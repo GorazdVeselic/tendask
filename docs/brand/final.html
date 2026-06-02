@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tendask — finalna znamka</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --green-900:#205A28; --green:#2e7d32; --green-400:#3a9a57;
+    --honey:#E0A82E; --soft:#e8f3ea; --softer:#f2f8f3;
+    --ink:#1d2823; --muted:#6b7770; --line:#e4e8e5; --bg:#eceef0;
+    --font:'Plus Jakarta Sans',sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:var(--font);background:var(--bg);color:var(--ink);padding:40px 24px 90px;}
+  .wrap{max-width:1080px;margin:0 auto;}
+  h1{font-size:28px;font-weight:800;letter-spacing:-.6px;}
+  .lead{color:#5c6660;margin-top:8px;font-size:15px;max-width:720px;}
+  h2{font-size:13px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:#8a938d;margin:34px 0 14px;}
+  .panel{background:#fff;border-radius:20px;box-shadow:0 10px 34px rgba(20,40,30,.10);overflow:hidden;}
+
+  /* HERO */
+  .hero{background:radial-gradient(130% 120% at 50% 0%, var(--green-400) 0%, var(--green) 52%, var(--green-900) 100%);
+        padding:56px 40px;display:flex;align-items:center;justify-content:center;gap:34px;position:relative;overflow:hidden;}
+  .hexbg{position:absolute;inset:0;opacity:.10;}
+  .hero .lock{position:relative;z-index:2;display:flex;align-items:center;gap:22px;}
+  .hero .wm{font-weight:800;font-size:52px;letter-spacing:-1.5px;color:#fff;}
+  .hero .tag{font-weight:600;font-size:16px;color:#DCEFE0;margin-top:2px;}
+
+  .row{display:flex;gap:20px;flex-wrap:wrap;}
+  .tile{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px;display:flex;flex-direction:column;align-items:center;gap:12px;min-width:150px;flex:1;}
+  .tile .cap{font-size:12px;color:var(--muted);text-align:center;}
+  .appicon{width:96px;height:96px;border-radius:24px;display:grid;place-items:center;box-shadow:0 8px 20px rgba(0,0,0,.18);}
+
+  .swatches{display:flex;gap:10px;flex-wrap:wrap;}
+  .sw{width:104px;}
+  .sw .chip{height:64px;border-radius:11px;border:1px solid rgba(0,0,0,.06);}
+  .sw .nm{font-size:12px;font-weight:600;margin-top:7px;}
+  .sw .hx{font-size:11px;color:var(--muted);font-family:ui-monospace,monospace;}
+
+  .type .big{font-size:30px;font-weight:800;letter-spacing:-.5px;}
+  .type .mid{font-size:19px;font-weight:600;margin-top:8px;}
+  .type .body{font-size:15px;font-weight:400;color:#42504a;margin-top:8px;line-height:1.55;max-width:560px;}
+  .weights{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;color:var(--ink);}
+  .weights span{font-size:18px;}
+  .pad{padding:26px 28px;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Tendask — finalna znamka</h1>
+  <p class="lead">Smer <b>D (uravnotežena)</b> — paleta + tipografija; logo <b>iz A</b> (organski list v šesterokotniku, <b>brez kljukice</b>). Žila lista ostane subtilna.</p>
+
+  <!-- HERO -->
+  <h2>Glavni logotip</h2>
+  <div class="panel">
+    <div class="hero">
+      <svg class="hexbg" viewBox="0 0 1080 260" preserveAspectRatio="xMidYMid slice"><defs><pattern id="hx" width="50" height="56" patternUnits="userSpaceOnUse"><path d="M25 1 L49 14 L49 42 L25 55 L1 42 L1 14 Z" fill="none" stroke="#fff" stroke-width="1.5"/></pattern></defs><rect width="1080" height="260" fill="url(#hx)"/></svg>
+      <div class="lock">
+        <!-- logomark: list v šesterokotniku, BREZ kljukice -->
+        <svg width="118" height="118" viewBox="0 0 120 120" style="filter:drop-shadow(0 10px 22px rgba(0,0,0,.25))">
+          <path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#fff" stroke-linejoin="round"/>
+          <path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#2e7d32"/>
+          <path d="M60 34 C56 50 54 66 50 83" fill="none" stroke="#205A28" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+        <div>
+          <div class="wm">Tendask</div>
+          <div class="tag">Tvoj vrtni dnevnik 🌿</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VARIATIONS -->
+  <h2>Različice logotipa</h2>
+  <div class="row">
+    <div class="tile">
+      <div class="appicon" style="background:radial-gradient(120% 120% at 50% 0%, #3a9a57, #2e7d32);">
+        <svg width="56" height="56" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#fff" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#2e7d32"/><path d="M60 34 C56 50 54 66 50 83" fill="none" stroke="#205A28" stroke-width="3" stroke-linecap="round"/></svg>
+      </div>
+      <div class="cap"><b>Ikona aplikacije</b><br>(zaobljen kvadrat, App Store / Play)</div>
+    </div>
+    <div class="tile">
+      <svg width="80" height="80" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#2e7d32" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/><path d="M60 34 C56 50 54 66 50 83" fill="none" stroke="#cfe6d3" stroke-width="3" stroke-linecap="round"/></svg>
+      <div class="cap"><b>Inverz</b><br>poln zelen šesterokotnik, bel list</div>
+    </div>
+    <div class="tile">
+      <svg width="80" height="80" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="none" stroke="#2e7d32" stroke-width="5" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#2e7d32"/></svg>
+      <div class="cap"><b>Enobarvno</b><br>za žige, ikone, monokromatsko</div>
+    </div>
+    <div class="tile" style="background:#1d2823;">
+      <svg width="80" height="80" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="none" stroke="#fff" stroke-width="4" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/></svg>
+      <div class="cap" style="color:#aeb6b0;"><b>Na temni podlagi</b></div>
+    </div>
+  </div>
+
+  <!-- SMALL SIZES -->
+  <h2>Berljivost v majhnih velikostih</h2>
+  <div class="panel pad">
+    <div class="row" style="align-items:flex-end;gap:30px;">
+      <div style="display:flex;align-items:flex-end;gap:24px;">
+        <svg width="64" height="64" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#2e7d32" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/></svg>
+        <svg width="44" height="44" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#2e7d32" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/></svg>
+        <svg width="28" height="28" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#2e7d32" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/></svg>
+        <svg width="18" height="18" viewBox="0 0 120 120"><path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#2e7d32" stroke-linejoin="round"/><path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#fff"/></svg>
+      </div>
+      <div class="cap" style="color:var(--muted);">Brez kljukice je list <b>čist tudi pri 18&nbsp;px</b> (favicon/notif). Inverz (bel list na zelenem) deluje najbolje v drobnem.</div>
+    </div>
+  </div>
+
+  <!-- PALETTE -->
+  <h2>Barvna paleta</h2>
+  <div class="panel pad">
+    <div class="swatches">
+      <div class="sw"><div class="chip" style="background:#205A28"></div><div class="nm">Globoka zelena</div><div class="hx">#205A28</div></div>
+      <div class="sw"><div class="chip" style="background:#2e7d32"></div><div class="nm">Primarna zelena</div><div class="hx">#2e7d32</div></div>
+      <div class="sw"><div class="chip" style="background:#3a9a57"></div><div class="nm">Svetla zelena</div><div class="hx">#3a9a57</div></div>
+      <div class="sw"><div class="chip" style="background:#E0A82E"></div><div class="nm">Medena (poudarek)</div><div class="hx">#E0A82E</div></div>
+      <div class="sw"><div class="chip" style="background:#e8f3ea"></div><div class="nm">Mehka zelena</div><div class="hx">#e8f3ea</div></div>
+      <div class="sw"><div class="chip" style="background:#1d2823"></div><div class="nm">Črnilo / tekst</div><div class="hx">#1d2823</div></div>
+      <div class="sw"><div class="chip" style="background:#6b7770"></div><div class="nm">Pridušeno</div><div class="hx">#6b7770</div></div>
+      <div class="sw"><div class="chip" style="background:#eceef0;border-color:#dde">&nbsp;</div><div class="nm">Ozadje</div><div class="hx">#eceef0</div></div>
+    </div>
+    <div class="cap" style="margin-top:16px;color:var(--muted);">Primarna zelena = ista kot v wireframih. <b>Medena</b> je redek poudarek (gumbi "danes", praznovanja, opozorila), ne prevladuje.</div>
+  </div>
+
+  <!-- TYPE -->
+  <h2>Tipografija — Plus Jakarta Sans</h2>
+  <div class="panel pad type">
+    <div class="big">Pokosil sem trato 🌱</div>
+    <div class="mid">Gnojenje · obrez · setev · zalivanje</div>
+    <div class="body">En družinski sklad za vse: naslovi (800/700), poudarki (600), telo (400). Čist, a topel grotesk — moderno in prijazno hkrati. Polno podpira slovenske (č š ž) in nemške (ä ö ü ß) znake.</div>
+    <div class="weights">
+      <span style="font-weight:400;">400 Regular</span>
+      <span style="font-weight:500;">500 Medium</span>
+      <span style="font-weight:600;">600 SemiBold</span>
+      <span style="font-weight:700;">700 Bold</span>
+      <span style="font-weight:800;">800 ExtraBold</span>
+    </div>
+  </div>
+
+  <p class="lead" style="margin-top:34px;">Če je tole v redu, izdelam <b>produkcijske SVG datoteke</b> (logo, ikona, inverz, monokrom), <b>app-icon PNG-je</b> (1024/512/192…) in <b>brand guide</b> (docs/brand/brand.md) + posodobim wireframe splash. Reci, če kaj prilagodim (npr. obliko lista, kot šesterokotnika, odtenek zelene).</p>
+</div>
+</body>
+</html>

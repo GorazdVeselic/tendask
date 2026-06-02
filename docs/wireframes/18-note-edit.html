@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opomba</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .note-area { width:100%; background:#f6f8f6; border:1.5px solid var(--line);
+    border-radius:14px; padding:15px; font-size:16px; line-height:1.55; font-family:var(--font);
+    color:var(--text); min-height:170px; resize:none; }
+  .hint { font-size:12px; color:var(--muted); margin:7px 2px 0; line-height:1.45; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="03-calendar.html" style="text-decoration:none;"><span class="back">✕</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Nova opomba</div>
+    <div style="width:30px;"></div>
+  </div>
+
+  <div class="content">
+    <!-- Besedilo = glavna stvar -->
+    <div class="field">
+      <label>Zapis</label>
+      <textarea class="note-area" placeholder="Prosto besedilo — opažanje, ideja, misel…
+npr. Paradižnik kaže rjave pege na spodnjih listih. Preveriti plesen.">Paradižnik kaže rjave pege na spodnjih listih. Preveriti plesen — morda kostanjeva rjavenka po dežju.</textarea>
+    </div>
+
+    <!-- Kdaj -->
+    <div class="field">
+      <label>Kdaj</label>
+      <div class="segmented">
+        <div class="seg active">Danes</div>
+        <div class="seg">Včeraj</div>
+        <div class="seg">Datum…</div>
+      </div>
+    </div>
+
+    <!-- Kje (neobvezno) -->
+    <div class="field">
+      <label>Območje <span style="text-transform:none;font-weight:500;">(neobvezno)</span></label>
+      <div class="chips">
+        <div class="chip active">Visoka greda 1</div>
+        <div class="chip">Trata zadaj</div>
+        <div class="chip">Živa meja</div>
+        <div class="chip">+ Novo</div>
+      </div>
+    </div>
+
+    <!-- Rastlina (neobvezno) -->
+    <div class="field">
+      <label>Rastlina <span style="text-transform:none;font-weight:500;">(neobvezno)</span></label>
+      <div class="chips">
+        <div class="chip active">Paradižnik</div>
+        <a href="10-plant-picker.html" style="text-decoration:none;"><div class="chip">+ Izberi rastlino</div></a>
+      </div>
+      <div class="hint">Opomba lahko visi prosto ali jo navežeš na območje/rastlino — pojavi se v zgodovini te rastline.</div>
+    </div>
+
+    <div class="hint" style="text-align:center;margin-top:14px;">
+      🌧️ Vreme se shrani samodejno · Dež 16° — koristno ob opažanjih (bolezni, rast).
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="03-calendar.html" style="text-decoration:none;"><button class="btn">Shrani opombo</button></a>
+  </div>
+</div>
+</body>
+</html>

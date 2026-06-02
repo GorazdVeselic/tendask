@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Akcije — predlog</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .swipe { position:relative; overflow:hidden; border-radius:12px; margin-bottom:6px; }
+  .swipe .row-front { background:#fff; transform:translateX(-148px); }
+  .swipe .actions { position:absolute; top:0; right:0; bottom:0; display:flex; }
+  .swipe .sa { width:74px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; gap:3px; }
+  .swipe .sa .i{ font-size:18px; }
+  .sa.done{ background:var(--accent); } .sa.snooze{ background:#d99a2b; }
+  .asheet-item{ display:flex; align-items:center; gap:14px; padding:15px 4px; border-bottom:1px solid var(--line); font-size:15px; font-weight:600; }
+  .asheet-item .i{ width:26px; text-align:center; font-size:18px; }
+  .asheet-item.danger{ color:#c0392b; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Akcije / urejanje</h1><div class="sub">predlog vzorca</div></div>
+  </div>
+
+  <div class="content" style="padding-bottom:20px;">
+    <!-- A) Povleci -->
+    <div class="section-title">A · Povleci levo (2 najpogostejši)</div>
+    <div class="swipe">
+      <div class="actions">
+        <div class="sa done"><span class="i">✓</span>Opravil</div>
+        <div class="sa snooze"><span class="i">⏰</span>+1 dan</div>
+      </div>
+      <div class="row-front card" style="padding:6px 16px;margin:0;">
+        <div class="list-item" style="border:none;">
+          <div class="avatar">🥔</div>
+          <div class="li-main"><div class="li-title">Okopavanje krompirja</div><div class="li-sub">🌿 Krompir · 🪴 Greda 2</div></div>
+          <div class="li-trail">⋯</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:2px 2px 14px;">Hitro, brez odpiranja. Tap na ⋯ = vse akcije →</div>
+
+    <!-- B) Akcijska plošča -->
+    <div class="section-title">B · ⋯ / dolg pritisk → akcijska plošča</div>
+    <div class="card" style="padding:2px 16px;">
+      <div class="asheet-item"><span class="i">✓</span>Označi kot opravljeno <span style="margin-left:auto;font-size:12px;color:var(--muted);">+ v dnevnik</span></div>
+      <div class="asheet-item"><span class="i">⏰</span>Premakni +1 dan</div>
+      <div class="asheet-item"><span class="i">📅</span>Premakni na datum…</div>
+      <div class="asheet-item"><span class="i">✏️</span>Uredi</div>
+      <div class="asheet-item"><span class="i">⧉</span>Podvoji</div>
+      <div class="asheet-item danger"><span class="i">🗑</span>Izbriši</div>
+    </div>
+
+    <!-- priporočilo -->
+    <div class="smart" style="margin-top:16px;background:var(--accent-softer);border-color:#dcebe0;">
+      <span class="ico">✅</span>
+      <div class="txt">
+        <b>Priporočilo:</b> uporabimo <b>oba</b> — povleci za 2 najpogostejši akciji,
+        plošča (⋯ / dolg pritisk) za vse. <b>Enak vzorec povsod</b>: opomniki, vnosi
+        v dnevnik, območja, zaloge.
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

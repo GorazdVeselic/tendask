@@ -1,0 +1,9 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tendask">
+  <!-- Tendask logomark — barvna različica (za zelene/temne/fotografske podlage) -->
+  <!-- šesterokotnik = H3 celica -->
+  <path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#ffffff" stroke-linejoin="round"/>
+  <!-- list = vrt -->
+  <path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#2e7d32"/>
+  <!-- žila lista (subtilna, ne kljukica) -->
+  <path d="M60 34 C56 50 54 66 50 83" stroke="#205A28" stroke-width="3" stroke-linecap="round"/>
+</svg>

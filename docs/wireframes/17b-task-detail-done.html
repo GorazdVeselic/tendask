@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detajl opravila — opravljeno</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* --- naslovni blok opravila --- */
+  .t-hero { display:flex; gap:14px; align-items:flex-start; margin:6px 0 14px; }
+  .t-hero .av { width:54px; height:54px; border-radius:16px; flex:0 0 54px;
+    background:var(--accent-soft); display:grid; place-items:center; font-size:28px; }
+  .t-hero h2 { font-size:20px; font-weight:800; letter-spacing:-.3px; line-height:1.2; }
+  .t-hero .meta { font-size:13px; color:var(--muted); margin-top:4px; line-height:1.5; }
+  .badge { display:inline-flex; align-items:center; gap:5px; font-size:12px; font-weight:700;
+    padding:4px 10px; border-radius:999px; margin-top:7px; }
+  .badge.done { background:var(--accent-soft); color:var(--accent); }
+
+  /* --- vremenski posnetek (3 pasovi) --- */
+  .wx { border:1px solid #dcebe0; border-radius:16px; overflow:hidden; margin-bottom:6px; }
+  .wx-band { padding:13px 15px; border-bottom:1px solid var(--line); }
+  .wx-band:last-child { border-bottom:none; }
+  .wx-lbl { font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.6px;
+    color:var(--muted); margin-bottom:9px; display:flex; justify-content:space-between; align-items:center; }
+  .wx-now { background:linear-gradient(135deg,#eaf4ec,#f4faf5); }
+  .wx-now .top { display:flex; align-items:center; gap:14px; }
+  .wx-now .ico { font-size:40px; }
+  .wx-now .temp { font-size:34px; font-weight:800; line-height:1; }
+  .wx-now .m { font-size:12.5px; color:var(--muted); line-height:1.55; }
+  .wx-back .b-main { display:flex; align-items:center; gap:12px; }
+  .rain-amt { font-size:24px; font-weight:800; color:var(--info); white-space:nowrap; }
+  .wx-back .b-txt { font-size:13px; color:var(--text); line-height:1.45; }
+  .wx-back .b-txt small { color:var(--muted); }
+  .wx-fc { display:flex; gap:9px; }
+  .fc-day { flex:1; text-align:center; background:#f6f8f6; border:1px solid var(--line); border-radius:12px; padding:9px 3px; }
+  .fc-day .d { font-size:11px; color:var(--muted); font-weight:700; }
+  .fc-day .i { font-size:22px; display:block; margin:3px 0 2px; }
+  .fc-day .t { font-size:14px; font-weight:700; }
+  .fc-day .p { font-size:11px; color:var(--info); font-weight:600; }
+  .fc-day.hl { background:var(--info-soft); border-color:#c4dcf0; }
+  .wx-note { font-size:12px; color:var(--muted); margin:7px 2px 0; line-height:1.45; }
+
+  /* --- info vrstice (bralno) --- */
+  .info { display:flex; gap:12px; padding:13px 2px; border-bottom:1px solid var(--line); align-items:flex-start; }
+  .info:last-child { border-bottom:none; }
+  .info .k { font-size:13px; color:var(--muted); font-weight:600; flex:0 0 92px; padding-top:1px; }
+  .info .v { font-size:14.5px; flex:1; line-height:1.5; }
+  .info .v .sub { color:var(--muted); font-size:13px; }
+
+  /* --- spodnja akcijska vrstica --- */
+  .actionbar { position:absolute; left:0; right:0; bottom:0; padding:12px 18px 20px;
+    background:linear-gradient(to top,#fff 74%,transparent); }
+  .act-row { display:flex; gap:8px; margin-top:9px; }
+  .act { flex:1; display:flex; flex-direction:column; align-items:center; gap:4px;
+    background:var(--accent-soft); color:var(--accent); border-radius:12px; padding:9px 0; font-size:11.5px; font-weight:700; }
+  .act .i { font-size:18px; }
+  .act.danger { background:#fdecea; color:#c0392b; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="03-calendar.html" style="text-decoration:none;"><span class="back">‹ Dnevnik</span></a>
+    <div style="flex:1;"></div>
+    <a href="14-actions.html" style="text-decoration:none;"><div class="icon-btn">⋯</div></a>
+  </div>
+
+  <div class="content" style="padding-bottom:188px;">
+
+    <!-- naslov opravila -->
+    <div class="t-hero">
+      <div class="av">🧪</div>
+      <div>
+        <h2>Gnojenje</h2>
+        <div class="meta">Visoka greda 1 · foliarno (urea)</div>
+        <span class="badge done">✓ Opravljeno · pon 31. maj · 09:15</span>
+      </div>
+    </div>
+
+    <!-- VREMENSKI POSNETEK (zamrznjen, dejanski) -->
+    <div class="section-title" style="margin-top:6px;">Vremenski posnetek</div>
+    <div class="wx">
+
+      <!-- 1) ob opravilu (dejansko zabeleženo) -->
+      <div class="wx-band wx-now">
+        <div class="wx-lbl"><span>Ob opravilu · pon 31. maj 09:15</span><span>zabeleženo</span></div>
+        <div class="top">
+          <span class="ico">☀️</span>
+          <div>
+            <span class="temp">19°</span>
+          </div>
+          <div class="m" style="margin-left:4px;">
+            jasno · veter 5 km/h SV<br>
+            vlaga 55 % · padavine 0 mm<br>
+            temp. tal 16° · ET₀ 3,0 mm
+          </div>
+        </div>
+      </div>
+
+      <!-- 2) nazaj 24-48h -->
+      <div class="wx-band wx-back">
+        <div class="wx-lbl"><span>Zadnjih 48 h pred opravilom</span><span>zabeleženo</span></div>
+        <div class="b-main">
+          <span class="rain-amt">💧 2 mm</span>
+          <div class="b-txt">
+            dež v 48 h pred opravilom<br>
+            <small>sob 0 mm · ned 2 mm — tla rahlo vlažna, listi suhi (primerno za foliarno).</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3) napoved 24-72h kot zabeleženo ob izvedbi -->
+      <div class="wx-band">
+        <div class="wx-lbl"><span>Napoved 24–72 h</span><span>kot zabeleženo ob izvedbi</span></div>
+        <div class="wx-fc">
+          <div class="fc-day hl"><span class="d">tor</span><span class="i">🌧️</span><span class="t">16°</span><span class="p">8 mm</span></div>
+          <div class="fc-day"><span class="d">sre</span><span class="i">☀️</span><span class="t">22°</span><span class="p">0 mm</span></div>
+          <div class="fc-day"><span class="d">čet</span><span class="i">🌦️</span><span class="t">18°</span><span class="p">4 mm</span></div>
+        </div>
+        <div class="wx-note" style="margin-top:9px;">Listi so gnojilo vpili še isti dan (pon); dež šele naslednji dan (tor) — sredstvo ni izpralo.</div>
+      </div>
+    </div>
+    <div class="wx-note">📌 Posnetek je bil zajet ob izvedbi (Open-Meteo) in je trajno shranjen k opravilu.</div>
+
+    <!-- podrobnosti -->
+    <div class="section-title">Podrobnosti</div>
+    <div class="card" style="padding:2px 16px;">
+      <div class="info"><div class="k">Območje</div><div class="v">Visoka greda 1</div></div>
+      <div class="info"><div class="k">Rastlina</div><div class="v">Paradižnik</div></div>
+      <div class="info">
+        <div class="k">Sredstva</div>
+        <div class="v">
+          Urea <span class="sub">100 g / 16 l</span>
+          <div class="sub" style="margin-top:3px;">🧪 Recept “Pomladno foliarno / 16 l” · odpisano iz zaloge</div>
+        </div>
+      </div>
+      <div class="info"><div class="k">Opomnik</div><div class="v">—</div></div>
+      <div class="info"><div class="k">Ponavljanje</div><div class="v">Enkratno</div></div>
+      <div class="info"><div class="k">Opomba</div><div class="v">100 g uree na 16 l, zjutraj pred vročino.</div></div>
+    </div>
+
+    <!-- zgodovinski namig (ločnica) -->
+    <div class="smart" style="background:var(--accent-softer);border-color:#dcebe0;margin-top:14px;">
+      <span class="ico">📅</span>
+      <div class="txt"><b>Lani 2. junija</b> si isto gredo gnojil z ureo. Letos si ~2 dni prej.</div>
+    </div>
+
+  </div>
+
+  <!-- AKCIJE (opravljeno stanje) -->
+  <div class="actionbar">
+    <a href="07-reminder-edit.html" style="text-decoration:none;"><button class="btn">✏️ Uredi</button></a>
+    <div class="act-row">
+      <a href="07-reminder-edit.html" style="text-decoration:none;flex:1;"><div class="act"><span class="i">⧉</span>Podvoji</div></a>
+      <a href="11-month.html" style="text-decoration:none;flex:1;"><div class="act"><span class="i">📅</span>Premakni</div></a>
+      <a href="06-reminders.html" style="text-decoration:none;flex:1;"><div class="act"><span class="i">↩</span>Na čaka</div></a>
+      <a href="03-calendar.html" style="text-decoration:none;flex:1;"><div class="act danger"><span class="i">🗑</span>Izbriši</div></a>
+    </div>
+  </div>
+</div>
+</body>
+</html>

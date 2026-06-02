@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opravila</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .swipe { position:relative; overflow:hidden; border-radius:12px; }
+  .swipe .row-front { background:#fff; transform:translateX(-148px); }
+  .swipe .actions {
+    position:absolute; top:0; right:0; bottom:0; display:flex;
+  }
+  .swipe .sa { width:74px; display:flex; flex-direction:column; align-items:center; justify-content:center; color:#fff; font-size:12px; font-weight:700; gap:3px; }
+  .swipe .sa .i { font-size:18px; }
+  .sa.done{ background:var(--accent); } .sa.snooze{ background:#d99a2b; }
+  .status { font-size:12px; font-weight:700; }
+  .status.due{ color:var(--accent); } .status.late{ color:#c0392b; } .status.rep{ color:#7a6cc0; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Opravila</h1><div class="sub">prihajajoča in zapadla opravila · 🔔 = opomnik</div></div>
+    <a href="02-quick-log.html" style="text-decoration:none;"><div class="icon-btn">＋</div></a>
+  </div>
+
+  <div class="content">
+    <div class="section-title">Jutri · sreda 2. jun</div>
+    <a href="17-task-detail.html" style="text-decoration:none;color:inherit;">
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="avatar">🧪</div>
+        <div class="li-main">
+          <div class="li-title">Foliarno škropljenje</div>
+          <div class="li-sub">🌿 Lovorikovec · 🪴 Živa meja, trata · urea+mospilan/16l</div>
+        </div>
+        <div class="status due">jutri<br>7:00</div>
+      </div>
+    </div></a>
+
+    <!-- Primer: vrstica povlečena levo (razkrite akcije) -->
+    <div class="section-title">Ta teden</div>
+    <div class="swipe card" style="padding:0;">
+      <div class="actions">
+        <div class="sa done"><span class="i">✓</span>Opravil</div>
+        <div class="sa snooze"><span class="i">⏰</span>+1 dan</div>
+      </div>
+      <div class="row-front" style="padding:6px 16px;">
+        <div class="list-item" style="border:none;">
+          <div class="avatar">🥔</div>
+          <div class="li-main">
+            <div class="li-title">Okopavanje krompirja</div>
+            <div class="li-sub">🌿 Krompir · 🪴 Visoka greda 2</div>
+          </div>
+          <div class="li-trail">⋯</div>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:2px 2px 0;">↑ povlečena vrstica razkrije ✓ in +1 dan · ⋯ odpre vse akcije</div>
+
+    <!-- Zamuja -->
+    <div class="card" style="padding:6px 16px;margin-top:12px;">
+      <div class="list-item">
+        <div class="avatar">🐛</div>
+        <div class="li-main">
+          <div class="li-title">Škropljenje malin</div>
+          <div class="li-sub">🌿 Maline · 🪴 Jagodičevje</div>
+        </div>
+        <div class="status late">zamuja<br>2 dni</div>
+      </div>
+    </div>
+
+    <div class="section-title">Ponavljajoče</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="avatar">✂️</div>
+        <div class="li-main">
+          <div class="li-title">Obrez žive meje</div>
+          <div class="li-sub">🌿 Lovorikovec · 🪴 Živa meja</div>
+        </div>
+        <div class="status rep">🔁 2×<br>letno</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="02-quick-log.html"><div class="fab">+</div></a>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="04-areas.html"><div class="nav-item"><span class="ico">🪴</span>Območja</div></a>
+    <a href="06-reminders.html"><div class="nav-item active"><span class="ico">📋</span>Opravila</div></a>
+  </nav>
+</div>
+</body>
+</html>

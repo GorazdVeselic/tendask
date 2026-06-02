@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Izberi rastlino</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="09-area-edit.html" style="text-decoration:none;"><span class="back">‹ Nazaj</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Izberi rastlino</div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div class="content">
+    <!-- Iskanje -->
+    <div class="field" style="margin-bottom:10px;">
+      <input class="input" value="parad" placeholder="Išči rastlino…">
+    </div>
+
+    <!-- Kategorije -->
+    <div class="chips" style="margin-bottom:8px;">
+      <div class="chip active">Vse</div>
+      <div class="chip">Sadno drevje</div>
+      <div class="chip">Jagodičevje</div>
+      <div class="chip">Zelenjava</div>
+      <div class="chip">Zelišča</div>
+      <div class="chip">Okrasne</div>
+    </div>
+
+    <!-- Zadetki iz kurirane baze -->
+    <div class="section-title">Iz baze</div>
+    <div class="card" style="padding:2px 14px;">
+      <div class="notif-row"><span class="ico">🍅</span><div class="nr-main">Paradižnik <span class="nr-sub">Solanum lycopersicum · zelenjava</span></div><span style="color:var(--accent);">＋</span></div>
+      <div class="notif-row"><span class="ico">🥬</span><div class="nr-main">Solata glavnata <span class="nr-sub">Lactuca sativa · zelenjava</span></div><span style="color:var(--accent);">＋</span></div>
+      <div class="notif-row"><span class="ico">🥬</span><div class="nr-main">Solata listnata <span class="nr-sub">Lactuca sativa · zelenjava</span></div><span style="color:var(--accent);">＋</span></div>
+    </div>
+
+    <!-- Nadzorovan "po meri" -->
+    <div class="section-title">Ne najdeš?</div>
+    <div class="card" style="border-style:dashed;">
+      <div style="font-size:14px;font-weight:600;margin-bottom:4px;">＋ Dodaj po meri: „parad…“</div>
+      <div class="smart" style="margin:8px 0 0;background:var(--warn-soft);border-color:#f1e0bf;">
+        <span class="ico">⚠️</span>
+        <div class="txt" style="font-size:13px;">
+          Predlog iz baze: <b>Paradižnik</b>? &nbsp;<span class="pill ghost" style="padding:3px 10px;">Uporabi</span><br><br>
+          Lasten vnos je <b>zaseben</b> in se <b>ne deli s skupnostjo</b> (V2),
+          ker se lastni izrazi ne morejo ujemati med uporabniki/jeziki.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

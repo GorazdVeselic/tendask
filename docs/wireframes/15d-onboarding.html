@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding 4/4</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .ob { flex:1; display:flex; flex-direction:column; padding:0 26px 30px; }
+  .ob .skip { text-align:right; padding:8px 0; color:var(--muted); font-weight:600; font-size:14px; }
+  .ob .stage { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .ob .art { width:150px;height:150px;border-radius:36px;background:var(--accent-soft);display:grid;place-items:center;font-size:74px;margin-bottom:26px; }
+  .ob h1 { font-size:25px; letter-spacing:-.3px; }
+  .ob p { font-size:15px; color:var(--muted); margin-top:12px; line-height:1.6; max-width:300px; }
+  .badge { font-size:12px;font-weight:700;color:var(--accent);background:var(--accent-soft);padding:4px 10px;border-radius:999px;margin-top:14px; }
+  .dots { display:flex; gap:8px; justify-content:center; margin:22px 0; }
+  .dots span { width:8px; height:8px; border-radius:50%; background:var(--line-strong); }
+  .dots span.on { background:var(--accent); width:22px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="ob">
+    <a href="13-login.html" style="text-decoration:none;"><div class="skip">Preskoči ›</div></a>
+
+    <div class="stage">
+      <div class="art">
+        <svg width="96" height="96" viewBox="0 0 96 96" fill="none" stroke="#2e7d32" stroke-width="5" stroke-linejoin="round">
+          <path d="M48 8 L82 28 L82 68 L48 88 L14 68 L14 28 Z"/>
+          <line x1="15" y1="48" x2="81" y2="48"/>
+          <path d="M48 8 C31 28 31 68 48 88"/>
+          <path d="M48 8 C65 28 65 68 48 88"/>
+        </svg>
+      </div>
+      <h1>Tvoja okolica</h1>
+      <p>Kasneje: poglej, kaj počnejo vrtnarji v podobni klimi blizu tebe —
+        anonimno in zasebno.</p>
+      <div class="badge">kmalu (V2)</div>
+    </div>
+
+    <div class="dots"><span></span><span></span><span></span><span class="on"></span></div>
+    <a href="13-login.html" style="text-decoration:none;"><button class="btn">Začni 🌿</button></a>
+  </div>
+</div>
+</body>
+</html>

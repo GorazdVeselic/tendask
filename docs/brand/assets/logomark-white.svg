@@ -1,0 +1,5 @@
+<svg width="120" height="120" viewBox="0 0 120 120" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tendask">
+  <!-- Tendask logomark — vse belo (za temne/fotografske podlage) -->
+  <path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" stroke="#ffffff" stroke-width="4" stroke-linejoin="round"/>
+  <path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#ffffff"/>
+</svg>

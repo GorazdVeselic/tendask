@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Prijava</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .auth { flex:1; display:flex; flex-direction:column; padding:0 26px 30px; }
+  .auth .top { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .auth .mark { width:74px;height:74px;border-radius:22px;background:var(--accent-soft);display:grid;place-items:center;font-size:38px;margin-bottom:18px; }
+  .auth h1 { font-size:24px; letter-spacing:-.4px; }
+  .auth .vp { font-size:14px; color:var(--muted); margin-top:10px; line-height:1.55; max-width:280px; }
+  .authbtn {
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:15px;border-radius:14px;font-size:15px;font-weight:700;margin-bottom:10px;border:1.5px solid var(--line);
+    background:#fff;color:var(--text);
+  }
+  .authbtn.dark{ background:#111;color:#fff;border-color:#111; }
+  .authbtn.accent{ background:var(--accent);color:#fff;border-color:var(--accent); }
+  .skip { text-align:center;color:var(--muted);font-size:14px;font-weight:600;margin-top:6px; text-decoration:underline; }
+  .legal { text-align:center;font-size:11px;color:var(--muted);margin-top:14px;line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="auth">
+    <div class="top">
+      <div class="mark">
+        <svg width="58" height="58" viewBox="0 0 124 124" xmlns="http://www.w3.org/2000/svg">
+          <path d="M62 6 L112 34 L112 90 L62 118 L12 90 L12 34 Z" fill="#2e7d32"/>
+          <path d="M62 30 C40 40 36 70 50 90 C58 76 78 70 86 46 C74 50 60 56 54 70 C54 54 56 40 62 30 Z" fill="#ffffff"/>
+          <path d="M62 34 C58 50 56 66 52 84" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>Dobrodošel v Tendask</h1>
+      <div class="vp">Shrani svoj vrtni dnevnik in <b>ne izgubi zgodovine</b>
+        ob menjavi telefona.</div>
+    </div>
+
+    <a href="16-location.html" style="text-decoration:none;"><div class="authbtn dark"> Nadaljuj z Apple</div></a>
+    <a href="16-location.html" style="text-decoration:none;"><div class="authbtn"> Nadaljuj z Google</div></a>
+    <a href="16-location.html" style="text-decoration:none;"><div class="authbtn accent">✉️ Nadaljuj z e-pošto</div></a>
+
+    <a href="16-location.html" style="text-decoration:none;"><div class="skip">Preizkusi brez računa</div></a>
+    <div class="legal">
+      Z e-pošto pošljemo potrditveno kodo (brez gesla).<br>
+      Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.<br>
+      ⚠️ <b>Brez računa</b> se ob odstranitvi aplikacije ali izgubi/menjavi naprave
+      <b>vsi podatki izgubijo</b>.
+    </div>
+  </div>
+</div>
+</body>
+</html>

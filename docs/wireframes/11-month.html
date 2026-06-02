@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesečni pregled</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .cal { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .cal .wd { text-align:center; font-size:11px; font-weight:700; color:var(--muted); padding:4px 0; }
+  .cal .cell {
+    aspect-ratio:1/1; border-radius:10px; background:#f6f8f6; border:1px solid var(--line);
+    display:flex; flex-direction:column; align-items:center; justify-content:flex-start;
+    padding-top:5px; font-size:13px; color:var(--text);
+  }
+  .cal .cell.empty { background:transparent; border:none; }
+  .cal .cell.today { border-color:var(--accent); background:var(--accent-soft); font-weight:700; }
+  .dotrow { display:flex; gap:2px; margin-top:3px; }
+  .d { width:5px; height:5px; border-radius:50%; }
+  .d.mow{ background:#3a9a57; } .d.water{ background:#3aa0d0; }
+  .d.fert{ background:#c79a2b; } .d.cut{ background:#9a6cc7; } .d.treat{ background:#d06a3a; }
+  .legend { display:flex; flex-wrap:wrap; gap:10px; font-size:12px; color:var(--muted); margin-top:14px; }
+  .legend span { display:flex; align-items:center; gap:5px; }
+  .legend .d { width:8px; height:8px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Junij 2026</h1><div class="sub">9 opravil ta mesec</div></div>
+    <div class="icon-btn">🔍</div>
+  </div>
+
+  <div class="content">
+    <!-- preklop pogleda -->
+    <div class="segmented" style="margin-bottom:14px;">
+      <a href="03-calendar.html" style="flex:1;text-decoration:none;"><div class="seg">Časovnica</div></a>
+      <div class="seg active">Mesec</div>
+    </div>
+
+    <!-- navigacija meseca -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+      <span style="color:var(--accent);font-size:20px;">‹</span>
+      <b style="font-size:15px;">Junij 2026</b>
+      <span style="color:var(--accent);font-size:20px;">›</span>
+    </div>
+
+    <div style="font-size:12px;color:var(--accent);font-weight:600;margin-bottom:8px;">
+      💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).
+    </div>
+
+    <!-- koledar -->
+    <div class="cal">
+      <div class="wd">P</div><div class="wd">T</div><div class="wd">S</div><div class="wd">Č</div><div class="wd">P</div><div class="wd">S</div><div class="wd">N</div>
+      <div class="cell empty"></div>
+      <div class="cell today">1<div class="dotrow"><span class="d mow"></span></div></div>
+      <div class="cell">2<div class="dotrow"><span class="d treat"></span></div></div>
+      <div class="cell">3</div>
+      <div class="cell">4<div class="dotrow"><span class="d mow"></span></div></div>
+      <div class="cell">5</div>
+      <div class="cell">6<div class="dotrow"><span class="d water"></span></div></div>
+      <div class="cell">7</div><div class="cell">8</div>
+      <div class="cell">9<div class="dotrow"><span class="d fert"></span></div></div>
+      <a href="07-reminder-edit.html" style="display:contents;"><div class="cell">10</div></a><div class="cell">11</div>
+      <div class="cell">12<div class="dotrow"><span class="d cut"></span></div></div>
+      <div class="cell">13</div>
+      <div class="cell">14</div><div class="cell">15</div><div class="cell">16</div>
+      <div class="cell">17</div>
+      <div class="cell">18<div class="dotrow"><span class="d fert"></span></div></div>
+      <div class="cell">19</div><div class="cell">20</div>
+      <div class="cell">21</div><div class="cell">22</div><div class="cell">23</div>
+      <div class="cell">24<div class="dotrow"><span class="d mow"></span></div></div>
+      <div class="cell">25</div><div class="cell">26</div><div class="cell">27</div>
+      <div class="cell">28</div><div class="cell">29</div><div class="cell">30</div>
+    </div>
+
+    <div class="legend">
+      <span><span class="d mow"></span>Košnja</span>
+      <span><span class="d water"></span>Zalivanje</span>
+      <span><span class="d fert"></span>Gnojenje</span>
+      <span><span class="d cut"></span>Obrez</span>
+      <span><span class="d treat"></span>Tretiranje</span>
+    </div>
+
+    <!-- Setveni koledar / sezonski predlogi -->
+    <div class="section-title">Junij — setveni koledar 🌱</div>
+    <div class="card tinted">
+      <div style="font-size:12px;color:var(--accent);font-weight:700;margin-bottom:8px;">
+        📍 Srednja Evropa · sev. polobla
+      </div>
+      <div style="font-size:14px;line-height:1.6;">
+        <b>Setev:</b> fižol, kumare, blitva, radič<br>
+        <b>Sajenje:</b> zelje, ohrovt, por<br>
+        <b>Opravila:</b> redni obrez žive meje, zastiranje gredic
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;">
+        Prilagojeno tvoji klimi (iz lokacije). Po-MVP funkcija.
+      </div>
+    </div>
+  </div>
+
+  <a href="02-quick-log.html"><div class="fab">+</div></a>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="03-calendar.html"><div class="nav-item active"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="04-areas.html"><div class="nav-item"><span class="ico">🪴</span>Območja</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+  </nav>
+</div>
+</body>
+</html>

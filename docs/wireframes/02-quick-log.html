@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hiter vnos</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="01-home.html" style="text-decoration:none;"><span class="back">✕</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Hiter vnos</div>
+    <a href="07-reminder-edit.html" style="text-decoration:none;"><span style="color:var(--accent);font-weight:600;font-size:14px;">Napredno ›</span></a>
+  </div>
+
+  <div class="content">
+    <!-- preklop: opravilo vs prosta opomba -->
+    <a href="18-note-edit.html" style="text-decoration:none;">
+      <div class="card tinted" style="display:flex;align-items:center;gap:10px;padding:12px 14px;margin-top:4px;">
+        <span style="font-size:20px;">✍️</span>
+        <div style="flex:1;font-size:13.5px;color:var(--text);">Nimaš opravila, le zapis?<br><span style="color:var(--muted);">Misel, opažanje, bolezen…</span></div>
+        <span style="color:var(--accent);font-weight:700;">Opomba ›</span>
+      </div>
+    </a>
+
+    <!-- 1. Kaj (en dotik) -->
+    <div class="section-title">Kaj si naredil?</div>
+    <div class="task-grid">
+      <div class="task-tile active"><span class="ico">🌱</span><span class="lbl">Košnja</span></div>
+      <div class="task-tile"><span class="ico">💧</span><span class="lbl">Zalivanje</span></div>
+      <div class="task-tile"><span class="ico">🧪</span><span class="lbl">Gnojenje</span></div>
+      <div class="task-tile"><span class="ico">✂️</span><span class="lbl">Obrez</span></div>
+      <div class="task-tile"><span class="ico">🪴</span><span class="lbl">Sajenje</span></div>
+      <div class="task-tile"><span class="ico">🌾</span><span class="lbl">Setev</span></div>
+      <div class="task-tile"><span class="ico">🐛</span><span class="lbl">Tretiranje</span></div>
+      <div class="task-tile"><span class="ico">🧺</span><span class="lbl">Pobiranje</span></div>
+      <div class="task-tile"><span class="ico">➕</span><span class="lbl">Drugo</span></div>
+    </div>
+
+    <!-- 2. Kdaj (privzeto Danes) -->
+    <div class="section-title">Kdaj</div>
+    <div class="segmented">
+      <div class="seg active">Danes</div>
+      <div class="seg">Včeraj</div>
+      <div class="seg">Datum…</div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:8px 2px 0;">
+      Danes/preteklost = opravljeno · prihodnji datum = opravilo čaka (+ lahko opomnik).
+    </div>
+
+    <!-- 3. Kje (privzeto zadnje območje) -->
+    <div class="section-title">Kje</div>
+    <div class="chips">
+      <div class="chip active">Trata zadaj</div>
+      <div class="chip">Trata spredaj</div>
+      <div class="chip">Živa meja</div>
+      <div class="chip">Visoka greda 1</div>
+      <div class="chip">Visoka greda 2</div>
+      <div class="chip">+ Novo</div>
+    </div>
+
+    <!-- Po potrebi: rastlina + sredstva (za obrez/tretiranje/gnojenje...) -->
+    <div class="section-title">Več <span style="text-transform:none;font-weight:500;">(po potrebi)</span></div>
+    <div class="card" style="padding:2px 14px;">
+      <a href="10-plant-picker.html" style="text-decoration:none;color:inherit;"><div class="add-line">🌿 Dodaj rastlino (jablana, paradižnik…)</div></a>
+      <a href="08-supplies.html" style="text-decoration:none;color:inherit;"><div class="add-line">🧪 Dodaj sredstvo iz zalog (poraba)</div></a>
+      <a href="07-reminder-edit.html" style="text-decoration:none;color:inherit;"><div class="add-line">🔔 Dodaj opomnik (opozori me)</div></a>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:-4px 2px 8px;">
+      Pri obrezu / tretiranju / gnojenju se ti to ponudi samodejno.
+    </div>
+
+    <!-- 4. Opomba (neobvezno) -->
+    <div class="section-title">Opomba <span style="text-transform:none;font-weight:500;">(neobvezno)</span></div>
+    <div class="field" style="margin-bottom:8px;">
+      <textarea class="textarea" placeholder="npr. 100g uree na 16l"></textarea>
+    </div>
+
+    <div style="font-size:12.5px;color:var(--muted);text-align:center;margin:6px 0 4px;">
+      🌧️ Vreme se shrani samodejno · Dež 16°
+    </div>
+
+    <a href="07-reminder-edit.html" style="text-decoration:none;">
+      <div style="text-align:center;color:var(--accent);font-weight:600;font-size:14px;margin:10px 0 4px;">
+        ⚙︎ Napredno: status, ponavljanje, opomnik ›
+      </div>
+    </a>
+  </div>
+
+  <!-- Shrani (sticky vtis prek FAB-cone) -->
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="01-home.html" style="text-decoration:none;"><button class="btn">Shrani opravilo</button></a>
+  </div>
+</div>
+</body>
+</html>

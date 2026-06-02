@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dodaj območje</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="04-areas.html" style="text-decoration:none;"><span class="back">✕</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Novo območje</div>
+    <div style="width:30px;"></div>
+  </div>
+
+  <div class="content">
+    <!-- Ime -->
+    <div class="field">
+      <label>Ime</label>
+      <input class="input" value="Sadovnjak">
+    </div>
+
+    <!-- Tip -->
+    <div class="field">
+      <label>Tip</label>
+      <div class="chips">
+        <div class="chip">Trata</div>
+        <div class="chip">Živa meja</div>
+        <div class="chip">Gredica</div>
+        <div class="chip active">Sadno drevje</div>
+        <div class="chip">Okrasno</div>
+        <div class="chip">Drugo</div>
+      </div>
+    </div>
+
+    <!-- Rastline znotraj (2. nivo) -->
+    <div class="field">
+      <label>Rastline v območju</label>
+      <div class="card" style="padding:2px 14px;margin-bottom:0;">
+        <div class="notif-row"><span class="ico">🍎</span><div class="nr-main">Jablana <span class="nr-sub">Malus domestica</span></div><span style="color:var(--muted);">✕</span></div>
+        <div class="notif-row"><span class="ico">🫐</span><div class="nr-main">Sliva <span class="nr-sub">Prunus domestica</span></div><span style="color:var(--muted);">✕</span></div>
+        <div class="notif-row"><span class="ico">🍒</span><div class="nr-main">Češnja <span class="nr-sub">Prunus avium</span></div><span style="color:var(--muted);">✕</span></div>
+        <a href="10-plant-picker.html" style="text-decoration:none;"><div class="add-line">＋ Dodaj rastlino</div></a>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">
+        Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.
+      </div>
+    </div>
+
+    <!-- Pojasnilo o lokaciji -->
+    <div class="smart" style="background:var(--info-soft);border-color:#cfe0f0;">
+      <span class="ico">📍</span>
+      <div class="txt" style="color:#1f4e79;">
+        Območja nimajo svoje lokacije — vsa so na tvoji posesti.
+        <b>Lokacija za vreme (in H3-okolico) se nastavi enkrat v profilu.</b>
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:16px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="04-areas.html" style="text-decoration:none;"><button class="btn">Shrani območje</button></a>
+  </div>
+</div>
+</body>
+</html>

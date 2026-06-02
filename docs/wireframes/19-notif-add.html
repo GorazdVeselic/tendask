@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dodaj obvestilo</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .dim { opacity:.4; pointer-events:none; }
+  .time-row { display:flex; align-items:center; gap:10px; }
+  .time-row .input { text-align:center; font-weight:700; font-size:18px; max-width:120px; }
+  .preview { display:flex; align-items:center; gap:10px; background:var(--accent-softer);
+    border:1px solid #dcebe0; border-radius:12px; padding:12px 14px; margin-top:4px; }
+  .preview .ico { color:var(--accent); font-size:18px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <!-- zatemnjeno ozadje (obrazec 07) -->
+  <div class="appbar dim">
+    <span class="back">✕</span>
+    <div class="sub" style="font-weight:700;color:var(--text);">Novo opravilo</div>
+    <div style="width:30px;"></div>
+  </div>
+  <div class="content dim">
+    <div class="field"><label>Opomnik — obvestila na telefon</label>
+      <div class="card" style="padding:2px 14px;margin-bottom:0;">
+        <div class="notif-row"><span class="ico">🔔</span><div class="nr-main">Na dan dogodka <span class="nr-sub">ob 07:00</span></div><span style="color:var(--muted);">✕</span></div>
+        <div class="add-line">＋ Dodaj obvestilo</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- spodnja plošča -->
+  <a href="07-reminder-edit.html" style="text-decoration:none;"><div class="sheet-overlay"></div></a>
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2>Dodaj obvestilo</h2>
+    <div class="sheet-sub">Kdaj naj te opozori pred opravilom?</div>
+
+    <div class="field">
+      <label>Zamik</label>
+      <div class="chips">
+        <div class="chip">Ob dogodku</div>
+        <div class="chip">2 h prej</div>
+        <div class="chip active">1 dan prej</div>
+        <div class="chip">2 dni prej</div>
+        <div class="chip">Po meri…</div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Ura obvestila</label>
+      <div class="time-row">
+        <input class="input" value="18:00">
+        <span style="font-size:13px;color:var(--muted);">dan pred dogodkom</span>
+      </div>
+    </div>
+
+    <div class="field" style="margin-bottom:14px;">
+      <label>Predogled</label>
+      <div class="preview"><span class="ico">🔔</span><div>1 dan prej ob 18:00 — „Foliarno škropljenje"</div></div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);margin:0 2px 14px;">
+      Na isto opravilo lahko dodaš več obvestil (npr. 1 dan prej + na dan ob 7:00).
+    </div>
+
+    <a href="07-reminder-edit.html" style="text-decoration:none;"><button class="btn">Dodaj obvestilo</button></a>
+  </div>
+</div>
+</body>
+</html>

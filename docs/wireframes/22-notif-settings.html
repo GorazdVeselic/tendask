@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nastavitve obvestil</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .toggle { width:44px;height:26px;border-radius:999px;background:var(--accent);position:relative;flex:0 0 44px; }
+  .toggle::after{ content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff; }
+  .toggle.off{ background:#cfd6d0; }
+  .toggle.off::after{ right:auto;left:3px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="12-settings.html" style="text-decoration:none;"><span class="back">‹ Nastavitve</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Obvestila</div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div class="content">
+    <!-- vrste -->
+    <div class="section-title">Vrste obvestil</div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="list-item">
+        <div class="avatar">⏰</div>
+        <div class="li-main"><div class="li-title">Opomniki opravil</div><div class="li-sub">lokalno · delujejo brez interneta</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="list-item">
+        <div class="avatar">🌤️</div>
+        <div class="li-main"><div class="li-title">Pametni namigi (vreme)</div><div class="li-sub">"jutri suho — primeren čas"</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="list-item">
+        <div class="avatar">🌍</div>
+        <div class="li-main"><div class="li-title">Namigi okolice <span style="font-size:11px;color:var(--accent);">V2</span></div><div class="li-sub">kaj počnejo drugi v bližini</div></div>
+        <div class="toggle off"></div>
+      </div>
+    </div>
+
+    <!-- privzeti zamik -->
+    <div class="section-title">Privzeti zamik opomnika</div>
+    <div class="segmented">
+      <div class="seg">Ob dogodku</div>
+      <div class="seg">2 h prej</div>
+      <div class="seg active">1 dan prej</div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:8px 2px 0;">Predizpolni nova opravila; vedno lahko spremeniš.</div>
+
+    <!-- vodenje proti motečnosti -->
+    <div class="section-title">Da te ne zasipa</div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="list-item">
+        <div class="li-main"><div class="li-title">Tihe ure</div><div class="li-sub">22:00 – 7:00 brez obvestil</div></div>
+        <div class="toggle"></div>
+      </div>
+      <div class="list-item">
+        <div class="li-main"><div class="li-title">Največ 1 namig na dan</div><div class="li-sub">vreme + okolica združimo v en povzetek</div></div>
+        <div class="toggle"></div>
+      </div>
+    </div>
+
+    <!-- predogled + dovoljenje -->
+    <div class="section-title">Več</div>
+    <div class="card" style="padding:4px 16px;">
+      <a href="20-notif-preview.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item"><div class="li-main"><div class="li-title">👁 Predogled obvestil</div><div class="li-sub">kako izgledajo na zaklenjenem zaslonu</div></div><div class="li-trail">›</div></div></a>
+      <div class="list-item"><div class="li-main"><div class="li-title">Sistemsko dovoljenje</div><div class="li-sub">naprava: dovoljeno</div></div><div class="li-trail" style="color:var(--accent);">✓</div></div>
+    </div>
+
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;">
+      Opomniki opravil so lokalni; pametni namigi in okolica pridejo prek strežnika (FCM).
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+<svg width="1024" height="1024" viewBox="0 0 1024 1024" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Tendask adaptive foreground">
+  <!-- Android adaptivna ikona — PREDNJI sloj (prosojno ozadje).
+       Ozadje = poln barvni sloj #2e7d32 (glej flutter_launcher_icons konfig).
+       Mark je manjši zaradi varne cone (66% safe zone): skala 4, centriran. -->
+  <g transform="translate(272,272) scale(4)">
+    <path d="M60 8 L106 34 L106 86 L60 112 L14 86 L14 34 Z" fill="#ffffff" stroke-linejoin="round"/>
+    <path d="M60 30 C39 40 35 68 49 88 C57 75 76 69 84 46 C72 50 59 56 53 69 C53 53 55 40 60 30 Z" fill="#2e7d32"/>
+    <path d="M60 34 C56 50 54 66 50 83" stroke="#205A28" stroke-width="3" stroke-linecap="round" fill="none"/>
+  </g>
+</svg>

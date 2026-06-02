@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Onboarding 1/4</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .ob { flex:1; display:flex; flex-direction:column; padding:0 26px 30px; }
+  .ob .skip { text-align:right; padding:8px 0; color:var(--muted); font-weight:600; font-size:14px; }
+  .ob .stage { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; }
+  .ob .art { width:150px;height:150px;border-radius:36px;background:var(--accent-soft);display:grid;place-items:center;font-size:74px;margin-bottom:26px; }
+  .ob h1 { font-size:25px; letter-spacing:-.3px; }
+  .ob p { font-size:15px; color:var(--muted); margin-top:12px; line-height:1.6; max-width:300px; }
+  .dots { display:flex; gap:8px; justify-content:center; margin:22px 0; }
+  .dots span { width:8px; height:8px; border-radius:50%; background:var(--line-strong); }
+  .dots span.on { background:var(--accent); width:22px; border-radius:4px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="ob">
+    <a href="13-login.html" style="text-decoration:none;"><div class="skip">Preskoči ›</div></a>
+
+    <div class="stage">
+      <div class="art">
+        <svg width="104" height="104" viewBox="0 0 124 124" xmlns="http://www.w3.org/2000/svg">
+          <path d="M62 6 L112 34 L112 90 L62 118 L12 90 L12 34 Z" fill="#2e7d32"/>
+          <path d="M62 30 C40 40 36 70 50 90 C58 76 78 70 86 46 C74 50 60 56 54 70 C54 54 56 40 62 30 Z" fill="#ffffff"/>
+          <path d="M62 34 C58 50 56 66 52 84" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <h1>Dobrodošel v Tendask</h1>
+      <p>Tvoj preprost dnevnik vrta, trate in žive meje — vse opravilo na enem mestu.</p>
+    </div>
+
+    <div class="dots"><span class="on"></span><span></span><span></span><span></span></div>
+    <a href="15b-onboarding.html" style="text-decoration:none;"><button class="btn">Naprej</button></a>
+  </div>
+</div>
+</body>
+</html>

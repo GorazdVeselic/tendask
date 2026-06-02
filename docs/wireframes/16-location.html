@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lokacija</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .loc { flex:1; display:flex; flex-direction:column; padding:10px 26px 30px; }
+  .loc .art { width:96px;height:96px;border-radius:28px;background:var(--accent-soft);display:grid;place-items:center;font-size:48px;margin:18px auto 18px; }
+  .loc h1 { font-size:23px; text-align:center; letter-spacing:-.3px; }
+  .loc .why { font-size:14px; color:var(--muted); text-align:center; margin-top:12px; line-height:1.6; }
+  .or { text-align:center; color:var(--muted); font-size:13px; margin:16px 0 10px; position:relative; }
+  .priv { display:flex; gap:10px; background:var(--info-soft); border:1px solid #cfe0f0; border-radius:14px; padding:12px 14px; margin-top:18px; }
+  .priv .i{ font-size:18px; } .priv .t{ font-size:13px; color:#1f4e79; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="loc">
+    <div class="art">
+      <svg width="60" height="60" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
+        <path d="M32 4 C20 4 11 13 11 25 C11 41 32 60 32 60 C32 60 53 41 53 25 C53 13 44 4 32 4 Z" fill="#2e7d32"/>
+        <circle cx="32" cy="25" r="8" fill="#ffffff"/>
+      </svg>
+    </div>
+    <h1>Kje vrtnariš?</h1>
+    <div class="why">
+      Lokacijo potrebujemo za <b>lokalno vremensko napoved</b> in (kasneje) da ti
+      pokažemo, kaj počnejo vrtnarji v <b>podobni klimi</b>.
+    </div>
+
+    <button class="btn" style="margin-top:24px;">📡 Uporabi mojo lokacijo</button>
+
+    <div class="or">— ali vpiši kraj —</div>
+    <input class="input" placeholder="Vas, mesto ali naslov (npr. Šentjur)">
+    <div style="font-size:12px;color:var(--muted);margin-top:8px;text-align:center;">
+      Dovolj je vas ali mesto — natančen naslov ni potreben.
+    </div>
+
+    <div class="priv">
+      <span class="i">🔒</span>
+      <div class="t">Tvojo lokacijo uporabimo <b>le za približno določitev tvoje okolice</b>
+        (širše območje nekaj km). <b>Natančna lokacija je shranjena le na tvoji napravi</b> —
+        pri nas hranimo <b>samo okvirno okolico</b> in ni nikoli razkrita drugim.</div>
+    </div>
+
+    <div style="flex:1;"></div>
+    <a href="01-home.html" style="text-decoration:none;"><button class="btn">Nadaljuj</button></a>
+  </div>
+</div>
+</body>
+</html>

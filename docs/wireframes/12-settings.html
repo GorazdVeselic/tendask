@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Nastavitve</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .toggle { width:44px;height:26px;border-radius:999px;background:var(--accent);position:relative;flex:0 0 44px; }
+  .toggle::after{ content:"";position:absolute;top:3px;right:3px;width:20px;height:20px;border-radius:50%;background:#fff; }
+  .toggle.off{ background:#cfd6d0; }
+  .toggle.off::after{ right:auto;left:3px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="01-home.html" style="text-decoration:none;"><span class="back">‹ Domov</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Nastavitve</div>
+    <div style="width:40px;"></div>
+  </div>
+
+  <div class="content">
+    <!-- Profil -->
+    <div class="card" style="display:flex;align-items:center;gap:14px;">
+      <div class="avatar" style="width:50px;height:50px;font-size:22px;flex:0 0 50px;">👤</div>
+      <div style="flex:1;">
+        <div style="font-size:16px;font-weight:700;">Gorazd</div>
+        <div style="font-size:13px;color:var(--muted);">prijavljen prek Google</div>
+      </div>
+      <span style="color:var(--muted);">›</span>
+    </div>
+
+    <!-- Lokacija (ENA, za vreme + H3) -->
+    <div class="section-title">Lokacija</div>
+    <div class="card">
+      <div class="list-item" style="border:none;padding:6px 0;">
+        <div class="avatar">📍</div>
+        <div class="li-main">
+          <div class="li-title">Šentjur (okolica)</div>
+          <div class="li-sub">za vreme in okolico</div>
+        </div>
+        <a href="16-location.html" style="text-decoration:none;"><div class="li-trail" style="color:var(--accent);">Spremeni</div></a>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;border-top:1px solid var(--line);padding-top:10px;">
+        🔒 Uporablja se <b>le za približno določitev tvoje okolice</b> (širše območje
+        nekaj km) — za vreme in (kasneje) primerjavo s podobno klimo.
+        <b>Tvoja točna lokacija ni nikoli razkrita.</b>
+      </div>
+    </div>
+
+    <!-- Jezik -->
+    <div class="section-title">Jezik</div>
+    <div class="segmented">
+      <div class="seg active">Slovenščina</div>
+      <div class="seg">English</div>
+      <div class="seg">Deutsch</div>
+    </div>
+
+    <!-- Obvestila -->
+    <div class="section-title">Obvestila</div>
+    <div class="card" style="padding:4px 16px;">
+      <a href="22-notif-settings.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item"><div class="avatar">🔔</div><div class="li-main"><div class="li-title">Obvestila</div><div class="li-sub">opomniki · vreme · okolica · tihe ure</div></div><div class="li-trail">›</div></div></a>
+    </div>
+
+    <!-- Vrt -->
+    <div class="section-title">Vrt</div>
+    <div class="card" style="padding:4px 16px;">
+      <a href="08-supplies.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item"><div class="li-main"><div class="li-title">📦 Zaloge & sredstva</div><div class="li-sub">urea, alge, gnojila, oprema</div></div><div class="li-trail">›</div></div></a>
+      <a href="04-areas.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item"><div class="li-main"><div class="li-title">🪴 Območja</div><div class="li-sub">trate, meje, gredice</div></div><div class="li-trail">›</div></div></a>
+    </div>
+
+    <!-- Račun / podatki -->
+    <div class="section-title">Račun & podatki</div>
+    <div class="card" style="padding:4px 16px;">
+      <div class="list-item"><div class="li-main"><div class="li-title">Enote</div></div><div class="li-trail">metrične · °C</div></div>
+      <div class="list-item"><div class="li-main"><div class="li-title">Izvozi podatke</div><div class="li-sub">GDPR</div></div><div class="li-trail">›</div></div>
+      <div class="list-item"><div class="li-main"><div class="li-title">Odjava</div></div><div class="li-trail">›</div></div>
+      <div class="list-item"><div class="li-main"><div class="li-title" style="color:#c0392b;">Izbriši račun in vse podatke</div><div class="li-sub">nepovratno · GDPR</div></div><div class="li-trail">›</div></div>
+    </div>
+
+    <div style="text-align:center;color:var(--muted);font-size:12px;margin-top:16px;">Tendask · v1 (MVP)</div>
+  </div>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="04-areas.html"><div class="nav-item"><span class="ico">🪴</span>Območja</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+  </nav>
+</div>
+</body>
+</html>

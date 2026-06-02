@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dnevnik</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Dnevnik</h1><div class="sub">vrtni dnevnik · junij 2026</div></div>
+    <div class="icon-btn">🔍</div>
+  </div>
+
+  <div class="content">
+    <!-- preklop pogleda -->
+    <div class="segmented" style="margin-bottom:6px;">
+      <div class="seg active">Časovnica</div>
+      <a href="11-month.html" style="flex:1;text-decoration:none;"><div class="seg">Mesec</div></a>
+    </div>
+
+    <!-- mini koledar trak -->
+    <div class="chips" style="margin:14px 0 4px;flex-wrap:nowrap;overflow-x:auto;">
+      <div class="chip">29<br><small>pet</small></div>
+      <div class="chip">30<br><small>sob</small></div>
+      <div class="chip">31<br><small>ned</small></div>
+      <div class="chip active">1<br><small>tor</small></div>
+      <div class="chip">2<br><small>sre</small></div>
+      <div class="chip">3<br><small>čet</small></div>
+    </div>
+
+    <!-- filter toka: opravila + opombe -->
+    <div class="chips" style="margin:12px 0 2px;">
+      <div class="chip active">Vse</div>
+      <div class="chip">✓ Opravila</div>
+      <div class="chip">✍️ Opombe</div>
+    </div>
+
+    <div class="day-group">
+      <div class="day-head">Danes · torek 1. jun</div>
+      <div class="card" style="padding:6px 16px;">
+        <div class="list-item">
+          <div class="avatar">🌱</div>
+          <div class="li-main"><div class="li-title">Košnja</div><div class="li-sub">🪴 Trata zadaj · 🌧️ 16°</div></div>
+          <div class="li-trail">8:30</div>
+        </div>
+        <a href="18-note-edit.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item">
+          <div class="avatar" style="background:var(--warn-soft);">✍️</div>
+          <div class="li-main"><div class="li-title">Paradižnik kaže rjave pege…</div><div class="li-sub">📝 Opomba · 🪴 Visoka greda 1 · paradižnik</div></div>
+          <div class="li-trail">10:05</div>
+        </div></a>
+      </div>
+    </div>
+
+    <div class="day-group">
+      <div class="day-head">včeraj · ponedeljek 31. maj</div>
+      <div class="card" style="padding:6px 16px;">
+        <div class="list-item">
+          <div class="avatar">💧</div>
+          <div class="li-main"><div class="li-title">Zalivanje</div><div class="li-sub">🪴 Trata zadaj · ☀️ 22°</div></div>
+          <div class="li-trail">19:00</div>
+        </div>
+        <a href="17b-task-detail-done.html" style="text-decoration:none;color:inherit;">
+        <div class="list-item">
+          <div class="avatar">🧪</div>
+          <div class="li-main"><div class="li-title">Gnojenje</div><div class="li-sub">🪴 Visoka greda 1 · 100g uree/16l</div></div>
+          <div class="li-trail">9:15</div>
+        </div></a>
+      </div>
+    </div>
+
+    <div class="day-group">
+      <div class="day-head">petek 29. maj</div>
+      <div class="card" style="padding:6px 16px;">
+        <div class="list-item">
+          <div class="avatar">✂️</div>
+          <div class="li-main"><div class="li-title">Obrez</div><div class="li-sub">🪴 Živa meja · lovorikovec</div></div>
+          <div class="li-trail">17:40</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <a href="02-quick-log.html"><div class="fab">+</div></a>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="03-calendar.html"><div class="nav-item active"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="04-areas.html"><div class="nav-item"><span class="ico">🪴</span>Območja</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+  </nav>
+</div>
+</body>
+</html>

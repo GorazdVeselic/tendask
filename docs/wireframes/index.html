@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wireframes — vrtnarska evidenčna aplikacija (MVP)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .hero { max-width: 880px; margin: 0 auto 10px; }
+  .hero h1 { font-size: 30px; letter-spacing: -0.5px; }
+  .hero p { color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .roles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; max-width: 880px; margin: 24px auto 8px; }
+  .role { background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 18px; }
+  .role h3 { font-size: 15px; margin-bottom: 8px; }
+  .role ul { margin: 0 0 0 16px; font-size: 13px; color: var(--muted); line-height: 1.7; }
+  @media (max-width: 760px){ .roles{ grid-template-columns:1fr; } }
+  .group-title { max-width:1400px; margin:46px auto 6px; font-size:20px; font-weight:800; color:var(--text); letter-spacing:-.3px; border-bottom:2px solid var(--accent-soft); padding-bottom:8px; }
+  .group-title span { font-size:13px; font-weight:500; color:var(--muted); margin-left:8px; }
+</style>
+</head>
+<body>
+<div class="gallery-page">
+  <div class="hero">
+    <h1>🌿 Vrtnarska evidenčna aplikacija — wireframes (MVP)</h1>
+    <p>Preprost, pregleden UI/UX za solo različico (v1). Mobile-first, ena zelena
+    poudarna barva, spodnja navigacija + plavajoči <b>＋</b> za hiter vnos.
+    Klikni gumbe znotraj telefonov — povezave med zasloni delujejo.</p>
+  </div>
+
+  <div class="roles">
+    <div class="role">
+      <h3>🎨 App designer</h3>
+      <ul>
+        <li>Mobile-first, en akcent (zelena)</li>
+        <li>Veliki tarčni gumbi, kartice</li>
+        <li>Spodnja navigacija (4) + FAB</li>
+        <li>Ikone opravil za hitro prepoznavo</li>
+      </ul>
+    </div>
+    <div class="role">
+      <h3>🛠️ App razvijalec</h3>
+      <ul>
+        <li>4 zavihki + FAB = jasna IA</li>
+        <li>Ponovljive komponente (chip, card, list)</li>
+        <li>Push obvestila + lokalno shranjevanje</li>
+        <li>Vreme se shrani ob vnosu (snapshot)</li>
+      </ul>
+    </div>
+    <div class="role">
+      <h3>🧪 UI/UX tester</h3>
+      <ul>
+        <li>Hiter vnos = 2–3 dotiki</li>
+        <li>Privzetki: Danes + zadnje območje</li>
+        <li>Opomnik z obvestili kot Google Koledar</li>
+        <li>Zgodovinski namig na pravem mestu</li>
+      </ul>
+    </div>
+  </div>
+
+  <h2 class="group-title">🚀 Start <span>tok: Splash → Onboarding (1–4) → Prijava → Lokacija → Domov</span></h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="00-splash.html"></iframe><div class="cap">00 · Splash<small>tap → onboarding</small></div></div>
+    <div class="frame-wrap"><iframe src="15-onboarding.html"></iframe><div class="cap">15 · Onboarding 1/4<small>Dobrodošel</small></div></div>
+    <div class="frame-wrap"><iframe src="15b-onboarding.html"></iframe><div class="cap">15 · Onboarding 2/4<small>Beleži v sekundi</small></div></div>
+    <div class="frame-wrap"><iframe src="15c-onboarding.html"></iframe><div class="cap">15 · Onboarding 3/4<small>Opomniki + vreme</small></div></div>
+    <div class="frame-wrap"><iframe src="15d-onboarding.html"></iframe><div class="cap">15 · Onboarding 4/4<small>Okolica (V2)</small></div></div>
+    <div class="frame-wrap"><iframe src="13-login.html"></iframe><div class="cap">13 · Prijava<small>Apple/Google/e-pošta → lokacija</small></div></div>
+    <div class="frame-wrap"><iframe src="16-location.html"></iframe><div class="cap">16 · Lokacija<small>GPS ali kraj → domov</small></div></div>
+  </div>
+
+  <h2 class="group-title">🏠 Domov</h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="01-home.html"></iframe><div class="cap">01 · Domov<small>vreme + pametni opomnik + danes</small></div></div>
+  </div>
+
+  <h2 class="group-title">📋 Opravila <span>tok: seznam → tap = Detajl → Uredi (07) · FAB ＋ → Hiter vnos → (Napredno ›) → Novo opravilo · koledar: tap na dan</span></h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="02-quick-log.html"></iframe><div class="cap">02 · Hiter vnos ⭐<small>kaj + kdaj + kje</small></div></div>
+    <div class="frame-wrap"><iframe src="07-reminder-edit.html"></iframe><div class="cap">07 · Novo opravilo<small>status + rastlina + opomnik</small></div></div>
+    <div class="frame-wrap"><iframe src="17-task-detail.html"></iframe><div class="cap">17 · Detajl opravila (čaka)<small>napoved + akcije</small></div></div>
+    <div class="frame-wrap"><iframe src="17b-task-detail-done.html"></iframe><div class="cap">17b · Detajl opravila (opravljeno)<small>zamrznjen posnetek</small></div></div>
+    <div class="frame-wrap"><iframe src="03-calendar.html"></iframe><div class="cap">03 · Dnevnik / časovnica<small>kaj sem naredil</small></div></div>
+    <div class="frame-wrap"><iframe src="11-month.html"></iframe><div class="cap">11 · Mesečni / setveni<small>tap na dan = dodaj</small></div></div>
+    <div class="frame-wrap"><iframe src="06-reminders.html"></iframe><div class="cap">06 · Opravila<small>prihajajoča + zapadla</small></div></div>
+    <div class="frame-wrap"><iframe src="14-actions.html"></iframe><div class="cap">14 · Akcije / urejanje<small>povleci + plošča</small></div></div>
+  </div>
+
+  <h2 class="group-title">✍️ Opombe / vrtni dnevnik <span>samostojna opomba + opombe na opravilih → en tok v Dnevniku (03)</span></h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="18-note-edit.html"></iframe><div class="cap">18 · Opomba<small>prosto besedilo · iz 02 ali Dnevnika</small></div></div>
+  </div>
+
+  <h2 class="group-title">🪴 Območja & rastline</h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="04-areas.html"></iframe><div class="cap">04 · Območja<small>trate, meje, gredice</small></div></div>
+    <div class="frame-wrap"><iframe src="05-area-detail.html"></iframe><div class="cap">05 · Območje (detajl)<small>zgodovina + rastline</small></div></div>
+    <div class="frame-wrap"><iframe src="09-area-edit.html"></iframe><div class="cap">09 · Dodaj območje<small>2-nivojsko</small></div></div>
+    <div class="frame-wrap"><iframe src="10-plant-picker.html"></iframe><div class="cap">10 · Izbirnik rastlin<small>baza + "po meri"</small></div></div>
+  </div>
+
+  <h2 class="group-title">📦 Zaloge · 👤 Profil</h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="08-supplies.html"></iframe><div class="cap">08 · Zaloge<small>sredstva + oprema</small></div></div>
+    <div class="frame-wrap"><iframe src="12-settings.html"></iframe><div class="cap">12 · Nastavitve / profil<small>lokacija + jezik</small></div></div>
+  </div>
+
+  <h2 class="group-title">🔔 Obvestila <span>opomniki=lokalni · vreme + okolica=FCM · vodenje proti motečnosti</span></h2>
+  <div class="gallery-grid">
+    <div class="frame-wrap"><iframe src="19-notif-add.html"></iframe><div class="cap">19 · Dodaj obvestilo<small>zamik + ura (iz 07)</small></div></div>
+    <div class="frame-wrap"><iframe src="20-notif-preview.html"></iframe><div class="cap">20 · Videz obvestil<small>3 vrste na zaklenjenem zaslonu</small></div></div>
+    <div class="frame-wrap"><iframe src="21-notif-permission.html"></iframe><div class="cap">21 · Prošnja za dovoljenje<small>priming (po vrednosti)</small></div></div>
+    <div class="frame-wrap"><iframe src="22-notif-settings.html"></iframe><div class="cap">22 · Nastavitve obvestil<small>vrste · tihe ure · frekvenca</small></div></div>
+  </div>
+
+  <div class="hero" style="margin-top:50px;">
+    <p style="font-size:13px;">Odpri posamezen zaslon v novem zavihku:
+      <a href="01-home.html">Domov</a> ·
+      <a href="02-quick-log.html">Hiter vnos</a> ·
+      <a href="03-calendar.html">Dnevnik</a> ·
+      <a href="04-areas.html">Območja</a> ·
+      <a href="05-area-detail.html">Območje detajl</a> ·
+      <a href="06-reminders.html">Opravila</a> ·
+      <a href="07-reminder-edit.html">Novo opravilo</a> ·
+      <a href="17-task-detail.html">Detajl opravila</a> ·
+      <a href="17b-task-detail-done.html">Detajl (opravljeno)</a> ·
+      <a href="18-note-edit.html">Opomba</a> ·
+      <a href="08-supplies.html">Zaloge</a> ·
+      <a href="09-area-edit.html">Dodaj območje</a> ·
+      <a href="10-plant-picker.html">Izbirnik rastlin</a> ·
+      <a href="11-month.html">Mesečni pregled</a> ·
+      <a href="12-settings.html">Nastavitve</a> ·
+      <a href="13-login.html">Prijava</a> ·
+      <a href="14-actions.html">Akcije</a> ·
+      <a href="15-onboarding.html">Onboarding</a> ·
+      <a href="16-location.html">Lokacija</a> ·
+      <a href="19-notif-add.html">Dodaj obvestilo</a> ·
+      <a href="20-notif-preview.html">Videz obvestil</a> ·
+      <a href="21-notif-permission.html">Dovoljenje</a> ·
+      <a href="22-notif-settings.html">Nastavitve obvestil</a>
+    </p>
+  </div>
+</div>
+</body>
+</html>

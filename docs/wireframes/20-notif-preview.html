@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Videz obvestil</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .lock { position:absolute; inset:0;
+    background:linear-gradient(160deg,#23402e 0%,#2e7d32 55%,#1d5526 100%);
+    display:flex; flex-direction:column; padding:60px 16px 20px; }
+  .lock .clock { text-align:center; color:#fff; margin-bottom:24px; }
+  .lock .clock .t { font-size:64px; font-weight:300; letter-spacing:-1px; line-height:1; }
+  .lock .clock .d { font-size:15px; opacity:.9; margin-top:6px; }
+  .notif {
+    background:rgba(255,255,255,.92); backdrop-filter:blur(8px);
+    border-radius:18px; padding:12px 14px; margin-bottom:10px; display:flex; gap:11px; align-items:flex-start;
+  }
+  .notif .app { width:34px;height:34px;border-radius:9px;flex:0 0 34px;
+    background:var(--accent); display:grid; place-items:center; font-size:18px; }
+  .notif .b { flex:1; min-width:0; }
+  .notif .h { display:flex; justify-content:space-between; font-size:11px; color:var(--muted); font-weight:600; text-transform:uppercase; letter-spacing:.4px; }
+  .notif .ti { font-size:14.5px; font-weight:700; margin-top:2px; }
+  .notif .tx { font-size:13px; color:var(--text); margin-top:2px; line-height:1.4; }
+  .tag { display:inline-block; font-size:10px; font-weight:700; padding:2px 7px; border-radius:999px; margin-top:7px; }
+  .tag.rem { background:var(--accent-soft); color:var(--accent); }
+  .tag.wx { background:var(--info-soft); color:var(--info); }
+  .tag.com { background:var(--warn-soft); color:var(--warn); }
+  .foot { margin-top:auto; text-align:center; color:rgba(255,255,255,.85); font-size:12px; line-height:1.5; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="lock">
+    <div class="clock">
+      <div class="t">9:41</div>
+      <div class="d">torek, 1. junij</div>
+    </div>
+
+    <!-- 1) Opomnik opravila (lokalno) -->
+    <div class="notif">
+      <div class="app">🌿</div>
+      <div class="b">
+        <div class="h"><span>Tendask</span><span>zdaj</span></div>
+        <div class="ti">⏰ Foliarno škropljenje · 07:00</div>
+        <div class="tx">Živa meja + trata · jutro je suho — primeren čas.</div>
+        <span class="tag rem">opomnik opravila</span>
+      </div>
+    </div>
+
+    <!-- 2) Pametni vremenski namig (FCM) -->
+    <div class="notif">
+      <div class="app">🌤️</div>
+      <div class="b">
+        <div class="h"><span>Tendask</span><span>8:02</span></div>
+        <div class="ti">Jutri zjutraj bo suho ☀️</div>
+        <div class="tx">Primeren čas za foliarno škropljenje lovorikovcev.</div>
+        <span class="tag wx">pametni namig · vreme</span>
+      </div>
+    </div>
+
+    <!-- 3) Namig okolice / skupnosti (V2, FCM) -->
+    <div class="notif">
+      <div class="app">🌍</div>
+      <div class="b">
+        <div class="h"><span>Tendask</span><span>včeraj</span></div>
+        <div class="ti">Tvoja okolica</div>
+        <div class="tx">68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.</div>
+        <span class="tag com">namig okolice · V2</span>
+      </div>
+    </div>
+
+    <div class="foot">Tap na obvestilo → odpre ustrezni zaslon<br>(opravilo · namig · okolica). Globoke povezave.</div>
+  </div>
+</div>
+</body>
+</html>
