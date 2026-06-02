@@ -44,7 +44,7 @@
 | # | Mejnik | Cilj | Stanje |
 |---|--------|------|:------:|
 | **M0** | Temelj projekta | Skeleton: mape, tema, router, i18n, CI | `[x]` |
-| **M1** | Lokalna baza + seed | drift sheme + katalog/uporabnik tabele + seed | `[ ]` |
+| **M1** | Lokalna baza + seed | drift sheme + katalog/uporabnik tabele + seed | `[x]` |
 | **M2** | Jedro opravil (offline) | Vnos/pregled/urejanje opravil nad drift | `[ ]` |
 | **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[ ]` |
 | **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[ ]` |
@@ -110,7 +110,7 @@ Reference: `koncept.md` §7.14 (tabele), `opravila-in-rastline.md` (seed vsebina
 - [x] **1.5 — Seed servis.** Ob prvem zagonu (prazna baza) napolni katalog iz seed-a; idempotentno.
   *DoD:* po zagonu so katalog tabele napolnjene; ponoven zagon ne podvaja.
   *Commit:* `feat: seed servis (napolni katalog ob prvem zagonu)`
-- [ ] **1.6 — Testi M1.** Unit: seed naloži pričakovano št. vrstic; osnovne CRUD poizvedbe nad
+- [x] **1.6 — Testi M1.** Unit: seed naloži pričakovano št. vrstic; osnovne CRUD poizvedbe nad
   `task`/`area`. *DoD:* testi zeleni.
   *Commit:* `test: seed + osnovne drift poizvedbe`
 
@@ -253,6 +253,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-02 — **1.6** — testi M1: 9 unit testov (seed šteje vrstice + idempotentnost + polja; Area CRUD ×3; Task CRUD ×3); AppDatabase.forTesting(super.executor); vsi testi zeleni (10/10).
 - 2026-06-02 — **1.5** — SeedService: idempotenten, transakcija (task_type+plant → category_matrix), UncontrolledProviderScope v main; await LocaleSettings. flutter analyze čist, test zelen.
 - 2026-06-02 — **1.4** — seed podatki: 26 tipov opravil (A.1–A.4) + 34 rastlin (C.1–C.6) + 58 vnosov category_matrix; Dart const; flutter analyze čist.
 - 2026-06-02 — **1.3** — user tabele: profile, area, user_plant, task, task_reminder, note, supply, recipe, task_supply; sync-ready (uuid/updated_at/deleted/sync_status); area.protected; Notes.content→'text'; code-gen čist.
