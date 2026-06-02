@@ -102,6 +102,17 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
     );
   }
 
+  /// Opens the full form (07), carrying over whatever has been entered so far.
+  /// Plant / supply / reminder all live there (07 covers M3.2/M3.3/M8).
+  void _openAdvanced() {
+    final params = <String, String>{'date': _selectedDate.toIso8601String()};
+    if (_taskTypeId != null) params['type'] = _taskTypeId!;
+    if (_areaId != null) params['area'] = _areaId!;
+    final note = _noteController.text.trim();
+    if (note.isNotEmpty) params['note'] = note;
+    context.pushNamed('task-new', queryParameters: params);
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
@@ -119,7 +130,7 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
         centerTitle: true,
         actions: [
           TextButton(
-            onPressed: () => context.pushNamed('task-new'),
+            onPressed: _openAdvanced,
             child: Text(
               t.quick_log.advanced,
               style: TextStyle(color: theme.colorScheme.primary),
@@ -177,7 +188,7 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
                 ),
                 const SizedBox(height: 16),
                 _SectionLabel(t.quick_log.more),
-                _MoreSection(t: t),
+                _MoreSection(t: t, onTap: _openAdvanced),
                 const SizedBox(height: 16),
                 _SectionLabel(t.quick_log.note_label),
                 TextField(
@@ -396,8 +407,11 @@ class _EmptyAreas extends StatelessWidget {
 }
 
 class _MoreSection extends StatelessWidget {
-  const _MoreSection({required this.t});
+  const _MoreSection({required this.t, required this.onTap});
   final Translations t;
+
+  /// All rows open the full form (07), which hosts plant/supply/reminder.
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -405,11 +419,11 @@ class _MoreSection extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          _AddRow(label: t.quick_log.add_plant, onTap: () {}),   // M3.2
+          _AddRow(label: t.quick_log.add_plant, onTap: onTap),
           Divider(height: 1, indent: 16, color: theme.colorScheme.outlineVariant),
-          _AddRow(label: t.quick_log.add_supply, onTap: () {}),  // M3.3
+          _AddRow(label: t.quick_log.add_supply, onTap: onTap),
           Divider(height: 1, indent: 16, color: theme.colorScheme.outlineVariant),
-          _AddRow(label: t.quick_log.add_reminder, onTap: () {}), // M8
+          _AddRow(label: t.quick_log.add_reminder, onTap: onTap),
         ],
       ),
     );

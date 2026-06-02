@@ -21,13 +21,23 @@ import '../application/tasks_providers.dart';
 import 'widgets/task_type_tile.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
-  const TaskFormScreen({super.key, this.taskId, this.initialDate});
+  const TaskFormScreen({
+    super.key,
+    this.taskId,
+    this.initialDate,
+    this.initialTaskTypeId,
+    this.initialAreaId,
+    this.initialNote,
+  });
 
   /// Null = create mode; non-null = edit mode.
   final String? taskId;
 
-  /// Preselected date for create mode (e.g. tapped day in the month calendar).
+  /// Preselected values for create mode (e.g. carried over from Quick Log).
   final DateTime? initialDate;
+  final String? initialTaskTypeId;
+  final String? initialAreaId;
+  final String? initialNote;
 
   @override
   ConsumerState<TaskFormScreen> createState() => _TaskFormScreenState();
@@ -53,6 +63,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     if (_isEdit) {
       _isLoading = true;
       Future.microtask(_loadTask);
+    } else {
+      // Carry-over values from Quick Log (create mode only).
+      _taskTypeId = widget.initialTaskTypeId;
+      _areaId = widget.initialAreaId;
+      if (widget.initialNote != null) {
+        _noteController.text = widget.initialNote!;
+      }
     }
   }
 
@@ -142,11 +159,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       final note = _noteController.text.trim();
       final repo = ref.read(tasksRepositoryProvider);
 
-      // Only persist a plant when the task type actually needs a subject.
-      final catalog = ref.read(taskTypesMapProvider).asData?.value;
-      final requiresSubject =
-          catalog?[_taskTypeId]?.requiresSubject ?? false;
-      final userPlantId = requiresSubject ? _userPlantId : null;
+      // Plant is an optional link; persist whatever was selected (only ever
+      // non-null when an area is chosen, since the picker is area-scoped).
+      final userPlantId = _userPlantId;
 
       final String taskId;
       if (_isEdit) {
@@ -330,7 +345,6 @@ class _FormBody extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedType = taskTypeId != null ? catalog[taskTypeId] : null;
-    final requiresSubject = selectedType?.requiresSubject ?? false;
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
@@ -410,8 +424,8 @@ class _FormBody extends StatelessWidget {
           ),
         const SizedBox(height: 16),
 
-        // Rastlina (conditional) — only once an area is chosen.
-        if (requiresSubject && areaId != null) ...[
+        // Rastlina (optional) — available once an area is chosen.
+        if (areaId != null) ...[
           _FieldLabel('${t.task_form.plant} '
               '${t.task_form.plant_hint}'),
           PlantField(

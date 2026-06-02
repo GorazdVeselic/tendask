@@ -128,9 +128,13 @@ final appRouter = GoRouter(
       path: '/task-new',
       name: 'task-new',
       builder: (context, state) {
-        final raw = state.uri.queryParameters['date'];
+        final q = state.uri.queryParameters;
+        final raw = q['date'];
         return TaskFormScreen(
           initialDate: raw != null ? DateTime.tryParse(raw) : null,
+          initialTaskTypeId: q['type'],
+          initialAreaId: q['area'],
+          initialNote: q['note'],
         );
       },
     ),
