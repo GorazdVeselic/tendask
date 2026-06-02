@@ -52,6 +52,31 @@
     "err_type": "Aufgabentyp auswählen.",
     "err_area": "Bereich auswählen."
   },
+  "tasks_list": {
+    "title": "Aufgaben",
+    "subtitle": "bevorstehende und überfällige",
+    "section_overdue": "Überfällig",
+    "section_today": "Heute",
+    "section_tomorrow": "Morgen",
+    "section_this_week": "Diese Woche",
+    "section_later": "Später",
+    "empty": "Keine offenen Aufgaben. Mit + hinzufügen.",
+    "overdue_days(n)": {
+      "one": "1 Tag überfällig",
+      "other": "{n} Tage überfällig"
+    },
+    "status_today": "heute",
+    "status_tomorrow": "morgen",
+    "action_complete": "Erledigt",
+    "action_postpone": "+1 Tag",
+    "action_edit": "Bearbeiten",
+    "action_duplicate": "Duplizieren",
+    "action_delete": "Löschen",
+    "delete_confirm_title": "Aufgabe löschen?",
+    "delete_confirm_body": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "delete_yes": "Löschen",
+    "delete_cancel": "Abbrechen"
+  },
   "task_form": {
     "title_new": "Neue Aufgabe",
     "title_edit": "Aufgabe bearbeiten",

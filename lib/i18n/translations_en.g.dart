@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
+	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 }
 
@@ -135,6 +136,38 @@ class _Translations$quick_log$en extends Translations$quick_log$sl {
 	@override String get err_area => 'Select an area.';
 }
 
+// Path: tasks_list
+class _Translations$tasks_list$en extends Translations$tasks_list$sl {
+	_Translations$tasks_list$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tasks';
+	@override String get subtitle => 'upcoming and overdue';
+	@override String get section_overdue => 'Overdue';
+	@override String get section_today => 'Today';
+	@override String get section_tomorrow => 'Tomorrow';
+	@override String get section_this_week => 'This week';
+	@override String get section_later => 'Later';
+	@override String get empty => 'No pending tasks. Add one with +.';
+	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'overdue 1 day',
+		other: 'overdue {n} days',
+	);
+	@override String get status_today => 'today';
+	@override String get status_tomorrow => 'tomorrow';
+	@override String get action_complete => 'Complete';
+	@override String get action_postpone => '+1 day';
+	@override String get action_edit => 'Edit';
+	@override String get action_duplicate => 'Duplicate';
+	@override String get action_delete => 'Delete';
+	@override String get delete_confirm_title => 'Delete task?';
+	@override String get delete_confirm_body => 'This action cannot be undone.';
+	@override String get delete_yes => 'Delete';
+	@override String get delete_cancel => 'Cancel';
+}
+
 // Path: task_form
 class _Translations$task_form$en extends Translations$task_form$sl {
 	_Translations$task_form$en._(TranslationsEn root) : this._root = root, super.internal(root);
@@ -222,6 +255,26 @@ extension on TranslationsEn {
 			'quick_log.save' => 'Save task',
 			'quick_log.err_type' => 'Select a task type.',
 			'quick_log.err_area' => 'Select an area.',
+			'tasks_list.title' => 'Tasks',
+			'tasks_list.subtitle' => 'upcoming and overdue',
+			'tasks_list.section_overdue' => 'Overdue',
+			'tasks_list.section_today' => 'Today',
+			'tasks_list.section_tomorrow' => 'Tomorrow',
+			'tasks_list.section_this_week' => 'This week',
+			'tasks_list.section_later' => 'Later',
+			'tasks_list.empty' => 'No pending tasks. Add one with +.',
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'overdue 1 day', other: 'overdue {n} days', ), 
+			'tasks_list.status_today' => 'today',
+			'tasks_list.status_tomorrow' => 'tomorrow',
+			'tasks_list.action_complete' => 'Complete',
+			'tasks_list.action_postpone' => '+1 day',
+			'tasks_list.action_edit' => 'Edit',
+			'tasks_list.action_duplicate' => 'Duplicate',
+			'tasks_list.action_delete' => 'Delete',
+			'tasks_list.delete_confirm_title' => 'Delete task?',
+			'tasks_list.delete_confirm_body' => 'This action cannot be undone.',
+			'tasks_list.delete_yes' => 'Delete',
+			'tasks_list.delete_cancel' => 'Cancel',
 			'task_form.title_new' => 'New task',
 			'task_form.title_edit' => 'Edit task',
 			'task_form.what' => 'What',

@@ -44,6 +44,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
+	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 }
 
@@ -135,6 +136,38 @@ class _Translations$quick_log$de extends Translations$quick_log$sl {
 	@override String get err_area => 'Bereich auswählen.';
 }
 
+// Path: tasks_list
+class _Translations$tasks_list$de extends Translations$tasks_list$sl {
+	_Translations$tasks_list$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Aufgaben';
+	@override String get subtitle => 'bevorstehende und überfällige';
+	@override String get section_overdue => 'Überfällig';
+	@override String get section_today => 'Heute';
+	@override String get section_tomorrow => 'Morgen';
+	@override String get section_this_week => 'Diese Woche';
+	@override String get section_later => 'Später';
+	@override String get empty => 'Keine offenen Aufgaben. Mit + hinzufügen.';
+	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '1 Tag überfällig',
+		other: '{n} Tage überfällig',
+	);
+	@override String get status_today => 'heute';
+	@override String get status_tomorrow => 'morgen';
+	@override String get action_complete => 'Erledigt';
+	@override String get action_postpone => '+1 Tag';
+	@override String get action_edit => 'Bearbeiten';
+	@override String get action_duplicate => 'Duplizieren';
+	@override String get action_delete => 'Löschen';
+	@override String get delete_confirm_title => 'Aufgabe löschen?';
+	@override String get delete_confirm_body => 'Diese Aktion kann nicht rückgängig gemacht werden.';
+	@override String get delete_yes => 'Löschen';
+	@override String get delete_cancel => 'Abbrechen';
+}
+
 // Path: task_form
 class _Translations$task_form$de extends Translations$task_form$sl {
 	_Translations$task_form$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -222,6 +255,26 @@ extension on TranslationsDe {
 			'quick_log.save' => 'Aufgabe speichern',
 			'quick_log.err_type' => 'Aufgabentyp auswählen.',
 			'quick_log.err_area' => 'Bereich auswählen.',
+			'tasks_list.title' => 'Aufgaben',
+			'tasks_list.subtitle' => 'bevorstehende und überfällige',
+			'tasks_list.section_overdue' => 'Überfällig',
+			'tasks_list.section_today' => 'Heute',
+			'tasks_list.section_tomorrow' => 'Morgen',
+			'tasks_list.section_this_week' => 'Diese Woche',
+			'tasks_list.section_later' => 'Später',
+			'tasks_list.empty' => 'Keine offenen Aufgaben. Mit + hinzufügen.',
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 Tag überfällig', other: '{n} Tage überfällig', ), 
+			'tasks_list.status_today' => 'heute',
+			'tasks_list.status_tomorrow' => 'morgen',
+			'tasks_list.action_complete' => 'Erledigt',
+			'tasks_list.action_postpone' => '+1 Tag',
+			'tasks_list.action_edit' => 'Bearbeiten',
+			'tasks_list.action_duplicate' => 'Duplizieren',
+			'tasks_list.action_delete' => 'Löschen',
+			'tasks_list.delete_confirm_title' => 'Aufgabe löschen?',
+			'tasks_list.delete_confirm_body' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
+			'tasks_list.delete_yes' => 'Löschen',
+			'tasks_list.delete_cancel' => 'Abbrechen',
 			'task_form.title_new' => 'Neue Aufgabe',
 			'task_form.title_edit' => 'Aufgabe bearbeiten',
 			'task_form.what' => 'Was',

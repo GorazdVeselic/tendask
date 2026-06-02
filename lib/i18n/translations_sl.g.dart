@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
+	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 }
 
@@ -222,6 +223,78 @@ class Translations$quick_log$sl {
 	String get err_area => 'Izberi območje.';
 }
 
+// Path: tasks_list
+class Translations$tasks_list$sl {
+	Translations$tasks_list$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Opravila'
+	String get title => 'Opravila';
+
+	/// sl: 'prihajajoča in zapadla'
+	String get subtitle => 'prihajajoča in zapadla';
+
+	/// sl: 'Zamuda'
+	String get section_overdue => 'Zamuda';
+
+	/// sl: 'Danes'
+	String get section_today => 'Danes';
+
+	/// sl: 'Jutri'
+	String get section_tomorrow => 'Jutri';
+
+	/// sl: 'Ta teden'
+	String get section_this_week => 'Ta teden';
+
+	/// sl: 'Pozneje'
+	String get section_later => 'Pozneje';
+
+	/// sl: 'Ni čakajočih opravil. Dodaj novo z +.'
+	String get empty => 'Ni čakajočih opravil. Dodaj novo z +.';
+
+	/// sl: '(one) {zamuja 1 dan} (other) {zamuja {n} dni}'
+	String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: 'zamuja 1 dan',
+		other: 'zamuja {n} dni',
+	);
+
+	/// sl: 'danes'
+	String get status_today => 'danes';
+
+	/// sl: 'jutri'
+	String get status_tomorrow => 'jutri';
+
+	/// sl: 'Opravljeno'
+	String get action_complete => 'Opravljeno';
+
+	/// sl: '+1 dan'
+	String get action_postpone => '+1 dan';
+
+	/// sl: 'Uredi'
+	String get action_edit => 'Uredi';
+
+	/// sl: 'Podvoji'
+	String get action_duplicate => 'Podvoji';
+
+	/// sl: 'Izbriši'
+	String get action_delete => 'Izbriši';
+
+	/// sl: 'Izbriši opravilo?'
+	String get delete_confirm_title => 'Izbriši opravilo?';
+
+	/// sl: 'To dejanje je nepopravljivo.'
+	String get delete_confirm_body => 'To dejanje je nepopravljivo.';
+
+	/// sl: 'Izbriši'
+	String get delete_yes => 'Izbriši';
+
+	/// sl: 'Prekliči'
+	String get delete_cancel => 'Prekliči';
+}
+
 // Path: task_form
 class Translations$task_form$sl {
 	Translations$task_form$sl.internal(this._root);
@@ -363,6 +436,26 @@ extension on Translations {
 			'quick_log.save' => 'Shrani opravilo',
 			'quick_log.err_type' => 'Izberi vrsto opravila.',
 			'quick_log.err_area' => 'Izberi območje.',
+			'tasks_list.title' => 'Opravila',
+			'tasks_list.subtitle' => 'prihajajoča in zapadla',
+			'tasks_list.section_overdue' => 'Zamuda',
+			'tasks_list.section_today' => 'Danes',
+			'tasks_list.section_tomorrow' => 'Jutri',
+			'tasks_list.section_this_week' => 'Ta teden',
+			'tasks_list.section_later' => 'Pozneje',
+			'tasks_list.empty' => 'Ni čakajočih opravil. Dodaj novo z +.',
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: 'zamuja 1 dan', other: 'zamuja {n} dni', ), 
+			'tasks_list.status_today' => 'danes',
+			'tasks_list.status_tomorrow' => 'jutri',
+			'tasks_list.action_complete' => 'Opravljeno',
+			'tasks_list.action_postpone' => '+1 dan',
+			'tasks_list.action_edit' => 'Uredi',
+			'tasks_list.action_duplicate' => 'Podvoji',
+			'tasks_list.action_delete' => 'Izbriši',
+			'tasks_list.delete_confirm_title' => 'Izbriši opravilo?',
+			'tasks_list.delete_confirm_body' => 'To dejanje je nepopravljivo.',
+			'tasks_list.delete_yes' => 'Izbriši',
+			'tasks_list.delete_cancel' => 'Prekliči',
 			'task_form.title_new' => 'Novo opravilo',
 			'task_form.title_edit' => 'Uredi opravilo',
 			'task_form.what' => 'Kaj',

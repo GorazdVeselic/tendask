@@ -30,10 +30,10 @@ void main() {
           ),
           branches: [
             StatefulShellBranch(routes: [
-              GoRoute(path: '/journal', builder: (_, _2) => const JournalScreen()),
+              GoRoute(path: '/journal', builder: (_, _) => const JournalScreen()),
             ]),
             StatefulShellBranch(routes: [
-              GoRoute(path: '/tasks', builder: (_, _2) => const TasksScreen()),
+              GoRoute(path: '/tasks', builder: (_, _) => const TasksScreen()),
             ]),
           ],
         ),
@@ -44,7 +44,9 @@ void main() {
       TranslationProvider(
         child: ProviderScope(
           overrides: [
-            // Provide empty data so JournalScreen resolves immediately
+            // Provide empty data so JournalScreen and TasksScreen resolve immediately
+            pendingTasksProvider
+                .overrideWith((ref) => Stream.value(<Task>[])),
             completedTasksProvider
                 .overrideWith((ref) => Stream.value(<Task>[])),
             taskTypesMapProvider

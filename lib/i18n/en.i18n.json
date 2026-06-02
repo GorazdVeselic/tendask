@@ -52,6 +52,31 @@
     "err_type": "Select a task type.",
     "err_area": "Select an area."
   },
+  "tasks_list": {
+    "title": "Tasks",
+    "subtitle": "upcoming and overdue",
+    "section_overdue": "Overdue",
+    "section_today": "Today",
+    "section_tomorrow": "Tomorrow",
+    "section_this_week": "This week",
+    "section_later": "Later",
+    "empty": "No pending tasks. Add one with +.",
+    "overdue_days(n)": {
+      "one": "overdue 1 day",
+      "other": "overdue {n} days"
+    },
+    "status_today": "today",
+    "status_tomorrow": "tomorrow",
+    "action_complete": "Complete",
+    "action_postpone": "+1 day",
+    "action_edit": "Edit",
+    "action_duplicate": "Duplicate",
+    "action_delete": "Delete",
+    "delete_confirm_title": "Delete task?",
+    "delete_confirm_body": "This action cannot be undone.",
+    "delete_yes": "Delete",
+    "delete_cancel": "Cancel"
+  },
   "task_form": {
     "title_new": "New task",
     "title_edit": "Edit task",

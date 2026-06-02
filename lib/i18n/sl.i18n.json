@@ -52,6 +52,31 @@
     "err_type": "Izberi vrsto opravila.",
     "err_area": "Izberi območje."
   },
+  "tasks_list": {
+    "title": "Opravila",
+    "subtitle": "prihajajoča in zapadla",
+    "section_overdue": "Zamuda",
+    "section_today": "Danes",
+    "section_tomorrow": "Jutri",
+    "section_this_week": "Ta teden",
+    "section_later": "Pozneje",
+    "empty": "Ni čakajočih opravil. Dodaj novo z +.",
+    "overdue_days(n)": {
+      "one": "zamuja 1 dan",
+      "other": "zamuja {n} dni"
+    },
+    "status_today": "danes",
+    "status_tomorrow": "jutri",
+    "action_complete": "Opravljeno",
+    "action_postpone": "+1 dan",
+    "action_edit": "Uredi",
+    "action_duplicate": "Podvoji",
+    "action_delete": "Izbriši",
+    "delete_confirm_title": "Izbriši opravilo?",
+    "delete_confirm_body": "To dejanje je nepopravljivo.",
+    "delete_yes": "Izbriši",
+    "delete_cancel": "Prekliči"
+  },
   "task_form": {
     "title_new": "Novo opravilo",
     "title_edit": "Uredi opravilo",
