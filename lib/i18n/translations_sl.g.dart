@@ -50,6 +50,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
+	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
 }
 
 // Path: nav
@@ -619,6 +620,66 @@ class Translations$plants$sl {
 	String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
 }
 
+// Path: supplies
+class Translations$supplies$sl {
+	Translations$supplies$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Zaloge'
+	String get title => 'Zaloge';
+
+	/// sl: 'kaj imam doma'
+	String get subtitle => 'kaj imam doma';
+
+	/// sl: 'Ni zalog. Dodaj jih z +.'
+	String get empty => 'Ni zalog. Dodaj jih z +.';
+
+	/// sl: 'malo'
+	String get low => 'malo';
+
+	/// sl: '~$q$unit'
+	String qty({required Object q, required Object unit}) => '~${q}${unit}';
+
+	/// sl: 'Novo sredstvo'
+	String get form_new => 'Novo sredstvo';
+
+	/// sl: 'Uredi sredstvo'
+	String get form_edit => 'Uredi sredstvo';
+
+	/// sl: 'Ime'
+	String get form_name => 'Ime';
+
+	/// sl: 'Količina'
+	String get form_quantity => 'Količina';
+
+	/// sl: 'Enota'
+	String get form_unit => 'Enota';
+
+	/// sl: 'Opozori pri (prag)'
+	String get form_threshold => 'Opozori pri (prag)';
+
+	/// sl: 'Shrani'
+	String get form_save => 'Shrani';
+
+	/// sl: 'Vnesi ime sredstva.'
+	String get err_name => 'Vnesi ime sredstva.';
+
+	/// sl: 'Dodaj sredstvo'
+	String get add_to_task => 'Dodaj sredstvo';
+
+	/// sl: 'Novo sredstvo'
+	String get pick_new => 'Novo sredstvo';
+
+	/// sl: 'Porabljena količina'
+	String get amount => 'Porabljena količina';
+
+	/// sl: 'Dodaj'
+	String get add_confirm => 'Dodaj';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -785,6 +846,23 @@ extension on Translations {
 			'plants.not_found' => 'Ne najdeš?',
 			'plants.custom_add' => ({required Object q}) => '+ Dodaj po meri: „${q}“',
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
+			'supplies.title' => 'Zaloge',
+			'supplies.subtitle' => 'kaj imam doma',
+			'supplies.empty' => 'Ni zalog. Dodaj jih z +.',
+			'supplies.low' => 'malo',
+			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
+			'supplies.form_new' => 'Novo sredstvo',
+			'supplies.form_edit' => 'Uredi sredstvo',
+			'supplies.form_name' => 'Ime',
+			'supplies.form_quantity' => 'Količina',
+			'supplies.form_unit' => 'Enota',
+			'supplies.form_threshold' => 'Opozori pri (prag)',
+			'supplies.form_save' => 'Shrani',
+			'supplies.err_name' => 'Vnesi ime sredstva.',
+			'supplies.add_to_task' => 'Dodaj sredstvo',
+			'supplies.pick_new' => 'Novo sredstvo',
+			'supplies.amount' => 'Porabljena količina',
+			'supplies.add_confirm' => 'Dodaj',
 			_ => null,
 		};
 	}

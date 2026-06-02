@@ -13,6 +13,7 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/plant_display.dart';
+import '../../supplies/application/supplies_providers.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
@@ -80,6 +81,26 @@ class TaskDetailScreen extends ConsumerWidget {
               ? null
               : userPlantLabel(matches.first, plantsCatalog);
 
+          // Consumed supplies, e.g. "Urea 1kg, NPK 0.5kg".
+          final taskSupplies =
+              ref.watch(taskSuppliesProvider(task.id)).asData?.value ??
+                  const [];
+          final supplyById = {
+            for (final s
+                in ref.watch(suppliesListProvider).asData?.value ?? const [])
+              s.id: s
+          };
+          final suppliesLabel = taskSupplies.isEmpty
+              ? null
+              : taskSupplies.map((ts) {
+                  final s = supplyById[ts.supplyId];
+                  final unit = s?.unit ?? '';
+                  final amt = ts.amount == ts.amount.roundToDouble()
+                      ? ts.amount.toInt().toString()
+                      : ts.amount.toString();
+                  return '${s?.name ?? ts.supplyId} $amt$unit';
+                }).join(', ');
+
           return Column(
             children: [
               Expanded(
@@ -104,6 +125,7 @@ class TaskDetailScreen extends ConsumerWidget {
                           task: task,
                           area: area,
                           plantLabel: plantLabel,
+                          suppliesLabel: suppliesLabel,
                           t: t,
                           theme: theme),
                     ],
@@ -383,6 +405,7 @@ class _DetailsCard extends StatelessWidget {
     required this.task,
     required this.area,
     required this.plantLabel,
+    required this.suppliesLabel,
     required this.t,
     required this.theme,
   });
@@ -390,6 +413,7 @@ class _DetailsCard extends StatelessWidget {
   final Task task;
   final Area? area;
   final String? plantLabel;
+  final String? suppliesLabel;
   final Translations t;
   final ThemeData theme;
 
@@ -404,7 +428,7 @@ class _DetailsCard extends StatelessWidget {
     final rows = [
       (t.task_detail.label_area, area?.name ?? t.task_detail.none),
       (t.task_detail.label_plant, plantLabel ?? t.task_detail.none),
-      (t.task_detail.label_supplies, t.task_detail.none), // M3.3
+      (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, t.task_detail.none), // M8
       (t.task_detail.label_recurrence, recurrenceLabel),
       if (task.note != null && task.note!.isNotEmpty)

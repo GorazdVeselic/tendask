@@ -6,6 +6,7 @@ import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
 import 'package:tendask/core/task_status.dart';
+import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 
 class _FakeClock implements Clock {
@@ -30,7 +31,7 @@ void main() {
   setUp(() async {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     clock = _FakeClock(t0);
-    repo = TasksRepository(db, clock: clock);
+    repo = TasksRepository(db, SuppliesRepository(db, clock: clock), clock: clock);
 
     await SeedService(db).runIfNeeded();
     await db.into(db.areas).insert(AreasCompanion.insert(

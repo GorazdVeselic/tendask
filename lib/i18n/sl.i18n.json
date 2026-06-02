@@ -179,5 +179,24 @@
     "not_found": "Ne najdeš?",
     "custom_add(q)": "+ Dodaj po meri: „$q“",
     "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo."
+  },
+  "supplies": {
+    "title": "Zaloge",
+    "subtitle": "kaj imam doma",
+    "empty": "Ni zalog. Dodaj jih z +.",
+    "low": "malo",
+    "qty(q, unit)": "~$q$unit",
+    "form_new": "Novo sredstvo",
+    "form_edit": "Uredi sredstvo",
+    "form_name": "Ime",
+    "form_quantity": "Količina",
+    "form_unit": "Enota",
+    "form_threshold": "Opozori pri (prag)",
+    "form_save": "Shrani",
+    "err_name": "Vnesi ime sredstva.",
+    "add_to_task": "Dodaj sredstvo",
+    "pick_new": "Novo sredstvo",
+    "amount": "Porabljena količina",
+    "add_confirm": "Dodaj"
   }
 }

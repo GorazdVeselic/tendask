@@ -179,5 +179,24 @@
     "not_found": "Can't find it?",
     "custom_add(q)": "+ Add custom: “$q”",
     "custom_private": "A custom entry is private and not shared with the community."
+  },
+  "supplies": {
+    "title": "Supplies",
+    "subtitle": "what I have at home",
+    "empty": "No supplies yet. Add some with +.",
+    "low": "low",
+    "qty(q, unit)": "~$q$unit",
+    "form_new": "New supply",
+    "form_edit": "Edit supply",
+    "form_name": "Name",
+    "form_quantity": "Quantity",
+    "form_unit": "Unit",
+    "form_threshold": "Warn at (threshold)",
+    "form_save": "Save",
+    "err_name": "Enter a supply name.",
+    "add_to_task": "Add supply",
+    "pick_new": "New supply",
+    "amount": "Amount used",
+    "add_confirm": "Add"
   }
 }

@@ -49,6 +49,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
 	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
+	@override late final _Translations$supplies$en supplies = _Translations$supplies$en._(_root);
 }
 
 // Path: nav
@@ -302,6 +303,32 @@ class _Translations$plants$en extends Translations$plants$sl {
 	@override String get custom_private => 'A custom entry is private and not shared with the community.';
 }
 
+// Path: supplies
+class _Translations$supplies$en extends Translations$supplies$sl {
+	_Translations$supplies$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Supplies';
+	@override String get subtitle => 'what I have at home';
+	@override String get empty => 'No supplies yet. Add some with +.';
+	@override String get low => 'low';
+	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
+	@override String get form_new => 'New supply';
+	@override String get form_edit => 'Edit supply';
+	@override String get form_name => 'Name';
+	@override String get form_quantity => 'Quantity';
+	@override String get form_unit => 'Unit';
+	@override String get form_threshold => 'Warn at (threshold)';
+	@override String get form_save => 'Save';
+	@override String get err_name => 'Enter a supply name.';
+	@override String get add_to_task => 'Add supply';
+	@override String get pick_new => 'New supply';
+	@override String get amount => 'Amount used';
+	@override String get add_confirm => 'Add';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -468,6 +495,23 @@ extension on TranslationsEn {
 			'plants.not_found' => 'Can\'t find it?',
 			'plants.custom_add' => ({required Object q}) => '+ Add custom: “${q}”',
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
+			'supplies.title' => 'Supplies',
+			'supplies.subtitle' => 'what I have at home',
+			'supplies.empty' => 'No supplies yet. Add some with +.',
+			'supplies.low' => 'low',
+			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
+			'supplies.form_new' => 'New supply',
+			'supplies.form_edit' => 'Edit supply',
+			'supplies.form_name' => 'Name',
+			'supplies.form_quantity' => 'Quantity',
+			'supplies.form_unit' => 'Unit',
+			'supplies.form_threshold' => 'Warn at (threshold)',
+			'supplies.form_save' => 'Save',
+			'supplies.err_name' => 'Enter a supply name.',
+			'supplies.add_to_task' => 'Add supply',
+			'supplies.pick_new' => 'New supply',
+			'supplies.amount' => 'Amount used',
+			'supplies.add_confirm' => 'Add',
 			_ => null,
 		};
 	}

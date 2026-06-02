@@ -179,5 +179,24 @@
     "not_found": "Nicht gefunden?",
     "custom_add(q)": "+ Eigene hinzufügen: „$q“",
     "custom_private": "Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt."
+  },
+  "supplies": {
+    "title": "Vorräte",
+    "subtitle": "was ich zu Hause habe",
+    "empty": "Noch keine Vorräte. Füge welche mit + hinzu.",
+    "low": "wenig",
+    "qty(q, unit)": "~$q$unit",
+    "form_new": "Neues Mittel",
+    "form_edit": "Mittel bearbeiten",
+    "form_name": "Name",
+    "form_quantity": "Menge",
+    "form_unit": "Einheit",
+    "form_threshold": "Warnen bei (Schwelle)",
+    "form_save": "Speichern",
+    "err_name": "Namen des Mittels eingeben.",
+    "add_to_task": "Mittel hinzufügen",
+    "pick_new": "Neues Mittel",
+    "amount": "Verbrauchte Menge",
+    "add_confirm": "Hinzufügen"
   }
 }

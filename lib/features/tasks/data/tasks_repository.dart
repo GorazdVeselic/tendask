@@ -4,11 +4,13 @@ import 'package:uuid/uuid.dart';
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/task_status.dart';
+import '../../supplies/data/supplies_repository.dart';
 
 class TasksRepository {
-  TasksRepository(this._db, {this._clock = const SystemClock()});
+  TasksRepository(this._db, this._supplies, {this._clock = const SystemClock()});
 
   final AppDatabase _db;
+  final SuppliesRepository _supplies;
   final Clock _clock;
   final _uuid = const Uuid();
 
@@ -107,25 +109,31 @@ class TasksRepository {
   }
 
   Future<void> complete(String id) async {
-    final now = _clock.now();
-    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
-      TasksCompanion(
-        status: const Value(TaskStatus.done),
-        updatedAt: Value(now),
-        syncStatus: const Value('pending'),
-      ),
-    );
+    await _db.transaction(() async {
+      await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+        TasksCompanion(
+          status: const Value(TaskStatus.done),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value('pending'),
+        ),
+      );
+      // Deduct supplies from stock now that the task is done.
+      await _supplies.applyForTask(id);
+    });
   }
 
   Future<void> softDelete(String id) async {
-    final now = _clock.now();
-    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
-      TasksCompanion(
-        deleted: const Value(true),
-        updatedAt: Value(now),
-        syncStatus: const Value('pending'),
-      ),
-    );
+    await _db.transaction(() async {
+      await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+        TasksCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value('pending'),
+        ),
+      );
+      // Return any booked consumption to stock.
+      await _supplies.revertForTask(id);
+    });
   }
 
   Future<void> postponeOneDay(String id) async {
@@ -142,14 +150,17 @@ class TasksRepository {
   }
 
   Future<void> revertToWaiting(String id) async {
-    final now = _clock.now();
-    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
-      TasksCompanion(
-        status: const Value(TaskStatus.waiting),
-        updatedAt: Value(now),
-        syncStatus: const Value('pending'),
-      ),
-    );
+    await _db.transaction(() async {
+      await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+        TasksCompanion(
+          status: const Value(TaskStatus.waiting),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value('pending'),
+        ),
+      );
+      // No longer done — return supplies to stock.
+      await _supplies.revertForTask(id);
+    });
   }
 
   Future<String> duplicate(String id) async {

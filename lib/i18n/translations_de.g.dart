@@ -49,6 +49,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
+	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 }
 
 // Path: nav
@@ -302,6 +303,32 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
 }
 
+// Path: supplies
+class _Translations$supplies$de extends Translations$supplies$sl {
+	_Translations$supplies$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vorräte';
+	@override String get subtitle => 'was ich zu Hause habe';
+	@override String get empty => 'Noch keine Vorräte. Füge welche mit + hinzu.';
+	@override String get low => 'wenig';
+	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
+	@override String get form_new => 'Neues Mittel';
+	@override String get form_edit => 'Mittel bearbeiten';
+	@override String get form_name => 'Name';
+	@override String get form_quantity => 'Menge';
+	@override String get form_unit => 'Einheit';
+	@override String get form_threshold => 'Warnen bei (Schwelle)';
+	@override String get form_save => 'Speichern';
+	@override String get err_name => 'Namen des Mittels eingeben.';
+	@override String get add_to_task => 'Mittel hinzufügen';
+	@override String get pick_new => 'Neues Mittel';
+	@override String get amount => 'Verbrauchte Menge';
+	@override String get add_confirm => 'Hinzufügen';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -468,6 +495,23 @@ extension on TranslationsDe {
 			'plants.not_found' => 'Nicht gefunden?',
 			'plants.custom_add' => ({required Object q}) => '+ Eigene hinzufügen: „${q}“',
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
+			'supplies.title' => 'Vorräte',
+			'supplies.subtitle' => 'was ich zu Hause habe',
+			'supplies.empty' => 'Noch keine Vorräte. Füge welche mit + hinzu.',
+			'supplies.low' => 'wenig',
+			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
+			'supplies.form_new' => 'Neues Mittel',
+			'supplies.form_edit' => 'Mittel bearbeiten',
+			'supplies.form_name' => 'Name',
+			'supplies.form_quantity' => 'Menge',
+			'supplies.form_unit' => 'Einheit',
+			'supplies.form_threshold' => 'Warnen bei (Schwelle)',
+			'supplies.form_save' => 'Speichern',
+			'supplies.err_name' => 'Namen des Mittels eingeben.',
+			'supplies.add_to_task' => 'Mittel hinzufügen',
+			'supplies.pick_new' => 'Neues Mittel',
+			'supplies.amount' => 'Verbrauchte Menge',
+			'supplies.add_confirm' => 'Hinzufügen',
 			_ => null,
 		};
 	}

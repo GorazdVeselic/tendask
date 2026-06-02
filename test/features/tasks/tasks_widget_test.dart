@@ -12,6 +12,7 @@ import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
+import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/features/tasks/presentation/quick_log_screen.dart';
@@ -68,7 +69,7 @@ void main() {
       final db = await _buildDb();
       addTearDown(db.close);
 
-      final repo = TasksRepository(db);
+      final repo = TasksRepository(db, SuppliesRepository(db));
 
       // Query once for static provider overrides (completing streams/futures).
       // Overriding tasksRepositoryProvider (not databaseProvider) so that the
@@ -137,7 +138,7 @@ void main() {
       final db = await _buildDb();
       addTearDown(db.close);
 
-      final repo = TasksRepository(db);
+      final repo = TasksRepository(db, SuppliesRepository(db));
       final taskId = await repo.create(
         userId: 'local',
         areaId: _areaId,

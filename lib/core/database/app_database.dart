@@ -36,7 +36,18 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 1;
+  int get schemaVersion => 2;
+
+  @override
+  MigrationStrategy get migration => MigrationStrategy(
+        onCreate: (m) => m.createAll(),
+        onUpgrade: (m, from, to) async {
+          // v2: track whether a task_supply consumption was booked into stock.
+          if (from < 2) {
+            await m.addColumn(taskSupplies, taskSupplies.applied);
+          }
+        },
+      );
 }
 
 LazyDatabase _openConnection() {

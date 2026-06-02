@@ -14,6 +14,9 @@ import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/plant_display.dart';
 import '../../plants/presentation/plant_picker_screen.dart';
+import '../../supplies/application/supplies_providers.dart';
+import '../../supplies/data/supply_spec.dart';
+import '../../supplies/presentation/add_supply_to_task_sheet.dart';
 import '../application/tasks_providers.dart';
 import 'widgets/task_type_tile.dart';
 
@@ -31,6 +34,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   String? _taskTypeId;
   String? _areaId;
   String? _userPlantId;
+  final List<SupplySpec> _supplies = [];
   TaskStatus _status = TaskStatus.waiting;
   DateTime _date = DateTime.now();
   final _noteController = TextEditingController();
@@ -51,6 +55,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   Future<void> _loadTask() async {
     final task =
         await ref.read(tasksRepositoryProvider).byId(widget.taskId!);
+    final supplies = await ref
+        .read(suppliesRepositoryProvider)
+        .suppliesForTask(widget.taskId!);
     if (!mounted) return;
     if (task != null) {
       setState(() {
@@ -60,9 +67,19 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         _status = task.status;
         _date = task.date.toLocal();
         _noteController.text = task.note ?? '';
+        _supplies
+          ..clear()
+          ..addAll(supplies
+              .map((ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount)));
       });
     }
     setState(() => _isLoading = false);
+  }
+
+  Future<void> _addSupply() async {
+    final spec = await showAddSupplyToTaskSheet(context);
+    if (spec == null || !mounted) return;
+    setState(() => _supplies.add(spec));
   }
 
   @override
@@ -127,6 +144,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           catalog?[_taskTypeId]?.requiresSubject ?? false;
       final userPlantId = requiresSubject ? _userPlantId : null;
 
+      final String taskId;
       if (_isEdit) {
         await repo.updateTask(
           id: widget.taskId!,
@@ -137,8 +155,9 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           note: note.isEmpty ? null : note,
           userPlantId: userPlantId,
         );
+        taskId = widget.taskId!;
       } else {
-        await repo.create(
+        taskId = await repo.create(
           // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
           userId: 'local',
           areaId: _areaId!,
@@ -149,6 +168,11 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           userPlantId: userPlantId,
         );
       }
+      await ref.read(suppliesRepositoryProvider).syncForTask(
+            taskId: taskId,
+            specs: _supplies,
+            isDone: _status == TaskStatus.done,
+          );
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -229,6 +253,10 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                   onUserPlantChanged: (id) =>
                       setState(() => _userPlantId = id),
                   onAddPlant: _addPlant,
+                  supplies: _supplies,
+                  onAddSupply: _addSupply,
+                  onRemoveSupply: (i) =>
+                      setState(() => _supplies.removeAt(i)),
                   onStatusChanged: (s) => setState(() => _status = s),
                   onPickDate: _pickDate,
                   onPickTime: _pickTime,
@@ -266,6 +294,9 @@ class _FormBody extends StatelessWidget {
     required this.onAreaChanged,
     required this.onUserPlantChanged,
     required this.onAddPlant,
+    required this.supplies,
+    required this.onAddSupply,
+    required this.onRemoveSupply,
     required this.onStatusChanged,
     required this.onPickDate,
     required this.onPickTime,
@@ -276,6 +307,7 @@ class _FormBody extends StatelessWidget {
   final String? taskTypeId;
   final String? areaId;
   final String? userPlantId;
+  final List<SupplySpec> supplies;
   final TaskStatus status;
   final DateTime date;
   final TextEditingController noteController;
@@ -285,6 +317,8 @@ class _FormBody extends StatelessWidget {
   final ValueChanged<String> onAreaChanged;
   final ValueChanged<String?> onUserPlantChanged;
   final VoidCallback onAddPlant;
+  final VoidCallback onAddSupply;
+  final ValueChanged<int> onRemoveSupply;
   final ValueChanged<TaskStatus> onStatusChanged;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
@@ -391,26 +425,12 @@ class _FormBody extends StatelessWidget {
           const SizedBox(height: 16),
         ],
 
-        // Sredstva (placeholder)
+        // Sredstva
         _FieldLabel(t.task_form.supplies),
-        Card(
-          child: InkWell(
-            borderRadius: BorderRadius.circular(12),
-            onTap: () {}, // M3.3
-            child: Padding(
-              padding: const EdgeInsets.symmetric(
-                  horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  const Text('🧪',
-                      style: TextStyle(fontSize: 18)),
-                  const SizedBox(width: 10),
-                  Text(t.task_form.supplies_add,
-                      style: theme.textTheme.bodyMedium),
-                ],
-              ),
-            ),
-          ),
+        _SupplyField(
+          supplies: supplies,
+          onAdd: onAddSupply,
+          onRemove: onRemoveSupply,
         ),
         const SizedBox(height: 16),
 
@@ -706,6 +726,69 @@ class _PlantField extends ConsumerWidget {
             ),
           ],
         ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Supply field — pick supplies consumed by the task (deducted on completion)
+// ---------------------------------------------------------------------------
+
+class _SupplyField extends ConsumerWidget {
+  const _SupplyField({
+    required this.supplies,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  final List<SupplySpec> supplies;
+  final VoidCallback onAdd;
+  final ValueChanged<int> onRemove;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final catalog = ref.watch(suppliesListProvider).asData?.value ?? const [];
+    final byId = {for (final s in catalog) s.id: s};
+
+    String label(SupplySpec spec) {
+      final supply = byId[spec.supplyId];
+      final name = supply?.name ?? spec.supplyId;
+      final unit = supply?.unit ?? '';
+      final amount = spec.amount == spec.amount.roundToDouble()
+          ? spec.amount.toInt().toString()
+          : spec.amount.toString();
+      return '$name — $amount$unit';
+    }
+
+    return Card(
+      child: Column(
+        children: [
+          for (var i = 0; i < supplies.length; i++)
+            ListTile(
+              dense: true,
+              leading: const Text('🧪', style: TextStyle(fontSize: 18)),
+              title: Text(label(supplies[i]), style: theme.textTheme.bodyMedium),
+              trailing: IconButton(
+                icon: Icon(Icons.close,
+                    size: 18, color: theme.colorScheme.onSurfaceVariant),
+                onPressed: () => onRemove(i),
+              ),
+            ),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: onAdd,
+              icon: const Icon(Icons.add, size: 18),
+              label: Text(t.task_form.supplies_add),
+              style: TextButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(horizontal: 16),
+                  visualDensity: VisualDensity.compact),
+            ),
+          ),
+        ],
       ),
     );
   }

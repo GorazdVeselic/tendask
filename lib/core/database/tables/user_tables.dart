@@ -188,6 +188,9 @@ class TaskSupplies extends Table {
   TextColumn get taskId => text().references(Tasks, #id)();
   TextColumn get supplyId => text().references(Supplies, #id)();
   RealColumn get amount => real()();
+  // True once this consumption was booked into supply.quantity (task done) —
+  // guards against double deduction / double return.
+  BoolColumn get applied => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>

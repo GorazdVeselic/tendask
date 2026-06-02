@@ -5931,6 +5931,21 @@ class $TaskSuppliesTable extends TaskSupplies
     type: DriftSqlType.double,
     requiredDuringInsert: true,
   );
+  static const VerificationMeta _appliedMeta = const VerificationMeta(
+    'applied',
+  );
+  @override
+  late final GeneratedColumn<bool> applied = GeneratedColumn<bool>(
+    'applied',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("applied" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -5975,6 +5990,7 @@ class $TaskSuppliesTable extends TaskSupplies
     taskId,
     supplyId,
     amount,
+    applied,
     updatedAt,
     deleted,
     syncStatus,
@@ -6019,6 +6035,12 @@ class $TaskSuppliesTable extends TaskSupplies
       );
     } else if (isInserting) {
       context.missing(_amountMeta);
+    }
+    if (data.containsKey('applied')) {
+      context.handle(
+        _appliedMeta,
+        applied.isAcceptableOrUnknown(data['applied']!, _appliedMeta),
+      );
     }
     if (data.containsKey('updated_at')) {
       context.handle(
@@ -6065,6 +6087,10 @@ class $TaskSuppliesTable extends TaskSupplies
         DriftSqlType.double,
         data['${effectivePrefix}amount'],
       )!,
+      applied: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}applied'],
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -6091,6 +6117,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
   final String taskId;
   final String supplyId;
   final double amount;
+  final bool applied;
   final DateTime updatedAt;
   final bool deleted;
   final String syncStatus;
@@ -6099,6 +6126,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
     required this.taskId,
     required this.supplyId,
     required this.amount,
+    required this.applied,
     required this.updatedAt,
     required this.deleted,
     required this.syncStatus,
@@ -6110,6 +6138,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
     map['task_id'] = Variable<String>(taskId);
     map['supply_id'] = Variable<String>(supplyId);
     map['amount'] = Variable<double>(amount);
+    map['applied'] = Variable<bool>(applied);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['deleted'] = Variable<bool>(deleted);
     map['sync_status'] = Variable<String>(syncStatus);
@@ -6122,6 +6151,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
       taskId: Value(taskId),
       supplyId: Value(supplyId),
       amount: Value(amount),
+      applied: Value(applied),
       updatedAt: Value(updatedAt),
       deleted: Value(deleted),
       syncStatus: Value(syncStatus),
@@ -6138,6 +6168,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
       taskId: serializer.fromJson<String>(json['taskId']),
       supplyId: serializer.fromJson<String>(json['supplyId']),
       amount: serializer.fromJson<double>(json['amount']),
+      applied: serializer.fromJson<bool>(json['applied']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
@@ -6151,6 +6182,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
       'taskId': serializer.toJson<String>(taskId),
       'supplyId': serializer.toJson<String>(supplyId),
       'amount': serializer.toJson<double>(amount),
+      'applied': serializer.toJson<bool>(applied),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
       'syncStatus': serializer.toJson<String>(syncStatus),
@@ -6162,6 +6194,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
     String? taskId,
     String? supplyId,
     double? amount,
+    bool? applied,
     DateTime? updatedAt,
     bool? deleted,
     String? syncStatus,
@@ -6170,6 +6203,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
     taskId: taskId ?? this.taskId,
     supplyId: supplyId ?? this.supplyId,
     amount: amount ?? this.amount,
+    applied: applied ?? this.applied,
     updatedAt: updatedAt ?? this.updatedAt,
     deleted: deleted ?? this.deleted,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -6180,6 +6214,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
       taskId: data.taskId.present ? data.taskId.value : this.taskId,
       supplyId: data.supplyId.present ? data.supplyId.value : this.supplyId,
       amount: data.amount.present ? data.amount.value : this.amount,
+      applied: data.applied.present ? data.applied.value : this.applied,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       syncStatus: data.syncStatus.present
@@ -6195,6 +6230,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
           ..write('taskId: $taskId, ')
           ..write('supplyId: $supplyId, ')
           ..write('amount: $amount, ')
+          ..write('applied: $applied, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus')
@@ -6203,8 +6239,16 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(id, taskId, supplyId, amount, updatedAt, deleted, syncStatus);
+  int get hashCode => Object.hash(
+    id,
+    taskId,
+    supplyId,
+    amount,
+    applied,
+    updatedAt,
+    deleted,
+    syncStatus,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -6213,6 +6257,7 @@ class TaskSupply extends DataClass implements Insertable<TaskSupply> {
           other.taskId == this.taskId &&
           other.supplyId == this.supplyId &&
           other.amount == this.amount &&
+          other.applied == this.applied &&
           other.updatedAt == this.updatedAt &&
           other.deleted == this.deleted &&
           other.syncStatus == this.syncStatus);
@@ -6223,6 +6268,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
   final Value<String> taskId;
   final Value<String> supplyId;
   final Value<double> amount;
+  final Value<bool> applied;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
   final Value<String> syncStatus;
@@ -6232,6 +6278,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
     this.taskId = const Value.absent(),
     this.supplyId = const Value.absent(),
     this.amount = const Value.absent(),
+    this.applied = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -6242,6 +6289,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
     required String taskId,
     required String supplyId,
     required double amount,
+    this.applied = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -6256,6 +6304,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
     Expression<String>? taskId,
     Expression<String>? supplyId,
     Expression<double>? amount,
+    Expression<bool>? applied,
     Expression<DateTime>? updatedAt,
     Expression<bool>? deleted,
     Expression<String>? syncStatus,
@@ -6266,6 +6315,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
       if (taskId != null) 'task_id': taskId,
       if (supplyId != null) 'supply_id': supplyId,
       if (amount != null) 'amount': amount,
+      if (applied != null) 'applied': applied,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deleted != null) 'deleted': deleted,
       if (syncStatus != null) 'sync_status': syncStatus,
@@ -6278,6 +6328,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
     Value<String>? taskId,
     Value<String>? supplyId,
     Value<double>? amount,
+    Value<bool>? applied,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
     Value<String>? syncStatus,
@@ -6288,6 +6339,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
       taskId: taskId ?? this.taskId,
       supplyId: supplyId ?? this.supplyId,
       amount: amount ?? this.amount,
+      applied: applied ?? this.applied,
       updatedAt: updatedAt ?? this.updatedAt,
       deleted: deleted ?? this.deleted,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -6309,6 +6361,9 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
     }
     if (amount.present) {
       map['amount'] = Variable<double>(amount.value);
+    }
+    if (applied.present) {
+      map['applied'] = Variable<bool>(applied.value);
     }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
@@ -6332,6 +6387,7 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
           ..write('taskId: $taskId, ')
           ..write('supplyId: $supplyId, ')
           ..write('amount: $amount, ')
+          ..write('applied: $applied, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus, ')
@@ -11621,6 +11677,7 @@ typedef $$TaskSuppliesTableCreateCompanionBuilder =
       required String taskId,
       required String supplyId,
       required double amount,
+      Value<bool> applied,
       required DateTime updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -11632,6 +11689,7 @@ typedef $$TaskSuppliesTableUpdateCompanionBuilder =
       Value<String> taskId,
       Value<String> supplyId,
       Value<double> amount,
+      Value<bool> applied,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -11696,6 +11754,11 @@ class $$TaskSuppliesTableFilterComposer
 
   ColumnFilters<double> get amount => $composableBuilder(
     column: $table.amount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get applied => $composableBuilder(
+    column: $table.applied,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -11780,6 +11843,11 @@ class $$TaskSuppliesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get applied => $composableBuilder(
+    column: $table.applied,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -11856,6 +11924,9 @@ class $$TaskSuppliesTableAnnotationComposer
 
   GeneratedColumn<double> get amount =>
       $composableBuilder(column: $table.amount, builder: (column) => column);
+
+  GeneratedColumn<bool> get applied =>
+      $composableBuilder(column: $table.applied, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -11947,6 +12018,7 @@ class $$TaskSuppliesTableTableManager
                 Value<String> taskId = const Value.absent(),
                 Value<String> supplyId = const Value.absent(),
                 Value<double> amount = const Value.absent(),
+                Value<bool> applied = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -11956,6 +12028,7 @@ class $$TaskSuppliesTableTableManager
                 taskId: taskId,
                 supplyId: supplyId,
                 amount: amount,
+                applied: applied,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,
@@ -11967,6 +12040,7 @@ class $$TaskSuppliesTableTableManager
                 required String taskId,
                 required String supplyId,
                 required double amount,
+                Value<bool> applied = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -11976,6 +12050,7 @@ class $$TaskSuppliesTableTableManager
                 taskId: taskId,
                 supplyId: supplyId,
                 amount: amount,
+                applied: applied,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,

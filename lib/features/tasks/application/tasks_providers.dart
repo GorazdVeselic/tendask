@@ -3,13 +3,17 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../supplies/application/supplies_providers.dart';
 import '../data/tasks_repository.dart';
 
 part 'tasks_providers.g.dart';
 
 @Riverpod(keepAlive: true)
 TasksRepository tasksRepository(Ref ref) {
-  return TasksRepository(ref.watch(databaseProvider));
+  return TasksRepository(
+    ref.watch(databaseProvider),
+    ref.watch(suppliesRepositoryProvider),
+  );
 }
 
 // Manual StreamProviders — riverpod_generator can't resolve drift part-file types
