@@ -221,5 +221,26 @@
     "pick_new": "Novo sredstvo",
     "amount": "Porabljena količina",
     "add_confirm": "Dodaj"
+  },
+  "settings": {
+    "title": "Nastavitve",
+    "profile_guest": "Gost (brez prijave)",
+    "section_location": "Lokacija",
+    "location_placeholder": "Lokacija za vreme",
+    "section_language": "Jezik",
+    "section_notifications": "Obvestila",
+    "notifications_placeholder": "Obvestila in opomniki",
+    "section_garden": "Vrt",
+    "supplies": "📦 Zaloge & sredstva",
+    "supplies_sub": "urea, alge, gnojila, oprema",
+    "areas": "🪴 Območja",
+    "areas_sub": "trate, meje, gredice",
+    "section_account": "Račun & podatki",
+    "units": "Enote",
+    "export_data": "Izvozi podatke (GDPR)",
+    "logout": "Odjava",
+    "delete_account": "Izbriši račun in vse podatke",
+    "coming_soon": "Na voljo kmalu",
+    "version": "Tendask · v1 (MVP)"
   }
 }

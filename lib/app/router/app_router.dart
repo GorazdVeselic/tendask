@@ -7,6 +7,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
+import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
@@ -91,6 +92,11 @@ final appRouter = GoRouter(
       path: '/supplies',
       name: 'supplies',
       builder: (context, state) => const SuppliesScreen(),
+    ),
+    GoRoute(
+      path: '/settings',
+      name: 'settings',
+      builder: (context, state) => const SettingsScreen(),
     ),
     GoRoute(
       path: '/areas/new',

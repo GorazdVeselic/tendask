@@ -221,5 +221,26 @@
     "pick_new": "Neues Mittel",
     "amount": "Verbrauchte Menge",
     "add_confirm": "Hinzufügen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "profile_guest": "Gast (nicht angemeldet)",
+    "section_location": "Standort",
+    "location_placeholder": "Wetter-Standort",
+    "section_language": "Sprache",
+    "section_notifications": "Benachrichtigungen",
+    "notifications_placeholder": "Benachrichtigungen und Erinnerungen",
+    "section_garden": "Garten",
+    "supplies": "📦 Vorräte & Mittel",
+    "supplies_sub": "Harnstoff, Algen, Dünger, Geräte",
+    "areas": "🪴 Bereiche",
+    "areas_sub": "Rasen, Hecken, Beete",
+    "section_account": "Konto & Daten",
+    "units": "Einheiten",
+    "export_data": "Daten exportieren (DSGVO)",
+    "logout": "Abmelden",
+    "delete_account": "Konto und alle Daten löschen",
+    "coming_soon": "Demnächst",
+    "version": "Tendask · v1 (MVP)"
   }
 }

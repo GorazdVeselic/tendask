@@ -44,7 +44,7 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.settings_outlined),
-            onPressed: () {}, // wired in M3
+            onPressed: () => context.pushNamed('settings'),
           ),
         ],
       ),

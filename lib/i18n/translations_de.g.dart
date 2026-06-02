@@ -51,6 +51,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
+	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
 }
 
 // Path: nav
@@ -360,6 +361,34 @@ class _Translations$supplies$de extends Translations$supplies$sl {
 	@override String get add_confirm => 'Hinzufügen';
 }
 
+// Path: settings
+class _Translations$settings$de extends Translations$settings$sl {
+	_Translations$settings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Einstellungen';
+	@override String get profile_guest => 'Gast (nicht angemeldet)';
+	@override String get section_location => 'Standort';
+	@override String get location_placeholder => 'Wetter-Standort';
+	@override String get section_language => 'Sprache';
+	@override String get section_notifications => 'Benachrichtigungen';
+	@override String get notifications_placeholder => 'Benachrichtigungen und Erinnerungen';
+	@override String get section_garden => 'Garten';
+	@override String get supplies => '📦 Vorräte & Mittel';
+	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
+	@override String get areas => '🪴 Bereiche';
+	@override String get areas_sub => 'Rasen, Hecken, Beete';
+	@override String get section_account => 'Konto & Daten';
+	@override String get units => 'Einheiten';
+	@override String get export_data => 'Daten exportieren (DSGVO)';
+	@override String get logout => 'Abmelden';
+	@override String get delete_account => 'Konto und alle Daten löschen';
+	@override String get coming_soon => 'Demnächst';
+	@override String get version => 'Tendask · v1 (MVP)';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -561,6 +590,25 @@ extension on TranslationsDe {
 			'supplies.pick_new' => 'Neues Mittel',
 			'supplies.amount' => 'Verbrauchte Menge',
 			'supplies.add_confirm' => 'Hinzufügen',
+			'settings.title' => 'Einstellungen',
+			'settings.profile_guest' => 'Gast (nicht angemeldet)',
+			'settings.section_location' => 'Standort',
+			'settings.location_placeholder' => 'Wetter-Standort',
+			'settings.section_language' => 'Sprache',
+			'settings.section_notifications' => 'Benachrichtigungen',
+			'settings.notifications_placeholder' => 'Benachrichtigungen und Erinnerungen',
+			'settings.section_garden' => 'Garten',
+			'settings.supplies' => '📦 Vorräte & Mittel',
+			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
+			'settings.areas' => '🪴 Bereiche',
+			'settings.areas_sub' => 'Rasen, Hecken, Beete',
+			'settings.section_account' => 'Konto & Daten',
+			'settings.units' => 'Einheiten',
+			'settings.export_data' => 'Daten exportieren (DSGVO)',
+			'settings.logout' => 'Abmelden',
+			'settings.delete_account' => 'Konto und alle Daten löschen',
+			'settings.coming_soon' => 'Demnächst',
+			'settings.version' => 'Tendask · v1 (MVP)',
 			_ => null,
 		};
 	}

@@ -221,5 +221,26 @@
     "pick_new": "New supply",
     "amount": "Amount used",
     "add_confirm": "Add"
+  },
+  "settings": {
+    "title": "Settings",
+    "profile_guest": "Guest (not signed in)",
+    "section_location": "Location",
+    "location_placeholder": "Weather location",
+    "section_language": "Language",
+    "section_notifications": "Notifications",
+    "notifications_placeholder": "Notifications and reminders",
+    "section_garden": "Garden",
+    "supplies": "📦 Supplies",
+    "supplies_sub": "urea, algae, fertilizers, gear",
+    "areas": "🪴 Areas",
+    "areas_sub": "lawns, hedges, beds",
+    "section_account": "Account & data",
+    "units": "Units",
+    "export_data": "Export data (GDPR)",
+    "logout": "Sign out",
+    "delete_account": "Delete account and all data",
+    "coming_soon": "Coming soon",
+    "version": "Tendask · v1 (MVP)"
   }
 }

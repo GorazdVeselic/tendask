@@ -1,0 +1,198 @@
+import 'dart:async';
+
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
+import '../../../i18n/translations.g.dart';
+import '../application/profile_providers.dart';
+
+/// Native language names (endonyms) — not translated; shown the same in every locale.
+String _langLabel(AppLocale loc) => switch (loc) {
+      AppLocale.sl => 'Slovenščina',
+      AppLocale.en => 'English',
+      AppLocale.de => 'Deutsch',
+    };
+
+class SettingsScreen extends ConsumerWidget {
+  const SettingsScreen({super.key});
+
+  void _setLang(WidgetRef ref, AppLocale loc) {
+    unawaited(LocaleSettings.setLocale(loc));
+    unawaited(ref.read(profileRepositoryProvider).setLang(loc.languageCode));
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final current = LocaleSettings.currentLocale;
+
+    void comingSoon() {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(t.settings.coming_soon),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: context.pop,
+        ),
+        title: Text(t.settings.title),
+        centerTitle: true,
+      ),
+      body: ListView(
+        padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+        children: [
+          // Profile (placeholder — M7 auth)
+          Card(
+            child: ListTile(
+              leading: const CircleAvatar(child: Text('👤')),
+              title: Text(t.settings.profile_guest),
+              subtitle: Text(t.settings.coming_soon),
+              onTap: comingSoon,
+            ),
+          ),
+
+          // Location (placeholder — M7)
+          _SectionTitle(t.settings.section_location),
+          Card(
+            child: ListTile(
+              leading: const Text('📍', style: TextStyle(fontSize: 22)),
+              title: Text(t.settings.location_placeholder),
+              subtitle: Text(t.settings.coming_soon),
+              onTap: comingSoon,
+            ),
+          ),
+
+          // Language (ACTIVE)
+          _SectionTitle(t.settings.section_language),
+          SegmentedButton<AppLocale>(
+            segments: [
+              for (final loc in AppLocale.values)
+                ButtonSegment(value: loc, label: Text(_langLabel(loc))),
+            ],
+            selected: {current},
+            onSelectionChanged: (s) => _setLang(ref, s.first),
+            style: const ButtonStyle(visualDensity: VisualDensity.compact),
+          ),
+
+          // Notifications (placeholder — M8)
+          _SectionTitle(t.settings.section_notifications),
+          Card(
+            child: ListTile(
+              leading: const Text('🔔', style: TextStyle(fontSize: 22)),
+              title: Text(t.settings.notifications_placeholder),
+              subtitle: Text(t.settings.coming_soon),
+              onTap: comingSoon,
+            ),
+          ),
+
+          // Garden (ACTIVE)
+          _SectionTitle(t.settings.section_garden),
+          Card(
+            child: Column(
+              children: [
+                ListTile(
+                  leading: const Text('📦', style: TextStyle(fontSize: 22)),
+                  title: Text(t.settings.supplies),
+                  subtitle: Text(t.settings.supplies_sub),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.pushNamed('supplies'),
+                ),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                ListTile(
+                  leading: const Text('🪴', style: TextStyle(fontSize: 22)),
+                  title: Text(t.settings.areas),
+                  subtitle: Text(t.settings.areas_sub),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.pushNamed('areas'),
+                ),
+              ],
+            ),
+          ),
+
+          // Account & data (placeholder — M7 / GDPR)
+          _SectionTitle(t.settings.section_account),
+          Card(
+            child: Column(
+              children: [
+                _PlaceholderTile(label: t.settings.units, onTap: comingSoon),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                _PlaceholderTile(
+                    label: t.settings.export_data, onTap: comingSoon),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                _PlaceholderTile(label: t.settings.logout, onTap: comingSoon),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                _PlaceholderTile(
+                  label: t.settings.delete_account,
+                  destructive: true,
+                  onTap: comingSoon,
+                ),
+              ],
+            ),
+          ),
+
+          const SizedBox(height: 20),
+          Center(
+            child: Text(
+              t.settings.version,
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SectionTitle extends StatelessWidget {
+  const _SectionTitle(this.label);
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
+      child: Text(
+        label.toUpperCase(),
+        style: theme.textTheme.labelSmall?.copyWith(
+            letterSpacing: 0.8, color: theme.colorScheme.onSurfaceVariant),
+      ),
+    );
+  }
+}
+
+class _PlaceholderTile extends StatelessWidget {
+  const _PlaceholderTile({
+    required this.label,
+    required this.onTap,
+    this.destructive = false,
+  });
+
+  final String label;
+  final VoidCallback onTap;
+  final bool destructive;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return ListTile(
+      title: Text(
+        label,
+        style: destructive
+            ? TextStyle(color: theme.colorScheme.error)
+            : null,
+      ),
+      trailing: const Icon(Icons.chevron_right),
+      onTap: onTap,
+    );
+  }
+}

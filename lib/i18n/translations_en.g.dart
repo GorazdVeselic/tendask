@@ -51,6 +51,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
 	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
 	@override late final _Translations$supplies$en supplies = _Translations$supplies$en._(_root);
+	@override late final _Translations$settings$en settings = _Translations$settings$en._(_root);
 }
 
 // Path: nav
@@ -360,6 +361,34 @@ class _Translations$supplies$en extends Translations$supplies$sl {
 	@override String get add_confirm => 'Add';
 }
 
+// Path: settings
+class _Translations$settings$en extends Translations$settings$sl {
+	_Translations$settings$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Settings';
+	@override String get profile_guest => 'Guest (not signed in)';
+	@override String get section_location => 'Location';
+	@override String get location_placeholder => 'Weather location';
+	@override String get section_language => 'Language';
+	@override String get section_notifications => 'Notifications';
+	@override String get notifications_placeholder => 'Notifications and reminders';
+	@override String get section_garden => 'Garden';
+	@override String get supplies => '📦 Supplies';
+	@override String get supplies_sub => 'urea, algae, fertilizers, gear';
+	@override String get areas => '🪴 Areas';
+	@override String get areas_sub => 'lawns, hedges, beds';
+	@override String get section_account => 'Account & data';
+	@override String get units => 'Units';
+	@override String get export_data => 'Export data (GDPR)';
+	@override String get logout => 'Sign out';
+	@override String get delete_account => 'Delete account and all data';
+	@override String get coming_soon => 'Coming soon';
+	@override String get version => 'Tendask · v1 (MVP)';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -561,6 +590,25 @@ extension on TranslationsEn {
 			'supplies.pick_new' => 'New supply',
 			'supplies.amount' => 'Amount used',
 			'supplies.add_confirm' => 'Add',
+			'settings.title' => 'Settings',
+			'settings.profile_guest' => 'Guest (not signed in)',
+			'settings.section_location' => 'Location',
+			'settings.location_placeholder' => 'Weather location',
+			'settings.section_language' => 'Language',
+			'settings.section_notifications' => 'Notifications',
+			'settings.notifications_placeholder' => 'Notifications and reminders',
+			'settings.section_garden' => 'Garden',
+			'settings.supplies' => '📦 Supplies',
+			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
+			'settings.areas' => '🪴 Areas',
+			'settings.areas_sub' => 'lawns, hedges, beds',
+			'settings.section_account' => 'Account & data',
+			'settings.units' => 'Units',
+			'settings.export_data' => 'Export data (GDPR)',
+			'settings.logout' => 'Sign out',
+			'settings.delete_account' => 'Delete account and all data',
+			'settings.coming_soon' => 'Coming soon',
+			'settings.version' => 'Tendask · v1 (MVP)',
 			_ => null,
 		};
 	}

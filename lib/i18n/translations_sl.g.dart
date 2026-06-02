@@ -52,6 +52,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
 	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
+	late final Translations$settings$sl settings = Translations$settings$sl.internal(_root);
 }
 
 // Path: nav
@@ -747,6 +748,72 @@ class Translations$supplies$sl {
 	String get add_confirm => 'Dodaj';
 }
 
+// Path: settings
+class Translations$settings$sl {
+	Translations$settings$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Nastavitve'
+	String get title => 'Nastavitve';
+
+	/// sl: 'Gost (brez prijave)'
+	String get profile_guest => 'Gost (brez prijave)';
+
+	/// sl: 'Lokacija'
+	String get section_location => 'Lokacija';
+
+	/// sl: 'Lokacija za vreme'
+	String get location_placeholder => 'Lokacija za vreme';
+
+	/// sl: 'Jezik'
+	String get section_language => 'Jezik';
+
+	/// sl: 'Obvestila'
+	String get section_notifications => 'Obvestila';
+
+	/// sl: 'Obvestila in opomniki'
+	String get notifications_placeholder => 'Obvestila in opomniki';
+
+	/// sl: 'Vrt'
+	String get section_garden => 'Vrt';
+
+	/// sl: '📦 Zaloge & sredstva'
+	String get supplies => '📦 Zaloge & sredstva';
+
+	/// sl: 'urea, alge, gnojila, oprema'
+	String get supplies_sub => 'urea, alge, gnojila, oprema';
+
+	/// sl: '🪴 Območja'
+	String get areas => '🪴 Območja';
+
+	/// sl: 'trate, meje, gredice'
+	String get areas_sub => 'trate, meje, gredice';
+
+	/// sl: 'Račun & podatki'
+	String get section_account => 'Račun & podatki';
+
+	/// sl: 'Enote'
+	String get units => 'Enote';
+
+	/// sl: 'Izvozi podatke (GDPR)'
+	String get export_data => 'Izvozi podatke (GDPR)';
+
+	/// sl: 'Odjava'
+	String get logout => 'Odjava';
+
+	/// sl: 'Izbriši račun in vse podatke'
+	String get delete_account => 'Izbriši račun in vse podatke';
+
+	/// sl: 'Na voljo kmalu'
+	String get coming_soon => 'Na voljo kmalu';
+
+	/// sl: 'Tendask · v1 (MVP)'
+	String get version => 'Tendask · v1 (MVP)';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -948,6 +1015,25 @@ extension on Translations {
 			'supplies.pick_new' => 'Novo sredstvo',
 			'supplies.amount' => 'Porabljena količina',
 			'supplies.add_confirm' => 'Dodaj',
+			'settings.title' => 'Nastavitve',
+			'settings.profile_guest' => 'Gost (brez prijave)',
+			'settings.section_location' => 'Lokacija',
+			'settings.location_placeholder' => 'Lokacija za vreme',
+			'settings.section_language' => 'Jezik',
+			'settings.section_notifications' => 'Obvestila',
+			'settings.notifications_placeholder' => 'Obvestila in opomniki',
+			'settings.section_garden' => 'Vrt',
+			'settings.supplies' => '📦 Zaloge & sredstva',
+			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
+			'settings.areas' => '🪴 Območja',
+			'settings.areas_sub' => 'trate, meje, gredice',
+			'settings.section_account' => 'Račun & podatki',
+			'settings.units' => 'Enote',
+			'settings.export_data' => 'Izvozi podatke (GDPR)',
+			'settings.logout' => 'Odjava',
+			'settings.delete_account' => 'Izbriši račun in vse podatke',
+			'settings.coming_soon' => 'Na voljo kmalu',
+			'settings.version' => 'Tendask · v1 (MVP)',
 			_ => null,
 		};
 	}
