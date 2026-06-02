@@ -265,6 +265,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   naj obrazec opravila (02/07) ponudi inline povezavo **"+ Dodaj območje"** → odpre obrazec območja in
   se po vrnitvi vrne nazaj z izbranim novim območjem (trenutno je vstop le prek zavihka Območja). Velja
   razmisliti tudi za rastlino/sredstvo (isti vzorec "ustvari sproti").
+- **FR-4 — Navigacija po dnevih na časovnici Dnevnika.** Wireframe 03 predvideva mini koledarski
+  trak (vodoravni dnevi) na vrhu časovnice za hiter skok/premik po dnevih (prejšnji/naslednji); v
+  M2.5 ni bil implementiran (časovnica je le kronološki seznam + filter). Dodati trak (skok na dan)
+  ali ‹ › dnevno navigacijo.
 
 ## Dnevnik napredka
 
