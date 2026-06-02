@@ -42,6 +42,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$de nav = _Translations$nav$de._(_root);
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
+	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 }
@@ -80,8 +81,28 @@ class _Translations$common$de extends Translations$common$sl {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get today => 'heute';
+	@override String get today => 'Heute';
+	@override String get today_lower => 'heute';
 	@override String get yesterday => 'gestern';
+}
+
+// Path: journal
+class _Translations$journal$de extends Translations$journal$sl {
+	_Translations$journal$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Tagebuch';
+	@override String get subtitle => 'Gartentagebuch';
+	@override String get filter_all => 'Alle';
+	@override String get filter_tasks => '✓ Aufgaben';
+	@override String get filter_notes => '✍️ Notizen';
+	@override String get empty => 'Noch keine Einträge.';
+	@override String get empty_tasks => 'Keine erledigten Aufgaben.';
+	@override String get empty_notes => 'Noch keine Notizen.';
+	@override String get timeline => 'Zeitlinie';
+	@override String get month_view => 'Monat';
 }
 
 // Path: quick_log
@@ -167,8 +188,19 @@ extension on TranslationsDe {
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'home.weather_placeholder' => 'Wetter kommt in M4.',
-			'common.today' => 'heute',
+			'common.today' => 'Heute',
+			'common.today_lower' => 'heute',
 			'common.yesterday' => 'gestern',
+			'journal.title' => 'Tagebuch',
+			'journal.subtitle' => 'Gartentagebuch',
+			'journal.filter_all' => 'Alle',
+			'journal.filter_tasks' => '✓ Aufgaben',
+			'journal.filter_notes' => '✍️ Notizen',
+			'journal.empty' => 'Noch keine Einträge.',
+			'journal.empty_tasks' => 'Keine erledigten Aufgaben.',
+			'journal.empty_notes' => 'Noch keine Notizen.',
+			'journal.timeline' => 'Zeitlinie',
+			'journal.month_view' => 'Monat',
 			'quick_log.title' => 'Schnell erfassen',
 			'quick_log.advanced' => 'Erweitert ›',
 			'quick_log.note_card_title' => 'Keine Aufgabe, nur eine Notiz?',

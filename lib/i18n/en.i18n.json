@@ -13,8 +13,21 @@
     "weather_placeholder": "Weather coming in M4."
   },
   "common": {
-    "today": "today",
+    "today": "Today",
+    "today_lower": "today",
     "yesterday": "yesterday"
+  },
+  "journal": {
+    "title": "Journal",
+    "subtitle": "garden journal",
+    "filter_all": "All",
+    "filter_tasks": "✓ Tasks",
+    "filter_notes": "✍️ Notes",
+    "empty": "No journal entries yet.",
+    "empty_tasks": "No completed tasks.",
+    "empty_notes": "No notes yet.",
+    "timeline": "Timeline",
+    "month_view": "Month"
   },
   "quick_log": {
     "title": "Quick Log",

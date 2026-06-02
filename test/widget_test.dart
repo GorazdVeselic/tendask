@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
+import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -27,10 +30,10 @@ void main() {
           ),
           branches: [
             StatefulShellBranch(routes: [
-              GoRoute(path: '/journal', builder: (_, _) => const JournalScreen()),
+              GoRoute(path: '/journal', builder: (_, _2) => const JournalScreen()),
             ]),
             StatefulShellBranch(routes: [
-              GoRoute(path: '/tasks', builder: (_, _) => const TasksScreen()),
+              GoRoute(path: '/tasks', builder: (_, _2) => const TasksScreen()),
             ]),
           ],
         ),
@@ -40,6 +43,15 @@ void main() {
     await tester.pumpWidget(
       TranslationProvider(
         child: ProviderScope(
+          overrides: [
+            // Provide empty data so JournalScreen resolves immediately
+            completedTasksProvider
+                .overrideWith((ref) => Stream.value(<Task>[])),
+            taskTypesMapProvider
+                .overrideWith((ref) async => <String, TaskType>{}),
+            areasMapProvider
+                .overrideWith((ref) => Stream.value(<String, Area>{})),
+          ],
           child: MaterialApp.router(routerConfig: router),
         ),
       ),

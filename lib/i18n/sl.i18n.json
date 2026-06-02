@@ -13,8 +13,21 @@
     "weather_placeholder": "Vreme bo na voljo v M4."
   },
   "common": {
-    "today": "danes",
+    "today": "Danes",
+    "today_lower": "danes",
     "yesterday": "včeraj"
+  },
+  "journal": {
+    "title": "Dnevnik",
+    "subtitle": "vrtni dnevnik",
+    "filter_all": "Vse",
+    "filter_tasks": "✓ Opravila",
+    "filter_notes": "✍️ Opombe",
+    "empty": "Ni vnosov v dnevniku.",
+    "empty_tasks": "Ni opravljenih opravil.",
+    "empty_notes": "Ni opomb.",
+    "timeline": "Časovnica",
+    "month_view": "Mesec"
   },
   "quick_log": {
     "title": "Hiter vnos",

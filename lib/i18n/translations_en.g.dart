@@ -42,6 +42,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
+	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 }
@@ -80,8 +81,28 @@ class _Translations$common$en extends Translations$common$sl {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get today => 'today';
+	@override String get today => 'Today';
+	@override String get today_lower => 'today';
 	@override String get yesterday => 'yesterday';
+}
+
+// Path: journal
+class _Translations$journal$en extends Translations$journal$sl {
+	_Translations$journal$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Journal';
+	@override String get subtitle => 'garden journal';
+	@override String get filter_all => 'All';
+	@override String get filter_tasks => '✓ Tasks';
+	@override String get filter_notes => '✍️ Notes';
+	@override String get empty => 'No journal entries yet.';
+	@override String get empty_tasks => 'No completed tasks.';
+	@override String get empty_notes => 'No notes yet.';
+	@override String get timeline => 'Timeline';
+	@override String get month_view => 'Month';
 }
 
 // Path: quick_log
@@ -167,8 +188,19 @@ extension on TranslationsEn {
 			'home.no_tasks_today' => 'No tasks planned for today.',
 			'home.no_recent' => 'No completed tasks yet.',
 			'home.weather_placeholder' => 'Weather coming in M4.',
-			'common.today' => 'today',
+			'common.today' => 'Today',
+			'common.today_lower' => 'today',
 			'common.yesterday' => 'yesterday',
+			'journal.title' => 'Journal',
+			'journal.subtitle' => 'garden journal',
+			'journal.filter_all' => 'All',
+			'journal.filter_tasks' => '✓ Tasks',
+			'journal.filter_notes' => '✍️ Notes',
+			'journal.empty' => 'No journal entries yet.',
+			'journal.empty_tasks' => 'No completed tasks.',
+			'journal.empty_notes' => 'No notes yet.',
+			'journal.timeline' => 'Timeline',
+			'journal.month_view' => 'Month',
 			'quick_log.title' => 'Quick Log',
 			'quick_log.advanced' => 'Advanced ›',
 			'quick_log.note_card_title' => 'No task, just a note?',

@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
+	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 }
@@ -100,11 +101,53 @@ class Translations$common$sl {
 
 	// Translations
 
+	/// sl: 'Danes'
+	String get today => 'Danes';
+
 	/// sl: 'danes'
-	String get today => 'danes';
+	String get today_lower => 'danes';
 
 	/// sl: 'včeraj'
 	String get yesterday => 'včeraj';
+}
+
+// Path: journal
+class Translations$journal$sl {
+	Translations$journal$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Dnevnik'
+	String get title => 'Dnevnik';
+
+	/// sl: 'vrtni dnevnik'
+	String get subtitle => 'vrtni dnevnik';
+
+	/// sl: 'Vse'
+	String get filter_all => 'Vse';
+
+	/// sl: '✓ Opravila'
+	String get filter_tasks => '✓ Opravila';
+
+	/// sl: '✍️ Opombe'
+	String get filter_notes => '✍️ Opombe';
+
+	/// sl: 'Ni vnosov v dnevniku.'
+	String get empty => 'Ni vnosov v dnevniku.';
+
+	/// sl: 'Ni opravljenih opravil.'
+	String get empty_tasks => 'Ni opravljenih opravil.';
+
+	/// sl: 'Ni opomb.'
+	String get empty_notes => 'Ni opomb.';
+
+	/// sl: 'Časovnica'
+	String get timeline => 'Časovnica';
+
+	/// sl: 'Mesec'
+	String get month_view => 'Mesec';
 }
 
 // Path: quick_log
@@ -286,8 +329,19 @@ extension on Translations {
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'home.weather_placeholder' => 'Vreme bo na voljo v M4.',
-			'common.today' => 'danes',
+			'common.today' => 'Danes',
+			'common.today_lower' => 'danes',
 			'common.yesterday' => 'včeraj',
+			'journal.title' => 'Dnevnik',
+			'journal.subtitle' => 'vrtni dnevnik',
+			'journal.filter_all' => 'Vse',
+			'journal.filter_tasks' => '✓ Opravila',
+			'journal.filter_notes' => '✍️ Opombe',
+			'journal.empty' => 'Ni vnosov v dnevniku.',
+			'journal.empty_tasks' => 'Ni opravljenih opravil.',
+			'journal.empty_notes' => 'Ni opomb.',
+			'journal.timeline' => 'Časovnica',
+			'journal.month_view' => 'Mesec',
 			'quick_log.title' => 'Hiter vnos',
 			'quick_log.advanced' => 'Napredno ›',
 			'quick_log.note_card_title' => 'Nimaš opravila, le zapis?',

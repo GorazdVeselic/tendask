@@ -13,8 +13,21 @@
     "weather_placeholder": "Wetter kommt in M4."
   },
   "common": {
-    "today": "heute",
+    "today": "Heute",
+    "today_lower": "heute",
     "yesterday": "gestern"
+  },
+  "journal": {
+    "title": "Tagebuch",
+    "subtitle": "Gartentagebuch",
+    "filter_all": "Alle",
+    "filter_tasks": "✓ Aufgaben",
+    "filter_notes": "✍️ Notizen",
+    "empty": "Noch keine Einträge.",
+    "empty_tasks": "Keine erledigten Aufgaben.",
+    "empty_notes": "Noch keine Notizen.",
+    "timeline": "Zeitlinie",
+    "month_view": "Monat"
   },
   "quick_log": {
     "title": "Schnell erfassen",
