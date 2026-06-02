@@ -111,7 +111,9 @@ class SettingsScreen extends ConsumerWidget {
                   title: Text(t.settings.areas),
                   subtitle: Text(t.settings.areas_sub),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.pushNamed('areas'),
+                  // 'areas' is a shell-branch tab → switch to it (goNamed),
+                  // never pushNamed a shell route from a full-screen page.
+                  onTap: () => context.goNamed('areas'),
                 ),
               ],
             ),

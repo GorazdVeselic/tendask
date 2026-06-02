@@ -249,6 +249,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 ---
 
+## Backlog (feature requests)
+
+> Zabeleženo med razvojem; ni vezano na trenutni mejnik. Implementira se kot ločen korak po dogovoru.
+
+- **FR-1 — Grid tipov opravil: razširi/skrij + sort po pogostosti.** Grid (~26 tipov) v Hitrem
+  vnosu (02) in obrazcu (07) privzeto pokaže le ~6 (2–3 vrstice) + gumb **Razširi** (prikaže vse) /
+  **Skrij** (nazaj na 6). Bonus: sortiranje po pogostosti uporabe **per user** — izvedljivo brez nove
+  sheme prek `SELECT task_type_id, COUNT(*) FROM task WHERE deleted=0 GROUP BY task_type_id ORDER BY 2 DESC`
+  (najpogostejši v zgornjih 6). Najprej ekstrahiraj skupni `TaskTypeGrid` widget (zdaj podvojen v 02/07).
+- **FR-2 — Dodaj območje iz obrazca opravila.** Ko uporabnik nima nobenega območja (ali želi novo),
+  naj obrazec opravila (02/07) ponudi inline povezavo **"+ Dodaj območje"** → odpre obrazec območja in
+  se po vrnitvi vrne nazaj z izbranim novim območjem (trenutno je vstop le prek zavihka Območja). Velja
+  razmisliti tudi za rastlino/sredstvo (isti vzorec "ustvari sproti").
+
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.

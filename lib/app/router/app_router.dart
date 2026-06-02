@@ -98,8 +98,10 @@ final appRouter = GoRouter(
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
     ),
+    // Path must not collide with the shell '/areas/:id' (area-detail):
+    // '/areas/new' would match ':id'="new". Use a distinct prefix.
     GoRoute(
-      path: '/areas/new',
+      path: '/area-new',
       name: 'area-new',
       builder: (context, state) => const AreaFormScreen(),
     ),
@@ -120,8 +122,10 @@ final appRouter = GoRouter(
       builder: (context, state) =>
           NoteFormScreen(noteId: state.pathParameters['id']),
     ),
+    // Path must not collide with the shell '/tasks/:id' (task-detail):
+    // '/tasks/new' would match ':id'="new". Use a distinct prefix.
     GoRoute(
-      path: '/tasks/new',
+      path: '/task-new',
       name: 'task-new',
       builder: (context, state) {
         final raw = state.uri.queryParameters['date'];
