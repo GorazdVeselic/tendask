@@ -110,6 +110,11 @@ class _Translations$journal$de extends Translations$journal$sl {
 	@override String get empty_notes => 'Noch keine Notizen.';
 	@override String get timeline => 'Zeitlinie';
 	@override String get month_view => 'Monat';
+	@override String get month_hint => '💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).';
+	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '{n} Aufgabe diesen Monat',
+		other: '{n} Aufgaben diesen Monat',
+	);
 }
 
 // Path: quick_log
@@ -386,6 +391,8 @@ extension on TranslationsDe {
 			'journal.empty_notes' => 'Noch keine Notizen.',
 			'journal.timeline' => 'Zeitlinie',
 			'journal.month_view' => 'Monat',
+			'journal.month_hint' => '💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).',
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '{n} Aufgabe diesen Monat', other: '{n} Aufgaben diesen Monat', ), 
 			'quick_log.title' => 'Schnell erfassen',
 			'quick_log.advanced' => 'Erweitert ›',
 			'quick_log.note_card_title' => 'Keine Aufgabe, nur eine Notiz?',

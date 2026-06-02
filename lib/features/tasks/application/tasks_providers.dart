@@ -25,6 +25,10 @@ final completedTasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(tasksRepositoryProvider).watchCompleted();
 });
 
+final allTasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
+  return ref.watch(tasksRepositoryProvider).watchAll();
+});
+
 final taskByIdProvider =
     StreamProvider.autoDispose.family<Task?, String>((ref, id) {
   return ref.watch(tasksRepositoryProvider).watchById(id);

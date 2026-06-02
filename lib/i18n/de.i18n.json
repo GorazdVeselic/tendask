@@ -28,7 +28,12 @@
     "empty_tasks": "Keine erledigten Aufgaben.",
     "empty_notes": "Noch keine Notizen.",
     "timeline": "Zeitlinie",
-    "month_view": "Monat"
+    "month_view": "Monat",
+    "month_hint": "💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).",
+    "month_count(n)": {
+      "one": "{n} Aufgabe diesen Monat",
+      "other": "{n} Aufgaben diesen Monat"
+    }
   },
   "quick_log": {
     "title": "Schnell erfassen",

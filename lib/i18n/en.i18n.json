@@ -28,7 +28,12 @@
     "empty_tasks": "No completed tasks.",
     "empty_notes": "No notes yet.",
     "timeline": "Timeline",
-    "month_view": "Month"
+    "month_view": "Month",
+    "month_hint": "💡 Tap a day to add a task (past or planned).",
+    "month_count(n)": {
+      "one": "{n} task this month",
+      "other": "{n} tasks this month"
+    }
   },
   "quick_log": {
     "title": "Quick Log",

@@ -110,6 +110,11 @@ class _Translations$journal$en extends Translations$journal$sl {
 	@override String get empty_notes => 'No notes yet.';
 	@override String get timeline => 'Timeline';
 	@override String get month_view => 'Month';
+	@override String get month_hint => '💡 Tap a day to add a task (past or planned).';
+	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '{n} task this month',
+		other: '{n} tasks this month',
+	);
 }
 
 // Path: quick_log
@@ -386,6 +391,8 @@ extension on TranslationsEn {
 			'journal.empty_notes' => 'No notes yet.',
 			'journal.timeline' => 'Timeline',
 			'journal.month_view' => 'Month',
+			'journal.month_hint' => '💡 Tap a day to add a task (past or planned).',
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '{n} task this month', other: '{n} tasks this month', ), 
 			'quick_log.title' => 'Quick Log',
 			'quick_log.advanced' => 'Advanced ›',
 			'quick_log.note_card_title' => 'No task, just a note?',

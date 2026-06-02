@@ -117,7 +117,12 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/tasks/new',
       name: 'task-new',
-      builder: (context, state) => const TaskFormScreen(),
+      builder: (context, state) {
+        final raw = state.uri.queryParameters['date'];
+        return TaskFormScreen(
+          initialDate: raw != null ? DateTime.tryParse(raw) : null,
+        );
+      },
     ),
     GoRoute(
       path: '/tasks/:id/edit',

@@ -157,6 +157,15 @@ class Translations$journal$sl {
 
 	/// sl: 'Mesec'
 	String get month_view => 'Mesec';
+
+	/// sl: '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).'
+	String get month_hint => '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).';
+
+	/// sl: '(one) {{n} opravilo ta mesec} (other) {{n} opravil ta mesec}'
+	String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '{n} opravilo ta mesec',
+		other: '{n} opravil ta mesec',
+	);
 }
 
 // Path: quick_log
@@ -769,6 +778,8 @@ extension on Translations {
 			'journal.empty_notes' => 'Ni opomb.',
 			'journal.timeline' => 'Časovnica',
 			'journal.month_view' => 'Mesec',
+			'journal.month_hint' => '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).',
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '{n} opravilo ta mesec', other: '{n} opravil ta mesec', ), 
 			'quick_log.title' => 'Hiter vnos',
 			'quick_log.advanced' => 'Napredno ›',
 			'quick_log.note_card_title' => 'Nimaš opravila, le zapis?',

@@ -21,10 +21,13 @@ import '../application/tasks_providers.dart';
 import 'widgets/task_type_tile.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
-  const TaskFormScreen({super.key, this.taskId});
+  const TaskFormScreen({super.key, this.taskId, this.initialDate});
 
   /// Null = create mode; non-null = edit mode.
   final String? taskId;
+
+  /// Preselected date for create mode (e.g. tapped day in the month calendar).
+  final DateTime? initialDate;
 
   @override
   ConsumerState<TaskFormScreen> createState() => _TaskFormScreenState();
@@ -36,7 +39,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   String? _userPlantId;
   final List<SupplySpec> _supplies = [];
   TaskStatus _status = TaskStatus.waiting;
-  DateTime _date = DateTime.now();
+  late DateTime _date;
   final _noteController = TextEditingController();
   bool _isLoading = false;
   bool _isSaving = false;
@@ -46,6 +49,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   @override
   void initState() {
     super.initState();
+    _date = widget.initialDate ?? DateTime.now();
     if (_isEdit) {
       _isLoading = true;
       Future.microtask(_loadTask);

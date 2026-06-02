@@ -12,8 +12,11 @@ import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/notes_providers.dart';
 import 'journal_entry.dart';
+import 'month_calendar_view.dart';
 
 enum _Filter { all, tasks, notes }
+
+enum _View { timeline, month }
 
 class JournalScreen extends ConsumerStatefulWidget {
   const JournalScreen({super.key});
@@ -24,6 +27,7 @@ class JournalScreen extends ConsumerStatefulWidget {
 
 class _JournalScreenState extends ConsumerState<JournalScreen> {
   _Filter _filter = _Filter.all;
+  _View _view = _View.timeline;
 
   @override
   Widget build(BuildContext context) {
@@ -58,26 +62,43 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
       ),
       body: Column(
         children: [
-          _FilterBar(
-            filter: _filter,
-            onChanged: (f) => setState(() => _filter = f),
-            t: t,
+          Padding(
+            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+            child: SegmentedButton<_View>(
+              segments: [
+                ButtonSegment(
+                    value: _View.timeline, label: Text(t.journal.timeline)),
+                ButtonSegment(
+                    value: _View.month, label: Text(t.journal.month_view)),
+              ],
+              selected: {_view},
+              onSelectionChanged: (s) => setState(() => _view = s.first),
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+            ),
           ),
+          if (_view == _View.timeline)
+            _FilterBar(
+              filter: _filter,
+              onChanged: (f) => setState(() => _filter = f),
+              t: t,
+            ),
           Expanded(
-            child: completed == null ||
-                    notes == null ||
-                    catalog == null ||
-                    areas == null
-                ? const Center(child: CircularProgressIndicator.adaptive())
-                : _JournalList(
-                    tasks: completed,
-                    notes: notes,
-                    catalog: catalog,
-                    areas: areas,
-                    filter: _filter,
-                    t: t,
-                    theme: theme,
-                  ),
+            child: _view == _View.month
+                ? const MonthCalendarView()
+                : completed == null ||
+                        notes == null ||
+                        catalog == null ||
+                        areas == null
+                    ? const Center(child: CircularProgressIndicator.adaptive())
+                    : _JournalList(
+                        tasks: completed,
+                        notes: notes,
+                        catalog: catalog,
+                        areas: areas,
+                        filter: _filter,
+                        t: t,
+                        theme: theme,
+                      ),
           ),
         ],
       ),

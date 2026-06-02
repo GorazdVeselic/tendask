@@ -28,7 +28,12 @@
     "empty_tasks": "Ni opravljenih opravil.",
     "empty_notes": "Ni opomb.",
     "timeline": "Časovnica",
-    "month_view": "Mesec"
+    "month_view": "Mesec",
+    "month_hint": "💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).",
+    "month_count(n)": {
+      "one": "{n} opravilo ta mesec",
+      "other": "{n} opravil ta mesec"
+    }
   },
   "quick_log": {
     "title": "Hiter vnos",

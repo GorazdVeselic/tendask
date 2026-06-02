@@ -34,6 +34,13 @@ class TasksRepository {
           ..orderBy([(t) => OrderingTerm.desc(t.date)])
       ).watch();
 
+  /// Every non-deleted task (any status), oldest first — for the month calendar.
+  Stream<List<Task>> watchAll() => (
+        _db.select(_db.tasks)
+          ..where((t) => t.deleted.equals(false))
+          ..orderBy([(t) => OrderingTerm.asc(t.date)])
+      ).watch();
+
   /// Task history for one area (newest first), for the area detail screen.
   Stream<List<Task>> watchByArea(String areaId) => (
         _db.select(_db.tasks)
