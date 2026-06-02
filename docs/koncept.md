@@ -386,7 +386,9 @@ OPRAVILO = { tip · območje · rastlina? · DATUM (preteklost/prihodnost) ·
 - **Dnevnik (03) = vrtni dnevnik**: opravljena opravila + opombe pomešano po datumu;
   opombe imajo ✍️ ikono; filter **Vse / Opravila / Opombe**.
 - Vstop za samostojno opombo: iz **Hitrega vnosa** (✍️ kartica) ali tap v dnevniku → 18.
-  Ohranjeno pravilo **FAB ＋ = Hiter vnos povsod** (opomba je veja, ne 5. zavihek).
+  Pravilo **FAB ＋ = Hiter vnos** (opomba je veja, ne 5. zavihek). FAB je na **Domov + Dnevnik**
+  (Območja in Opravila imata lastne akcije za dodajanje; FAB bi prekrival vsebino/akcijske liste —
+  popravek iz ročne preverbe M3.7).
 - Wireframe: `18-note-edit.html`. Če opombo navežeš na rastlino, se pokaže v njeni zgodovini.
 
 ### Skupni pregled flowa — popravki neskladij (8. krog)

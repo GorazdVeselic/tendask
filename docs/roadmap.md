@@ -258,6 +258,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   **Skrij** (nazaj na 6). Bonus: sortiranje po pogostosti uporabe **per user** — izvedljivo brez nove
   sheme prek `SELECT task_type_id, COUNT(*) FROM task WHERE deleted=0 GROUP BY task_type_id ORDER BY 2 DESC`
   (najpogostejši v zgornjih 6). Najprej ekstrahiraj skupni `TaskTypeGrid` widget (zdaj podvojen v 02/07).
+- **FR-3 — Zatikanja (performance).** Med ročno preverbo M3.7 opažena rahla zatikanja pri
+  navigaciji/scrollu. Kasneje: profiliraj (DevTools timeline), poišči nepotrebne rebuilde
+  (`const`, ozki `watch`/`select`), preveri drift stream rebuilde. Najprej izmeri, šele nato optimiziraj.
 - **FR-2 — Dodaj območje iz obrazca opravila.** Ko uporabnik nima nobenega območja (ali želi novo),
   naj obrazec opravila (02/07) ponudi inline povezavo **"+ Dodaj območje"** → odpre obrazec območja in
   se po vrnitvi vrne nazaj z izbranim novim območjem (trenutno je vstop le prek zavihka Območja). Velja

@@ -256,7 +256,7 @@ class _Translations$task_form$de extends Translations$task_form$sl {
 	@override String get no_areas => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.';
 	@override String get plant => 'Pflanze';
 	@override String get plant_hint => '(für Schnitt, Behandlung, Ernte…)';
-	@override String get plant_add => '+ Pflanze auswählen';
+	@override String get plant_add => 'Pflanze auswählen';
 	@override String get plant_note => 'Mit Pflanze verknüpfen, nicht nur Bereich.';
 	@override String get plant_select => 'Pflanze auswählen';
 	@override String get plant_none => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
@@ -304,9 +304,8 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get form_name_hint => 'z. B. Hochbeet 1';
 	@override String get form_type => 'Typ';
 	@override String get form_plants => 'Pflanzen im Bereich';
-	@override String get form_plants_add => '+ Pflanze hinzufügen';
+	@override String get form_plants_add => 'Pflanze hinzufügen';
 	@override String get form_plants_note => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.';
-	@override String get form_location_info => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.';
 	@override String get form_save => 'Bereich speichern';
 	@override String get err_name => 'Bereichsnamen eingeben.';
 	@override String get plants_empty => 'Noch keine Pflanzen.';
@@ -514,7 +513,7 @@ extension on TranslationsDe {
 			'task_form.no_areas' => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.',
 			'task_form.plant' => 'Pflanze',
 			'task_form.plant_hint' => '(für Schnitt, Behandlung, Ernte…)',
-			'task_form.plant_add' => '+ Pflanze auswählen',
+			'task_form.plant_add' => 'Pflanze auswählen',
 			'task_form.plant_note' => 'Mit Pflanze verknüpfen, nicht nur Bereich.',
 			'task_form.plant_select' => 'Pflanze auswählen',
 			'task_form.plant_none' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
@@ -553,9 +552,8 @@ extension on TranslationsDe {
 			'areas.form_name_hint' => 'z. B. Hochbeet 1',
 			'areas.form_type' => 'Typ',
 			'areas.form_plants' => 'Pflanzen im Bereich',
-			'areas.form_plants_add' => '+ Pflanze hinzufügen',
+			'areas.form_plants_add' => 'Pflanze hinzufügen',
 			'areas.form_plants_note' => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.',
-			'areas.form_location_info' => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.',
 			'areas.form_save' => 'Bereich speichern',
 			'areas.err_name' => 'Bereichsnamen eingeben.',
 			'areas.plants_empty' => 'Noch keine Pflanzen.',

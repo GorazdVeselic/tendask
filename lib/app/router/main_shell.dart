@@ -11,12 +11,17 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
+    // Quick-log FAB only on Home (0) and Journal (1); Areas/Tasks have their
+    // own add actions and the FAB would overlap their content / action sheets.
+    final showFab = shell.currentIndex == 0 || shell.currentIndex == 1;
     return Scaffold(
       body: shell,
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => context.pushNamed('quick-log'),
-        child: const Icon(Icons.add),
-      ),
+      floatingActionButton: showFab
+          ? FloatingActionButton(
+              onPressed: () => context.pushNamed('quick-log'),
+              child: const Icon(Icons.add),
+            )
+          : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,

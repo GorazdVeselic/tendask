@@ -256,7 +256,7 @@ class _Translations$task_form$en extends Translations$task_form$sl {
 	@override String get no_areas => 'No areas yet — add them in the Areas section.';
 	@override String get plant => 'Plant';
 	@override String get plant_hint => '(for pruning, treatment, harvesting…)';
-	@override String get plant_add => '+ Select plant';
+	@override String get plant_add => 'Select plant';
 	@override String get plant_note => 'Link to a plant, not just an area.';
 	@override String get plant_select => 'Select plant';
 	@override String get plant_none => 'This area has no plants yet. Add one with the button below.';
@@ -304,9 +304,8 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get form_name_hint => 'e.g. Raised bed 1';
 	@override String get form_type => 'Type';
 	@override String get form_plants => 'Plants in area';
-	@override String get form_plants_add => '+ Add plant';
+	@override String get form_plants_add => 'Add plant';
 	@override String get form_plants_note => 'Tasks (pruning, treatment, harvesting) link to the selected plant.';
-	@override String get form_location_info => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.';
 	@override String get form_save => 'Save area';
 	@override String get err_name => 'Enter an area name.';
 	@override String get plants_empty => 'No plants yet.';
@@ -514,7 +513,7 @@ extension on TranslationsEn {
 			'task_form.no_areas' => 'No areas yet — add them in the Areas section.',
 			'task_form.plant' => 'Plant',
 			'task_form.plant_hint' => '(for pruning, treatment, harvesting…)',
-			'task_form.plant_add' => '+ Select plant',
+			'task_form.plant_add' => 'Select plant',
 			'task_form.plant_note' => 'Link to a plant, not just an area.',
 			'task_form.plant_select' => 'Select plant',
 			'task_form.plant_none' => 'This area has no plants yet. Add one with the button below.',
@@ -553,9 +552,8 @@ extension on TranslationsEn {
 			'areas.form_name_hint' => 'e.g. Raised bed 1',
 			'areas.form_type' => 'Type',
 			'areas.form_plants' => 'Plants in area',
-			'areas.form_plants_add' => '+ Add plant',
+			'areas.form_plants_add' => 'Add plant',
 			'areas.form_plants_note' => 'Tasks (pruning, treatment, harvesting) link to the selected plant.',
-			'areas.form_location_info' => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.',
 			'areas.form_save' => 'Save area',
 			'areas.err_name' => 'Enter an area name.',
 			'areas.plants_empty' => 'No plants yet.',

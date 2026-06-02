@@ -492,8 +492,8 @@ class Translations$task_form$sl {
 	/// sl: '(za obrez, tretiranje, pobiranje…)'
 	String get plant_hint => '(za obrez, tretiranje, pobiranje…)';
 
-	/// sl: '+ Izberi rastlino'
-	String get plant_add => '+ Izberi rastlino';
+	/// sl: 'Izberi rastlino'
+	String get plant_add => 'Izberi rastlino';
 
 	/// sl: 'Vežemo na rastlino, ne le območje.'
 	String get plant_note => 'Vežemo na rastlino, ne le območje.';
@@ -618,14 +618,11 @@ class Translations$areas$sl {
 	/// sl: 'Rastline v območju'
 	String get form_plants => 'Rastline v območju';
 
-	/// sl: '+ Dodaj rastlino'
-	String get form_plants_add => '+ Dodaj rastlino';
+	/// sl: 'Dodaj rastlino'
+	String get form_plants_add => 'Dodaj rastlino';
 
 	/// sl: 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.'
 	String get form_plants_note => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.';
-
-	/// sl: 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.'
-	String get form_location_info => 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.';
 
 	/// sl: 'Shrani območje'
 	String get form_save => 'Shrani območje';
@@ -939,7 +936,7 @@ extension on Translations {
 			'task_form.no_areas' => 'Ni območij — dodaj jih v razdelku Območja.',
 			'task_form.plant' => 'Rastlina',
 			'task_form.plant_hint' => '(za obrez, tretiranje, pobiranje…)',
-			'task_form.plant_add' => '+ Izberi rastlino',
+			'task_form.plant_add' => 'Izberi rastlino',
 			'task_form.plant_note' => 'Vežemo na rastlino, ne le območje.',
 			'task_form.plant_select' => 'Izberi rastlino',
 			'task_form.plant_none' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
@@ -978,9 +975,8 @@ extension on Translations {
 			'areas.form_name_hint' => 'npr. Visoka greda 1',
 			'areas.form_type' => 'Tip',
 			'areas.form_plants' => 'Rastline v območju',
-			'areas.form_plants_add' => '+ Dodaj rastlino',
+			'areas.form_plants_add' => 'Dodaj rastlino',
 			'areas.form_plants_note' => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.',
-			'areas.form_location_info' => 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.',
 			'areas.form_save' => 'Shrani območje',
 			'areas.err_name' => 'Vnesi ime območja.',
 			'areas.plants_empty' => 'Še ni rastlin.',

@@ -182,7 +182,6 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                         ),
                       ),
                       const SizedBox(height: 12),
-                      _LocationInfo(text: t.areas.form_location_info),
                     ],
                   ),
                 ),
@@ -298,32 +297,3 @@ class _PlantsSection extends StatelessWidget {
   }
 }
 
-class _LocationInfo extends StatelessWidget {
-  const _LocationInfo({required this.text});
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
-      color: theme.colorScheme.surfaceContainerHighest,
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('📍', style: TextStyle(fontSize: 18)),
-            const SizedBox(width: 10),
-            Expanded(
-              child: Text(
-                text,
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
