@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
 import 'package:tendask/core/task_status.dart';
@@ -66,7 +67,7 @@ void main() {
         id: areaId,
         userId: 'user-1',
         name: 'Trata',
-        type: 'lawn',
+        type: const Value(AreaType.lawn),
         updatedAt: now,
       ));
 
@@ -75,7 +76,7 @@ void main() {
           .getSingle();
 
       expect(area.name, 'Trata');
-      expect(area.type, 'lawn');
+      expect(area.type, AreaType.lawn);
       expect(area.deleted, false);
       expect(area.syncStatus, 'pending');
     });
@@ -85,7 +86,7 @@ void main() {
         id: areaId,
         userId: 'user-1',
         name: 'Trata',
-        type: 'lawn',
+        type: const Value(AreaType.lawn),
         updatedAt: now,
       ));
 
@@ -105,7 +106,7 @@ void main() {
         id: areaId,
         userId: 'user-1',
         name: 'Trata',
-        type: 'lawn',
+        type: const Value(AreaType.lawn),
         updatedAt: now,
       ));
 
@@ -135,7 +136,7 @@ void main() {
         id: areaId,
         userId: 'user-1',
         name: 'Vrt',
-        type: 'bed',
+        type: const Value(AreaType.bed),
         updatedAt: now,
       ));
     });

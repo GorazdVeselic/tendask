@@ -32,6 +32,26 @@ class TasksRepository {
           ..orderBy([(t) => OrderingTerm.desc(t.date)])
       ).watch();
 
+  /// Task history for one area (newest first), for the area detail screen.
+  Stream<List<Task>> watchByArea(String areaId) => (
+        _db.select(_db.tasks)
+          ..where((t) => t.deleted.equals(false) & t.areaId.equals(areaId))
+          ..orderBy([(t) => OrderingTerm.desc(t.date)])
+      ).watch();
+
+  /// Newest task per area, keyed by areaId — for the "last: …" list subtitle.
+  Stream<Map<String, Task>> watchLatestPerArea() => (
+        _db.select(_db.tasks)
+          ..where((t) => t.deleted.equals(false))
+          ..orderBy([(t) => OrderingTerm.desc(t.date)])
+      ).watch().map((tasks) {
+        final latest = <String, Task>{};
+        for (final task in tasks) {
+          latest.putIfAbsent(task.areaId, () => task);
+        }
+        return latest;
+      });
+
   Future<Task?> byId(String id) =>
       (_db.select(_db.tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
 

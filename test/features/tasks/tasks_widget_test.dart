@@ -7,9 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/task_status.dart';
+import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/features/tasks/presentation/quick_log_screen.dart';
@@ -41,7 +43,7 @@ Future<AppDatabase> _buildDb() async {
       id: _areaId,
       userId: 'local',
       name: 'Moj vrt',
-      type: 'bed',
+      type: const Value(AreaType.bed),
       updatedAt: _past,
     ),
   );

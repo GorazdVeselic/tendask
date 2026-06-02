@@ -2,6 +2,7 @@
   "nav": {
     "home": "Home",
     "journal": "Journal",
+    "areas": "Areas",
     "tasks": "Tasks"
   },
   "home": {
@@ -130,5 +131,34 @@
     "save": "Save task",
     "err_type": "Select a task type.",
     "err_area": "Select an area."
+  },
+  "areas": {
+    "title": "Areas",
+    "subtitle": "my property",
+    "empty": "No areas yet. Add your first with +.",
+    "last_prefix": "last:",
+    "type_lawn": "Lawn",
+    "type_hedge": "Hedge",
+    "type_bed": "Bed",
+    "type_tree": "Fruit tree",
+    "type_ornamental": "Ornamental",
+    "type_other": "Other",
+    "history_title": "Task history",
+    "history_empty": "No tasks in this area yet.",
+    "action_edit": "Edit",
+    "action_delete": "Delete",
+    "delete_confirm_title": "Delete area?",
+    "delete_confirm_body": "Tasks remain but lose their link to this area.",
+    "form_title_new": "New area",
+    "form_title_edit": "Edit area",
+    "form_name": "Name",
+    "form_name_hint": "e.g. Raised bed 1",
+    "form_type": "Type",
+    "form_plants": "Plants in area",
+    "form_plants_add": "+ Add plant",
+    "form_plants_note": "Tasks (pruning, treatment, harvesting) link to the selected plant.",
+    "form_location_info": "Areas have no location of their own — they're all on your property. The location for weather is set once in your profile.",
+    "form_save": "Save area",
+    "err_name": "Enter an area name."
   }
 }

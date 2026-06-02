@@ -2,6 +2,7 @@
   "nav": {
     "home": "Startseite",
     "journal": "Tagebuch",
+    "areas": "Bereiche",
     "tasks": "Aufgaben"
   },
   "home": {
@@ -130,5 +131,34 @@
     "save": "Aufgabe speichern",
     "err_type": "Aufgabentyp auswählen.",
     "err_area": "Bereich auswählen."
+  },
+  "areas": {
+    "title": "Bereiche",
+    "subtitle": "mein Grundstück",
+    "empty": "Noch keine Bereiche. Füge den ersten mit + hinzu.",
+    "last_prefix": "zuletzt:",
+    "type_lawn": "Rasen",
+    "type_hedge": "Hecke",
+    "type_bed": "Beet",
+    "type_tree": "Obstbaum",
+    "type_ornamental": "Zierpflanzen",
+    "type_other": "Sonstiges",
+    "history_title": "Aufgabenverlauf",
+    "history_empty": "Noch keine Aufgaben in diesem Bereich.",
+    "action_edit": "Bearbeiten",
+    "action_delete": "Löschen",
+    "delete_confirm_title": "Bereich löschen?",
+    "delete_confirm_body": "Aufgaben bleiben erhalten, verlieren aber die Verknüpfung zum Bereich.",
+    "form_title_new": "Neuer Bereich",
+    "form_title_edit": "Bereich bearbeiten",
+    "form_name": "Name",
+    "form_name_hint": "z. B. Hochbeet 1",
+    "form_type": "Typ",
+    "form_plants": "Pflanzen im Bereich",
+    "form_plants_add": "+ Pflanze hinzufügen",
+    "form_plants_note": "Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.",
+    "form_location_info": "Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.",
+    "form_save": "Bereich speichern",
+    "err_name": "Bereichsnamen eingeben."
   }
 }

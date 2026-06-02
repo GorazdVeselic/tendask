@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
+	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 }
 
 // Path: nav
@@ -63,6 +64,9 @@ class Translations$nav$sl {
 
 	/// sl: 'Dnevnik'
 	String get journal => 'Dnevnik';
+
+	/// sl: 'Območja'
+	String get areas => 'Območja';
 
 	/// sl: 'Opravila'
 	String get tasks => 'Opravila';
@@ -464,6 +468,96 @@ class Translations$task_form$sl {
 	String get err_area => 'Izberi območje.';
 }
 
+// Path: areas
+class Translations$areas$sl {
+	Translations$areas$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Območja'
+	String get title => 'Območja';
+
+	/// sl: 'moja posest'
+	String get subtitle => 'moja posest';
+
+	/// sl: 'Ni območij. Dodaj prvo z +.'
+	String get empty => 'Ni območij. Dodaj prvo z +.';
+
+	/// sl: 'zadnje:'
+	String get last_prefix => 'zadnje:';
+
+	/// sl: 'Trata'
+	String get type_lawn => 'Trata';
+
+	/// sl: 'Živa meja'
+	String get type_hedge => 'Živa meja';
+
+	/// sl: 'Gredica'
+	String get type_bed => 'Gredica';
+
+	/// sl: 'Sadno drevje'
+	String get type_tree => 'Sadno drevje';
+
+	/// sl: 'Okrasno'
+	String get type_ornamental => 'Okrasno';
+
+	/// sl: 'Drugo'
+	String get type_other => 'Drugo';
+
+	/// sl: 'Zgodovina opravil'
+	String get history_title => 'Zgodovina opravil';
+
+	/// sl: 'Na tem območju še ni opravil.'
+	String get history_empty => 'Na tem območju še ni opravil.';
+
+	/// sl: 'Uredi'
+	String get action_edit => 'Uredi';
+
+	/// sl: 'Izbriši'
+	String get action_delete => 'Izbriši';
+
+	/// sl: 'Izbriši območje?'
+	String get delete_confirm_title => 'Izbriši območje?';
+
+	/// sl: 'Opravila ostanejo, a izgubijo povezavo z območjem.'
+	String get delete_confirm_body => 'Opravila ostanejo, a izgubijo povezavo z območjem.';
+
+	/// sl: 'Novo območje'
+	String get form_title_new => 'Novo območje';
+
+	/// sl: 'Uredi območje'
+	String get form_title_edit => 'Uredi območje';
+
+	/// sl: 'Ime'
+	String get form_name => 'Ime';
+
+	/// sl: 'npr. Visoka greda 1'
+	String get form_name_hint => 'npr. Visoka greda 1';
+
+	/// sl: 'Tip'
+	String get form_type => 'Tip';
+
+	/// sl: 'Rastline v območju'
+	String get form_plants => 'Rastline v območju';
+
+	/// sl: '+ Dodaj rastlino'
+	String get form_plants_add => '+ Dodaj rastlino';
+
+	/// sl: 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.'
+	String get form_plants_note => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.';
+
+	/// sl: 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.'
+	String get form_location_info => 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.';
+
+	/// sl: 'Shrani območje'
+	String get form_save => 'Shrani območje';
+
+	/// sl: 'Vnesi ime območja.'
+	String get err_name => 'Vnesi ime območja.';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -474,6 +568,7 @@ extension on Translations {
 		return switch (path) {
 			'nav.home' => 'Domov',
 			'nav.journal' => 'Dnevnik',
+			'nav.areas' => 'Območja',
 			'nav.tasks' => 'Opravila',
 			'home.greeting' => 'Dober dan 🌿',
 			'home.today' => 'Danes',
@@ -585,6 +680,33 @@ extension on Translations {
 			'task_form.save' => 'Shrani opravilo',
 			'task_form.err_type' => 'Izberi vrsto opravila.',
 			'task_form.err_area' => 'Izberi območje.',
+			'areas.title' => 'Območja',
+			'areas.subtitle' => 'moja posest',
+			'areas.empty' => 'Ni območij. Dodaj prvo z +.',
+			'areas.last_prefix' => 'zadnje:',
+			'areas.type_lawn' => 'Trata',
+			'areas.type_hedge' => 'Živa meja',
+			'areas.type_bed' => 'Gredica',
+			'areas.type_tree' => 'Sadno drevje',
+			'areas.type_ornamental' => 'Okrasno',
+			'areas.type_other' => 'Drugo',
+			'areas.history_title' => 'Zgodovina opravil',
+			'areas.history_empty' => 'Na tem območju še ni opravil.',
+			'areas.action_edit' => 'Uredi',
+			'areas.action_delete' => 'Izbriši',
+			'areas.delete_confirm_title' => 'Izbriši območje?',
+			'areas.delete_confirm_body' => 'Opravila ostanejo, a izgubijo povezavo z območjem.',
+			'areas.form_title_new' => 'Novo območje',
+			'areas.form_title_edit' => 'Uredi območje',
+			'areas.form_name' => 'Ime',
+			'areas.form_name_hint' => 'npr. Visoka greda 1',
+			'areas.form_type' => 'Tip',
+			'areas.form_plants' => 'Rastline v območju',
+			'areas.form_plants_add' => '+ Dodaj rastlino',
+			'areas.form_plants_note' => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.',
+			'areas.form_location_info' => 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.',
+			'areas.form_save' => 'Shrani območje',
+			'areas.err_name' => 'Vnesi ime območja.',
 			_ => null,
 		};
 	}

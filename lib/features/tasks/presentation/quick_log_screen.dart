@@ -9,6 +9,7 @@ import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/save_bar.dart';
 import '../../../i18n/translations.g.dart';
+import '../../areas/application/areas_providers.dart';
 import '../application/tasks_providers.dart';
 import 'widgets/task_type_tile.dart';
 

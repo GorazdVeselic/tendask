@@ -1,5 +1,7 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
@@ -35,7 +37,7 @@ void main() {
       id: areaId,
       userId: userId,
       name: 'Vrt',
-      type: 'bed',
+      type: const Value(AreaType.bed),
       updatedAt: t0,
     ));
   });

@@ -1854,15 +1854,16 @@ class $AreasTable extends Areas with TableInfo<$AreasTable, Area> {
     type: DriftSqlType.string,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _typeMeta = const VerificationMeta('type');
   @override
-  late final GeneratedColumn<String> type = GeneratedColumn<String>(
-    'type',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-  );
+  late final GeneratedColumnWithTypeConverter<AreaType, String> type =
+      GeneratedColumn<String>(
+        'type',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('other'),
+      ).withConverter<AreaType>($AreasTable.$convertertype);
   static const VerificationMeta _protectedMeta = const VerificationMeta(
     'protected',
   );
@@ -1960,14 +1961,6 @@ class $AreasTable extends Areas with TableInfo<$AreasTable, Area> {
     } else if (isInserting) {
       context.missing(_nameMeta);
     }
-    if (data.containsKey('type')) {
-      context.handle(
-        _typeMeta,
-        type.isAcceptableOrUnknown(data['type']!, _typeMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_typeMeta);
-    }
     if (data.containsKey('protected')) {
       context.handle(
         _protectedMeta,
@@ -2015,10 +2008,12 @@ class $AreasTable extends Areas with TableInfo<$AreasTable, Area> {
         DriftSqlType.string,
         data['${effectivePrefix}name'],
       )!,
-      type: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}type'],
-      )!,
+      type: $AreasTable.$convertertype.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}type'],
+        )!,
+      ),
       protected: attachedDatabase.typeMapping.read(
         DriftSqlType.bool,
         data['${effectivePrefix}protected'],
@@ -2042,13 +2037,16 @@ class $AreasTable extends Areas with TableInfo<$AreasTable, Area> {
   $AreasTable createAlias(String alias) {
     return $AreasTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<AreaType, String, String> $convertertype =
+      const EnumNameConverter<AreaType>(AreaType.values);
 }
 
 class Area extends DataClass implements Insertable<Area> {
   final String id;
   final String userId;
   final String name;
-  final String type;
+  final AreaType type;
   final bool protected;
   final DateTime updatedAt;
   final bool deleted;
@@ -2069,7 +2067,9 @@ class Area extends DataClass implements Insertable<Area> {
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
     map['name'] = Variable<String>(name);
-    map['type'] = Variable<String>(type);
+    {
+      map['type'] = Variable<String>($AreasTable.$convertertype.toSql(type));
+    }
     map['protected'] = Variable<bool>(protected);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['deleted'] = Variable<bool>(deleted);
@@ -2099,7 +2099,9 @@ class Area extends DataClass implements Insertable<Area> {
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
-      type: serializer.fromJson<String>(json['type']),
+      type: $AreasTable.$convertertype.fromJson(
+        serializer.fromJson<String>(json['type']),
+      ),
       protected: serializer.fromJson<bool>(json['protected']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
@@ -2113,7 +2115,9 @@ class Area extends DataClass implements Insertable<Area> {
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
-      'type': serializer.toJson<String>(type),
+      'type': serializer.toJson<String>(
+        $AreasTable.$convertertype.toJson(type),
+      ),
       'protected': serializer.toJson<bool>(protected),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
@@ -2125,7 +2129,7 @@ class Area extends DataClass implements Insertable<Area> {
     String? id,
     String? userId,
     String? name,
-    String? type,
+    AreaType? type,
     bool? protected,
     DateTime? updatedAt,
     bool? deleted,
@@ -2199,7 +2203,7 @@ class AreasCompanion extends UpdateCompanion<Area> {
   final Value<String> id;
   final Value<String> userId;
   final Value<String> name;
-  final Value<String> type;
+  final Value<AreaType> type;
   final Value<bool> protected;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
@@ -2220,7 +2224,7 @@ class AreasCompanion extends UpdateCompanion<Area> {
     required String id,
     required String userId,
     required String name,
-    required String type,
+    this.type = const Value.absent(),
     this.protected = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
@@ -2229,7 +2233,6 @@ class AreasCompanion extends UpdateCompanion<Area> {
   }) : id = Value(id),
        userId = Value(userId),
        name = Value(name),
-       type = Value(type),
        updatedAt = Value(updatedAt);
   static Insertable<Area> custom({
     Expression<String>? id,
@@ -2259,7 +2262,7 @@ class AreasCompanion extends UpdateCompanion<Area> {
     Value<String>? id,
     Value<String>? userId,
     Value<String>? name,
-    Value<String>? type,
+    Value<AreaType>? type,
     Value<bool>? protected,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
@@ -2292,7 +2295,9 @@ class AreasCompanion extends UpdateCompanion<Area> {
       map['name'] = Variable<String>(name.value);
     }
     if (type.present) {
-      map['type'] = Variable<String>(type.value);
+      map['type'] = Variable<String>(
+        $AreasTable.$convertertype.toSql(type.value),
+      );
     }
     if (protected.present) {
       map['protected'] = Variable<bool>(protected.value);
@@ -8032,7 +8037,7 @@ typedef $$AreasTableCreateCompanionBuilder =
       required String id,
       required String userId,
       required String name,
-      required String type,
+      Value<AreaType> type,
       Value<bool> protected,
       required DateTime updatedAt,
       Value<bool> deleted,
@@ -8044,7 +8049,7 @@ typedef $$AreasTableUpdateCompanionBuilder =
       Value<String> id,
       Value<String> userId,
       Value<String> name,
-      Value<String> type,
+      Value<AreaType> type,
       Value<bool> protected,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
@@ -8136,10 +8141,11 @@ class $$AreasTableFilterComposer extends Composer<_$AppDatabase, $AreasTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get type => $composableBuilder(
-    column: $table.type,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<AreaType, AreaType, String> get type =>
+      $composableBuilder(
+        column: $table.type,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<bool> get protected => $composableBuilder(
     column: $table.protected,
@@ -8305,7 +8311,7 @@ class $$AreasTableAnnotationComposer
   GeneratedColumn<String> get name =>
       $composableBuilder(column: $table.name, builder: (column) => column);
 
-  GeneratedColumn<String> get type =>
+  GeneratedColumnWithTypeConverter<AreaType, String> get type =>
       $composableBuilder(column: $table.type, builder: (column) => column);
 
   GeneratedColumn<bool> get protected =>
@@ -8433,7 +8439,7 @@ class $$AreasTableTableManager
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
-                Value<String> type = const Value.absent(),
+                Value<AreaType> type = const Value.absent(),
                 Value<bool> protected = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
@@ -8455,7 +8461,7 @@ class $$AreasTableTableManager
                 required String id,
                 required String userId,
                 required String name,
-                required String type,
+                Value<AreaType> type = const Value.absent(),
                 Value<bool> protected = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),

@@ -47,6 +47,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
+	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 }
 
 // Path: nav
@@ -58,6 +59,7 @@ class _Translations$nav$de extends Translations$nav$sl {
 	// Translations
 	@override String get home => 'Startseite';
 	@override String get journal => 'Tagebuch';
+	@override String get areas => 'Bereiche';
 	@override String get tasks => 'Aufgaben';
 }
 
@@ -237,6 +239,42 @@ class _Translations$task_form$de extends Translations$task_form$sl {
 	@override String get err_area => 'Bereich auswählen.';
 }
 
+// Path: areas
+class _Translations$areas$de extends Translations$areas$sl {
+	_Translations$areas$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Bereiche';
+	@override String get subtitle => 'mein Grundstück';
+	@override String get empty => 'Noch keine Bereiche. Füge den ersten mit + hinzu.';
+	@override String get last_prefix => 'zuletzt:';
+	@override String get type_lawn => 'Rasen';
+	@override String get type_hedge => 'Hecke';
+	@override String get type_bed => 'Beet';
+	@override String get type_tree => 'Obstbaum';
+	@override String get type_ornamental => 'Zierpflanzen';
+	@override String get type_other => 'Sonstiges';
+	@override String get history_title => 'Aufgabenverlauf';
+	@override String get history_empty => 'Noch keine Aufgaben in diesem Bereich.';
+	@override String get action_edit => 'Bearbeiten';
+	@override String get action_delete => 'Löschen';
+	@override String get delete_confirm_title => 'Bereich löschen?';
+	@override String get delete_confirm_body => 'Aufgaben bleiben erhalten, verlieren aber die Verknüpfung zum Bereich.';
+	@override String get form_title_new => 'Neuer Bereich';
+	@override String get form_title_edit => 'Bereich bearbeiten';
+	@override String get form_name => 'Name';
+	@override String get form_name_hint => 'z. B. Hochbeet 1';
+	@override String get form_type => 'Typ';
+	@override String get form_plants => 'Pflanzen im Bereich';
+	@override String get form_plants_add => '+ Pflanze hinzufügen';
+	@override String get form_plants_note => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.';
+	@override String get form_location_info => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.';
+	@override String get form_save => 'Bereich speichern';
+	@override String get err_name => 'Bereichsnamen eingeben.';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -247,6 +285,7 @@ extension on TranslationsDe {
 		return switch (path) {
 			'nav.home' => 'Startseite',
 			'nav.journal' => 'Tagebuch',
+			'nav.areas' => 'Bereiche',
 			'nav.tasks' => 'Aufgaben',
 			'home.greeting' => 'Guten Tag 🌿',
 			'home.today' => 'Heute',
@@ -358,6 +397,33 @@ extension on TranslationsDe {
 			'task_form.save' => 'Aufgabe speichern',
 			'task_form.err_type' => 'Aufgabentyp auswählen.',
 			'task_form.err_area' => 'Bereich auswählen.',
+			'areas.title' => 'Bereiche',
+			'areas.subtitle' => 'mein Grundstück',
+			'areas.empty' => 'Noch keine Bereiche. Füge den ersten mit + hinzu.',
+			'areas.last_prefix' => 'zuletzt:',
+			'areas.type_lawn' => 'Rasen',
+			'areas.type_hedge' => 'Hecke',
+			'areas.type_bed' => 'Beet',
+			'areas.type_tree' => 'Obstbaum',
+			'areas.type_ornamental' => 'Zierpflanzen',
+			'areas.type_other' => 'Sonstiges',
+			'areas.history_title' => 'Aufgabenverlauf',
+			'areas.history_empty' => 'Noch keine Aufgaben in diesem Bereich.',
+			'areas.action_edit' => 'Bearbeiten',
+			'areas.action_delete' => 'Löschen',
+			'areas.delete_confirm_title' => 'Bereich löschen?',
+			'areas.delete_confirm_body' => 'Aufgaben bleiben erhalten, verlieren aber die Verknüpfung zum Bereich.',
+			'areas.form_title_new' => 'Neuer Bereich',
+			'areas.form_title_edit' => 'Bereich bearbeiten',
+			'areas.form_name' => 'Name',
+			'areas.form_name_hint' => 'z. B. Hochbeet 1',
+			'areas.form_type' => 'Typ',
+			'areas.form_plants' => 'Pflanzen im Bereich',
+			'areas.form_plants_add' => '+ Pflanze hinzufügen',
+			'areas.form_plants_note' => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.',
+			'areas.form_location_info' => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.',
+			'areas.form_save' => 'Bereich speichern',
+			'areas.err_name' => 'Bereichsnamen eingeben.',
 			_ => null,
 		};
 	}

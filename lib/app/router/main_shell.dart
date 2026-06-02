@@ -33,6 +33,11 @@ class MainShell extends StatelessWidget {
             label: t.nav.journal,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.grass_outlined),
+            selectedIcon: const Icon(Icons.grass),
+            label: t.nav.areas,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.check_box_outlined),
             selectedIcon: const Icon(Icons.check_box),
             label: t.nav.tasks,

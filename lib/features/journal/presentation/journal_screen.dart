@@ -7,6 +7,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 

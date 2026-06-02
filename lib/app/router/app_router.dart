@@ -1,5 +1,8 @@
 import 'package:go_router/go_router.dart';
 
+import '../../features/areas/presentation/area_detail_screen.dart';
+import '../../features/areas/presentation/area_form_screen.dart';
+import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
@@ -35,6 +38,24 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
+              path: '/areas',
+              name: 'areas',
+              builder: (context, state) => const AreasScreen(),
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  name: 'area-detail',
+                  builder: (context, state) => AreaDetailScreen(
+                    id: state.pathParameters['id']!,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
               path: '/tasks',
               name: 'tasks',
               builder: (context, state) => const TasksScreen(),
@@ -57,6 +78,17 @@ final appRouter = GoRouter(
       path: '/quick-log',
       name: 'quick-log',
       builder: (context, state) => const QuickLogScreen(),
+    ),
+    GoRoute(
+      path: '/areas/new',
+      name: 'area-new',
+      builder: (context, state) => const AreaFormScreen(),
+    ),
+    GoRoute(
+      path: '/areas/:id/edit',
+      name: 'area-edit',
+      builder: (context, state) =>
+          AreaFormScreen(areaId: state.pathParameters['id']),
     ),
     GoRoute(
       path: '/tasks/new',

@@ -47,6 +47,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
+	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
 }
 
 // Path: nav
@@ -58,6 +59,7 @@ class _Translations$nav$en extends Translations$nav$sl {
 	// Translations
 	@override String get home => 'Home';
 	@override String get journal => 'Journal';
+	@override String get areas => 'Areas';
 	@override String get tasks => 'Tasks';
 }
 
@@ -237,6 +239,42 @@ class _Translations$task_form$en extends Translations$task_form$sl {
 	@override String get err_area => 'Select an area.';
 }
 
+// Path: areas
+class _Translations$areas$en extends Translations$areas$sl {
+	_Translations$areas$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Areas';
+	@override String get subtitle => 'my property';
+	@override String get empty => 'No areas yet. Add your first with +.';
+	@override String get last_prefix => 'last:';
+	@override String get type_lawn => 'Lawn';
+	@override String get type_hedge => 'Hedge';
+	@override String get type_bed => 'Bed';
+	@override String get type_tree => 'Fruit tree';
+	@override String get type_ornamental => 'Ornamental';
+	@override String get type_other => 'Other';
+	@override String get history_title => 'Task history';
+	@override String get history_empty => 'No tasks in this area yet.';
+	@override String get action_edit => 'Edit';
+	@override String get action_delete => 'Delete';
+	@override String get delete_confirm_title => 'Delete area?';
+	@override String get delete_confirm_body => 'Tasks remain but lose their link to this area.';
+	@override String get form_title_new => 'New area';
+	@override String get form_title_edit => 'Edit area';
+	@override String get form_name => 'Name';
+	@override String get form_name_hint => 'e.g. Raised bed 1';
+	@override String get form_type => 'Type';
+	@override String get form_plants => 'Plants in area';
+	@override String get form_plants_add => '+ Add plant';
+	@override String get form_plants_note => 'Tasks (pruning, treatment, harvesting) link to the selected plant.';
+	@override String get form_location_info => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.';
+	@override String get form_save => 'Save area';
+	@override String get err_name => 'Enter an area name.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -247,6 +285,7 @@ extension on TranslationsEn {
 		return switch (path) {
 			'nav.home' => 'Home',
 			'nav.journal' => 'Journal',
+			'nav.areas' => 'Areas',
 			'nav.tasks' => 'Tasks',
 			'home.greeting' => 'Good day 🌿',
 			'home.today' => 'Today',
@@ -358,6 +397,33 @@ extension on TranslationsEn {
 			'task_form.save' => 'Save task',
 			'task_form.err_type' => 'Select a task type.',
 			'task_form.err_area' => 'Select an area.',
+			'areas.title' => 'Areas',
+			'areas.subtitle' => 'my property',
+			'areas.empty' => 'No areas yet. Add your first with +.',
+			'areas.last_prefix' => 'last:',
+			'areas.type_lawn' => 'Lawn',
+			'areas.type_hedge' => 'Hedge',
+			'areas.type_bed' => 'Bed',
+			'areas.type_tree' => 'Fruit tree',
+			'areas.type_ornamental' => 'Ornamental',
+			'areas.type_other' => 'Other',
+			'areas.history_title' => 'Task history',
+			'areas.history_empty' => 'No tasks in this area yet.',
+			'areas.action_edit' => 'Edit',
+			'areas.action_delete' => 'Delete',
+			'areas.delete_confirm_title' => 'Delete area?',
+			'areas.delete_confirm_body' => 'Tasks remain but lose their link to this area.',
+			'areas.form_title_new' => 'New area',
+			'areas.form_title_edit' => 'Edit area',
+			'areas.form_name' => 'Name',
+			'areas.form_name_hint' => 'e.g. Raised bed 1',
+			'areas.form_type' => 'Type',
+			'areas.form_plants' => 'Plants in area',
+			'areas.form_plants_add' => '+ Add plant',
+			'areas.form_plants_note' => 'Tasks (pruning, treatment, harvesting) link to the selected plant.',
+			'areas.form_location_info' => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.',
+			'areas.form_save' => 'Save area',
+			'areas.err_name' => 'Enter an area name.',
 			_ => null,
 		};
 	}

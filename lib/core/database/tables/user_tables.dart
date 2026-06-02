@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../area_type.dart';
 import '../../task_status.dart';
 import 'catalog_tables.dart';
 
@@ -30,8 +31,9 @@ class Areas extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
   TextColumn get name => text()();
-  // lawn, hedge, bed, tree, greenhouse, indoor, other
-  TextColumn get type => text()();
+  // lawn, hedge, bed, tree, ornamental, other
+  TextColumn get type =>
+      textEnum<AreaType>().withDefault(const Constant('other'))();
   // True for greenhouse/indoor — excluded from weather guards (§7.7)
   BoolColumn get protected =>
       boolean().withDefault(const Constant(false))();

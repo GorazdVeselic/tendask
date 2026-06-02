@@ -10,6 +10,7 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/sheet_handle.dart';
+import '../../areas/application/areas_providers.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
