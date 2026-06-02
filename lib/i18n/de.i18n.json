@@ -53,6 +53,24 @@
     "err_type": "Aufgabentyp auswählen.",
     "err_area": "Bereich auswählen."
   },
+  "notes": {
+    "title_new": "Neue Notiz",
+    "title_edit": "Notiz bearbeiten",
+    "content_label": "Notiz",
+    "content_hint": "Freier Text — Beobachtung, Idee, Gedanke…",
+    "when": "Wann",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "pick_date": "Datum…",
+    "area": "Bereich (optional)",
+    "no_areas": "Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.",
+    "plant": "Pflanze (optional)",
+    "save": "Notiz speichern",
+    "err_content": "Notiztext eingeben.",
+    "delete": "Notiz löschen",
+    "delete_confirm": "Diese Aktion kann nicht rückgängig gemacht werden.",
+    "info": "🌧️ Das Wetter wird automatisch gespeichert."
+  },
   "task_detail": {
     "section_weather": "Wetteraufnahme",
     "weather_placeholder": "Wetteraufnahme wird in M4 verfügbar sein.",

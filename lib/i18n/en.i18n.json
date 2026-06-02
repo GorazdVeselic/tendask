@@ -53,6 +53,24 @@
     "err_type": "Select a task type.",
     "err_area": "Select an area."
   },
+  "notes": {
+    "title_new": "New note",
+    "title_edit": "Edit note",
+    "content_label": "Note",
+    "content_hint": "Free text — observation, idea, thought…",
+    "when": "When",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "pick_date": "Date…",
+    "area": "Area (optional)",
+    "no_areas": "No areas yet — add them in the Areas section.",
+    "plant": "Plant (optional)",
+    "save": "Save note",
+    "err_content": "Enter the note text.",
+    "delete": "Delete note",
+    "delete_confirm": "This action cannot be undone.",
+    "info": "🌧️ Weather is saved automatically."
+  },
   "task_detail": {
     "section_weather": "Weather snapshot",
     "weather_placeholder": "Weather snapshot will be available in M4.",

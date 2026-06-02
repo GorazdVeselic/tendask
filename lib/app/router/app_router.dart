@@ -5,6 +5,7 @@ import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
+import '../../features/journal/presentation/note_form_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
@@ -101,6 +102,17 @@ final appRouter = GoRouter(
       name: 'area-edit',
       builder: (context, state) =>
           AreaFormScreen(areaId: state.pathParameters['id']),
+    ),
+    GoRoute(
+      path: '/notes/new',
+      name: 'note-new',
+      builder: (context, state) => const NoteFormScreen(),
+    ),
+    GoRoute(
+      path: '/notes/:id/edit',
+      name: 'note-edit',
+      builder: (context, state) =>
+          NoteFormScreen(noteId: state.pathParameters['id']),
     ),
     GoRoute(
       path: '/tasks/new',

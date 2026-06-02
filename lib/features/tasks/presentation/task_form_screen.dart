@@ -12,8 +12,8 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
-import '../../plants/presentation/plant_display.dart';
 import '../../plants/presentation/plant_picker_screen.dart';
+import '../../plants/presentation/widgets/plant_field.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../../supplies/data/supply_spec.dart';
 import '../../supplies/presentation/add_supply_to_task_sheet.dart';
@@ -410,7 +410,7 @@ class _FormBody extends StatelessWidget {
         if (requiresSubject && areaId != null) ...[
           _FieldLabel('${t.task_form.plant} '
               '${t.task_form.plant_hint}'),
-          _PlantField(
+          PlantField(
             areaId: areaId!,
             selectedId: userPlantId,
             onChanged: onUserPlantChanged,
@@ -650,80 +650,6 @@ class _TappableField extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 8),
             Text(text, style: theme.textTheme.bodyMedium),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Plant field — pick a plant of the selected area, or add a new one (picker)
-// ---------------------------------------------------------------------------
-
-class _PlantField extends ConsumerWidget {
-  const _PlantField({
-    required this.areaId,
-    required this.selectedId,
-    required this.onChanged,
-    required this.onAdd,
-  });
-
-  final String areaId;
-  final String? selectedId;
-  final ValueChanged<String?> onChanged;
-  final VoidCallback onAdd;
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final plants = ref.watch(userPlantsByAreaProvider(areaId)).asData?.value;
-    final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
-
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (plants == null)
-              const Center(child: CircularProgressIndicator.adaptive())
-            else if (plants.isEmpty)
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Text(
-                  t.task_form.plant_none,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant),
-                ),
-              )
-            else
-              Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: [
-                  for (final p in plants)
-                    ChoiceChip(
-                      avatar: Text(userPlantIcon(p, catalog),
-                          style: const TextStyle(fontSize: 14)),
-                      label: Text(userPlantLabel(p, catalog)),
-                      selected: p.id == selectedId,
-                      onSelected: (sel) => onChanged(sel ? p.id : null),
-                    ),
-                ],
-              ),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TextButton.icon(
-                onPressed: onAdd,
-                icon: const Icon(Icons.add, size: 18),
-                label: Text(t.task_form.plant_add),
-                style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    visualDensity: VisualDensity.compact),
-              ),
-            ),
           ],
         ),
       ),

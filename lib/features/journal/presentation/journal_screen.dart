@@ -10,6 +10,8 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
+import '../application/notes_providers.dart';
+import 'journal_entry.dart';
 
 enum _Filter { all, tasks, notes }
 
@@ -29,6 +31,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
     final theme = Theme.of(context);
 
     final completed = ref.watch(completedTasksProvider).asData?.value;
+    final notes = ref.watch(notesProvider).asData?.value;
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
     final areas = ref.watch(areasMapProvider).asData?.value;
 
@@ -61,10 +64,14 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             t: t,
           ),
           Expanded(
-            child: completed == null || catalog == null || areas == null
+            child: completed == null ||
+                    notes == null ||
+                    catalog == null ||
+                    areas == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
                 : _JournalList(
                     tasks: completed,
+                    notes: notes,
                     catalog: catalog,
                     areas: areas,
                     filter: _filter,
@@ -165,6 +172,7 @@ class _FilterChip extends StatelessWidget {
 class _JournalList extends StatelessWidget {
   const _JournalList({
     required this.tasks,
+    required this.notes,
     required this.catalog,
     required this.areas,
     required this.filter,
@@ -173,6 +181,7 @@ class _JournalList extends StatelessWidget {
   });
 
   final List<Task> tasks;
+  final List<Note> notes;
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
   final _Filter filter;
@@ -181,12 +190,14 @@ class _JournalList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final showTasks = filter == _Filter.all || filter == _Filter.tasks;
+    final entries = <JournalEntry>[
+      if (filter != _Filter.notes)
+        for (final task in tasks) TaskJournalEntry(task),
+      if (filter != _Filter.tasks)
+        for (final note in notes) NoteJournalEntry(note),
+    ]..sort((a, b) => b.date.compareTo(a.date));
 
-    final filteredTasks = showTasks ? tasks : <Task>[];
-
-    // Notes are M3.4 — filter_notes always yields empty for now
-    if (filteredTasks.isEmpty) {
+    if (entries.isEmpty) {
       final msg = filter == _Filter.notes
           ? t.journal.empty_notes
           : filter == _Filter.tasks
@@ -195,14 +206,14 @@ class _JournalList extends StatelessWidget {
       return EmptyState(msg);
     }
 
-    final groups = _groupByDate(filteredTasks);
+    final groups = _groupByDate(entries);
 
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 100),
       itemCount: groups.length,
       itemBuilder: (context, i) => _DayGroup(
         date: groups[i].date,
-        tasks: groups[i].tasks,
+        entries: groups[i].entries,
         catalog: catalog,
         areas: areas,
         t: t,
@@ -211,22 +222,22 @@ class _JournalList extends StatelessWidget {
     );
   }
 
-  static List<_DateGroup> _groupByDate(List<Task> tasks) {
+  static List<_DateGroup> _groupByDate(List<JournalEntry> entries) {
     final map = <String, _DateGroup>{};
-    for (final task in tasks) {
-      final local = task.date.toLocal();
+    for (final entry in entries) {
+      final local = entry.date.toLocal();
       final key =
           '${local.year}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')}';
-      map.putIfAbsent(key, () => _DateGroup(local, [])).tasks.add(task);
+      map.putIfAbsent(key, () => _DateGroup(local, [])).entries.add(entry);
     }
     return map.values.toList();
   }
 }
 
 class _DateGroup {
-  _DateGroup(this.date, this.tasks);
+  _DateGroup(this.date, this.entries);
   final DateTime date;
-  final List<Task> tasks;
+  final List<JournalEntry> entries;
 }
 
 // ---------------------------------------------------------------------------
@@ -236,7 +247,7 @@ class _DateGroup {
 class _DayGroup extends StatelessWidget {
   const _DayGroup({
     required this.date,
-    required this.tasks,
+    required this.entries,
     required this.catalog,
     required this.areas,
     required this.t,
@@ -244,7 +255,7 @@ class _DayGroup extends StatelessWidget {
   });
 
   final DateTime date;
-  final List<Task> tasks;
+  final List<JournalEntry> entries;
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
   final Translations t;
@@ -262,19 +273,28 @@ class _DayGroup extends StatelessWidget {
           Card(
             child: Column(
               children: [
-                for (var i = 0; i < tasks.length; i++) ...[
+                for (var i = 0; i < entries.length; i++) ...[
                   if (i > 0)
                     Divider(
                       height: 1,
                       indent: 56,
                       color: theme.colorScheme.outlineVariant,
                     ),
-                  _TaskEntry(
-                    task: tasks[i],
-                    taskType: catalog[tasks[i].taskTypeId],
-                    area: areas[tasks[i].areaId],
-                    theme: theme,
-                  ),
+                  switch (entries[i]) {
+                    TaskJournalEntry(:final task) => _TaskEntry(
+                        task: task,
+                        taskType: catalog[task.taskTypeId],
+                        area: areas[task.areaId],
+                        theme: theme,
+                      ),
+                    NoteJournalEntry(:final note) => _NoteEntry(
+                        note: note,
+                        area: note.areaId != null
+                            ? areas[note.areaId]
+                            : null,
+                        theme: theme,
+                      ),
+                  },
                 ],
               ],
             ),
@@ -354,6 +374,48 @@ class _TaskEntry extends StatelessWidget {
           const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       onTap: () => context.pushNamed('task-detail',
           pathParameters: {'id': task.id}),
+    );
+  }
+}
+
+class _NoteEntry extends StatelessWidget {
+  const _NoteEntry({
+    required this.note,
+    required this.area,
+    required this.theme,
+  });
+
+  final Note note;
+  final Area? area;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    final timeStr = formatHm(note.date.toLocal());
+
+    return ListTile(
+      leading: CircleAvatar(
+        backgroundColor: theme.colorScheme.surfaceContainerHighest,
+        child: const Text('✍️', style: TextStyle(fontSize: 18)),
+      ),
+      title: Text(
+        note.content,
+        style: theme.textTheme.bodyMedium,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+      ),
+      subtitle: area != null
+          ? Text('🪴 ${area!.name}',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
+          : null,
+      trailing: Text(timeStr,
+          style: theme.textTheme.bodySmall
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+      contentPadding:
+          const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      onTap: () =>
+          context.pushNamed('note-edit', pathParameters: {'id': note.id}),
     );
   }
 }

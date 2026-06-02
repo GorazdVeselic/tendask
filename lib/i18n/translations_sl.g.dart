@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
+	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
@@ -228,6 +229,63 @@ class Translations$quick_log$sl {
 
 	/// sl: 'Izberi območje.'
 	String get err_area => 'Izberi območje.';
+}
+
+// Path: notes
+class Translations$notes$sl {
+	Translations$notes$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Nova opomba'
+	String get title_new => 'Nova opomba';
+
+	/// sl: 'Uredi opombo'
+	String get title_edit => 'Uredi opombo';
+
+	/// sl: 'Zapis'
+	String get content_label => 'Zapis';
+
+	/// sl: 'Prosto besedilo — opažanje, ideja, misel…'
+	String get content_hint => 'Prosto besedilo — opažanje, ideja, misel…';
+
+	/// sl: 'Kdaj'
+	String get when => 'Kdaj';
+
+	/// sl: 'Danes'
+	String get today => 'Danes';
+
+	/// sl: 'Včeraj'
+	String get yesterday => 'Včeraj';
+
+	/// sl: 'Datum…'
+	String get pick_date => 'Datum…';
+
+	/// sl: 'Območje (neobvezno)'
+	String get area => 'Območje (neobvezno)';
+
+	/// sl: 'Ni območij — dodaj jih v razdelku Območja.'
+	String get no_areas => 'Ni območij — dodaj jih v razdelku Območja.';
+
+	/// sl: 'Rastlina (neobvezno)'
+	String get plant => 'Rastlina (neobvezno)';
+
+	/// sl: 'Shrani opombo'
+	String get save => 'Shrani opombo';
+
+	/// sl: 'Vpiši besedilo opombe.'
+	String get err_content => 'Vpiši besedilo opombe.';
+
+	/// sl: 'Izbriši opombo'
+	String get delete => 'Izbriši opombo';
+
+	/// sl: 'To dejanje je nepopravljivo.'
+	String get delete_confirm => 'To dejanje je nepopravljivo.';
+
+	/// sl: '🌧️ Vreme se shrani samodejno.'
+	String get info => '🌧️ Vreme se shrani samodejno.';
 }
 
 // Path: task_detail
@@ -732,6 +790,22 @@ extension on Translations {
 			'quick_log.save' => 'Shrani opravilo',
 			'quick_log.err_type' => 'Izberi vrsto opravila.',
 			'quick_log.err_area' => 'Izberi območje.',
+			'notes.title_new' => 'Nova opomba',
+			'notes.title_edit' => 'Uredi opombo',
+			'notes.content_label' => 'Zapis',
+			'notes.content_hint' => 'Prosto besedilo — opažanje, ideja, misel…',
+			'notes.when' => 'Kdaj',
+			'notes.today' => 'Danes',
+			'notes.yesterday' => 'Včeraj',
+			'notes.pick_date' => 'Datum…',
+			'notes.area' => 'Območje (neobvezno)',
+			'notes.no_areas' => 'Ni območij — dodaj jih v razdelku Območja.',
+			'notes.plant' => 'Rastlina (neobvezno)',
+			'notes.save' => 'Shrani opombo',
+			'notes.err_content' => 'Vpiši besedilo opombe.',
+			'notes.delete' => 'Izbriši opombo',
+			'notes.delete_confirm' => 'To dejanje je nepopravljivo.',
+			'notes.info' => '🌧️ Vreme se shrani samodejno.',
 			'task_detail.section_weather' => 'Vremenski posnetek',
 			'task_detail.weather_placeholder' => 'Vremenski posnetek bo na voljo v M4.',
 			'task_detail.section_details' => 'Podrobnosti',

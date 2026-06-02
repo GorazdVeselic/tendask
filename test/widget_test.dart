@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
+import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
@@ -50,6 +51,7 @@ void main() {
                 .overrideWith((ref) => Stream.value(<Task>[])),
             completedTasksProvider
                 .overrideWith((ref) => Stream.value(<Task>[])),
+            notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
             taskTypesMapProvider
                 .overrideWith((ref) async => <String, TaskType>{}),
             areasMapProvider

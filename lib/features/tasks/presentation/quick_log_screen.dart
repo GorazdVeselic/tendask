@@ -133,7 +133,10 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 8),
               children: [
-                _NoteCard(t: t),
+                _NoteCard(
+                  t: t,
+                  onTap: () => context.pushNamed('note-new'),
+                ),
                 const SizedBox(height: 16),
                 _SectionLabel(t.quick_log.what),
                 catalogAsync.when(
@@ -203,8 +206,9 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
 // ---------------------------------------------------------------------------
 
 class _NoteCard extends StatelessWidget {
-  const _NoteCard({required this.t});
+  const _NoteCard({required this.t, required this.onTap});
   final Translations t;
+  final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -213,7 +217,7 @@ class _NoteCard extends StatelessWidget {
       color: theme.colorScheme.surfaceContainerHighest,
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () {}, // M3.4
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
           child: Row(

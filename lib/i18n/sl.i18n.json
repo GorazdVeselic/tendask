@@ -53,6 +53,24 @@
     "err_type": "Izberi vrsto opravila.",
     "err_area": "Izberi območje."
   },
+  "notes": {
+    "title_new": "Nova opomba",
+    "title_edit": "Uredi opombo",
+    "content_label": "Zapis",
+    "content_hint": "Prosto besedilo — opažanje, ideja, misel…",
+    "when": "Kdaj",
+    "today": "Danes",
+    "yesterday": "Včeraj",
+    "pick_date": "Datum…",
+    "area": "Območje (neobvezno)",
+    "no_areas": "Ni območij — dodaj jih v razdelku Območja.",
+    "plant": "Rastlina (neobvezno)",
+    "save": "Shrani opombo",
+    "err_content": "Vpiši besedilo opombe.",
+    "delete": "Izbriši opombo",
+    "delete_confirm": "To dejanje je nepopravljivo.",
+    "info": "🌧️ Vreme se shrani samodejno."
+  },
   "task_detail": {
     "section_weather": "Vremenski posnetek",
     "weather_placeholder": "Vremenski posnetek bo na voljo v M4.",

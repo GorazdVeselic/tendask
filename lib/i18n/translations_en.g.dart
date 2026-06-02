@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
+	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
@@ -139,6 +140,31 @@ class _Translations$quick_log$en extends Translations$quick_log$sl {
 	@override String get save => 'Save task';
 	@override String get err_type => 'Select a task type.';
 	@override String get err_area => 'Select an area.';
+}
+
+// Path: notes
+class _Translations$notes$en extends Translations$notes$sl {
+	_Translations$notes$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'New note';
+	@override String get title_edit => 'Edit note';
+	@override String get content_label => 'Note';
+	@override String get content_hint => 'Free text — observation, idea, thought…';
+	@override String get when => 'When';
+	@override String get today => 'Today';
+	@override String get yesterday => 'Yesterday';
+	@override String get pick_date => 'Date…';
+	@override String get area => 'Area (optional)';
+	@override String get no_areas => 'No areas yet — add them in the Areas section.';
+	@override String get plant => 'Plant (optional)';
+	@override String get save => 'Save note';
+	@override String get err_content => 'Enter the note text.';
+	@override String get delete => 'Delete note';
+	@override String get delete_confirm => 'This action cannot be undone.';
+	@override String get info => '🌧️ Weather is saved automatically.';
 }
 
 // Path: task_detail
@@ -381,6 +407,22 @@ extension on TranslationsEn {
 			'quick_log.save' => 'Save task',
 			'quick_log.err_type' => 'Select a task type.',
 			'quick_log.err_area' => 'Select an area.',
+			'notes.title_new' => 'New note',
+			'notes.title_edit' => 'Edit note',
+			'notes.content_label' => 'Note',
+			'notes.content_hint' => 'Free text — observation, idea, thought…',
+			'notes.when' => 'When',
+			'notes.today' => 'Today',
+			'notes.yesterday' => 'Yesterday',
+			'notes.pick_date' => 'Date…',
+			'notes.area' => 'Area (optional)',
+			'notes.no_areas' => 'No areas yet — add them in the Areas section.',
+			'notes.plant' => 'Plant (optional)',
+			'notes.save' => 'Save note',
+			'notes.err_content' => 'Enter the note text.',
+			'notes.delete' => 'Delete note',
+			'notes.delete_confirm' => 'This action cannot be undone.',
+			'notes.info' => '🌧️ Weather is saved automatically.',
 			'task_detail.section_weather' => 'Weather snapshot',
 			'task_detail.weather_placeholder' => 'Weather snapshot will be available in M4.',
 			'task_detail.section_details' => 'Details',

@@ -44,6 +44,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
+	@override late final _Translations$notes$de notes = _Translations$notes$de._(_root);
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
@@ -139,6 +140,31 @@ class _Translations$quick_log$de extends Translations$quick_log$sl {
 	@override String get save => 'Aufgabe speichern';
 	@override String get err_type => 'Aufgabentyp auswählen.';
 	@override String get err_area => 'Bereich auswählen.';
+}
+
+// Path: notes
+class _Translations$notes$de extends Translations$notes$sl {
+	_Translations$notes$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'Neue Notiz';
+	@override String get title_edit => 'Notiz bearbeiten';
+	@override String get content_label => 'Notiz';
+	@override String get content_hint => 'Freier Text — Beobachtung, Idee, Gedanke…';
+	@override String get when => 'Wann';
+	@override String get today => 'Heute';
+	@override String get yesterday => 'Gestern';
+	@override String get pick_date => 'Datum…';
+	@override String get area => 'Bereich (optional)';
+	@override String get no_areas => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.';
+	@override String get plant => 'Pflanze (optional)';
+	@override String get save => 'Notiz speichern';
+	@override String get err_content => 'Notiztext eingeben.';
+	@override String get delete => 'Notiz löschen';
+	@override String get delete_confirm => 'Diese Aktion kann nicht rückgängig gemacht werden.';
+	@override String get info => '🌧️ Das Wetter wird automatisch gespeichert.';
 }
 
 // Path: task_detail
@@ -381,6 +407,22 @@ extension on TranslationsDe {
 			'quick_log.save' => 'Aufgabe speichern',
 			'quick_log.err_type' => 'Aufgabentyp auswählen.',
 			'quick_log.err_area' => 'Bereich auswählen.',
+			'notes.title_new' => 'Neue Notiz',
+			'notes.title_edit' => 'Notiz bearbeiten',
+			'notes.content_label' => 'Notiz',
+			'notes.content_hint' => 'Freier Text — Beobachtung, Idee, Gedanke…',
+			'notes.when' => 'Wann',
+			'notes.today' => 'Heute',
+			'notes.yesterday' => 'Gestern',
+			'notes.pick_date' => 'Datum…',
+			'notes.area' => 'Bereich (optional)',
+			'notes.no_areas' => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.',
+			'notes.plant' => 'Pflanze (optional)',
+			'notes.save' => 'Notiz speichern',
+			'notes.err_content' => 'Notiztext eingeben.',
+			'notes.delete' => 'Notiz löschen',
+			'notes.delete_confirm' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
+			'notes.info' => '🌧️ Das Wetter wird automatisch gespeichert.',
 			'task_detail.section_weather' => 'Wetteraufnahme',
 			'task_detail.weather_placeholder' => 'Wetteraufnahme wird in M4 verfügbar sein.',
 			'task_detail.section_details' => 'Details',
