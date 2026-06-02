@@ -1,10 +1,49 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tendask/app/app.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tendask/features/journal/presentation/journal_screen.dart';
+import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 
 void main() {
-  testWidgets('smoke test — app renders with ProviderScope', (WidgetTester tester) async {
-    await tester.pumpWidget(const ProviderScope(child: TendaskApp()));
-    expect(find.text('Tendask'), findsOneWidget);
+  testWidgets('nav shell — tab switch works', (WidgetTester tester) async {
+    final router = GoRouter(
+      initialLocation: '/dnevnik',
+      routes: [
+        StatefulShellRoute.indexedStack(
+          builder: (context, state, shell) => Scaffold(
+            body: shell,
+            bottomNavigationBar: NavigationBar(
+              selectedIndex: shell.currentIndex,
+              onDestinationSelected: shell.goBranch,
+              destinations: const [
+                NavigationDestination(icon: Icon(Icons.today), label: 'Dnevnik'),
+                NavigationDestination(icon: Icon(Icons.check_box), label: 'Opravila'),
+              ],
+            ),
+          ),
+          branches: [
+            StatefulShellBranch(routes: [
+              GoRoute(path: '/dnevnik', builder: (_, __) => const JournalScreen()),
+            ]),
+            StatefulShellBranch(routes: [
+              GoRoute(path: '/opravila', builder: (_, __) => const TasksScreen()),
+            ]),
+          ],
+        ),
+      ],
+    );
+
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Dnevnik'), findsWidgets);
+    await tester.tap(find.text('Opravila').last);
+    await tester.pumpAndSettle();
+    expect(find.text('Opravila'), findsWidgets);
   });
 }

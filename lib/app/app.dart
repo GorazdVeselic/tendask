@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'providers.dart';
+import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
 class TendaskApp extends ConsumerWidget {
@@ -9,13 +10,11 @@ class TendaskApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final name = ref.watch(appNameProvider);
-    return MaterialApp(
+    return MaterialApp.router(
       title: name,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
-      home: Scaffold(
-        body: Center(child: Text(name)),
-      ),
+      routerConfig: appRouter,
     );
   }
 }
