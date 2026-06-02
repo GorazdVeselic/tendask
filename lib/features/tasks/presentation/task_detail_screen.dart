@@ -11,6 +11,8 @@ import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../plants/presentation/plant_display.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
@@ -66,6 +68,18 @@ class TaskDetailScreen extends ConsumerWidget {
           final area = areas[task.areaId];
           final isWaiting = task.status == TaskStatus.waiting;
 
+          // Resolve the linked plant name (null when the task has no subject).
+          final plantsCatalog =
+              ref.watch(plantsMapProvider).asData?.value ?? const {};
+          final areaPlants =
+              ref.watch(userPlantsByAreaProvider(task.areaId)).asData?.value ??
+                  const [];
+          final matches =
+              areaPlants.where((p) => p.id == task.userPlantId);
+          final plantLabel = matches.isEmpty
+              ? null
+              : userPlantLabel(matches.first, plantsCatalog);
+
           return Column(
             children: [
               Expanded(
@@ -86,7 +100,12 @@ class TaskDetailScreen extends ConsumerWidget {
                       _WeatherPlaceholder(t: t, theme: theme),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_details, theme: theme),
-                      _DetailsCard(task: task, area: area, t: t, theme: theme),
+                      _DetailsCard(
+                          task: task,
+                          area: area,
+                          plantLabel: plantLabel,
+                          t: t,
+                          theme: theme),
                     ],
                   ),
                 ),
@@ -363,12 +382,14 @@ class _DetailsCard extends StatelessWidget {
   const _DetailsCard({
     required this.task,
     required this.area,
+    required this.plantLabel,
     required this.t,
     required this.theme,
   });
 
   final Task task;
   final Area? area;
+  final String? plantLabel;
   final Translations t;
   final ThemeData theme;
 
@@ -382,7 +403,7 @@ class _DetailsCard extends StatelessWidget {
 
     final rows = [
       (t.task_detail.label_area, area?.name ?? t.task_detail.none),
-      (t.task_detail.label_plant, t.task_detail.none), // M3.2
+      (t.task_detail.label_plant, plantLabel ?? t.task_detail.none),
       (t.task_detail.label_supplies, t.task_detail.none), // M3.3
       (t.task_detail.label_reminder, t.task_detail.none), // M8
       (t.task_detail.label_recurrence, recurrenceLabel),

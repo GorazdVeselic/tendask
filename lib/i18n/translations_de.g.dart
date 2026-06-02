@@ -48,6 +48,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
+	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 }
 
 // Path: nav
@@ -224,6 +225,8 @@ class _Translations$task_form$de extends Translations$task_form$sl {
 	@override String get plant_hint => '(für Schnitt, Behandlung, Ernte…)';
 	@override String get plant_add => '+ Pflanze auswählen';
 	@override String get plant_note => 'Mit Pflanze verknüpfen, nicht nur Bereich.';
+	@override String get plant_select => 'Pflanze auswählen';
+	@override String get plant_none => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
 	@override String get supplies => 'Verbrauchte Mittel';
 	@override String get supplies_add => '+ Mittel hinzufügen';
 	@override String get reminders => 'Erinnerung (optional)';
@@ -273,6 +276,30 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get form_location_info => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.';
 	@override String get form_save => 'Bereich speichern';
 	@override String get err_name => 'Bereichsnamen eingeben.';
+	@override String get plants_empty => 'Noch keine Pflanzen.';
+	@override String get plant_remove => 'Entfernen';
+}
+
+// Path: plants
+class _Translations$plants$de extends Translations$plants$sl {
+	_Translations$plants$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get picker_title => 'Pflanze auswählen';
+	@override String get search_hint => 'Pflanze suchen…';
+	@override String get cat_all => 'Alle';
+	@override String get cat_fruit_tree => 'Obstbäume';
+	@override String get cat_berries => 'Beeren';
+	@override String get cat_vegetable => 'Gemüse';
+	@override String get cat_herbs => 'Kräuter';
+	@override String get cat_ornamental => 'Zierpflanzen';
+	@override String get cat_lawn => 'Rasen';
+	@override String get from_catalog => 'Aus dem Katalog';
+	@override String get not_found => 'Nicht gefunden?';
+	@override String custom_add({required Object q}) => '+ Eigene hinzufügen: „${q}“';
+	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
 }
 
 /// The flat map containing all translations for locale <de>.
@@ -384,6 +411,8 @@ extension on TranslationsDe {
 			'task_form.plant_hint' => '(für Schnitt, Behandlung, Ernte…)',
 			'task_form.plant_add' => '+ Pflanze auswählen',
 			'task_form.plant_note' => 'Mit Pflanze verknüpfen, nicht nur Bereich.',
+			'task_form.plant_select' => 'Pflanze auswählen',
+			'task_form.plant_none' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
 			'task_form.supplies' => 'Verbrauchte Mittel',
 			'task_form.supplies_add' => '+ Mittel hinzufügen',
 			'task_form.reminders' => 'Erinnerung (optional)',
@@ -424,6 +453,21 @@ extension on TranslationsDe {
 			'areas.form_location_info' => 'Bereiche haben keinen eigenen Standort — sie sind alle auf deinem Grundstück. Der Standort für das Wetter wird einmalig im Profil festgelegt.',
 			'areas.form_save' => 'Bereich speichern',
 			'areas.err_name' => 'Bereichsnamen eingeben.',
+			'areas.plants_empty' => 'Noch keine Pflanzen.',
+			'areas.plant_remove' => 'Entfernen',
+			'plants.picker_title' => 'Pflanze auswählen',
+			'plants.search_hint' => 'Pflanze suchen…',
+			'plants.cat_all' => 'Alle',
+			'plants.cat_fruit_tree' => 'Obstbäume',
+			'plants.cat_berries' => 'Beeren',
+			'plants.cat_vegetable' => 'Gemüse',
+			'plants.cat_herbs' => 'Kräuter',
+			'plants.cat_ornamental' => 'Zierpflanzen',
+			'plants.cat_lawn' => 'Rasen',
+			'plants.from_catalog' => 'Aus dem Katalog',
+			'plants.not_found' => 'Nicht gefunden?',
+			'plants.custom_add' => ({required Object q}) => '+ Eigene hinzufügen: „${q}“',
+			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
 			_ => null,
 		};
 	}

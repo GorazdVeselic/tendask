@@ -3,8 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/area_type.dart';
+import '../../../core/catalog_labels.dart';
+import '../../../core/database/app_database.dart';
+import '../../../core/database/catalog_provider.dart';
 import '../../../core/widgets/save_bar.dart';
 import '../../../i18n/translations.g.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../plants/data/plant_spec.dart';
+import '../../plants/presentation/plant_picker_screen.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
 
@@ -21,6 +27,7 @@ class AreaFormScreen extends ConsumerStatefulWidget {
 class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
   final _nameController = TextEditingController();
   AreaType _type = AreaType.other;
+  final List<PlantSpec> _plants = [];
   bool _isLoading = false;
   bool _isSaving = false;
 
@@ -37,14 +44,33 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
 
   Future<void> _loadArea() async {
     final area = await ref.read(areasRepositoryProvider).byId(widget.areaId!);
+    final plants =
+        await ref.read(userPlantsRepositoryProvider).byArea(widget.areaId!);
     if (!mounted) return;
     if (area != null) {
       setState(() {
         _nameController.text = area.name;
         _type = area.type;
+        _plants
+          ..clear()
+          ..addAll(plants.map((p) => PlantSpec(
+                userPlantId: p.id,
+                plantId: p.plantId,
+                customName: p.customName,
+                personalAlias: p.personalAlias,
+              )));
       });
     }
     setState(() => _isLoading = false);
+  }
+
+  Future<void> _addPlant() async {
+    final pick = await context.pushNamed<PlantPick>('plant-picker');
+    if (pick == null || !mounted) return;
+    setState(() => _plants.add(PlantSpec(
+          plantId: pick.plantId,
+          customName: pick.customName,
+        )));
   }
 
   @override
@@ -69,17 +95,21 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
 
     setState(() => _isSaving = true);
     try {
+      // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
+      const userId = 'local';
       final repo = ref.read(areasRepositoryProvider);
+      final String areaId;
       if (_isEdit) {
         await repo.update(id: widget.areaId!, name: name, type: _type);
+        areaId = widget.areaId!;
       } else {
-        await repo.create(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
-          name: name,
-          type: _type,
-        );
+        areaId = await repo.create(userId: userId, name: name, type: _type);
       }
+      await ref.read(userPlantsRepositoryProvider).syncForArea(
+            userId: userId,
+            areaId: areaId,
+            specs: _plants,
+          );
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
@@ -90,6 +120,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
+    final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     return Scaffold(
       appBar: AppBar(
@@ -133,26 +164,14 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      // Plants in area — placeholder until M3.2 (plant picker).
                       _FieldLabel(t.areas.form_plants),
-                      Card(
-                        child: InkWell(
-                          borderRadius: BorderRadius.circular(12),
-                          onTap: () {}, // M3.2
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 12),
-                            child: Row(
-                              children: [
-                                const Text('🌿',
-                                    style: TextStyle(fontSize: 18)),
-                                const SizedBox(width: 10),
-                                Text(t.areas.form_plants_add,
-                                    style: theme.textTheme.bodyMedium),
-                              ],
-                            ),
-                          ),
-                        ),
+                      _PlantsSection(
+                        plants: _plants,
+                        catalog: catalog,
+                        t: t,
+                        theme: theme,
+                        onAdd: _addPlant,
+                        onRemove: (i) => setState(() => _plants.removeAt(i)),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(top: 4, bottom: 4),
@@ -191,6 +210,89 @@ class _FieldLabel extends StatelessWidget {
         style: Theme.of(context).textTheme.labelMedium?.copyWith(
               color: Theme.of(context).colorScheme.onSurfaceVariant,
             ),
+      ),
+    );
+  }
+}
+
+class _PlantsSection extends StatelessWidget {
+  const _PlantsSection({
+    required this.plants,
+    required this.catalog,
+    required this.t,
+    required this.theme,
+    required this.onAdd,
+    required this.onRemove,
+  });
+
+  final List<PlantSpec> plants;
+  final Map<String, Plant> catalog;
+  final Translations t;
+  final ThemeData theme;
+  final VoidCallback onAdd;
+  final ValueChanged<int> onRemove;
+
+  String _label(PlantSpec spec) {
+    if (spec.customName != null) return spec.customName!;
+    final plant = spec.plantId != null ? catalog[spec.plantId] : null;
+    return plant != null ? catalogLabel(plant.labels) : '🌿';
+  }
+
+  String _icon(PlantSpec spec) {
+    final plant = spec.plantId != null ? catalog[spec.plantId] : null;
+    return plant?.icon ?? '🌿';
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          if (plants.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+              child: Align(
+                alignment: Alignment.centerLeft,
+                child: Text(
+                  t.areas.plants_empty,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                ),
+              ),
+            )
+          else
+            for (var i = 0; i < plants.length; i++)
+              ListTile(
+                leading:
+                    Text(_icon(plants[i]), style: const TextStyle(fontSize: 20)),
+                title:
+                    Text(_label(plants[i]), style: theme.textTheme.bodyMedium),
+                trailing: IconButton(
+                  icon: Icon(Icons.close,
+                      size: 18, color: theme.colorScheme.onSurfaceVariant),
+                  tooltip: t.areas.plant_remove,
+                  onPressed: () => onRemove(i),
+                ),
+                dense: true,
+              ),
+          Divider(height: 1, color: theme.colorScheme.outlineVariant),
+          InkWell(
+            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
+            onTap: onAdd,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+              child: Row(
+                children: [
+                  Icon(Icons.add, size: 18, color: theme.colorScheme.primary),
+                  const SizedBox(width: 10),
+                  Text(t.areas.form_plants_add,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(color: theme.colorScheme.primary)),
+                ],
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }

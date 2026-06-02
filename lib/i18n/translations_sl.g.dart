@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
+	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
 }
 
 // Path: nav
@@ -428,6 +429,12 @@ class Translations$task_form$sl {
 	/// sl: 'Vežemo na rastlino, ne le območje.'
 	String get plant_note => 'Vežemo na rastlino, ne le območje.';
 
+	/// sl: 'Izberi rastlino'
+	String get plant_select => 'Izberi rastlino';
+
+	/// sl: 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.'
+	String get plant_none => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.';
+
 	/// sl: 'Sredstva iz zalog (poraba)'
 	String get supplies => 'Sredstva iz zalog (poraba)';
 
@@ -556,6 +563,60 @@ class Translations$areas$sl {
 
 	/// sl: 'Vnesi ime območja.'
 	String get err_name => 'Vnesi ime območja.';
+
+	/// sl: 'Še ni rastlin.'
+	String get plants_empty => 'Še ni rastlin.';
+
+	/// sl: 'Odstrani'
+	String get plant_remove => 'Odstrani';
+}
+
+// Path: plants
+class Translations$plants$sl {
+	Translations$plants$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Izberi rastlino'
+	String get picker_title => 'Izberi rastlino';
+
+	/// sl: 'Išči rastlino…'
+	String get search_hint => 'Išči rastlino…';
+
+	/// sl: 'Vse'
+	String get cat_all => 'Vse';
+
+	/// sl: 'Sadno drevje'
+	String get cat_fruit_tree => 'Sadno drevje';
+
+	/// sl: 'Jagodičevje'
+	String get cat_berries => 'Jagodičevje';
+
+	/// sl: 'Zelenjava'
+	String get cat_vegetable => 'Zelenjava';
+
+	/// sl: 'Zelišča'
+	String get cat_herbs => 'Zelišča';
+
+	/// sl: 'Okrasne'
+	String get cat_ornamental => 'Okrasne';
+
+	/// sl: 'Trata'
+	String get cat_lawn => 'Trata';
+
+	/// sl: 'Iz baze'
+	String get from_catalog => 'Iz baze';
+
+	/// sl: 'Ne najdeš?'
+	String get not_found => 'Ne najdeš?';
+
+	/// sl: '+ Dodaj po meri: „$q“'
+	String custom_add({required Object q}) => '+ Dodaj po meri: „${q}“';
+
+	/// sl: 'Lasten vnos je zaseben in se ne deli s skupnostjo.'
+	String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -667,6 +728,8 @@ extension on Translations {
 			'task_form.plant_hint' => '(za obrez, tretiranje, pobiranje…)',
 			'task_form.plant_add' => '+ Izberi rastlino',
 			'task_form.plant_note' => 'Vežemo na rastlino, ne le območje.',
+			'task_form.plant_select' => 'Izberi rastlino',
+			'task_form.plant_none' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
 			'task_form.supplies' => 'Sredstva iz zalog (poraba)',
 			'task_form.supplies_add' => '+ Dodaj sredstvo iz zalog',
 			'task_form.reminders' => 'Opomnik (neobvezno)',
@@ -707,6 +770,21 @@ extension on Translations {
 			'areas.form_location_info' => 'Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.',
 			'areas.form_save' => 'Shrani območje',
 			'areas.err_name' => 'Vnesi ime območja.',
+			'areas.plants_empty' => 'Še ni rastlin.',
+			'areas.plant_remove' => 'Odstrani',
+			'plants.picker_title' => 'Izberi rastlino',
+			'plants.search_hint' => 'Išči rastlino…',
+			'plants.cat_all' => 'Vse',
+			'plants.cat_fruit_tree' => 'Sadno drevje',
+			'plants.cat_berries' => 'Jagodičevje',
+			'plants.cat_vegetable' => 'Zelenjava',
+			'plants.cat_herbs' => 'Zelišča',
+			'plants.cat_ornamental' => 'Okrasne',
+			'plants.cat_lawn' => 'Trata',
+			'plants.from_catalog' => 'Iz baze',
+			'plants.not_found' => 'Ne najdeš?',
+			'plants.custom_add' => ({required Object q}) => '+ Dodaj po meri: „${q}“',
+			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
 			_ => null,
 		};
 	}

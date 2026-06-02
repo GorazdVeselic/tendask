@@ -1,0 +1,86 @@
+import 'package:drift/drift.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../../core/clock.dart';
+import '../../../core/database/app_database.dart';
+import 'plant_spec.dart';
+
+class UserPlantsRepository {
+  UserPlantsRepository(this._db, {this._clock = const SystemClock()});
+
+  final AppDatabase _db;
+  final Clock _clock;
+  final _uuid = const Uuid();
+
+  Stream<List<UserPlant>> watchByArea(String areaId) => (
+        _db.select(_db.userPlants)
+          ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
+          ..orderBy([(p) => OrderingTerm.asc(p.id)])
+      ).watch();
+
+  Future<List<UserPlant>> byArea(String areaId) => (
+        _db.select(_db.userPlants)
+          ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
+      ).get();
+
+  /// Creates one plant for an area and returns its id (task-form picker flow).
+  Future<String> createForArea({
+    required String userId,
+    required String areaId,
+    String? plantId,
+    String? customName,
+    String? personalAlias,
+  }) async {
+    final id = _uuid.v4();
+    await _db.into(_db.userPlants).insert(UserPlantsCompanion.insert(
+          id: id,
+          userId: userId,
+          areaId: areaId,
+          plantId: Value(plantId),
+          customName: Value(customName),
+          personalAlias: Value(personalAlias),
+          isCustom: Value(plantId == null),
+          updatedAt: _clock.now(),
+        ));
+    return id;
+  }
+
+  /// Reconciles an area's plants with [specs] in a single transaction:
+  /// inserts specs without an id, soft-deletes existing rows no longer present.
+  Future<void> syncForArea({
+    required String userId,
+    required String areaId,
+    required List<PlantSpec> specs,
+  }) async {
+    await _db.transaction(() async {
+      final existing = await byArea(areaId);
+      final keepIds =
+          specs.map((s) => s.userPlantId).whereType<String>().toSet();
+
+      for (final row in existing) {
+        if (!keepIds.contains(row.id)) {
+          await _softDelete(row.id);
+        }
+      }
+      for (final spec in specs.where((s) => s.userPlantId == null)) {
+        await createForArea(
+          userId: userId,
+          areaId: areaId,
+          plantId: spec.plantId,
+          customName: spec.customName,
+          personalAlias: spec.personalAlias,
+        );
+      }
+    });
+  }
+
+  Future<void> _softDelete(String id) async {
+    await (_db.update(_db.userPlants)..where((p) => p.id.equals(id))).write(
+      UserPlantsCompanion(
+        deleted: const Value(true),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value('pending'),
+      ),
+    );
+  }
+}

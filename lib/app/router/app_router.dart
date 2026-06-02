@@ -5,6 +5,7 @@ import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
+import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/task_form_screen.dart';
@@ -78,6 +79,11 @@ final appRouter = GoRouter(
       path: '/quick-log',
       name: 'quick-log',
       builder: (context, state) => const QuickLogScreen(),
+    ),
+    GoRoute(
+      path: '/plant-picker',
+      name: 'plant-picker',
+      builder: (context, state) => const PlantPickerScreen(),
     ),
     GoRoute(
       path: '/areas/new',

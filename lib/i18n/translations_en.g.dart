@@ -48,6 +48,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
+	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
 }
 
 // Path: nav
@@ -224,6 +225,8 @@ class _Translations$task_form$en extends Translations$task_form$sl {
 	@override String get plant_hint => '(for pruning, treatment, harvesting…)';
 	@override String get plant_add => '+ Select plant';
 	@override String get plant_note => 'Link to a plant, not just an area.';
+	@override String get plant_select => 'Select plant';
+	@override String get plant_none => 'This area has no plants yet. Add one with the button below.';
 	@override String get supplies => 'Supplies used';
 	@override String get supplies_add => '+ Add supply';
 	@override String get reminders => 'Reminder (optional)';
@@ -273,6 +276,30 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get form_location_info => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.';
 	@override String get form_save => 'Save area';
 	@override String get err_name => 'Enter an area name.';
+	@override String get plants_empty => 'No plants yet.';
+	@override String get plant_remove => 'Remove';
+}
+
+// Path: plants
+class _Translations$plants$en extends Translations$plants$sl {
+	_Translations$plants$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get picker_title => 'Select plant';
+	@override String get search_hint => 'Search plant…';
+	@override String get cat_all => 'All';
+	@override String get cat_fruit_tree => 'Fruit trees';
+	@override String get cat_berries => 'Berries';
+	@override String get cat_vegetable => 'Vegetables';
+	@override String get cat_herbs => 'Herbs';
+	@override String get cat_ornamental => 'Ornamental';
+	@override String get cat_lawn => 'Lawn';
+	@override String get from_catalog => 'From catalog';
+	@override String get not_found => 'Can\'t find it?';
+	@override String custom_add({required Object q}) => '+ Add custom: “${q}”';
+	@override String get custom_private => 'A custom entry is private and not shared with the community.';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -384,6 +411,8 @@ extension on TranslationsEn {
 			'task_form.plant_hint' => '(for pruning, treatment, harvesting…)',
 			'task_form.plant_add' => '+ Select plant',
 			'task_form.plant_note' => 'Link to a plant, not just an area.',
+			'task_form.plant_select' => 'Select plant',
+			'task_form.plant_none' => 'This area has no plants yet. Add one with the button below.',
 			'task_form.supplies' => 'Supplies used',
 			'task_form.supplies_add' => '+ Add supply',
 			'task_form.reminders' => 'Reminder (optional)',
@@ -424,6 +453,21 @@ extension on TranslationsEn {
 			'areas.form_location_info' => 'Areas have no location of their own — they\'re all on your property. The location for weather is set once in your profile.',
 			'areas.form_save' => 'Save area',
 			'areas.err_name' => 'Enter an area name.',
+			'areas.plants_empty' => 'No plants yet.',
+			'areas.plant_remove' => 'Remove',
+			'plants.picker_title' => 'Select plant',
+			'plants.search_hint' => 'Search plant…',
+			'plants.cat_all' => 'All',
+			'plants.cat_fruit_tree' => 'Fruit trees',
+			'plants.cat_berries' => 'Berries',
+			'plants.cat_vegetable' => 'Vegetables',
+			'plants.cat_herbs' => 'Herbs',
+			'plants.cat_ornamental' => 'Ornamental',
+			'plants.cat_lawn' => 'Lawn',
+			'plants.from_catalog' => 'From catalog',
+			'plants.not_found' => 'Can\'t find it?',
+			'plants.custom_add' => ({required Object q}) => '+ Add custom: “${q}”',
+			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
 			_ => null,
 		};
 	}

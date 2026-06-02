@@ -118,6 +118,8 @@
     "plant_hint": "(for pruning, treatment, harvesting…)",
     "plant_add": "+ Select plant",
     "plant_note": "Link to a plant, not just an area.",
+    "plant_select": "Select plant",
+    "plant_none": "This area has no plants yet. Add one with the button below.",
     "supplies": "Supplies used",
     "supplies_add": "+ Add supply",
     "reminders": "Reminder (optional)",
@@ -159,6 +161,23 @@
     "form_plants_note": "Tasks (pruning, treatment, harvesting) link to the selected plant.",
     "form_location_info": "Areas have no location of their own — they're all on your property. The location for weather is set once in your profile.",
     "form_save": "Save area",
-    "err_name": "Enter an area name."
+    "err_name": "Enter an area name.",
+    "plants_empty": "No plants yet.",
+    "plant_remove": "Remove"
+  },
+  "plants": {
+    "picker_title": "Select plant",
+    "search_hint": "Search plant…",
+    "cat_all": "All",
+    "cat_fruit_tree": "Fruit trees",
+    "cat_berries": "Berries",
+    "cat_vegetable": "Vegetables",
+    "cat_herbs": "Herbs",
+    "cat_ornamental": "Ornamental",
+    "cat_lawn": "Lawn",
+    "from_catalog": "From catalog",
+    "not_found": "Can't find it?",
+    "custom_add(q)": "+ Add custom: “$q”",
+    "custom_private": "A custom entry is private and not shared with the community."
   }
 }

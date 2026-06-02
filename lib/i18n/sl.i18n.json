@@ -118,6 +118,8 @@
     "plant_hint": "(za obrez, tretiranje, pobiranje…)",
     "plant_add": "+ Izberi rastlino",
     "plant_note": "Vežemo na rastlino, ne le območje.",
+    "plant_select": "Izberi rastlino",
+    "plant_none": "To območje še nima rastlin. Dodaj jo z gumbom spodaj.",
     "supplies": "Sredstva iz zalog (poraba)",
     "supplies_add": "+ Dodaj sredstvo iz zalog",
     "reminders": "Opomnik (neobvezno)",
@@ -159,6 +161,23 @@
     "form_plants_note": "Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.",
     "form_location_info": "Območja nimajo svoje lokacije — vsa so na tvoji posesti. Lokacija za vreme se nastavi enkrat v profilu.",
     "form_save": "Shrani območje",
-    "err_name": "Vnesi ime območja."
+    "err_name": "Vnesi ime območja.",
+    "plants_empty": "Še ni rastlin.",
+    "plant_remove": "Odstrani"
+  },
+  "plants": {
+    "picker_title": "Izberi rastlino",
+    "search_hint": "Išči rastlino…",
+    "cat_all": "Vse",
+    "cat_fruit_tree": "Sadno drevje",
+    "cat_berries": "Jagodičevje",
+    "cat_vegetable": "Zelenjava",
+    "cat_herbs": "Zelišča",
+    "cat_ornamental": "Okrasne",
+    "cat_lawn": "Trata",
+    "from_catalog": "Iz baze",
+    "not_found": "Ne najdeš?",
+    "custom_add(q)": "+ Dodaj po meri: „$q“",
+    "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo."
   }
 }

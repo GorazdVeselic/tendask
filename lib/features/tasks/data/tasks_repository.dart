@@ -90,6 +90,7 @@ class TasksRepository {
     required TaskStatus status,
     required DateTime date,
     required String? note,
+    String? userPlantId,
   }) async {
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
       TasksCompanion(
@@ -98,6 +99,7 @@ class TasksRepository {
         status: Value(status),
         date: Value(date.toUtc()),
         note: Value(note),
+        userPlantId: Value(userPlantId),
         updatedAt: Value(_clock.now()),
         syncStatus: const Value('pending'),
       ),

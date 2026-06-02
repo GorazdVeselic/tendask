@@ -11,6 +11,9 @@ import '../../../core/widgets/save_bar.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../plants/presentation/plant_display.dart';
+import '../../plants/presentation/plant_picker_screen.dart';
 import '../application/tasks_providers.dart';
 import 'widgets/task_type_tile.dart';
 
@@ -27,6 +30,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   String? _taskTypeId;
   String? _areaId;
+  String? _userPlantId;
   TaskStatus _status = TaskStatus.waiting;
   DateTime _date = DateTime.now();
   final _noteController = TextEditingController();
@@ -52,6 +56,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       setState(() {
         _taskTypeId = task.taskTypeId;
         _areaId = task.areaId;
+        _userPlantId = task.userPlantId;
         _status = task.status;
         _date = task.date.toLocal();
         _noteController.text = task.note ?? '';
@@ -116,6 +121,12 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       final note = _noteController.text.trim();
       final repo = ref.read(tasksRepositoryProvider);
 
+      // Only persist a plant when the task type actually needs a subject.
+      final catalog = ref.read(taskTypesMapProvider).asData?.value;
+      final requiresSubject =
+          catalog?[_taskTypeId]?.requiresSubject ?? false;
+      final userPlantId = requiresSubject ? _userPlantId : null;
+
       if (_isEdit) {
         await repo.updateTask(
           id: widget.taskId!,
@@ -124,6 +135,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           status: _status,
           date: _date,
           note: note.isEmpty ? null : note,
+          userPlantId: userPlantId,
         );
       } else {
         await repo.create(
@@ -134,12 +146,27 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           date: _date,
           status: _status,
           note: note.isEmpty ? null : note,
+          userPlantId: userPlantId,
         );
       }
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
+  }
+
+  Future<void> _addPlant() async {
+    if (_areaId == null) return;
+    final pick = await context.pushNamed<PlantPick>('plant-picker');
+    if (pick == null || !mounted) return;
+    final id = await ref.read(userPlantsRepositoryProvider).createForArea(
+          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
+          userId: 'local',
+          areaId: _areaId!,
+          plantId: pick.plantId,
+          customName: pick.customName,
+        );
+    if (mounted) setState(() => _userPlantId = id);
   }
 
   @override
@@ -187,6 +214,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                   areas: areas,
                   taskTypeId: _taskTypeId,
                   areaId: _areaId,
+                  userPlantId: _userPlantId,
                   status: _status,
                   date: _date,
                   noteController: _noteController,
@@ -194,7 +222,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
                   theme: theme,
                   onTaskTypeChanged: (id) =>
                       setState(() => _taskTypeId = id),
-                  onAreaChanged: (id) => setState(() => _areaId = id),
+                  onAreaChanged: (id) => setState(() {
+                    _areaId = id;
+                    _userPlantId = null;
+                  }),
+                  onUserPlantChanged: (id) =>
+                      setState(() => _userPlantId = id),
+                  onAddPlant: _addPlant,
                   onStatusChanged: (s) => setState(() => _status = s),
                   onPickDate: _pickDate,
                   onPickTime: _pickTime,
@@ -222,6 +256,7 @@ class _FormBody extends StatelessWidget {
     required this.areas,
     required this.taskTypeId,
     required this.areaId,
+    required this.userPlantId,
     required this.status,
     required this.date,
     required this.noteController,
@@ -229,6 +264,8 @@ class _FormBody extends StatelessWidget {
     required this.theme,
     required this.onTaskTypeChanged,
     required this.onAreaChanged,
+    required this.onUserPlantChanged,
+    required this.onAddPlant,
     required this.onStatusChanged,
     required this.onPickDate,
     required this.onPickTime,
@@ -238,6 +275,7 @@ class _FormBody extends StatelessWidget {
   final Map<String, Area> areas;
   final String? taskTypeId;
   final String? areaId;
+  final String? userPlantId;
   final TaskStatus status;
   final DateTime date;
   final TextEditingController noteController;
@@ -245,6 +283,8 @@ class _FormBody extends StatelessWidget {
   final ThemeData theme;
   final ValueChanged<String> onTaskTypeChanged;
   final ValueChanged<String> onAreaChanged;
+  final ValueChanged<String?> onUserPlantChanged;
+  final VoidCallback onAddPlant;
   final ValueChanged<TaskStatus> onStatusChanged;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
@@ -332,32 +372,15 @@ class _FormBody extends StatelessWidget {
           ),
         const SizedBox(height: 16),
 
-        // Rastlina (conditional)
-        if (requiresSubject) ...[
+        // Rastlina (conditional) — only once an area is chosen.
+        if (requiresSubject && areaId != null) ...[
           _FieldLabel('${t.task_form.plant} '
               '${t.task_form.plant_hint}'),
-          Card(
-            child: Column(
-              children: [
-                InkWell(
-                  borderRadius: BorderRadius.circular(12),
-                  onTap: () {}, // M3.2
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 12),
-                    child: Row(
-                      children: [
-                        const Text('🌿',
-                            style: TextStyle(fontSize: 18)),
-                        const SizedBox(width: 10),
-                        Text(t.task_form.plant_add,
-                            style: theme.textTheme.bodyMedium),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          _PlantField(
+            areaId: areaId!,
+            selectedId: userPlantId,
+            onChanged: onUserPlantChanged,
+            onAdd: onAddPlant,
           ),
           Padding(
             padding: const EdgeInsets.only(top: 4, bottom: 4),
@@ -607,6 +630,80 @@ class _TappableField extends StatelessWidget {
                 color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 8),
             Text(text, style: theme.textTheme.bodyMedium),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Plant field — pick a plant of the selected area, or add a new one (picker)
+// ---------------------------------------------------------------------------
+
+class _PlantField extends ConsumerWidget {
+  const _PlantField({
+    required this.areaId,
+    required this.selectedId,
+    required this.onChanged,
+    required this.onAdd,
+  });
+
+  final String areaId;
+  final String? selectedId;
+  final ValueChanged<String?> onChanged;
+  final VoidCallback onAdd;
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final plants = ref.watch(userPlantsByAreaProvider(areaId)).asData?.value;
+    final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
+
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (plants == null)
+              const Center(child: CircularProgressIndicator.adaptive())
+            else if (plants.isEmpty)
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 6),
+                child: Text(
+                  t.task_form.plant_none,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant),
+                ),
+              )
+            else
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  for (final p in plants)
+                    ChoiceChip(
+                      avatar: Text(userPlantIcon(p, catalog),
+                          style: const TextStyle(fontSize: 14)),
+                      label: Text(userPlantLabel(p, catalog)),
+                      selected: p.id == selectedId,
+                      onSelected: (sel) => onChanged(sel ? p.id : null),
+                    ),
+                ],
+              ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                onPressed: onAdd,
+                icon: const Icon(Icons.add, size: 18),
+                label: Text(t.task_form.plant_add),
+                style: TextButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    visualDensity: VisualDensity.compact),
+              ),
+            ),
           ],
         ),
       ),
