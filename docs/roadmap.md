@@ -43,7 +43,7 @@
 
 | # | Mejnik | Cilj | Stanje |
 |---|--------|------|:------:|
-| **M0** | Temelj projekta | Skeleton: mape, tema, router, i18n, CI | `[ ]` |
+| **M0** | Temelj projekta | Skeleton: mape, tema, router, i18n, CI | `[x]` |
 | **M1** | Lokalna baza + seed | drift sheme + katalog/uporabnik tabele + seed | `[ ]` |
 | **M2** | Jedro opravil (offline) | Vnos/pregled/urejanje opravil nad drift | `[ ]` |
 | **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[ ]` |
@@ -81,7 +81,7 @@
 - [x] **0.5 — i18n (slang).** Nastavi `slang` sl/en/de + nekaj ključev (naslovi zavihkov, FAB);
   zamenjaj vse vidne nize s `t.*`. *DoD:* preklop jezika zamenja besedilo; brez hardcode nizov.
   *Commit:* `feat: i18n slang (sl/en/de) + osnovni ključi`
-- [ ] **0.6 — CI + README.** GitHub Actions: `flutter analyze` + `flutter test` ob push/PR;
+- [x] **0.6 — CI + README.** GitHub Actions: `flutter analyze` + `flutter test` ob push/PR;
   posodobi `README.md` (zagon, build, struktura). *DoD:* CI zelen na GitHubu.
   *Commit:* `ci: GitHub Actions (analyze + test) + README`
 
@@ -253,6 +253,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-02 — **0.6** — CI (GitHub Actions: analyze + test + code-gen) + README posodobljen. **M0 zaključen.**
 - 2026-06-02 — **0.5** — slang i18n sl/en/de; context.t v vseh widgetih; brez hardcode nizov; test zelen.
 - 2026-06-02 — **0.4** — go_router StatefulShellRoute, 2 zavihka (Dnevnik/Opravila), FAB placeholder; test preklopa zelen.
 - 2026-06-02 — **0.3** — brand tema (AppColors, AppTheme light+dark, Plus Jakarta Sans); flutter analyze čist.
