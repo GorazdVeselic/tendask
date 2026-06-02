@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'providers.dart';
+import '../i18n/translations.g.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
 
@@ -9,9 +9,10 @@ class TendaskApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final name = ref.watch(appNameProvider);
     return MaterialApp.router(
-      title: name,
+      title: 'Tendask',
+      locale: TranslationProvider.of(context).flutterLocale,
+      supportedLocales: AppLocaleUtils.supportedLocales,
       theme: AppTheme.light(),
       darkTheme: AppTheme.dark(),
       routerConfig: appRouter,

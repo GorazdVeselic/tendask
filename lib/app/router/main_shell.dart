@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import '../../i18n/translations.g.dart';
 
 class MainShell extends StatelessWidget {
   const MainShell({required this.shell, super.key});
@@ -8,6 +9,7 @@ class MainShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Scaffold(
       body: shell,
       floatingActionButton: FloatingActionButton(
@@ -18,16 +20,16 @@ class MainShell extends StatelessWidget {
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
         onDestinationSelected: shell.goBranch,
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.calendar_today_outlined),
-            selectedIcon: Icon(Icons.calendar_today),
-            label: 'Dnevnik', // i18n: t.nav.journal — replaced in 0.5
+            icon: const Icon(Icons.calendar_today_outlined),
+            selectedIcon: const Icon(Icons.calendar_today),
+            label: t.nav.journal,
           ),
           NavigationDestination(
-            icon: Icon(Icons.check_box_outlined),
-            selectedIcon: Icon(Icons.check_box),
-            label: 'Opravila', // i18n: t.nav.tasks — replaced in 0.5
+            icon: const Icon(Icons.check_box_outlined),
+            selectedIcon: const Icon(Icons.check_box),
+            label: t.nav.tasks,
           ),
         ],
       ),
