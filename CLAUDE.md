@@ -114,10 +114,15 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 
 ## Komentarji in dokumentacija
 
-- **Default: brez komentarjev.** Imena povedo zgodbo.
-- **Vsi komentarji in doc komentarji v kodi so v angleščini.** Code-resident text (komentarji, `///` doc, log/error stringi, asset paths) ujema identifikatorje (camelCase EN) in package docs. Slovenščina živi v dizajn dokumentih (`docs/*`), pravilih (`CLAUDE.md`, `docs/roadmap.md`) in chat-u — ne v kodi. Uporabniško vidni stringi gredo prek `t.*` (slang).
-- Komentar samo, ko je *zakaj* neočiten: skrita invarianta, workaround za bug v lib-u, surprising behavior.
-- `///` doc komentar za public API repozitorijev, servisov in modelov — eno vrstico, brez epov.
+**Jezikovno pravilo (fiksno):**
+- **Pogovor agent ↔ razvijalec: slovenščina.**
+- **Vsa koda: angleščina.** To zajema: identifikatorje, route poti in imena (`/journal` ne `/dnevnik`; `name: 'journal'` ne `'dnevnik'`), i18n ključe (`nav.journal`), log/error nize, asset poti, imena datotek, komentarje, doc komentarje. Slovenščina živi samo v `docs/*`, pravilih (`CLAUDE.md`, `docs/roadmap.md`) in klepetu — **nikoli v kodi**.
+
+**Komentarji:**
+- **Default: brez komentarjev.** Dobro poimenovanje pove zgodbo.
+- **Komentar samo za neočiten ZAKAJ:** skrita invarianta, workaround za bug v lib-u, presenetljivo obnašanje. Če bralec brez komentarja ne bo zmeden, ga ne piši.
+- **Jedrnato — en stavek.** Brez opisa toka (`// calls X then Y`), brez reference na kličoče (`// used by Z`) — to spada v PR opis, ne kodo.
+- `///` doc komentar za public API repozitorijev, servisov in modelov — eno vrstico.
 - **Brez TODO brez datuma in podpisa.** `// TODO(gorazd, 2026-06-15): ...` ali nič.
 
 ## Git / commiti
