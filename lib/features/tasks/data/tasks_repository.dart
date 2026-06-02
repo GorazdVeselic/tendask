@@ -11,6 +11,10 @@ class TasksRepository {
   final Clock _clock;
   final _uuid = const Uuid();
 
+  Stream<Task?> watchById(String id) =>
+      (_db.select(_db.tasks)..where((t) => t.id.equals(id)))
+          .watchSingleOrNull();
+
   Stream<List<Task>> watchPending() => (
         _db.select(_db.tasks)
           ..where((t) => t.deleted.equals(false) & t.status.equals('waiting'))
@@ -89,6 +93,17 @@ class TasksRepository {
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
       TasksCompanion(
         date: Value(task.date.add(const Duration(days: 1))),
+        updatedAt: Value(now),
+        syncStatus: const Value('pending'),
+      ),
+    );
+  }
+
+  Future<void> revertToWaiting(String id) async {
+    final now = _clock.now();
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        status: const Value('waiting'),
         updatedAt: Value(now),
         syncStatus: const Value('pending'),
       ),

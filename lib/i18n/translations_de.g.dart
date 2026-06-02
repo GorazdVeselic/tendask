@@ -44,6 +44,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
+	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 }
@@ -134,6 +135,38 @@ class _Translations$quick_log$de extends Translations$quick_log$sl {
 	@override String get save => 'Aufgabe speichern';
 	@override String get err_type => 'Aufgabentyp auswählen.';
 	@override String get err_area => 'Bereich auswählen.';
+}
+
+// Path: task_detail
+class _Translations$task_detail$de extends Translations$task_detail$sl {
+	_Translations$task_detail$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get section_weather => 'Wetteraufnahme';
+	@override String get weather_placeholder => 'Wetteraufnahme wird in M4 verfügbar sein.';
+	@override String get section_details => 'Details';
+	@override String get label_area => 'Bereich';
+	@override String get label_plant => 'Pflanze';
+	@override String get label_supplies => 'Mittel';
+	@override String get label_reminder => 'Erinnerung';
+	@override String get label_recurrence => 'Wiederholung';
+	@override String get label_note => 'Notiz';
+	@override String get badge_waiting => 'Geplant';
+	@override String get badge_done => 'Erledigt';
+	@override String get action_complete => '✓  Als erledigt markieren';
+	@override String get action_postpone => '+1 Tag';
+	@override String get action_edit => 'Bearbeiten';
+	@override String get action_duplicate => 'Duplizieren';
+	@override String get action_delete => 'Löschen';
+	@override String get action_revert => 'Zurück auf Ausstehend';
+	@override String get action_move => 'Verschieben';
+	@override String get recurrence_once => 'Einmalig';
+	@override String get recurrence_weekly => 'Wöchentlich';
+	@override String get recurrence_seasonal => 'Saisonal';
+	@override String get none => '—';
+	@override String get not_found => 'Aufgabe nicht gefunden.';
 }
 
 // Path: tasks_list
@@ -255,6 +288,29 @@ extension on TranslationsDe {
 			'quick_log.save' => 'Aufgabe speichern',
 			'quick_log.err_type' => 'Aufgabentyp auswählen.',
 			'quick_log.err_area' => 'Bereich auswählen.',
+			'task_detail.section_weather' => 'Wetteraufnahme',
+			'task_detail.weather_placeholder' => 'Wetteraufnahme wird in M4 verfügbar sein.',
+			'task_detail.section_details' => 'Details',
+			'task_detail.label_area' => 'Bereich',
+			'task_detail.label_plant' => 'Pflanze',
+			'task_detail.label_supplies' => 'Mittel',
+			'task_detail.label_reminder' => 'Erinnerung',
+			'task_detail.label_recurrence' => 'Wiederholung',
+			'task_detail.label_note' => 'Notiz',
+			'task_detail.badge_waiting' => 'Geplant',
+			'task_detail.badge_done' => 'Erledigt',
+			'task_detail.action_complete' => '✓  Als erledigt markieren',
+			'task_detail.action_postpone' => '+1 Tag',
+			'task_detail.action_edit' => 'Bearbeiten',
+			'task_detail.action_duplicate' => 'Duplizieren',
+			'task_detail.action_delete' => 'Löschen',
+			'task_detail.action_revert' => 'Zurück auf Ausstehend',
+			'task_detail.action_move' => 'Verschieben',
+			'task_detail.recurrence_once' => 'Einmalig',
+			'task_detail.recurrence_weekly' => 'Wöchentlich',
+			'task_detail.recurrence_seasonal' => 'Saisonal',
+			'task_detail.none' => '—',
+			'task_detail.not_found' => 'Aufgabe nicht gefunden.',
 			'tasks_list.title' => 'Aufgaben',
 			'tasks_list.subtitle' => 'bevorstehende und überfällige',
 			'tasks_list.section_overdue' => 'Überfällig',

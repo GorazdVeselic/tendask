@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
+	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 }
@@ -134,6 +135,38 @@ class _Translations$quick_log$en extends Translations$quick_log$sl {
 	@override String get save => 'Save task';
 	@override String get err_type => 'Select a task type.';
 	@override String get err_area => 'Select an area.';
+}
+
+// Path: task_detail
+class _Translations$task_detail$en extends Translations$task_detail$sl {
+	_Translations$task_detail$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get section_weather => 'Weather snapshot';
+	@override String get weather_placeholder => 'Weather snapshot will be available in M4.';
+	@override String get section_details => 'Details';
+	@override String get label_area => 'Area';
+	@override String get label_plant => 'Plant';
+	@override String get label_supplies => 'Supplies';
+	@override String get label_reminder => 'Reminder';
+	@override String get label_recurrence => 'Recurrence';
+	@override String get label_note => 'Note';
+	@override String get badge_waiting => 'Planned';
+	@override String get badge_done => 'Done';
+	@override String get action_complete => '✓  Mark as done';
+	@override String get action_postpone => '+1 day';
+	@override String get action_edit => 'Edit';
+	@override String get action_duplicate => 'Duplicate';
+	@override String get action_delete => 'Delete';
+	@override String get action_revert => 'Back to waiting';
+	@override String get action_move => 'Reschedule';
+	@override String get recurrence_once => 'Once';
+	@override String get recurrence_weekly => 'Weekly';
+	@override String get recurrence_seasonal => 'Seasonal';
+	@override String get none => '—';
+	@override String get not_found => 'Task not found.';
 }
 
 // Path: tasks_list
@@ -255,6 +288,29 @@ extension on TranslationsEn {
 			'quick_log.save' => 'Save task',
 			'quick_log.err_type' => 'Select a task type.',
 			'quick_log.err_area' => 'Select an area.',
+			'task_detail.section_weather' => 'Weather snapshot',
+			'task_detail.weather_placeholder' => 'Weather snapshot will be available in M4.',
+			'task_detail.section_details' => 'Details',
+			'task_detail.label_area' => 'Area',
+			'task_detail.label_plant' => 'Plant',
+			'task_detail.label_supplies' => 'Supplies',
+			'task_detail.label_reminder' => 'Reminder',
+			'task_detail.label_recurrence' => 'Recurrence',
+			'task_detail.label_note' => 'Note',
+			'task_detail.badge_waiting' => 'Planned',
+			'task_detail.badge_done' => 'Done',
+			'task_detail.action_complete' => '✓  Mark as done',
+			'task_detail.action_postpone' => '+1 day',
+			'task_detail.action_edit' => 'Edit',
+			'task_detail.action_duplicate' => 'Duplicate',
+			'task_detail.action_delete' => 'Delete',
+			'task_detail.action_revert' => 'Back to waiting',
+			'task_detail.action_move' => 'Reschedule',
+			'task_detail.recurrence_once' => 'Once',
+			'task_detail.recurrence_weekly' => 'Weekly',
+			'task_detail.recurrence_seasonal' => 'Seasonal',
+			'task_detail.none' => '—',
+			'task_detail.not_found' => 'Task not found.',
 			'tasks_list.title' => 'Tasks',
 			'tasks_list.subtitle' => 'upcoming and overdue',
 			'tasks_list.section_overdue' => 'Overdue',

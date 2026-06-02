@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
+	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 }
@@ -221,6 +222,84 @@ class Translations$quick_log$sl {
 
 	/// sl: 'Izberi območje.'
 	String get err_area => 'Izberi območje.';
+}
+
+// Path: task_detail
+class Translations$task_detail$sl {
+	Translations$task_detail$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Vremenski posnetek'
+	String get section_weather => 'Vremenski posnetek';
+
+	/// sl: 'Vremenski posnetek bo na voljo v M4.'
+	String get weather_placeholder => 'Vremenski posnetek bo na voljo v M4.';
+
+	/// sl: 'Podrobnosti'
+	String get section_details => 'Podrobnosti';
+
+	/// sl: 'Območje'
+	String get label_area => 'Območje';
+
+	/// sl: 'Rastlina'
+	String get label_plant => 'Rastlina';
+
+	/// sl: 'Sredstva'
+	String get label_supplies => 'Sredstva';
+
+	/// sl: 'Opomnik'
+	String get label_reminder => 'Opomnik';
+
+	/// sl: 'Ponavljanje'
+	String get label_recurrence => 'Ponavljanje';
+
+	/// sl: 'Opomba'
+	String get label_note => 'Opomba';
+
+	/// sl: 'Načrtovano'
+	String get badge_waiting => 'Načrtovano';
+
+	/// sl: 'Opravljeno'
+	String get badge_done => 'Opravljeno';
+
+	/// sl: '✓ Označi kot opravljeno'
+	String get action_complete => '✓  Označi kot opravljeno';
+
+	/// sl: '+1 dan'
+	String get action_postpone => '+1 dan';
+
+	/// sl: 'Uredi'
+	String get action_edit => 'Uredi';
+
+	/// sl: 'Podvoji'
+	String get action_duplicate => 'Podvoji';
+
+	/// sl: 'Izbriši'
+	String get action_delete => 'Izbriši';
+
+	/// sl: 'Na čaka'
+	String get action_revert => 'Na čaka';
+
+	/// sl: 'Premakni'
+	String get action_move => 'Premakni';
+
+	/// sl: 'Enkratno'
+	String get recurrence_once => 'Enkratno';
+
+	/// sl: 'Tedensko'
+	String get recurrence_weekly => 'Tedensko';
+
+	/// sl: 'Sezonsko'
+	String get recurrence_seasonal => 'Sezonsko';
+
+	/// sl: '—'
+	String get none => '—';
+
+	/// sl: 'Opravilo ni bilo najdeno.'
+	String get not_found => 'Opravilo ni bilo najdeno.';
 }
 
 // Path: tasks_list
@@ -436,6 +515,29 @@ extension on Translations {
 			'quick_log.save' => 'Shrani opravilo',
 			'quick_log.err_type' => 'Izberi vrsto opravila.',
 			'quick_log.err_area' => 'Izberi območje.',
+			'task_detail.section_weather' => 'Vremenski posnetek',
+			'task_detail.weather_placeholder' => 'Vremenski posnetek bo na voljo v M4.',
+			'task_detail.section_details' => 'Podrobnosti',
+			'task_detail.label_area' => 'Območje',
+			'task_detail.label_plant' => 'Rastlina',
+			'task_detail.label_supplies' => 'Sredstva',
+			'task_detail.label_reminder' => 'Opomnik',
+			'task_detail.label_recurrence' => 'Ponavljanje',
+			'task_detail.label_note' => 'Opomba',
+			'task_detail.badge_waiting' => 'Načrtovano',
+			'task_detail.badge_done' => 'Opravljeno',
+			'task_detail.action_complete' => '✓  Označi kot opravljeno',
+			'task_detail.action_postpone' => '+1 dan',
+			'task_detail.action_edit' => 'Uredi',
+			'task_detail.action_duplicate' => 'Podvoji',
+			'task_detail.action_delete' => 'Izbriši',
+			'task_detail.action_revert' => 'Na čaka',
+			'task_detail.action_move' => 'Premakni',
+			'task_detail.recurrence_once' => 'Enkratno',
+			'task_detail.recurrence_weekly' => 'Tedensko',
+			'task_detail.recurrence_seasonal' => 'Sezonsko',
+			'task_detail.none' => '—',
+			'task_detail.not_found' => 'Opravilo ni bilo najdeno.',
 			'tasks_list.title' => 'Opravila',
 			'tasks_list.subtitle' => 'prihajajoča in zapadla',
 			'tasks_list.section_overdue' => 'Zamuda',

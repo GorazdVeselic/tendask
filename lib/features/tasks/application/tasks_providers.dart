@@ -12,11 +12,16 @@ TasksRepository tasksRepository(Ref ref) {
   return TasksRepository(ref.watch(databaseProvider));
 }
 
-// Manual StreamProvider — riverpod_generator can't resolve drift part-file types
+// Manual StreamProviders — riverpod_generator can't resolve drift part-file types
 final pendingTasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(tasksRepositoryProvider).watchPending();
 });
 
 final completedTasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(tasksRepositoryProvider).watchCompleted();
+});
+
+final taskByIdProvider =
+    StreamProvider.autoDispose.family<Task?, String>((ref, id) {
+  return ref.watch(tasksRepositoryProvider).watchById(id);
 });
