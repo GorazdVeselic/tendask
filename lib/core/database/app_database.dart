@@ -6,10 +6,27 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import 'tables/catalog_tables.dart';
+import 'tables/user_tables.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [TaskTypes, Plants, PlantSynonyms, CategoryTaskTypes])
+@DriftDatabase(tables: [
+  // catalog (read-only, seeded on first launch)
+  TaskTypes,
+  Plants,
+  PlantSynonyms,
+  CategoryTaskTypes,
+  // user data (sync-ready: uuid / updated_at / deleted / sync_status)
+  Profiles,
+  Areas,
+  UserPlants,
+  Tasks,
+  TaskReminders,
+  Notes,
+  Supplies,
+  Recipes,
+  TaskSupplies,
+])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
