@@ -43,6 +43,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
+	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 }
 
 // Path: nav
@@ -113,6 +114,42 @@ class _Translations$quick_log$de extends Translations$quick_log$sl {
 	@override String get err_area => 'Bereich auswählen.';
 }
 
+// Path: task_form
+class _Translations$task_form$de extends Translations$task_form$sl {
+	_Translations$task_form$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'Neue Aufgabe';
+	@override String get title_edit => 'Aufgabe bearbeiten';
+	@override String get what => 'Was';
+	@override String get what_hint => 'Aufgabentyp auswählen';
+	@override String get when => 'Wann';
+	@override String get status => 'Status';
+	@override String get status_waiting => 'Ausstehend';
+	@override String get status_done => 'Erledigt';
+	@override String get area => 'Bereich';
+	@override String get no_areas => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.';
+	@override String get plant => 'Pflanze';
+	@override String get plant_hint => '(für Schnitt, Behandlung, Ernte…)';
+	@override String get plant_add => '+ Pflanze auswählen';
+	@override String get plant_note => 'Mit Pflanze verknüpfen, nicht nur Bereich.';
+	@override String get supplies => 'Verbrauchte Mittel';
+	@override String get supplies_add => '+ Mittel hinzufügen';
+	@override String get reminders => 'Erinnerung (optional)';
+	@override String get reminders_add => '+ Erinnerung hinzufügen';
+	@override String get recurrence => 'Wiederholung';
+	@override String get recurrence_once => 'Einmalig';
+	@override String get recurrence_weekly => 'Wöchentlich';
+	@override String get recurrence_seasonal => 'Saisonal';
+	@override String get note => 'Notiz (optional)';
+	@override String get note_hint => 'Morgens, vor dem erwarteten Regen.';
+	@override String get save => 'Aufgabe speichern';
+	@override String get err_type => 'Aufgabentyp auswählen.';
+	@override String get err_area => 'Bereich auswählen.';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -153,6 +190,33 @@ extension on TranslationsDe {
 			'quick_log.save' => 'Aufgabe speichern',
 			'quick_log.err_type' => 'Aufgabentyp auswählen.',
 			'quick_log.err_area' => 'Bereich auswählen.',
+			'task_form.title_new' => 'Neue Aufgabe',
+			'task_form.title_edit' => 'Aufgabe bearbeiten',
+			'task_form.what' => 'Was',
+			'task_form.what_hint' => 'Aufgabentyp auswählen',
+			'task_form.when' => 'Wann',
+			'task_form.status' => 'Status',
+			'task_form.status_waiting' => 'Ausstehend',
+			'task_form.status_done' => 'Erledigt',
+			'task_form.area' => 'Bereich',
+			'task_form.no_areas' => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.',
+			'task_form.plant' => 'Pflanze',
+			'task_form.plant_hint' => '(für Schnitt, Behandlung, Ernte…)',
+			'task_form.plant_add' => '+ Pflanze auswählen',
+			'task_form.plant_note' => 'Mit Pflanze verknüpfen, nicht nur Bereich.',
+			'task_form.supplies' => 'Verbrauchte Mittel',
+			'task_form.supplies_add' => '+ Mittel hinzufügen',
+			'task_form.reminders' => 'Erinnerung (optional)',
+			'task_form.reminders_add' => '+ Erinnerung hinzufügen',
+			'task_form.recurrence' => 'Wiederholung',
+			'task_form.recurrence_once' => 'Einmalig',
+			'task_form.recurrence_weekly' => 'Wöchentlich',
+			'task_form.recurrence_seasonal' => 'Saisonal',
+			'task_form.note' => 'Notiz (optional)',
+			'task_form.note_hint' => 'Morgens, vor dem erwarteten Regen.',
+			'task_form.save' => 'Aufgabe speichern',
+			'task_form.err_type' => 'Aufgabentyp auswählen.',
+			'task_form.err_area' => 'Bereich auswählen.',
 			_ => null,
 		};
 	}

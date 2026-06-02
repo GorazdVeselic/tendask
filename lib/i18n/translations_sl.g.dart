@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
+	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 }
 
 // Path: nav
@@ -178,6 +179,96 @@ class Translations$quick_log$sl {
 	String get err_area => 'Izberi območje.';
 }
 
+// Path: task_form
+class Translations$task_form$sl {
+	Translations$task_form$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Novo opravilo'
+	String get title_new => 'Novo opravilo';
+
+	/// sl: 'Uredi opravilo'
+	String get title_edit => 'Uredi opravilo';
+
+	/// sl: 'Kaj'
+	String get what => 'Kaj';
+
+	/// sl: 'Izberi vrsto opravila'
+	String get what_hint => 'Izberi vrsto opravila';
+
+	/// sl: 'Kdaj'
+	String get when => 'Kdaj';
+
+	/// sl: 'Status'
+	String get status => 'Status';
+
+	/// sl: 'Čaka'
+	String get status_waiting => 'Čaka';
+
+	/// sl: 'Opravljeno'
+	String get status_done => 'Opravljeno';
+
+	/// sl: 'Območje'
+	String get area => 'Območje';
+
+	/// sl: 'Ni območij — dodaj jih v razdelku Območja.'
+	String get no_areas => 'Ni območij — dodaj jih v razdelku Območja.';
+
+	/// sl: 'Rastlina'
+	String get plant => 'Rastlina';
+
+	/// sl: '(za obrez, tretiranje, pobiranje…)'
+	String get plant_hint => '(za obrez, tretiranje, pobiranje…)';
+
+	/// sl: '+ Izberi rastlino'
+	String get plant_add => '+ Izberi rastlino';
+
+	/// sl: 'Vežemo na rastlino, ne le območje.'
+	String get plant_note => 'Vežemo na rastlino, ne le območje.';
+
+	/// sl: 'Sredstva iz zalog (poraba)'
+	String get supplies => 'Sredstva iz zalog (poraba)';
+
+	/// sl: '+ Dodaj sredstvo iz zalog'
+	String get supplies_add => '+ Dodaj sredstvo iz zalog';
+
+	/// sl: 'Opomnik (neobvezno)'
+	String get reminders => 'Opomnik (neobvezno)';
+
+	/// sl: '+ Dodaj obvestilo'
+	String get reminders_add => '+ Dodaj obvestilo';
+
+	/// sl: 'Ponavljanje'
+	String get recurrence => 'Ponavljanje';
+
+	/// sl: 'Enkratno'
+	String get recurrence_once => 'Enkratno';
+
+	/// sl: 'Tedensko'
+	String get recurrence_weekly => 'Tedensko';
+
+	/// sl: 'Sezonsko'
+	String get recurrence_seasonal => 'Sezonsko';
+
+	/// sl: 'Opomba (neobvezno)'
+	String get note => 'Opomba (neobvezno)';
+
+	/// sl: 'Zjutraj, pred napovedanim dežjem.'
+	String get note_hint => 'Zjutraj, pred napovedanim dežjem.';
+
+	/// sl: 'Shrani opravilo'
+	String get save => 'Shrani opravilo';
+
+	/// sl: 'Izberi vrsto opravila.'
+	String get err_type => 'Izberi vrsto opravila.';
+
+	/// sl: 'Izberi območje.'
+	String get err_area => 'Izberi območje.';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -218,6 +309,33 @@ extension on Translations {
 			'quick_log.save' => 'Shrani opravilo',
 			'quick_log.err_type' => 'Izberi vrsto opravila.',
 			'quick_log.err_area' => 'Izberi območje.',
+			'task_form.title_new' => 'Novo opravilo',
+			'task_form.title_edit' => 'Uredi opravilo',
+			'task_form.what' => 'Kaj',
+			'task_form.what_hint' => 'Izberi vrsto opravila',
+			'task_form.when' => 'Kdaj',
+			'task_form.status' => 'Status',
+			'task_form.status_waiting' => 'Čaka',
+			'task_form.status_done' => 'Opravljeno',
+			'task_form.area' => 'Območje',
+			'task_form.no_areas' => 'Ni območij — dodaj jih v razdelku Območja.',
+			'task_form.plant' => 'Rastlina',
+			'task_form.plant_hint' => '(za obrez, tretiranje, pobiranje…)',
+			'task_form.plant_add' => '+ Izberi rastlino',
+			'task_form.plant_note' => 'Vežemo na rastlino, ne le območje.',
+			'task_form.supplies' => 'Sredstva iz zalog (poraba)',
+			'task_form.supplies_add' => '+ Dodaj sredstvo iz zalog',
+			'task_form.reminders' => 'Opomnik (neobvezno)',
+			'task_form.reminders_add' => '+ Dodaj obvestilo',
+			'task_form.recurrence' => 'Ponavljanje',
+			'task_form.recurrence_once' => 'Enkratno',
+			'task_form.recurrence_weekly' => 'Tedensko',
+			'task_form.recurrence_seasonal' => 'Sezonsko',
+			'task_form.note' => 'Opomba (neobvezno)',
+			'task_form.note_hint' => 'Zjutraj, pred napovedanim dežjem.',
+			'task_form.save' => 'Shrani opravilo',
+			'task_form.err_type' => 'Izberi vrsto opravila.',
+			'task_form.err_area' => 'Izberi območje.',
 			_ => null,
 		};
 	}

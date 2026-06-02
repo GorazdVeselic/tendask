@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
+import '../../features/tasks/presentation/task_form_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
 
@@ -57,7 +58,13 @@ final appRouter = GoRouter(
     GoRoute(
       path: '/tasks/new',
       name: 'task-new',
-      builder: (context, state) => const TasksScreen(), // placeholder, M2.4
+      builder: (context, state) => const TaskFormScreen(),
+    ),
+    GoRoute(
+      path: '/tasks/:id/edit',
+      name: 'task-edit',
+      builder: (context, state) =>
+          TaskFormScreen(taskId: state.pathParameters['id']),
     ),
   ],
 );

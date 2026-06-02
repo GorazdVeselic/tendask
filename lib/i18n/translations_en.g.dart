@@ -43,6 +43,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
+	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 }
 
 // Path: nav
@@ -113,6 +114,42 @@ class _Translations$quick_log$en extends Translations$quick_log$sl {
 	@override String get err_area => 'Select an area.';
 }
 
+// Path: task_form
+class _Translations$task_form$en extends Translations$task_form$sl {
+	_Translations$task_form$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'New task';
+	@override String get title_edit => 'Edit task';
+	@override String get what => 'What';
+	@override String get what_hint => 'Select task type';
+	@override String get when => 'When';
+	@override String get status => 'Status';
+	@override String get status_waiting => 'Waiting';
+	@override String get status_done => 'Done';
+	@override String get area => 'Area';
+	@override String get no_areas => 'No areas yet — add them in the Areas section.';
+	@override String get plant => 'Plant';
+	@override String get plant_hint => '(for pruning, treatment, harvesting…)';
+	@override String get plant_add => '+ Select plant';
+	@override String get plant_note => 'Link to a plant, not just an area.';
+	@override String get supplies => 'Supplies used';
+	@override String get supplies_add => '+ Add supply';
+	@override String get reminders => 'Reminder (optional)';
+	@override String get reminders_add => '+ Add reminder';
+	@override String get recurrence => 'Recurrence';
+	@override String get recurrence_once => 'Once';
+	@override String get recurrence_weekly => 'Weekly';
+	@override String get recurrence_seasonal => 'Seasonal';
+	@override String get note => 'Note (optional)';
+	@override String get note_hint => 'Morning, before expected rain.';
+	@override String get save => 'Save task';
+	@override String get err_type => 'Select a task type.';
+	@override String get err_area => 'Select an area.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -153,6 +190,33 @@ extension on TranslationsEn {
 			'quick_log.save' => 'Save task',
 			'quick_log.err_type' => 'Select a task type.',
 			'quick_log.err_area' => 'Select an area.',
+			'task_form.title_new' => 'New task',
+			'task_form.title_edit' => 'Edit task',
+			'task_form.what' => 'What',
+			'task_form.what_hint' => 'Select task type',
+			'task_form.when' => 'When',
+			'task_form.status' => 'Status',
+			'task_form.status_waiting' => 'Waiting',
+			'task_form.status_done' => 'Done',
+			'task_form.area' => 'Area',
+			'task_form.no_areas' => 'No areas yet — add them in the Areas section.',
+			'task_form.plant' => 'Plant',
+			'task_form.plant_hint' => '(for pruning, treatment, harvesting…)',
+			'task_form.plant_add' => '+ Select plant',
+			'task_form.plant_note' => 'Link to a plant, not just an area.',
+			'task_form.supplies' => 'Supplies used',
+			'task_form.supplies_add' => '+ Add supply',
+			'task_form.reminders' => 'Reminder (optional)',
+			'task_form.reminders_add' => '+ Add reminder',
+			'task_form.recurrence' => 'Recurrence',
+			'task_form.recurrence_once' => 'Once',
+			'task_form.recurrence_weekly' => 'Weekly',
+			'task_form.recurrence_seasonal' => 'Seasonal',
+			'task_form.note' => 'Note (optional)',
+			'task_form.note_hint' => 'Morning, before expected rain.',
+			'task_form.save' => 'Save task',
+			'task_form.err_type' => 'Select a task type.',
+			'task_form.err_area' => 'Select an area.',
 			_ => null,
 		};
 	}
