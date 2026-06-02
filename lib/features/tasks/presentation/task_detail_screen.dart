@@ -1,15 +1,19 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
+import '../../../core/task_status.dart';
+import '../../../core/widgets/sheet_handle.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
+import 'widgets/confirm_delete_dialog.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
   const TaskDetailScreen({super.key, required this.id});
@@ -59,7 +63,7 @@ class TaskDetailScreen extends ConsumerWidget {
 
           final taskType = catalog[task.taskTypeId];
           final area = areas[task.areaId];
-          final isWaiting = task.status == 'waiting';
+          final isWaiting = task.status == TaskStatus.waiting;
 
           return Column(
             children: [
@@ -119,25 +123,14 @@ class TaskDetailScreen extends ConsumerWidget {
     Translations t,
     ThemeData theme,
   ) {
-    final isWaiting = task.status == 'waiting';
+    final isWaiting = task.status == TaskStatus.waiting;
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => SafeArea(
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            const SizedBox(height: 8),
-            Center(
-              child: Container(
-                width: 40,
-                height: 4,
-                decoration: BoxDecoration(
-                  color: theme.colorScheme.outlineVariant,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
+            const SheetHandle(),
             if (isWaiting) ...[
               ListTile(
                 leading: Icon(Icons.check_circle_outline,
@@ -191,28 +184,7 @@ class TaskDetailScreen extends ConsumerWidget {
               ),
               onTap: () async {
                 final sheetNav = Navigator.of(ctx);
-                final confirmed = await showDialog<bool>(
-                  context: ctx,
-                  builder: (dialogCtx) => AlertDialog(
-                    title: Text(t.tasks_list.delete_confirm_title),
-                    content: Text(t.tasks_list.delete_confirm_body),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(dialogCtx).pop(false),
-                        child: Text(t.tasks_list.delete_cancel),
-                      ),
-                      FilledButton(
-                        style: FilledButton.styleFrom(
-                          backgroundColor:
-                              Theme.of(dialogCtx).colorScheme.error,
-                        ),
-                        onPressed: () => Navigator.of(dialogCtx).pop(true),
-                        child: Text(t.tasks_list.delete_yes),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirmed == true) {
+                if (await showConfirmDeleteDialog(ctx)) {
                   sheetNav.pop();
                   unawaited(
                       repo.softDelete(task.id).then((_) => router.pop()));
@@ -246,12 +218,10 @@ class _HeroBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleSettings.currentLocale.languageTag;
     final icon = taskType?.icon ?? '📋';
-    final label = taskType != null
-        ? _taskLabel(taskType!.labels, locale)
-        : task.taskTypeId;
-    final isWaiting = task.status == 'waiting';
+    final label =
+        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
+    final isWaiting = task.status == TaskStatus.waiting;
 
     return Row(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -291,15 +261,6 @@ class _HeroBlock extends StatelessWidget {
       ],
     );
   }
-
-  static String _taskLabel(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
-  }
 }
 
 class _StatusPill extends StatelessWidget {
@@ -318,8 +279,7 @@ class _StatusPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final local = task.date.toLocal();
-    final dateStr =
-        '${local.day}. ${local.month}. ${local.year} · ${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+    final dateStr = '${formatDmy(local)} · ${formatHm(local)}';
     final label = isWaiting
         ? '📅  ${t.task_detail.badge_waiting} · $dateStr'
         : '✓  ${t.task_detail.badge_done} · $dateStr';
@@ -618,27 +578,7 @@ class _ActionBar extends StatelessWidget {
   }
 
   Future<void> _showDeleteDialog(BuildContext context) async {
-    final confirmed = await showDialog<bool>(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: Text(t.tasks_list.delete_confirm_title),
-        content: Text(t.tasks_list.delete_confirm_body),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(false),
-            child: Text(t.tasks_list.delete_cancel),
-          ),
-          FilledButton(
-            style: FilledButton.styleFrom(
-              backgroundColor: Theme.of(ctx).colorScheme.error,
-            ),
-            onPressed: () => Navigator.of(ctx).pop(true),
-            child: Text(t.tasks_list.delete_yes),
-          ),
-        ],
-      ),
-    );
-    if (confirmed == true) onDelete();
+    if (await showConfirmDeleteDialog(context)) onDelete();
   }
 }
 

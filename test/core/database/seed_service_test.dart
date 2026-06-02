@@ -3,6 +3,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
+import 'package:tendask/core/task_status.dart';
 import 'package:tendask/data/seed/catalog_seed.dart';
 
 void main() {
@@ -153,7 +154,7 @@ void main() {
             ..where((t) => t.id.equals(taskId)))
           .getSingle();
 
-      expect(task.status, 'waiting');
+      expect(task.status, TaskStatus.waiting);
       expect(task.deleted, false);
       expect(task.syncStatus, 'pending');
     });
@@ -169,14 +170,15 @@ void main() {
       ));
 
       await (db.update(db.tasks)..where((t) => t.id.equals(taskId))).write(
-        TasksCompanion(status: const Value('done'), updatedAt: Value(now)),
+        TasksCompanion(
+            status: const Value(TaskStatus.done), updatedAt: Value(now)),
       );
 
       final task = await (db.select(db.tasks)
             ..where((t) => t.id.equals(taskId)))
           .getSingle();
 
-      expect(task.status, 'done');
+      expect(task.status, TaskStatus.done);
     });
 
     test('soft delete sets deleted=true', () async {

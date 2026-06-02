@@ -3,6 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
+import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 
 class _FakeClock implements Clock {
@@ -54,7 +55,7 @@ void main() {
       expect(task, isNotNull);
       expect(task!.userId, userId);
       expect(task.areaId, areaId);
-      expect(task.status, 'waiting');
+      expect(task.status, TaskStatus.waiting);
       expect(task.deleted, false);
       expect(task.syncStatus, 'pending');
       expect(task.updatedAt.toUtc(), t0);
@@ -104,7 +105,7 @@ void main() {
       await repo.complete(id);
 
       final task = await repo.byId(id);
-      expect(task!.status, 'done');
+      expect(task!.status, TaskStatus.done);
       expect(task.syncStatus, 'pending');
       expect(task.updatedAt, isNot(t0));
     });
@@ -145,14 +146,14 @@ void main() {
         taskTypeId: 'mow',
         date: t0,
         note: 'test note',
-        status: 'done',
+        status: TaskStatus.done,
       );
 
       final newId = await repo.duplicate(id);
 
       expect(newId, isNot(id));
       final copy = await repo.byId(newId);
-      expect(copy!.status, 'waiting');
+      expect(copy!.status, TaskStatus.waiting);
       expect(copy.note, 'test note');
       expect(copy.areaId, areaId);
       expect(copy.taskTypeId, 'mow');

@@ -1,11 +1,11 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -21,8 +21,7 @@ class HomeScreen extends ConsumerWidget {
     final catalogAsync = ref.watch(taskTypesMapProvider);
 
     final now = DateTime.now();
-    final todayLabel =
-        '${now.day}. ${now.month}. ${now.year}';
+    final todayLabel = formatDmy(now);
 
     return Scaffold(
       appBar: AppBar(
@@ -232,6 +231,7 @@ class _TaskList extends StatelessWidget {
     if (diff.inDays < 2) return t.common.yesterday;
     return '${d.day}. ${d.month}.';
   }
+
 }
 
 class _TaskTile extends StatelessWidget {
@@ -248,8 +248,8 @@ class _TaskTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final locale = LocaleSettings.currentLocale.languageTag;
-    final label = taskType != null ? _label(taskType!.labels, locale) : task.taskTypeId;
+    final label =
+        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
     final icon = taskType?.icon ?? '📋';
 
     return ListTile(
@@ -266,14 +266,5 @@ class _TaskTile extends StatelessWidget {
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       onTap: () => context.pushNamed('task-detail', pathParameters: {'id': task.id}),
     );
-  }
-
-  static String _label(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
   }
 }

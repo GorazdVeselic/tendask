@@ -1,14 +1,17 @@
-import 'dart:convert';
-
-import 'package:drift/drift.dart' show Value;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
+import '../../../core/task_status.dart';
+import '../../../core/widgets/save_bar.dart';
+import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/tasks_providers.dart';
+import 'widgets/task_type_tile.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
   const TaskFormScreen({super.key, this.taskId});
@@ -23,7 +26,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   String? _taskTypeId;
   String? _areaId;
-  String _status = 'waiting';
+  TaskStatus _status = TaskStatus.waiting;
   DateTime _date = DateTime.now();
   final _noteController = TextEditingController();
   bool _isLoading = false;
@@ -113,15 +116,13 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       final repo = ref.read(tasksRepositoryProvider);
 
       if (_isEdit) {
-        await repo.update(
-          widget.taskId!,
-          TasksCompanion(
-            taskTypeId: Value(_taskTypeId!),
-            areaId: Value(_areaId!),
-            status: Value(_status),
-            date: Value(_date.toUtc()),
-            note: Value(note.isEmpty ? null : note),
-          ),
+        await repo.updateTask(
+          id: widget.taskId!,
+          taskTypeId: _taskTypeId!,
+          areaId: _areaId!,
+          status: _status,
+          date: _date,
+          note: note.isEmpty ? null : note,
         );
       } else {
         await repo.create(
@@ -129,7 +130,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
           userId: 'local',
           areaId: _areaId!,
           taskTypeId: _taskTypeId!,
-          date: _date.toUtc(),
+          date: _date,
           status: _status,
           note: note.isEmpty ? null : note,
         );
@@ -200,7 +201,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               ),
             ),
           ),
-          _SaveBar(
+          SaveBar(
               onSave: _save,
               isSaving: _isSaving,
               label: t.task_form.save),
@@ -236,22 +237,20 @@ class _FormBody extends StatelessWidget {
   final Map<String, Area> areas;
   final String? taskTypeId;
   final String? areaId;
-  final String status;
+  final TaskStatus status;
   final DateTime date;
   final TextEditingController noteController;
   final Translations t;
   final ThemeData theme;
   final ValueChanged<String> onTaskTypeChanged;
   final ValueChanged<String> onAreaChanged;
-  final ValueChanged<String> onStatusChanged;
+  final ValueChanged<TaskStatus> onStatusChanged;
   final VoidCallback onPickDate;
   final VoidCallback onPickTime;
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleSettings.currentLocale.languageTag;
-    final selectedType =
-        taskTypeId != null ? catalog[taskTypeId] : null;
+    final selectedType = taskTypeId != null ? catalog[taskTypeId] : null;
     final requiresSubject = selectedType?.requiresSubject ?? false;
 
     return ListView(
@@ -262,7 +261,6 @@ class _FormBody extends StatelessWidget {
         _TypePickerField(
           selected: selectedType,
           hint: t.task_form.what_hint,
-          locale: locale,
           catalog: catalog,
           theme: theme,
           onChanged: onTaskTypeChanged,
@@ -276,8 +274,7 @@ class _FormBody extends StatelessWidget {
             Expanded(
               flex: 3,
               child: _TappableField(
-                text:
-                    '${date.day}. ${date.month}. ${date.year}',
+                text: formatDmy(date),
                 icon: Icons.calendar_today_outlined,
                 onTap: onPickDate,
                 theme: theme,
@@ -287,8 +284,7 @@ class _FormBody extends StatelessWidget {
             Expanded(
               flex: 2,
               child: _TappableField(
-                text:
-                    '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}',
+                text: formatHm(date),
                 icon: Icons.access_time_outlined,
                 onTap: onPickTime,
                 theme: theme,
@@ -300,17 +296,17 @@ class _FormBody extends StatelessWidget {
 
         // Status
         _FieldLabel(t.task_form.status),
-        SegmentedButton<String>(
+        SegmentedButton<TaskStatus>(
           segments: [
             ButtonSegment(
-                value: 'waiting', label: Text(t.task_form.status_waiting)),
+                value: TaskStatus.waiting,
+                label: Text(t.task_form.status_waiting)),
             ButtonSegment(
-                value: 'done', label: Text(t.task_form.status_done)),
+                value: TaskStatus.done, label: Text(t.task_form.status_done)),
           ],
           selected: {status},
           onSelectionChanged: (s) => onStatusChanged(s.first),
-          style: const ButtonStyle(
-              visualDensity: VisualDensity.compact),
+          style: const ButtonStyle(visualDensity: VisualDensity.compact),
         ),
         const SizedBox(height: 16),
 
@@ -464,7 +460,6 @@ class _TypePickerField extends StatelessWidget {
   const _TypePickerField({
     required this.selected,
     required this.hint,
-    required this.locale,
     required this.catalog,
     required this.theme,
     required this.onChanged,
@@ -472,7 +467,6 @@ class _TypePickerField extends StatelessWidget {
 
   final TaskType? selected;
   final String hint;
-  final String locale;
   final Map<String, TaskType> catalog;
   final ThemeData theme;
   final ValueChanged<String> onChanged;
@@ -480,7 +474,7 @@ class _TypePickerField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final label = selected != null
-        ? '${selected!.icon}  ${_taskLabel(selected!.labels, locale)}'
+        ? '${selected!.icon}  ${catalogLabel(selected!.labels)}'
         : null;
 
     return InkWell(
@@ -523,16 +517,8 @@ class _TypePickerField extends StatelessWidget {
         maxChildSize: 0.95,
         builder: (_, controller) => Column(
           children: [
-            const SizedBox(height: 8),
-            Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: Colors.grey.shade300,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-            const SizedBox(height: 12),
+            const SheetHandle(),
+            const SizedBox(height: 4),
             Expanded(
               child: GridView.builder(
                 controller: controller,
@@ -547,84 +533,16 @@ class _TypePickerField extends StatelessWidget {
                 itemCount: catalog.length,
                 itemBuilder: (_, i) {
                   final type = catalog.values.elementAt(i);
-                  final label = _taskLabel(type.labels, locale);
-                  return _TypeTile(
+                  return TaskTypeTile(
                     icon: type.icon,
-                    label: label,
+                    label: catalogLabel(type.labels),
                     selected: type.id == selected?.id,
-                    color: Theme.of(context).colorScheme.primary,
                     onTap: () {
                       onChanged(type.id);
                       Navigator.of(ctx).pop();
                     },
                   );
                 },
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  static String _taskLabel(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
-  }
-}
-
-class _TypeTile extends StatelessWidget {
-  const _TypeTile({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String icon;
-  final String label;
-  final bool selected;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        decoration: BoxDecoration(
-          color: selected
-              ? color.withAlpha(30)
-              : theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: selected ? color : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 22)),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight:
-                    selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected
-                    ? color
-                    : theme.colorScheme.onSurface,
               ),
             ),
           ],
@@ -695,46 +613,3 @@ class _TappableField extends StatelessWidget {
   }
 }
 
-class _SaveBar extends StatelessWidget {
-  const _SaveBar({
-    required this.onSave,
-    required this.isSaving,
-    required this.label,
-  });
-
-  final VoidCallback onSave;
-  final bool isSaving;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 48,
-        child: FilledButton(
-          onPressed: isSaving ? null : onSave,
-          child: isSaving
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator.adaptive(
-                      strokeWidth: 2),
-                )
-              : Text(label),
-        ),
-      ),
-    );
-  }
-}

@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/task_status.dart';
 
 class TasksRepository {
   TasksRepository(this._db, {this._clock = const SystemClock()});
@@ -17,13 +18,17 @@ class TasksRepository {
 
   Stream<List<Task>> watchPending() => (
         _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false) & t.status.equals('waiting'))
+          ..where((t) =>
+              t.deleted.equals(false) &
+              t.status.equalsValue(TaskStatus.waiting))
           ..orderBy([(t) => OrderingTerm.asc(t.date)])
       ).watch();
 
   Stream<List<Task>> watchCompleted() => (
         _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false) & t.status.equals('done'))
+          ..where((t) =>
+              t.deleted.equals(false) &
+              t.status.equalsValue(TaskStatus.done))
           ..orderBy([(t) => OrderingTerm.desc(t.date)])
       ).watch();
 
@@ -36,7 +41,7 @@ class TasksRepository {
     required String taskTypeId,
     required DateTime date,
     String? userPlantId,
-    String status = 'waiting',
+    TaskStatus status = TaskStatus.waiting,
     String? note,
     String? recurrence,
   }) async {
@@ -47,7 +52,7 @@ class TasksRepository {
       userId: userId,
       areaId: areaId,
       taskTypeId: taskTypeId,
-      date: date,
+      date: date.toUtc(),
       userPlantId: Value(userPlantId),
       status: Value(status),
       note: Value(note),
@@ -57,10 +62,25 @@ class TasksRepository {
     return id;
   }
 
-  Future<void> update(String id, TasksCompanion patch) async {
-    final now = _clock.now();
+  /// Edits the user-facing fields of a task; keeps drift types out of the UI.
+  Future<void> updateTask({
+    required String id,
+    required String taskTypeId,
+    required String areaId,
+    required TaskStatus status,
+    required DateTime date,
+    required String? note,
+  }) async {
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
-      patch.copyWith(updatedAt: Value(now), syncStatus: const Value('pending')),
+      TasksCompanion(
+        taskTypeId: Value(taskTypeId),
+        areaId: Value(areaId),
+        status: Value(status),
+        date: Value(date.toUtc()),
+        note: Value(note),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value('pending'),
+      ),
     );
   }
 
@@ -68,7 +88,7 @@ class TasksRepository {
     final now = _clock.now();
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
       TasksCompanion(
-        status: const Value('done'),
+        status: const Value(TaskStatus.done),
         updatedAt: Value(now),
         syncStatus: const Value('pending'),
       ),
@@ -103,7 +123,7 @@ class TasksRepository {
     final now = _clock.now();
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
       TasksCompanion(
-        status: const Value('waiting'),
+        status: const Value(TaskStatus.waiting),
         updatedAt: Value(now),
         syncStatus: const Value('pending'),
       ),
@@ -122,7 +142,7 @@ class TasksRepository {
       taskTypeId: task.taskTypeId,
       date: task.date,
       userPlantId: Value(task.userPlantId),
-      status: const Value('waiting'),
+      status: const Value(TaskStatus.waiting),
       note: Value(task.note),
       recurrence: Value(task.recurrence),
       updatedAt: now,

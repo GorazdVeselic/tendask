@@ -1,5 +1,6 @@
 import 'package:drift/drift.dart';
 
+import '../../task_status.dart';
 import 'catalog_tables.dart';
 
 /// Sync-ready pattern: every user row has id (UUID, device-generated),
@@ -77,9 +78,8 @@ class Tasks extends Table {
       text().nullable().references(UserPlants, #id)();
   TextColumn get taskTypeId => text().references(TaskTypes, #id)();
   DateTimeColumn get date => dateTime()();
-  // waiting | done
   TextColumn get status =>
-      text().withDefault(const Constant('waiting'))();
+      textEnum<TaskStatus>().withDefault(const Constant('waiting'))();
   TextColumn get note => text().nullable()();
   // Frozen weather snapshot (JSON); set on completion, never overwritten
   TextColumn get weather => text().nullable()();

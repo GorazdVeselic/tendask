@@ -1,11 +1,12 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
+import '../../../core/widgets/empty_state.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -190,7 +191,7 @@ class _JournalList extends StatelessWidget {
           : filter == _Filter.tasks
               ? t.journal.empty_tasks
               : t.journal.empty;
-      return _EmptyState(msg);
+      return EmptyState(msg);
     }
 
     final groups = _groupByDate(filteredTasks);
@@ -292,9 +293,8 @@ class _DayHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final d = DateTime(date.year, date.month, date.day);
+    final today = startOfDay(DateTime.now());
+    final d = startOfDay(date);
 
     final String label;
     if (d == today) {
@@ -302,7 +302,7 @@ class _DayHeader extends StatelessWidget {
     } else if (d == today.subtract(const Duration(days: 1))) {
       label = t.common.yesterday;
     } else {
-      label = '${date.day}. ${date.month}. ${date.year}';
+      label = formatDmy(date);
     }
 
     return Text(
@@ -330,14 +330,10 @@ class _TaskEntry extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleSettings.currentLocale.languageTag;
     final icon = taskType?.icon ?? '📋';
-    final label = taskType != null
-        ? _taskLabel(taskType!.labels, locale)
-        : task.taskTypeId;
-    final local = task.date.toLocal();
-    final timeStr =
-        '${local.hour.toString().padLeft(2, '0')}:${local.minute.toString().padLeft(2, '0')}';
+    final label =
+        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
+    final timeStr = formatHm(task.date.toLocal());
 
     return ListTile(
       leading: CircleAvatar(
@@ -357,36 +353,6 @@ class _TaskEntry extends StatelessWidget {
           const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       onTap: () => context.pushNamed('task-detail',
           pathParameters: {'id': task.id}),
-    );
-  }
-
-  static String _taskLabel(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
-  }
-}
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState(this.message);
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-        ),
-      ),
     );
   }
 }

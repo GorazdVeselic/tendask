@@ -9,6 +9,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
+import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/features/tasks/presentation/quick_log_screen.dart';
@@ -214,7 +215,7 @@ void main() {
       // runAsync gives repo.complete() time to settle on the real event loop.
       await tester.runAsync(() async {
         final updated = await repo.byId(taskId);
-        expect(updated!.status, 'done');
+        expect(updated!.status, TaskStatus.done);
 
         final pending = await repo.watchPending().first;
         expect(pending, isEmpty);

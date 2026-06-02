@@ -3025,16 +3025,16 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.dateTime,
     requiredDuringInsert: true,
   );
-  static const VerificationMeta _statusMeta = const VerificationMeta('status');
   @override
-  late final GeneratedColumn<String> status = GeneratedColumn<String>(
-    'status',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultValue: const Constant('waiting'),
-  );
+  late final GeneratedColumnWithTypeConverter<TaskStatus, String> status =
+      GeneratedColumn<String>(
+        'status',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('waiting'),
+      ).withConverter<TaskStatus>($TasksTable.$converterstatus);
   static const VerificationMeta _noteMeta = const VerificationMeta('note');
   @override
   late final GeneratedColumn<String> note = GeneratedColumn<String>(
@@ -3181,12 +3181,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     } else if (isInserting) {
       context.missing(_dateMeta);
     }
-    if (data.containsKey('status')) {
-      context.handle(
-        _statusMeta,
-        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
-      );
-    }
     if (data.containsKey('note')) {
       context.handle(
         _noteMeta,
@@ -3258,10 +3252,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}date'],
       )!,
-      status: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}status'],
-      )!,
+      status: $TasksTable.$converterstatus.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}status'],
+        )!,
+      ),
       note: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}note'],
@@ -3293,6 +3289,9 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   $TasksTable createAlias(String alias) {
     return $TasksTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<TaskStatus, String, String> $converterstatus =
+      const EnumNameConverter<TaskStatus>(TaskStatus.values);
 }
 
 class Task extends DataClass implements Insertable<Task> {
@@ -3302,7 +3301,7 @@ class Task extends DataClass implements Insertable<Task> {
   final String? userPlantId;
   final String taskTypeId;
   final DateTime date;
-  final String status;
+  final TaskStatus status;
   final String? note;
   final String? weather;
   final String? recurrence;
@@ -3335,7 +3334,11 @@ class Task extends DataClass implements Insertable<Task> {
     }
     map['task_type_id'] = Variable<String>(taskTypeId);
     map['date'] = Variable<DateTime>(date);
-    map['status'] = Variable<String>(status);
+    {
+      map['status'] = Variable<String>(
+        $TasksTable.$converterstatus.toSql(status),
+      );
+    }
     if (!nullToAbsent || note != null) {
       map['note'] = Variable<String>(note);
     }
@@ -3387,7 +3390,9 @@ class Task extends DataClass implements Insertable<Task> {
       userPlantId: serializer.fromJson<String?>(json['userPlantId']),
       taskTypeId: serializer.fromJson<String>(json['taskTypeId']),
       date: serializer.fromJson<DateTime>(json['date']),
-      status: serializer.fromJson<String>(json['status']),
+      status: $TasksTable.$converterstatus.fromJson(
+        serializer.fromJson<String>(json['status']),
+      ),
       note: serializer.fromJson<String?>(json['note']),
       weather: serializer.fromJson<String?>(json['weather']),
       recurrence: serializer.fromJson<String?>(json['recurrence']),
@@ -3406,7 +3411,9 @@ class Task extends DataClass implements Insertable<Task> {
       'userPlantId': serializer.toJson<String?>(userPlantId),
       'taskTypeId': serializer.toJson<String>(taskTypeId),
       'date': serializer.toJson<DateTime>(date),
-      'status': serializer.toJson<String>(status),
+      'status': serializer.toJson<String>(
+        $TasksTable.$converterstatus.toJson(status),
+      ),
       'note': serializer.toJson<String?>(note),
       'weather': serializer.toJson<String?>(weather),
       'recurrence': serializer.toJson<String?>(recurrence),
@@ -3423,7 +3430,7 @@ class Task extends DataClass implements Insertable<Task> {
     Value<String?> userPlantId = const Value.absent(),
     String? taskTypeId,
     DateTime? date,
-    String? status,
+    TaskStatus? status,
     Value<String?> note = const Value.absent(),
     Value<String?> weather = const Value.absent(),
     Value<String?> recurrence = const Value.absent(),
@@ -3533,7 +3540,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String?> userPlantId;
   final Value<String> taskTypeId;
   final Value<DateTime> date;
-  final Value<String> status;
+  final Value<TaskStatus> status;
   final Value<String?> note;
   final Value<String?> weather;
   final Value<String?> recurrence;
@@ -3619,7 +3626,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<String?>? userPlantId,
     Value<String>? taskTypeId,
     Value<DateTime>? date,
-    Value<String>? status,
+    Value<TaskStatus>? status,
     Value<String?>? note,
     Value<String?>? weather,
     Value<String?>? recurrence,
@@ -3668,7 +3675,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
       map['date'] = Variable<DateTime>(date.value);
     }
     if (status.present) {
-      map['status'] = Variable<String>(status.value);
+      map['status'] = Variable<String>(
+        $TasksTable.$converterstatus.toSql(status.value),
+      );
     }
     if (note.present) {
       map['note'] = Variable<String>(note.value);
@@ -9266,7 +9275,7 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<String?> userPlantId,
       required String taskTypeId,
       required DateTime date,
-      Value<String> status,
+      Value<TaskStatus> status,
       Value<String?> note,
       Value<String?> weather,
       Value<String?> recurrence,
@@ -9283,7 +9292,7 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<String?> userPlantId,
       Value<String> taskTypeId,
       Value<DateTime> date,
-      Value<String> status,
+      Value<TaskStatus> status,
       Value<String?> note,
       Value<String?> weather,
       Value<String?> recurrence,
@@ -9410,10 +9419,11 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  ColumnFilters<String> get status => $composableBuilder(
-    column: $table.status,
-    builder: (column) => ColumnFilters(column),
-  );
+  ColumnWithTypeConverterFilters<TaskStatus, TaskStatus, String> get status =>
+      $composableBuilder(
+        column: $table.status,
+        builder: (column) => ColumnWithTypeConverterFilters(column),
+      );
 
   ColumnFilters<String> get note => $composableBuilder(
     column: $table.note,
@@ -9712,7 +9722,7 @@ class $$TasksTableAnnotationComposer
   GeneratedColumn<DateTime> get date =>
       $composableBuilder(column: $table.date, builder: (column) => column);
 
-  GeneratedColumn<String> get status =>
+  GeneratedColumnWithTypeConverter<TaskStatus, String> get status =>
       $composableBuilder(column: $table.status, builder: (column) => column);
 
   GeneratedColumn<String> get note =>
@@ -9897,7 +9907,7 @@ class $$TasksTableTableManager
                 Value<String?> userPlantId = const Value.absent(),
                 Value<String> taskTypeId = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
-                Value<String> status = const Value.absent(),
+                Value<TaskStatus> status = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
@@ -9929,7 +9939,7 @@ class $$TasksTableTableManager
                 Value<String?> userPlantId = const Value.absent(),
                 required String taskTypeId,
                 required DateTime date,
-                Value<String> status = const Value.absent(),
+                Value<TaskStatus> status = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),

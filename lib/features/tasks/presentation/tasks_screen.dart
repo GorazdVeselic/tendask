@@ -1,13 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
+import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/sheet_handle.dart';
 import '../application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
+import 'widgets/confirm_delete_dialog.dart';
 
 enum _Group { overdue, today, tomorrow, thisWeek, later }
 
@@ -93,7 +96,7 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    if (tasks.isEmpty) return _EmptyState(t.tasks_list.empty);
+    if (tasks.isEmpty) return EmptyState(t.tasks_list.empty);
 
     final grouped = _groupTasks(tasks);
     final sections =
@@ -144,8 +147,7 @@ class _TasksList extends StatelessWidget {
   }
 
   static Map<_Group, List<Task>> _groupTasks(List<Task> tasks) {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
+    final today = startOfDay(DateTime.now());
     final tomorrow = today.add(const Duration(days: 1));
     final nextWeek = today.add(const Duration(days: 7));
 
@@ -154,8 +156,7 @@ class _TasksList extends StatelessWidget {
     };
 
     for (final task in tasks) {
-      final local = task.date.toLocal();
-      final day = DateTime(local.year, local.month, local.day);
+      final day = startOfDay(task.date.toLocal());
 
       final group = day.isBefore(today)
           ? _Group.overdue
@@ -235,11 +236,9 @@ class _TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleSettings.currentLocale.languageTag;
     final icon = taskType?.icon ?? '📋';
-    final label = taskType != null
-        ? _taskLabel(taskType!.labels, locale)
-        : task.taskTypeId;
+    final label =
+        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
 
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
@@ -306,15 +305,6 @@ class _TaskRow extends StatelessWidget {
       ),
     );
   }
-
-  static String _taskLabel(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
-  }
 }
 
 // ─── Status badge ────────────────────────────────────────────────────────────
@@ -354,11 +344,9 @@ class _StatusBadge extends StatelessWidget {
   }
 
   String _overdueText() {
-    final now = DateTime.now();
-    final today = DateTime(now.year, now.month, now.day);
-    final local = task.date.toLocal();
-    final taskDay = DateTime(local.year, local.month, local.day);
-    final days = today.difference(taskDay).inDays;
+    final days = startOfDay(DateTime.now())
+        .difference(startOfDay(task.date.toLocal()))
+        .inDays;
     return t.tasks_list.overdue_days(n: days);
   }
 
@@ -395,18 +383,7 @@ class _ActionSheet extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          const SizedBox(height: 8),
-          Center(
-            child: Container(
-              width: 40,
-              height: 4,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.outlineVariant,
-                borderRadius: BorderRadius.circular(2),
-              ),
-            ),
-          ),
-          const SizedBox(height: 4),
+          const SheetHandle(),
           ListTile(
             leading: Icon(Icons.check_circle_outline,
                 color: theme.colorScheme.primary),
@@ -437,27 +414,7 @@ class _ActionSheet extends StatelessWidget {
             ),
             onTap: () async {
               final sheetNav = Navigator.of(context);
-              final confirmed = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: Text(t.tasks_list.delete_confirm_title),
-                  content: Text(t.tasks_list.delete_confirm_body),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(false),
-                      child: Text(t.tasks_list.delete_cancel),
-                    ),
-                    FilledButton(
-                      style: FilledButton.styleFrom(
-                        backgroundColor: Theme.of(ctx).colorScheme.error,
-                      ),
-                      onPressed: () => Navigator.of(ctx).pop(true),
-                      child: Text(t.tasks_list.delete_yes),
-                    ),
-                  ],
-                ),
-              );
-              if (confirmed == true) {
+              if (await showConfirmDeleteDialog(context)) {
                 sheetNav.pop();
                 onDelete();
               }
@@ -470,25 +427,3 @@ class _ActionSheet extends StatelessWidget {
   }
 }
 
-// ─── Empty state ─────────────────────────────────────────────────────────────
-
-class _EmptyState extends StatelessWidget {
-  const _EmptyState(this.message);
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
-        ),
-      ),
-    );
-  }
-}

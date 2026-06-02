@@ -1,13 +1,16 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/date_format.dart';
+import '../../../core/task_status.dart';
+import '../../../core/widgets/save_bar.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/tasks_providers.dart';
+import 'widgets/task_type_tile.dart';
 
 enum _DateOption { today, yesterday, custom }
 
@@ -41,12 +44,11 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
     };
   }
 
-  String get _status {
-    final now = DateTime.now();
-    final d = _selectedDate;
-    final isToday = d.year == now.year && d.month == now.month && d.day == now.day;
-    final isPast = d.isBefore(DateTime(now.year, now.month, now.day));
-    return (isToday || isPast) ? 'done' : 'waiting';
+  TaskStatus get _status {
+    final today = startOfDay(DateTime.now());
+    final day = startOfDay(_selectedDate);
+    final isTodayOrPast = !day.isAfter(today);
+    return isTodayOrPast ? TaskStatus.done : TaskStatus.waiting;
   }
 
   Future<void> _pickDate() async {
@@ -188,7 +190,7 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
               ],
             ),
           ),
-          _SaveBar(onSave: _save, isSaving: _isSaving, label: t.quick_log.save),
+          SaveBar(onSave: _save, isSaving: _isSaving, label: t.quick_log.save),
         ],
       ),
     );
@@ -276,9 +278,6 @@ class _TaskTypeGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final locale = LocaleSettings.currentLocale.languageTag;
-    final theme = Theme.of(context);
-
     return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
@@ -291,79 +290,13 @@ class _TaskTypeGrid extends StatelessWidget {
       itemCount: types.length,
       itemBuilder: (context, i) {
         final type = types[i];
-        final isSelected = type.id == selected;
-        final label = _label(type.labels, locale);
-        return _TypeTile(
+        return TaskTypeTile(
           icon: type.icon,
-          label: label,
-          selected: isSelected,
-          color: theme.colorScheme.primary,
+          label: catalogLabel(type.labels),
+          selected: type.id == selected,
           onTap: () => onSelect(type.id),
         );
       },
-    );
-  }
-
-  static String _label(String json, String lang) {
-    try {
-      final m = jsonDecode(json) as Map<String, dynamic>;
-      return (m[lang] ?? m['en'] ?? json) as String;
-    } catch (_) {
-      return json;
-    }
-  }
-}
-
-class _TypeTile extends StatelessWidget {
-  const _TypeTile({
-    required this.icon,
-    required this.label,
-    required this.selected,
-    required this.color,
-    required this.onTap,
-  });
-
-  final String icon;
-  final String label;
-  final bool selected;
-  final Color color;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return GestureDetector(
-      onTap: onTap,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
-        decoration: BoxDecoration(
-          color: selected
-              ? color.withAlpha(30)
-              : theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-            color: selected ? color : Colors.transparent,
-            width: 1.5,
-          ),
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(icon, style: const TextStyle(fontSize: 22)),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              textAlign: TextAlign.center,
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-              style: theme.textTheme.labelSmall?.copyWith(
-                fontWeight: selected ? FontWeight.w700 : FontWeight.w500,
-                color: selected ? color : theme.colorScheme.onSurface,
-              ),
-            ),
-          ],
-        ),
-      ),
     );
   }
 }
@@ -385,10 +318,8 @@ class _DateSegment extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String customLabel = t.quick_log.pick_date;
-    if (customDate != null) {
-      customLabel = '${customDate!.day}. ${customDate!.month}. ${customDate!.year}';
-    }
+    final customLabel =
+        customDate != null ? formatDmy(customDate!) : t.quick_log.pick_date;
 
     return SegmentedButton<_DateOption>(
       segments: [
@@ -500,45 +431,3 @@ class _AddRow extends StatelessWidget {
   }
 }
 
-class _SaveBar extends StatelessWidget {
-  const _SaveBar({
-    required this.onSave,
-    required this.isSaving,
-    required this.label,
-  });
-
-  final VoidCallback onSave;
-  final bool isSaving;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withAlpha(15),
-            blurRadius: 8,
-            offset: const Offset(0, -2),
-          ),
-        ],
-      ),
-      child: SizedBox(
-        width: double.infinity,
-        height: 48,
-        child: FilledButton(
-          onPressed: isSaving ? null : onSave,
-          child: isSaving
-              ? const SizedBox(
-                  width: 20,
-                  height: 20,
-                  child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-                )
-              : Text(label),
-        ),
-      ),
-    );
-  }
-}
