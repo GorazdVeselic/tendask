@@ -103,7 +103,7 @@ Reference: `koncept.md` §7.14 (tabele), `opravila-in-rastline.md` (seed vsebina
   recipe, task_supply` — vsaka uporabniška vrstica z `id` (UUID), `updated_at`, `deleted`,
   `sync_status` (lokalno). FK po §7.14. *DoD:* migracija + code-gen čist.
   *Commit:* `feat: drift uporabniške tabele (sync-ready: uuid/updated_at/deleted/sync_status)`
-- [ ] **1.4 — Seed podatki (Dart/JSON).** Pretvori tipe opravil + matriko kategorija↔tip + vzorčne
+- [x] **1.4 — Seed podatki (Dart/JSON).** Pretvori tipe opravil + matriko kategorija↔tip + vzorčne
   rastline iz `opravila-in-rastline.md` v strukturiran seed (asset JSON ali Dart konstante).
   *DoD:* seed datoteka obstaja, ujema se s katalogom v dokumentu.
   *Commit:* `feat: seed podatki katalog (tipi opravil + matrika + vzorčne rastline)`
@@ -253,6 +253,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-02 — **1.4** — seed podatki: 26 tipov opravil (A.1–A.4) + 34 rastlin (C.1–C.6) + 58 vnosov category_matrix; Dart const; flutter analyze čist.
 - 2026-06-02 — **1.3** — user tabele: profile, area, user_plant, task, task_reminder, note, supply, recipe, task_supply; sync-ready (uuid/updated_at/deleted/sync_status); area.protected; Notes.content→'text'; code-gen čist.
 - 2026-06-02 — **1.2** — katalog tabele: `task_type`, `plant`, `plant_synonym`, `category_task_type`; `labels` JSON TEXT; `tableName` override za Supabase skladnost; code-gen čist.
 - 2026-06-02 — **1.1** — drift temelj: `AppDatabase` (prazna) + `LazyDatabase`/`NativeDatabase` + `databaseProvider` (keepAlive); `path_provider`+`path` dodana; `*.g.dart` izključeni iz analize.
