@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+
 import '../../i18n/translations.g.dart';
 
 class MainShell extends StatelessWidget {
@@ -13,7 +14,7 @@ class MainShell extends StatelessWidget {
     return Scaffold(
       body: shell,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {}, // wired in M2: opens quick entry (screen 02)
+        onPressed: () => context.pushNamed('quick-log'),
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -21,6 +22,11 @@ class MainShell extends StatelessWidget {
         selectedIndex: shell.currentIndex,
         onDestinationSelected: shell.goBranch,
         destinations: [
+          NavigationDestination(
+            icon: const Icon(Icons.home_outlined),
+            selectedIcon: const Icon(Icons.home),
+            label: t.nav.home,
+          ),
           NavigationDestination(
             icon: const Icon(Icons.calendar_today_outlined),
             selectedIcon: const Icon(Icons.calendar_today),

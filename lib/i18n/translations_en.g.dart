@@ -40,6 +40,8 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 
 	// Translations
 	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
+	@override late final _Translations$home$en home = _Translations$home$en._(_root);
+	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 }
 
 // Path: nav
@@ -49,8 +51,35 @@ class _Translations$nav$en extends Translations$nav$sl {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
+	@override String get home => 'Home';
 	@override String get journal => 'Journal';
 	@override String get tasks => 'Tasks';
+}
+
+// Path: home
+class _Translations$home$en extends Translations$home$sl {
+	_Translations$home$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get greeting => 'Good day 🌿';
+	@override String get today => 'Today';
+	@override String get recent => 'Recent';
+	@override String get no_tasks_today => 'No tasks planned for today.';
+	@override String get no_recent => 'No completed tasks yet.';
+	@override String get weather_placeholder => 'Weather coming in M4.';
+}
+
+// Path: common
+class _Translations$common$en extends Translations$common$sl {
+	_Translations$common$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get today => 'today';
+	@override String get yesterday => 'yesterday';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -61,8 +90,17 @@ class _Translations$nav$en extends Translations$nav$sl {
 extension on TranslationsEn {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'nav.home' => 'Home',
 			'nav.journal' => 'Journal',
 			'nav.tasks' => 'Tasks',
+			'home.greeting' => 'Good day 🌿',
+			'home.today' => 'Today',
+			'home.recent' => 'Recent',
+			'home.no_tasks_today' => 'No tasks planned for today.',
+			'home.no_recent' => 'No completed tasks yet.',
+			'home.weather_placeholder' => 'Weather coming in M4.',
+			'common.today' => 'today',
+			'common.yesterday' => 'yesterday',
 			_ => null,
 		};
 	}

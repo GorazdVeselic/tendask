@@ -1,6 +1,19 @@
 {
   "nav": {
+    "home": "Domov",
     "journal": "Dnevnik",
     "tasks": "Opravila"
+  },
+  "home": {
+    "greeting": "Dober dan 🌿",
+    "today": "Danes",
+    "recent": "Nazadnje",
+    "no_tasks_today": "Danes ni načrtovanih opravil.",
+    "no_recent": "Še ni opravljenih opravil.",
+    "weather_placeholder": "Vreme bo na voljo v M4."
+  },
+  "common": {
+    "today": "danes",
+    "yesterday": "včeraj"
   }
 }

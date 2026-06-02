@@ -1,6 +1,19 @@
 {
   "nav": {
+    "home": "Home",
     "journal": "Journal",
     "tasks": "Tasks"
+  },
+  "home": {
+    "greeting": "Good day 🌿",
+    "today": "Today",
+    "recent": "Recent",
+    "no_tasks_today": "No tasks planned for today.",
+    "no_recent": "No completed tasks yet.",
+    "weather_placeholder": "Weather coming in M4."
+  },
+  "common": {
+    "today": "today",
+    "yesterday": "yesterday"
   }
 }
