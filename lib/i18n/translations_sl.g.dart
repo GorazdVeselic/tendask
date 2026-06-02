@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
+	late final Translations$quick_log$sl quick_log = Translations$quick_log$sl.internal(_root);
 }
 
 // Path: nav
@@ -105,6 +106,78 @@ class Translations$common$sl {
 	String get yesterday => 'včeraj';
 }
 
+// Path: quick_log
+class Translations$quick_log$sl {
+	Translations$quick_log$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Hiter vnos'
+	String get title => 'Hiter vnos';
+
+	/// sl: 'Napredno ›'
+	String get advanced => 'Napredno ›';
+
+	/// sl: 'Nimaš opravila, le zapis?'
+	String get note_card_title => 'Nimaš opravila, le zapis?';
+
+	/// sl: 'Misel, opažanje, bolezen…'
+	String get note_card_sub => 'Misel, opažanje, bolezen…';
+
+	/// sl: 'Opomba ›'
+	String get note_card_action => 'Opomba ›';
+
+	/// sl: 'Kaj si naredil?'
+	String get what => 'Kaj si naredil?';
+
+	/// sl: 'Kdaj'
+	String get when => 'Kdaj';
+
+	/// sl: 'Danes'
+	String get today => 'Danes';
+
+	/// sl: 'Včeraj'
+	String get yesterday => 'Včeraj';
+
+	/// sl: 'Datum…'
+	String get pick_date => 'Datum…';
+
+	/// sl: 'Kje'
+	String get where => 'Kje';
+
+	/// sl: 'Ni območij — dodaj jih v razdelku Območja.'
+	String get no_areas => 'Ni območij — dodaj jih v razdelku Območja.';
+
+	/// sl: 'Več (po potrebi)'
+	String get more => 'Več (po potrebi)';
+
+	/// sl: '🌿 Dodaj rastlino'
+	String get add_plant => '🌿 Dodaj rastlino';
+
+	/// sl: '🧪 Dodaj sredstvo iz zalog'
+	String get add_supply => '🧪 Dodaj sredstvo iz zalog';
+
+	/// sl: '🔔 Dodaj opomnik'
+	String get add_reminder => '🔔 Dodaj opomnik';
+
+	/// sl: 'Opomba (neobvezno)'
+	String get note_label => 'Opomba (neobvezno)';
+
+	/// sl: 'npr. 100g uree na 16l'
+	String get note_hint => 'npr. 100g uree na 16l';
+
+	/// sl: 'Shrani opravilo'
+	String get save => 'Shrani opravilo';
+
+	/// sl: 'Izberi vrsto opravila.'
+	String get err_type => 'Izberi vrsto opravila.';
+
+	/// sl: 'Izberi območje.'
+	String get err_area => 'Izberi območje.';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -124,6 +197,27 @@ extension on Translations {
 			'home.weather_placeholder' => 'Vreme bo na voljo v M4.',
 			'common.today' => 'danes',
 			'common.yesterday' => 'včeraj',
+			'quick_log.title' => 'Hiter vnos',
+			'quick_log.advanced' => 'Napredno ›',
+			'quick_log.note_card_title' => 'Nimaš opravila, le zapis?',
+			'quick_log.note_card_sub' => 'Misel, opažanje, bolezen…',
+			'quick_log.note_card_action' => 'Opomba ›',
+			'quick_log.what' => 'Kaj si naredil?',
+			'quick_log.when' => 'Kdaj',
+			'quick_log.today' => 'Danes',
+			'quick_log.yesterday' => 'Včeraj',
+			'quick_log.pick_date' => 'Datum…',
+			'quick_log.where' => 'Kje',
+			'quick_log.no_areas' => 'Ni območij — dodaj jih v razdelku Območja.',
+			'quick_log.more' => 'Več (po potrebi)',
+			'quick_log.add_plant' => '🌿 Dodaj rastlino',
+			'quick_log.add_supply' => '🧪 Dodaj sredstvo iz zalog',
+			'quick_log.add_reminder' => '🔔 Dodaj opomnik',
+			'quick_log.note_label' => 'Opomba (neobvezno)',
+			'quick_log.note_hint' => 'npr. 100g uree na 16l',
+			'quick_log.save' => 'Shrani opravilo',
+			'quick_log.err_type' => 'Izberi vrsto opravila.',
+			'quick_log.err_area' => 'Izberi območje.',
 			_ => null,
 		};
 	}

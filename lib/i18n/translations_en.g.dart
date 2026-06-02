@@ -42,6 +42,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
+	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
 }
 
 // Path: nav
@@ -82,6 +83,36 @@ class _Translations$common$en extends Translations$common$sl {
 	@override String get yesterday => 'yesterday';
 }
 
+// Path: quick_log
+class _Translations$quick_log$en extends Translations$quick_log$sl {
+	_Translations$quick_log$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Quick Log';
+	@override String get advanced => 'Advanced ›';
+	@override String get note_card_title => 'No task, just a note?';
+	@override String get note_card_sub => 'Thought, observation, disease…';
+	@override String get note_card_action => 'Note ›';
+	@override String get what => 'What did you do?';
+	@override String get when => 'When';
+	@override String get today => 'Today';
+	@override String get yesterday => 'Yesterday';
+	@override String get pick_date => 'Date…';
+	@override String get where => 'Where';
+	@override String get no_areas => 'No areas yet — add them in the Areas section.';
+	@override String get more => 'More (optional)';
+	@override String get add_plant => '🌿 Add plant';
+	@override String get add_supply => '🧪 Add supply';
+	@override String get add_reminder => '🔔 Add reminder';
+	@override String get note_label => 'Note (optional)';
+	@override String get note_hint => 'e.g. 100g urea per 16L';
+	@override String get save => 'Save task';
+	@override String get err_type => 'Select a task type.';
+	@override String get err_area => 'Select an area.';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -101,6 +132,27 @@ extension on TranslationsEn {
 			'home.weather_placeholder' => 'Weather coming in M4.',
 			'common.today' => 'today',
 			'common.yesterday' => 'yesterday',
+			'quick_log.title' => 'Quick Log',
+			'quick_log.advanced' => 'Advanced ›',
+			'quick_log.note_card_title' => 'No task, just a note?',
+			'quick_log.note_card_sub' => 'Thought, observation, disease…',
+			'quick_log.note_card_action' => 'Note ›',
+			'quick_log.what' => 'What did you do?',
+			'quick_log.when' => 'When',
+			'quick_log.today' => 'Today',
+			'quick_log.yesterday' => 'Yesterday',
+			'quick_log.pick_date' => 'Date…',
+			'quick_log.where' => 'Where',
+			'quick_log.no_areas' => 'No areas yet — add them in the Areas section.',
+			'quick_log.more' => 'More (optional)',
+			'quick_log.add_plant' => '🌿 Add plant',
+			'quick_log.add_supply' => '🧪 Add supply',
+			'quick_log.add_reminder' => '🔔 Add reminder',
+			'quick_log.note_label' => 'Note (optional)',
+			'quick_log.note_hint' => 'e.g. 100g urea per 16L',
+			'quick_log.save' => 'Save task',
+			'quick_log.err_type' => 'Select a task type.',
+			'quick_log.err_area' => 'Select an area.',
 			_ => null,
 		};
 	}

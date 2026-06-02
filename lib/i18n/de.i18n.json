@@ -15,5 +15,28 @@
   "common": {
     "today": "heute",
     "yesterday": "gestern"
+  },
+  "quick_log": {
+    "title": "Schnell erfassen",
+    "advanced": "Erweitert ›",
+    "note_card_title": "Keine Aufgabe, nur eine Notiz?",
+    "note_card_sub": "Gedanke, Beobachtung, Krankheit…",
+    "note_card_action": "Notiz ›",
+    "what": "Was hast du gemacht?",
+    "when": "Wann",
+    "today": "Heute",
+    "yesterday": "Gestern",
+    "pick_date": "Datum…",
+    "where": "Wo",
+    "no_areas": "Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.",
+    "more": "Mehr (optional)",
+    "add_plant": "🌿 Pflanze hinzufügen",
+    "add_supply": "🧪 Mittel hinzufügen",
+    "add_reminder": "🔔 Erinnerung hinzufügen",
+    "note_label": "Notiz (optional)",
+    "note_hint": "z.B. 100g Harnstoff pro 16L",
+    "save": "Aufgabe speichern",
+    "err_type": "Aufgabentyp auswählen.",
+    "err_area": "Bereich auswählen."
   }
 }

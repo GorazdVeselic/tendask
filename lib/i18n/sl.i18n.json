@@ -15,5 +15,28 @@
   "common": {
     "today": "danes",
     "yesterday": "včeraj"
+  },
+  "quick_log": {
+    "title": "Hiter vnos",
+    "advanced": "Napredno ›",
+    "note_card_title": "Nimaš opravila, le zapis?",
+    "note_card_sub": "Misel, opažanje, bolezen…",
+    "note_card_action": "Opomba ›",
+    "what": "Kaj si naredil?",
+    "when": "Kdaj",
+    "today": "Danes",
+    "yesterday": "Včeraj",
+    "pick_date": "Datum…",
+    "where": "Kje",
+    "no_areas": "Ni območij — dodaj jih v razdelku Območja.",
+    "more": "Več (po potrebi)",
+    "add_plant": "🌿 Dodaj rastlino",
+    "add_supply": "🧪 Dodaj sredstvo iz zalog",
+    "add_reminder": "🔔 Dodaj opomnik",
+    "note_label": "Opomba (neobvezno)",
+    "note_hint": "npr. 100g uree na 16l",
+    "save": "Shrani opravilo",
+    "err_type": "Izberi vrsto opravila.",
+    "err_area": "Izberi območje."
   }
 }

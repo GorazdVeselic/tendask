@@ -15,5 +15,28 @@
   "common": {
     "today": "today",
     "yesterday": "yesterday"
+  },
+  "quick_log": {
+    "title": "Quick Log",
+    "advanced": "Advanced ›",
+    "note_card_title": "No task, just a note?",
+    "note_card_sub": "Thought, observation, disease…",
+    "note_card_action": "Note ›",
+    "what": "What did you do?",
+    "when": "When",
+    "today": "Today",
+    "yesterday": "Yesterday",
+    "pick_date": "Date…",
+    "where": "Where",
+    "no_areas": "No areas yet — add them in the Areas section.",
+    "more": "More (optional)",
+    "add_plant": "🌿 Add plant",
+    "add_supply": "🧪 Add supply",
+    "add_reminder": "🔔 Add reminder",
+    "note_label": "Note (optional)",
+    "note_hint": "e.g. 100g urea per 16L",
+    "save": "Save task",
+    "err_type": "Select a task type.",
+    "err_area": "Select an area."
   }
 }

@@ -54,5 +54,10 @@ final appRouter = GoRouter(
       name: 'quick-log',
       builder: (context, state) => const QuickLogScreen(),
     ),
+    GoRoute(
+      path: '/tasks/new',
+      name: 'task-new',
+      builder: (context, state) => const TasksScreen(), // placeholder, M2.4
+    ),
   ],
 );
