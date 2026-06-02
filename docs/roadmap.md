@@ -66,7 +66,7 @@
 **Cilj:** prazna a pravilno strukturirana Flutter aplikacija, ki se zažene z brand temo,
 2-zavihkovo navigacijo in i18n; CI varuje vsak commit.
 
-- [ ] **0.1 — Struktura map (§6 tech-stack).** Ustvari `lib/{app,core,i18n,features/*,data/seed}`
+- [x] **0.1 — Struktura map (§6 tech-stack).** Ustvari `lib/{app,core,i18n,features/*,data/seed}`
   po feature-first; minimalni `main.dart` z `MaterialApp` (placeholder). *DoD:* zažene se prazen zaslon.
   *Commit:* `chore: feature-first struktura map + minimalni main`
 - [ ] **0.2 — Riverpod temelj.** Dodaj `flutter_riverpod`, `riverpod_annotation`, dev `riverpod_generator`+
@@ -253,4 +253,5 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-02 — **0.1** — feature-first struktura map + minimalni main + lint pravila; `flutter analyze` čist, test zelen.
 - 2026-06-02 — Roadmap ustvarjen; M0 čaka na začetek.
