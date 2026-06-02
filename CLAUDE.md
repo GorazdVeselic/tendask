@@ -51,6 +51,7 @@ lib/
 Pravila:
 - **Vsak feature = `data/` (repozitorij: drift + remote) → `application/` (Riverpod providerji) → `presentation/` (zasloni/gradniki).**
 - **Repozitorij skrije, ali gre za drift ali remote.** Aplikacijska plast ne ve, od kod pridejo podatki. **UI bere iz Riverpod providerjev, nikoli direktno iz Supabase ali drift v gradniku.**
+- **Repo ne sprejema/vrača drift tipov na meji.** Metode so tipirane (`create(...)`, `updateTask({...})`) — **nikoli `Companion`/`Value` v podpisu**; drift (`package:drift`) ostane v `data/`. Widget nikoli ne sestavi `Companion` (to je bil glavni zdrs M2 — `repo.update(id, TasksCompanion)` je pustil drift v `task_form`).
 - **Eno odgovornost na datoteko.** Če datoteka preseže ~300 vrstic ali drži dve nepovezani stvari → razdeli.
 - **`core/` ne kliče `features/`.** Features kličejo core. Modeli ne kličejo nič.
 - **Brez krožnih importov.** Če ju imaš, je struktura napačna — popravi, ne zaobidi.
@@ -80,7 +81,14 @@ Pravila:
 - **`!` (bang) operator z resnico.** Nikoli `foo!` brez komentarja v eni vrstici nad njim, ki pojasni **zakaj** je `null` tu nemogoč (invarianta, prejšnji check). Privzeto: `if (foo == null) return;` ali `switch (foo) { case null => ...; case final v => ... }`.
 - **`analysis_options.yaml` je executable verzija teh pravil.** Baseline: `include: package:flutter_lints/flutter.yaml`. Treat-as-error: `avoid_print`, `unawaited_futures`, `use_build_context_synchronously`, `prefer_const_constructors`, `prefer_const_literals_to_create_immutables`. Lint, ki se da avtomatizirati, NE sme živeti samo v CLAUDE.md.
 
-## Zasebnost & podatki
+## UI / presentation vzorci (naučeno iz pregleda M2)
+
+- **Brez podvojenih widgetov.** Če isti widget (tile, save-bar, dialog, sheet-handle, empty-state) rabita ≥2 zaslona → `core/widgets/` (generičen) ali `features/<x>/presentation/widgets/` (feature-specifičen). **Verbatim copy-paste widgeta med zasloni je rdeč alarm**, tudi pri 2 klicalcih (drugače velja ≥3 pravilo — pri identičnih kopijah ne).
+- **Ne prenašaj `theme`/`t` skozi konstruktorje.** `Theme.of(context)` in `context.t` sta poceni `InheritedWidget` lookup-a — beri ju lokalno v vsakem widgetu, ne kot parametre (prop-drilling = šum v vsakem podpisu).
+- **Katalog labels samo prek `catalogLabel()`** (`core/catalog_labels.dart`) — nikoli ročni `jsonDecode` labels v widgetu (velja splošno: brez `Map<String,dynamic>` v presentation plasti).
+- **Datumi za prikaz prek `core/date_format.dart`** (`startOfDay`/`formatDmy`/`formatHm`), ne podvojeni inline izračuni `DateTime(now.year, now.month, now.day)` po zaslonih.
+- **Napake niso `SizedBox.shrink()`.** Tiho požiranje (`error: (_, _) => SizedBox.shrink()`) skrije bug — pokaži vsaj miren indikator (kasneje Sentry). Mreža = pričakovano stanje (graceful degrade); lokalni DB error = ne, to je bug.
+- **Velika presentation datoteka (>~300 vrstic) je signal za ekstrakcijo widgetov**, ne za scroll.
 
 - **H3 celico računaj na napravi** (`h3_flutter`), shrani r7/r6/r5; **koordinate nikoli ne zapustijo naprave** in se nikoli ne shranijo.
 - **RLS povsod:** uporabniške tabele `user_id = auth.uid()`; katalog (task_type, plant, …) javno-bralni. Anonimni uporabnik = veljaven `auth.uid()`, RLS deluje enako.
@@ -97,6 +105,8 @@ Aplikacija živi offline; sync je inkrementalen in **enouporabniški (MVP)** —
 - **Pull:** `select where user_id = auth.uid() and updated_at > last_pulled_at` → `upsert` v drift; `deleted = true` → odstrani lokalno.
 - **Sprožilci:** ob vrnitvi povezave (`connectivity_plus`), zagonu, periodično.
 - **Čas = UTC v shrambi in transferu; lokalna timezone SAMO za prikaz.** **Nikoli `DateTime.now()` direktno v sync/opomnik/ponavljanje logiki** — uporabi `Clock` interface (`abstract class Clock { DateTime now(); }`, default `SystemClock()`); servisi sprejmejo `Clock` v konstruktorju, testi inject-ajo `FakeClock`. Brez tega ne moreš testirati "opomnik čez 2 dni" brez `Future.delayed`.
+- **Repo normalizira čas v UTC.** Klicalec poda lokalni `DateTime`; repo naredi `.toUtc()` pred zapisom (en `create`/`updateTask` v dveh widgetih ne sme dati različnih rezultatov). Za prikaz `.toLocal()` prek `core/date_format.dart`.
+- **Domenska stanja = `enum` prek drift `textEnum`** (npr. `TaskStatus { waiting, done }`), shranjen kot `enum.name` (`'waiting'`/`'done'`) → zrcalno s Supabase, brez migracije. Query: `col.equalsValue(Enum.x)`. **Gotcha:** glavni `app_database.dart` mora **importati enum**, sicer generirani `*.g.dart` (part-of) javi "Type not found" (`flutter analyze` tega ne ujame, `flutter test` ga). Workflow v nastajanju (npr. `sync_status`, dokler M6 ni potrjen) pusti `String` — abstrahiraj šele stabilen API.
 - **Shema drift in Supabase morata zrcaliti.** Ob spremembi tabele posodobi oba (drift tabela + Supabase migracija). **Migracije = additive-only:** add column/table = OK; rename = NIKOLI (add new + dual-write + drop čez 2 release); nov column = nullable ali z default (nikoli `NOT NULL` brez backfilla v isti migraciji). Razlog: stari APK-ji ob pull-u ne smejo crash-ati.
 - **Tolerantni parser na obeh straneh.** Neznana polja iz remote → ignoriraj (ne crash). Manjkajoča optional polja → default.
 - **Multi-table write = transakcija.** Npr. opravilo + odpis zalog (`task_supply`) shrani atomarno (drift transaction; na Supabase strani RPC ali atomic upsert).
