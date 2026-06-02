@@ -13,7 +13,7 @@ class MainShell extends StatelessWidget {
     return Scaffold(
       body: shell,
       floatingActionButton: FloatingActionButton(
-        onPressed: () {}, // wired in M2: opens hiter vnos (02)
+        onPressed: () {}, // wired in M2: opens quick entry (screen 02)
         child: const Icon(Icons.add),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,

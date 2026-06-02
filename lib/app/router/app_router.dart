@@ -4,7 +4,7 @@ import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
 
 final appRouter = GoRouter(
-  initialLocation: '/dnevnik',
+  initialLocation: '/journal',
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => MainShell(shell: shell),
@@ -12,8 +12,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/dnevnik',
-              name: 'dnevnik',
+              path: '/journal',
+              name: 'journal',
               builder: (context, state) => const JournalScreen(),
             ),
           ],
@@ -21,8 +21,8 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
-              path: '/opravila',
-              name: 'opravila',
+              path: '/tasks',
+              name: 'tasks',
               builder: (context, state) => const TasksScreen(),
             ),
           ],

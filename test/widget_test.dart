@@ -11,7 +11,7 @@ void main() {
 
   testWidgets('nav shell — tab switch works', (WidgetTester tester) async {
     final router = GoRouter(
-      initialLocation: '/dnevnik',
+      initialLocation: '/journal',
       routes: [
         StatefulShellRoute.indexedStack(
           builder: (context, state, shell) => Scaffold(
@@ -20,17 +20,17 @@ void main() {
               selectedIndex: shell.currentIndex,
               onDestinationSelected: shell.goBranch,
               destinations: const [
-                NavigationDestination(icon: Icon(Icons.today), label: 'Dnevnik'),
-                NavigationDestination(icon: Icon(Icons.check_box), label: 'Opravila'),
+                NavigationDestination(icon: Icon(Icons.today), label: 'Journal'),
+                NavigationDestination(icon: Icon(Icons.check_box), label: 'Tasks'),
               ],
             ),
           ),
           branches: [
             StatefulShellBranch(routes: [
-              GoRoute(path: '/dnevnik', builder: (_, _) => const JournalScreen()),
+              GoRoute(path: '/journal', builder: (_, _) => const JournalScreen()),
             ]),
             StatefulShellBranch(routes: [
-              GoRoute(path: '/opravila', builder: (_, _) => const TasksScreen()),
+              GoRoute(path: '/tasks', builder: (_, _) => const TasksScreen()),
             ]),
           ],
         ),
@@ -46,9 +46,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text('Dnevnik'), findsWidgets);
-    await tester.tap(find.text('Opravila').last);
+    expect(find.text('Journal'), findsWidgets);
+    await tester.tap(find.text('Tasks').last);
     await tester.pumpAndSettle();
-    expect(find.text('Opravila'), findsWidgets);
+    expect(find.text('Tasks'), findsWidgets);
   });
 }
