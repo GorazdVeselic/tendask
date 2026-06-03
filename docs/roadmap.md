@@ -269,6 +269,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   trak (vodoravni dnevi) na vrhu časovnice za hiter skok/premik po dnevih (prejšnji/naslednji); v
   M2.5 ni bil implementiran (časovnica je le kronološki seznam + filter). Dodati trak (skok na dan)
   ali ‹ › dnevno navigacijo.
+- **FR-5 — Ponavljanje opravil (nice-to-have).** Korak »Kdaj« v vnosu predvideva izbiro ponavljanja
+  (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
+  dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
+  beleženje. Kasneje: definiraj pravilo ponavljanja + generator + UI za serijo. Do takrat je vsako opravilo enkratno.
 
 ## Dnevnik napredka
 

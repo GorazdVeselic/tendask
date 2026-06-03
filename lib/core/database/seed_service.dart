@@ -48,6 +48,7 @@ class SeedService {
       category: t.category,
       requiresSubject: Value(t.requiresSubject),
       weatherSensitive: Value(t.weatherSensitive),
+      consumesSupplies: Value(t.consumesSupplies),
       defaultCadence: Value(t.defaultCadence),
     );
   }

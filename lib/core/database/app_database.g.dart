@@ -77,6 +77,21 @@ class $TaskTypesTable extends TaskTypes
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _consumesSuppliesMeta = const VerificationMeta(
+    'consumesSupplies',
+  );
+  @override
+  late final GeneratedColumn<bool> consumesSupplies = GeneratedColumn<bool>(
+    'consumes_supplies',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("consumes_supplies" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _defaultCadenceMeta = const VerificationMeta(
     'defaultCadence',
   );
@@ -96,6 +111,7 @@ class $TaskTypesTable extends TaskTypes
     category,
     requiresSubject,
     weatherSensitive,
+    consumesSupplies,
     defaultCadence,
   ];
   @override
@@ -157,6 +173,15 @@ class $TaskTypesTable extends TaskTypes
         ),
       );
     }
+    if (data.containsKey('consumes_supplies')) {
+      context.handle(
+        _consumesSuppliesMeta,
+        consumesSupplies.isAcceptableOrUnknown(
+          data['consumes_supplies']!,
+          _consumesSuppliesMeta,
+        ),
+      );
+    }
     if (data.containsKey('default_cadence')) {
       context.handle(
         _defaultCadenceMeta,
@@ -199,6 +224,10 @@ class $TaskTypesTable extends TaskTypes
         DriftSqlType.bool,
         data['${effectivePrefix}weather_sensitive'],
       )!,
+      consumesSupplies: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}consumes_supplies'],
+      )!,
       defaultCadence: attachedDatabase.typeMapping.read(
         DriftSqlType.int,
         data['${effectivePrefix}default_cadence'],
@@ -219,6 +248,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
   final String category;
   final bool requiresSubject;
   final bool weatherSensitive;
+  final bool consumesSupplies;
   final int? defaultCadence;
   const TaskType({
     required this.id,
@@ -227,6 +257,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     required this.category,
     required this.requiresSubject,
     required this.weatherSensitive,
+    required this.consumesSupplies,
     this.defaultCadence,
   });
   @override
@@ -238,6 +269,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     map['category'] = Variable<String>(category);
     map['requires_subject'] = Variable<bool>(requiresSubject);
     map['weather_sensitive'] = Variable<bool>(weatherSensitive);
+    map['consumes_supplies'] = Variable<bool>(consumesSupplies);
     if (!nullToAbsent || defaultCadence != null) {
       map['default_cadence'] = Variable<int>(defaultCadence);
     }
@@ -252,6 +284,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       category: Value(category),
       requiresSubject: Value(requiresSubject),
       weatherSensitive: Value(weatherSensitive),
+      consumesSupplies: Value(consumesSupplies),
       defaultCadence: defaultCadence == null && nullToAbsent
           ? const Value.absent()
           : Value(defaultCadence),
@@ -270,6 +303,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       category: serializer.fromJson<String>(json['category']),
       requiresSubject: serializer.fromJson<bool>(json['requiresSubject']),
       weatherSensitive: serializer.fromJson<bool>(json['weatherSensitive']),
+      consumesSupplies: serializer.fromJson<bool>(json['consumesSupplies']),
       defaultCadence: serializer.fromJson<int?>(json['defaultCadence']),
     );
   }
@@ -283,6 +317,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       'category': serializer.toJson<String>(category),
       'requiresSubject': serializer.toJson<bool>(requiresSubject),
       'weatherSensitive': serializer.toJson<bool>(weatherSensitive),
+      'consumesSupplies': serializer.toJson<bool>(consumesSupplies),
       'defaultCadence': serializer.toJson<int?>(defaultCadence),
     };
   }
@@ -294,6 +329,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     String? category,
     bool? requiresSubject,
     bool? weatherSensitive,
+    bool? consumesSupplies,
     Value<int?> defaultCadence = const Value.absent(),
   }) => TaskType(
     id: id ?? this.id,
@@ -302,6 +338,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     category: category ?? this.category,
     requiresSubject: requiresSubject ?? this.requiresSubject,
     weatherSensitive: weatherSensitive ?? this.weatherSensitive,
+    consumesSupplies: consumesSupplies ?? this.consumesSupplies,
     defaultCadence: defaultCadence.present
         ? defaultCadence.value
         : this.defaultCadence,
@@ -318,6 +355,9 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       weatherSensitive: data.weatherSensitive.present
           ? data.weatherSensitive.value
           : this.weatherSensitive,
+      consumesSupplies: data.consumesSupplies.present
+          ? data.consumesSupplies.value
+          : this.consumesSupplies,
       defaultCadence: data.defaultCadence.present
           ? data.defaultCadence.value
           : this.defaultCadence,
@@ -333,6 +373,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
           ..write('category: $category, ')
           ..write('requiresSubject: $requiresSubject, ')
           ..write('weatherSensitive: $weatherSensitive, ')
+          ..write('consumesSupplies: $consumesSupplies, ')
           ..write('defaultCadence: $defaultCadence')
           ..write(')'))
         .toString();
@@ -346,6 +387,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     category,
     requiresSubject,
     weatherSensitive,
+    consumesSupplies,
     defaultCadence,
   );
   @override
@@ -358,6 +400,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
           other.category == this.category &&
           other.requiresSubject == this.requiresSubject &&
           other.weatherSensitive == this.weatherSensitive &&
+          other.consumesSupplies == this.consumesSupplies &&
           other.defaultCadence == this.defaultCadence);
 }
 
@@ -368,6 +411,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
   final Value<String> category;
   final Value<bool> requiresSubject;
   final Value<bool> weatherSensitive;
+  final Value<bool> consumesSupplies;
   final Value<int?> defaultCadence;
   final Value<int> rowid;
   const TaskTypesCompanion({
@@ -377,6 +421,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     this.category = const Value.absent(),
     this.requiresSubject = const Value.absent(),
     this.weatherSensitive = const Value.absent(),
+    this.consumesSupplies = const Value.absent(),
     this.defaultCadence = const Value.absent(),
     this.rowid = const Value.absent(),
   });
@@ -387,6 +432,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     required String category,
     this.requiresSubject = const Value.absent(),
     this.weatherSensitive = const Value.absent(),
+    this.consumesSupplies = const Value.absent(),
     this.defaultCadence = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
@@ -400,6 +446,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     Expression<String>? category,
     Expression<bool>? requiresSubject,
     Expression<bool>? weatherSensitive,
+    Expression<bool>? consumesSupplies,
     Expression<int>? defaultCadence,
     Expression<int>? rowid,
   }) {
@@ -410,6 +457,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
       if (category != null) 'category': category,
       if (requiresSubject != null) 'requires_subject': requiresSubject,
       if (weatherSensitive != null) 'weather_sensitive': weatherSensitive,
+      if (consumesSupplies != null) 'consumes_supplies': consumesSupplies,
       if (defaultCadence != null) 'default_cadence': defaultCadence,
       if (rowid != null) 'rowid': rowid,
     });
@@ -422,6 +470,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     Value<String>? category,
     Value<bool>? requiresSubject,
     Value<bool>? weatherSensitive,
+    Value<bool>? consumesSupplies,
     Value<int?>? defaultCadence,
     Value<int>? rowid,
   }) {
@@ -432,6 +481,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
       category: category ?? this.category,
       requiresSubject: requiresSubject ?? this.requiresSubject,
       weatherSensitive: weatherSensitive ?? this.weatherSensitive,
+      consumesSupplies: consumesSupplies ?? this.consumesSupplies,
       defaultCadence: defaultCadence ?? this.defaultCadence,
       rowid: rowid ?? this.rowid,
     );
@@ -458,6 +508,9 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     if (weatherSensitive.present) {
       map['weather_sensitive'] = Variable<bool>(weatherSensitive.value);
     }
+    if (consumesSupplies.present) {
+      map['consumes_supplies'] = Variable<bool>(consumesSupplies.value);
+    }
     if (defaultCadence.present) {
       map['default_cadence'] = Variable<int>(defaultCadence.value);
     }
@@ -476,6 +529,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
           ..write('category: $category, ')
           ..write('requiresSubject: $requiresSubject, ')
           ..write('weatherSensitive: $weatherSensitive, ')
+          ..write('consumesSupplies: $consumesSupplies, ')
           ..write('defaultCadence: $defaultCadence, ')
           ..write('rowid: $rowid')
           ..write(')'))
@@ -6817,6 +6871,7 @@ typedef $$TaskTypesTableCreateCompanionBuilder =
       required String category,
       Value<bool> requiresSubject,
       Value<bool> weatherSensitive,
+      Value<bool> consumesSupplies,
       Value<int?> defaultCadence,
       Value<int> rowid,
     });
@@ -6828,6 +6883,7 @@ typedef $$TaskTypesTableUpdateCompanionBuilder =
       Value<String> category,
       Value<bool> requiresSubject,
       Value<bool> weatherSensitive,
+      Value<bool> consumesSupplies,
       Value<int?> defaultCadence,
       Value<int> rowid,
     });
@@ -6916,6 +6972,11 @@ class $$TaskTypesTableFilterComposer
 
   ColumnFilters<bool> get weatherSensitive => $composableBuilder(
     column: $table.weatherSensitive,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get consumesSupplies => $composableBuilder(
+    column: $table.consumesSupplies,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -7014,6 +7075,11 @@ class $$TaskTypesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get consumesSupplies => $composableBuilder(
+    column: $table.consumesSupplies,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<int> get defaultCadence => $composableBuilder(
     column: $table.defaultCadence,
     builder: (column) => ColumnOrderings(column),
@@ -7048,6 +7114,11 @@ class $$TaskTypesTableAnnotationComposer
 
   GeneratedColumn<bool> get weatherSensitive => $composableBuilder(
     column: $table.weatherSensitive,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get consumesSupplies => $composableBuilder(
+    column: $table.consumesSupplies,
     builder: (column) => column,
   );
 
@@ -7142,6 +7213,7 @@ class $$TaskTypesTableTableManager
                 Value<String> category = const Value.absent(),
                 Value<bool> requiresSubject = const Value.absent(),
                 Value<bool> weatherSensitive = const Value.absent(),
+                Value<bool> consumesSupplies = const Value.absent(),
                 Value<int?> defaultCadence = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TaskTypesCompanion(
@@ -7151,6 +7223,7 @@ class $$TaskTypesTableTableManager
                 category: category,
                 requiresSubject: requiresSubject,
                 weatherSensitive: weatherSensitive,
+                consumesSupplies: consumesSupplies,
                 defaultCadence: defaultCadence,
                 rowid: rowid,
               ),
@@ -7162,6 +7235,7 @@ class $$TaskTypesTableTableManager
                 required String category,
                 Value<bool> requiresSubject = const Value.absent(),
                 Value<bool> weatherSensitive = const Value.absent(),
+                Value<bool> consumesSupplies = const Value.absent(),
                 Value<int?> defaultCadence = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TaskTypesCompanion.insert(
@@ -7171,6 +7245,7 @@ class $$TaskTypesTableTableManager
                 category: category,
                 requiresSubject: requiresSubject,
                 weatherSensitive: weatherSensitive,
+                consumesSupplies: consumesSupplies,
                 defaultCadence: defaultCadence,
                 rowid: rowid,
               ),

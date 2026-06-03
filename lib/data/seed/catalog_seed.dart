@@ -12,6 +12,7 @@ class TaskTypeSeed {
     required this.category,
     this.requiresSubject = false,
     this.weatherSensitive = false,
+    this.consumesSupplies = false,
     this.defaultCadence,
   });
 
@@ -23,6 +24,8 @@ class TaskTypeSeed {
   final String category;
   final bool requiresSubject;
   final bool weatherSensitive;
+  // Draws from stock (fertilizing, treatment) — gates the supplies step
+  final bool consumesSupplies;
   // Days between repetitions; null = no fixed cadence
   final int? defaultCadence;
 }
@@ -60,7 +63,8 @@ abstract final class CatalogSeed {
     TaskTypeSeed(id: 'water', sl: 'Zalivanje', en: 'Watering', de: 'Gießen',
         icon: '💧', category: 'general', weatherSensitive: true),
     TaskTypeSeed(id: 'fertilize', sl: 'Gnojenje', en: 'Fertilizing', de: 'Düngen',
-        icon: '🧪', category: 'plant_care', weatherSensitive: true),
+        icon: '🧪', category: 'plant_care',
+        weatherSensitive: true, consumesSupplies: true),
     TaskTypeSeed(id: 'prune', sl: 'Obrez', en: 'Pruning', de: 'Schnitt',
         icon: '✂️', category: 'plant_care', requiresSubject: true),
     TaskTypeSeed(id: 'plant', sl: 'Sajenje', en: 'Planting', de: 'Pflanzen',
@@ -71,7 +75,7 @@ abstract final class CatalogSeed {
         requiresSubject: true, weatherSensitive: true),
     TaskTypeSeed(id: 'treat', sl: 'Tretiranje / škropljenje', en: 'Treatment',
         de: 'Behandlung', icon: '🐛', category: 'protection',
-        requiresSubject: true, weatherSensitive: true),
+        requiresSubject: true, weatherSensitive: true, consumesSupplies: true),
     TaskTypeSeed(id: 'harvest', sl: 'Pobiranje', en: 'Harvest', de: 'Ernte',
         icon: '🧺', category: 'harvest', requiresSubject: true),
     TaskTypeSeed(id: 'weed', sl: 'Pletje / okopavanje', en: 'Weeding',
@@ -97,10 +101,10 @@ abstract final class CatalogSeed {
     TaskTypeSeed(id: 'roll', sl: 'Valjanje', en: 'Rolling', de: 'Walzen',
         icon: '🛞', category: 'lawn_care', weatherSensitive: true),
     TaskTypeSeed(id: 'lime', sl: 'Apnjenje', en: 'Liming', de: 'Kalken',
-        icon: '⚪', category: 'lawn_care'),
+        icon: '⚪', category: 'lawn_care', consumesSupplies: true),
     TaskTypeSeed(id: 'lawn_weed_moss', sl: 'Tretiranje proti plevelu/mahu',
         en: 'Weed & moss control', de: 'Unkraut-/Moosbekämpfung', icon: '🚫',
-        category: 'lawn_care', weatherSensitive: true),
+        category: 'lawn_care', weatherSensitive: true, consumesSupplies: true),
 
     // A.3 — Seedling cultivation (protected areas — frost-anchor chain)
     TaskTypeSeed(id: 'start_seedlings', sl: 'Predsetev / vzgoja sadik',

@@ -13,6 +13,10 @@ class TaskTypes extends Table {
       boolean().withDefault(const Constant(false))();
   BoolColumn get weatherSensitive =>
       boolean().withDefault(const Constant(false))();
+  // True for types that draw from stock (fertilizing, treatment) — drives the
+  // conditional "supplies" step in the entry flow.
+  BoolColumn get consumesSupplies =>
+      boolean().withDefault(const Constant(false))();
   // Days between repetitions; null = no default cadence
   IntColumn get defaultCadence => integer().nullable()();
 

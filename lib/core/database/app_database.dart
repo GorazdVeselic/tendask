@@ -37,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 3;
+  int get schemaVersion => 4;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -58,6 +58,15 @@ class AppDatabase extends _$AppDatabase {
               "updated_at, 0, 'pending' FROM task",
             );
             await m.alterTable(TableMigration(tasks));
+          }
+          // v4: flag catalog types that draw from stock. Seed only runs on an
+          // empty DB, so backfill the known supply-consuming types here.
+          if (from < 4) {
+            await m.addColumn(taskTypes, taskTypes.consumesSupplies);
+            await customStatement(
+              "UPDATE task_type SET consumes_supplies = 1 "
+              "WHERE id IN ('fertilize', 'treat', 'lawn_weed_moss', 'lime')",
+            );
           }
         },
       );
