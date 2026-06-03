@@ -354,8 +354,12 @@ OPRAVILO = { tip · SUBJEKTI[] (rastlina ALI območje, M:N — §7.15) · DATUM 
 - Zavihek **"Opomniki" → preimenovan v "Opravila"** (☑️): prihajajoča + zapadla
   opravila, ki čakajo; 🔔 = ima opomnik.
 - **Dnevnik** (📅) = kaj sem naredil (preteklost). **Opravila** (☑️) = kaj me čaka.
-- Vstopni točki sta isti entiteti: `02 Hiter vnos` (hitro, privzeto opravljeno) in
-  `07 Novo opravilo` (poln urejevalnik s statusom + opomnikom + ponavljanjem).
+- Vstop = **en horizontalni stepper** (§7.16), ki nadomesti nekdanja 02 Hiter vnos
+  in 07 Novo opravilo (status + subjekti + opomnik + sredstva v enem flowu).
+- **Vrstni red zavihkov (2026-06-03):** Domov · **Opravila** · Dnevnik · Vrt —
+  Opravila (dnevna akcija) naprej, Dnevnik (zgodovina) za njim, Vrt (struktura) na
+  koncu. **FAB ＋ (vnos) le na Domov + Opravila** — Dnevnik je bralni zgodovinski
+  pogled (brez ＋); Opravila izgubi ＋ v AppBar (nadomesti ga FAB).
 
 **Mesečni koledar:** tap na dan → dodaj opravilo (preteklo ali načrtovano).
 
@@ -719,6 +723,11 @@ Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
 
 ## 11. Dnevnik odločitev
 
+- **2026-06-03 (vrstni red zavihkov + FAB — §7.9):** Spodnja navigacija preurejena v
+  **Domov · Opravila · Dnevnik · Vrt** (prej Domov · Dnevnik · Vrt · Opravila). Razlog:
+  Opravila so dnevni akcijski pogled (»kaj me čaka«) in sodijo naprej; Dnevnik je zgodovina
+  za branje. **FAB ＋ (vnos) preseljen z Dnevnika na Opravila** (+ ostane na Domov); Opravila
+  izgubi podvojeni ＋ v AppBar. Dnevnik je odslej čisto bralni zgodovinski pogled.
 - **2026-06-03 (vnos = horizontalni stepper — §7.16):** 02 Hiter vnos + 07 Novo opravilo se
   združita v en horizontalni flow s pogojnimi koraki (tip · rastlina/območje · kdaj+ura+status+
   ponavljanje · opomnik [če čaka] · sredstva [če tip] · pregled s Shrani/Popravi). Območja rastlin

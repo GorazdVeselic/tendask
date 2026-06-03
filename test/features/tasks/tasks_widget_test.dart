@@ -140,6 +140,12 @@ void main() {
       await tester.tap(find.text('Nadaljuj')); // → step 3 (when)
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump();
+
+      // Force status "done" so the flow is deterministic regardless of the run
+      // clock (a future default date would add the conditional reminder step).
+      await tester.tap(find.text('Opravljeno'));
+      await tester.pump();
       await tester.tap(find.text('Nadaljuj')); // → review (mow: no supplies)
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));

@@ -56,12 +56,6 @@ class TasksScreen extends ConsumerWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => context.pushNamed('task-new'),
-          ),
-        ],
       ),
       body: pending == null || catalog == null || areas == null
           ? const Center(child: CircularProgressIndicator.adaptive())

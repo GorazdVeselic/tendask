@@ -34,6 +34,24 @@ final appRouter = GoRouter(
         StatefulShellBranch(
           routes: [
             GoRoute(
+              path: '/tasks',
+              name: 'tasks',
+              builder: (context, state) => const TasksScreen(),
+              routes: [
+                GoRoute(
+                  path: ':id',
+                  name: 'task-detail',
+                  builder: (context, state) => TaskDetailScreen(
+                    id: state.pathParameters['id']!,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+        StatefulShellBranch(
+          routes: [
+            GoRoute(
               path: '/journal',
               name: 'journal',
               builder: (context, state) => const JournalScreen(),
@@ -51,24 +69,6 @@ final appRouter = GoRouter(
                   path: ':id',
                   name: 'area-detail',
                   builder: (context, state) => AreaDetailScreen(
-                    id: state.pathParameters['id']!,
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),
-        StatefulShellBranch(
-          routes: [
-            GoRoute(
-              path: '/tasks',
-              name: 'tasks',
-              builder: (context, state) => const TasksScreen(),
-              routes: [
-                GoRoute(
-                  path: ':id',
-                  name: 'task-detail',
-                  builder: (context, state) => TaskDetailScreen(
                     id: state.pathParameters['id']!,
                   ),
                 ),

@@ -11,10 +11,11 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    // Quick-log FAB only on the Home/Journal *tabs* themselves — not on pushed
+    // Quick-log FAB only on the Home/Tasks *tabs* themselves — not on pushed
     // sub-pages (e.g. task detail), where it would overlap their action bars.
+    // Journal is a read-only history view, so it has no add button.
     final location = GoRouterState.of(context).uri.path;
-    final showFab = location == '/home' || location == '/journal';
+    final showFab = location == '/home' || location == '/tasks';
     return Scaffold(
       body: shell,
       floatingActionButton: showFab
@@ -34,6 +35,11 @@ class MainShell extends StatelessWidget {
             label: t.nav.home,
           ),
           NavigationDestination(
+            icon: const Icon(Icons.check_box_outlined),
+            selectedIcon: const Icon(Icons.check_box),
+            label: t.nav.tasks,
+          ),
+          NavigationDestination(
             icon: const Icon(Icons.calendar_today_outlined),
             selectedIcon: const Icon(Icons.calendar_today),
             label: t.nav.journal,
@@ -42,11 +48,6 @@ class MainShell extends StatelessWidget {
             icon: const Icon(Icons.grass_outlined),
             selectedIcon: const Icon(Icons.grass),
             label: t.nav.areas,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.check_box_outlined),
-            selectedIcon: const Icon(Icons.check_box),
-            label: t.nav.tasks,
           ),
         ],
       ),
