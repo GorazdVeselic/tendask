@@ -85,10 +85,8 @@ class _SubjectPickerScreenState extends ConsumerState<SubjectPickerScreen> {
             normQuery.isEmpty ||
             userPlantLabel(p, catalog).toLowerCase().contains(normQuery))
         .toList();
-    final areaList = areas.values
-        .where((a) =>
-            normQuery.isEmpty || a.name.toLowerCase().contains(normQuery))
-        .toList();
+    // Areas are always shown (as chips), not filtered by the plant search.
+    final areaList = areas.values.toList();
     final ownedPlantIds = {
       for (final p in userPlants.values)
         if (p.plantId != null) p.plantId,
@@ -130,28 +128,17 @@ class _SubjectPickerScreenState extends ConsumerState<SubjectPickerScreen> {
                   for (final p in plants)
                     CheckboxListTile(
                       value: _plantIds.contains(p.id),
-                      onChanged: (sel) => setState(() =>
-                          sel == true ? _plantIds.add(p.id) : _plantIds.remove(p.id)),
+                      // A plant's area is context, not a co-equal subject — pick
+                      // an area explicitly only for whole-area tasks (e.g. lawn).
+                      onChanged: (sel) => setState(() => sel == true
+                          ? _plantIds.add(p.id)
+                          : _plantIds.remove(p.id)),
                       secondary: Text(userPlantIcon(p, catalog),
                           style: const TextStyle(fontSize: 20)),
                       title: Text(userPlantLabel(p, catalog)),
                       subtitle: p.areaId != null && areas[p.areaId] != null
                           ? Text('🪴 ${areas[p.areaId]!.name}')
                           : null,
-                      controlAffinity: ListTileControlAffinity.leading,
-                      dense: true,
-                    ),
-                ],
-                if (areaList.isNotEmpty) ...[
-                  _SectionLabel(t.subject_picker.section_areas, theme: theme),
-                  for (final a in areaList)
-                    CheckboxListTile(
-                      value: _areaIds.contains(a.id),
-                      onChanged: (sel) => setState(() =>
-                          sel == true ? _areaIds.add(a.id) : _areaIds.remove(a.id)),
-                      secondary: Text(areaTypeIcon(a.type),
-                          style: const TextStyle(fontSize: 20)),
-                      title: Text(a.name),
                       controlAffinity: ListTileControlAffinity.leading,
                       dense: true,
                     ),
@@ -170,6 +157,29 @@ class _SubjectPickerScreenState extends ConsumerState<SubjectPickerScreen> {
                       dense: true,
                       onTap: () => _addFromCatalog(p.id),
                     ),
+                ],
+                // Areas as chips: a plant's area is pre-selected; deselectable.
+                if (areaList.isNotEmpty) ...[
+                  _SectionLabel(t.subject_picker.section_areas, theme: theme),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(8, 0, 8, 8),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: [
+                        for (final a in areaList)
+                          FilterChip(
+                            avatar: Text(areaTypeIcon(a.type),
+                                style: const TextStyle(fontSize: 14)),
+                            label: Text(a.name),
+                            selected: _areaIds.contains(a.id),
+                            onSelected: (sel) => setState(() => sel
+                                ? _areaIds.add(a.id)
+                                : _areaIds.remove(a.id)),
+                          ),
+                      ],
+                    ),
+                  ),
                 ],
                 if (plants.isEmpty && areaList.isEmpty && catalogMatches.isEmpty)
                   Padding(

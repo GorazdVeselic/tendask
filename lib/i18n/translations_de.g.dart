@@ -286,11 +286,11 @@ class _Translations$subject_picker$de extends Translations$subject_picker$sl {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Wofür?';
-	@override String get hint => 'Pflanze oder Rasen';
+	@override String get title => 'Pflanze oder Bereich';
+	@override String get hint => 'Pflanze oder Bereich';
 	@override String get search_hint => 'Pflanze oder Bereich suchen…';
 	@override String get section_plants => 'Pflanzen';
-	@override String get section_areas => 'Rasen / Bereiche';
+	@override String get section_areas => 'Bereiche';
 	@override String get from_catalog => 'Aus Katalog hinzufügen';
 	@override String get choose => 'Wählen';
 	@override String get confirm => 'Bestätigen';
@@ -591,11 +591,11 @@ extension on TranslationsDe {
 			'task_form.save' => 'Aufgabe speichern',
 			'task_form.err_type' => 'Aufgabentyp auswählen.',
 			'task_form.err_area' => 'Bereich auswählen.',
-			'subject_picker.title' => 'Wofür?',
-			'subject_picker.hint' => 'Pflanze oder Rasen',
+			'subject_picker.title' => 'Pflanze oder Bereich',
+			'subject_picker.hint' => 'Pflanze oder Bereich',
 			'subject_picker.search_hint' => 'Pflanze oder Bereich suchen…',
 			'subject_picker.section_plants' => 'Pflanzen',
-			'subject_picker.section_areas' => 'Rasen / Bereiche',
+			'subject_picker.section_areas' => 'Bereiche',
 			'subject_picker.from_catalog' => 'Aus Katalog hinzufügen',
 			'subject_picker.choose' => 'Wählen',
 			'subject_picker.confirm' => 'Bestätigen',

@@ -159,11 +159,11 @@
     "err_area": "Bereich auswählen."
   },
   "subject_picker": {
-    "title": "Wofür?",
-    "hint": "Pflanze oder Rasen",
+    "title": "Pflanze oder Bereich",
+    "hint": "Pflanze oder Bereich",
     "search_hint": "Pflanze oder Bereich suchen…",
     "section_plants": "Pflanzen",
-    "section_areas": "Rasen / Bereiche",
+    "section_areas": "Bereiche",
     "from_catalog": "Aus Katalog hinzufügen",
     "choose": "Wählen",
     "confirm": "Bestätigen",

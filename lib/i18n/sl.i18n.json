@@ -159,11 +159,11 @@
     "err_area": "Izberi območje."
   },
   "subject_picker": {
-    "title": "Za kaj?",
-    "hint": "rastlina ali trata",
+    "title": "Rastlina ali območje",
+    "hint": "rastlina ali območje",
     "search_hint": "Išči rastlino ali območje…",
     "section_plants": "Rastline",
-    "section_areas": "Trate / območja",
+    "section_areas": "Območja",
     "from_catalog": "Dodaj iz kataloga",
     "choose": "Izberi",
     "confirm": "Potrdi",

@@ -558,11 +558,11 @@ class Translations$subject_picker$sl {
 
 	// Translations
 
-	/// sl: 'Za kaj?'
-	String get title => 'Za kaj?';
+	/// sl: 'Rastlina ali območje'
+	String get title => 'Rastlina ali območje';
 
-	/// sl: 'rastlina ali trata'
-	String get hint => 'rastlina ali trata';
+	/// sl: 'rastlina ali območje'
+	String get hint => 'rastlina ali območje';
 
 	/// sl: 'Išči rastlino ali območje…'
 	String get search_hint => 'Išči rastlino ali območje…';
@@ -570,8 +570,8 @@ class Translations$subject_picker$sl {
 	/// sl: 'Rastline'
 	String get section_plants => 'Rastline';
 
-	/// sl: 'Trate / območja'
-	String get section_areas => 'Trate / območja';
+	/// sl: 'Območja'
+	String get section_areas => 'Območja';
 
 	/// sl: 'Dodaj iz kataloga'
 	String get from_catalog => 'Dodaj iz kataloga';
@@ -1074,11 +1074,11 @@ extension on Translations {
 			'task_form.save' => 'Shrani opravilo',
 			'task_form.err_type' => 'Izberi vrsto opravila.',
 			'task_form.err_area' => 'Izberi območje.',
-			'subject_picker.title' => 'Za kaj?',
-			'subject_picker.hint' => 'rastlina ali trata',
+			'subject_picker.title' => 'Rastlina ali območje',
+			'subject_picker.hint' => 'rastlina ali območje',
 			'subject_picker.search_hint' => 'Išči rastlino ali območje…',
 			'subject_picker.section_plants' => 'Rastline',
-			'subject_picker.section_areas' => 'Trate / območja',
+			'subject_picker.section_areas' => 'Območja',
 			'subject_picker.from_catalog' => 'Dodaj iz kataloga',
 			'subject_picker.choose' => 'Izberi',
 			'subject_picker.confirm' => 'Potrdi',

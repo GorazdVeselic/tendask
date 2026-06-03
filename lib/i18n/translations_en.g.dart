@@ -286,11 +286,11 @@ class _Translations$subject_picker$en extends Translations$subject_picker$sl {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'For what?';
-	@override String get hint => 'plant or lawn';
+	@override String get title => 'Plant or area';
+	@override String get hint => 'plant or area';
 	@override String get search_hint => 'Search plant or area…';
 	@override String get section_plants => 'Plants';
-	@override String get section_areas => 'Lawns / areas';
+	@override String get section_areas => 'Areas';
 	@override String get from_catalog => 'Add from catalog';
 	@override String get choose => 'Choose';
 	@override String get confirm => 'Confirm';
@@ -591,11 +591,11 @@ extension on TranslationsEn {
 			'task_form.save' => 'Save task',
 			'task_form.err_type' => 'Select a task type.',
 			'task_form.err_area' => 'Select an area.',
-			'subject_picker.title' => 'For what?',
-			'subject_picker.hint' => 'plant or lawn',
+			'subject_picker.title' => 'Plant or area',
+			'subject_picker.hint' => 'plant or area',
 			'subject_picker.search_hint' => 'Search plant or area…',
 			'subject_picker.section_plants' => 'Plants',
-			'subject_picker.section_areas' => 'Lawns / areas',
+			'subject_picker.section_areas' => 'Areas',
 			'subject_picker.from_catalog' => 'Add from catalog',
 			'subject_picker.choose' => 'Choose',
 			'subject_picker.confirm' => 'Confirm',

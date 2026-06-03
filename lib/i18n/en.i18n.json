@@ -159,11 +159,11 @@
     "err_area": "Select an area."
   },
   "subject_picker": {
-    "title": "For what?",
-    "hint": "plant or lawn",
+    "title": "Plant or area",
+    "hint": "plant or area",
     "search_hint": "Search plant or area…",
     "section_plants": "Plants",
-    "section_areas": "Lawns / areas",
+    "section_areas": "Areas",
     "from_catalog": "Add from catalog",
     "choose": "Choose",
     "confirm": "Confirm",
