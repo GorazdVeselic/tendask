@@ -59,15 +59,10 @@ class AppDatabase extends _$AppDatabase {
             );
             await m.alterTable(TableMigration(tasks));
           }
-          // v4: flag catalog types that draw from stock. Seed only runs on an
-          // empty DB, so backfill the known supply-consuming types here.
-          if (from < 4) {
-            await m.addColumn(taskTypes, taskTypes.consumesSupplies);
-            await customStatement(
-              "UPDATE task_type SET consumes_supplies = 1 "
-              "WHERE id IN ('fertilize', 'treat', 'lawn_weed_moss', 'lime')",
-            );
-          }
+          // v4 adds task_type.consumes_supplies. Pre-release: no devices hold
+          // data yet, so we rely on fresh install (onCreate + re-seed) rather
+          // than a data-backfill migration. Add real migration steps here once
+          // the app ships and existing DBs must survive upgrades.
         },
       );
 }
