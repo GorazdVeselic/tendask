@@ -1,6 +1,6 @@
 # Prefokus: rastlina kot subjekt (ne območje)
 
-> Datum: 2026-06-03 · Status: **POTRJENA SMER** (odločitve spodaj), izvedba v teku
+> Datum: 2026-06-03 · Status: **ZAKLJUČENO** (model + IA + UI implementirani, testi zeleni)
 > Povod: opravila so območje-centrična; rastlina — razlog, zaradi katerega opravila
 > sploh delamo — je drugorazredna ali neobvezna. To znižuje vrednost aplikacije.
 > Sorodno: nadgrajuje `ia-pregled.md` (vitka IA) in `koncept.md` §7.7/7.8/7.9/7.14.

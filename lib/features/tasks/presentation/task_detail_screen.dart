@@ -119,13 +119,23 @@ class TaskDetailScreen extends ConsumerWidget {
                         theme: theme,
                       ),
                       const SizedBox(height: 20),
+                      _SectionTitle(
+                          '${t.subject_picker.title} (${subjects.length})',
+                          theme: theme),
+                      _SubjectsCard(
+                        subjects: subjects,
+                        areas: areas,
+                        userPlants: userPlants,
+                        plants: plantsCatalog,
+                        theme: theme,
+                      ),
+                      const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_weather, theme: theme),
                       _WeatherPlaceholder(t: t, theme: theme),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_details, theme: theme),
                       _DetailsCard(
                           task: task,
-                          subjectLabel: subjectsLabel,
                           suppliesLabel: suppliesLabel,
                           t: t,
                           theme: theme),
@@ -367,6 +377,77 @@ class _SectionTitle extends StatelessWidget {
   }
 }
 
+// ─── Subjects card ────────────────────────────────────────────────────────────
+
+class _SubjectsCard extends StatelessWidget {
+  const _SubjectsCard({
+    required this.subjects,
+    required this.areas,
+    required this.userPlants,
+    required this.plants,
+    required this.theme,
+  });
+
+  final List<TaskSubject> subjects;
+  final Map<String, Area> areas;
+  final Map<String, UserPlant> userPlants;
+  final Map<String, Plant> plants;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: Column(
+        children: [
+          for (var i = 0; i < subjects.length; i++) ...[
+            if (i > 0)
+              Divider(
+                  height: 1,
+                  indent: 56,
+                  color: theme.colorScheme.outlineVariant),
+            _row(context, subjects[i]),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _row(BuildContext context, TaskSubject s) {
+    final spec =
+        TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId);
+    final label =
+        specLabel(spec, areas: areas, userPlants: userPlants, plants: plants);
+    final icon =
+        specIcon(spec, areas: areas, userPlants: userPlants, plants: plants);
+    // For a plant subject, show its area as a subtitle (derived from instance).
+    final plantArea = s.userPlantId != null
+        ? userPlants[s.userPlantId]?.areaId
+        : null;
+    final areaName = plantArea != null ? areas[plantArea]?.name : null;
+
+    return ListTile(
+      leading: Text(icon, style: const TextStyle(fontSize: 22)),
+      title: Text(label, style: theme.textTheme.bodyMedium),
+      subtitle: areaName != null
+          ? Text('🪴 $areaName',
+              style: theme.textTheme.bodySmall
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
+          : null,
+      trailing: Icon(Icons.chevron_right,
+          color: theme.colorScheme.onSurfaceVariant, size: 20),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      onTap: () {
+        if (s.userPlantId != null) {
+          context
+              .pushNamed('plant-detail', pathParameters: {'id': s.userPlantId!});
+        } else if (s.areaId != null) {
+          context.pushNamed('area-detail', pathParameters: {'id': s.areaId!});
+        }
+      },
+    );
+  }
+}
+
 // ─── Weather placeholder ──────────────────────────────────────────────────────
 
 class _WeatherPlaceholder extends StatelessWidget {
@@ -404,14 +485,12 @@ class _WeatherPlaceholder extends StatelessWidget {
 class _DetailsCard extends StatelessWidget {
   const _DetailsCard({
     required this.task,
-    required this.subjectLabel,
     required this.suppliesLabel,
     required this.t,
     required this.theme,
   });
 
   final Task task;
-  final String? subjectLabel;
   final String? suppliesLabel;
   final Translations t;
   final ThemeData theme;
@@ -425,7 +504,6 @@ class _DetailsCard extends StatelessWidget {
     };
 
     final rows = [
-      (t.task_detail.label_subjects, subjectLabel ?? t.task_detail.none),
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, t.task_detail.none), // M8
       (t.task_detail.label_recurrence, recurrenceLabel),
