@@ -18,7 +18,7 @@ class MainShell extends StatelessWidget {
       body: shell,
       floatingActionButton: showFab
           ? FloatingActionButton(
-              onPressed: () => context.pushNamed('quick-log'),
+              onPressed: () => context.pushNamed('task-new'),
               child: const Icon(Icons.add),
             )
           : null,

@@ -110,7 +110,9 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
             areaId: areaId,
             specs: _plants,
           );
-      if (mounted) context.pop();
+      // Return the new area id so callers can auto-select it (entry subject
+      // step). Null on edit.
+      if (mounted) context.pop(_isEdit ? null : areaId);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

@@ -20,6 +20,18 @@ class TaskSubjectSpec {
   final String? areaId;
 }
 
+/// A reminder on the repository boundary. Stored now; the actual scheduling
+/// (flutter_local_notifications) lands in M8 — this only persists the model.
+class ReminderSpec {
+  const ReminderSpec({required this.offsetMinutes, this.time});
+
+  /// Minutes before the task date; 0 = at event time.
+  final int offsetMinutes;
+
+  /// "HH:mm" time of day for the notification; null = use the task's own time.
+  final String? time;
+}
+
 class TasksRepository {
   TasksRepository(this._db, this._supplies, {this._clock = const SystemClock()});
 
@@ -71,6 +83,14 @@ class TasksRepository {
   Future<List<TaskSubject>> subjectsForTask(String taskId) =>
       (_db.select(_db.taskSubjects)
             ..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false)))
+          .get();
+
+  // ── Reminders ─────────────────────────────────────────────────────────────
+
+  Future<List<TaskReminder>> remindersForTask(String taskId) =>
+      (_db.select(_db.taskReminders)
+            ..where((r) => r.taskId.equals(taskId) & r.deleted.equals(false))
+            ..orderBy([(r) => OrderingTerm.asc(r.offset)]))
           .get();
 
   /// Task history for one area (newest first): tasks whose subject is the area
@@ -161,6 +181,7 @@ class TasksRepository {
     TaskStatus status = TaskStatus.waiting,
     String? note,
     String? recurrence,
+    List<ReminderSpec> reminders = const [],
   }) async {
     final id = _uuid.v4();
     final now = _clock.now();
@@ -176,6 +197,7 @@ class TasksRepository {
             updatedAt: now,
           ));
       await _insertSubjects(id, subjects, now);
+      await _insertReminders(id, reminders, now);
     });
     return id;
   }
@@ -188,6 +210,7 @@ class TasksRepository {
     required DateTime date,
     required String? note,
     required List<TaskSubjectSpec> subjects,
+    List<ReminderSpec> reminders = const [],
   }) async {
     final now = _clock.now();
     await _db.transaction(() async {
@@ -210,6 +233,15 @@ class TasksRepository {
         syncStatus: const Value('pending'),
       ));
       await _insertSubjects(id, subjects, now);
+      // Same soft-delete-then-reinsert for reminders.
+      await (_db.update(_db.taskReminders)
+            ..where((r) => r.taskId.equals(id) & r.deleted.equals(false)))
+          .write(TaskRemindersCompanion(
+        deleted: const Value(true),
+        updatedAt: Value(now),
+        syncStatus: const Value('pending'),
+      ));
+      await _insertReminders(id, reminders, now);
     });
   }
 
@@ -224,6 +256,22 @@ class TasksRepository {
             taskId: taskId,
             userPlantId: Value(s.userPlantId),
             areaId: Value(s.areaId),
+            updatedAt: now,
+          ));
+    }
+  }
+
+  Future<void> _insertReminders(
+    String taskId,
+    List<ReminderSpec> reminders,
+    DateTime now,
+  ) async {
+    for (final r in reminders) {
+      await _db.into(_db.taskReminders).insert(TaskRemindersCompanion.insert(
+            id: _uuid.v4(),
+            taskId: taskId,
+            offset: r.offsetMinutes,
+            reminderTime: Value(r.time),
             updatedAt: now,
           ));
     }
@@ -306,6 +354,15 @@ class TasksRepository {
         [
           for (final s in subs)
             TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
+        ],
+        now,
+      );
+      final reminders = await remindersForTask(id);
+      await _insertReminders(
+        newId,
+        [
+          for (final r in reminders)
+            ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
         ],
         now,
       );

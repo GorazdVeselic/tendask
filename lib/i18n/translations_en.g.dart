@@ -49,6 +49,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 	@override late final _Translations$subject_picker$en subject_picker = _Translations$subject_picker$en._(_root);
+	@override late final _Translations$entry$en entry = _Translations$entry$en._(_root);
 	@override late final _Translations$plant_edit$en plant_edit = _Translations$plant_edit$en._(_root);
 	@override late final _Translations$plant_detail$en plant_detail = _Translations$plant_detail$en._(_root);
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
@@ -296,6 +297,76 @@ class _Translations$subject_picker$en extends Translations$subject_picker$sl {
 	@override String get confirm => 'Confirm';
 	@override String get err_select => 'Choose at least one plant or lawn.';
 	@override String get empty => 'No plants or areas. Add them in the Garden tab.';
+}
+
+// Path: entry
+class _Translations$entry$en extends Translations$entry$sl {
+	_Translations$entry$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'New task';
+	@override String get title_review => 'Review';
+	@override String get kContinue => 'Continue';
+	@override String get skip => 'Skip';
+	@override String get save => 'Save task';
+	@override String get step => 'Step';
+	@override String get note_card_title => 'Just a note, no task?';
+	@override String get note_card_action => 'Note ›';
+	@override String get type_title => 'What did you do?';
+	@override String get type_hint => 'Tapping a task takes you forward automatically.';
+	@override String get subject_title => 'For what?';
+	@override String get subject_search_hint => 'Search plant…';
+	@override String get subject_plants => 'Plants';
+	@override String get subject_add_plant => 'Add plant';
+	@override String get subject_add_area => 'Add area';
+	@override String get subject_from_catalog => 'Add from catalog';
+	@override String get subject_areas_context => 'Areas:';
+	@override String get subject_area_section => 'Or the whole area';
+	@override String get subject_area_hint => '(e.g. lawn)';
+	@override String get subject_area_note => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).';
+	@override String get subject_empty => 'No plants or areas yet. Add them in the Garden tab.';
+	@override String get when_title => 'When';
+	@override String get when_today => 'Today';
+	@override String get when_tomorrow => 'Tomorrow';
+	@override String get when_pick_date => 'Date…';
+	@override String get when_date => 'Date';
+	@override String get when_time => 'Time';
+	@override String get when_default_note => 'Default: today at the next full hour.';
+	@override String get when_status => 'Status';
+	@override String get when_status_waiting => 'Waiting';
+	@override String get when_status_done => 'Done';
+	@override String get when_status_note => 'Default derived from the date: future = waiting, today or past = done.';
+	@override String get reminder_title => 'Reminder';
+	@override String get optional => '(optional)';
+	@override String get reminder_why => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.';
+	@override String get reminder_add => 'Add reminder';
+	@override String get reminder_note => 'Adjustable offset and time. Several reminders per task.';
+	@override String get supplies_title => 'Supplies';
+	@override String get supplies_why => 'This step is here because the task usually consumes supplies. They are deducted from stock.';
+	@override String get supplies_add => 'Add supply from stock';
+	@override String get supplies_note => 'One mix for all selected plants — deducted once.';
+	@override String get review_title => 'Check it over — tap a row to edit';
+	@override String get review_type => 'Task';
+	@override String get review_subject => 'For what';
+	@override String get review_when => 'When';
+	@override String get review_reminder => 'Reminder';
+	@override String get review_supplies => 'Supplies';
+	@override String get review_fix => 'Edit';
+	@override String get review_none => '—';
+	@override String get note_label => 'Note';
+	@override String get note_hint => 'e.g. in the morning before forecast rain';
+	@override String get weather_note => '🌧️ Weather is saved automatically on completion.';
+	@override String get err_subject => 'Pick at least one plant or area.';
+	@override String get rem_event => 'At event time';
+	@override String get rem_10min => '10 minutes before';
+	@override String get rem_1hour => '1 hour before';
+	@override String get rem_1day => '1 day before';
+	@override String get rem_2day => '2 days before';
+	@override String rem_at({required Object t}) => 'at ${t}';
+	@override String get rem_choose_time => 'At time';
+	@override String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
 }
 
 // Path: plant_edit
@@ -601,6 +672,67 @@ extension on TranslationsEn {
 			'subject_picker.confirm' => 'Confirm',
 			'subject_picker.err_select' => 'Choose at least one plant or lawn.',
 			'subject_picker.empty' => 'No plants or areas. Add them in the Garden tab.',
+			'entry.title_new' => 'New task',
+			'entry.title_review' => 'Review',
+			'entry.kContinue' => 'Continue',
+			'entry.skip' => 'Skip',
+			'entry.save' => 'Save task',
+			'entry.step' => 'Step',
+			'entry.note_card_title' => 'Just a note, no task?',
+			'entry.note_card_action' => 'Note ›',
+			'entry.type_title' => 'What did you do?',
+			'entry.type_hint' => 'Tapping a task takes you forward automatically.',
+			'entry.subject_title' => 'For what?',
+			'entry.subject_search_hint' => 'Search plant…',
+			'entry.subject_plants' => 'Plants',
+			'entry.subject_add_plant' => 'Add plant',
+			'entry.subject_add_area' => 'Add area',
+			'entry.subject_from_catalog' => 'Add from catalog',
+			'entry.subject_areas_context' => 'Areas:',
+			'entry.subject_area_section' => 'Or the whole area',
+			'entry.subject_area_hint' => '(e.g. lawn)',
+			'entry.subject_area_note' => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).',
+			'entry.subject_empty' => 'No plants or areas yet. Add them in the Garden tab.',
+			'entry.when_title' => 'When',
+			'entry.when_today' => 'Today',
+			'entry.when_tomorrow' => 'Tomorrow',
+			'entry.when_pick_date' => 'Date…',
+			'entry.when_date' => 'Date',
+			'entry.when_time' => 'Time',
+			'entry.when_default_note' => 'Default: today at the next full hour.',
+			'entry.when_status' => 'Status',
+			'entry.when_status_waiting' => 'Waiting',
+			'entry.when_status_done' => 'Done',
+			'entry.when_status_note' => 'Default derived from the date: future = waiting, today or past = done.',
+			'entry.reminder_title' => 'Reminder',
+			'entry.optional' => '(optional)',
+			'entry.reminder_why' => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.',
+			'entry.reminder_add' => 'Add reminder',
+			'entry.reminder_note' => 'Adjustable offset and time. Several reminders per task.',
+			'entry.supplies_title' => 'Supplies',
+			'entry.supplies_why' => 'This step is here because the task usually consumes supplies. They are deducted from stock.',
+			'entry.supplies_add' => 'Add supply from stock',
+			'entry.supplies_note' => 'One mix for all selected plants — deducted once.',
+			'entry.review_title' => 'Check it over — tap a row to edit',
+			'entry.review_type' => 'Task',
+			'entry.review_subject' => 'For what',
+			'entry.review_when' => 'When',
+			'entry.review_reminder' => 'Reminder',
+			'entry.review_supplies' => 'Supplies',
+			'entry.review_fix' => 'Edit',
+			'entry.review_none' => '—',
+			'entry.note_label' => 'Note',
+			'entry.note_hint' => 'e.g. in the morning before forecast rain',
+			'entry.weather_note' => '🌧️ Weather is saved automatically on completion.',
+			'entry.err_subject' => 'Pick at least one plant or area.',
+			'entry.rem_event' => 'At event time',
+			'entry.rem_10min' => '10 minutes before',
+			'entry.rem_1hour' => '1 hour before',
+			'entry.rem_1day' => '1 day before',
+			'entry.rem_2day' => '2 days before',
+			'entry.rem_at' => ({required Object t}) => 'at ${t}',
+			'entry.rem_choose_time' => 'At time',
+			'entry.rem_time_note' => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").',
 			'plant_edit.title_new' => 'Add plant',
 			'plant_edit.title_edit' => 'Edit plant',
 			'plant_edit.species' => 'Species',

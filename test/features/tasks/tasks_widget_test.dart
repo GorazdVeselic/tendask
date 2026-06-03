@@ -13,11 +13,11 @@ import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
+import 'package:tendask/features/supplies/application/supplies_providers.dart';
 import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
-import 'package:tendask/features/tasks/presentation/quick_log_screen.dart';
-import 'package:tendask/features/tasks/presentation/subject_picker_screen.dart';
+import 'package:tendask/features/tasks/presentation/entry/entry_screen.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -60,8 +60,9 @@ void main() {
 
   // ── 1: QuickLogScreen saves task ────────────────────────────────────────────
 
-  group('QuickLogScreen', () {
-    testWidgets('tapping type + area + save creates task in DB', (tester) async {
+  group('EntryScreen', () {
+    testWidgets('type + subject + continue + save creates task in DB',
+        (tester) async {
       // Taller viewport so area chips are not obscured by the fixed save bar.
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
@@ -91,15 +92,13 @@ void main() {
             builder: (_, _) => const Scaffold(body: Text('home')),
           ),
           GoRoute(
-            path: '/quick-log',
-            builder: (_, _) => const QuickLogScreen(),
+            path: '/entry',
+            builder: (_, _) => const EntryScreen(),
           ),
           GoRoute(
-            path: '/subject-picker',
-            name: 'subject-picker',
-            builder: (_, state) => SubjectPickerScreen(
-              initial: (state.extra as List<TaskSubjectSpec>?) ?? const [],
-            ),
+            path: '/note-new',
+            name: 'note-new',
+            builder: (_, _) => const SizedBox(),
           ),
         ],
       );
@@ -115,30 +114,41 @@ void main() {
                   .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
               plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
               plantsListProvider.overrideWith((ref) async => <Plant>[]),
+              suppliesListProvider
+                  .overrideWith((ref) => Stream.value(<Supply>[])),
             ],
             child: MaterialApp.router(routerConfig: router),
           ),
         ),
       );
 
-      unawaited(router.push('/quick-log'));
-      await tester.pumpAndSettle();
+      // Explicit pumps — the PageView's animateToPage transitions keep
+      // pumpAndSettle from ever settling.
+      unawaited(router.push('/entry'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100)); // resolve futures
 
-      // Tap the only type tile ("Košnja")
+      // Step 1: tap the only type tile ("Košnja") — auto-advances to step 2.
       await tester.tap(find.text('Košnja'));
-      await tester.pumpAndSettle();
+      await tester.pump(); // start page transition
+      await tester.pump(const Duration(milliseconds: 400)); // transition done
+      await tester.pump(); // rebuild with stream data (areas)
 
-      // Open the subject picker, select the area, confirm.
-      await tester.tap(find.text('Izberi'));
-      await tester.pumpAndSettle();
+      // Step 2 (subjects): pick the area chip.
       await tester.tap(find.text('Moj vrt'));
-      await tester.pumpAndSettle();
-      await tester.tap(find.textContaining('Potrdi'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.tap(find.text('Nadaljuj')); // → step 3 (when)
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.tap(find.text('Nadaljuj')); // → review (mow: no supplies)
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.pump();
 
-      // Tap save — _save() writes to DB then calls context.pop()
+      // Review: save — writes to DB then calls context.pop().
       await tester.tap(find.text('Shrani opravilo'));
-      await tester.pumpAndSettle();
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
 
       // Verify task was persisted with the correct type and area
       final rows = await (db.select(db.tasks)).get();
@@ -179,8 +189,8 @@ void main() {
         routes: [
           GoRoute(path: '/', builder: (_, _) => const TasksScreen()),
           GoRoute(
-            path: '/ql',
-            name: 'quick-log',
+            path: '/tn',
+            name: 'task-new',
             builder: (_, _) => const SizedBox(),
           ),
           GoRoute(

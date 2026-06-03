@@ -50,6 +50,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 	late final Translations$subject_picker$sl subject_picker = Translations$subject_picker$sl.internal(_root);
+	late final Translations$entry$sl entry = Translations$entry$sl.internal(_root);
 	late final Translations$plant_edit$sl plant_edit = Translations$plant_edit$sl.internal(_root);
 	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
@@ -589,6 +590,198 @@ class Translations$subject_picker$sl {
 	String get empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
 }
 
+// Path: entry
+class Translations$entry$sl {
+	Translations$entry$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Novo opravilo'
+	String get title_new => 'Novo opravilo';
+
+	/// sl: 'Pregled'
+	String get title_review => 'Pregled';
+
+	/// sl: 'Nadaljuj'
+	String get kContinue => 'Nadaljuj';
+
+	/// sl: 'Preskoči'
+	String get skip => 'Preskoči';
+
+	/// sl: 'Shrani opravilo'
+	String get save => 'Shrani opravilo';
+
+	/// sl: 'Korak'
+	String get step => 'Korak';
+
+	/// sl: 'Le zapis brez opravila?'
+	String get note_card_title => 'Le zapis brez opravila?';
+
+	/// sl: 'Opomba ›'
+	String get note_card_action => 'Opomba ›';
+
+	/// sl: 'Kaj boš naredil?'
+	String get type_title => 'Kaj boš naredil?';
+
+	/// sl: 'Tap na opravilo te samodejno pelje naprej.'
+	String get type_hint => 'Tap na opravilo te samodejno pelje naprej.';
+
+	/// sl: 'Za kaj?'
+	String get subject_title => 'Za kaj?';
+
+	/// sl: 'Išči rastlino…'
+	String get subject_search_hint => 'Išči rastlino…';
+
+	/// sl: 'Rastline'
+	String get subject_plants => 'Rastline';
+
+	/// sl: 'Dodaj rastlino'
+	String get subject_add_plant => 'Dodaj rastlino';
+
+	/// sl: 'Dodaj območje'
+	String get subject_add_area => 'Dodaj območje';
+
+	/// sl: 'Dodaj iz kataloga'
+	String get subject_from_catalog => 'Dodaj iz kataloga';
+
+	/// sl: 'Območja:'
+	String get subject_areas_context => 'Območja:';
+
+	/// sl: 'Ali celotno območje'
+	String get subject_area_section => 'Ali celotno območje';
+
+	/// sl: '(npr. trata)'
+	String get subject_area_hint => '(npr. trata)';
+
+	/// sl: 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).'
+	String get subject_area_note => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).';
+
+	/// sl: 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.'
+	String get subject_empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
+
+	/// sl: 'Kdaj'
+	String get when_title => 'Kdaj';
+
+	/// sl: 'Danes'
+	String get when_today => 'Danes';
+
+	/// sl: 'Jutri'
+	String get when_tomorrow => 'Jutri';
+
+	/// sl: 'Datum…'
+	String get when_pick_date => 'Datum…';
+
+	/// sl: 'Datum'
+	String get when_date => 'Datum';
+
+	/// sl: 'Ura'
+	String get when_time => 'Ura';
+
+	/// sl: 'Privzeto: danes ob naslednji polni uri.'
+	String get when_default_note => 'Privzeto: danes ob naslednji polni uri.';
+
+	/// sl: 'Status'
+	String get when_status => 'Status';
+
+	/// sl: 'Čaka'
+	String get when_status_waiting => 'Čaka';
+
+	/// sl: 'Opravljeno'
+	String get when_status_done => 'Opravljeno';
+
+	/// sl: 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.'
+	String get when_status_note => 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.';
+
+	/// sl: 'Opomnik'
+	String get reminder_title => 'Opomnik';
+
+	/// sl: '(neobvezno)'
+	String get optional => '(neobvezno)';
+
+	/// sl: 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.'
+	String get reminder_why => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.';
+
+	/// sl: 'Dodaj opomnik'
+	String get reminder_add => 'Dodaj opomnik';
+
+	/// sl: 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.'
+	String get reminder_note => 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.';
+
+	/// sl: 'Sredstva'
+	String get supplies_title => 'Sredstva';
+
+	/// sl: 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.'
+	String get supplies_why => 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.';
+
+	/// sl: 'Dodaj sredstvo iz zalog'
+	String get supplies_add => 'Dodaj sredstvo iz zalog';
+
+	/// sl: 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.'
+	String get supplies_note => 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.';
+
+	/// sl: 'Še preveri — tap na vrstico za popravek'
+	String get review_title => 'Še preveri — tap na vrstico za popravek';
+
+	/// sl: 'Opravilo'
+	String get review_type => 'Opravilo';
+
+	/// sl: 'Za kaj'
+	String get review_subject => 'Za kaj';
+
+	/// sl: 'Kdaj'
+	String get review_when => 'Kdaj';
+
+	/// sl: 'Opomnik'
+	String get review_reminder => 'Opomnik';
+
+	/// sl: 'Sredstva'
+	String get review_supplies => 'Sredstva';
+
+	/// sl: 'Popravi'
+	String get review_fix => 'Popravi';
+
+	/// sl: '—'
+	String get review_none => '—';
+
+	/// sl: 'Opomba'
+	String get note_label => 'Opomba';
+
+	/// sl: 'npr. zjutraj pred napovedanim dežjem'
+	String get note_hint => 'npr. zjutraj pred napovedanim dežjem';
+
+	/// sl: '🌧️ Vreme se shrani samodejno ob izvedbi.'
+	String get weather_note => '🌧️ Vreme se shrani samodejno ob izvedbi.';
+
+	/// sl: 'Izberi vsaj eno rastlino ali območje.'
+	String get err_subject => 'Izberi vsaj eno rastlino ali območje.';
+
+	/// sl: 'Ob dogodku'
+	String get rem_event => 'Ob dogodku';
+
+	/// sl: '10 minut prej'
+	String get rem_10min => '10 minut prej';
+
+	/// sl: '1 uro prej'
+	String get rem_1hour => '1 uro prej';
+
+	/// sl: '1 dan prej'
+	String get rem_1day => '1 dan prej';
+
+	/// sl: '2 dni prej'
+	String get rem_2day => '2 dni prej';
+
+	/// sl: 'ob $t'
+	String rem_at({required Object t}) => 'ob ${t}';
+
+	/// sl: 'Ob uri'
+	String get rem_choose_time => 'Ob uri';
+
+	/// sl: 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).'
+	String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+}
+
 // Path: plant_edit
 class Translations$plant_edit$sl {
 	Translations$plant_edit$sl.internal(this._root);
@@ -1084,6 +1277,67 @@ extension on Translations {
 			'subject_picker.confirm' => 'Potrdi',
 			'subject_picker.err_select' => 'Izberi vsaj eno rastlino ali trato.',
 			'subject_picker.empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
+			'entry.title_new' => 'Novo opravilo',
+			'entry.title_review' => 'Pregled',
+			'entry.kContinue' => 'Nadaljuj',
+			'entry.skip' => 'Preskoči',
+			'entry.save' => 'Shrani opravilo',
+			'entry.step' => 'Korak',
+			'entry.note_card_title' => 'Le zapis brez opravila?',
+			'entry.note_card_action' => 'Opomba ›',
+			'entry.type_title' => 'Kaj boš naredil?',
+			'entry.type_hint' => 'Tap na opravilo te samodejno pelje naprej.',
+			'entry.subject_title' => 'Za kaj?',
+			'entry.subject_search_hint' => 'Išči rastlino…',
+			'entry.subject_plants' => 'Rastline',
+			'entry.subject_add_plant' => 'Dodaj rastlino',
+			'entry.subject_add_area' => 'Dodaj območje',
+			'entry.subject_from_catalog' => 'Dodaj iz kataloga',
+			'entry.subject_areas_context' => 'Območja:',
+			'entry.subject_area_section' => 'Ali celotno območje',
+			'entry.subject_area_hint' => '(npr. trata)',
+			'entry.subject_area_note' => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).',
+			'entry.subject_empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
+			'entry.when_title' => 'Kdaj',
+			'entry.when_today' => 'Danes',
+			'entry.when_tomorrow' => 'Jutri',
+			'entry.when_pick_date' => 'Datum…',
+			'entry.when_date' => 'Datum',
+			'entry.when_time' => 'Ura',
+			'entry.when_default_note' => 'Privzeto: danes ob naslednji polni uri.',
+			'entry.when_status' => 'Status',
+			'entry.when_status_waiting' => 'Čaka',
+			'entry.when_status_done' => 'Opravljeno',
+			'entry.when_status_note' => 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.',
+			'entry.reminder_title' => 'Opomnik',
+			'entry.optional' => '(neobvezno)',
+			'entry.reminder_why' => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.',
+			'entry.reminder_add' => 'Dodaj opomnik',
+			'entry.reminder_note' => 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.',
+			'entry.supplies_title' => 'Sredstva',
+			'entry.supplies_why' => 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.',
+			'entry.supplies_add' => 'Dodaj sredstvo iz zalog',
+			'entry.supplies_note' => 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.',
+			'entry.review_title' => 'Še preveri — tap na vrstico za popravek',
+			'entry.review_type' => 'Opravilo',
+			'entry.review_subject' => 'Za kaj',
+			'entry.review_when' => 'Kdaj',
+			'entry.review_reminder' => 'Opomnik',
+			'entry.review_supplies' => 'Sredstva',
+			'entry.review_fix' => 'Popravi',
+			'entry.review_none' => '—',
+			'entry.note_label' => 'Opomba',
+			'entry.note_hint' => 'npr. zjutraj pred napovedanim dežjem',
+			'entry.weather_note' => '🌧️ Vreme se shrani samodejno ob izvedbi.',
+			'entry.err_subject' => 'Izberi vsaj eno rastlino ali območje.',
+			'entry.rem_event' => 'Ob dogodku',
+			'entry.rem_10min' => '10 minut prej',
+			'entry.rem_1hour' => '1 uro prej',
+			'entry.rem_1day' => '1 dan prej',
+			'entry.rem_2day' => '2 dni prej',
+			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
+			'entry.rem_choose_time' => 'Ob uri',
+			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
 			'plant_edit.title_new' => 'Dodaj rastlino',
 			'plant_edit.title_edit' => 'Uredi rastlino',
 			'plant_edit.species' => 'Vrsta',

@@ -12,10 +12,9 @@ import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/data/tasks_repository.dart';
-import '../../features/tasks/presentation/quick_log_screen.dart';
+import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/subject_picker_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
-import '../../features/tasks/presentation/task_form_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
 
@@ -82,11 +81,6 @@ final appRouter = GoRouter(
       ],
     ),
     // Full-screen routes above the shell (no bottom nav)
-    GoRoute(
-      path: '/quick-log',
-      name: 'quick-log',
-      builder: (context, state) => const QuickLogScreen(),
-    ),
     GoRoute(
       path: '/plant-picker',
       name: 'plant-picker',
@@ -156,20 +150,9 @@ final appRouter = GoRouter(
       path: '/task-new',
       name: 'task-new',
       builder: (context, state) {
-        final q = state.uri.queryParameters;
-        final raw = q['date'];
-        final plantIds =
-            (q['plants'] ?? '').split(',').where((s) => s.isNotEmpty);
-        final areaIds =
-            (q['areas'] ?? '').split(',').where((s) => s.isNotEmpty);
-        return TaskFormScreen(
+        final raw = state.uri.queryParameters['date'];
+        return EntryScreen(
           initialDate: raw != null ? DateTime.tryParse(raw) : null,
-          initialTaskTypeId: q['type'],
-          initialSubjects: [
-            for (final id in plantIds) TaskSubjectSpec.plant(id),
-            for (final id in areaIds) TaskSubjectSpec.area(id),
-          ],
-          initialNote: q['note'],
         );
       },
     ),
@@ -177,7 +160,7 @@ final appRouter = GoRouter(
       path: '/tasks/:id/edit',
       name: 'task-edit',
       builder: (context, state) =>
-          TaskFormScreen(taskId: state.pathParameters['id']),
+          EntryScreen(taskId: state.pathParameters['id']),
     ),
   ],
 );

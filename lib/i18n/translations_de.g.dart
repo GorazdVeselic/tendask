@@ -49,6 +49,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 	@override late final _Translations$subject_picker$de subject_picker = _Translations$subject_picker$de._(_root);
+	@override late final _Translations$entry$de entry = _Translations$entry$de._(_root);
 	@override late final _Translations$plant_edit$de plant_edit = _Translations$plant_edit$de._(_root);
 	@override late final _Translations$plant_detail$de plant_detail = _Translations$plant_detail$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
@@ -296,6 +297,76 @@ class _Translations$subject_picker$de extends Translations$subject_picker$sl {
 	@override String get confirm => 'Bestätigen';
 	@override String get err_select => 'Wähle mindestens eine Pflanze oder einen Rasen.';
 	@override String get empty => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
+}
+
+// Path: entry
+class _Translations$entry$de extends Translations$entry$sl {
+	_Translations$entry$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'Neue Aufgabe';
+	@override String get title_review => 'Überprüfen';
+	@override String get kContinue => 'Weiter';
+	@override String get skip => 'Überspringen';
+	@override String get save => 'Aufgabe speichern';
+	@override String get step => 'Schritt';
+	@override String get note_card_title => 'Nur eine Notiz, keine Aufgabe?';
+	@override String get note_card_action => 'Notiz ›';
+	@override String get type_title => 'Was hast du gemacht?';
+	@override String get type_hint => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.';
+	@override String get subject_title => 'Wofür?';
+	@override String get subject_search_hint => 'Pflanze suchen…';
+	@override String get subject_plants => 'Pflanzen';
+	@override String get subject_add_plant => 'Pflanze hinzufügen';
+	@override String get subject_add_area => 'Bereich hinzufügen';
+	@override String get subject_from_catalog => 'Aus Katalog hinzufügen';
+	@override String get subject_areas_context => 'Bereiche:';
+	@override String get subject_area_section => 'Oder der ganze Bereich';
+	@override String get subject_area_hint => '(z. B. Rasen)';
+	@override String get subject_area_note => 'Wähle einen Bereich nur, wenn die Aufgabe für das Ganze ohne einzelne Pflanze gilt (Mähen, ein ganzes Beet mulchen).';
+	@override String get subject_empty => 'Noch keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
+	@override String get when_title => 'Wann';
+	@override String get when_today => 'Heute';
+	@override String get when_tomorrow => 'Morgen';
+	@override String get when_pick_date => 'Datum…';
+	@override String get when_date => 'Datum';
+	@override String get when_time => 'Uhrzeit';
+	@override String get when_default_note => 'Standard: heute zur nächsten vollen Stunde.';
+	@override String get when_status => 'Status';
+	@override String get when_status_waiting => 'Wartet';
+	@override String get when_status_done => 'Erledigt';
+	@override String get when_status_note => 'Standard aus dem Datum: Zukunft = wartet, heute oder Vergangenheit = erledigt.';
+	@override String get reminder_title => 'Erinnerung';
+	@override String get optional => '(optional)';
+	@override String get reminder_why => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.';
+	@override String get reminder_add => 'Erinnerung hinzufügen';
+	@override String get reminder_note => 'Einstellbarer Vorlauf und Uhrzeit. Mehrere Erinnerungen pro Aufgabe.';
+	@override String get supplies_title => 'Mittel';
+	@override String get supplies_why => 'Dieser Schritt ist da, weil die Aufgabe normalerweise Mittel verbraucht. Sie werden vom Bestand abgezogen.';
+	@override String get supplies_add => 'Mittel aus Bestand hinzufügen';
+	@override String get supplies_note => 'Eine Mischung für alle gewählten Pflanzen — einmal abgezogen.';
+	@override String get review_title => 'Prüfe es — tippe eine Zeile zum Bearbeiten';
+	@override String get review_type => 'Aufgabe';
+	@override String get review_subject => 'Wofür';
+	@override String get review_when => 'Wann';
+	@override String get review_reminder => 'Erinnerung';
+	@override String get review_supplies => 'Mittel';
+	@override String get review_fix => 'Bearbeiten';
+	@override String get review_none => '—';
+	@override String get note_label => 'Notiz';
+	@override String get note_hint => 'z. B. morgens vor angesagtem Regen';
+	@override String get weather_note => '🌧️ Das Wetter wird beim Abschluss automatisch gespeichert.';
+	@override String get err_subject => 'Wähle mindestens eine Pflanze oder einen Bereich.';
+	@override String get rem_event => 'Zum Zeitpunkt';
+	@override String get rem_10min => '10 Minuten vorher';
+	@override String get rem_1hour => '1 Stunde vorher';
+	@override String get rem_1day => '1 Tag vorher';
+	@override String get rem_2day => '2 Tage vorher';
+	@override String rem_at({required Object t}) => 'um ${t}';
+	@override String get rem_choose_time => 'Um Uhrzeit';
+	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
 }
 
 // Path: plant_edit
@@ -601,6 +672,67 @@ extension on TranslationsDe {
 			'subject_picker.confirm' => 'Bestätigen',
 			'subject_picker.err_select' => 'Wähle mindestens eine Pflanze oder einen Rasen.',
 			'subject_picker.empty' => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
+			'entry.title_new' => 'Neue Aufgabe',
+			'entry.title_review' => 'Überprüfen',
+			'entry.kContinue' => 'Weiter',
+			'entry.skip' => 'Überspringen',
+			'entry.save' => 'Aufgabe speichern',
+			'entry.step' => 'Schritt',
+			'entry.note_card_title' => 'Nur eine Notiz, keine Aufgabe?',
+			'entry.note_card_action' => 'Notiz ›',
+			'entry.type_title' => 'Was hast du gemacht?',
+			'entry.type_hint' => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.',
+			'entry.subject_title' => 'Wofür?',
+			'entry.subject_search_hint' => 'Pflanze suchen…',
+			'entry.subject_plants' => 'Pflanzen',
+			'entry.subject_add_plant' => 'Pflanze hinzufügen',
+			'entry.subject_add_area' => 'Bereich hinzufügen',
+			'entry.subject_from_catalog' => 'Aus Katalog hinzufügen',
+			'entry.subject_areas_context' => 'Bereiche:',
+			'entry.subject_area_section' => 'Oder der ganze Bereich',
+			'entry.subject_area_hint' => '(z. B. Rasen)',
+			'entry.subject_area_note' => 'Wähle einen Bereich nur, wenn die Aufgabe für das Ganze ohne einzelne Pflanze gilt (Mähen, ein ganzes Beet mulchen).',
+			'entry.subject_empty' => 'Noch keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
+			'entry.when_title' => 'Wann',
+			'entry.when_today' => 'Heute',
+			'entry.when_tomorrow' => 'Morgen',
+			'entry.when_pick_date' => 'Datum…',
+			'entry.when_date' => 'Datum',
+			'entry.when_time' => 'Uhrzeit',
+			'entry.when_default_note' => 'Standard: heute zur nächsten vollen Stunde.',
+			'entry.when_status' => 'Status',
+			'entry.when_status_waiting' => 'Wartet',
+			'entry.when_status_done' => 'Erledigt',
+			'entry.when_status_note' => 'Standard aus dem Datum: Zukunft = wartet, heute oder Vergangenheit = erledigt.',
+			'entry.reminder_title' => 'Erinnerung',
+			'entry.optional' => '(optional)',
+			'entry.reminder_why' => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.',
+			'entry.reminder_add' => 'Erinnerung hinzufügen',
+			'entry.reminder_note' => 'Einstellbarer Vorlauf und Uhrzeit. Mehrere Erinnerungen pro Aufgabe.',
+			'entry.supplies_title' => 'Mittel',
+			'entry.supplies_why' => 'Dieser Schritt ist da, weil die Aufgabe normalerweise Mittel verbraucht. Sie werden vom Bestand abgezogen.',
+			'entry.supplies_add' => 'Mittel aus Bestand hinzufügen',
+			'entry.supplies_note' => 'Eine Mischung für alle gewählten Pflanzen — einmal abgezogen.',
+			'entry.review_title' => 'Prüfe es — tippe eine Zeile zum Bearbeiten',
+			'entry.review_type' => 'Aufgabe',
+			'entry.review_subject' => 'Wofür',
+			'entry.review_when' => 'Wann',
+			'entry.review_reminder' => 'Erinnerung',
+			'entry.review_supplies' => 'Mittel',
+			'entry.review_fix' => 'Bearbeiten',
+			'entry.review_none' => '—',
+			'entry.note_label' => 'Notiz',
+			'entry.note_hint' => 'z. B. morgens vor angesagtem Regen',
+			'entry.weather_note' => '🌧️ Das Wetter wird beim Abschluss automatisch gespeichert.',
+			'entry.err_subject' => 'Wähle mindestens eine Pflanze oder einen Bereich.',
+			'entry.rem_event' => 'Zum Zeitpunkt',
+			'entry.rem_10min' => '10 Minuten vorher',
+			'entry.rem_1hour' => '1 Stunde vorher',
+			'entry.rem_1day' => '1 Tag vorher',
+			'entry.rem_2day' => '2 Tage vorher',
+			'entry.rem_at' => ({required Object t}) => 'um ${t}',
+			'entry.rem_choose_time' => 'Um Uhrzeit',
+			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',
 			'plant_edit.title_new' => 'Pflanze hinzufügen',
 			'plant_edit.title_edit' => 'Pflanze bearbeiten',
 			'plant_edit.species' => 'Art',

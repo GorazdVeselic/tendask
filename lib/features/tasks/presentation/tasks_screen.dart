@@ -58,7 +58,7 @@ class TasksScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.pushNamed('quick-log'),
+            onPressed: () => context.pushNamed('task-new'),
           ),
         ],
       ),

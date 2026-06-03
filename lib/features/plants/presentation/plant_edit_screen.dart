@@ -88,6 +88,9 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
       final repo = ref.read(userPlantsRepositoryProvider);
       final alias = _aliasController.text.trim();
       final aliasOrNull = alias.isEmpty ? null : alias;
+      // Created instance ids — returned to callers that auto-select the new
+      // plant (e.g. the entry subject step). Null on edit.
+      List<String>? created;
       if (_isEdit) {
         await repo.update(
           id: widget.userPlantId!,
@@ -95,25 +98,28 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
           personalAlias: aliasOrNull,
         );
       } else if (_areaIds.isEmpty) {
-        await repo.create(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
-          plantId: _plantId,
-          customName: _customName,
-          personalAlias: aliasOrNull,
-        );
-      } else {
-        for (final areaId in _areaIds) {
+        created = [
           await repo.create(
+            // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
             userId: 'local',
-            areaId: areaId,
             plantId: _plantId,
             customName: _customName,
             personalAlias: aliasOrNull,
-          );
-        }
+          ),
+        ];
+      } else {
+        created = [
+          for (final areaId in _areaIds)
+            await repo.create(
+              userId: 'local',
+              areaId: areaId,
+              plantId: _plantId,
+              customName: _customName,
+              personalAlias: aliasOrNull,
+            ),
+        ];
       }
-      if (mounted) context.pop();
+      if (mounted) context.pop(created);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
