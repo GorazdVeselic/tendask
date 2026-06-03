@@ -6,6 +6,20 @@ import '../../../core/database/app_database.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
 
+/// A subject on the repository boundary: a plant OR an area-as-subject.
+/// Keeps drift types out of the UI (see CLAUDE.md — no Companion in signatures).
+class TaskSubjectSpec {
+  const TaskSubjectSpec({this.userPlantId, this.areaId})
+      : assert(userPlantId != null || areaId != null,
+            'A subject must reference a plant or an area');
+  const TaskSubjectSpec.plant(String userPlantId)
+      : this(userPlantId: userPlantId);
+  const TaskSubjectSpec.area(String areaId) : this(areaId: areaId);
+
+  final String? userPlantId;
+  final String? areaId;
+}
+
 class TasksRepository {
   TasksRepository(this._db, this._supplies, {this._clock = const SystemClock()});
 
@@ -41,78 +55,178 @@ class TasksRepository {
           ..orderBy([(t) => OrderingTerm.asc(t.date)])
       ).watch();
 
-  /// Task history for one area (newest first), for the area detail screen.
-  Stream<List<Task>> watchByArea(String areaId) => (
-        _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false) & t.areaId.equals(areaId))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)])
-      ).watch();
+  // ── Subjects ────────────────────────────────────────────────────────────
 
-  /// Newest task per area, keyed by areaId — for the "last: …" list subtitle.
-  Stream<Map<String, Task>> watchLatestPerArea() => (
-        _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)])
-      ).watch().map((tasks) {
-        final latest = <String, Task>{};
-        for (final task in tasks) {
-          latest.putIfAbsent(task.areaId, () => task);
-        }
-        return latest;
-      });
+  /// All non-deleted subject links — for resolving subject labels in lists.
+  Stream<List<TaskSubject>> watchAllSubjects() =>
+      (_db.select(_db.taskSubjects)..where((s) => s.deleted.equals(false)))
+          .watch();
+
+  /// Subjects of one task (newest-relevant for the detail screen).
+  Stream<List<TaskSubject>> watchSubjectsForTask(String taskId) =>
+      (_db.select(_db.taskSubjects)
+            ..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false)))
+          .watch();
+
+  Future<List<TaskSubject>> subjectsForTask(String taskId) =>
+      (_db.select(_db.taskSubjects)
+            ..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false)))
+          .get();
+
+  /// Task history for one area (newest first): tasks whose subject is the area
+  /// itself OR a plant located in that area. Deduped by task id.
+  Stream<List<Task>> watchByArea(String areaId) {
+    final query = _db.select(_db.tasks).join([
+      innerJoin(
+        _db.taskSubjects,
+        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+            _db.taskSubjects.deleted.equals(false),
+      ),
+      leftOuterJoin(
+        _db.userPlants,
+        _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
+      ),
+    ])
+      ..where(_db.tasks.deleted.equals(false) &
+          (_db.taskSubjects.areaId.equals(areaId) |
+              _db.userPlants.areaId.equals(areaId)))
+      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    return query.watch().map(_dedupTasks);
+  }
+
+  /// Task history for one plant instance (newest first).
+  Stream<List<Task>> watchByPlant(String userPlantId) {
+    final query = _db.select(_db.tasks).join([
+      innerJoin(
+        _db.taskSubjects,
+        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+            _db.taskSubjects.deleted.equals(false) &
+            _db.taskSubjects.userPlantId.equals(userPlantId),
+      ),
+    ])
+      ..where(_db.tasks.deleted.equals(false))
+      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    return query.watch().map(_dedupTasks);
+  }
+
+  /// Newest task per area (direct subject or via a plant in that area) — for the
+  /// "last: …" subtitle in the garden list.
+  Stream<Map<String, Task>> watchLatestPerArea() {
+    final query = _db.select(_db.tasks).join([
+      innerJoin(
+        _db.taskSubjects,
+        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+            _db.taskSubjects.deleted.equals(false),
+      ),
+      leftOuterJoin(
+        _db.userPlants,
+        _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
+      ),
+    ])
+      ..where(_db.tasks.deleted.equals(false))
+      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    return query.watch().map((rows) {
+      final latest = <String, Task>{};
+      for (final row in rows) {
+        final task = row.readTable(_db.tasks);
+        final subject = row.readTable(_db.taskSubjects);
+        final plant = row.readTableOrNull(_db.userPlants);
+        final areaId = subject.areaId ?? plant?.areaId;
+        if (areaId != null) latest.putIfAbsent(areaId, () => task);
+      }
+      return latest;
+    });
+  }
+
+  List<Task> _dedupTasks(List<TypedResult> rows) {
+    final seen = <String>{};
+    final result = <Task>[];
+    for (final row in rows) {
+      final task = row.readTable(_db.tasks);
+      if (seen.add(task.id)) result.add(task);
+    }
+    return result;
+  }
 
   Future<Task?> byId(String id) =>
       (_db.select(_db.tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
 
+  // ── Mutations ───────────────────────────────────────────────────────────
+
   Future<String> create({
     required String userId,
-    required String areaId,
     required String taskTypeId,
     required DateTime date,
-    String? userPlantId,
+    required List<TaskSubjectSpec> subjects,
     TaskStatus status = TaskStatus.waiting,
     String? note,
     String? recurrence,
   }) async {
     final id = _uuid.v4();
     final now = _clock.now();
-    await _db.into(_db.tasks).insert(TasksCompanion.insert(
-      id: id,
-      userId: userId,
-      areaId: areaId,
-      taskTypeId: taskTypeId,
-      date: date.toUtc(),
-      userPlantId: Value(userPlantId),
-      status: Value(status),
-      note: Value(note),
-      recurrence: Value(recurrence),
-      updatedAt: now,
-    ));
+    await _db.transaction(() async {
+      await _db.into(_db.tasks).insert(TasksCompanion.insert(
+            id: id,
+            userId: userId,
+            taskTypeId: taskTypeId,
+            date: date.toUtc(),
+            status: Value(status),
+            note: Value(note),
+            recurrence: Value(recurrence),
+            updatedAt: now,
+          ));
+      await _insertSubjects(id, subjects, now);
+    });
     return id;
   }
 
-  /// Edits the user-facing fields of a task; keeps drift types out of the UI.
+  /// Edits the user-facing fields of a task and replaces its subjects.
   Future<void> updateTask({
     required String id,
     required String taskTypeId,
-    required String areaId,
     required TaskStatus status,
     required DateTime date,
     required String? note,
-    String? userPlantId,
+    required List<TaskSubjectSpec> subjects,
   }) async {
-    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
-      TasksCompanion(
-        taskTypeId: Value(taskTypeId),
-        areaId: Value(areaId),
-        status: Value(status),
-        date: Value(date.toUtc()),
-        note: Value(note),
-        userPlantId: Value(userPlantId),
-        updatedAt: Value(_clock.now()),
+    final now = _clock.now();
+    await _db.transaction(() async {
+      await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+        TasksCompanion(
+          taskTypeId: Value(taskTypeId),
+          status: Value(status),
+          date: Value(date.toUtc()),
+          note: Value(note),
+          updatedAt: Value(now),
+          syncStatus: const Value('pending'),
+        ),
+      );
+      // Soft-delete current subjects (so the change syncs) then insert fresh.
+      await (_db.update(_db.taskSubjects)
+            ..where((s) => s.taskId.equals(id) & s.deleted.equals(false)))
+          .write(TaskSubjectsCompanion(
+        deleted: const Value(true),
+        updatedAt: Value(now),
         syncStatus: const Value('pending'),
-      ),
-    );
+      ));
+      await _insertSubjects(id, subjects, now);
+    });
+  }
+
+  Future<void> _insertSubjects(
+    String taskId,
+    List<TaskSubjectSpec> subjects,
+    DateTime now,
+  ) async {
+    for (final s in subjects) {
+      await _db.into(_db.taskSubjects).insert(TaskSubjectsCompanion.insert(
+            id: _uuid.v4(),
+            taskId: taskId,
+            userPlantId: Value(s.userPlantId),
+            areaId: Value(s.areaId),
+            updatedAt: now,
+          ));
+    }
   }
 
   Future<void> complete(String id) async {
@@ -175,18 +289,27 @@ class TasksRepository {
     if (task == null) throw StateError('Task $id not found');
     final newId = _uuid.v4();
     final now = _clock.now();
-    await _db.into(_db.tasks).insert(TasksCompanion.insert(
-      id: newId,
-      userId: task.userId,
-      areaId: task.areaId,
-      taskTypeId: task.taskTypeId,
-      date: task.date,
-      userPlantId: Value(task.userPlantId),
-      status: const Value(TaskStatus.waiting),
-      note: Value(task.note),
-      recurrence: Value(task.recurrence),
-      updatedAt: now,
-    ));
+    await _db.transaction(() async {
+      await _db.into(_db.tasks).insert(TasksCompanion.insert(
+            id: newId,
+            userId: task.userId,
+            taskTypeId: task.taskTypeId,
+            date: task.date,
+            status: const Value(TaskStatus.waiting),
+            note: Value(task.note),
+            recurrence: Value(task.recurrence),
+            updatedAt: now,
+          ));
+      final subs = await subjectsForTask(id);
+      await _insertSubjects(
+        newId,
+        [
+          for (final s in subs)
+            TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
+        ],
+        now,
+      );
+    });
     return newId;
   }
 }

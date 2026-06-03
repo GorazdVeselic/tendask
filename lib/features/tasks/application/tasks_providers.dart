@@ -33,3 +33,15 @@ final taskByIdProvider =
     StreamProvider.autoDispose.family<Task?, String>((ref, id) {
   return ref.watch(tasksRepositoryProvider).watchById(id);
 });
+
+/// All subject links — used to resolve "for what" labels in task lists.
+final allTaskSubjectsProvider =
+    StreamProvider.autoDispose<List<TaskSubject>>((ref) {
+  return ref.watch(tasksRepositoryProvider).watchAllSubjects();
+});
+
+/// Subjects of a single task — for the task detail screen.
+final taskSubjectsForTaskProvider =
+    StreamProvider.autoDispose.family<List<TaskSubject>, String>((ref, id) {
+  return ref.watch(tasksRepositoryProvider).watchSubjectsForTask(id);
+});

@@ -18,6 +18,7 @@ import '../../supplies/application/supplies_providers.dart';
 import '../../supplies/data/supply_spec.dart';
 import '../../supplies/presentation/add_supply_to_task_sheet.dart';
 import '../application/tasks_providers.dart';
+import '../data/tasks_repository.dart';
 import 'widgets/task_type_tile.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -74,17 +75,32 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   }
 
   Future<void> _loadTask() async {
-    final task =
-        await ref.read(tasksRepositoryProvider).byId(widget.taskId!);
+    final repo = ref.read(tasksRepositoryProvider);
+    final task = await repo.byId(widget.taskId!);
+    final subjects = await repo.subjectsForTask(widget.taskId!);
     final supplies = await ref
         .read(suppliesRepositoryProvider)
         .suppliesForTask(widget.taskId!);
+
+    // Map subjects back to the single-select form: first plant + its area.
+    String? areaId;
+    String? userPlantId;
+    for (final s in subjects) {
+      userPlantId ??= s.userPlantId;
+      areaId ??= s.areaId;
+    }
+    if (areaId == null && userPlantId != null) {
+      final plant =
+          await ref.read(userPlantsRepositoryProvider).byId(userPlantId);
+      areaId = plant?.areaId;
+    }
+
     if (!mounted) return;
     if (task != null) {
       setState(() {
         _taskTypeId = task.taskTypeId;
-        _areaId = task.areaId;
-        _userPlantId = task.userPlantId;
+        _areaId = areaId;
+        _userPlantId = userPlantId;
         _status = task.status;
         _date = task.date.toLocal();
         _noteController.text = task.note ?? '';
@@ -159,32 +175,31 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       final note = _noteController.text.trim();
       final repo = ref.read(tasksRepositoryProvider);
 
-      // Plant is an optional link; persist whatever was selected (only ever
-      // non-null when an area is chosen, since the picker is area-scoped).
-      final userPlantId = _userPlantId;
+      // Subject = the chosen plant (area derived from it) or the area itself.
+      final subjects = _userPlantId != null
+          ? [TaskSubjectSpec.plant(_userPlantId!)]
+          : [TaskSubjectSpec.area(_areaId!)];
 
       final String taskId;
       if (_isEdit) {
         await repo.updateTask(
           id: widget.taskId!,
           taskTypeId: _taskTypeId!,
-          areaId: _areaId!,
           status: _status,
           date: _date,
           note: note.isEmpty ? null : note,
-          userPlantId: userPlantId,
+          subjects: subjects,
         );
         taskId = widget.taskId!;
       } else {
         taskId = await repo.create(
           // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
           userId: 'local',
-          areaId: _areaId!,
           taskTypeId: _taskTypeId!,
           date: _date,
           status: _status,
           note: note.isEmpty ? null : note,
-          userPlantId: userPlantId,
+          subjects: subjects,
         );
       }
       await ref.read(suppliesRepositoryProvider).syncForTask(

@@ -12,6 +12,7 @@ import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/data/notes_repository.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
+import 'package:tendask/features/plants/application/plants_providers.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -94,6 +95,11 @@ void main() {
               taskTypesMapProvider
                   .overrideWith((ref) async => <String, TaskType>{}),
               areasMapProvider.overrideWith((ref) => Stream.value({})),
+              allTaskSubjectsProvider
+                  .overrideWith((ref) => Stream.value(<TaskSubject>[])),
+              userPlantsMapProvider
+                  .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
+              plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
             ],
             child: MaterialApp.router(routerConfig: router),
           ),

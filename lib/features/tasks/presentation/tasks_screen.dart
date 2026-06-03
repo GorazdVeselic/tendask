@@ -9,8 +9,10 @@ import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
+import 'subject_labels.dart';
 import 'widgets/confirm_delete_dialog.dart';
 
 enum _Group { overdue, today, tomorrow, thisWeek, later }
@@ -27,6 +29,13 @@ class TasksScreen extends ConsumerWidget {
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
     final areas = ref.watch(areasMapProvider).asData?.value;
     final repo = ref.read(tasksRepositoryProvider);
+
+    final subjectLabels = subjectLabelsByTask(
+      ref.watch(allTaskSubjectsProvider).asData?.value ?? const [],
+      areas: areas ?? const {},
+      userPlants: ref.watch(userPlantsMapProvider).asData?.value ?? const {},
+      plants: ref.watch(plantsMapProvider).asData?.value ?? const {},
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -58,7 +67,7 @@ class TasksScreen extends ConsumerWidget {
           : _TasksList(
               tasks: pending,
               catalog: catalog,
-              areas: areas,
+              subjectLabels: subjectLabels,
               t: t,
               theme: theme,
               onComplete: (id) => repo.complete(id),
@@ -76,7 +85,7 @@ class _TasksList extends StatelessWidget {
   const _TasksList({
     required this.tasks,
     required this.catalog,
-    required this.areas,
+    required this.subjectLabels,
     required this.t,
     required this.theme,
     required this.onComplete,
@@ -87,7 +96,7 @@ class _TasksList extends StatelessWidget {
 
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
-  final Map<String, Area> areas;
+  final Map<String, String> subjectLabels;
   final Translations t;
   final ThemeData theme;
   final void Function(String id) onComplete;
@@ -130,7 +139,7 @@ class _TasksList extends StatelessWidget {
         return _TaskRow(
           task: task,
           taskType: catalog[task.taskTypeId],
-          area: areas[task.areaId],
+          subjectLabel: subjectLabels[task.id],
           group: group,
           t: t,
           theme: theme,
@@ -212,7 +221,7 @@ class _TaskRow extends StatelessWidget {
   const _TaskRow({
     required this.task,
     required this.taskType,
-    required this.area,
+    required this.subjectLabel,
     required this.group,
     required this.t,
     required this.theme,
@@ -225,7 +234,7 @@ class _TaskRow extends StatelessWidget {
 
   final Task task;
   final TaskType? taskType;
-  final Area? area;
+  final String? subjectLabel;
   final _Group group;
   final Translations t;
   final ThemeData theme;
@@ -267,9 +276,9 @@ class _TaskRow extends StatelessWidget {
                       style: theme.textTheme.bodyMedium
                           ?.copyWith(fontWeight: FontWeight.w500),
                     ),
-                    if (area != null)
+                    if (subjectLabel != null && subjectLabel!.isNotEmpty)
                       Text(
-                        '🪴 ${area!.name}',
+                        '🪴 $subjectLabel',
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: theme.colorScheme.onSurfaceVariant,
                         ),

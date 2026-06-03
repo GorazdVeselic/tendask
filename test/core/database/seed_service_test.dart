@@ -145,7 +145,6 @@ void main() {
       await db.into(db.tasks).insert(TasksCompanion.insert(
         id: taskId,
         userId: 'user-1',
-        areaId: areaId,
         taskTypeId: 'mow',
         date: now,
         updatedAt: now,
@@ -164,7 +163,6 @@ void main() {
       await db.into(db.tasks).insert(TasksCompanion.insert(
         id: taskId,
         userId: 'user-1',
-        areaId: areaId,
         taskTypeId: 'mow',
         date: now,
         updatedAt: now,
@@ -186,7 +184,6 @@ void main() {
       await db.into(db.tasks).insert(TasksCompanion.insert(
         id: taskId,
         userId: 'user-1',
-        areaId: areaId,
         taskTypeId: 'mow',
         date: now,
         updatedAt: now,

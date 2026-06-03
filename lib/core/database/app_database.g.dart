@@ -2363,9 +2363,9 @@ class $UserPlantsTable extends UserPlants
   late final GeneratedColumn<String> areaId = GeneratedColumn<String>(
     'area_id',
     aliasedName,
-    false,
+    true,
     type: DriftSqlType.string,
-    requiredDuringInsert: true,
+    requiredDuringInsert: false,
     defaultConstraints: GeneratedColumn.constraintIsAlways(
       'REFERENCES area (id)',
     ),
@@ -2502,8 +2502,6 @@ class $UserPlantsTable extends UserPlants
         _areaIdMeta,
         areaId.isAcceptableOrUnknown(data['area_id']!, _areaIdMeta),
       );
-    } else if (isInserting) {
-      context.missing(_areaIdMeta);
     }
     if (data.containsKey('plant_id')) {
       context.handle(
@@ -2572,7 +2570,7 @@ class $UserPlantsTable extends UserPlants
       areaId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}area_id'],
-      )!,
+      ),
       plantId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}plant_id'],
@@ -2613,7 +2611,7 @@ class $UserPlantsTable extends UserPlants
 class UserPlant extends DataClass implements Insertable<UserPlant> {
   final String id;
   final String userId;
-  final String areaId;
+  final String? areaId;
   final String? plantId;
   final String? customName;
   final String? personalAlias;
@@ -2624,7 +2622,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
   const UserPlant({
     required this.id,
     required this.userId,
-    required this.areaId,
+    this.areaId,
     this.plantId,
     this.customName,
     this.personalAlias,
@@ -2638,7 +2636,9 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['area_id'] = Variable<String>(areaId);
+    if (!nullToAbsent || areaId != null) {
+      map['area_id'] = Variable<String>(areaId);
+    }
     if (!nullToAbsent || plantId != null) {
       map['plant_id'] = Variable<String>(plantId);
     }
@@ -2659,7 +2659,9 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
     return UserPlantsCompanion(
       id: Value(id),
       userId: Value(userId),
-      areaId: Value(areaId),
+      areaId: areaId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(areaId),
       plantId: plantId == null && nullToAbsent
           ? const Value.absent()
           : Value(plantId),
@@ -2684,7 +2686,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
     return UserPlant(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      areaId: serializer.fromJson<String>(json['areaId']),
+      areaId: serializer.fromJson<String?>(json['areaId']),
       plantId: serializer.fromJson<String?>(json['plantId']),
       customName: serializer.fromJson<String?>(json['customName']),
       personalAlias: serializer.fromJson<String?>(json['personalAlias']),
@@ -2700,7 +2702,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'areaId': serializer.toJson<String>(areaId),
+      'areaId': serializer.toJson<String?>(areaId),
       'plantId': serializer.toJson<String?>(plantId),
       'customName': serializer.toJson<String?>(customName),
       'personalAlias': serializer.toJson<String?>(personalAlias),
@@ -2714,7 +2716,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
   UserPlant copyWith({
     String? id,
     String? userId,
-    String? areaId,
+    Value<String?> areaId = const Value.absent(),
     Value<String?> plantId = const Value.absent(),
     Value<String?> customName = const Value.absent(),
     Value<String?> personalAlias = const Value.absent(),
@@ -2725,7 +2727,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
   }) => UserPlant(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    areaId: areaId ?? this.areaId,
+    areaId: areaId.present ? areaId.value : this.areaId,
     plantId: plantId.present ? plantId.value : this.plantId,
     customName: customName.present ? customName.value : this.customName,
     personalAlias: personalAlias.present
@@ -2806,7 +2808,7 @@ class UserPlant extends DataClass implements Insertable<UserPlant> {
 class UserPlantsCompanion extends UpdateCompanion<UserPlant> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<String> areaId;
+  final Value<String?> areaId;
   final Value<String?> plantId;
   final Value<String?> customName;
   final Value<String?> personalAlias;
@@ -2831,7 +2833,7 @@ class UserPlantsCompanion extends UpdateCompanion<UserPlant> {
   UserPlantsCompanion.insert({
     required String id,
     required String userId,
-    required String areaId,
+    this.areaId = const Value.absent(),
     this.plantId = const Value.absent(),
     this.customName = const Value.absent(),
     this.personalAlias = const Value.absent(),
@@ -2842,7 +2844,6 @@ class UserPlantsCompanion extends UpdateCompanion<UserPlant> {
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
-       areaId = Value(areaId),
        updatedAt = Value(updatedAt);
   static Insertable<UserPlant> custom({
     Expression<String>? id,
@@ -2875,7 +2876,7 @@ class UserPlantsCompanion extends UpdateCompanion<UserPlant> {
   UserPlantsCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<String>? areaId,
+    Value<String?>? areaId,
     Value<String?>? plantId,
     Value<String?>? customName,
     Value<String?>? personalAlias,
@@ -2980,32 +2981,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: true,
-  );
-  static const VerificationMeta _areaIdMeta = const VerificationMeta('areaId');
-  @override
-  late final GeneratedColumn<String> areaId = GeneratedColumn<String>(
-    'area_id',
-    aliasedName,
-    false,
-    type: DriftSqlType.string,
-    requiredDuringInsert: true,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES area (id)',
-    ),
-  );
-  static const VerificationMeta _userPlantIdMeta = const VerificationMeta(
-    'userPlantId',
-  );
-  @override
-  late final GeneratedColumn<String> userPlantId = GeneratedColumn<String>(
-    'user_plant_id',
-    aliasedName,
-    true,
-    type: DriftSqlType.string,
-    requiredDuringInsert: false,
-    defaultConstraints: GeneratedColumn.constraintIsAlways(
-      'REFERENCES user_plant (id)',
-    ),
   );
   static const VerificationMeta _taskTypeIdMeta = const VerificationMeta(
     'taskTypeId',
@@ -3113,8 +3088,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
   List<GeneratedColumn> get $columns => [
     id,
     userId,
-    areaId,
-    userPlantId,
     taskTypeId,
     date,
     status,
@@ -3149,23 +3122,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
       );
     } else if (isInserting) {
       context.missing(_userIdMeta);
-    }
-    if (data.containsKey('area_id')) {
-      context.handle(
-        _areaIdMeta,
-        areaId.isAcceptableOrUnknown(data['area_id']!, _areaIdMeta),
-      );
-    } else if (isInserting) {
-      context.missing(_areaIdMeta);
-    }
-    if (data.containsKey('user_plant_id')) {
-      context.handle(
-        _userPlantIdMeta,
-        userPlantId.isAcceptableOrUnknown(
-          data['user_plant_id']!,
-          _userPlantIdMeta,
-        ),
-      );
     }
     if (data.containsKey('task_type_id')) {
       context.handle(
@@ -3241,14 +3197,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}user_id'],
       )!,
-      areaId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}area_id'],
-      )!,
-      userPlantId: attachedDatabase.typeMapping.read(
-        DriftSqlType.string,
-        data['${effectivePrefix}user_plant_id'],
-      ),
       taskTypeId: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}task_type_id'],
@@ -3302,8 +3250,6 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
 class Task extends DataClass implements Insertable<Task> {
   final String id;
   final String userId;
-  final String areaId;
-  final String? userPlantId;
   final String taskTypeId;
   final DateTime date;
   final TaskStatus status;
@@ -3316,8 +3262,6 @@ class Task extends DataClass implements Insertable<Task> {
   const Task({
     required this.id,
     required this.userId,
-    required this.areaId,
-    this.userPlantId,
     required this.taskTypeId,
     required this.date,
     required this.status,
@@ -3333,10 +3277,6 @@ class Task extends DataClass implements Insertable<Task> {
     final map = <String, Expression>{};
     map['id'] = Variable<String>(id);
     map['user_id'] = Variable<String>(userId);
-    map['area_id'] = Variable<String>(areaId);
-    if (!nullToAbsent || userPlantId != null) {
-      map['user_plant_id'] = Variable<String>(userPlantId);
-    }
     map['task_type_id'] = Variable<String>(taskTypeId);
     map['date'] = Variable<DateTime>(date);
     {
@@ -3363,10 +3303,6 @@ class Task extends DataClass implements Insertable<Task> {
     return TasksCompanion(
       id: Value(id),
       userId: Value(userId),
-      areaId: Value(areaId),
-      userPlantId: userPlantId == null && nullToAbsent
-          ? const Value.absent()
-          : Value(userPlantId),
       taskTypeId: Value(taskTypeId),
       date: Value(date),
       status: Value(status),
@@ -3391,8 +3327,6 @@ class Task extends DataClass implements Insertable<Task> {
     return Task(
       id: serializer.fromJson<String>(json['id']),
       userId: serializer.fromJson<String>(json['userId']),
-      areaId: serializer.fromJson<String>(json['areaId']),
-      userPlantId: serializer.fromJson<String?>(json['userPlantId']),
       taskTypeId: serializer.fromJson<String>(json['taskTypeId']),
       date: serializer.fromJson<DateTime>(json['date']),
       status: $TasksTable.$converterstatus.fromJson(
@@ -3412,8 +3346,6 @@ class Task extends DataClass implements Insertable<Task> {
     return <String, dynamic>{
       'id': serializer.toJson<String>(id),
       'userId': serializer.toJson<String>(userId),
-      'areaId': serializer.toJson<String>(areaId),
-      'userPlantId': serializer.toJson<String?>(userPlantId),
       'taskTypeId': serializer.toJson<String>(taskTypeId),
       'date': serializer.toJson<DateTime>(date),
       'status': serializer.toJson<String>(
@@ -3431,8 +3363,6 @@ class Task extends DataClass implements Insertable<Task> {
   Task copyWith({
     String? id,
     String? userId,
-    String? areaId,
-    Value<String?> userPlantId = const Value.absent(),
     String? taskTypeId,
     DateTime? date,
     TaskStatus? status,
@@ -3445,8 +3375,6 @@ class Task extends DataClass implements Insertable<Task> {
   }) => Task(
     id: id ?? this.id,
     userId: userId ?? this.userId,
-    areaId: areaId ?? this.areaId,
-    userPlantId: userPlantId.present ? userPlantId.value : this.userPlantId,
     taskTypeId: taskTypeId ?? this.taskTypeId,
     date: date ?? this.date,
     status: status ?? this.status,
@@ -3461,10 +3389,6 @@ class Task extends DataClass implements Insertable<Task> {
     return Task(
       id: data.id.present ? data.id.value : this.id,
       userId: data.userId.present ? data.userId.value : this.userId,
-      areaId: data.areaId.present ? data.areaId.value : this.areaId,
-      userPlantId: data.userPlantId.present
-          ? data.userPlantId.value
-          : this.userPlantId,
       taskTypeId: data.taskTypeId.present
           ? data.taskTypeId.value
           : this.taskTypeId,
@@ -3488,8 +3412,6 @@ class Task extends DataClass implements Insertable<Task> {
     return (StringBuffer('Task(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('areaId: $areaId, ')
-          ..write('userPlantId: $userPlantId, ')
           ..write('taskTypeId: $taskTypeId, ')
           ..write('date: $date, ')
           ..write('status: $status, ')
@@ -3507,8 +3429,6 @@ class Task extends DataClass implements Insertable<Task> {
   int get hashCode => Object.hash(
     id,
     userId,
-    areaId,
-    userPlantId,
     taskTypeId,
     date,
     status,
@@ -3525,8 +3445,6 @@ class Task extends DataClass implements Insertable<Task> {
       (other is Task &&
           other.id == this.id &&
           other.userId == this.userId &&
-          other.areaId == this.areaId &&
-          other.userPlantId == this.userPlantId &&
           other.taskTypeId == this.taskTypeId &&
           other.date == this.date &&
           other.status == this.status &&
@@ -3541,8 +3459,6 @@ class Task extends DataClass implements Insertable<Task> {
 class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String> id;
   final Value<String> userId;
-  final Value<String> areaId;
-  final Value<String?> userPlantId;
   final Value<String> taskTypeId;
   final Value<DateTime> date;
   final Value<TaskStatus> status;
@@ -3556,8 +3472,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
   const TasksCompanion({
     this.id = const Value.absent(),
     this.userId = const Value.absent(),
-    this.areaId = const Value.absent(),
-    this.userPlantId = const Value.absent(),
     this.taskTypeId = const Value.absent(),
     this.date = const Value.absent(),
     this.status = const Value.absent(),
@@ -3572,8 +3486,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
   TasksCompanion.insert({
     required String id,
     required String userId,
-    required String areaId,
-    this.userPlantId = const Value.absent(),
     required String taskTypeId,
     required DateTime date,
     this.status = const Value.absent(),
@@ -3586,15 +3498,12 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        userId = Value(userId),
-       areaId = Value(areaId),
        taskTypeId = Value(taskTypeId),
        date = Value(date),
        updatedAt = Value(updatedAt);
   static Insertable<Task> custom({
     Expression<String>? id,
     Expression<String>? userId,
-    Expression<String>? areaId,
-    Expression<String>? userPlantId,
     Expression<String>? taskTypeId,
     Expression<DateTime>? date,
     Expression<String>? status,
@@ -3609,8 +3518,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
     return RawValuesInsertable({
       if (id != null) 'id': id,
       if (userId != null) 'user_id': userId,
-      if (areaId != null) 'area_id': areaId,
-      if (userPlantId != null) 'user_plant_id': userPlantId,
       if (taskTypeId != null) 'task_type_id': taskTypeId,
       if (date != null) 'date': date,
       if (status != null) 'status': status,
@@ -3627,8 +3534,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
   TasksCompanion copyWith({
     Value<String>? id,
     Value<String>? userId,
-    Value<String>? areaId,
-    Value<String?>? userPlantId,
     Value<String>? taskTypeId,
     Value<DateTime>? date,
     Value<TaskStatus>? status,
@@ -3643,8 +3548,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
     return TasksCompanion(
       id: id ?? this.id,
       userId: userId ?? this.userId,
-      areaId: areaId ?? this.areaId,
-      userPlantId: userPlantId ?? this.userPlantId,
       taskTypeId: taskTypeId ?? this.taskTypeId,
       date: date ?? this.date,
       status: status ?? this.status,
@@ -3666,12 +3569,6 @@ class TasksCompanion extends UpdateCompanion<Task> {
     }
     if (userId.present) {
       map['user_id'] = Variable<String>(userId.value);
-    }
-    if (areaId.present) {
-      map['area_id'] = Variable<String>(areaId.value);
-    }
-    if (userPlantId.present) {
-      map['user_plant_id'] = Variable<String>(userPlantId.value);
     }
     if (taskTypeId.present) {
       map['task_type_id'] = Variable<String>(taskTypeId.value);
@@ -3713,14 +3610,489 @@ class TasksCompanion extends UpdateCompanion<Task> {
     return (StringBuffer('TasksCompanion(')
           ..write('id: $id, ')
           ..write('userId: $userId, ')
-          ..write('areaId: $areaId, ')
-          ..write('userPlantId: $userPlantId, ')
           ..write('taskTypeId: $taskTypeId, ')
           ..write('date: $date, ')
           ..write('status: $status, ')
           ..write('note: $note, ')
           ..write('weather: $weather, ')
           ..write('recurrence: $recurrence, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deleted: $deleted, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $TaskSubjectsTable extends TaskSubjects
+    with TableInfo<$TaskSubjectsTable, TaskSubject> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $TaskSubjectsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _taskIdMeta = const VerificationMeta('taskId');
+  @override
+  late final GeneratedColumn<String> taskId = GeneratedColumn<String>(
+    'task_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES task (id)',
+    ),
+  );
+  static const VerificationMeta _userPlantIdMeta = const VerificationMeta(
+    'userPlantId',
+  );
+  @override
+  late final GeneratedColumn<String> userPlantId = GeneratedColumn<String>(
+    'user_plant_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_plant (id)',
+    ),
+  );
+  static const VerificationMeta _areaIdMeta = const VerificationMeta('areaId');
+  @override
+  late final GeneratedColumn<String> areaId = GeneratedColumn<String>(
+    'area_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES area (id)',
+    ),
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedMeta = const VerificationMeta(
+    'deleted',
+  );
+  @override
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+    'deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('pending'),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    taskId,
+    userPlantId,
+    areaId,
+    updatedAt,
+    deleted,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'task_subject';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<TaskSubject> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('task_id')) {
+      context.handle(
+        _taskIdMeta,
+        taskId.isAcceptableOrUnknown(data['task_id']!, _taskIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_taskIdMeta);
+    }
+    if (data.containsKey('user_plant_id')) {
+      context.handle(
+        _userPlantIdMeta,
+        userPlantId.isAcceptableOrUnknown(
+          data['user_plant_id']!,
+          _userPlantIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('area_id')) {
+      context.handle(
+        _areaIdMeta,
+        areaId.isAcceptableOrUnknown(data['area_id']!, _areaIdMeta),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted')) {
+      context.handle(
+        _deletedMeta,
+        deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  TaskSubject map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return TaskSubject(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      taskId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_id'],
+      )!,
+      userPlantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_plant_id'],
+      ),
+      areaId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}area_id'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}deleted'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $TaskSubjectsTable createAlias(String alias) {
+    return $TaskSubjectsTable(attachedDatabase, alias);
+  }
+}
+
+class TaskSubject extends DataClass implements Insertable<TaskSubject> {
+  final String id;
+  final String taskId;
+  final String? userPlantId;
+  final String? areaId;
+  final DateTime updatedAt;
+  final bool deleted;
+  final String syncStatus;
+  const TaskSubject({
+    required this.id,
+    required this.taskId,
+    this.userPlantId,
+    this.areaId,
+    required this.updatedAt,
+    required this.deleted,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['task_id'] = Variable<String>(taskId);
+    if (!nullToAbsent || userPlantId != null) {
+      map['user_plant_id'] = Variable<String>(userPlantId);
+    }
+    if (!nullToAbsent || areaId != null) {
+      map['area_id'] = Variable<String>(areaId);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['deleted'] = Variable<bool>(deleted);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  TaskSubjectsCompanion toCompanion(bool nullToAbsent) {
+    return TaskSubjectsCompanion(
+      id: Value(id),
+      taskId: Value(taskId),
+      userPlantId: userPlantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userPlantId),
+      areaId: areaId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(areaId),
+      updatedAt: Value(updatedAt),
+      deleted: Value(deleted),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory TaskSubject.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return TaskSubject(
+      id: serializer.fromJson<String>(json['id']),
+      taskId: serializer.fromJson<String>(json['taskId']),
+      userPlantId: serializer.fromJson<String?>(json['userPlantId']),
+      areaId: serializer.fromJson<String?>(json['areaId']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'taskId': serializer.toJson<String>(taskId),
+      'userPlantId': serializer.toJson<String?>(userPlantId),
+      'areaId': serializer.toJson<String?>(areaId),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deleted': serializer.toJson<bool>(deleted),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  TaskSubject copyWith({
+    String? id,
+    String? taskId,
+    Value<String?> userPlantId = const Value.absent(),
+    Value<String?> areaId = const Value.absent(),
+    DateTime? updatedAt,
+    bool? deleted,
+    String? syncStatus,
+  }) => TaskSubject(
+    id: id ?? this.id,
+    taskId: taskId ?? this.taskId,
+    userPlantId: userPlantId.present ? userPlantId.value : this.userPlantId,
+    areaId: areaId.present ? areaId.value : this.areaId,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deleted: deleted ?? this.deleted,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  TaskSubject copyWithCompanion(TaskSubjectsCompanion data) {
+    return TaskSubject(
+      id: data.id.present ? data.id.value : this.id,
+      taskId: data.taskId.present ? data.taskId.value : this.taskId,
+      userPlantId: data.userPlantId.present
+          ? data.userPlantId.value
+          : this.userPlantId,
+      areaId: data.areaId.present ? data.areaId.value : this.areaId,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deleted: data.deleted.present ? data.deleted.value : this.deleted,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskSubject(')
+          ..write('id: $id, ')
+          ..write('taskId: $taskId, ')
+          ..write('userPlantId: $userPlantId, ')
+          ..write('areaId: $areaId, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deleted: $deleted, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    taskId,
+    userPlantId,
+    areaId,
+    updatedAt,
+    deleted,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is TaskSubject &&
+          other.id == this.id &&
+          other.taskId == this.taskId &&
+          other.userPlantId == this.userPlantId &&
+          other.areaId == this.areaId &&
+          other.updatedAt == this.updatedAt &&
+          other.deleted == this.deleted &&
+          other.syncStatus == this.syncStatus);
+}
+
+class TaskSubjectsCompanion extends UpdateCompanion<TaskSubject> {
+  final Value<String> id;
+  final Value<String> taskId;
+  final Value<String?> userPlantId;
+  final Value<String?> areaId;
+  final Value<DateTime> updatedAt;
+  final Value<bool> deleted;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const TaskSubjectsCompanion({
+    this.id = const Value.absent(),
+    this.taskId = const Value.absent(),
+    this.userPlantId = const Value.absent(),
+    this.areaId = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deleted = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  TaskSubjectsCompanion.insert({
+    required String id,
+    required String taskId,
+    this.userPlantId = const Value.absent(),
+    this.areaId = const Value.absent(),
+    required DateTime updatedAt,
+    this.deleted = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       taskId = Value(taskId),
+       updatedAt = Value(updatedAt);
+  static Insertable<TaskSubject> custom({
+    Expression<String>? id,
+    Expression<String>? taskId,
+    Expression<String>? userPlantId,
+    Expression<String>? areaId,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? deleted,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (taskId != null) 'task_id': taskId,
+      if (userPlantId != null) 'user_plant_id': userPlantId,
+      if (areaId != null) 'area_id': areaId,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deleted != null) 'deleted': deleted,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  TaskSubjectsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? taskId,
+    Value<String?>? userPlantId,
+    Value<String?>? areaId,
+    Value<DateTime>? updatedAt,
+    Value<bool>? deleted,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return TaskSubjectsCompanion(
+      id: id ?? this.id,
+      taskId: taskId ?? this.taskId,
+      userPlantId: userPlantId ?? this.userPlantId,
+      areaId: areaId ?? this.areaId,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deleted: deleted ?? this.deleted,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (taskId.present) {
+      map['task_id'] = Variable<String>(taskId.value);
+    }
+    if (userPlantId.present) {
+      map['user_plant_id'] = Variable<String>(userPlantId.value);
+    }
+    if (areaId.present) {
+      map['area_id'] = Variable<String>(areaId.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('TaskSubjectsCompanion(')
+          ..write('id: $id, ')
+          ..write('taskId: $taskId, ')
+          ..write('userPlantId: $userPlantId, ')
+          ..write('areaId: $areaId, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus, ')
@@ -6409,6 +6781,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $AreasTable areas = $AreasTable(this);
   late final $UserPlantsTable userPlants = $UserPlantsTable(this);
   late final $TasksTable tasks = $TasksTable(this);
+  late final $TaskSubjectsTable taskSubjects = $TaskSubjectsTable(this);
   late final $TaskRemindersTable taskReminders = $TaskRemindersTable(this);
   late final $NotesTable notes = $NotesTable(this);
   late final $SuppliesTable supplies = $SuppliesTable(this);
@@ -6427,6 +6800,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     areas,
     userPlants,
     tasks,
+    taskSubjects,
     taskReminders,
     notes,
     supplies,
@@ -8135,20 +8509,19 @@ final class $$AreasTableReferences
     );
   }
 
-  static MultiTypedResultKey<$TasksTable, List<Task>> _tasksRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.tasks,
-    aliasName: $_aliasNameGenerator(db.areas.id, db.tasks.areaId),
+  static MultiTypedResultKey<$TaskSubjectsTable, List<TaskSubject>>
+  _taskSubjectsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.taskSubjects,
+    aliasName: $_aliasNameGenerator(db.areas.id, db.taskSubjects.areaId),
   );
 
-  $$TasksTableProcessedTableManager get tasksRefs {
-    final manager = $$TasksTableTableManager(
+  $$TaskSubjectsTableProcessedTableManager get taskSubjectsRefs {
+    final manager = $$TaskSubjectsTableTableManager(
       $_db,
-      $_db.tasks,
+      $_db.taskSubjects,
     ).filter((f) => f.areaId.id.sqlEquals($_itemColumn<String>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_tasksRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_taskSubjectsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -8248,22 +8621,22 @@ class $$AreasTableFilterComposer extends Composer<_$AppDatabase, $AreasTable> {
     return f(composer);
   }
 
-  Expression<bool> tasksRefs(
-    Expression<bool> Function($$TasksTableFilterComposer f) f,
+  Expression<bool> taskSubjectsRefs(
+    Expression<bool> Function($$TaskSubjectsTableFilterComposer f) f,
   ) {
-    final $$TasksTableFilterComposer composer = $composerBuilder(
+    final $$TaskSubjectsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.tasks,
+      referencedTable: $db.taskSubjects,
       getReferencedColumn: (t) => t.areaId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TasksTableFilterComposer(
+          }) => $$TaskSubjectsTableFilterComposer(
             $db: $db,
-            $table: $db.tasks,
+            $table: $db.taskSubjects,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8409,22 +8782,22 @@ class $$AreasTableAnnotationComposer
     return f(composer);
   }
 
-  Expression<T> tasksRefs<T extends Object>(
-    Expression<T> Function($$TasksTableAnnotationComposer a) f,
+  Expression<T> taskSubjectsRefs<T extends Object>(
+    Expression<T> Function($$TaskSubjectsTableAnnotationComposer a) f,
   ) {
-    final $$TasksTableAnnotationComposer composer = $composerBuilder(
+    final $$TaskSubjectsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.tasks,
+      referencedTable: $db.taskSubjects,
       getReferencedColumn: (t) => t.areaId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TasksTableAnnotationComposer(
+          }) => $$TaskSubjectsTableAnnotationComposer(
             $db: $db,
-            $table: $db.tasks,
+            $table: $db.taskSubjects,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -8475,7 +8848,7 @@ class $$AreasTableTableManager
           Area,
           PrefetchHooks Function({
             bool userPlantsRefs,
-            bool tasksRefs,
+            bool taskSubjectsRefs,
             bool notesRefs,
           })
         > {
@@ -8541,12 +8914,16 @@ class $$AreasTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({userPlantsRefs = false, tasksRefs = false, notesRefs = false}) {
+              ({
+                userPlantsRefs = false,
+                taskSubjectsRefs = false,
+                notesRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (userPlantsRefs) db.userPlants,
-                    if (tasksRefs) db.tasks,
+                    if (taskSubjectsRefs) db.taskSubjects,
                     if (notesRefs) db.notes,
                   ],
                   addJoins: null,
@@ -8569,13 +8946,21 @@ class $$AreasTableTableManager
                               ),
                           typedResults: items,
                         ),
-                      if (tasksRefs)
-                        await $_getPrefetchedData<Area, $AreasTable, Task>(
+                      if (taskSubjectsRefs)
+                        await $_getPrefetchedData<
+                          Area,
+                          $AreasTable,
+                          TaskSubject
+                        >(
                           currentTable: table,
                           referencedTable: $$AreasTableReferences
-                              ._tasksRefsTable(db),
+                              ._taskSubjectsRefsTable(db),
                           managerFromTypedResult: (p0) =>
-                              $$AreasTableReferences(db, table, p0).tasksRefs,
+                              $$AreasTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).taskSubjectsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.areaId == item.id,
@@ -8617,7 +9002,7 @@ typedef $$AreasTableProcessedTableManager =
       Area,
       PrefetchHooks Function({
         bool userPlantsRefs,
-        bool tasksRefs,
+        bool taskSubjectsRefs,
         bool notesRefs,
       })
     >;
@@ -8625,7 +9010,7 @@ typedef $$UserPlantsTableCreateCompanionBuilder =
     UserPlantsCompanion Function({
       required String id,
       required String userId,
-      required String areaId,
+      Value<String?> areaId,
       Value<String?> plantId,
       Value<String?> customName,
       Value<String?> personalAlias,
@@ -8639,7 +9024,7 @@ typedef $$UserPlantsTableUpdateCompanionBuilder =
     UserPlantsCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<String> areaId,
+      Value<String?> areaId,
       Value<String?> plantId,
       Value<String?> customName,
       Value<String?> personalAlias,
@@ -8658,9 +9043,9 @@ final class $$UserPlantsTableReferences
     $_aliasNameGenerator(db.userPlants.areaId, db.areas.id),
   );
 
-  $$AreasTableProcessedTableManager get areaId {
-    final $_column = $_itemColumn<String>('area_id')!;
-
+  $$AreasTableProcessedTableManager? get areaId {
+    final $_column = $_itemColumn<String>('area_id');
+    if ($_column == null) return null;
     final manager = $$AreasTableTableManager(
       $_db,
       $_db.areas,
@@ -8690,20 +9075,22 @@ final class $$UserPlantsTableReferences
     );
   }
 
-  static MultiTypedResultKey<$TasksTable, List<Task>> _tasksRefsTable(
-    _$AppDatabase db,
-  ) => MultiTypedResultKey.fromTable(
-    db.tasks,
-    aliasName: $_aliasNameGenerator(db.userPlants.id, db.tasks.userPlantId),
+  static MultiTypedResultKey<$TaskSubjectsTable, List<TaskSubject>>
+  _taskSubjectsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.taskSubjects,
+    aliasName: $_aliasNameGenerator(
+      db.userPlants.id,
+      db.taskSubjects.userPlantId,
+    ),
   );
 
-  $$TasksTableProcessedTableManager get tasksRefs {
-    final manager = $$TasksTableTableManager(
+  $$TaskSubjectsTableProcessedTableManager get taskSubjectsRefs {
+    final manager = $$TaskSubjectsTableTableManager(
       $_db,
-      $_db.tasks,
+      $_db.taskSubjects,
     ).filter((f) => f.userPlantId.id.sqlEquals($_itemColumn<String>('id')!));
 
-    final cache = $_typedResult.readTableOrNull(_tasksRefsTable($_db));
+    final cache = $_typedResult.readTableOrNull(_taskSubjectsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -8824,22 +9211,22 @@ class $$UserPlantsTableFilterComposer
     return composer;
   }
 
-  Expression<bool> tasksRefs(
-    Expression<bool> Function($$TasksTableFilterComposer f) f,
+  Expression<bool> taskSubjectsRefs(
+    Expression<bool> Function($$TaskSubjectsTableFilterComposer f) f,
   ) {
-    final $$TasksTableFilterComposer composer = $composerBuilder(
+    final $$TaskSubjectsTableFilterComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.tasks,
+      referencedTable: $db.taskSubjects,
       getReferencedColumn: (t) => t.userPlantId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TasksTableFilterComposer(
+          }) => $$TaskSubjectsTableFilterComposer(
             $db: $db,
-            $table: $db.tasks,
+            $table: $db.taskSubjects,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9056,22 +9443,22 @@ class $$UserPlantsTableAnnotationComposer
     return composer;
   }
 
-  Expression<T> tasksRefs<T extends Object>(
-    Expression<T> Function($$TasksTableAnnotationComposer a) f,
+  Expression<T> taskSubjectsRefs<T extends Object>(
+    Expression<T> Function($$TaskSubjectsTableAnnotationComposer a) f,
   ) {
-    final $$TasksTableAnnotationComposer composer = $composerBuilder(
+    final $$TaskSubjectsTableAnnotationComposer composer = $composerBuilder(
       composer: this,
       getCurrentColumn: (t) => t.id,
-      referencedTable: $db.tasks,
+      referencedTable: $db.taskSubjects,
       getReferencedColumn: (t) => t.userPlantId,
       builder:
           (
             joinBuilder, {
             $addJoinBuilderToRootComposer,
             $removeJoinBuilderFromRootComposer,
-          }) => $$TasksTableAnnotationComposer(
+          }) => $$TaskSubjectsTableAnnotationComposer(
             $db: $db,
-            $table: $db.tasks,
+            $table: $db.taskSubjects,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9123,7 +9510,7 @@ class $$UserPlantsTableTableManager
           PrefetchHooks Function({
             bool areaId,
             bool plantId,
-            bool tasksRefs,
+            bool taskSubjectsRefs,
             bool notesRefs,
           })
         > {
@@ -9142,7 +9529,7 @@ class $$UserPlantsTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<String> areaId = const Value.absent(),
+                Value<String?> areaId = const Value.absent(),
                 Value<String?> plantId = const Value.absent(),
                 Value<String?> customName = const Value.absent(),
                 Value<String?> personalAlias = const Value.absent(),
@@ -9168,7 +9555,7 @@ class $$UserPlantsTableTableManager
               ({
                 required String id,
                 required String userId,
-                required String areaId,
+                Value<String?> areaId = const Value.absent(),
                 Value<String?> plantId = const Value.absent(),
                 Value<String?> customName = const Value.absent(),
                 Value<String?> personalAlias = const Value.absent(),
@@ -9202,13 +9589,13 @@ class $$UserPlantsTableTableManager
               ({
                 areaId = false,
                 plantId = false,
-                tasksRefs = false,
+                taskSubjectsRefs = false,
                 notesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
-                    if (tasksRefs) db.tasks,
+                    if (taskSubjectsRefs) db.taskSubjects,
                     if (notesRefs) db.notes,
                   ],
                   addJoins:
@@ -9260,21 +9647,21 @@ class $$UserPlantsTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
-                      if (tasksRefs)
+                      if (taskSubjectsRefs)
                         await $_getPrefetchedData<
                           UserPlant,
                           $UserPlantsTable,
-                          Task
+                          TaskSubject
                         >(
                           currentTable: table,
                           referencedTable: $$UserPlantsTableReferences
-                              ._tasksRefsTable(db),
+                              ._taskSubjectsRefsTable(db),
                           managerFromTypedResult: (p0) =>
                               $$UserPlantsTableReferences(
                                 db,
                                 table,
                                 p0,
-                              ).tasksRefs,
+                              ).taskSubjectsRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.userPlantId == item.id,
@@ -9325,7 +9712,7 @@ typedef $$UserPlantsTableProcessedTableManager =
       PrefetchHooks Function({
         bool areaId,
         bool plantId,
-        bool tasksRefs,
+        bool taskSubjectsRefs,
         bool notesRefs,
       })
     >;
@@ -9333,8 +9720,6 @@ typedef $$TasksTableCreateCompanionBuilder =
     TasksCompanion Function({
       required String id,
       required String userId,
-      required String areaId,
-      Value<String?> userPlantId,
       required String taskTypeId,
       required DateTime date,
       Value<TaskStatus> status,
@@ -9350,8 +9735,6 @@ typedef $$TasksTableUpdateCompanionBuilder =
     TasksCompanion Function({
       Value<String> id,
       Value<String> userId,
-      Value<String> areaId,
-      Value<String?> userPlantId,
       Value<String> taskTypeId,
       Value<DateTime> date,
       Value<TaskStatus> status,
@@ -9368,42 +9751,6 @@ final class $$TasksTableReferences
     extends BaseReferences<_$AppDatabase, $TasksTable, Task> {
   $$TasksTableReferences(super.$_db, super.$_table, super.$_typedResult);
 
-  static $AreasTable _areaIdTable(_$AppDatabase db) =>
-      db.areas.createAlias($_aliasNameGenerator(db.tasks.areaId, db.areas.id));
-
-  $$AreasTableProcessedTableManager get areaId {
-    final $_column = $_itemColumn<String>('area_id')!;
-
-    final manager = $$AreasTableTableManager(
-      $_db,
-      $_db.areas,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_areaIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
-  static $UserPlantsTable _userPlantIdTable(_$AppDatabase db) =>
-      db.userPlants.createAlias(
-        $_aliasNameGenerator(db.tasks.userPlantId, db.userPlants.id),
-      );
-
-  $$UserPlantsTableProcessedTableManager? get userPlantId {
-    final $_column = $_itemColumn<String>('user_plant_id');
-    if ($_column == null) return null;
-    final manager = $$UserPlantsTableTableManager(
-      $_db,
-      $_db.userPlants,
-    ).filter((f) => f.id.sqlEquals($_column));
-    final item = $_typedResult.readTableOrNull(_userPlantIdTable($_db));
-    if (item == null) return manager;
-    return ProcessedTableManager(
-      manager.$state.copyWith(prefetchedData: [item]),
-    );
-  }
-
   static $TaskTypesTable _taskTypeIdTable(_$AppDatabase db) => db.taskTypes
       .createAlias($_aliasNameGenerator(db.tasks.taskTypeId, db.taskTypes.id));
 
@@ -9418,6 +9765,24 @@ final class $$TasksTableReferences
     if (item == null) return manager;
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static MultiTypedResultKey<$TaskSubjectsTable, List<TaskSubject>>
+  _taskSubjectsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.taskSubjects,
+    aliasName: $_aliasNameGenerator(db.tasks.id, db.taskSubjects.taskId),
+  );
+
+  $$TaskSubjectsTableProcessedTableManager get taskSubjectsRefs {
+    final manager = $$TaskSubjectsTableTableManager(
+      $_db,
+      $_db.taskSubjects,
+    ).filter((f) => f.taskId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_taskSubjectsRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
     );
   }
 
@@ -9517,52 +9882,6 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
     builder: (column) => ColumnFilters(column),
   );
 
-  $$AreasTableFilterComposer get areaId {
-    final $$AreasTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.areaId,
-      referencedTable: $db.areas,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AreasTableFilterComposer(
-            $db: $db,
-            $table: $db.areas,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$UserPlantsTableFilterComposer get userPlantId {
-    final $$UserPlantsTableFilterComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userPlantId,
-      referencedTable: $db.userPlants,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$UserPlantsTableFilterComposer(
-            $db: $db,
-            $table: $db.userPlants,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
   $$TaskTypesTableFilterComposer get taskTypeId {
     final $$TaskTypesTableFilterComposer composer = $composerBuilder(
       composer: this,
@@ -9584,6 +9903,31 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
           ),
     );
     return composer;
+  }
+
+  Expression<bool> taskSubjectsRefs(
+    Expression<bool> Function($$TaskSubjectsTableFilterComposer f) f,
+  ) {
+    final $$TaskSubjectsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.taskSubjects,
+      getReferencedColumn: (t) => t.taskId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskSubjectsTableFilterComposer(
+            $db: $db,
+            $table: $db.taskSubjects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<bool> taskRemindersRefs(
@@ -9696,52 +10040,6 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
-  $$AreasTableOrderingComposer get areaId {
-    final $$AreasTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.areaId,
-      referencedTable: $db.areas,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AreasTableOrderingComposer(
-            $db: $db,
-            $table: $db.areas,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$UserPlantsTableOrderingComposer get userPlantId {
-    final $$UserPlantsTableOrderingComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userPlantId,
-      referencedTable: $db.userPlants,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$UserPlantsTableOrderingComposer(
-            $db: $db,
-            $table: $db.userPlants,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
   $$TaskTypesTableOrderingComposer get taskTypeId {
     final $$TaskTypesTableOrderingComposer composer = $composerBuilder(
       composer: this,
@@ -9809,52 +10107,6 @@ class $$TasksTableAnnotationComposer
     builder: (column) => column,
   );
 
-  $$AreasTableAnnotationComposer get areaId {
-    final $$AreasTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.areaId,
-      referencedTable: $db.areas,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$AreasTableAnnotationComposer(
-            $db: $db,
-            $table: $db.areas,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
-  $$UserPlantsTableAnnotationComposer get userPlantId {
-    final $$UserPlantsTableAnnotationComposer composer = $composerBuilder(
-      composer: this,
-      getCurrentColumn: (t) => t.userPlantId,
-      referencedTable: $db.userPlants,
-      getReferencedColumn: (t) => t.id,
-      builder:
-          (
-            joinBuilder, {
-            $addJoinBuilderToRootComposer,
-            $removeJoinBuilderFromRootComposer,
-          }) => $$UserPlantsTableAnnotationComposer(
-            $db: $db,
-            $table: $db.userPlants,
-            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
-            joinBuilder: joinBuilder,
-            $removeJoinBuilderFromRootComposer:
-                $removeJoinBuilderFromRootComposer,
-          ),
-    );
-    return composer;
-  }
-
   $$TaskTypesTableAnnotationComposer get taskTypeId {
     final $$TaskTypesTableAnnotationComposer composer = $composerBuilder(
       composer: this,
@@ -9876,6 +10128,31 @@ class $$TasksTableAnnotationComposer
           ),
     );
     return composer;
+  }
+
+  Expression<T> taskSubjectsRefs<T extends Object>(
+    Expression<T> Function($$TaskSubjectsTableAnnotationComposer a) f,
+  ) {
+    final $$TaskSubjectsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.taskSubjects,
+      getReferencedColumn: (t) => t.taskId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskSubjectsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.taskSubjects,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
   }
 
   Expression<T> taskRemindersRefs<T extends Object>(
@@ -9943,9 +10220,8 @@ class $$TasksTableTableManager
           (Task, $$TasksTableReferences),
           Task,
           PrefetchHooks Function({
-            bool areaId,
-            bool userPlantId,
             bool taskTypeId,
+            bool taskSubjectsRefs,
             bool taskRemindersRefs,
             bool taskSuppliesRefs,
           })
@@ -9965,8 +10241,6 @@ class $$TasksTableTableManager
               ({
                 Value<String> id = const Value.absent(),
                 Value<String> userId = const Value.absent(),
-                Value<String> areaId = const Value.absent(),
-                Value<String?> userPlantId = const Value.absent(),
                 Value<String> taskTypeId = const Value.absent(),
                 Value<DateTime> date = const Value.absent(),
                 Value<TaskStatus> status = const Value.absent(),
@@ -9980,8 +10254,6 @@ class $$TasksTableTableManager
               }) => TasksCompanion(
                 id: id,
                 userId: userId,
-                areaId: areaId,
-                userPlantId: userPlantId,
                 taskTypeId: taskTypeId,
                 date: date,
                 status: status,
@@ -9997,8 +10269,6 @@ class $$TasksTableTableManager
               ({
                 required String id,
                 required String userId,
-                required String areaId,
-                Value<String?> userPlantId = const Value.absent(),
                 required String taskTypeId,
                 required DateTime date,
                 Value<TaskStatus> status = const Value.absent(),
@@ -10012,8 +10282,6 @@ class $$TasksTableTableManager
               }) => TasksCompanion.insert(
                 id: id,
                 userId: userId,
-                areaId: areaId,
-                userPlantId: userPlantId,
                 taskTypeId: taskTypeId,
                 date: date,
                 status: status,
@@ -10033,15 +10301,15 @@ class $$TasksTableTableManager
               .toList(),
           prefetchHooksCallback:
               ({
-                areaId = false,
-                userPlantId = false,
                 taskTypeId = false,
+                taskSubjectsRefs = false,
                 taskRemindersRefs = false,
                 taskSuppliesRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
+                    if (taskSubjectsRefs) db.taskSubjects,
                     if (taskRemindersRefs) db.taskReminders,
                     if (taskSuppliesRefs) db.taskSupplies,
                   ],
@@ -10061,32 +10329,6 @@ class $$TasksTableTableManager
                           dynamic
                         >
                       >(state) {
-                        if (areaId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.areaId,
-                                    referencedTable: $$TasksTableReferences
-                                        ._areaIdTable(db),
-                                    referencedColumn: $$TasksTableReferences
-                                        ._areaIdTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
-                        if (userPlantId) {
-                          state =
-                              state.withJoin(
-                                    currentTable: table,
-                                    currentColumn: table.userPlantId,
-                                    referencedTable: $$TasksTableReferences
-                                        ._userPlantIdTable(db),
-                                    referencedColumn: $$TasksTableReferences
-                                        ._userPlantIdTable(db)
-                                        .id,
-                                  )
-                                  as T;
-                        }
                         if (taskTypeId) {
                           state =
                               state.withJoin(
@@ -10105,6 +10347,27 @@ class $$TasksTableTableManager
                       },
                   getPrefetchedDataCallback: (items) async {
                     return [
+                      if (taskSubjectsRefs)
+                        await $_getPrefetchedData<
+                          Task,
+                          $TasksTable,
+                          TaskSubject
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TasksTableReferences
+                              ._taskSubjectsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TasksTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).taskSubjectsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.taskId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                       if (taskRemindersRefs)
                         await $_getPrefetchedData<
                           Task,
@@ -10168,12 +10431,551 @@ typedef $$TasksTableProcessedTableManager =
       (Task, $$TasksTableReferences),
       Task,
       PrefetchHooks Function({
-        bool areaId,
-        bool userPlantId,
         bool taskTypeId,
+        bool taskSubjectsRefs,
         bool taskRemindersRefs,
         bool taskSuppliesRefs,
       })
+    >;
+typedef $$TaskSubjectsTableCreateCompanionBuilder =
+    TaskSubjectsCompanion Function({
+      required String id,
+      required String taskId,
+      Value<String?> userPlantId,
+      Value<String?> areaId,
+      required DateTime updatedAt,
+      Value<bool> deleted,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$TaskSubjectsTableUpdateCompanionBuilder =
+    TaskSubjectsCompanion Function({
+      Value<String> id,
+      Value<String> taskId,
+      Value<String?> userPlantId,
+      Value<String?> areaId,
+      Value<DateTime> updatedAt,
+      Value<bool> deleted,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+final class $$TaskSubjectsTableReferences
+    extends BaseReferences<_$AppDatabase, $TaskSubjectsTable, TaskSubject> {
+  $$TaskSubjectsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TasksTable _taskIdTable(_$AppDatabase db) => db.tasks.createAlias(
+    $_aliasNameGenerator(db.taskSubjects.taskId, db.tasks.id),
+  );
+
+  $$TasksTableProcessedTableManager get taskId {
+    final $_column = $_itemColumn<String>('task_id')!;
+
+    final manager = $$TasksTableTableManager(
+      $_db,
+      $_db.tasks,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_taskIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $UserPlantsTable _userPlantIdTable(_$AppDatabase db) =>
+      db.userPlants.createAlias(
+        $_aliasNameGenerator(db.taskSubjects.userPlantId, db.userPlants.id),
+      );
+
+  $$UserPlantsTableProcessedTableManager? get userPlantId {
+    final $_column = $_itemColumn<String>('user_plant_id');
+    if ($_column == null) return null;
+    final manager = $$UserPlantsTableTableManager(
+      $_db,
+      $_db.userPlants,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userPlantIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AreasTable _areaIdTable(_$AppDatabase db) => db.areas.createAlias(
+    $_aliasNameGenerator(db.taskSubjects.areaId, db.areas.id),
+  );
+
+  $$AreasTableProcessedTableManager? get areaId {
+    final $_column = $_itemColumn<String>('area_id');
+    if ($_column == null) return null;
+    final manager = $$AreasTableTableManager(
+      $_db,
+      $_db.areas,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_areaIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$TaskSubjectsTableFilterComposer
+    extends Composer<_$AppDatabase, $TaskSubjectsTable> {
+  $$TaskSubjectsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TasksTableFilterComposer get taskId {
+    final $$TasksTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableFilterComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableFilterComposer get userPlantId {
+    final $$UserPlantsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableFilterComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableFilterComposer get areaId {
+    final $$AreasTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableFilterComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TaskSubjectsTableOrderingComposer
+    extends Composer<_$AppDatabase, $TaskSubjectsTable> {
+  $$TaskSubjectsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TasksTableOrderingComposer get taskId {
+    final $$TasksTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableOrderingComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableOrderingComposer get userPlantId {
+    final $$UserPlantsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableOrderingComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableOrderingComposer get areaId {
+    final $$AreasTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableOrderingComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TaskSubjectsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $TaskSubjectsTable> {
+  $$TaskSubjectsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get deleted =>
+      $composableBuilder(column: $table.deleted, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  $$TasksTableAnnotationComposer get taskId {
+    final $$TasksTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskId,
+      referencedTable: $db.tasks,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TasksTableAnnotationComposer(
+            $db: $db,
+            $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableAnnotationComposer get userPlantId {
+    final $$UserPlantsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableAnnotationComposer get areaId {
+    final $$AreasTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableAnnotationComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$TaskSubjectsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $TaskSubjectsTable,
+          TaskSubject,
+          $$TaskSubjectsTableFilterComposer,
+          $$TaskSubjectsTableOrderingComposer,
+          $$TaskSubjectsTableAnnotationComposer,
+          $$TaskSubjectsTableCreateCompanionBuilder,
+          $$TaskSubjectsTableUpdateCompanionBuilder,
+          (TaskSubject, $$TaskSubjectsTableReferences),
+          TaskSubject,
+          PrefetchHooks Function({bool taskId, bool userPlantId, bool areaId})
+        > {
+  $$TaskSubjectsTableTableManager(_$AppDatabase db, $TaskSubjectsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$TaskSubjectsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$TaskSubjectsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$TaskSubjectsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> taskId = const Value.absent(),
+                Value<String?> userPlantId = const Value.absent(),
+                Value<String?> areaId = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TaskSubjectsCompanion(
+                id: id,
+                taskId: taskId,
+                userPlantId: userPlantId,
+                areaId: areaId,
+                updatedAt: updatedAt,
+                deleted: deleted,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String taskId,
+                Value<String?> userPlantId = const Value.absent(),
+                Value<String?> areaId = const Value.absent(),
+                required DateTime updatedAt,
+                Value<bool> deleted = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => TaskSubjectsCompanion.insert(
+                id: id,
+                taskId: taskId,
+                userPlantId: userPlantId,
+                areaId: areaId,
+                updatedAt: updatedAt,
+                deleted: deleted,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$TaskSubjectsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({taskId = false, userPlantId = false, areaId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (taskId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.taskId,
+                                    referencedTable:
+                                        $$TaskSubjectsTableReferences
+                                            ._taskIdTable(db),
+                                    referencedColumn:
+                                        $$TaskSubjectsTableReferences
+                                            ._taskIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (userPlantId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.userPlantId,
+                                    referencedTable:
+                                        $$TaskSubjectsTableReferences
+                                            ._userPlantIdTable(db),
+                                    referencedColumn:
+                                        $$TaskSubjectsTableReferences
+                                            ._userPlantIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (areaId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.areaId,
+                                    referencedTable:
+                                        $$TaskSubjectsTableReferences
+                                            ._areaIdTable(db),
+                                    referencedColumn:
+                                        $$TaskSubjectsTableReferences
+                                            ._areaIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$TaskSubjectsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $TaskSubjectsTable,
+      TaskSubject,
+      $$TaskSubjectsTableFilterComposer,
+      $$TaskSubjectsTableOrderingComposer,
+      $$TaskSubjectsTableAnnotationComposer,
+      $$TaskSubjectsTableCreateCompanionBuilder,
+      $$TaskSubjectsTableUpdateCompanionBuilder,
+      (TaskSubject, $$TaskSubjectsTableReferences),
+      TaskSubject,
+      PrefetchHooks Function({bool taskId, bool userPlantId, bool areaId})
     >;
 typedef $$TaskRemindersTableCreateCompanionBuilder =
     TaskRemindersCompanion Function({
@@ -12156,6 +12958,8 @@ class $AppDatabaseManager {
       $$UserPlantsTableTableManager(_db, _db.userPlants);
   $$TasksTableTableManager get tasks =>
       $$TasksTableTableManager(_db, _db.tasks);
+  $$TaskSubjectsTableTableManager get taskSubjects =>
+      $$TaskSubjectsTableTableManager(_db, _db.taskSubjects);
   $$TaskRemindersTableTableManager get taskReminders =>
       $$TaskRemindersTableTableManager(_db, _db.taskReminders);
   $$NotesTableTableManager get notes =>

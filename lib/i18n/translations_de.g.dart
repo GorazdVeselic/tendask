@@ -184,6 +184,7 @@ class _Translations$task_detail$de extends Translations$task_detail$sl {
 	@override String get weather_placeholder => 'Wetteraufnahme wird in M4 verfügbar sein.';
 	@override String get section_details => 'Details';
 	@override String get label_area => 'Bereich';
+	@override String get label_subjects => 'Wofür';
 	@override String get label_plant => 'Pflanze';
 	@override String get label_supplies => 'Mittel';
 	@override String get label_reminder => 'Erinnerung';
@@ -462,6 +463,7 @@ extension on TranslationsDe {
 			'task_detail.weather_placeholder' => 'Wetteraufnahme wird in M4 verfügbar sein.',
 			'task_detail.section_details' => 'Details',
 			'task_detail.label_area' => 'Bereich',
+			'task_detail.label_subjects' => 'Wofür',
 			'task_detail.label_plant' => 'Pflanze',
 			'task_detail.label_supplies' => 'Mittel',
 			'task_detail.label_reminder' => 'Erinnerung',

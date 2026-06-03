@@ -7,6 +7,7 @@ import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
+import 'package:tendask/features/plants/application/plants_providers.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
@@ -56,6 +57,11 @@ void main() {
                 .overrideWith((ref) async => <String, TaskType>{}),
             areasMapProvider
                 .overrideWith((ref) => Stream.value(<String, Area>{})),
+            allTaskSubjectsProvider
+                .overrideWith((ref) => Stream.value(<TaskSubject>[])),
+            userPlantsMapProvider
+                .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
+            plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
           ],
           child: MaterialApp.router(routerConfig: router),
         ),

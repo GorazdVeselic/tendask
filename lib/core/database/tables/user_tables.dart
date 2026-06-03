@@ -52,7 +52,8 @@ class UserPlants extends Table {
 
   TextColumn get id => text()();
   TextColumn get userId => text()();
-  TextColumn get areaId => text().references(Areas, #id)();
+  // Nullable: a plant may have no named area (e.g. a pot on the terrace).
+  TextColumn get areaId => text().nullable().references(Areas, #id)();
   // Null when is_custom = true (no catalog match)
   TextColumn get plantId =>
       text().nullable().references(Plants, #id)();
@@ -75,9 +76,7 @@ class Tasks extends Table {
 
   TextColumn get id => text()();
   TextColumn get userId => text()();
-  TextColumn get areaId => text().references(Areas, #id)();
-  TextColumn get userPlantId =>
-      text().nullable().references(UserPlants, #id)();
+  // Subjects (plants/areas) live in TaskSubjects — task is M:N with subjects.
   TextColumn get taskTypeId => text().references(TaskTypes, #id)();
   DateTimeColumn get date => dateTime()();
   TextColumn get status =>
@@ -94,6 +93,32 @@ class Tasks extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+}
+
+/// M:N link between a task and its subjects (a plant OR an area-as-subject).
+/// One row per subject; CHECK guarantees at least one of the two FKs is set.
+class TaskSubjects extends Table {
+  @override
+  String get tableName => 'task_subject';
+
+  TextColumn get id => text()();
+  TextColumn get taskId => text().references(Tasks, #id)();
+  // Subject = plant (user_plant_id) OR area-as-subject (area_id); never neither.
+  TextColumn get userPlantId =>
+      text().nullable().references(UserPlants, #id)();
+  TextColumn get areaId => text().nullable().references(Areas, #id)();
+  DateTimeColumn get updatedAt => dateTime()();
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
+  TextColumn get syncStatus =>
+      text().withDefault(const Constant('pending'))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+
+  @override
+  List<String> get customConstraints => [
+        'CHECK (user_plant_id IS NOT NULL OR area_id IS NOT NULL)',
+      ];
 }
 
 class TaskReminders extends Table {

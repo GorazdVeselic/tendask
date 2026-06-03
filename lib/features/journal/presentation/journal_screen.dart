@@ -8,7 +8,9 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../features/areas/application/areas_providers.dart';
+import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
+import '../../../features/tasks/presentation/subject_labels.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/notes_providers.dart';
 import 'journal_entry.dart';
@@ -38,6 +40,13 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
     final notes = ref.watch(notesProvider).asData?.value;
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
     final areas = ref.watch(areasMapProvider).asData?.value;
+
+    final subjectLabels = subjectLabelsByTask(
+      ref.watch(allTaskSubjectsProvider).asData?.value ?? const [],
+      areas: areas ?? const {},
+      userPlants: ref.watch(userPlantsMapProvider).asData?.value ?? const {},
+      plants: ref.watch(plantsMapProvider).asData?.value ?? const {},
+    );
 
     return Scaffold(
       appBar: AppBar(
@@ -95,6 +104,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         notes: notes,
                         catalog: catalog,
                         areas: areas,
+                        subjectLabels: subjectLabels,
                         filter: _filter,
                         t: t,
                         theme: theme,
@@ -196,6 +206,7 @@ class _JournalList extends StatelessWidget {
     required this.notes,
     required this.catalog,
     required this.areas,
+    required this.subjectLabels,
     required this.filter,
     required this.t,
     required this.theme,
@@ -205,6 +216,7 @@ class _JournalList extends StatelessWidget {
   final List<Note> notes;
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
+  final Map<String, String> subjectLabels;
   final _Filter filter;
   final Translations t;
   final ThemeData theme;
@@ -237,6 +249,7 @@ class _JournalList extends StatelessWidget {
         entries: groups[i].entries,
         catalog: catalog,
         areas: areas,
+        subjectLabels: subjectLabels,
         t: t,
         theme: theme,
       ),
@@ -271,6 +284,7 @@ class _DayGroup extends StatelessWidget {
     required this.entries,
     required this.catalog,
     required this.areas,
+    required this.subjectLabels,
     required this.t,
     required this.theme,
   });
@@ -279,6 +293,7 @@ class _DayGroup extends StatelessWidget {
   final List<JournalEntry> entries;
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
+  final Map<String, String> subjectLabels;
   final Translations t;
   final ThemeData theme;
 
@@ -305,7 +320,7 @@ class _DayGroup extends StatelessWidget {
                     TaskJournalEntry(:final task) => _TaskEntry(
                         task: task,
                         taskType: catalog[task.taskTypeId],
-                        area: areas[task.areaId],
+                        subjectLabel: subjectLabels[task.id],
                         theme: theme,
                       ),
                     NoteJournalEntry(:final note) => _NoteEntry(
@@ -361,13 +376,13 @@ class _TaskEntry extends StatelessWidget {
   const _TaskEntry({
     required this.task,
     required this.taskType,
-    required this.area,
+    required this.subjectLabel,
     required this.theme,
   });
 
   final Task task;
   final TaskType? taskType;
-  final Area? area;
+  final String? subjectLabel;
   final ThemeData theme;
 
   @override
@@ -383,8 +398,8 @@ class _TaskEntry extends StatelessWidget {
         child: Text(icon, style: const TextStyle(fontSize: 18)),
       ),
       title: Text(label, style: theme.textTheme.bodyMedium),
-      subtitle: area != null
-          ? Text('🪴 ${area!.name}',
+      subtitle: (subjectLabel != null && subjectLabel!.isNotEmpty)
+          ? Text('🪴 $subjectLabel',
               style: theme.textTheme.bodySmall
                   ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
           : null,

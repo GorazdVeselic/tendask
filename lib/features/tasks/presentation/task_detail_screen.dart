@@ -12,11 +12,11 @@ import '../../../core/task_status.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
-import '../../plants/presentation/plant_display.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
+import 'subject_labels.dart';
 import 'widgets/confirm_delete_dialog.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
@@ -66,20 +66,22 @@ class TaskDetailScreen extends ConsumerWidget {
           }
 
           final taskType = catalog[task.taskTypeId];
-          final area = areas[task.areaId];
           final isWaiting = task.status == TaskStatus.waiting;
 
-          // Resolve the linked plant name (null when the task has no subject).
+          // Resolve the task's subjects (plants and/or areas) into one label.
+          final subjects =
+              ref.watch(taskSubjectsForTaskProvider(task.id)).asData?.value ??
+                  const [];
+          final userPlants =
+              ref.watch(userPlantsMapProvider).asData?.value ?? const {};
           final plantsCatalog =
               ref.watch(plantsMapProvider).asData?.value ?? const {};
-          final areaPlants =
-              ref.watch(userPlantsByAreaProvider(task.areaId)).asData?.value ??
-                  const [];
-          final matches =
-              areaPlants.where((p) => p.id == task.userPlantId);
-          final plantLabel = matches.isEmpty
-              ? null
-              : userPlantLabel(matches.first, plantsCatalog);
+          final subjectsLabel = subjectLabelsByTask(
+            subjects,
+            areas: areas,
+            userPlants: userPlants,
+            plants: plantsCatalog,
+          )[task.id];
 
           // Consumed supplies, e.g. "Urea 1kg, NPK 0.5kg".
           final taskSupplies =
@@ -112,7 +114,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       _HeroBlock(
                         task: task,
                         taskType: taskType,
-                        area: area,
+                        subjectLabel: subjectsLabel,
                         t: t,
                         theme: theme,
                       ),
@@ -123,8 +125,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       _SectionTitle(t.task_detail.section_details, theme: theme),
                       _DetailsCard(
                           task: task,
-                          area: area,
-                          plantLabel: plantLabel,
+                          subjectLabel: subjectsLabel,
                           suppliesLabel: suppliesLabel,
                           t: t,
                           theme: theme),
@@ -247,14 +248,14 @@ class _HeroBlock extends StatelessWidget {
   const _HeroBlock({
     required this.task,
     required this.taskType,
-    required this.area,
+    required this.subjectLabel,
     required this.t,
     required this.theme,
   });
 
   final Task task;
   final TaskType? taskType;
-  final Area? area;
+  final String? subjectLabel;
   final Translations t;
   final ThemeData theme;
 
@@ -289,9 +290,9 @@ class _HeroBlock extends StatelessWidget {
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w800),
               ),
-              if (area != null)
+              if (subjectLabel != null && subjectLabel!.isNotEmpty)
                 Text(
-                  '🪴 ${area!.name}',
+                  '🪴 $subjectLabel',
                   style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant),
                 ),
@@ -403,16 +404,14 @@ class _WeatherPlaceholder extends StatelessWidget {
 class _DetailsCard extends StatelessWidget {
   const _DetailsCard({
     required this.task,
-    required this.area,
-    required this.plantLabel,
+    required this.subjectLabel,
     required this.suppliesLabel,
     required this.t,
     required this.theme,
   });
 
   final Task task;
-  final Area? area;
-  final String? plantLabel;
+  final String? subjectLabel;
   final String? suppliesLabel;
   final Translations t;
   final ThemeData theme;
@@ -426,8 +425,7 @@ class _DetailsCard extends StatelessWidget {
     };
 
     final rows = [
-      (t.task_detail.label_area, area?.name ?? t.task_detail.none),
-      (t.task_detail.label_plant, plantLabel ?? t.task_detail.none),
+      (t.task_detail.label_subjects, subjectLabel ?? t.task_detail.none),
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, t.task_detail.none), // M8
       (t.task_detail.label_recurrence, recurrenceLabel),

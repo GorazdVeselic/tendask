@@ -184,6 +184,7 @@ class _Translations$task_detail$en extends Translations$task_detail$sl {
 	@override String get weather_placeholder => 'Weather snapshot will be available in M4.';
 	@override String get section_details => 'Details';
 	@override String get label_area => 'Area';
+	@override String get label_subjects => 'For';
 	@override String get label_plant => 'Plant';
 	@override String get label_supplies => 'Supplies';
 	@override String get label_reminder => 'Reminder';
@@ -462,6 +463,7 @@ extension on TranslationsEn {
 			'task_detail.weather_placeholder' => 'Weather snapshot will be available in M4.',
 			'task_detail.section_details' => 'Details',
 			'task_detail.label_area' => 'Area',
+			'task_detail.label_subjects' => 'For',
 			'task_detail.label_plant' => 'Plant',
 			'task_detail.label_supplies' => 'Supplies',
 			'task_detail.label_reminder' => 'Reminder',

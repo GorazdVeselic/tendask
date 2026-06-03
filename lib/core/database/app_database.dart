@@ -23,6 +23,7 @@ part 'app_database.g.dart';
   Areas,
   UserPlants,
   Tasks,
+  TaskSubjects,
   TaskReminders,
   Notes,
   Supplies,
@@ -36,7 +37,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 2;
+  int get schemaVersion => 3;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -45,6 +46,18 @@ class AppDatabase extends _$AppDatabase {
           // v2: track whether a task_supply consumption was booked into stock.
           if (from < 2) {
             await m.addColumn(taskSupplies, taskSupplies.applied);
+          }
+          // v3: subjects move to task_subject (M:N). Create the table, copy each
+          // task's old area/plant into it, then drop the old columns from task.
+          if (from < 3) {
+            await m.createTable(taskSubjects);
+            await customStatement(
+              "INSERT INTO task_subject (id, task_id, user_plant_id, area_id, "
+              "updated_at, deleted, sync_status) "
+              "SELECT lower(hex(randomblob(16))), id, user_plant_id, area_id, "
+              "updated_at, 0, 'pending' FROM task",
+            );
+            await m.alterTable(TableMigration(tasks));
           }
         },
       );

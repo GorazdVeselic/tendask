@@ -318,6 +318,9 @@ class Translations$task_detail$sl {
 	/// sl: 'Območje'
 	String get label_area => 'Območje';
 
+	/// sl: 'Za kaj'
+	String get label_subjects => 'Za kaj';
+
 	/// sl: 'Rastlina'
 	String get label_plant => 'Rastlina';
 
@@ -885,6 +888,7 @@ extension on Translations {
 			'task_detail.weather_placeholder' => 'Vremenski posnetek bo na voljo v M4.',
 			'task_detail.section_details' => 'Podrobnosti',
 			'task_detail.label_area' => 'Območje',
+			'task_detail.label_subjects' => 'Za kaj',
 			'task_detail.label_plant' => 'Rastlina',
 			'task_detail.label_supplies' => 'Sredstva',
 			'task_detail.label_reminder' => 'Opomnik',

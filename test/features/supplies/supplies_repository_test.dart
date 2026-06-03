@@ -42,7 +42,10 @@ void main() {
     ureaId = await supplies.create(
         userId: userId, name: 'Urea', unit: 'kg', quantity: 5);
     taskId = await tasks.create(
-        userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0);
+        userId: userId,
+        taskTypeId: 'mow',
+        date: t0,
+        subjects: const [TaskSubjectSpec.area(areaId)]);
   });
 
   tearDown(() async => db.close());

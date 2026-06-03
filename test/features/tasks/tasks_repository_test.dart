@@ -49,7 +49,7 @@ void main() {
     test('returns a new UUID and task has correct defaults', () async {
       final id = await repo.create(
         userId: userId,
-        areaId: areaId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
         taskTypeId: 'mow',
         date: t0,
       );
@@ -57,23 +57,26 @@ void main() {
       final task = await repo.byId(id);
       expect(task, isNotNull);
       expect(task!.userId, userId);
-      expect(task.areaId, areaId);
       expect(task.status, TaskStatus.waiting);
       expect(task.deleted, false);
       expect(task.syncStatus, 'pending');
       expect(task.updatedAt.toUtc(), t0);
+
+      final subjects = await repo.subjectsForTask(id);
+      expect(subjects, hasLength(1));
+      expect(subjects.first.areaId, areaId);
     });
 
     test('two creates produce distinct IDs', () async {
       final id1 = await repo.create(
         userId: userId,
-        areaId: areaId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
         taskTypeId: 'mow',
         date: t0,
       );
       final id2 = await repo.create(
         userId: userId,
-        areaId: areaId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
         taskTypeId: 'mow',
         date: t0,
       );
@@ -84,14 +87,14 @@ void main() {
   group('TasksRepository.watchPending', () {
     test('only returns non-deleted waiting tasks', () async {
       final id1 = await repo.create(
-          userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0);
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
       final id2 = await repo.create(
-          userId: userId, areaId: areaId, taskTypeId: 'water', date: t0);
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
 
       await repo.complete(id2);
       await repo.softDelete(
           await repo.create(
-              userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0));
+              userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0));
 
       final pending = await repo.watchPending().first;
       expect(pending.length, 1);
@@ -102,7 +105,7 @@ void main() {
   group('TasksRepository.complete', () {
     test('sets status=done, updates updatedAt and syncStatus', () async {
       final id = await repo.create(
-          userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0);
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
 
       clock.advance(const Duration(minutes: 5));
       await repo.complete(id);
@@ -117,7 +120,7 @@ void main() {
   group('TasksRepository.softDelete', () {
     test('sets deleted=true and task disappears from watchPending', () async {
       final id = await repo.create(
-          userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0);
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
 
       await repo.softDelete(id);
 
@@ -132,7 +135,7 @@ void main() {
   group('TasksRepository.postponeOneDay', () {
     test('advances date by exactly 1 day', () async {
       final id = await repo.create(
-          userId: userId, areaId: areaId, taskTypeId: 'mow', date: t0);
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
 
       await repo.postponeOneDay(id);
 
@@ -145,7 +148,7 @@ void main() {
     test('creates a copy with a new ID and status=waiting', () async {
       final id = await repo.create(
         userId: userId,
-        areaId: areaId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
         taskTypeId: 'mow',
         date: t0,
         note: 'test note',
@@ -158,8 +161,10 @@ void main() {
       final copy = await repo.byId(newId);
       expect(copy!.status, TaskStatus.waiting);
       expect(copy.note, 'test note');
-      expect(copy.areaId, areaId);
       expect(copy.taskTypeId, 'mow');
+
+      final copySubjects = await repo.subjectsForTask(newId);
+      expect(copySubjects.single.areaId, areaId);
     });
   });
 }

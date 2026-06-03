@@ -11,6 +11,7 @@ import '../../../core/widgets/save_bar.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/tasks_providers.dart';
+import '../data/tasks_repository.dart';
 import 'widgets/task_type_tile.dart';
 
 enum _DateOption { today, yesterday, custom }
@@ -84,11 +85,11 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
       await ref.read(tasksRepositoryProvider).create(
             // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
             userId: 'local',
-            areaId: _areaId!,
             taskTypeId: _taskTypeId!,
             date: _selectedDate,
             status: _status,
             note: note.isEmpty ? null : note,
+            subjects: [TaskSubjectSpec.area(_areaId!)],
           );
       if (mounted) context.pop();
     } finally {

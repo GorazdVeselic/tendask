@@ -12,6 +12,7 @@ import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
+import 'package:tendask/features/plants/application/plants_providers.dart';
 import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
@@ -127,7 +128,8 @@ void main() {
       final rows = await (db.select(db.tasks)).get();
       expect(rows, hasLength(1));
       expect(rows.first.taskTypeId, 'mow');
-      expect(rows.first.areaId, _areaId);
+      final subs = await (db.select(db.taskSubjects)).get();
+      expect(subs.single.areaId, _areaId);
     });
   });
 
@@ -141,9 +143,9 @@ void main() {
       final repo = TasksRepository(db, SuppliesRepository(db));
       final taskId = await repo.create(
         userId: 'local',
-        areaId: _areaId,
         taskTypeId: 'mow',
         date: _past,
+        subjects: const [TaskSubjectSpec.area(_areaId)],
       );
 
       // Query once for static provider overrides.
@@ -190,6 +192,25 @@ void main() {
               ),
               completedTasksProvider.overrideWith(
                 (ref) => Stream.value(<Task>[]),
+              ),
+              // Subject label plumbing — kept static so the test stays hermetic.
+              allTaskSubjectsProvider.overrideWith(
+                (ref) => Stream.value([
+                  TaskSubject(
+                    id: 'ts1',
+                    taskId: taskId,
+                    areaId: _areaId,
+                    updatedAt: _past,
+                    deleted: false,
+                    syncStatus: 'pending',
+                  ),
+                ]),
+              ),
+              userPlantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, UserPlant>{}),
+              ),
+              plantsMapProvider.overrideWith(
+                (ref) async => <String, Plant>{},
               ),
             ],
             child: MaterialApp.router(routerConfig: router),

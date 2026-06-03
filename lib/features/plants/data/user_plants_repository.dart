@@ -18,10 +18,19 @@ class UserPlantsRepository {
           ..orderBy([(p) => OrderingTerm.asc(p.id)])
       ).watch();
 
+  /// Every non-deleted plant — for resolving plant labels across the app.
+  Stream<List<UserPlant>> watchAll() => (
+        _db.select(_db.userPlants)..where((p) => p.deleted.equals(false))
+      ).watch();
+
   Future<List<UserPlant>> byArea(String areaId) => (
         _db.select(_db.userPlants)
           ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
       ).get();
+
+  Future<UserPlant?> byId(String id) => (
+        _db.select(_db.userPlants)..where((p) => p.id.equals(id))
+      ).getSingleOrNull();
 
   /// Creates one plant for an area and returns its id (task-form picker flow).
   Future<String> createForArea({
@@ -35,7 +44,7 @@ class UserPlantsRepository {
     await _db.into(_db.userPlants).insert(UserPlantsCompanion.insert(
           id: id,
           userId: userId,
-          areaId: areaId,
+          areaId: Value(areaId),
           plantId: Value(plantId),
           customName: Value(customName),
           personalAlias: Value(personalAlias),

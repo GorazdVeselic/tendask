@@ -17,3 +17,12 @@ final userPlantsByAreaProvider =
     StreamProvider.autoDispose.family<List<UserPlant>, String>((ref, areaId) {
   return ref.watch(userPlantsRepositoryProvider).watchByArea(areaId);
 });
+
+/// All user plants keyed by id — for resolving plant subject labels.
+final userPlantsMapProvider =
+    StreamProvider.autoDispose<Map<String, UserPlant>>((ref) {
+  return ref
+      .watch(userPlantsRepositoryProvider)
+      .watchAll()
+      .map((list) => {for (final p in list) p.id: p});
+});
