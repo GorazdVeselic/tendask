@@ -32,6 +32,10 @@ class UserPlantsRepository {
         _db.select(_db.userPlants)..where((p) => p.id.equals(id))
       ).getSingleOrNull();
 
+  Stream<UserPlant?> watchById(String id) => (
+        _db.select(_db.userPlants)..where((p) => p.id.equals(id))
+      ).watchSingleOrNull();
+
   /// Creates one plant for an area and returns its id (task-form picker flow).
   Future<String> createForArea({
     required String userId,

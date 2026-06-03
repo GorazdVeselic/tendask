@@ -45,3 +45,9 @@ final taskSubjectsForTaskProvider =
     StreamProvider.autoDispose.family<List<TaskSubject>, String>((ref, id) {
   return ref.watch(tasksRepositoryProvider).watchSubjectsForTask(id);
 });
+
+/// Task history for one plant instance — for the plant detail screen.
+final tasksByPlantProvider =
+    StreamProvider.autoDispose.family<List<Task>, String>((ref, userPlantId) {
+  return ref.watch(tasksRepositoryProvider).watchByPlant(userPlantId);
+});

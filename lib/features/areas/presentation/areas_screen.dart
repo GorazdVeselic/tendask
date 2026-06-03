@@ -9,6 +9,8 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../i18n/translations.g.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../plants/presentation/plant_display.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
 
@@ -23,6 +25,13 @@ class AreasScreen extends ConsumerWidget {
     final areas = ref.watch(areasListProvider).asData?.value;
     final latest = ref.watch(latestTaskPerAreaProvider).asData?.value;
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
+    final userPlants = ref.watch(userPlantsMapProvider).asData?.value;
+    final plantCatalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
+
+    final plantsByArea = <String, List<UserPlant>>{};
+    for (final p in userPlants?.values ?? const <UserPlant>[]) {
+      if (p.areaId != null) (plantsByArea[p.areaId!] ??= []).add(p);
+    }
 
     return Scaffold(
       appBar: AppBar(
@@ -55,6 +64,8 @@ class AreasScreen extends ConsumerWidget {
               areas: areas,
               latest: latest ?? const {},
               catalog: catalog,
+              plantsByArea: plantsByArea,
+              plantCatalog: plantCatalog,
               t: t,
               theme: theme,
             ),
@@ -69,6 +80,8 @@ class _AreasList extends StatelessWidget {
     required this.areas,
     required this.latest,
     required this.catalog,
+    required this.plantsByArea,
+    required this.plantCatalog,
     required this.t,
     required this.theme,
   });
@@ -76,6 +89,8 @@ class _AreasList extends StatelessWidget {
   final List<Area> areas;
   final Map<String, Task> latest;
   final Map<String, TaskType> catalog;
+  final Map<String, List<UserPlant>> plantsByArea;
+  final Map<String, Plant> plantCatalog;
   final Translations t;
   final ThemeData theme;
 
@@ -83,13 +98,16 @@ class _AreasList extends StatelessWidget {
   Widget build(BuildContext context) {
     if (areas.isEmpty) return EmptyState(t.areas.empty);
 
-    // Flat list: AreaType (section header) or Area (row), only non-empty types.
+    // Flat list: AreaType (section header), Area (row), then its UserPlant rows.
     final items = <Object>[];
     for (final type in AreaType.values) {
       final inType = areas.where((a) => a.type == type).toList();
       if (inType.isEmpty) continue;
       items.add(type);
-      items.addAll(inType);
+      for (final area in inType) {
+        items.add(area);
+        items.addAll(plantsByArea[area.id] ?? const []);
+      }
     }
 
     return ListView.builder(
@@ -100,6 +118,13 @@ class _AreasList extends StatelessWidget {
         if (item is AreaType) {
           return _SectionHeader(label: areaTypeLabel(item, t), theme: theme);
         }
+        if (item is UserPlant) {
+          return _PlantRow(
+            plant: item,
+            catalog: plantCatalog,
+            theme: theme,
+          );
+        }
         final area = item as Area;
         return _AreaRow(
           area: area,
@@ -109,6 +134,38 @@ class _AreasList extends StatelessWidget {
           theme: theme,
         );
       },
+    );
+  }
+}
+
+// ─── Plant row (under its area) ───────────────────────────────────────────────
+
+class _PlantRow extends StatelessWidget {
+  const _PlantRow({
+    required this.plant,
+    required this.catalog,
+    required this.theme,
+  });
+
+  final UserPlant plant;
+  final Map<String, Plant> catalog;
+  final ThemeData theme;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(left: 28, right: 16),
+      child: ListTile(
+        dense: true,
+        leading: Text(userPlantIcon(plant, catalog),
+            style: const TextStyle(fontSize: 20)),
+        title: Text(userPlantLabel(plant, catalog),
+            style: theme.textTheme.bodyMedium),
+        trailing: Icon(Icons.chevron_right,
+            color: theme.colorScheme.onSurfaceVariant, size: 20),
+        onTap: () =>
+            context.pushNamed('plant-detail', pathParameters: {'id': plant.id}),
+      ),
     );
   }
 }

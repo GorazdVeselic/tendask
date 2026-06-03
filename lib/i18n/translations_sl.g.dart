@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
+	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
 	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
@@ -69,8 +70,8 @@ class Translations$nav$sl {
 	/// sl: 'Dnevnik'
 	String get journal => 'Dnevnik';
 
-	/// sl: 'Območja'
-	String get areas => 'Območja';
+	/// sl: 'Vrt'
+	String get areas => 'Vrt';
 
 	/// sl: 'Opravila'
 	String get tasks => 'Opravila';
@@ -547,6 +548,24 @@ class Translations$task_form$sl {
 	String get err_area => 'Izberi območje.';
 }
 
+// Path: plant_detail
+class Translations$plant_detail$sl {
+	Translations$plant_detail$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Rastlina ni bila najdena.'
+	String get not_found => 'Rastlina ni bila najdena.';
+
+	/// sl: 'Zgodovina opravil'
+	String get history_title => 'Zgodovina opravil';
+
+	/// sl: 'Za to rastlino še ni opravil.'
+	String get history_empty => 'Za to rastlino še ni opravil.';
+}
+
 // Path: areas
 class Translations$areas$sl {
 	Translations$areas$sl.internal(this._root);
@@ -555,11 +574,11 @@ class Translations$areas$sl {
 
 	// Translations
 
-	/// sl: 'Območja'
-	String get title => 'Območja';
+	/// sl: 'Vrt'
+	String get title => 'Vrt';
 
-	/// sl: 'moja posest'
-	String get subtitle => 'moja posest';
+	/// sl: 'rastline in trate'
+	String get subtitle => 'rastline in trate';
 
 	/// sl: 'Ni območij. Dodaj prvo z +.'
 	String get empty => 'Ni območij. Dodaj prvo z +.';
@@ -824,7 +843,7 @@ extension on Translations {
 		return switch (path) {
 			'nav.home' => 'Domov',
 			'nav.journal' => 'Dnevnik',
-			'nav.areas' => 'Območja',
+			'nav.areas' => 'Vrt',
 			'nav.tasks' => 'Opravila',
 			'home.greeting' => 'Dober dan 🌿',
 			'home.today' => 'Danes',
@@ -957,8 +976,11 @@ extension on Translations {
 			'task_form.save' => 'Shrani opravilo',
 			'task_form.err_type' => 'Izberi vrsto opravila.',
 			'task_form.err_area' => 'Izberi območje.',
-			'areas.title' => 'Območja',
-			'areas.subtitle' => 'moja posest',
+			'plant_detail.not_found' => 'Rastlina ni bila najdena.',
+			'plant_detail.history_title' => 'Zgodovina opravil',
+			'plant_detail.history_empty' => 'Za to rastlino še ni opravil.',
+			'areas.title' => 'Vrt',
+			'areas.subtitle' => 'rastline in trate',
 			'areas.empty' => 'Ni območij. Dodaj prvo z +.',
 			'areas.last_prefix' => 'zadnje:',
 			'areas.type_lawn' => 'Trata',

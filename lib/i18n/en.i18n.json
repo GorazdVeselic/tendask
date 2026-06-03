@@ -2,7 +2,7 @@
   "nav": {
     "home": "Home",
     "journal": "Journal",
-    "areas": "Areas",
+    "areas": "Garden",
     "tasks": "Tasks"
   },
   "home": {
@@ -158,9 +158,14 @@
     "err_type": "Select a task type.",
     "err_area": "Select an area."
   },
+  "plant_detail": {
+    "not_found": "Plant not found.",
+    "history_title": "Task history",
+    "history_empty": "No tasks for this plant yet."
+  },
   "areas": {
-    "title": "Areas",
-    "subtitle": "my property",
+    "title": "Garden",
+    "subtitle": "plants and lawns",
     "empty": "No areas yet. Add your first with +.",
     "last_prefix": "last:",
     "type_lawn": "Lawn",

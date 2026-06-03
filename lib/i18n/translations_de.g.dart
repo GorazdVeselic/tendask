@@ -48,6 +48,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
+	@override late final _Translations$plant_detail$de plant_detail = _Translations$plant_detail$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
@@ -63,7 +64,7 @@ class _Translations$nav$de extends Translations$nav$sl {
 	// Translations
 	@override String get home => 'Startseite';
 	@override String get journal => 'Tagebuch';
-	@override String get areas => 'Bereiche';
+	@override String get areas => 'Garten';
 	@override String get tasks => 'Aufgaben';
 }
 
@@ -276,6 +277,18 @@ class _Translations$task_form$de extends Translations$task_form$sl {
 	@override String get err_area => 'Bereich auswählen.';
 }
 
+// Path: plant_detail
+class _Translations$plant_detail$de extends Translations$plant_detail$sl {
+	_Translations$plant_detail$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get not_found => 'Pflanze nicht gefunden.';
+	@override String get history_title => 'Aufgabenverlauf';
+	@override String get history_empty => 'Noch keine Aufgaben für diese Pflanze.';
+}
+
 // Path: areas
 class _Translations$areas$de extends Translations$areas$sl {
 	_Translations$areas$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -283,8 +296,8 @@ class _Translations$areas$de extends Translations$areas$sl {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Bereiche';
-	@override String get subtitle => 'mein Grundstück';
+	@override String get title => 'Garten';
+	@override String get subtitle => 'Pflanzen und Rasen';
 	@override String get empty => 'Noch keine Bereiche. Füge den ersten mit + hinzu.';
 	@override String get last_prefix => 'zuletzt:';
 	@override String get type_lawn => 'Rasen';
@@ -399,7 +412,7 @@ extension on TranslationsDe {
 		return switch (path) {
 			'nav.home' => 'Startseite',
 			'nav.journal' => 'Tagebuch',
-			'nav.areas' => 'Bereiche',
+			'nav.areas' => 'Garten',
 			'nav.tasks' => 'Aufgaben',
 			'home.greeting' => 'Guten Tag 🌿',
 			'home.today' => 'Heute',
@@ -532,8 +545,11 @@ extension on TranslationsDe {
 			'task_form.save' => 'Aufgabe speichern',
 			'task_form.err_type' => 'Aufgabentyp auswählen.',
 			'task_form.err_area' => 'Bereich auswählen.',
-			'areas.title' => 'Bereiche',
-			'areas.subtitle' => 'mein Grundstück',
+			'plant_detail.not_found' => 'Pflanze nicht gefunden.',
+			'plant_detail.history_title' => 'Aufgabenverlauf',
+			'plant_detail.history_empty' => 'Noch keine Aufgaben für diese Pflanze.',
+			'areas.title' => 'Garten',
+			'areas.subtitle' => 'Pflanzen und Rasen',
 			'areas.empty' => 'Noch keine Bereiche. Füge den ersten mit + hinzu.',
 			'areas.last_prefix' => 'zuletzt:',
 			'areas.type_lawn' => 'Rasen',

@@ -2,7 +2,7 @@
   "nav": {
     "home": "Domov",
     "journal": "Dnevnik",
-    "areas": "Območja",
+    "areas": "Vrt",
     "tasks": "Opravila"
   },
   "home": {
@@ -158,9 +158,14 @@
     "err_type": "Izberi vrsto opravila.",
     "err_area": "Izberi območje."
   },
+  "plant_detail": {
+    "not_found": "Rastlina ni bila najdena.",
+    "history_title": "Zgodovina opravil",
+    "history_empty": "Za to rastlino še ni opravil."
+  },
   "areas": {
-    "title": "Območja",
-    "subtitle": "moja posest",
+    "title": "Vrt",
+    "subtitle": "rastline in trate",
     "empty": "Ni območij. Dodaj prvo z +.",
     "last_prefix": "zadnje:",
     "type_lawn": "Trata",

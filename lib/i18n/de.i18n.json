@@ -2,7 +2,7 @@
   "nav": {
     "home": "Startseite",
     "journal": "Tagebuch",
-    "areas": "Bereiche",
+    "areas": "Garten",
     "tasks": "Aufgaben"
   },
   "home": {
@@ -158,9 +158,14 @@
     "err_type": "Aufgabentyp auswählen.",
     "err_area": "Bereich auswählen."
   },
+  "plant_detail": {
+    "not_found": "Pflanze nicht gefunden.",
+    "history_title": "Aufgabenverlauf",
+    "history_empty": "Noch keine Aufgaben für diese Pflanze."
+  },
   "areas": {
-    "title": "Bereiche",
-    "subtitle": "mein Grundstück",
+    "title": "Garten",
+    "subtitle": "Pflanzen und Rasen",
     "empty": "Noch keine Bereiche. Füge den ersten mit + hinzu.",
     "last_prefix": "zuletzt:",
     "type_lawn": "Rasen",

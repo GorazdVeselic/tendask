@@ -18,6 +18,12 @@ final userPlantsByAreaProvider =
   return ref.watch(userPlantsRepositoryProvider).watchByArea(areaId);
 });
 
+/// One user plant by id — for the plant detail screen.
+final userPlantByIdProvider =
+    StreamProvider.autoDispose.family<UserPlant?, String>((ref, id) {
+  return ref.watch(userPlantsRepositoryProvider).watchById(id);
+});
+
 /// All user plants keyed by id — for resolving plant subject labels.
 final userPlantsMapProvider =
     StreamProvider.autoDispose<Map<String, UserPlant>>((ref) {
