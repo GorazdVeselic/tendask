@@ -16,4 +16,9 @@ abstract final class AppColors {
   static const Color warnSoft = Color(0xFFFFF4E0);
   static const Color info = Color(0xFF2266AA);
   static const Color infoSoft = Color(0xFFE6F0FA);
+  // Destructive / error — used for delete actions and validation.
+  static const Color danger = Color(0xFFBA1A1A);
+  static const Color dangerSoft = Color(0xFFFCEDEC);
+  // Lighter destructive tone for dark theme.
+  static const Color danger300 = Color(0xFFFFB4AB);
 }

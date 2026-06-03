@@ -14,9 +14,13 @@ abstract final class AppTheme {
         surface: AppColors.surface,
         onSurface: AppColors.ink,
         surfaceContainerHighest: AppColors.soft,
+        onSurfaceVariant: AppColors.muted,
         outline: AppColors.line,
+        error: AppColors.danger,
+        onError: Colors.white,
       ),
       textTheme: GoogleFonts.plusJakartaSansTextTheme(),
+      inputDecorationTheme: _inputTheme(AppColors.muted),
     );
   }
 
@@ -30,9 +34,18 @@ abstract final class AppTheme {
         onSecondary: AppColors.ink,
         surface: Color(0xFF1A2E1C),
         onSurface: Colors.white,
+        onSurfaceVariant: Color(0xFFA8B5AC),
         outline: Color(0xFF3A4E3C),
+        error: AppColors.danger300,
+        onError: Color(0xFF690005),
       ),
       textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme),
+      inputDecorationTheme: _inputTheme(const Color(0xFF8A988E)),
     );
   }
+
+  /// Hints must read as placeholders, not entered text — keep them muted.
+  static InputDecorationTheme _inputTheme(Color hint) => InputDecorationTheme(
+        hintStyle: TextStyle(color: hint, fontWeight: FontWeight.w400),
+      );
 }
