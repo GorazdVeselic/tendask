@@ -8,11 +8,44 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/plant_display.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
+
+void _showAddMenu(BuildContext context) {
+  final t = context.t;
+  showModalBottomSheet<void>(
+    context: context,
+    builder: (ctx) => SafeArea(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const SheetHandle(),
+          ListTile(
+            leading: const Icon(Icons.eco_outlined),
+            title: Text(t.plant_edit.title_new),
+            onTap: () {
+              Navigator.of(ctx).pop();
+              context.pushNamed('plant-new');
+            },
+          ),
+          ListTile(
+            leading: const Icon(Icons.yard_outlined),
+            title: Text(t.areas.form_title_new),
+            onTap: () {
+              Navigator.of(ctx).pop();
+              context.pushNamed('area-new');
+            },
+          ),
+          const SizedBox(height: 8),
+        ],
+      ),
+    ),
+  );
+}
 
 class AreasScreen extends ConsumerWidget {
   const AreasScreen({super.key});
@@ -54,7 +87,7 @@ class AreasScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.add),
-            onPressed: () => context.pushNamed('area-new'),
+            onPressed: () => _showAddMenu(context),
           ),
         ],
       ),

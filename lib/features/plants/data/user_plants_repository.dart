@@ -104,6 +104,24 @@ class UserPlantsRepository {
     });
   }
 
+  /// Edits one plant instance (alias and/or its area).
+  Future<void> update({
+    required String id,
+    String? areaId,
+    String? personalAlias,
+  }) async {
+    await (_db.update(_db.userPlants)..where((p) => p.id.equals(id))).write(
+      UserPlantsCompanion(
+        areaId: Value(areaId),
+        personalAlias: Value(personalAlias),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value('pending'),
+      ),
+    );
+  }
+
+  Future<void> softDelete(String id) => _softDelete(id);
+
   Future<void> _softDelete(String id) async {
     await (_db.update(_db.userPlants)..where((p) => p.id.equals(id))).write(
       UserPlantsCompanion(

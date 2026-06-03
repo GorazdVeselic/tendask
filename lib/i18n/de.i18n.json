@@ -170,6 +170,24 @@
     "err_select": "Wähle mindestens eine Pflanze oder einen Rasen.",
     "empty": "Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu."
   },
+  "plant_edit": {
+    "title_new": "Pflanze hinzufügen",
+    "title_edit": "Pflanze bearbeiten",
+    "species": "Art",
+    "species_choose": "Art wählen",
+    "species_change": "Ändern",
+    "alias": "Eigener Name (optional)",
+    "alias_hint": "z. B. „alter Apfel am Zaun“",
+    "alias_note": "Nur du siehst ihn; wird statt des Standardnamens angezeigt.",
+    "locations": "Wo sie wächst",
+    "locations_hint": "einen oder mehrere Bereiche wählen",
+    "locations_note": "Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).",
+    "new_area": "Neuer Bereich",
+    "delete": "Pflanze aus dem Garten entfernen",
+    "delete_note": "Der Aufgabenverlauf bleibt im Tagebuch.",
+    "save": "Speichern",
+    "err_species": "Wähle zuerst eine Art."
+  },
   "plant_detail": {
     "not_found": "Pflanze nicht gefunden.",
     "history_title": "Aufgabenverlauf",

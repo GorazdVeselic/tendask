@@ -49,6 +49,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 	@override late final _Translations$subject_picker$de subject_picker = _Translations$subject_picker$de._(_root);
+	@override late final _Translations$plant_edit$de plant_edit = _Translations$plant_edit$de._(_root);
 	@override late final _Translations$plant_detail$de plant_detail = _Translations$plant_detail$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
@@ -295,6 +296,31 @@ class _Translations$subject_picker$de extends Translations$subject_picker$sl {
 	@override String get confirm => 'Bestätigen';
 	@override String get err_select => 'Wähle mindestens eine Pflanze oder einen Rasen.';
 	@override String get empty => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
+}
+
+// Path: plant_edit
+class _Translations$plant_edit$de extends Translations$plant_edit$sl {
+	_Translations$plant_edit$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_new => 'Pflanze hinzufügen';
+	@override String get title_edit => 'Pflanze bearbeiten';
+	@override String get species => 'Art';
+	@override String get species_choose => 'Art wählen';
+	@override String get species_change => 'Ändern';
+	@override String get alias => 'Eigener Name (optional)';
+	@override String get alias_hint => 'z. B. „alter Apfel am Zaun“';
+	@override String get alias_note => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.';
+	@override String get locations => 'Wo sie wächst';
+	@override String get locations_hint => 'einen oder mehrere Bereiche wählen';
+	@override String get locations_note => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).';
+	@override String get new_area => 'Neuer Bereich';
+	@override String get delete => 'Pflanze aus dem Garten entfernen';
+	@override String get delete_note => 'Der Aufgabenverlauf bleibt im Tagebuch.';
+	@override String get save => 'Speichern';
+	@override String get err_species => 'Wähle zuerst eine Art.';
 }
 
 // Path: plant_detail
@@ -575,6 +601,22 @@ extension on TranslationsDe {
 			'subject_picker.confirm' => 'Bestätigen',
 			'subject_picker.err_select' => 'Wähle mindestens eine Pflanze oder einen Rasen.',
 			'subject_picker.empty' => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
+			'plant_edit.title_new' => 'Pflanze hinzufügen',
+			'plant_edit.title_edit' => 'Pflanze bearbeiten',
+			'plant_edit.species' => 'Art',
+			'plant_edit.species_choose' => 'Art wählen',
+			'plant_edit.species_change' => 'Ändern',
+			'plant_edit.alias' => 'Eigener Name (optional)',
+			'plant_edit.alias_hint' => 'z. B. „alter Apfel am Zaun“',
+			'plant_edit.alias_note' => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.',
+			'plant_edit.locations' => 'Wo sie wächst',
+			'plant_edit.locations_hint' => 'einen oder mehrere Bereiche wählen',
+			'plant_edit.locations_note' => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).',
+			'plant_edit.new_area' => 'Neuer Bereich',
+			'plant_edit.delete' => 'Pflanze aus dem Garten entfernen',
+			'plant_edit.delete_note' => 'Der Aufgabenverlauf bleibt im Tagebuch.',
+			'plant_edit.save' => 'Speichern',
+			'plant_edit.err_species' => 'Wähle zuerst eine Art.',
 			'plant_detail.not_found' => 'Pflanze nicht gefunden.',
 			'plant_detail.history_title' => 'Aufgabenverlauf',
 			'plant_detail.history_empty' => 'Noch keine Aufgaben für diese Pflanze.',

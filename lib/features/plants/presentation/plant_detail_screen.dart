@@ -35,6 +35,14 @@ class PlantDetailScreen extends ConsumerWidget {
           icon: const Icon(Icons.arrow_back),
           onPressed: context.pop,
         ),
+        actions: [
+          if (plant != null)
+            IconButton(
+              icon: const Icon(Icons.edit_outlined),
+              onPressed: () =>
+                  context.pushNamed('plant-edit', pathParameters: {'id': id}),
+            ),
+        ],
       ),
       body: plant == null
           ? Center(child: Text(t.plant_detail.not_found))

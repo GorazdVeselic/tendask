@@ -7,6 +7,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
+import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
@@ -92,10 +93,21 @@ final appRouter = GoRouter(
       builder: (context, state) => const PlantPickerScreen(),
     ),
     GoRoute(
+      path: '/plant-new',
+      name: 'plant-new',
+      builder: (context, state) => const PlantEditScreen(),
+    ),
+    GoRoute(
       path: '/plant/:id',
       name: 'plant-detail',
       builder: (context, state) =>
           PlantDetailScreen(id: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/plant/:id/edit',
+      name: 'plant-edit',
+      builder: (context, state) =>
+          PlantEditScreen(userPlantId: state.pathParameters['id']),
     ),
     GoRoute(
       path: '/subject-picker',

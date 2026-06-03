@@ -170,6 +170,24 @@
     "err_select": "Izberi vsaj eno rastlino ali trato.",
     "empty": "Ni rastlin ali območij. Dodaj jih v zavihku Vrt."
   },
+  "plant_edit": {
+    "title_new": "Dodaj rastlino",
+    "title_edit": "Uredi rastlino",
+    "species": "Vrsta",
+    "species_choose": "Izberi vrsto",
+    "species_change": "Spremeni",
+    "alias": "Osebno ime (neobvezno)",
+    "alias_hint": "npr. „stara jablana ob ograji“",
+    "alias_note": "Vidiš ga samo ti; prikaže se namesto privzetega imena.",
+    "locations": "Kje raste",
+    "locations_hint": "izberi eno ali več območij",
+    "locations_note": "Brez območja je tudi v redu (npr. lončnica na terasi).",
+    "new_area": "Novo območje",
+    "delete": "Odstrani rastlino iz vrta",
+    "delete_note": "Zgodovina opravil ostane v Dnevniku.",
+    "save": "Shrani",
+    "err_species": "Najprej izberi vrsto rastline."
+  },
   "plant_detail": {
     "not_found": "Rastlina ni bila najdena.",
     "history_title": "Zgodovina opravil",

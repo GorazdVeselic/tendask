@@ -50,6 +50,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
 	late final Translations$subject_picker$sl subject_picker = Translations$subject_picker$sl.internal(_root);
+	late final Translations$plant_edit$sl plant_edit = Translations$plant_edit$sl.internal(_root);
 	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
@@ -588,6 +589,63 @@ class Translations$subject_picker$sl {
 	String get empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
 }
 
+// Path: plant_edit
+class Translations$plant_edit$sl {
+	Translations$plant_edit$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Dodaj rastlino'
+	String get title_new => 'Dodaj rastlino';
+
+	/// sl: 'Uredi rastlino'
+	String get title_edit => 'Uredi rastlino';
+
+	/// sl: 'Vrsta'
+	String get species => 'Vrsta';
+
+	/// sl: 'Izberi vrsto'
+	String get species_choose => 'Izberi vrsto';
+
+	/// sl: 'Spremeni'
+	String get species_change => 'Spremeni';
+
+	/// sl: 'Osebno ime (neobvezno)'
+	String get alias => 'Osebno ime (neobvezno)';
+
+	/// sl: 'npr. „stara jablana ob ograji“'
+	String get alias_hint => 'npr. „stara jablana ob ograji“';
+
+	/// sl: 'Vidiš ga samo ti; prikaže se namesto privzetega imena.'
+	String get alias_note => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.';
+
+	/// sl: 'Kje raste'
+	String get locations => 'Kje raste';
+
+	/// sl: 'izberi eno ali več območij'
+	String get locations_hint => 'izberi eno ali več območij';
+
+	/// sl: 'Brez območja je tudi v redu (npr. lončnica na terasi).'
+	String get locations_note => 'Brez območja je tudi v redu (npr. lončnica na terasi).';
+
+	/// sl: 'Novo območje'
+	String get new_area => 'Novo območje';
+
+	/// sl: 'Odstrani rastlino iz vrta'
+	String get delete => 'Odstrani rastlino iz vrta';
+
+	/// sl: 'Zgodovina opravil ostane v Dnevniku.'
+	String get delete_note => 'Zgodovina opravil ostane v Dnevniku.';
+
+	/// sl: 'Shrani'
+	String get save => 'Shrani';
+
+	/// sl: 'Najprej izberi vrsto rastline.'
+	String get err_species => 'Najprej izberi vrsto rastline.';
+}
+
 // Path: plant_detail
 class Translations$plant_detail$sl {
 	Translations$plant_detail$sl.internal(this._root);
@@ -1026,6 +1084,22 @@ extension on Translations {
 			'subject_picker.confirm' => 'Potrdi',
 			'subject_picker.err_select' => 'Izberi vsaj eno rastlino ali trato.',
 			'subject_picker.empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
+			'plant_edit.title_new' => 'Dodaj rastlino',
+			'plant_edit.title_edit' => 'Uredi rastlino',
+			'plant_edit.species' => 'Vrsta',
+			'plant_edit.species_choose' => 'Izberi vrsto',
+			'plant_edit.species_change' => 'Spremeni',
+			'plant_edit.alias' => 'Osebno ime (neobvezno)',
+			'plant_edit.alias_hint' => 'npr. „stara jablana ob ograji“',
+			'plant_edit.alias_note' => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.',
+			'plant_edit.locations' => 'Kje raste',
+			'plant_edit.locations_hint' => 'izberi eno ali več območij',
+			'plant_edit.locations_note' => 'Brez območja je tudi v redu (npr. lončnica na terasi).',
+			'plant_edit.new_area' => 'Novo območje',
+			'plant_edit.delete' => 'Odstrani rastlino iz vrta',
+			'plant_edit.delete_note' => 'Zgodovina opravil ostane v Dnevniku.',
+			'plant_edit.save' => 'Shrani',
+			'plant_edit.err_species' => 'Najprej izberi vrsto rastline.',
 			'plant_detail.not_found' => 'Rastlina ni bila najdena.',
 			'plant_detail.history_title' => 'Zgodovina opravil',
 			'plant_detail.history_empty' => 'Za to rastlino še ni opravil.',

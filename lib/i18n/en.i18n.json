@@ -170,6 +170,24 @@
     "err_select": "Choose at least one plant or lawn.",
     "empty": "No plants or areas. Add them in the Garden tab."
   },
+  "plant_edit": {
+    "title_new": "Add plant",
+    "title_edit": "Edit plant",
+    "species": "Species",
+    "species_choose": "Choose species",
+    "species_change": "Change",
+    "alias": "Personal name (optional)",
+    "alias_hint": "e.g. “old apple by the fence”",
+    "alias_note": "Only you see it; shown instead of the default name.",
+    "locations": "Where it grows",
+    "locations_hint": "pick one or more areas",
+    "locations_note": "No area is fine too (e.g. a pot on the terrace).",
+    "new_area": "New area",
+    "delete": "Remove plant from garden",
+    "delete_note": "Task history stays in the journal.",
+    "save": "Save",
+    "err_species": "Choose a species first."
+  },
   "plant_detail": {
     "not_found": "Plant not found.",
     "history_title": "Task history",
