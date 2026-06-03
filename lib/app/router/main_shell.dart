@@ -11,9 +11,10 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    // Quick-log FAB only on Home (0) and Journal (1); Areas/Tasks have their
-    // own add actions and the FAB would overlap their content / action sheets.
-    final showFab = shell.currentIndex == 0 || shell.currentIndex == 1;
+    // Quick-log FAB only on the Home/Journal *tabs* themselves — not on pushed
+    // sub-pages (e.g. task detail), where it would overlap their action bars.
+    final location = GoRouterState.of(context).uri.path;
+    final showFab = location == '/home' || location == '/journal';
     return Scaffold(
       body: shell,
       floatingActionButton: showFab
