@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domov (v2)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div>
+      <h1>Dober dan 🌿</h1>
+      <div class="sub">torek, 1. junij</div>
+    </div>
+    <a href="12-settings.html" style="text-decoration:none;"><div class="icon-btn">⚙️</div></a>
+  </div>
+
+  <div class="content">
+    <!-- Vreme -->
+    <div class="weather">
+      <span class="ico">🌧️</span>
+      <div>
+        <div class="temp">16°</div>
+        <div class="meta">Dež · nocoj 8 mm<br>veter 5 km/h</div>
+      </div>
+      <div class="days">
+        <div class="day">sre<b>☀️</b>24°</div>
+        <div class="day">čet<b>🌦️</b>18°</div>
+        <div class="day">pet<b>🌧️</b>15°</div>
+      </div>
+    </div>
+
+    <!-- Pametni opomnik (po RASTLINI) -->
+    <div class="smart">
+      <span class="ico">💡</span>
+      <div class="txt">
+        <b>Jutri zjutraj bo suho.</b> Lani 18. maja si folirano gnojil
+        <b>paradižnik in solato</b> (urea + alge) — primeren čas za ponovitev.
+        <div class="actions">
+          <a href="07-reminder-edit_v2.html" style="text-decoration:none;"><button class="pill">+ Načrtuj opravilo</button></a>
+          <button class="pill ghost">Opusti</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Danes (vodi s SUBJEKTOM) -->
+    <div class="section-title">Danes</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="li-check"></div>
+        <div class="li-main">
+          <div class="li-title">Pokositi trato</div>
+          <div class="li-sub">🌱 Trata zadaj · opomnik 7:00</div>
+        </div>
+        <div class="li-trail">🔔</div>
+      </div>
+      <div class="list-item">
+        <div class="li-check"></div>
+        <div class="li-main">
+          <div class="li-title">Zaliti paradižnik in solato</div>
+          <div class="li-sub">🪴 Visoka greda 1</div>
+        </div>
+        <div class="li-trail">⏱️</div>
+      </div>
+    </div>
+
+    <!-- Hitri dostop -->
+    <div class="section-title">Hitri dostop</div>
+    <div class="row">
+      <a href="08-supplies.html" style="flex:1;text-decoration:none;color:inherit;">
+      <div class="card tinted" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:26px;">📦</div>
+        <div style="font-size:14px;font-weight:600;margin-top:6px;">Zaloge</div>
+        <div style="font-size:12px;color:var(--muted);">urea, alge, gnojila</div>
+      </div></a>
+      <a href="18-note-edit.html" style="flex:1;text-decoration:none;color:inherit;">
+      <div class="card tinted" style="text-align:center;margin-bottom:0;">
+        <div style="font-size:26px;">📝</div>
+        <div style="font-size:14px;font-weight:600;margin-top:6px;">Opombe</div>
+        <div style="font-size:12px;color:var(--muted);">prosto besedilo</div>
+      </div></a>
+    </div>
+
+    <!-- Nazadnje (subjekt naprej; multi-subjekt = ena vrstica) -->
+    <div class="section-title">Nazadnje</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="avatar">🧪</div>
+        <div class="li-main">
+          <div class="li-title">Folirano gnojenje</div>
+          <div class="li-sub">🍅 paradižnik · 🥬 solata · 🌱 trata zadaj</div>
+        </div>
+        <div class="li-trail">danes</div>
+      </div>
+      <div class="list-item">
+        <div class="avatar">✂️</div>
+        <div class="li-main">
+          <div class="li-title">Obrezal jablano</div>
+          <div class="li-sub">🪴 Sadovnjak</div>
+        </div>
+        <div class="li-trail">12. mar</div>
+      </div>
+    </div>
+  </div>
+
+  <a href="02-quick-log_v2.html"><div class="fab">+</div></a>
+
+  <nav class="bottomnav">
+    <a href="01-home_v2.html"><div class="nav-item active"><span class="ico">🏠</span>Domov</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="04-areas_v2.html"><div class="nav-item"><span class="ico">🪴</span>Vrt</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+  </nav>
+</div>
+</body>
+</html>

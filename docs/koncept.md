@@ -297,7 +297,8 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 
 ### Opravilo/opomnik se veže na RASTLINO (ne le območje)
 ```
-Opravilo / Opomnik = { tip · OBMOČJE · RASTLINA (neobvezno) · datum · sredstva · vreme · status }
+Opravilo = { tip · DATUM · status · sredstva · vreme · opomba · SUBJEKTI[] }
+SUBJEKT  = rastlina ALI območje   (M:N — POPRAVEK 2026-06-03, glej §7.15)
 ```
 - Vsak **tip opravila** ima zastavico `zahtevaSubjekt`: obrez/tretiranje/pobiranje/
   sajenje/okopavanje → **da** (pokaže izbirnik rastline); košnja/zalivanje trate → ne.
@@ -341,7 +342,7 @@ Opravilo / Opomnik = { tip · OBMOČJE · RASTLINA (neobvezno) · datum · sreds
 
 Pomembna poenostavitev: ne ločujemo "opravilo" vs "opomnik". Obstaja **ena entiteta**:
 ```
-OPRAVILO = { tip · območje · rastlina? · DATUM (preteklost/prihodnost) ·
+OPRAVILO = { tip · SUBJEKTI[] (rastlina ALI območje, M:N — §7.15) · DATUM (preteklost/prihodnost) ·
              STATUS (čaka / opravljeno) · sredstva · vreme · opomba ·
              OPOMNIK = obvestila (NEOBVEZNO) · ponavljanje? }
 ```
@@ -514,8 +515,9 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
 - **Uporabnik (RLS `user_id = auth.uid()`):**
   `profile(user_id PK, h3_r7, h3_r6, h3_r5, lang)` — celice, NE koordinat ·
   `area(id, user_id, name, type)` — brez lokacije ·
-  `user_plant(id, user_id, area_id FK, plant_id FK NULL, custom_name NULL, personal_alias NULL, is_custom)` ·
-  `task(id, user_id, area_id, user_plant_id NULL, task_type_id FK, date, status, note, weather jsonb, recurrence jsonb)` — OPRAVILO ·
+  `user_plant(id, user_id, area_id FK NULL, plant_id FK NULL, custom_name NULL, personal_alias NULL, is_custom)` ·
+  `task(id, user_id, task_type_id FK, date, status, note, weather jsonb, recurrence jsonb)` — OPRAVILO (subjekti v `task_subject`) ·
+  `task_subject(id, task_id FK, user_plant_id FK NULL, area_id FK NULL, CHECK ≥1)` — M:N subjekti opravila (§7.15) ·
   `task_reminder(id, task_id FK, offset, time)` — plast A ·
   `note(id, user_id, area_id NULL, user_plant_id NULL, date, text, weather jsonb)` ·
   `supply` · `recipe` · `task_supply(task_id, supply_id, amount)` — zaloge/odpis ·
@@ -544,6 +546,47 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
    koordinate ne zapustijo naprave (zasebnost).
 
 **RLS/GDPR:** uporabniške tabele `user_id = auth.uid()`; katalog javno-bralni; izbris računa = `ON DELETE CASCADE`.
+
+---
+
+## 7.15 Prefokus na rastlino: SUBJEKT (rastlina ALI območje), M:N (2026-06-03) ⭐
+
+> 📋 **Vir resnice te revizije: [`fokus-rastlina.md`](fokus-rastlina.md)** (diagnoza + wireframe _v2).
+> To poglavje **popravlja** §7.7/7.8/7.9/7.14 tam, kjer je bila aplikacija območje-centrična.
+
+**Povod:** opravila so bila vezana na **območje (obvezno)**, rastlina je bila drugorazredna
+(`user_plant_id` NULL, skrita pod "Več"); ni bilo detajla rastline ne vstopa zanjo. To ruši
+bistvo — uporabnik dela opravila **zaradi rastlin** (jagode→tretiram, trava→zalijem).
+
+**Ključni vpogled — dva tipa subjekta:**
+1. **Homogeno območje = subjekt** (trata) — rastline ni, območje *je* subjekt (obstoječe, pravilno).
+2. **Rastlina = subjekt** (jablana, paradižnik) — območje je le **kraj, kjer stoji**.
+
+**Model (popravek):**
+- Opravilo se veže na **SUBJEKT = rastlina ALI območje**; ne na območje kot hrbtenico.
+- Vez je **many-to-many**: eno opravilo → **N subjektov** (z algami folirano gnojim solato +
+  paradižnik + trato = en dogodek). Nova tabela **`task_subject`** (`task.area_id`/`user_plant_id`
+  **odstranjena**). V Dnevniku **ena vrstica**; prikaže se v zgodovini vsakega subjekta;
+  **sredstva in vreme skupna** (en odpis, en posnetek).
+- **Subjekt = instanca, ne vrsta.** `user_plant` = vrsta × območje; ista vrsta na več območjih
+  (jablana–vrt, jablana–sadovnjak) = več instanc → ob izbiri vrste **odkljukaš območja**.
+- `user_plant.area_id` → **nullable** (lončnica brez imenovanega območja).
+
+**IA / UX (popravek):**
+- Zavihek **"Območja" → "Vrt"** (rastline grupirane po območjih + trate). **Nov zaslon
+  Detajl rastline** (zgodovina ene rastline) in **Dodaj/uredi rastlino** (vrsta + osebno ime +
+  **izbira lokacij = multi-select območij** + kategorija + izbris).
+- **Vnos: Kaj → Za kaj (subjekt, multi-select) → Kdaj**; izbirnik subjektov ima **inline dodajanje**
+  iz kataloga vseh vrst. Domov/seznami **vodijo s subjektom** (opomnik: "obreži lovorikovce", ne
+  "opravilo na živi meji"). Detajl opravila (17/17b) **našteje vse subjekte**.
+- Pametni motor (§7.13): primarni ključ cooldowna/predlogov = **rastlina+tip**, območje le filter.
+
+**Kar OSTANE:** trata = območje-subjekt (brez umetne "rastline trava"); pojem območja
+(grupiranje + lokacija); vreme/sync/obvestila/katalog/dvojnost Dnevnik+Opravila. To je
+prefokus IA+UX + poseg v shemo, **ne predelava**.
+
+**Wireframe _v2:** `01/02/04→Vrt/07/10/17/17b` + nova `plant-detail`/`plant-edit`
+(`docs/wireframes/*_v2.html`, galerija označena).
 
 ---
 
@@ -648,6 +691,16 @@ Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
 ---
 
 ## 11. Dnevnik odločitev
+
+- **2026-06-03 (prefokus na rastlino — glej §7.15 + [`fokus-rastlina.md`](fokus-rastlina.md)):**
+  Ugotovljeno, da je bila aplikacija območje-centrična na vseh plasteh (task.area_id obvezen,
+  rastlina drugorazredna; ni detajla/vstopa rastline) — kar ruši bistvo. **Popravek:** opravilo
+  se veže na **SUBJEKT = rastlina ALI območje**, vez **M:N** prek nove tabele `task_subject`
+  (eno opravilo → več subjektov; sredstva/vreme skupna; `task.area_id`/`user_plant_id` odstranjena;
+  `user_plant.area_id` nullable). IA: zavihek **Območja → Vrt**, nova zaslona **Detajl rastline**
+  in **Dodaj/uredi rastlino** (multi-select lokacij); vnos **Kaj → Za kaj (multi-select) → Kdaj**
+  z inline dodajanjem iz kataloga; detajl opravila našteje vse subjekte. Trata ostane
+  območje-subjekt. Wireframe `_v2` izdelani; sledi shema + repo + UI.
 
 - **2026-06-01 (ime — ZAKLJUČENO):** Izbrano ime **„Tendask"** (tend+task); domeni
   `tendask.com` + `tendask.app` kupljeni. **Znamka preverjena v TMview (razreda 9/35/42) =
