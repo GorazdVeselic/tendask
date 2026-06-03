@@ -90,6 +90,25 @@ Pravila:
 - **Napake niso `SizedBox.shrink()`.** Tiho požiranje (`error: (_, _) => SizedBox.shrink()`) skrije bug — pokaži vsaj miren indikator (kasneje Sentry). Mreža = pričakovano stanje (graceful degrade); lokalni DB error = ne, to je bug.
 - **Velika presentation datoteka (>~300 vrstic) je signal za ekstrakcijo widgetov**, ne za scroll.
 
+### Komponentni katalog (en widget na vzorec — nikoli lokalna kopija)
+
+Za vsak ponavljajoč se UI vzorec obstaja EN skupni widget. Lokalna `_SectionTitle`/`_Label`/`_EmptyHint` kopija = rdeč alarm; uporabi skupnega.
+
+- **Sekcijska oznaka** (skupina/sekcija v seznamu ali zaslonu) → `SectionLabel` (`core/widgets/section_label.dart`) — **VELIKE črke**, `labelSmall`, letterSpacing, `onSurfaceVariant`. En sam stil sekcij v aplikaciji.
+- **Oznaka nad poljem v obrazcu** → `FieldLabel` (isti file) — sentence-case, `labelMedium`, `onSurfaceVariant`.
+- **Prazen celozaslonski seznam** → `EmptyState` (`core/widgets/empty_state.dart`). **Dashboard/inline hint** (kratek kontekstni namig, npr. Domov »danes nič«) ni list-empty — sme biti lokalen in kompakten (ne `EmptyState`, ki je centriran in zračen).
+- **Izbris v edit obrazcu** → `DestructiveButton` (`core/widgets/destructive_button.dart`) — rdeč (`colorScheme.error`), inline na **dnu vsebine**, samo v edit mode. **Nikoli** delete kot ikona v AppBar s privzeto barvo (izgleda onemogočen).
+- **Izbris v `⋯` action sheetu** → zadnja `ListTile` vrstica, ločena z `Divider`, ikona+tekst v `colorScheme.error`.
+- **Potrditev izbrisa** → `showConfirmDialog(..., destructive: true)` (`core/widgets/confirm_dialog.dart`) — rdeč `FilledButton`.
+- **Shrani/potrdi gumb**: full-screen obrazec → `SaveBar`; bottom sheet → `FilledButton` (48h, full-width) — isti videz.
+- **Bottom sheet** → vedno `SheetHandle` na vrhu.
+
+### Barve in stil samo prek teme
+
+- **Destruktivno/napaka = `colorScheme.error`**, nikoli hardcode rdeča; brand barve so v `theme/` (`AppColors.danger` ipd.).
+- **Sekundarni/muted tekst = `colorScheme.onSurfaceVariant`** (= brand muted, nastavljen v temi).
+- **Hint je medel globalno prek `inputDecorationTheme.hintStyle`** — ne nastavljaj `hintStyle` per-field; hint nikoli ne sme izgledati kot vnesen tekst.
+
 - **H3 celico računaj na napravi** (`h3_flutter`), shrani r7/r6/r5; **koordinate nikoli ne zapustijo naprave** in se nikoli ne shranijo.
 - **RLS povsod:** uporabniške tabele `user_id = auth.uid()`; katalog (task_type, plant, …) javno-bralni. Anonimni uporabnik = veljaven `auth.uid()`, RLS deluje enako.
 - **Skrivnosti prek `--dart-define`** (Supabase `url`+`anonKey`, Sentry DSN). Anon key + RLS = dovolj; brez service-role ključev v aplikaciji.
