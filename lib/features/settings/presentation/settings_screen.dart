@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/profile_providers.dart';
 
@@ -60,7 +61,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // Location (placeholder — M7)
-          _SectionTitle(t.settings.section_location),
+          SectionLabel(t.settings.section_location),
           Card(
             child: ListTile(
               leading: const Text('📍', style: TextStyle(fontSize: 22)),
@@ -71,7 +72,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // Language (ACTIVE)
-          _SectionTitle(t.settings.section_language),
+          SectionLabel(t.settings.section_language),
           SegmentedButton<AppLocale>(
             segments: [
               for (final loc in AppLocale.values)
@@ -83,7 +84,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // Notifications (placeholder — M8)
-          _SectionTitle(t.settings.section_notifications),
+          SectionLabel(t.settings.section_notifications),
           Card(
             child: ListTile(
               leading: const Text('🔔', style: TextStyle(fontSize: 22)),
@@ -94,7 +95,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // Garden (ACTIVE)
-          _SectionTitle(t.settings.section_garden),
+          SectionLabel(t.settings.section_garden),
           Card(
             child: Column(
               children: [
@@ -120,7 +121,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
 
           // Account & data (placeholder — M7 / GDPR)
-          _SectionTitle(t.settings.section_account),
+          SectionLabel(t.settings.section_account),
           Card(
             child: Column(
               children: [
@@ -149,24 +150,6 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 20, 4, 8),
-      child: Text(
-        label.toUpperCase(),
-        style: theme.textTheme.labelSmall?.copyWith(
-            letterSpacing: 0.8, color: theme.colorScheme.onSurfaceVariant),
       ),
     );
   }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import 'plant_display.dart';
 
@@ -116,7 +117,8 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     children: [
                       if (results.isNotEmpty) ...[
-                        _SectionLabel(t.plants.from_catalog, theme: theme),
+                        SectionLabel(t.plants.from_catalog,
+                            padding: const EdgeInsets.only(bottom: 6)),
                         Card(
                           child: Column(
                             children: [
@@ -151,26 +153,6 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                   ),
           ),
         ],
-      ),
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label, {required this.theme});
-  final String label;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 6),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
       ),
     );
   }
@@ -231,7 +213,8 @@ class _CustomEntry extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _SectionLabel(t.plants.not_found, theme: theme),
+            SectionLabel(t.plants.not_found,
+                padding: const EdgeInsets.only(bottom: 6)),
             InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () => onAdd(query),

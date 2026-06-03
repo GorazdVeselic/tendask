@@ -7,6 +7,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/widgets/save_bar.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/data/plant_spec.dart';
@@ -141,7 +142,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                     children: [
-                      _FieldLabel(t.areas.form_name),
+                      FieldLabel(t.areas.form_name),
                       TextField(
                         controller: _nameController,
                         decoration: InputDecoration(
@@ -152,7 +153,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                         textCapitalization: TextCapitalization.sentences,
                       ),
                       const SizedBox(height: 16),
-                      _FieldLabel(t.areas.form_type),
+                      FieldLabel(t.areas.form_type),
                       Wrap(
                         spacing: 8,
                         runSpacing: 4,
@@ -166,7 +167,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                         ],
                       ),
                       const SizedBox(height: 16),
-                      _FieldLabel(t.areas.form_plants),
+                      FieldLabel(t.areas.form_plants),
                       _PlantsSection(
                         plants: _plants,
                         catalog: catalog,
@@ -194,24 +195,6 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                 ),
               ],
             ),
-    );
-  }
-}
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-      ),
     );
   }
 }

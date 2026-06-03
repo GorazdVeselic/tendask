@@ -6,7 +6,9 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
@@ -165,7 +167,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
             child: ListView(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               children: [
-                _Label(t.plant_edit.species),
+                FieldLabel(t.plant_edit.species),
                 _SpeciesField(
                   plantId: _plantId,
                   customName: _customName,
@@ -175,7 +177,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                   onPick: _pickSpecies,
                 ),
                 const SizedBox(height: 16),
-                _Label(t.plant_edit.alias),
+                FieldLabel(t.plant_edit.alias),
                 TextField(
                   controller: _aliasController,
                   decoration: InputDecoration(
@@ -192,7 +194,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                           color: theme.colorScheme.onSurfaceVariant)),
                 ),
                 const SizedBox(height: 16),
-                _Label('${t.plant_edit.locations} · ${t.plant_edit.locations_hint}'),
+                FieldLabel('${t.plant_edit.locations} · ${t.plant_edit.locations_hint}'),
                 _LocationField(
                   areas: areas,
                   isEdit: _isEdit,
@@ -213,14 +215,9 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                 ),
                 if (_isEdit) ...[
                   const SizedBox(height: 24),
-                  Center(
-                    child: TextButton.icon(
-                      onPressed: _delete,
-                      icon: Icon(Icons.delete_outline,
-                          color: theme.colorScheme.error),
-                      label: Text(t.plant_edit.delete,
-                          style: TextStyle(color: theme.colorScheme.error)),
-                    ),
+                  DestructiveButton(
+                    label: t.plant_edit.delete,
+                    onPressed: _delete,
                   ),
                 ],
               ],
@@ -228,23 +225,6 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
           ),
           SaveBar(onSave: _save, isSaving: _isSaving, label: t.plant_edit.save),
         ],
-      ),
-    );
-  }
-}
-
-class _Label extends StatelessWidget {
-  const _Label(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant),
       ),
     );
   }

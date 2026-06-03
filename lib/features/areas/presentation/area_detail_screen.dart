@@ -7,6 +7,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/areas_providers.dart';
@@ -179,16 +180,7 @@ class _History extends StatelessWidget {
       return const Center(child: CircularProgressIndicator.adaptive());
     }
     if (tasks.isEmpty) {
-      return Card(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          child: Text(
-            t.areas.history_empty,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-          ),
-        ),
-      );
+      return EmptyState(t.areas.history_empty);
     }
 
     return Card(

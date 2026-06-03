@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
+import '../../../../../core/widgets/section_label.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
 import '../../../../areas/presentation/area_type_display.dart';
@@ -121,7 +122,8 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
           child: ListView(
             padding: const EdgeInsets.fromLTRB(8, 0, 8, 16),
             children: [
-              _SectionLabel(t.entry.subject_plants),
+              SectionLabel(t.entry.subject_plants,
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
               for (final p in plants)
                 CheckboxListTile(
                   value: widget.plantIds.contains(p.id),
@@ -147,7 +149,8 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                 ),
               _AddAction(label: t.entry.subject_add_plant, onTap: _addPlant),
               if (catalogMatches.isNotEmpty) ...[
-                _SectionLabel(t.entry.subject_from_catalog),
+                SectionLabel(t.entry.subject_from_catalog,
+                    padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
                 for (final p in catalogMatches)
                   ListTile(
                     leading:
@@ -162,8 +165,8 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                   ),
               ],
               const SizedBox(height: 8),
-              _SectionLabel(
-                  '${t.entry.subject_area_section} ${t.entry.subject_area_hint}'),
+              SectionLabel(t.entry.subject_area_section,
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
               if (areaList.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
@@ -193,26 +196,6 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _SectionLabel extends StatelessWidget {
-  const _SectionLabel(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
     );
   }
 }

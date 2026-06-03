@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/date_format.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
@@ -181,14 +183,6 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
         ),
         title: Text(_isEdit ? t.notes.title_edit : t.notes.title_new),
         centerTitle: true,
-        actions: [
-          if (_isEdit)
-            IconButton(
-              icon: const Icon(Icons.delete_outline),
-              tooltip: t.notes.delete,
-              onPressed: _delete,
-            ),
-        ],
       ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator.adaptive())
@@ -198,7 +192,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                   child: ListView(
                     padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
                     children: [
-                      _FieldLabel(t.notes.content_label),
+                      FieldLabel(t.notes.content_label),
                       TextField(
                         controller: _contentController,
                         decoration: InputDecoration(
@@ -211,7 +205,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                         textCapitalization: TextCapitalization.sentences,
                       ),
                       const SizedBox(height: 16),
-                      _FieldLabel(t.notes.when),
+                      FieldLabel(t.notes.when),
                       _DateSegment(
                         option: _dateOption,
                         customDate: _customDate,
@@ -220,7 +214,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                         onPickDate: _pickDate,
                       ),
                       const SizedBox(height: 16),
-                      _FieldLabel(t.notes.area),
+                      FieldLabel(t.notes.area),
                       _AreaField(
                         selectedId: _areaId,
                         onChanged: (id) => setState(() {
@@ -230,7 +224,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                       ),
                       if (_areaId != null) ...[
                         const SizedBox(height: 16),
-                        _FieldLabel(t.notes.plant),
+                        FieldLabel(t.notes.plant),
                         PlantField(
                           areaId: _areaId!,
                           selectedId: _userPlantId,
@@ -241,6 +235,13 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                       ],
                       const SizedBox(height: 16),
                       _InfoHint(text: t.notes.info, theme: theme),
+                      if (_isEdit) ...[
+                        const SizedBox(height: 24),
+                        DestructiveButton(
+                          label: t.notes.delete,
+                          onPressed: _delete,
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -258,24 +259,6 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
 // ---------------------------------------------------------------------------
 // Sub-widgets
 // ---------------------------------------------------------------------------
-
-class _FieldLabel extends StatelessWidget {
-  const _FieldLabel(this.label);
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: Theme.of(context).textTheme.labelMedium?.copyWith(
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-      ),
-    );
-  }
-}
 
 class _DateSegment extends StatelessWidget {
   const _DateSegment({

@@ -6,6 +6,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -100,15 +101,15 @@ class _HomeBody extends StatelessWidget {
       children: [
         _WeatherPlaceholder(label: t.home.weather_placeholder),
         const SizedBox(height: 16),
-        _SectionTitle(t.home.today),
+        SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
         if (todayTasks.isEmpty)
-          _EmptyHint(t.home.no_tasks_today)
+          _DashboardHint(t.home.no_tasks_today)
         else
           _TaskList(tasks: todayTasks, catalog: catalog),
         const SizedBox(height: 16),
-        _SectionTitle(t.home.recent),
+        SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
         if (recentTasks.isEmpty)
-          _EmptyHint(t.home.no_recent)
+          _DashboardHint(t.home.no_recent)
         else
           _TaskList(tasks: recentTasks, catalog: catalog, showRelativeDate: true, now: now, t: t),
       ],
@@ -145,39 +146,21 @@ class _WeatherPlaceholder extends StatelessWidget {
   }
 }
 
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.title);
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        title.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              letterSpacing: 0.8,
-              color: Theme.of(context).colorScheme.onSurfaceVariant,
-            ),
-      ),
-    );
-  }
-}
-
-class _EmptyHint extends StatelessWidget {
-  const _EmptyHint(this.text);
+/// Compact inline placeholder for the dashboard (not a full-screen list empty).
+class _DashboardHint extends StatelessWidget {
+  const _DashboardHint(this.text);
   final String text;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Text(
           text,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant,
-              ),
+          style: theme.textTheme.bodySmall
+              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
         ),
       ),
     );

@@ -7,6 +7,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
@@ -129,9 +130,9 @@ class _TasksList extends StatelessWidget {
       itemBuilder: (context, i) {
         final item = items[i];
         if (item is _Group) {
-          return _SectionHeader(
-            label: _sectionLabel(item, t),
-            theme: theme,
+          return SectionLabel(
+            _sectionLabel(item, t),
+            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
           );
         }
         final task = item as Task;
@@ -190,29 +191,6 @@ class _TasksList extends StatelessWidget {
         _Group.thisWeek => t.tasks_list.section_this_week,
         _Group.later => t.tasks_list.section_later,
       };
-}
-
-// ─── Section header ───────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label, required this.theme});
-
-  final String label;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
 }
 
 // ─── Task row ────────────────────────────────────────────────────────────────
