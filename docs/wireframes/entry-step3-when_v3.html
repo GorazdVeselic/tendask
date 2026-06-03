@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vnos 3 — Kdaj</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .steps { display:flex; gap:6px; padding:2px 20px 10px; }
+  .steps .seg { flex:1; height:4px; border-radius:2px; background:var(--line-strong); }
+  .steps .seg.on { background:var(--accent); }
+  .steptitle { padding:0 20px 6px; font-size:13px; color:var(--muted); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="entry-step2-subject_v3.html" style="text-decoration:none;"><span class="back">‹</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">🧪 Gnojenje</div>
+    <a href="01-home_v2.html" style="text-decoration:none;"><span class="back" style="font-size:16px;">✕</span></a>
+  </div>
+  <div class="steps">
+    <div class="seg on"></div><div class="seg on"></div><div class="seg on"></div>
+    <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  </div>
+  <div class="steptitle">Korak 3 · Kdaj</div>
+
+  <div class="content">
+    <!-- hitri preset -->
+    <div class="field" style="margin-bottom:12px;">
+      <div class="segmented">
+        <div class="seg">Danes</div>
+        <div class="seg active">Jutri</div>
+        <div class="seg">Datum…</div>
+      </div>
+    </div>
+
+    <!-- eksplicitno datum + ura spodaj (ne sekata ven) -->
+    <div class="row">
+      <div style="flex:3;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:7px;">Datum</label>
+        <div class="input" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:15px;">📅</span><span>sre, 2. jun 2026</span>
+        </div>
+      </div>
+      <div style="flex:2;">
+        <label style="display:block;font-size:13px;font-weight:600;color:var(--muted);margin-bottom:7px;">Ura</label>
+        <div class="input" style="display:flex;align-items:center;gap:8px;">
+          <span style="font-size:15px;">🕐</span><span>07:00</span>
+        </div>
+      </div>
+    </div>
+    <div style="font-size:12px;color:var(--muted);margin:8px 2px 16px;">
+      Privzeto: <b>Danes</b> ob naslednji polni uri. Izbira zgoraj posodobi datum spodaj; lahko ga tudi ročno popraviš. <i>(prikazan načrtovan primer — Jutri)</i>
+    </div>
+
+    <!-- status (izpeljan iz datuma, premostljiv) -->
+    <div class="field">
+      <label>Status</label>
+      <div class="segmented">
+        <div class="seg active">Čaka</div>
+        <div class="seg">Opravljeno</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">
+        Privzeto izpeljano iz datuma: prihodnost = čaka, danes/preteklost = opravljeno.
+      </div>
+    </div>
+
+    <!-- ponavljanje (le ko Čaka) -->
+    <div class="field">
+      <label>Ponavljanje</label>
+      <div class="segmented">
+        <div class="seg active">Enkratno</div>
+        <div class="seg">Tedensko</div>
+        <div class="seg">Sezonsko</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:6px;">
+        Prikazano, ker je opravilo načrtovano (Čaka).
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="entry-step4-reminder_v3.html" style="text-decoration:none;"><button class="btn">Nadaljuj ›</button></a>
+  </div>
+</div>
+</body>
+</html>

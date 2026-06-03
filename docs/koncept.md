@@ -590,6 +590,33 @@ prefokus IA+UX + poseg v shemo, **ne predelava**.
 
 ---
 
+## 7.16 Vnos = en horizontalni stepper (2026-06-03)
+
+> Združi **02 Hiter vnos + 07 Novo opravilo** v EN flow (odpravi podvajanje iz `ia-pregled.md`).
+> Wireframe: `docs/wireframes/entry-step*_v3.html`.
+
+Namesto enega gostega navpičnega obrazca (in ločenega »naprednega«) je vnos **horizontalni
+stepper** — en korak na zaslon, »Nadaljuj«, na koncu **pregled** s »Shrani« in »Popravi«
+(tap na vrstico skoči na korak, predizpolnjeno).
+
+**Koraki (pogojni — kratki za preprosto, polni za kompleksno):**
+1. **Tip** (tap = samodejno naprej)
+2. **Rastlina / območje** — rastline (čipi, + dodaj iz kataloga); **območja rastlin so kontekstni
+   tekst, NE enakovreden subjekt**; območje kot subjekt le ob namenski izbiri (trata, cela greda)
+3. **Kdaj** — hitri preset Danes/Jutri/Datum **zgoraj**, pod njim eksplicitna polja **datum + ura**
+   (preset posodobi datum; privzeto Danes ob **naslednji polni uri**) · **status** (Čaka/Opravljeno,
+   privzeto iz datuma) · **ponavljanje** (le ko Čaka)
+4. **Opomnik** — *pogojno: le ko Čaka* (prihodnost); Google-stil zamik (ob dogodku · X prej · po meri)
+   + ura, več na opravilo. **Terminologija:** na opravilu je »**opomnik**«, ne »obvestilo«
+   (obvestilo = sistemski kanal dostave, §7.12). Wireframe urejanja: `reminder-add_v3.html`.
+5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje)
+6. **Pregled** — vse izbire + opomba; Shrani / tap = Popravi
+
+**Posledice:** košnja danes = koraki 1–3 + pregled (4–5 odpadeta) → hitrost ohranjena;
+tretiranje dobi vseh 5 vodeno. Implementacija: refaktor `quick_log` + `task_form` → en stepper.
+
+---
+
 ## 8. v2 vizija — H3 hiperlokalna skupnost
 
 Agregirani (anonimizirani, GDPR-skladni) signali sosedov po območjih + primerjave.
@@ -692,6 +719,10 @@ Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
 
 ## 11. Dnevnik odločitev
 
+- **2026-06-03 (vnos = horizontalni stepper — §7.16):** 02 Hiter vnos + 07 Novo opravilo se
+  združita v en horizontalni flow s pogojnimi koraki (tip · rastlina/območje · kdaj+ura+status+
+  ponavljanje · opomnik [če čaka] · sredstva [če tip] · pregled s Shrani/Popravi). Območja rastlin
+  so kontekst, ne subjekt. Dodan `_v3` wireframe; sledi implementacija (refaktor v en stepper).
 - **2026-06-03 (prefokus na rastlino — glej §7.15 + [`fokus-rastlina.md`](fokus-rastlina.md)):**
   Ugotovljeno, da je bila aplikacija območje-centrična na vseh plasteh (task.area_id obvezen,
   rastlina drugorazredna; ni detajla/vstopa rastline) — kar ruši bistvo. **Popravek:** opravilo

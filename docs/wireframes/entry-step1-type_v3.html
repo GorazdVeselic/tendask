@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vnos 1/ — Tip</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .steps { display:flex; gap:6px; padding:2px 20px 10px; }
+  .steps .seg { flex:1; height:4px; border-radius:2px; background:var(--line-strong); }
+  .steps .seg.on { background:var(--accent); }
+  .steptitle { padding:0 20px 6px; font-size:13px; color:var(--muted); font-weight:600; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="01-home_v2.html" style="text-decoration:none;"><span class="back">✕</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Novo opravilo</div>
+    <div style="width:30px;"></div>
+  </div>
+  <div class="steps">
+    <div class="seg on"></div><div class="seg"></div><div class="seg"></div>
+    <div class="seg"></div><div class="seg"></div><div class="seg"></div>
+  </div>
+  <div class="steptitle">Korak 1 · Kaj boš naredil?</div>
+
+  <div class="content">
+    <div class="task-grid">
+      <div class="task-tile"><span class="ico">🌱</span><span class="lbl">Košnja</span></div>
+      <div class="task-tile"><span class="ico">💧</span><span class="lbl">Zalivanje</span></div>
+      <div class="task-tile active"><span class="ico">🧪</span><span class="lbl">Gnojenje</span></div>
+      <div class="task-tile"><span class="ico">✂️</span><span class="lbl">Obrez</span></div>
+      <div class="task-tile"><span class="ico">🪴</span><span class="lbl">Sajenje</span></div>
+      <div class="task-tile"><span class="ico">🌾</span><span class="lbl">Setev</span></div>
+      <div class="task-tile"><span class="ico">🐛</span><span class="lbl">Tretiranje</span></div>
+      <div class="task-tile"><span class="ico">🧺</span><span class="lbl">Pobiranje</span></div>
+      <div class="task-tile"><span class="ico">➕</span><span class="lbl">Drugo</span></div>
+    </div>
+    <div style="font-size:12.5px;color:var(--muted);text-align:center;margin:14px 6px;">
+      💡 Tap na opravilo te samodejno pelje naprej.
+    </div>
+    <!-- preklop na prosto opombo (kot doslej) -->
+    <a href="18-note-edit.html" style="text-decoration:none;">
+      <div class="card tinted" style="display:flex;align-items:center;gap:10px;padding:12px 14px;">
+        <span style="font-size:18px;">✍️</span>
+        <div style="flex:1;font-size:13px;color:var(--text);">Le zapis brez opravila?</div>
+        <span style="color:var(--accent);font-weight:700;">Opomba ›</span>
+      </div>
+    </a>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="entry-step2-subject_v3.html" style="text-decoration:none;"><button class="btn">Nadaljuj ›</button></a>
+  </div>
+</div>
+</body>
+</html>

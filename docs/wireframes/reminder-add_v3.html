@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Opomnik (urejanje)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .radio { width:20px; height:20px; border-radius:50%; border:2px solid var(--line-strong);
+    flex:0 0 20px; position:relative; }
+  .radio.on { border-color:var(--accent); }
+  .radio.on::after { content:""; position:absolute; inset:4px; border-radius:50%; background:var(--accent); }
+  .opt { display:flex; align-items:center; gap:12px; padding:13px 4px; border-bottom:1px solid var(--line); font-size:15px; }
+  .opt:last-child { border-bottom:none; }
+  .opt .ico { color:var(--accent); font-size:16px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="entry-step4-reminder_v3.html" style="text-decoration:none;"><span class="back">‹</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Opomnik</div>
+    <div style="width:30px;"></div>
+  </div>
+
+  <div class="content">
+    <div style="font-size:12.5px;color:var(--muted);margin:4px 2px 8px;">
+      Kdaj naj te opozori? (glede na čas opravila: <b>sre, 2. jun · 07:00</b>)
+    </div>
+
+    <div class="card" style="padding:2px 16px;">
+      <div class="opt"><span class="radio"></span><span class="ico">🔔</span><div style="flex:1;">Ob dogodku</div></div>
+      <div class="opt"><span class="radio"></span><span class="ico">🔔</span><div style="flex:1;">10 minut prej</div></div>
+      <div class="opt"><span class="radio"></span><span class="ico">🔔</span><div style="flex:1;">1 uro prej</div></div>
+      <div class="opt"><span class="radio on"></span><span class="ico">🔔</span><div style="flex:1;">1 dan prej</div><span style="font-size:13px;color:var(--muted);">ob 18:00</span></div>
+      <div class="opt"><span class="radio"></span><span class="ico">🔔</span><div style="flex:1;">2 dni prej</div></div>
+      <div class="opt"><span class="radio"></span><span class="ico">⚙︎</span><div style="flex:1;">Po meri…</div></div>
+    </div>
+
+    <!-- "Po meri" urejevalnik (prikazano, ko je izbrano Po meri) -->
+    <div class="section-title">Po meri</div>
+    <div class="card">
+      <div class="row" style="align-items:center;">
+        <input class="input" value="2" style="flex:1;text-align:center;">
+        <div class="segmented" style="flex:3;">
+          <div class="seg">minut</div>
+          <div class="seg">ur</div>
+          <div class="seg active">dni</div>
+        </div>
+        <div style="flex:0 0 auto;font-size:14px;color:var(--muted);padding-left:4px;">prej</div>
+      </div>
+      <div class="row" style="align-items:center;margin-top:12px;">
+        <div style="flex:1;font-size:14px;color:var(--muted);">Ob uri</div>
+        <div class="input" style="flex:2;display:flex;align-items:center;gap:8px;">
+          <span>🕐</span><span>18:00</span>
+        </div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:10px;">
+        Ura velja pri dnevnih/tedenskih zamikih (npr. »2 dni prej ob 18:00«).
+      </div>
+    </div>
+  </div>
+
+  <div style="position:absolute;left:0;right:0;bottom:0;padding:14px 20px 22px;background:linear-gradient(to top,#fff 70%,transparent);">
+    <a href="entry-step4-reminder_v3.html" style="text-decoration:none;"><button class="btn">Dodaj opomnik</button></a>
+  </div>
+</div>
+</body>
+</html>

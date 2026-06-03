@@ -127,6 +127,11 @@ Vrstni red **Kaj → Za kaj (subjekti) → Kdaj**. Izbirnik subjekta je **multi-
 - subjekt-rastlina **ven iz "Več (po potrebi)"** v glavno polje; območje se izpelje iz
   instance.
 
+> **Dopolnitev 2026-06-03 (v3):** vnos preoblikovan v **en horizontalni stepper** (nadomesti
+> 02+07) — glej `koncept.md` §7.16 + `docs/wireframes/entry-step*_v3.html`. Pomemben popravek:
+> **območja rastlin so kontekstni tekst, ne enakovreden subjekt**; območje je subjekt le ob
+> namenski izbiri (trata, cela greda). Status in ponavljanje gresta na korak »Kdaj« (+ ura).
+
 ### 6.5 Domov + seznami
 Vodi s **subjektom** (rastlina, če obstaja; sicer območje); območje = drobni drugotni čip.
 Opomnik: "Obreži **lovorikovce**", ne "opravilo na živi meji".
