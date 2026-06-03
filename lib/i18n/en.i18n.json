@@ -35,29 +35,6 @@
       "other": "{n} tasks this month"
     }
   },
-  "quick_log": {
-    "title": "Quick Log",
-    "advanced": "Advanced ›",
-    "note_card_title": "No task, just a note?",
-    "note_card_sub": "Thought, observation, disease…",
-    "note_card_action": "Note ›",
-    "what": "What did you do?",
-    "when": "When",
-    "today": "Today",
-    "yesterday": "Yesterday",
-    "pick_date": "Date…",
-    "where": "Where",
-    "no_areas": "No areas yet — add them in the Areas section.",
-    "more": "More (optional)",
-    "add_plant": "🌿 Add plant",
-    "add_supply": "🧪 Add supply",
-    "add_reminder": "🔔 Add reminder",
-    "note_label": "Note (optional)",
-    "note_hint": "e.g. 100g urea per 16L",
-    "save": "Save task",
-    "err_type": "Select a task type.",
-    "err_area": "Select an area."
-  },
   "notes": {
     "title_new": "New note",
     "title_edit": "Edit note",
@@ -126,37 +103,6 @@
     "delete_confirm_body": "This action cannot be undone.",
     "delete_yes": "Delete",
     "delete_cancel": "Cancel"
-  },
-  "task_form": {
-    "title_new": "New task",
-    "title_edit": "Edit task",
-    "what": "What",
-    "what_hint": "Select task type",
-    "when": "When",
-    "status": "Status",
-    "status_waiting": "Waiting",
-    "status_done": "Done",
-    "area": "Area",
-    "no_areas": "No areas yet — add them in the Areas section.",
-    "plant": "Plant",
-    "plant_hint": "(for pruning, treatment, harvesting…)",
-    "plant_add": "Select plant",
-    "plant_note": "Link to a plant, not just an area.",
-    "plant_select": "Select plant",
-    "plant_none": "This area has no plants yet. Add one with the button below.",
-    "supplies": "Supplies used",
-    "supplies_add": "+ Add supply",
-    "reminders": "Reminder (optional)",
-    "reminders_add": "+ Add reminder",
-    "recurrence": "Recurrence",
-    "recurrence_once": "Once",
-    "recurrence_weekly": "Weekly",
-    "recurrence_seasonal": "Seasonal",
-    "note": "Note (optional)",
-    "note_hint": "Morning, before expected rain.",
-    "save": "Save task",
-    "err_type": "Select a task type.",
-    "err_area": "Select an area."
   },
   "subject_picker": {
     "title": "Plant or area",
@@ -299,7 +245,9 @@
     "from_catalog": "From catalog",
     "not_found": "Can't find it?",
     "custom_add(q)": "+ Add custom: “$q”",
-    "custom_private": "A custom entry is private and not shared with the community."
+    "custom_private": "A custom entry is private and not shared with the community.",
+    "field_add": "Select plant",
+    "field_empty": "This area has no plants yet. Add one with the button below."
   },
   "supplies": {
     "title": "Supplies",

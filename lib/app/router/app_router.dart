@@ -11,9 +11,7 @@ import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
-import '../../features/tasks/data/tasks_repository.dart';
 import '../../features/tasks/presentation/entry/entry_screen.dart';
-import '../../features/tasks/presentation/subject_picker_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
@@ -102,13 +100,6 @@ final appRouter = GoRouter(
       name: 'plant-edit',
       builder: (context, state) =>
           PlantEditScreen(userPlantId: state.pathParameters['id']),
-    ),
-    GoRoute(
-      path: '/subject-picker',
-      name: 'subject-picker',
-      builder: (context, state) => SubjectPickerScreen(
-        initial: (state.extra as List<TaskSubjectSpec>?) ?? const [],
-      ),
     ),
     GoRoute(
       path: '/supplies',

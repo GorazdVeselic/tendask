@@ -35,29 +35,6 @@
       "other": "{n} Aufgaben diesen Monat"
     }
   },
-  "quick_log": {
-    "title": "Schnell erfassen",
-    "advanced": "Erweitert ›",
-    "note_card_title": "Keine Aufgabe, nur eine Notiz?",
-    "note_card_sub": "Gedanke, Beobachtung, Krankheit…",
-    "note_card_action": "Notiz ›",
-    "what": "Was hast du gemacht?",
-    "when": "Wann",
-    "today": "Heute",
-    "yesterday": "Gestern",
-    "pick_date": "Datum…",
-    "where": "Wo",
-    "no_areas": "Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.",
-    "more": "Mehr (optional)",
-    "add_plant": "🌿 Pflanze hinzufügen",
-    "add_supply": "🧪 Mittel hinzufügen",
-    "add_reminder": "🔔 Erinnerung hinzufügen",
-    "note_label": "Notiz (optional)",
-    "note_hint": "z.B. 100g Harnstoff pro 16L",
-    "save": "Aufgabe speichern",
-    "err_type": "Aufgabentyp auswählen.",
-    "err_area": "Bereich auswählen."
-  },
   "notes": {
     "title_new": "Neue Notiz",
     "title_edit": "Notiz bearbeiten",
@@ -126,37 +103,6 @@
     "delete_confirm_body": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "delete_yes": "Löschen",
     "delete_cancel": "Abbrechen"
-  },
-  "task_form": {
-    "title_new": "Neue Aufgabe",
-    "title_edit": "Aufgabe bearbeiten",
-    "what": "Was",
-    "what_hint": "Aufgabentyp auswählen",
-    "when": "Wann",
-    "status": "Status",
-    "status_waiting": "Ausstehend",
-    "status_done": "Erledigt",
-    "area": "Bereich",
-    "no_areas": "Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.",
-    "plant": "Pflanze",
-    "plant_hint": "(für Schnitt, Behandlung, Ernte…)",
-    "plant_add": "Pflanze auswählen",
-    "plant_note": "Mit Pflanze verknüpfen, nicht nur Bereich.",
-    "plant_select": "Pflanze auswählen",
-    "plant_none": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.",
-    "supplies": "Verbrauchte Mittel",
-    "supplies_add": "+ Mittel hinzufügen",
-    "reminders": "Erinnerung (optional)",
-    "reminders_add": "+ Erinnerung hinzufügen",
-    "recurrence": "Wiederholung",
-    "recurrence_once": "Einmalig",
-    "recurrence_weekly": "Wöchentlich",
-    "recurrence_seasonal": "Saisonal",
-    "note": "Notiz (optional)",
-    "note_hint": "Morgens, vor dem erwarteten Regen.",
-    "save": "Aufgabe speichern",
-    "err_type": "Aufgabentyp auswählen.",
-    "err_area": "Bereich auswählen."
   },
   "subject_picker": {
     "title": "Pflanze oder Bereich",
@@ -299,7 +245,9 @@
     "from_catalog": "Aus dem Katalog",
     "not_found": "Nicht gefunden?",
     "custom_add(q)": "+ Eigene hinzufügen: „$q“",
-    "custom_private": "Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt."
+    "custom_private": "Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.",
+    "field_add": "Pflanze auswählen",
+    "field_empty": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu."
   },
   "supplies": {
     "title": "Vorräte",

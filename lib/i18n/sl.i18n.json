@@ -35,29 +35,6 @@
       "other": "{n} opravil ta mesec"
     }
   },
-  "quick_log": {
-    "title": "Hiter vnos",
-    "advanced": "Napredno ›",
-    "note_card_title": "Nimaš opravila, le zapis?",
-    "note_card_sub": "Misel, opažanje, bolezen…",
-    "note_card_action": "Opomba ›",
-    "what": "Kaj si naredil?",
-    "when": "Kdaj",
-    "today": "Danes",
-    "yesterday": "Včeraj",
-    "pick_date": "Datum…",
-    "where": "Kje",
-    "no_areas": "Ni območij — dodaj jih v razdelku Območja.",
-    "more": "Več (po potrebi)",
-    "add_plant": "🌿 Dodaj rastlino",
-    "add_supply": "🧪 Dodaj sredstvo iz zalog",
-    "add_reminder": "🔔 Dodaj opomnik",
-    "note_label": "Opomba (neobvezno)",
-    "note_hint": "npr. 100g uree na 16l",
-    "save": "Shrani opravilo",
-    "err_type": "Izberi vrsto opravila.",
-    "err_area": "Izberi območje."
-  },
   "notes": {
     "title_new": "Nova opomba",
     "title_edit": "Uredi opombo",
@@ -126,37 +103,6 @@
     "delete_confirm_body": "To dejanje je nepopravljivo.",
     "delete_yes": "Izbriši",
     "delete_cancel": "Prekliči"
-  },
-  "task_form": {
-    "title_new": "Novo opravilo",
-    "title_edit": "Uredi opravilo",
-    "what": "Kaj",
-    "what_hint": "Izberi vrsto opravila",
-    "when": "Kdaj",
-    "status": "Status",
-    "status_waiting": "Čaka",
-    "status_done": "Opravljeno",
-    "area": "Območje",
-    "no_areas": "Ni območij — dodaj jih v razdelku Območja.",
-    "plant": "Rastlina",
-    "plant_hint": "(za obrez, tretiranje, pobiranje…)",
-    "plant_add": "Izberi rastlino",
-    "plant_note": "Vežemo na rastlino, ne le območje.",
-    "plant_select": "Izberi rastlino",
-    "plant_none": "To območje še nima rastlin. Dodaj jo z gumbom spodaj.",
-    "supplies": "Sredstva iz zalog (poraba)",
-    "supplies_add": "+ Dodaj sredstvo iz zalog",
-    "reminders": "Opomnik (neobvezno)",
-    "reminders_add": "+ Dodaj obvestilo",
-    "recurrence": "Ponavljanje",
-    "recurrence_once": "Enkratno",
-    "recurrence_weekly": "Tedensko",
-    "recurrence_seasonal": "Sezonsko",
-    "note": "Opomba (neobvezno)",
-    "note_hint": "Zjutraj, pred napovedanim dežjem.",
-    "save": "Shrani opravilo",
-    "err_type": "Izberi vrsto opravila.",
-    "err_area": "Izberi območje."
   },
   "subject_picker": {
     "title": "Rastlina ali območje",
@@ -299,7 +245,9 @@
     "from_catalog": "Iz baze",
     "not_found": "Ne najdeš?",
     "custom_add(q)": "+ Dodaj po meri: „$q“",
-    "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo."
+    "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo.",
+    "field_add": "Izberi rastlino",
+    "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."
   },
   "supplies": {
     "title": "Zaloge",

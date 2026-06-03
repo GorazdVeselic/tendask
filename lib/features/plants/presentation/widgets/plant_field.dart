@@ -7,7 +7,7 @@ import '../../../../core/database/catalog_provider.dart';
 import '../plant_display.dart';
 
 /// Picks a plant belonging to [areaId] (chips), or adds a new one via the
-/// catalog picker ([onAdd]). Shared by the task form and the note form.
+/// catalog picker ([onAdd]). Used by the note form.
 class PlantField extends ConsumerWidget {
   const PlantField({
     super.key,
@@ -41,7 +41,7 @@ class PlantField extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
-                  t.task_form.plant_none,
+                  t.plants.field_empty,
                   style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant),
                 ),
@@ -66,7 +66,7 @@ class PlantField extends ConsumerWidget {
               child: TextButton.icon(
                 onPressed: onAdd,
                 icon: const Icon(Icons.add, size: 18),
-                label: Text(t.task_form.plant_add),
+                label: Text(t.plants.field_add),
                 style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
                     visualDensity: VisualDensity.compact),

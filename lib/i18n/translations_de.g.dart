@@ -43,11 +43,9 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
-	@override late final _Translations$quick_log$de quick_log = _Translations$quick_log$de._(_root);
 	@override late final _Translations$notes$de notes = _Translations$notes$de._(_root);
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
-	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
 	@override late final _Translations$subject_picker$de subject_picker = _Translations$subject_picker$de._(_root);
 	@override late final _Translations$entry$de entry = _Translations$entry$de._(_root);
 	@override late final _Translations$plant_edit$de plant_edit = _Translations$plant_edit$de._(_root);
@@ -120,36 +118,6 @@ class _Translations$journal$de extends Translations$journal$sl {
 		one: '{n} Aufgabe diesen Monat',
 		other: '{n} Aufgaben diesen Monat',
 	);
-}
-
-// Path: quick_log
-class _Translations$quick_log$de extends Translations$quick_log$sl {
-	_Translations$quick_log$de._(TranslationsDe root) : this._root = root, super.internal(root);
-
-	final TranslationsDe _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Schnell erfassen';
-	@override String get advanced => 'Erweitert ›';
-	@override String get note_card_title => 'Keine Aufgabe, nur eine Notiz?';
-	@override String get note_card_sub => 'Gedanke, Beobachtung, Krankheit…';
-	@override String get note_card_action => 'Notiz ›';
-	@override String get what => 'Was hast du gemacht?';
-	@override String get when => 'Wann';
-	@override String get today => 'Heute';
-	@override String get yesterday => 'Gestern';
-	@override String get pick_date => 'Datum…';
-	@override String get where => 'Wo';
-	@override String get no_areas => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.';
-	@override String get more => 'Mehr (optional)';
-	@override String get add_plant => '🌿 Pflanze hinzufügen';
-	@override String get add_supply => '🧪 Mittel hinzufügen';
-	@override String get add_reminder => '🔔 Erinnerung hinzufügen';
-	@override String get note_label => 'Notiz (optional)';
-	@override String get note_hint => 'z.B. 100g Harnstoff pro 16L';
-	@override String get save => 'Aufgabe speichern';
-	@override String get err_type => 'Aufgabentyp auswählen.';
-	@override String get err_area => 'Bereich auswählen.';
 }
 
 // Path: notes
@@ -240,44 +208,6 @@ class _Translations$tasks_list$de extends Translations$tasks_list$sl {
 	@override String get delete_confirm_body => 'Diese Aktion kann nicht rückgängig gemacht werden.';
 	@override String get delete_yes => 'Löschen';
 	@override String get delete_cancel => 'Abbrechen';
-}
-
-// Path: task_form
-class _Translations$task_form$de extends Translations$task_form$sl {
-	_Translations$task_form$de._(TranslationsDe root) : this._root = root, super.internal(root);
-
-	final TranslationsDe _root; // ignore: unused_field
-
-	// Translations
-	@override String get title_new => 'Neue Aufgabe';
-	@override String get title_edit => 'Aufgabe bearbeiten';
-	@override String get what => 'Was';
-	@override String get what_hint => 'Aufgabentyp auswählen';
-	@override String get when => 'Wann';
-	@override String get status => 'Status';
-	@override String get status_waiting => 'Ausstehend';
-	@override String get status_done => 'Erledigt';
-	@override String get area => 'Bereich';
-	@override String get no_areas => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.';
-	@override String get plant => 'Pflanze';
-	@override String get plant_hint => '(für Schnitt, Behandlung, Ernte…)';
-	@override String get plant_add => 'Pflanze auswählen';
-	@override String get plant_note => 'Mit Pflanze verknüpfen, nicht nur Bereich.';
-	@override String get plant_select => 'Pflanze auswählen';
-	@override String get plant_none => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
-	@override String get supplies => 'Verbrauchte Mittel';
-	@override String get supplies_add => '+ Mittel hinzufügen';
-	@override String get reminders => 'Erinnerung (optional)';
-	@override String get reminders_add => '+ Erinnerung hinzufügen';
-	@override String get recurrence => 'Wiederholung';
-	@override String get recurrence_once => 'Einmalig';
-	@override String get recurrence_weekly => 'Wöchentlich';
-	@override String get recurrence_seasonal => 'Saisonal';
-	@override String get note => 'Notiz (optional)';
-	@override String get note_hint => 'Morgens, vor dem erwarteten Regen.';
-	@override String get save => 'Aufgabe speichern';
-	@override String get err_type => 'Aufgabentyp auswählen.';
-	@override String get err_area => 'Bereich auswählen.';
 }
 
 // Path: subject_picker
@@ -463,6 +393,8 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get not_found => 'Nicht gefunden?';
 	@override String custom_add({required Object q}) => '+ Eigene hinzufügen: „${q}“';
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
+	@override String get field_add => 'Pflanze auswählen';
+	@override String get field_empty => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
 }
 
 // Path: supplies
@@ -552,27 +484,6 @@ extension on TranslationsDe {
 			'journal.month_view' => 'Monat',
 			'journal.month_hint' => '💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '{n} Aufgabe diesen Monat', other: '{n} Aufgaben diesen Monat', ), 
-			'quick_log.title' => 'Schnell erfassen',
-			'quick_log.advanced' => 'Erweitert ›',
-			'quick_log.note_card_title' => 'Keine Aufgabe, nur eine Notiz?',
-			'quick_log.note_card_sub' => 'Gedanke, Beobachtung, Krankheit…',
-			'quick_log.note_card_action' => 'Notiz ›',
-			'quick_log.what' => 'Was hast du gemacht?',
-			'quick_log.when' => 'Wann',
-			'quick_log.today' => 'Heute',
-			'quick_log.yesterday' => 'Gestern',
-			'quick_log.pick_date' => 'Datum…',
-			'quick_log.where' => 'Wo',
-			'quick_log.no_areas' => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.',
-			'quick_log.more' => 'Mehr (optional)',
-			'quick_log.add_plant' => '🌿 Pflanze hinzufügen',
-			'quick_log.add_supply' => '🧪 Mittel hinzufügen',
-			'quick_log.add_reminder' => '🔔 Erinnerung hinzufügen',
-			'quick_log.note_label' => 'Notiz (optional)',
-			'quick_log.note_hint' => 'z.B. 100g Harnstoff pro 16L',
-			'quick_log.save' => 'Aufgabe speichern',
-			'quick_log.err_type' => 'Aufgabentyp auswählen.',
-			'quick_log.err_area' => 'Bereich auswählen.',
 			'notes.title_new' => 'Neue Notiz',
 			'notes.title_edit' => 'Notiz bearbeiten',
 			'notes.content_label' => 'Notiz',
@@ -633,35 +544,6 @@ extension on TranslationsDe {
 			'tasks_list.delete_confirm_body' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
 			'tasks_list.delete_yes' => 'Löschen',
 			'tasks_list.delete_cancel' => 'Abbrechen',
-			'task_form.title_new' => 'Neue Aufgabe',
-			'task_form.title_edit' => 'Aufgabe bearbeiten',
-			'task_form.what' => 'Was',
-			'task_form.what_hint' => 'Aufgabentyp auswählen',
-			'task_form.when' => 'Wann',
-			'task_form.status' => 'Status',
-			'task_form.status_waiting' => 'Ausstehend',
-			'task_form.status_done' => 'Erledigt',
-			'task_form.area' => 'Bereich',
-			'task_form.no_areas' => 'Keine Bereiche — füge sie im Bereich-Abschnitt hinzu.',
-			'task_form.plant' => 'Pflanze',
-			'task_form.plant_hint' => '(für Schnitt, Behandlung, Ernte…)',
-			'task_form.plant_add' => 'Pflanze auswählen',
-			'task_form.plant_note' => 'Mit Pflanze verknüpfen, nicht nur Bereich.',
-			'task_form.plant_select' => 'Pflanze auswählen',
-			'task_form.plant_none' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
-			'task_form.supplies' => 'Verbrauchte Mittel',
-			'task_form.supplies_add' => '+ Mittel hinzufügen',
-			'task_form.reminders' => 'Erinnerung (optional)',
-			'task_form.reminders_add' => '+ Erinnerung hinzufügen',
-			'task_form.recurrence' => 'Wiederholung',
-			'task_form.recurrence_once' => 'Einmalig',
-			'task_form.recurrence_weekly' => 'Wöchentlich',
-			'task_form.recurrence_seasonal' => 'Saisonal',
-			'task_form.note' => 'Notiz (optional)',
-			'task_form.note_hint' => 'Morgens, vor dem erwarteten Regen.',
-			'task_form.save' => 'Aufgabe speichern',
-			'task_form.err_type' => 'Aufgabentyp auswählen.',
-			'task_form.err_area' => 'Bereich auswählen.',
 			'subject_picker.title' => 'Pflanze oder Bereich',
 			'subject_picker.hint' => 'Pflanze oder Bereich',
 			'subject_picker.search_hint' => 'Pflanze oder Bereich suchen…',
@@ -793,6 +675,8 @@ extension on TranslationsDe {
 			'plants.not_found' => 'Nicht gefunden?',
 			'plants.custom_add' => ({required Object q}) => '+ Eigene hinzufügen: „${q}“',
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
+			'plants.field_add' => 'Pflanze auswählen',
+			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
 			'supplies.title' => 'Vorräte',
 			'supplies.subtitle' => 'was ich zu Hause habe',
 			'supplies.empty' => 'Noch keine Vorräte. Füge welche mit + hinzu.',

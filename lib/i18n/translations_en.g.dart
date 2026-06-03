@@ -43,11 +43,9 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
-	@override late final _Translations$quick_log$en quick_log = _Translations$quick_log$en._(_root);
 	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
-	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
 	@override late final _Translations$subject_picker$en subject_picker = _Translations$subject_picker$en._(_root);
 	@override late final _Translations$entry$en entry = _Translations$entry$en._(_root);
 	@override late final _Translations$plant_edit$en plant_edit = _Translations$plant_edit$en._(_root);
@@ -120,36 +118,6 @@ class _Translations$journal$en extends Translations$journal$sl {
 		one: '{n} task this month',
 		other: '{n} tasks this month',
 	);
-}
-
-// Path: quick_log
-class _Translations$quick_log$en extends Translations$quick_log$sl {
-	_Translations$quick_log$en._(TranslationsEn root) : this._root = root, super.internal(root);
-
-	final TranslationsEn _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => 'Quick Log';
-	@override String get advanced => 'Advanced ›';
-	@override String get note_card_title => 'No task, just a note?';
-	@override String get note_card_sub => 'Thought, observation, disease…';
-	@override String get note_card_action => 'Note ›';
-	@override String get what => 'What did you do?';
-	@override String get when => 'When';
-	@override String get today => 'Today';
-	@override String get yesterday => 'Yesterday';
-	@override String get pick_date => 'Date…';
-	@override String get where => 'Where';
-	@override String get no_areas => 'No areas yet — add them in the Areas section.';
-	@override String get more => 'More (optional)';
-	@override String get add_plant => '🌿 Add plant';
-	@override String get add_supply => '🧪 Add supply';
-	@override String get add_reminder => '🔔 Add reminder';
-	@override String get note_label => 'Note (optional)';
-	@override String get note_hint => 'e.g. 100g urea per 16L';
-	@override String get save => 'Save task';
-	@override String get err_type => 'Select a task type.';
-	@override String get err_area => 'Select an area.';
 }
 
 // Path: notes
@@ -240,44 +208,6 @@ class _Translations$tasks_list$en extends Translations$tasks_list$sl {
 	@override String get delete_confirm_body => 'This action cannot be undone.';
 	@override String get delete_yes => 'Delete';
 	@override String get delete_cancel => 'Cancel';
-}
-
-// Path: task_form
-class _Translations$task_form$en extends Translations$task_form$sl {
-	_Translations$task_form$en._(TranslationsEn root) : this._root = root, super.internal(root);
-
-	final TranslationsEn _root; // ignore: unused_field
-
-	// Translations
-	@override String get title_new => 'New task';
-	@override String get title_edit => 'Edit task';
-	@override String get what => 'What';
-	@override String get what_hint => 'Select task type';
-	@override String get when => 'When';
-	@override String get status => 'Status';
-	@override String get status_waiting => 'Waiting';
-	@override String get status_done => 'Done';
-	@override String get area => 'Area';
-	@override String get no_areas => 'No areas yet — add them in the Areas section.';
-	@override String get plant => 'Plant';
-	@override String get plant_hint => '(for pruning, treatment, harvesting…)';
-	@override String get plant_add => 'Select plant';
-	@override String get plant_note => 'Link to a plant, not just an area.';
-	@override String get plant_select => 'Select plant';
-	@override String get plant_none => 'This area has no plants yet. Add one with the button below.';
-	@override String get supplies => 'Supplies used';
-	@override String get supplies_add => '+ Add supply';
-	@override String get reminders => 'Reminder (optional)';
-	@override String get reminders_add => '+ Add reminder';
-	@override String get recurrence => 'Recurrence';
-	@override String get recurrence_once => 'Once';
-	@override String get recurrence_weekly => 'Weekly';
-	@override String get recurrence_seasonal => 'Seasonal';
-	@override String get note => 'Note (optional)';
-	@override String get note_hint => 'Morning, before expected rain.';
-	@override String get save => 'Save task';
-	@override String get err_type => 'Select a task type.';
-	@override String get err_area => 'Select an area.';
 }
 
 // Path: subject_picker
@@ -463,6 +393,8 @@ class _Translations$plants$en extends Translations$plants$sl {
 	@override String get not_found => 'Can\'t find it?';
 	@override String custom_add({required Object q}) => '+ Add custom: “${q}”';
 	@override String get custom_private => 'A custom entry is private and not shared with the community.';
+	@override String get field_add => 'Select plant';
+	@override String get field_empty => 'This area has no plants yet. Add one with the button below.';
 }
 
 // Path: supplies
@@ -552,27 +484,6 @@ extension on TranslationsEn {
 			'journal.month_view' => 'Month',
 			'journal.month_hint' => '💡 Tap a day to add a task (past or planned).',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '{n} task this month', other: '{n} tasks this month', ), 
-			'quick_log.title' => 'Quick Log',
-			'quick_log.advanced' => 'Advanced ›',
-			'quick_log.note_card_title' => 'No task, just a note?',
-			'quick_log.note_card_sub' => 'Thought, observation, disease…',
-			'quick_log.note_card_action' => 'Note ›',
-			'quick_log.what' => 'What did you do?',
-			'quick_log.when' => 'When',
-			'quick_log.today' => 'Today',
-			'quick_log.yesterday' => 'Yesterday',
-			'quick_log.pick_date' => 'Date…',
-			'quick_log.where' => 'Where',
-			'quick_log.no_areas' => 'No areas yet — add them in the Areas section.',
-			'quick_log.more' => 'More (optional)',
-			'quick_log.add_plant' => '🌿 Add plant',
-			'quick_log.add_supply' => '🧪 Add supply',
-			'quick_log.add_reminder' => '🔔 Add reminder',
-			'quick_log.note_label' => 'Note (optional)',
-			'quick_log.note_hint' => 'e.g. 100g urea per 16L',
-			'quick_log.save' => 'Save task',
-			'quick_log.err_type' => 'Select a task type.',
-			'quick_log.err_area' => 'Select an area.',
 			'notes.title_new' => 'New note',
 			'notes.title_edit' => 'Edit note',
 			'notes.content_label' => 'Note',
@@ -633,35 +544,6 @@ extension on TranslationsEn {
 			'tasks_list.delete_confirm_body' => 'This action cannot be undone.',
 			'tasks_list.delete_yes' => 'Delete',
 			'tasks_list.delete_cancel' => 'Cancel',
-			'task_form.title_new' => 'New task',
-			'task_form.title_edit' => 'Edit task',
-			'task_form.what' => 'What',
-			'task_form.what_hint' => 'Select task type',
-			'task_form.when' => 'When',
-			'task_form.status' => 'Status',
-			'task_form.status_waiting' => 'Waiting',
-			'task_form.status_done' => 'Done',
-			'task_form.area' => 'Area',
-			'task_form.no_areas' => 'No areas yet — add them in the Areas section.',
-			'task_form.plant' => 'Plant',
-			'task_form.plant_hint' => '(for pruning, treatment, harvesting…)',
-			'task_form.plant_add' => 'Select plant',
-			'task_form.plant_note' => 'Link to a plant, not just an area.',
-			'task_form.plant_select' => 'Select plant',
-			'task_form.plant_none' => 'This area has no plants yet. Add one with the button below.',
-			'task_form.supplies' => 'Supplies used',
-			'task_form.supplies_add' => '+ Add supply',
-			'task_form.reminders' => 'Reminder (optional)',
-			'task_form.reminders_add' => '+ Add reminder',
-			'task_form.recurrence' => 'Recurrence',
-			'task_form.recurrence_once' => 'Once',
-			'task_form.recurrence_weekly' => 'Weekly',
-			'task_form.recurrence_seasonal' => 'Seasonal',
-			'task_form.note' => 'Note (optional)',
-			'task_form.note_hint' => 'Morning, before expected rain.',
-			'task_form.save' => 'Save task',
-			'task_form.err_type' => 'Select a task type.',
-			'task_form.err_area' => 'Select an area.',
 			'subject_picker.title' => 'Plant or area',
 			'subject_picker.hint' => 'plant or area',
 			'subject_picker.search_hint' => 'Search plant or area…',
@@ -793,6 +675,8 @@ extension on TranslationsEn {
 			'plants.not_found' => 'Can\'t find it?',
 			'plants.custom_add' => ({required Object q}) => '+ Add custom: “${q}”',
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
+			'plants.field_add' => 'Select plant',
+			'plants.field_empty' => 'This area has no plants yet. Add one with the button below.',
 			'supplies.title' => 'Supplies',
 			'supplies.subtitle' => 'what I have at home',
 			'supplies.empty' => 'No supplies yet. Add some with +.',
