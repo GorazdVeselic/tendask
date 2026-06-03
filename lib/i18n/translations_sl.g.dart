@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
 	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
 	late final Translations$task_form$sl task_form = Translations$task_form$sl.internal(_root);
+	late final Translations$subject_picker$sl subject_picker = Translations$subject_picker$sl.internal(_root);
 	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
@@ -548,6 +549,45 @@ class Translations$task_form$sl {
 	String get err_area => 'Izberi območje.';
 }
 
+// Path: subject_picker
+class Translations$subject_picker$sl {
+	Translations$subject_picker$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Za kaj?'
+	String get title => 'Za kaj?';
+
+	/// sl: 'rastlina ali trata'
+	String get hint => 'rastlina ali trata';
+
+	/// sl: 'Išči rastlino ali območje…'
+	String get search_hint => 'Išči rastlino ali območje…';
+
+	/// sl: 'Rastline'
+	String get section_plants => 'Rastline';
+
+	/// sl: 'Trate / območja'
+	String get section_areas => 'Trate / območja';
+
+	/// sl: 'Dodaj iz kataloga'
+	String get from_catalog => 'Dodaj iz kataloga';
+
+	/// sl: 'Izberi'
+	String get choose => 'Izberi';
+
+	/// sl: 'Potrdi'
+	String get confirm => 'Potrdi';
+
+	/// sl: 'Izberi vsaj eno rastlino ali trato.'
+	String get err_select => 'Izberi vsaj eno rastlino ali trato.';
+
+	/// sl: 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.'
+	String get empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
+}
+
 // Path: plant_detail
 class Translations$plant_detail$sl {
 	Translations$plant_detail$sl.internal(this._root);
@@ -976,6 +1016,16 @@ extension on Translations {
 			'task_form.save' => 'Shrani opravilo',
 			'task_form.err_type' => 'Izberi vrsto opravila.',
 			'task_form.err_area' => 'Izberi območje.',
+			'subject_picker.title' => 'Za kaj?',
+			'subject_picker.hint' => 'rastlina ali trata',
+			'subject_picker.search_hint' => 'Išči rastlino ali območje…',
+			'subject_picker.section_plants' => 'Rastline',
+			'subject_picker.section_areas' => 'Trate / območja',
+			'subject_picker.from_catalog' => 'Dodaj iz kataloga',
+			'subject_picker.choose' => 'Izberi',
+			'subject_picker.confirm' => 'Potrdi',
+			'subject_picker.err_select' => 'Izberi vsaj eno rastlino ali trato.',
+			'subject_picker.empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
 			'plant_detail.not_found' => 'Rastlina ni bila najdena.',
 			'plant_detail.history_title' => 'Zgodovina opravil',
 			'plant_detail.history_empty' => 'Za to rastlino še ni opravil.',

@@ -48,6 +48,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
 	@override late final _Translations$tasks_list$de tasks_list = _Translations$tasks_list$de._(_root);
 	@override late final _Translations$task_form$de task_form = _Translations$task_form$de._(_root);
+	@override late final _Translations$subject_picker$de subject_picker = _Translations$subject_picker$de._(_root);
 	@override late final _Translations$plant_detail$de plant_detail = _Translations$plant_detail$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
@@ -275,6 +276,25 @@ class _Translations$task_form$de extends Translations$task_form$sl {
 	@override String get save => 'Aufgabe speichern';
 	@override String get err_type => 'Aufgabentyp auswählen.';
 	@override String get err_area => 'Bereich auswählen.';
+}
+
+// Path: subject_picker
+class _Translations$subject_picker$de extends Translations$subject_picker$sl {
+	_Translations$subject_picker$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Wofür?';
+	@override String get hint => 'Pflanze oder Rasen';
+	@override String get search_hint => 'Pflanze oder Bereich suchen…';
+	@override String get section_plants => 'Pflanzen';
+	@override String get section_areas => 'Rasen / Bereiche';
+	@override String get from_catalog => 'Aus Katalog hinzufügen';
+	@override String get choose => 'Wählen';
+	@override String get confirm => 'Bestätigen';
+	@override String get err_select => 'Wähle mindestens eine Pflanze oder einen Rasen.';
+	@override String get empty => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
 }
 
 // Path: plant_detail
@@ -545,6 +565,16 @@ extension on TranslationsDe {
 			'task_form.save' => 'Aufgabe speichern',
 			'task_form.err_type' => 'Aufgabentyp auswählen.',
 			'task_form.err_area' => 'Bereich auswählen.',
+			'subject_picker.title' => 'Wofür?',
+			'subject_picker.hint' => 'Pflanze oder Rasen',
+			'subject_picker.search_hint' => 'Pflanze oder Bereich suchen…',
+			'subject_picker.section_plants' => 'Pflanzen',
+			'subject_picker.section_areas' => 'Rasen / Bereiche',
+			'subject_picker.from_catalog' => 'Aus Katalog hinzufügen',
+			'subject_picker.choose' => 'Wählen',
+			'subject_picker.confirm' => 'Bestätigen',
+			'subject_picker.err_select' => 'Wähle mindestens eine Pflanze oder einen Rasen.',
+			'subject_picker.empty' => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
 			'plant_detail.not_found' => 'Pflanze nicht gefunden.',
 			'plant_detail.history_title' => 'Aufgabenverlauf',
 			'plant_detail.history_empty' => 'Noch keine Aufgaben für diese Pflanze.',

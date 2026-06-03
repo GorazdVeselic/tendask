@@ -17,6 +17,7 @@ import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/features/tasks/presentation/quick_log_screen.dart';
+import 'package:tendask/features/tasks/presentation/subject_picker_screen.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -93,6 +94,13 @@ void main() {
             path: '/quick-log',
             builder: (_, _) => const QuickLogScreen(),
           ),
+          GoRoute(
+            path: '/subject-picker',
+            name: 'subject-picker',
+            builder: (_, state) => SubjectPickerScreen(
+              initial: (state.extra as List<TaskSubjectSpec>?) ?? const [],
+            ),
+          ),
         ],
       );
 
@@ -103,6 +111,10 @@ void main() {
               tasksRepositoryProvider.overrideWith((ref) => repo),
               taskTypesMapProvider.overrideWith((ref) async => taskTypeMap),
               areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
+              userPlantsMapProvider
+                  .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
+              plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
+              plantsListProvider.overrideWith((ref) async => <Plant>[]),
             ],
             child: MaterialApp.router(routerConfig: router),
           ),
@@ -116,8 +128,12 @@ void main() {
       await tester.tap(find.text('Košnja'));
       await tester.pumpAndSettle();
 
-      // Tap the area chip ("Moj vrt")
+      // Open the subject picker, select the area, confirm.
+      await tester.tap(find.text('Izberi'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Moj vrt'));
+      await tester.pumpAndSettle();
+      await tester.tap(find.textContaining('Potrdi'));
       await tester.pumpAndSettle();
 
       // Tap save — _save() writes to DB then calls context.pop()

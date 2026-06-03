@@ -48,6 +48,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
 	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
 	@override late final _Translations$task_form$en task_form = _Translations$task_form$en._(_root);
+	@override late final _Translations$subject_picker$en subject_picker = _Translations$subject_picker$en._(_root);
 	@override late final _Translations$plant_detail$en plant_detail = _Translations$plant_detail$en._(_root);
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
 	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
@@ -275,6 +276,25 @@ class _Translations$task_form$en extends Translations$task_form$sl {
 	@override String get save => 'Save task';
 	@override String get err_type => 'Select a task type.';
 	@override String get err_area => 'Select an area.';
+}
+
+// Path: subject_picker
+class _Translations$subject_picker$en extends Translations$subject_picker$sl {
+	_Translations$subject_picker$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'For what?';
+	@override String get hint => 'plant or lawn';
+	@override String get search_hint => 'Search plant or area…';
+	@override String get section_plants => 'Plants';
+	@override String get section_areas => 'Lawns / areas';
+	@override String get from_catalog => 'Add from catalog';
+	@override String get choose => 'Choose';
+	@override String get confirm => 'Confirm';
+	@override String get err_select => 'Choose at least one plant or lawn.';
+	@override String get empty => 'No plants or areas. Add them in the Garden tab.';
 }
 
 // Path: plant_detail
@@ -545,6 +565,16 @@ extension on TranslationsEn {
 			'task_form.save' => 'Save task',
 			'task_form.err_type' => 'Select a task type.',
 			'task_form.err_area' => 'Select an area.',
+			'subject_picker.title' => 'For what?',
+			'subject_picker.hint' => 'plant or lawn',
+			'subject_picker.search_hint' => 'Search plant or area…',
+			'subject_picker.section_plants' => 'Plants',
+			'subject_picker.section_areas' => 'Lawns / areas',
+			'subject_picker.from_catalog' => 'Add from catalog',
+			'subject_picker.choose' => 'Choose',
+			'subject_picker.confirm' => 'Confirm',
+			'subject_picker.err_select' => 'Choose at least one plant or lawn.',
+			'subject_picker.empty' => 'No plants or areas. Add them in the Garden tab.',
 			'plant_detail.not_found' => 'Plant not found.',
 			'plant_detail.history_title' => 'Task history',
 			'plant_detail.history_empty' => 'No tasks for this plant yet.',

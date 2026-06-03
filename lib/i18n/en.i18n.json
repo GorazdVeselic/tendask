@@ -158,6 +158,18 @@
     "err_type": "Select a task type.",
     "err_area": "Select an area."
   },
+  "subject_picker": {
+    "title": "For what?",
+    "hint": "plant or lawn",
+    "search_hint": "Search plant or area…",
+    "section_plants": "Plants",
+    "section_areas": "Lawns / areas",
+    "from_catalog": "Add from catalog",
+    "choose": "Choose",
+    "confirm": "Confirm",
+    "err_select": "Choose at least one plant or lawn.",
+    "empty": "No plants or areas. Add them in the Garden tab."
+  },
   "plant_detail": {
     "not_found": "Plant not found.",
     "history_title": "Task history",

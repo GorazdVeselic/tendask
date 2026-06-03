@@ -158,6 +158,18 @@
     "err_type": "Aufgabentyp auswählen.",
     "err_area": "Bereich auswählen."
   },
+  "subject_picker": {
+    "title": "Wofür?",
+    "hint": "Pflanze oder Rasen",
+    "search_hint": "Pflanze oder Bereich suchen…",
+    "section_plants": "Pflanzen",
+    "section_areas": "Rasen / Bereiche",
+    "from_catalog": "Aus Katalog hinzufügen",
+    "choose": "Wählen",
+    "confirm": "Bestätigen",
+    "err_select": "Wähle mindestens eine Pflanze oder einen Rasen.",
+    "empty": "Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu."
+  },
   "plant_detail": {
     "not_found": "Pflanze nicht gefunden.",
     "history_title": "Aufgabenverlauf",

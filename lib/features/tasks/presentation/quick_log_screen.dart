@@ -10,8 +10,10 @@ import '../../../core/task_status.dart';
 import '../../../core/widgets/save_bar.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
+import 'widgets/subject_field.dart';
 import 'widgets/task_type_tile.dart';
 
 enum _DateOption { today, yesterday, custom }
@@ -25,7 +27,7 @@ class QuickLogScreen extends ConsumerStatefulWidget {
 
 class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
   String? _taskTypeId;
-  String? _areaId;
+  final List<TaskSubjectSpec> _subjects = [];
   _DateOption _dateOption = _DateOption.today;
   DateTime? _customDate;
   final _noteController = TextEditingController();
@@ -74,8 +76,8 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
       _showError(t.quick_log.err_type);
       return;
     }
-    if (_areaId == null) {
-      _showError(t.quick_log.err_area);
+    if (_subjects.isEmpty) {
+      _showError(t.subject_picker.err_select);
       return;
     }
 
@@ -89,7 +91,7 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
             date: _selectedDate,
             status: _status,
             note: note.isEmpty ? null : note,
-            subjects: [TaskSubjectSpec.area(_areaId!)],
+            subjects: _subjects,
           );
       if (mounted) context.pop();
     } finally {
@@ -108,10 +110,31 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
   void _openAdvanced() {
     final params = <String, String>{'date': _selectedDate.toIso8601String()};
     if (_taskTypeId != null) params['type'] = _taskTypeId!;
-    if (_areaId != null) params['area'] = _areaId!;
+    final plantIds = [
+      for (final s in _subjects)
+        if (s.userPlantId != null) s.userPlantId!,
+    ];
+    final areaIds = [
+      for (final s in _subjects)
+        if (s.areaId != null) s.areaId!,
+    ];
+    if (plantIds.isNotEmpty) params['plants'] = plantIds.join(',');
+    if (areaIds.isNotEmpty) params['areas'] = areaIds.join(',');
     final note = _noteController.text.trim();
     if (note.isNotEmpty) params['note'] = note;
     context.pushNamed('task-new', queryParameters: params);
+  }
+
+  Future<void> _pickSubjects() async {
+    final result = await context.pushNamed<List<TaskSubjectSpec>>(
+      'subject-picker',
+      extra: _subjects,
+    );
+    if (result != null && mounted) {
+      setState(() => _subjects
+        ..clear()
+        ..addAll(result));
+    }
   }
 
   @override
@@ -119,7 +142,10 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
     final t = context.t;
     final theme = Theme.of(context);
     final catalogAsync = ref.watch(taskTypesMapProvider);
-    final areasAsync = ref.watch(areasMapProvider);
+    final areas = ref.watch(areasMapProvider).asData?.value ?? const {};
+    final userPlants =
+        ref.watch(userPlantsMapProvider).asData?.value ?? const {};
+    final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     return Scaffold(
       appBar: AppBar(
@@ -166,6 +192,16 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
+                _SectionLabel(t.subject_picker.title),
+                SubjectField(
+                  subjects: _subjects,
+                  areas: areas,
+                  userPlants: userPlants,
+                  plants: plants,
+                  onPick: _pickSubjects,
+                  onRemove: (i) => setState(() => _subjects.removeAt(i)),
+                ),
+                const SizedBox(height: 16),
                 _SectionLabel(t.quick_log.when),
                 _DateSegment(
                   option: _dateOption,
@@ -173,19 +209,6 @@ class _QuickLogScreenState extends ConsumerState<QuickLogScreen> {
                   t: t,
                   onChanged: (opt) => setState(() => _dateOption = opt),
                   onPickDate: _pickDate,
-                ),
-                const SizedBox(height: 16),
-                _SectionLabel(t.quick_log.where),
-                areasAsync.when(
-                  loading: () => const SizedBox.shrink(),
-                  error: (err, _) => const SizedBox.shrink(),
-                  data: (areas) => areas.isEmpty
-                      ? _EmptyAreas(t.quick_log.no_areas)
-                      : _AreaChips(
-                          areas: areas.values.toList(),
-                          selected: _areaId,
-                          onSelect: (id) => setState(() => _areaId = id),
-                        ),
                 ),
                 const SizedBox(height: 16),
                 _SectionLabel(t.quick_log.more),
@@ -364,48 +387,6 @@ class _DateSegment extends StatelessWidget {
   }
 }
 
-class _AreaChips extends StatelessWidget {
-  const _AreaChips({
-    required this.areas,
-    required this.selected,
-    required this.onSelect,
-  });
-
-  final List<Area> areas;
-  final String? selected;
-  final ValueChanged<String> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    return Wrap(
-      spacing: 8,
-      runSpacing: 4,
-      children: [
-        for (final area in areas)
-          ChoiceChip(
-            label: Text(area.name),
-            selected: area.id == selected,
-            onSelected: (_) => onSelect(area.id),
-          ),
-      ],
-    );
-  }
-}
-
-class _EmptyAreas extends StatelessWidget {
-  const _EmptyAreas(this.text);
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Text(
-      text,
-      style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: Theme.of(context).colorScheme.onSurfaceVariant,
-          ),
-    );
-  }
-}
 
 class _MoreSection extends StatelessWidget {
   const _MoreSection({required this.t, required this.onTap});
@@ -420,8 +401,6 @@ class _MoreSection extends StatelessWidget {
     return Card(
       child: Column(
         children: [
-          _AddRow(label: t.quick_log.add_plant, onTap: onTap),
-          Divider(height: 1, indent: 16, color: theme.colorScheme.outlineVariant),
           _AddRow(label: t.quick_log.add_supply, onTap: onTap),
           Divider(height: 1, indent: 16, color: theme.colorScheme.outlineVariant),
           _AddRow(label: t.quick_log.add_reminder, onTap: onTap),

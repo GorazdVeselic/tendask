@@ -36,10 +36,11 @@ class UserPlantsRepository {
         _db.select(_db.userPlants)..where((p) => p.id.equals(id))
       ).watchSingleOrNull();
 
-  /// Creates one plant for an area and returns its id (task-form picker flow).
-  Future<String> createForArea({
+  /// Creates one plant and returns its id. Area is optional (e.g. a plant added
+  /// inline from the subject picker, location assigned later).
+  Future<String> create({
     required String userId,
-    required String areaId,
+    String? areaId,
     String? plantId,
     String? customName,
     String? personalAlias,
@@ -57,6 +58,22 @@ class UserPlantsRepository {
         ));
     return id;
   }
+
+  /// Creates one plant for a specific area (task-form picker flow).
+  Future<String> createForArea({
+    required String userId,
+    required String areaId,
+    String? plantId,
+    String? customName,
+    String? personalAlias,
+  }) =>
+      create(
+        userId: userId,
+        areaId: areaId,
+        plantId: plantId,
+        customName: customName,
+        personalAlias: personalAlias,
+      );
 
   /// Reconciles an area's plants with [specs] in a single transaction:
   /// inserts specs without an id, soft-deletes existing rows no longer present.

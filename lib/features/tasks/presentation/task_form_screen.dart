@@ -12,13 +12,12 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
-import '../../plants/presentation/plant_picker_screen.dart';
-import '../../plants/presentation/widgets/plant_field.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../../supplies/data/supply_spec.dart';
 import '../../supplies/presentation/add_supply_to_task_sheet.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
+import 'widgets/subject_field.dart';
 import 'widgets/task_type_tile.dart';
 
 class TaskFormScreen extends ConsumerStatefulWidget {
@@ -27,7 +26,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
     this.taskId,
     this.initialDate,
     this.initialTaskTypeId,
-    this.initialAreaId,
+    this.initialSubjects = const [],
     this.initialNote,
   });
 
@@ -37,7 +36,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
   /// Preselected values for create mode (e.g. carried over from Quick Log).
   final DateTime? initialDate;
   final String? initialTaskTypeId;
-  final String? initialAreaId;
+  final List<TaskSubjectSpec> initialSubjects;
   final String? initialNote;
 
   @override
@@ -46,8 +45,7 @@ class TaskFormScreen extends ConsumerStatefulWidget {
 
 class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
   String? _taskTypeId;
-  String? _areaId;
-  String? _userPlantId;
+  final List<TaskSubjectSpec> _subjects = [];
   final List<SupplySpec> _supplies = [];
   TaskStatus _status = TaskStatus.waiting;
   late DateTime _date;
@@ -67,7 +65,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     } else {
       // Carry-over values from Quick Log (create mode only).
       _taskTypeId = widget.initialTaskTypeId;
-      _areaId = widget.initialAreaId;
+      _subjects.addAll(widget.initialSubjects);
       if (widget.initialNote != null) {
         _noteController.text = widget.initialNote!;
       }
@@ -82,25 +80,14 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
         .read(suppliesRepositoryProvider)
         .suppliesForTask(widget.taskId!);
 
-    // Map subjects back to the single-select form: first plant + its area.
-    String? areaId;
-    String? userPlantId;
-    for (final s in subjects) {
-      userPlantId ??= s.userPlantId;
-      areaId ??= s.areaId;
-    }
-    if (areaId == null && userPlantId != null) {
-      final plant =
-          await ref.read(userPlantsRepositoryProvider).byId(userPlantId);
-      areaId = plant?.areaId;
-    }
-
     if (!mounted) return;
     if (task != null) {
       setState(() {
         _taskTypeId = task.taskTypeId;
-        _areaId = areaId;
-        _userPlantId = userPlantId;
+        _subjects
+          ..clear()
+          ..addAll(subjects.map((s) =>
+              TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId)));
         _status = task.status;
         _date = task.date.toLocal();
         _noteController.text = task.note ?? '';
@@ -165,8 +152,8 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
       _showError(t.task_form.err_type);
       return;
     }
-    if (_areaId == null) {
-      _showError(t.task_form.err_area);
+    if (_subjects.isEmpty) {
+      _showError(t.subject_picker.err_select);
       return;
     }
 
@@ -174,11 +161,7 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     try {
       final note = _noteController.text.trim();
       final repo = ref.read(tasksRepositoryProvider);
-
-      // Subject = the chosen plant (area derived from it) or the area itself.
-      final subjects = _userPlantId != null
-          ? [TaskSubjectSpec.plant(_userPlantId!)]
-          : [TaskSubjectSpec.area(_areaId!)];
+      final subjects = _subjects;
 
       final String taskId;
       if (_isEdit) {
@@ -213,18 +196,16 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
   }
 
-  Future<void> _addPlant() async {
-    if (_areaId == null) return;
-    final pick = await context.pushNamed<PlantPick>('plant-picker');
-    if (pick == null || !mounted) return;
-    final id = await ref.read(userPlantsRepositoryProvider).createForArea(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
-          areaId: _areaId!,
-          plantId: pick.plantId,
-          customName: pick.customName,
-        );
-    if (mounted) setState(() => _userPlantId = id);
+  Future<void> _pickSubjects() async {
+    final result = await context.pushNamed<List<TaskSubjectSpec>>(
+      'subject-picker',
+      extra: _subjects,
+    );
+    if (result != null && mounted) {
+      setState(() => _subjects
+        ..clear()
+        ..addAll(result));
+    }
   }
 
   @override
@@ -244,7 +225,10 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
     }
 
     final catalogAsync = ref.watch(taskTypesMapProvider);
-    final areasAsync = ref.watch(areasMapProvider);
+    final areas = ref.watch(areasMapProvider).asData?.value ?? const {};
+    final userPlants =
+        ref.watch(userPlantsMapProvider).asData?.value ?? const {};
+    final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     return Scaffold(
       appBar: AppBar(
@@ -263,38 +247,28 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
               loading: () =>
                   const Center(child: CircularProgressIndicator.adaptive()),
               error: (err, _) => const SizedBox.shrink(),
-              data: (catalog) => areasAsync.when(
-                loading: () =>
-                    const Center(child: CircularProgressIndicator.adaptive()),
-                error: (err, _) => const SizedBox.shrink(),
-                data: (areas) => _FormBody(
-                  catalog: catalog,
-                  areas: areas,
-                  taskTypeId: _taskTypeId,
-                  areaId: _areaId,
-                  userPlantId: _userPlantId,
-                  status: _status,
-                  date: _date,
-                  noteController: _noteController,
-                  t: t,
-                  theme: theme,
-                  onTaskTypeChanged: (id) =>
-                      setState(() => _taskTypeId = id),
-                  onAreaChanged: (id) => setState(() {
-                    _areaId = id;
-                    _userPlantId = null;
-                  }),
-                  onUserPlantChanged: (id) =>
-                      setState(() => _userPlantId = id),
-                  onAddPlant: _addPlant,
-                  supplies: _supplies,
-                  onAddSupply: _addSupply,
-                  onRemoveSupply: (i) =>
-                      setState(() => _supplies.removeAt(i)),
-                  onStatusChanged: (s) => setState(() => _status = s),
-                  onPickDate: _pickDate,
-                  onPickTime: _pickTime,
-                ),
+              data: (catalog) => _FormBody(
+                catalog: catalog,
+                subjects: _subjects,
+                areas: areas,
+                userPlants: userPlants,
+                plants: plants,
+                taskTypeId: _taskTypeId,
+                status: _status,
+                date: _date,
+                noteController: _noteController,
+                t: t,
+                theme: theme,
+                onTaskTypeChanged: (id) => setState(() => _taskTypeId = id),
+                onPickSubjects: _pickSubjects,
+                onRemoveSubject: (i) =>
+                    setState(() => _subjects.removeAt(i)),
+                supplies: _supplies,
+                onAddSupply: _addSupply,
+                onRemoveSupply: (i) => setState(() => _supplies.removeAt(i)),
+                onStatusChanged: (s) => setState(() => _status = s),
+                onPickDate: _pickDate,
+                onPickTime: _pickTime,
               ),
             ),
           ),
@@ -315,19 +289,19 @@ class _TaskFormScreenState extends ConsumerState<TaskFormScreen> {
 class _FormBody extends StatelessWidget {
   const _FormBody({
     required this.catalog,
+    required this.subjects,
     required this.areas,
+    required this.userPlants,
+    required this.plants,
     required this.taskTypeId,
-    required this.areaId,
-    required this.userPlantId,
     required this.status,
     required this.date,
     required this.noteController,
     required this.t,
     required this.theme,
     required this.onTaskTypeChanged,
-    required this.onAreaChanged,
-    required this.onUserPlantChanged,
-    required this.onAddPlant,
+    required this.onPickSubjects,
+    required this.onRemoveSubject,
     required this.supplies,
     required this.onAddSupply,
     required this.onRemoveSupply,
@@ -337,10 +311,11 @@ class _FormBody extends StatelessWidget {
   });
 
   final Map<String, TaskType> catalog;
+  final List<TaskSubjectSpec> subjects;
   final Map<String, Area> areas;
+  final Map<String, UserPlant> userPlants;
+  final Map<String, Plant> plants;
   final String? taskTypeId;
-  final String? areaId;
-  final String? userPlantId;
   final List<SupplySpec> supplies;
   final TaskStatus status;
   final DateTime date;
@@ -348,9 +323,8 @@ class _FormBody extends StatelessWidget {
   final Translations t;
   final ThemeData theme;
   final ValueChanged<String> onTaskTypeChanged;
-  final ValueChanged<String> onAreaChanged;
-  final ValueChanged<String?> onUserPlantChanged;
-  final VoidCallback onAddPlant;
+  final VoidCallback onPickSubjects;
+  final ValueChanged<int> onRemoveSubject;
   final VoidCallback onAddSupply;
   final ValueChanged<int> onRemoveSupply;
   final ValueChanged<TaskStatus> onStatusChanged;
@@ -372,6 +346,18 @@ class _FormBody extends StatelessWidget {
           catalog: catalog,
           theme: theme,
           onChanged: onTaskTypeChanged,
+        ),
+        const SizedBox(height: 16),
+
+        // Za kaj (subjects)
+        _FieldLabel(t.subject_picker.title),
+        SubjectField(
+          subjects: subjects,
+          areas: areas,
+          userPlants: userPlants,
+          plants: plants,
+          onPick: onPickSubjects,
+          onRemove: onRemoveSubject,
         ),
         const SizedBox(height: 16),
 
@@ -417,46 +403,6 @@ class _FormBody extends StatelessWidget {
           style: const ButtonStyle(visualDensity: VisualDensity.compact),
         ),
         const SizedBox(height: 16),
-
-        // Območje
-        _FieldLabel(t.task_form.area),
-        if (areas.isEmpty)
-          Text(t.task_form.no_areas,
-              style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant))
-        else
-          Wrap(
-            spacing: 8,
-            runSpacing: 4,
-            children: [
-              for (final area in areas.values)
-                ChoiceChip(
-                  label: Text(area.name),
-                  selected: area.id == areaId,
-                  onSelected: (_) => onAreaChanged(area.id),
-                ),
-            ],
-          ),
-        const SizedBox(height: 16),
-
-        // Rastlina (optional) — available once an area is chosen.
-        if (areaId != null) ...[
-          _FieldLabel('${t.task_form.plant} '
-              '${t.task_form.plant_hint}'),
-          PlantField(
-            areaId: areaId!,
-            selectedId: userPlantId,
-            onChanged: onUserPlantChanged,
-            onAdd: onAddPlant,
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 4, bottom: 4),
-            child: Text(t.task_form.plant_note,
-                style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant)),
-          ),
-          const SizedBox(height: 16),
-        ],
 
         // Sredstva
         _FieldLabel(t.task_form.supplies),

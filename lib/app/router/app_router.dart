@@ -10,7 +10,9 @@ import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
+import '../../features/tasks/data/tasks_repository.dart';
 import '../../features/tasks/presentation/quick_log_screen.dart';
+import '../../features/tasks/presentation/subject_picker_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/task_form_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
@@ -96,6 +98,13 @@ final appRouter = GoRouter(
           PlantDetailScreen(id: state.pathParameters['id']!),
     ),
     GoRoute(
+      path: '/subject-picker',
+      name: 'subject-picker',
+      builder: (context, state) => SubjectPickerScreen(
+        initial: (state.extra as List<TaskSubjectSpec>?) ?? const [],
+      ),
+    ),
+    GoRoute(
       path: '/supplies',
       name: 'supplies',
       builder: (context, state) => const SuppliesScreen(),
@@ -137,10 +146,17 @@ final appRouter = GoRouter(
       builder: (context, state) {
         final q = state.uri.queryParameters;
         final raw = q['date'];
+        final plantIds =
+            (q['plants'] ?? '').split(',').where((s) => s.isNotEmpty);
+        final areaIds =
+            (q['areas'] ?? '').split(',').where((s) => s.isNotEmpty);
         return TaskFormScreen(
           initialDate: raw != null ? DateTime.tryParse(raw) : null,
           initialTaskTypeId: q['type'],
-          initialAreaId: q['area'],
+          initialSubjects: [
+            for (final id in plantIds) TaskSubjectSpec.plant(id),
+            for (final id in areaIds) TaskSubjectSpec.area(id),
+          ],
           initialNote: q['note'],
         );
       },

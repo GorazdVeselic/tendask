@@ -1,5 +1,7 @@
 import '../../../core/database/app_database.dart';
+import '../../areas/presentation/area_type_display.dart';
 import '../../plants/presentation/plant_display.dart';
+import '../data/tasks_repository.dart';
 
 /// Human label for a single task subject: plant name (alias/custom/catalog) when
 /// it is a plant, else the area name. Empty when nothing resolves.
@@ -36,4 +38,33 @@ Map<String, String> subjectLabelsByTask(
     (byTask[s.taskId] ??= <String>[]).add(label);
   }
   return {for (final e in byTask.entries) e.key: e.value.join(', ')};
+}
+
+/// Label for a selected subject (picker chips, form display).
+String specLabel(
+  TaskSubjectSpec s, {
+  required Map<String, Area> areas,
+  required Map<String, UserPlant> userPlants,
+  required Map<String, Plant> plants,
+}) {
+  if (s.userPlantId != null) {
+    final up = userPlants[s.userPlantId];
+    return up != null ? userPlantLabel(up, plants) : '🌿';
+  }
+  return areas[s.areaId]?.name ?? '';
+}
+
+/// Emoji for a selected subject — plant icon or area-type icon.
+String specIcon(
+  TaskSubjectSpec s, {
+  required Map<String, Area> areas,
+  required Map<String, UserPlant> userPlants,
+  required Map<String, Plant> plants,
+}) {
+  if (s.userPlantId != null) {
+    final up = userPlants[s.userPlantId];
+    return up != null ? userPlantIcon(up, plants) : '🌿';
+  }
+  final area = areas[s.areaId];
+  return area != null ? areaTypeIcon(area.type) : '🪴';
 }
