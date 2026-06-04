@@ -144,6 +144,27 @@ void main() {
     });
   });
 
+  group('TasksRepository.watchLast', () {
+    test('returns the most recently touched non-deleted task', () async {
+      await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+      clock.advance(const Duration(minutes: 5));
+      final id2 = await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+
+      expect((await repo.watchLast().first)?.id, id2);
+    });
+
+    test('skips deleted tasks and returns null when none remain', () async {
+      final id = await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+
+      await repo.softDelete(id);
+
+      expect(await repo.watchLast().first, isNull);
+    });
+  });
+
   group('TasksRepository.duplicate', () {
     test('creates a copy with a new ID and status=waiting', () async {
       final id = await repo.create(

@@ -125,6 +125,7 @@
     "step": "Step",
     "note_card_title": "Just a note, no task?",
     "note_card_action": "Note ›",
+    "repeat_last": "Repeat last",
     "type_title": "What did you do?",
     "type_hint": "Tapping a task takes you forward automatically.",
     "subject_title": "For what?",

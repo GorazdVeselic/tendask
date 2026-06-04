@@ -125,6 +125,7 @@
     "step": "Korak",
     "note_card_title": "Le zapis brez opravila?",
     "note_card_action": "Opomba ›",
+    "repeat_last": "Ponovi zadnje",
     "type_title": "Kaj boš naredil?",
     "type_hint": "Tap na opravilo te samodejno pelje naprej.",
     "subject_title": "Za kaj?",

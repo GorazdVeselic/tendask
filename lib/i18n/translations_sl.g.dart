@@ -453,6 +453,9 @@ class Translations$entry$sl {
 	/// sl: 'Opomba ›'
 	String get note_card_action => 'Opomba ›';
 
+	/// sl: 'Ponovi zadnje'
+	String get repeat_last => 'Ponovi zadnje';
+
 	/// sl: 'Kaj boš naredil?'
 	String get type_title => 'Kaj boš naredil?';
 
@@ -1126,6 +1129,7 @@ extension on Translations {
 			'entry.step' => 'Korak',
 			'entry.note_card_title' => 'Le zapis brez opravila?',
 			'entry.note_card_action' => 'Opomba ›',
+			'entry.repeat_last' => 'Ponovi zadnje',
 			'entry.type_title' => 'Kaj boš naredil?',
 			'entry.type_hint' => 'Tap na opravilo te samodejno pelje naprej.',
 			'entry.subject_title' => 'Za kaj?',

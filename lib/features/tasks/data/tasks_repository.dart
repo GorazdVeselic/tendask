@@ -80,6 +80,15 @@ class TasksRepository {
           ..orderBy([(t) => OrderingTerm.asc(t.date)])
       ).watch();
 
+  /// The most recently touched task — drives the "repeat last" shortcut. We sort
+  /// by `updated_at` (no `created_at` column) so the newest entry surfaces first.
+  Stream<Task?> watchLast() => (
+        _db.select(_db.tasks)
+          ..where((t) => t.deleted.equals(false))
+          ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+          ..limit(1)
+      ).watchSingleOrNull();
+
   // ── Subjects ────────────────────────────────────────────────────────────
 
   /// All non-deleted subject links — for resolving subject labels in lists.

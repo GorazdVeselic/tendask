@@ -151,6 +151,36 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     });
   }
 
+  // ── Repeat last (FR-6) ──────────────────────────────────────────────────────
+
+  /// Pre-fills type/subjects/supplies/note from a prior task and jumps straight
+  /// to review. Date/status keep the "now" defaults; reminders are not copied
+  /// (they are tied to a specific planned date).
+  Future<void> _repeatLast(String taskId) async {
+    final repo = ref.read(tasksRepositoryProvider);
+    final task = await repo.byId(taskId);
+    if (task == null) return;
+    final subjects = await repo.subjectsForTask(taskId);
+    final supplies =
+        await ref.read(suppliesRepositoryProvider).suppliesForTask(taskId);
+    if (!mounted) return;
+    setState(() {
+      _taskTypeId = task.taskTypeId;
+      _noteController.text = task.note ?? '';
+      _plantIds
+        ..clear()
+        ..addAll(subjects.map((s) => s.userPlantId).whereType<String>());
+      _areaIds
+        ..clear()
+        ..addAll(subjects.map((s) => s.areaId).whereType<String>());
+      _supplies
+        ..clear()
+        ..addAll(supplies
+            .map((ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount)));
+    });
+    _goTo(EntryStep.review);
+  }
+
   // ── Navigation ────────────────────────────────────────────────────────────
 
   void _goTo(EntryStep step) {
@@ -309,6 +339,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   selected: _taskTypeId,
                   onSelect: _selectType,
                   onNoteTap: () => context.pushNamed('note-new'),
+                  onRepeatLast: _isEdit ? null : _repeatLast,
                 ),
                 SubjectStepBody(
                   plantIds: _plantIds,

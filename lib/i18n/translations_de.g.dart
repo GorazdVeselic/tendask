@@ -245,6 +245,7 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get step => 'Schritt';
 	@override String get note_card_title => 'Nur eine Notiz, keine Aufgabe?';
 	@override String get note_card_action => 'Notiz ›';
+	@override String get repeat_last => 'Letztes wiederholen';
 	@override String get type_title => 'Was hast du gemacht?';
 	@override String get type_hint => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.';
 	@override String get subject_title => 'Wofür?';
@@ -587,6 +588,7 @@ extension on TranslationsDe {
 			'entry.step' => 'Schritt',
 			'entry.note_card_title' => 'Nur eine Notiz, keine Aufgabe?',
 			'entry.note_card_action' => 'Notiz ›',
+			'entry.repeat_last' => 'Letztes wiederholen',
 			'entry.type_title' => 'Was hast du gemacht?',
 			'entry.type_hint' => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.',
 			'entry.subject_title' => 'Wofür?',

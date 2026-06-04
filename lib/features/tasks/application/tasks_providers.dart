@@ -42,6 +42,11 @@ final allTasksProvider = StreamProvider.autoDispose<List<Task>>((ref) {
   return ref.watch(tasksRepositoryProvider).watchAll();
 });
 
+/// Most recently touched task — for the "repeat last" shortcut on entry step 1.
+final lastTaskProvider = StreamProvider.autoDispose<Task?>((ref) {
+  return ref.watch(tasksRepositoryProvider).watchLast();
+});
+
 final taskByIdProvider =
     StreamProvider.autoDispose.family<Task?, String>((ref, id) {
   return ref.watch(tasksRepositoryProvider).watchById(id);

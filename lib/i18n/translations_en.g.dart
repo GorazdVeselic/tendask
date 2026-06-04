@@ -245,6 +245,7 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get step => 'Step';
 	@override String get note_card_title => 'Just a note, no task?';
 	@override String get note_card_action => 'Note ›';
+	@override String get repeat_last => 'Repeat last';
 	@override String get type_title => 'What did you do?';
 	@override String get type_hint => 'Tapping a task takes you forward automatically.';
 	@override String get subject_title => 'For what?';
@@ -587,6 +588,7 @@ extension on TranslationsEn {
 			'entry.step' => 'Step',
 			'entry.note_card_title' => 'Just a note, no task?',
 			'entry.note_card_action' => 'Note ›',
+			'entry.repeat_last' => 'Repeat last',
 			'entry.type_title' => 'What did you do?',
 			'entry.type_hint' => 'Tapping a task takes you forward automatically.',
 			'entry.subject_title' => 'For what?',
