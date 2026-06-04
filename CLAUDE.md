@@ -140,6 +140,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - **UI degradira gracefully.** Zadnji znan state ostane viden (zadnji vremenski posnetek, zadnji sync). Indikator "ni sinhronizirano" je miren, ne alarmanten.
 - **Vreme (Open-Meteo):** ob izvedbi opravila zajemi posnetek; če mreže ni, opravilo se vseeno shrani (posnetek doda ob naslednji priložnosti ali ostane prazen). **Zamrznjen dejanski posnetek na "opravljeno"** se ne prepisuje.
 - **Connectivity status je explicit signal** prek enega `connectivity_plus` streama, ki ga features konzumirajo.
+- **Nobenega runtime fetcha sredstev (fonti, ikone, asseti).** Vse, kar app potrebuje za prikaz, je **bundlano** v `assets/`. Naučeno: `google_fonts` privzeto **naloži font prek omrežja** (`fonts.gstatic.com`) → offline (vrt!) vrže Unhandled Exception. Plus Jakarta Sans je bundlan variable font (`assets/fonts/PlusJakartaSans-VariableFont_wght.ttf`, `pubspec fonts:`), uporabljen prek `fontFamily` v `app_theme`, ne prek `GoogleFonts.*`.
 
 ## Komentarji in dokumentacija
 

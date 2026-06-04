@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'app_colors.dart';
 
 abstract final class AppTheme {
+  /// Bundled font (assets/fonts) — never fetched at runtime (offline-first).
+  static const _fontFamily = 'PlusJakartaSans';
+
   static ThemeData light() {
     return ThemeData(
       useMaterial3: true,
+      fontFamily: _fontFamily,
       colorScheme: const ColorScheme.light(
         primary: AppColors.green,
         onPrimary: Colors.white,
@@ -19,13 +22,16 @@ abstract final class AppTheme {
         error: AppColors.danger,
         onError: Colors.white,
       ),
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(),
       inputDecorationTheme: _inputTheme(AppColors.muted),
     );
   }
 
   static ThemeData dark() {
-    final base = ThemeData(brightness: Brightness.dark, useMaterial3: true);
+    final base = ThemeData(
+      brightness: Brightness.dark,
+      useMaterial3: true,
+      fontFamily: _fontFamily,
+    );
     return base.copyWith(
       colorScheme: const ColorScheme.dark(
         primary: AppColors.green400,
@@ -39,7 +45,6 @@ abstract final class AppTheme {
         error: AppColors.danger300,
         onError: Color(0xFF690005),
       ),
-      textTheme: GoogleFonts.plusJakartaSansTextTheme(base.textTheme),
       inputDecorationTheme: _inputTheme(const Color(0xFF8A988E)),
     );
   }
