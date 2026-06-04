@@ -48,7 +48,7 @@
 | **M2** | Jedro opravil (offline) | Vnos/pregled/urejanje opravil nad drift | `[x]` |
 | **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[x]` |
 | **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[x]` |
-| **M5** | Supabase zaledje | Projekt + shema + RLS | `[ ]` |
+| **M5** | Supabase zaledje | Projekt + shema + RLS | `[x]` |
 | **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[ ]` |
 | **M7** | Auth + H3 | Anonimno + linkanje + lokacija/H3 na napravi | `[ ]` |
 | **M8** | Lokalna obvestila (plast A) | Opomniki + deep-link + zasloni 19–22 | `[ ]` |
@@ -181,7 +181,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **5.1 — 👤 Projekt + ključi.** Uporabnik ustvari Supabase projekt; `url`+`anonKey` prek `--dart-define`; `supabase_flutter` init. *Commit:* `feat: Supabase client init (dart-define)` (`0741a69`)
 - [x] **5.2 — SQL migracije.** Iste tabele kot drift + indeksi (`updated_at`, `user_id`). *Commit:* `feat: Supabase shema (migracije)` (`bb72aec`)
 - [x] **5.3 — RLS politike.** Uporabniške tabele `user_id = auth.uid()`; katalog javno-bralni; CASCADE ob izbrisu računa. *Commit:* `feat: RLS politike` (`8df4131`)
-- [ ] **5.4 — Preverba.** Ročni insert/select prek client proti testnemu uporabniku. *DoD:* RLS prepreči tuje vrstice.
+- [x] **5.4 — Preverba.** Ročni insert/select prek client proti testnemu uporabniku. *DoD:* RLS prepreči tuje vrstice. ✅ (PASS: A=1, B=0)
 
 ---
 
@@ -291,6 +291,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **5.4 — uveljavitev + preverba → M5 ZAKLJUČEN.** Migraciji uveljavljeni v živo prek
+  **Supabase CLI** (isti postopek kot hexatory): `supabase init` → `link --project-ref jlmkkeijmmnwkizutvkg`
+  (Frankfurt; DB geslo prek `SUPABASE_DB_PASSWORD` env, ne v repo) → `db push` → **0001 + 0002 aplicirani
+  brez napak** (to hkrati validira shemo+RLS na pravem Postgres 15). `config.toml` + `supabase/.gitignore`
+  commitana (`0b848d3`); `.temp` (ref/pooler) gitignored. **RLS preverba** (`tmp/rls_verify.py`, psycopg prek
+  pooler, vse v **eni transakciji → rollback**, nič ne ostane): testni auth user A vstavi območje →
+  **A vidi 1, B (drug uid) vidi 0** = RLS prepreči tuje vrstice ✅; B bere katalog brez permission error.
+  **DoD 5.4 izpolnjen.** Skrivnosti: DB geslo ostaja v lokalnem `.env` (gitignored), publishable+anon v
+  `dart_defines.json` (gitignored). **M5 ZAKLJUČEN → naslednji M6 (sync servis: push/pull, LWW).**
 - 2026-06-04 — **DB pregled 0001/0002 (2 neodvisna agenta) + utrjevanje.** Adversarni pregled sheme +
   RLS. **Agent RLS/varnost/indeksi: čisto** (RLS na vseh 14 tabelah, EXISTS izolacija pravilna, GDPR cascade
   poln, indeksi popolni — vsak runtime FK pokrit). **Agent shema-fidelity: 1 najdba** — `plant_synonym`
