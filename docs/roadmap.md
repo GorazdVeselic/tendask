@@ -180,7 +180,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 - [x] **5.1 — 👤 Projekt + ključi.** Uporabnik ustvari Supabase projekt; `url`+`anonKey` prek `--dart-define`; `supabase_flutter` init. *Commit:* `feat: Supabase client init (dart-define)` (`0741a69`)
 - [x] **5.2 — SQL migracije.** Iste tabele kot drift + indeksi (`updated_at`, `user_id`). *Commit:* `feat: Supabase shema (migracije)` (`bb72aec`)
-- [ ] **5.3 — RLS politike.** Uporabniške tabele `user_id = auth.uid()`; katalog javno-bralni; CASCADE ob izbrisu računa. *Commit:* `feat: RLS politike`
+- [x] **5.3 — RLS politike.** Uporabniške tabele `user_id = auth.uid()`; katalog javno-bralni; CASCADE ob izbrisu računa. *Commit:* `feat: RLS politike` (`8df4131`)
 - [ ] **5.4 — Preverba.** Ročni insert/select prek client proti testnemu uporabniku. *DoD:* RLS prepreči tuje vrstice.
 
 ---
@@ -291,6 +291,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **5.3 — RLS politike.** `supabase/migrations/0002_rls.sql` (uveljavi se takoj za 0001).
+  **(1) Auth binding:** `user_id → auth.users(id) ON DELETE CASCADE` na 7 user tabelah (profile/area/
+  user_plant/task/note/supply/recipe) = GDPR cascade root (child sledijo prek `task_id`). **(2) RLS vklop**
+  na vseh 14 tabelah (brez politike = deny). **(3) Politike** (14): katalog (4) = javno-bralni `select to
+  anon, authenticated using(true)`, brez pisanja (seed prek service role obide RLS); user tabele (7) =
+  `for all to authenticated using/​with check (user_id = (select auth.uid()))`; child brez user_id (3:
+  task_subject/reminder/supply) = lastništvo prek starševskega `task` z `EXISTS`. **Perf:** `auth.uid()`
+  ovit v `(select auth.uid())` (initplan, ocenjen 1× na poizvedbo). **Anonimni** prijavljeni = vloga
+  `authenticated` + veljaven `auth.uid()` → iste politike (CLAUDE.md); `anon` vloga le za katalog branje.
+  Komentarji EN. flutter analyze/test nespremenjena (**72/72**). Commit: `feat:` (`8df4131`).
+  **Naslednji: 5.4 — uveljavi 0001+0002 v Supabase SQL editor + ročna preverba (RLS prepreči tuje vrstice).**
 - 2026-06-04 — **5.2 — Supabase shema (migracije).** `supabase/migrations/0001_schema.sql` +
   `supabase/README.md` — zrcalo drift tabel (`lib/core/database/tables/*`), vir tipov §7.14.
   **Katalog** (`task_type`/`plant`/`plant_synonym`/`category_task_type`): `id text` (slug), `labels jsonb`,
