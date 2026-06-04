@@ -318,6 +318,18 @@ class TasksRepository {
     );
   }
 
+  /// Moves a task to a new date (the "move" quick action). Caller passes a
+  /// local DateTime; repo normalizes to UTC.
+  Future<void> reschedule(String id, DateTime date) async {
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        date: Value(date.toUtc()),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value('pending'),
+      ),
+    );
+  }
+
   Future<void> revertToWaiting(String id) async {
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(

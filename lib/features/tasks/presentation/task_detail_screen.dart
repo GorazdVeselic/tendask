@@ -160,6 +160,23 @@ class TaskDetailScreen extends ConsumerWidget {
                   unawaited(repo.softDelete(id).then((_) => router.pop()));
                 },
                 onRevert: () => unawaited(repo.revertToWaiting(id)),
+                onMove: () async {
+                  final current = task.date.toLocal();
+                  final picked = await showDatePicker(
+                    context: context,
+                    initialDate: current,
+                    firstDate: DateTime(2020),
+                    lastDate: DateTime.now().add(const Duration(days: 365 * 3)),
+                  );
+                  // context not used after await — only the repo (lint-safe).
+                  if (picked != null) {
+                    unawaited(repo.reschedule(
+                      id,
+                      DateTime(picked.year, picked.month, picked.day,
+                          current.hour, current.minute),
+                    ));
+                  }
+                },
               ),
             ],
           );
@@ -503,7 +520,14 @@ class _DetailsCard extends StatelessWidget {
       _ => t.task_detail.recurrence_once,
     };
 
+    final local = task.date.toLocal();
+    // Explicit date row, labelled by status (e.g. "Opravljeno: 3. jun · 22:00").
+    final whenLabel = task.status == TaskStatus.done
+        ? t.task_detail.badge_done
+        : t.task_detail.badge_waiting;
+
     final rows = [
+      (whenLabel, '${formatDmy(local)} · ${formatHm(local)}'),
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, t.task_detail.none), // M8
       (t.task_detail.label_recurrence, recurrenceLabel),
@@ -582,6 +606,7 @@ class _ActionBar extends StatelessWidget {
     required this.onDuplicate,
     required this.onDelete,
     required this.onRevert,
+    required this.onMove,
   });
 
   final bool isWaiting;
@@ -593,6 +618,7 @@ class _ActionBar extends StatelessWidget {
   final VoidCallback onDuplicate;
   final VoidCallback onDelete;
   final VoidCallback onRevert;
+  final VoidCallback onMove;
 
   @override
   Widget build(BuildContext context) {
@@ -671,7 +697,7 @@ class _ActionBar extends StatelessWidget {
                       icon: Icons.calendar_today_outlined,
                       label: t.task_detail.action_move,
                       theme: theme,
-                      onTap: onEdit,
+                      onTap: onMove,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
