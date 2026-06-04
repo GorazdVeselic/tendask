@@ -178,8 +178,8 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** oblačna shema, ki zrcali drift; RLS za zasebnost. (Ročni koraki uporabnika označeni 👤.)
 
-- [ ] **5.1 — 👤 Projekt + ključi.** Uporabnik ustvari Supabase projekt; `url`+`anonKey` prek `--dart-define`; `supabase_flutter` init. *Commit:* `feat: Supabase client init (dart-define)`
-- [ ] **5.2 — SQL migracije.** Iste tabele kot drift + indeksi (`updated_at`, `user_id`). *Commit:* `feat: Supabase shema (migracije)`
+- [x] **5.1 — 👤 Projekt + ključi.** Uporabnik ustvari Supabase projekt; `url`+`anonKey` prek `--dart-define`; `supabase_flutter` init. *Commit:* `feat: Supabase client init (dart-define)` (`0741a69`)
+- [x] **5.2 — SQL migracije.** Iste tabele kot drift + indeksi (`updated_at`, `user_id`). *Commit:* `feat: Supabase shema (migracije)` (`bb72aec`)
 - [ ] **5.3 — RLS politike.** Uporabniške tabele `user_id = auth.uid()`; katalog javno-bralni; CASCADE ob izbrisu računa. *Commit:* `feat: RLS politike`
 - [ ] **5.4 — Preverba.** Ročni insert/select prek client proti testnemu uporabniku. *DoD:* RLS prepreči tuje vrstice.
 
@@ -291,6 +291,32 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **5.2 — Supabase shema (migracije).** `supabase/migrations/0001_schema.sql` +
+  `supabase/README.md` — zrcalo drift tabel (`lib/core/database/tables/*`), vir tipov §7.14.
+  **Katalog** (`task_type`/`plant`/`plant_synonym`/`category_task_type`): `id text` (slug), `labels jsonb`,
+  brez sync stolpcev. **Uporabniške** (profile/area/user_plant/task/task_subject/task_reminder/note/supply/
+  recipe/task_supply): `id`/`user_id` `uuid`, `weather`/`recurrence`/`items` `jsonb`, `date`/`updated_at`
+  `timestamptz`, `deleted` bool, **`sync_status` IZPUŠČEN** (samo lokalni drift). **CHECK**: area.type∈enum,
+  task.status∈enum, task_subject ≥1 FK, user_plant (plant_id∨is_custom), supply.quantity≥0. **FK cascade**:
+  child (task_subject/reminder/supply) → `task_id ON DELETE CASCADE`; inter-user FK (area_id/user_plant_id/
+  supply_id) cascade — pripravljeno za GDPR cascade prek `auth.users` (5.3). **Indeksi**: `(user_id,
+  updated_at)` (pull) + `updated_at` na child + **vsak FK** (cascade/RLS EXISTS). **DB-review popravki**:
+  dodani manjkajoči FK indeksi, poimenovani CHECK, `UNIQUE(plant_synonym)`, `updated_at default now()`;
+  **namerno BREZ updated_at triggerja** (naprava = lastnik LWW ključa, trigger bi pokvaril pull vrstni red);
+  `double precision` (ne numeric) = zrcali drift REAL. `suggestion_log`/`activity_agg` = V2/M11 (izpuščeno).
+  Komentarji v SQL = angleški (CLAUDE.md: koda=EN). **RLS/auth FK = 5.3 → shema še NE izpostavljena.**
+  Ni lokalnega Postgresa za izvedbo; sintakso validira Supabase SQL editor ob uveljavitvi (skupaj z 5.3).
+  flutter analyze/test nespremenjena (**72/72**). Commit: `feat:` (`bb72aec`). **Naslednji: 5.3 (RLS).**
+- 2026-06-04 — **5.1 — Supabase client init (M5 začet).** Dodan `supabase_flutter ^2.14.0` (tech-stack §1).
+  `core/config.dart`: `kSupabaseUrl` + `kSupabasePublishableKey` (`String.fromEnvironment`, prazna → app
+  dela offline). `main.dart`: `Supabase.initialize(url, publishableKey)` v bootstrapu **pogojno**
+  (`if kSupabaseUrl.isNotEmpty`) → offline-first (zažene se tudi brez konfiguracije). Skrivnosti SAMO prek
+  `--dart-define-from-file=dart_defines.json` (**gitignored**; tracked le `dart_defines.example.json`);
+  `deploy.bat`/`dev.bat` datoteko poberejo, če obstaja. **Uporabljen `publishableKey`** (ne `anonKey` —
+  opuščen v supabase_flutter 2.14; legacy JWT bi sprožil deprecation). **+ varnost:** najden netracken `.env`
+  s Supabase geslom (ni bil v `.gitignore`) → dodan `.env` v `.gitignore` (datoteka neizbrisana). Potrjeno na
+  napravi: app se normalno zažene (= `initialize` z ključi uspe). flutter analyze čist, **72/72 testov**.
+  Commit: `feat:` (`0741a69`). **Naslednji: 5.2 (SQL migracije — zrcalo drift tabel).**
 - 2026-06-04 — **Pregled prevodov + čiščenje.** Po vseh popravkih pregled i18n (`slang analyze --full`):
   struktura sl/en/de **popolna** (brez manjkajočih/odvečnih), brez `{}` interpolacije. Odstranjenih **14
   mrtvih ključev** (ostanki refaktoringov: `common.today_lower`, `task_detail.label_area/subjects/plant`,
