@@ -29,7 +29,6 @@ class TaskDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
-    final theme = Theme.of(context);
     final router = GoRouter.of(context);
 
     final taskAsync = ref.watch(taskByIdProvider(id));
@@ -50,7 +49,7 @@ class TaskDetailScreen extends ConsumerWidget {
             onPressed: () {
               final task = taskAsync.asData?.value;
               if (task != null) {
-                _openActionMenu(context, router, task, repo, t, theme);
+                _openActionMenu(context, router, task, repo);
               }
             },
           ),
@@ -117,38 +116,28 @@ class TaskDetailScreen extends ConsumerWidget {
                         task: task,
                         taskType: taskType,
                         subjectLabel: subjectsLabel,
-                        t: t,
-                        theme: theme,
                       ),
                       const SizedBox(height: 20),
                       _SectionTitle(
-                          '${t.subject_picker.title} (${subjects.length})',
-                          theme: theme),
+                          '${t.subject_picker.title} (${subjects.length})'),
                       _SubjectsCard(
                         subjects: subjects,
                         areas: areas,
                         userPlants: userPlants,
                         plants: plantsCatalog,
-                        theme: theme,
                       ),
                       const SizedBox(height: 20),
-                      _SectionTitle(t.task_detail.section_weather, theme: theme),
+                      _SectionTitle(t.task_detail.section_weather),
                       _WeatherSection(task: task),
                       const SizedBox(height: 20),
-                      _SectionTitle(t.task_detail.section_details, theme: theme),
-                      _DetailsCard(
-                          task: task,
-                          suppliesLabel: suppliesLabel,
-                          t: t,
-                          theme: theme),
+                      _SectionTitle(t.task_detail.section_details),
+                      _DetailsCard(task: task, suppliesLabel: suppliesLabel),
                     ],
                   ),
                 ),
               ),
               _ActionBar(
                 isWaiting: isWaiting,
-                t: t,
-                theme: theme,
                 onComplete: () {
                   unawaited(repo.complete(id).then((_) => router.pop()));
                 },
@@ -192,81 +181,84 @@ class TaskDetailScreen extends ConsumerWidget {
     GoRouter router,
     Task task,
     TasksRepository repo,
-    Translations t,
-    ThemeData theme,
   ) {
     final isWaiting = task.status == TaskStatus.waiting;
     showModalBottomSheet<void>(
       context: context,
-      builder: (ctx) => SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            const SheetHandle(),
-            if (isWaiting) ...[
+      builder: (ctx) {
+        final t = ctx.t;
+        final theme = Theme.of(ctx);
+        return SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              const SheetHandle(),
+              if (isWaiting) ...[
+                ListTile(
+                  leading: Icon(Icons.check_circle_outline,
+                      color: theme.colorScheme.primary),
+                  title: Text(t.task_detail.action_complete),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    unawaited(repo.complete(task.id).then((_) => router.pop()));
+                  },
+                ),
+                ListTile(
+                  leading: const Icon(Icons.schedule_outlined),
+                  title: Text(t.task_detail.action_postpone),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    unawaited(repo.postponeOneDay(task.id));
+                  },
+                ),
+              ] else
+                ListTile(
+                  leading: Icon(Icons.undo, color: theme.colorScheme.secondary),
+                  title: Text(t.task_detail.action_revert),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    unawaited(repo.revertToWaiting(task.id));
+                  },
+                ),
               ListTile(
-                leading: Icon(Icons.check_circle_outline,
-                    color: theme.colorScheme.primary),
-                title: Text(t.task_detail.action_complete),
+                leading: const Icon(Icons.edit_outlined),
+                title: Text(t.task_detail.action_edit),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  unawaited(repo.complete(task.id).then((_) => router.pop()));
+                  router
+                      .pushNamed('task-edit', pathParameters: {'id': task.id});
                 },
               ),
               ListTile(
-                leading: const Icon(Icons.schedule_outlined),
-                title: Text(t.task_detail.action_postpone),
+                leading: const Icon(Icons.copy_outlined),
+                title: Text(t.task_detail.action_duplicate),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  unawaited(repo.postponeOneDay(task.id));
+                  unawaited(repo.duplicate(task.id).then((_) => router.pop()));
                 },
               ),
-            ] else
+              Divider(height: 1, color: theme.colorScheme.outlineVariant),
               ListTile(
-                leading: Icon(Icons.undo, color: theme.colorScheme.secondary),
-                title: Text(t.task_detail.action_revert),
-                onTap: () {
-                  Navigator.of(ctx).pop();
-                  unawaited(repo.revertToWaiting(task.id));
+                leading:
+                    Icon(Icons.delete_outline, color: theme.colorScheme.error),
+                title: Text(
+                  t.task_detail.action_delete,
+                  style: TextStyle(color: theme.colorScheme.error),
+                ),
+                onTap: () async {
+                  final sheetNav = Navigator.of(ctx);
+                  if (await showConfirmDeleteDialog(ctx)) {
+                    sheetNav.pop();
+                    unawaited(
+                        repo.softDelete(task.id).then((_) => router.pop()));
+                  }
                 },
               ),
-            ListTile(
-              leading: const Icon(Icons.edit_outlined),
-              title: Text(t.task_detail.action_edit),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                router.pushNamed('task-edit', pathParameters: {'id': task.id});
-              },
-            ),
-            ListTile(
-              leading: const Icon(Icons.copy_outlined),
-              title: Text(t.task_detail.action_duplicate),
-              onTap: () {
-                Navigator.of(ctx).pop();
-                unawaited(repo.duplicate(task.id).then((_) => router.pop()));
-              },
-            ),
-            Divider(height: 1, color: theme.colorScheme.outlineVariant),
-            ListTile(
-              leading:
-                  Icon(Icons.delete_outline, color: theme.colorScheme.error),
-              title: Text(
-                t.task_detail.action_delete,
-                style: TextStyle(color: theme.colorScheme.error),
-              ),
-              onTap: () async {
-                final sheetNav = Navigator.of(ctx);
-                if (await showConfirmDeleteDialog(ctx)) {
-                  sheetNav.pop();
-                  unawaited(
-                      repo.softDelete(task.id).then((_) => router.pop()));
-                }
-              },
-            ),
-            const SizedBox(height: 8),
-          ],
-        ),
-      ),
+              const SizedBox(height: 8),
+            ],
+          ),
+        );
+      },
     );
   }
 }
@@ -278,18 +270,15 @@ class _HeroBlock extends StatelessWidget {
     required this.task,
     required this.taskType,
     required this.subjectLabel,
-    required this.t,
-    required this.theme,
   });
 
   final Task task;
   final TaskType? taskType;
   final String? subjectLabel;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final icon = taskType?.icon ?? '📋';
     final label =
         taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
@@ -326,7 +315,7 @@ class _HeroBlock extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant),
                 ),
               const SizedBox(height: 6),
-              _StatusPill(isWaiting: isWaiting, task: task, t: t, theme: theme),
+              _StatusPill(isWaiting: isWaiting, task: task),
             ],
           ),
         ),
@@ -336,20 +325,15 @@ class _HeroBlock extends StatelessWidget {
 }
 
 class _StatusPill extends StatelessWidget {
-  const _StatusPill({
-    required this.isWaiting,
-    required this.task,
-    required this.t,
-    required this.theme,
-  });
+  const _StatusPill({required this.isWaiting, required this.task});
 
   final bool isWaiting;
   final Task task;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final local = task.date.toLocal();
     final dateStr = '${formatDmy(local)} · ${formatHm(local)}';
     final label = isWaiting
@@ -376,13 +360,13 @@ class _StatusPill extends StatelessWidget {
 // ─── Section title ────────────────────────────────────────────────────────────
 
 class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.label, {required this.theme});
+  const _SectionTitle(this.label);
 
   final String label;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(bottom: 8),
       child: Text(
@@ -404,17 +388,16 @@ class _SubjectsCard extends StatelessWidget {
     required this.areas,
     required this.userPlants,
     required this.plants,
-    required this.theme,
   });
 
   final List<TaskSubject> subjects;
   final Map<String, Area> areas;
   final Map<String, UserPlant> userPlants;
   final Map<String, Plant> plants;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Card(
       child: Column(
         children: [
@@ -432,6 +415,7 @@ class _SubjectsCard extends StatelessWidget {
   }
 
   Widget _row(BuildContext context, TaskSubject s) {
+    final theme = Theme.of(context);
     final spec =
         TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId);
     final label =
@@ -511,20 +495,15 @@ class _WeatherSection extends StatelessWidget {
 // ─── Details card ─────────────────────────────────────────────────────────────
 
 class _DetailsCard extends StatelessWidget {
-  const _DetailsCard({
-    required this.task,
-    required this.suppliesLabel,
-    required this.t,
-    required this.theme,
-  });
+  const _DetailsCard({required this.task, required this.suppliesLabel});
 
   final Task task;
   final String? suppliesLabel;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final recurrenceLabel = switch (task.recurrence) {
       'weekly' => t.task_detail.recurrence_weekly,
       'seasonal' => t.task_detail.recurrence_seasonal,
@@ -557,7 +536,7 @@ class _DetailsCard extends StatelessWidget {
                   height: 1,
                   color: theme.colorScheme.outlineVariant,
                 ),
-              _InfoRow(label: rows[i].$1, value: rows[i].$2, theme: theme),
+              _InfoRow(label: rows[i].$1, value: rows[i].$2),
             ],
           ],
         ),
@@ -567,18 +546,14 @@ class _DetailsCard extends StatelessWidget {
 }
 
 class _InfoRow extends StatelessWidget {
-  const _InfoRow({
-    required this.label,
-    required this.value,
-    required this.theme,
-  });
+  const _InfoRow({required this.label, required this.value});
 
   final String label;
   final String value;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 12),
       child: Row(
@@ -609,8 +584,6 @@ class _InfoRow extends StatelessWidget {
 class _ActionBar extends StatelessWidget {
   const _ActionBar({
     required this.isWaiting,
-    required this.t,
-    required this.theme,
     required this.onComplete,
     required this.onPostpone,
     required this.onEdit,
@@ -621,8 +594,6 @@ class _ActionBar extends StatelessWidget {
   });
 
   final bool isWaiting;
-  final Translations t;
-  final ThemeData theme;
   final VoidCallback onComplete;
   final VoidCallback onPostpone;
   final VoidCallback onEdit;
@@ -633,6 +604,8 @@ class _ActionBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       decoration: BoxDecoration(
@@ -670,28 +643,24 @@ class _ActionBar extends StatelessWidget {
                     _SecBtn(
                       icon: Icons.schedule_outlined,
                       label: t.task_detail.action_postpone,
-                      theme: theme,
                       onTap: onPostpone,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.edit_outlined,
                       label: t.task_detail.action_edit,
-                      theme: theme,
                       onTap: onEdit,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.copy_outlined,
                       label: t.task_detail.action_duplicate,
-                      theme: theme,
                       onTap: onDuplicate,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.delete_outline,
                       label: t.task_detail.action_delete,
-                      theme: theme,
                       isDanger: true,
                       onTap: () => _confirmDelete(context),
                     ),
@@ -700,28 +669,24 @@ class _ActionBar extends StatelessWidget {
                     _SecBtn(
                       icon: Icons.copy_outlined,
                       label: t.task_detail.action_duplicate,
-                      theme: theme,
                       onTap: onDuplicate,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.calendar_today_outlined,
                       label: t.task_detail.action_move,
-                      theme: theme,
                       onTap: onMove,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.undo,
                       label: t.task_detail.action_revert,
-                      theme: theme,
                       onTap: onRevert,
                     ),
                     const SizedBox(width: 6),
                     _SecBtn(
                       icon: Icons.delete_outline,
                       label: t.task_detail.action_delete,
-                      theme: theme,
                       isDanger: true,
                       onTap: () => _confirmDelete(context),
                     ),
@@ -745,19 +710,18 @@ class _SecBtn extends StatelessWidget {
   const _SecBtn({
     required this.icon,
     required this.label,
-    required this.theme,
     required this.onTap,
     this.isDanger = false,
   });
 
   final IconData icon;
   final String label;
-  final ThemeData theme;
   final VoidCallback onTap;
   final bool isDanger;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final bg = isDanger
         ? theme.colorScheme.errorContainer
         : theme.colorScheme.surfaceContainerHighest;
