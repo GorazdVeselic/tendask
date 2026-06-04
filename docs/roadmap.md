@@ -263,10 +263,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - **FR-3 — Zatikanja (performance).** Med ročno preverbo M3.7 opažena rahla zatikanja pri
   navigaciji/scrollu. Kasneje: profiliraj (DevTools timeline), poišči nepotrebne rebuilde
   (`const`, ozki `watch`/`select`), preveri drift stream rebuilde. Najprej izmeri, šele nato optimiziraj.
-- **FR-2 — Dodaj območje iz obrazca opravila.** Ko uporabnik nima nobenega območja (ali želi novo),
-  naj obrazec opravila (02/07) ponudi inline povezavo **"+ Dodaj območje"** → odpre obrazec območja in
-  se po vrnitvi vrne nazaj z izbranim novim območjem (trenutno je vstop le prek zavihka Območja). Velja
-  razmisliti tudi za rastlino/sredstvo (isti vzorec "ustvari sproti").
+- **FR-2 — Dodaj območje iz obrazca opravila.** ✅ **Implementirano (potrjeno 2026-06-04).** Vsi trije
+  »ustvari sproti« vzorci so v stepperju: subject_step »+ Dodaj območje« (`area-new` → `area_form` vrne nov
+  `areaId` prek `pop` → auto-select) in »+ Dodaj rastlino« (`plant-new`), supplies_step »pick_new«
+  (`showSupplyEditSheet` → auto-select). Reaktivna osvežitev: `areasMapProvider`/`userPlantsMapProvider`/
+  `suppliesListProvider` so StreamProvider nad drift `watchAll()`, zato se nov element takoj prikaže.
+  Prazen vrt ni dead-end (gumbi so vidni tudi brez vnosov). Originalni predlog: ponudi inline povezavo
+  **"+ Dodaj območje"** → odpre obrazec → vrne z izbranim (+ isti vzorec za rastlino/sredstvo).
 - **FR-4 — Navigacija po dnevih na časovnici Dnevnika.** Wireframe 03 predvideva mini koledarski
   trak (vodoravni dnevi) na vrhu časovnice za hiter skok/premik po dnevih (prejšnji/naslednji); v
   M2.5 ni bil implementiran (časovnica je le kronološki seznam + filter). Dodati trak (skok na dan)
@@ -288,6 +291,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **FR-2 potrjen kot že implementiran (brez sprememb kode).** Pregled pokazal, da so vsi trije
+  »ustvari sproti« vzorci že v stepperju: subject_step »+ Dodaj območje« (`area-new`→`area_form` vrne `areaId`
+  prek `pop`→auto-select), »+ Dodaj rastlino« (`plant-new`), supplies_step »pick_new« (`showSupplyEditSheet`).
+  Vsi providerji StreamProvider (drift `watchAll()`) → nov element se reaktivno prikaže. Oznaka »delno«
+  (memory/roadmap) je bila zastarela; FR-2 označen kot implementiran. Commit `docs:`.
 - 2026-06-04 — **Weather receiveTimeout 10s→20s + diagnoza Open-Meteo izpada** (po M4, pred M5).
   Vreme na Domov se v debug ni naložilo. Diagnoza prek `adb logcat` + `adb shell ping` + brskalnik na napravi:
   napake so **nihale** (`receive timeout` → `connection timeout` → brskalnik vrne **502 Bad Gateway**) — torej
