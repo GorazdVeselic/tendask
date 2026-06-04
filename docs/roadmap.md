@@ -47,7 +47,7 @@
 | **M1** | Lokalna baza + seed | drift sheme + katalog/uporabnik tabele + seed | `[x]` |
 | **M2** | Jedro opravil (offline) | Vnos/pregled/urejanje opravil nad drift | `[x]` |
 | **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[x]` |
-| **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[ ]` |
+| **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[x]` |
 | **M5** | Supabase zaledje | Projekt + shema + RLS | `[ ]` |
 | **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[ ]` |
 | **M7** | Auth + H3 | Anonimno + linkanje + lokacija/H3 na napravi | `[ ]` |
@@ -167,10 +167,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** vremenski posnetek na opravilu/opombi (3 pasovi po §7.10); zamrznjen ob "opravljeno".
 
-- [ ] **4.1 — dio client + Open-Meteo model.** `dio` + tanek client + `freezed`/`json_serializable` model. *Commit:* `feat: Open-Meteo client (dio)`
-- [ ] **4.2 — Vremenski posnetek.** Ob izvedbi posname (temp/veter/vlaga/padavine/temp.tal/ET₀), shrani `weather jsonb`; 24–48 h nazaj + napoved. *Commit:* `feat: vremenski posnetek na opravilo`
-- [ ] **4.3 — Prikaz (Domov, Detajl 17/17b).** 3-pasovni prikaz; zamrznjen dejanski posnetek na opravljeno. *Commit:* `feat: prikaz vremenskih pasov`
-- [ ] **4.4 — Testi M4.** Unit: client z mock odgovori; serializacija. *Commit:* `test: Open-Meteo client`
+- [x] **4.1 — dio client + Open-Meteo model.** `dio` + tanek client + `freezed`/`json_serializable` model. *Commit:* `feat: Open-Meteo client (dio)`
+- [x] **4.2 — Vremenski posnetek.** Ob izvedbi posname (temp/veter/vlaga/padavine/temp.tal/ET₀), shrani `weather jsonb`; 24–48 h nazaj + napoved. *Commit:* `feat: vremenski posnetek na opravilo`
+- [x] **4.3 — Prikaz (Domov, Detajl 17/17b).** 3-pasovni prikaz; zamrznjen dejanski posnetek na opravljeno. *Commit:* `feat: prikaz vremenskih pasov`
+- [x] **4.4 — Testi M4.** Unit: client z mock odgovori; serializacija. *Commit:* `test: Open-Meteo client`
 
 ---
 
@@ -286,6 +286,24 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **M4 ZAKLJUČEN (vreme, Open-Meteo)** — **4.1** Open-Meteo client: paketi `dio`+`freezed`/
+  `json_serializable` (tech-stack §1); tolerantni DTO `OpenMeteoResponse` (vsa polja optional, ne crasha ob
+  delnem odgovoru); tanek transport client (en request → vsi 3 pasovi §7.10 + temp. tal + ET₀), vrže ob
+  napaki. **4.2** Vremenski posnetek: domenski `WeatherSnapshot` (3 pasovi) + čisti `buildSnapshot` builder +
+  `WeatherService` z omejenim retry/backoff (offline → null, graceful); zajem fire-and-forget ob prehodu v
+  opravljeno (`complete` + `create`-done), shrani v `task.weather` SAMO če prazen (zamrznjen, nikoli prepisan).
+  Repo agnostičen prek `WeatherCapture` typedef (composition, ne features→features). Privzeta lokacija v
+  `core/config` (TODO M7 → H3-centroid; Dart nima `double.fromEnvironment` → String + parse). **4.3** Prikaz:
+  `WeatherSnapshotCard` (detajl 17/17b, 3 pasovi) + `CurrentWeatherCard` (Domov, živ kontekst + napoved); WMO
+  koda → stanje+emoji; `decodeWeatherSnapshot` tolerantni dekoder (`catch(_)` — TypeError ob legacy/corrupt
+  JSON ne sme crashati UI); i18n `weather.*` sl/en/de, odstranjena mrtva placeholderja. **+ fix:** `INTERNET`
+  permission v main manifestu (bil le v debug → release ni dosegel mreže; potreben tudi M5/M6 sync + Sentry) —
+  **potrjeno na napravi (vreme dela)**. **+ 30-min cache** na Domov: `WeatherService.captureCached` (TTL prek
+  `Clock`, graceful degrade na zadnji znan), `weatherService` provider → `keepAlive` (cache preživi obiske).
+  **4.4** Testi M4: 14 novih (builder 3 pasovi + edge, (de)serializacija + decode tolerantnost, client prek
+  dio fake-adapterja, service cache TTL/graceful prek `FakeClock`+stub). flutter analyze čist, **69/69 testov
+  zelenih**. Odločitvi (UX uskladitev): vir lokacije = privzeta v config do M7; zajem le ob prehodu v opravljeno
+  (live napoved za čaka izpuščena). **Naslednji: M5 (Supabase zaledje).**
 - 2026-06-04 — **3.7 + M3 ZAKLJUČEN** — Po 3.6 je sledil **prefokus na vnos opravila** (ne nov mejnik, ampak
   večja prenova jedra M2/M3): (1) **Vnos = horizontalni stepper** (`features/tasks/presentation/entry/`) —
   6 pogojnih korakov (tip · subjekti multi-select · kdaj+ura+status · opomnik [če čaka] · sredstva [če tip
