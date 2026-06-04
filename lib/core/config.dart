@@ -17,3 +17,7 @@ const kWeatherRetryDelays = <Duration>[
   Duration(seconds: 1),
   Duration(seconds: 3),
 ];
+
+/// How long a fetched dashboard weather snapshot stays fresh before a re-fetch.
+/// Avoids a network call on every visit to Home (weather changes slowly).
+const kWeatherCacheTtl = Duration(minutes: 30);

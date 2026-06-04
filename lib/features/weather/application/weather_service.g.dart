@@ -21,7 +21,7 @@ final class WeatherServiceProvider
         argument: null,
         retry: null,
         name: r'weatherServiceProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -48,16 +48,18 @@ final class WeatherServiceProvider
   }
 }
 
-String _$weatherServiceHash() => r'661d7955bf1cec5bd6f1d1c90a1c6d3210f7623d';
+String _$weatherServiceHash() => r'6c2622973d324582c991140b525a1b62b7dd78ee';
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// default location. Null when offline — the UI degrades to a quiet hint.
+/// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+/// prior snapshot — the UI degrades to a quiet hint.
 
 @ProviderFor(currentWeather)
 final currentWeatherProvider = CurrentWeatherProvider._();
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// default location. Null when offline — the UI degrades to a quiet hint.
+/// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+/// prior snapshot — the UI degrades to a quiet hint.
 
 final class CurrentWeatherProvider
     extends
@@ -68,7 +70,8 @@ final class CurrentWeatherProvider
         >
     with $FutureModifier<WeatherSnapshot?>, $FutureProvider<WeatherSnapshot?> {
   /// Live weather for the dashboard (current conditions + short forecast) at the
-  /// default location. Null when offline — the UI degrades to a quiet hint.
+  /// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+  /// prior snapshot — the UI degrades to a quiet hint.
   CurrentWeatherProvider._()
     : super(
         from: null,
@@ -95,4 +98,4 @@ final class CurrentWeatherProvider
   }
 }
 
-String _$currentWeatherHash() => r'fb65e6736eb3dea35c666b7ca0c64da02cfb72c7';
+String _$currentWeatherHash() => r'43d22e43b5403021014506636e47c83190dd92b1';
