@@ -11,7 +11,9 @@ WeatherSnapshot? decodeWeatherSnapshot(String? json) {
   if (json == null || json.isEmpty) return null;
   try {
     return WeatherSnapshot.fromJson(jsonDecode(json) as Map<String, dynamic>);
-  } on Exception {
+  } catch (_) {
+    // Catch-all (incl. TypeError from a cast on legacy/corrupt data): a bad
+    // stored payload must degrade to "no snapshot", never crash the UI.
     return null;
   }
 }
