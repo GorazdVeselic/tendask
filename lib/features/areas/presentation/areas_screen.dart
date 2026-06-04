@@ -99,8 +99,6 @@ class AreasScreen extends ConsumerWidget {
               catalog: catalog,
               plantsByArea: plantsByArea,
               plantCatalog: plantCatalog,
-              t: t,
-              theme: theme,
             ),
     );
   }
@@ -115,8 +113,6 @@ class _AreasList extends StatelessWidget {
     required this.catalog,
     required this.plantsByArea,
     required this.plantCatalog,
-    required this.t,
-    required this.theme,
   });
 
   final List<Area> areas;
@@ -124,11 +120,10 @@ class _AreasList extends StatelessWidget {
   final Map<String, TaskType> catalog;
   final Map<String, List<UserPlant>> plantsByArea;
   final Map<String, Plant> plantCatalog;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     if (areas.isEmpty) return EmptyState(t.areas.empty);
 
     // Flat list: AreaType (section header), Area (row), then its UserPlant rows.
@@ -149,13 +144,12 @@ class _AreasList extends StatelessWidget {
       itemBuilder: (context, i) {
         final item = items[i];
         if (item is AreaType) {
-          return _SectionHeader(label: areaTypeLabel(item, t), theme: theme);
+          return _SectionHeader(label: areaTypeLabel(item, t));
         }
         if (item is UserPlant) {
           return _PlantRow(
             plant: item,
             catalog: plantCatalog,
-            theme: theme,
           );
         }
         final area = item as Area;
@@ -163,8 +157,6 @@ class _AreasList extends StatelessWidget {
           area: area,
           lastTask: latest[area.id],
           catalog: catalog,
-          t: t,
-          theme: theme,
         );
       },
     );
@@ -177,15 +169,14 @@ class _PlantRow extends StatelessWidget {
   const _PlantRow({
     required this.plant,
     required this.catalog,
-    required this.theme,
   });
 
   final UserPlant plant;
   final Map<String, Plant> catalog;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.only(left: 28, right: 16),
       child: ListTile(
@@ -206,13 +197,13 @@ class _PlantRow extends StatelessWidget {
 // ─── Section header ───────────────────────────────────────────────────────────
 
 class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label, required this.theme});
+  const _SectionHeader({required this.label});
 
   final String label;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
       child: Text(
@@ -233,18 +224,16 @@ class _AreaRow extends StatelessWidget {
     required this.area,
     required this.lastTask,
     required this.catalog,
-    required this.t,
-    required this.theme,
   });
 
   final Area area;
   final Task? lastTask;
   final Map<String, TaskType> catalog;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
       child: InkWell(
@@ -273,7 +262,7 @@ class _AreaRow extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      _subtitle(),
+                      _subtitle(t),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
@@ -290,7 +279,7 @@ class _AreaRow extends StatelessWidget {
     );
   }
 
-  String _subtitle() {
+  String _subtitle(Translations t) {
     final task = lastTask;
     if (task == null) return areaTypeLabel(area.type, t);
     final type = catalog[task.taskTypeId];

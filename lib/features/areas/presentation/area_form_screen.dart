@@ -171,8 +171,6 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                       _PlantsSection(
                         plants: _plants,
                         catalog: catalog,
-                        t: t,
-                        theme: theme,
                         onAdd: _addPlant,
                         onRemove: (i) => setState(() => _plants.removeAt(i)),
                       ),
@@ -203,16 +201,12 @@ class _PlantsSection extends StatelessWidget {
   const _PlantsSection({
     required this.plants,
     required this.catalog,
-    required this.t,
-    required this.theme,
     required this.onAdd,
     required this.onRemove,
   });
 
   final List<PlantSpec> plants;
   final Map<String, Plant> catalog;
-  final Translations t;
-  final ThemeData theme;
   final VoidCallback onAdd;
   final ValueChanged<int> onRemove;
 
@@ -229,6 +223,8 @@ class _PlantsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     return Card(
       child: Column(
         children: [

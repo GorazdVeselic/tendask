@@ -89,7 +89,6 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             _FilterBar(
               filter: _filter,
               onChanged: (f) => setState(() => _filter = f),
-              t: t,
             ),
           Expanded(
             child: _view == _View.month
@@ -106,8 +105,6 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                         areas: areas,
                         subjectLabels: subjectLabels,
                         filter: _filter,
-                        t: t,
-                        theme: theme,
                       ),
           ),
         ],
@@ -124,16 +121,14 @@ class _FilterBar extends StatelessWidget {
   const _FilterBar({
     required this.filter,
     required this.onChanged,
-    required this.t,
   });
 
   final _Filter filter;
   final ValueChanged<_Filter> onChanged;
-  final Translations t;
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
+    final t = context.t;
     return SingleChildScrollView(
       scrollDirection: Axis.horizontal,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
@@ -143,21 +138,18 @@ class _FilterBar extends StatelessWidget {
             label: t.journal.filter_all,
             selected: filter == _Filter.all,
             onTap: () => onChanged(_Filter.all),
-            theme: theme,
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: t.journal.filter_tasks,
             selected: filter == _Filter.tasks,
             onTap: () => onChanged(_Filter.tasks),
-            theme: theme,
           ),
           const SizedBox(width: 8),
           _FilterChip(
             label: t.journal.filter_notes,
             selected: filter == _Filter.notes,
             onTap: () => onChanged(_Filter.notes),
-            theme: theme,
           ),
         ],
       ),
@@ -170,16 +162,15 @@ class _FilterChip extends StatelessWidget {
     required this.label,
     required this.selected,
     required this.onTap,
-    required this.theme,
   });
 
   final String label;
   final bool selected;
   final VoidCallback onTap;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return FilterChip(
       label: Text(label),
       selected: selected,
@@ -208,8 +199,6 @@ class _JournalList extends StatelessWidget {
     required this.areas,
     required this.subjectLabels,
     required this.filter,
-    required this.t,
-    required this.theme,
   });
 
   final List<Task> tasks;
@@ -218,11 +207,10 @@ class _JournalList extends StatelessWidget {
   final Map<String, Area> areas;
   final Map<String, String> subjectLabels;
   final _Filter filter;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final entries = <JournalEntry>[
       if (filter != _Filter.notes)
         for (final task in tasks) TaskJournalEntry(task),
@@ -250,8 +238,6 @@ class _JournalList extends StatelessWidget {
         catalog: catalog,
         areas: areas,
         subjectLabels: subjectLabels,
-        t: t,
-        theme: theme,
       ),
     );
   }
@@ -285,8 +271,6 @@ class _DayGroup extends StatelessWidget {
     required this.catalog,
     required this.areas,
     required this.subjectLabels,
-    required this.t,
-    required this.theme,
   });
 
   final DateTime date;
@@ -294,17 +278,16 @@ class _DayGroup extends StatelessWidget {
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
   final Map<String, String> subjectLabels;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _DayHeader(date: date, t: t, theme: theme),
+          _DayHeader(date: date),
           const SizedBox(height: 6),
           Card(
             child: Column(
@@ -327,7 +310,6 @@ class _DayGroup extends StatelessWidget {
                         area: note.areaId != null
                             ? areas[note.areaId]
                             : null,
-                        theme: theme,
                       ),
                   },
                 ],
@@ -341,14 +323,14 @@ class _DayGroup extends StatelessWidget {
 }
 
 class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.date, required this.t, required this.theme});
+  const _DayHeader({required this.date});
 
   final DateTime date;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final today = startOfDay(DateTime.now());
     final d = startOfDay(date);
 
@@ -375,15 +357,14 @@ class _NoteEntry extends StatelessWidget {
   const _NoteEntry({
     required this.note,
     required this.area,
-    required this.theme,
   });
 
   final Note note;
   final Area? area;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final timeStr = formatHm(note.date.toLocal());
 
     return ListTile(

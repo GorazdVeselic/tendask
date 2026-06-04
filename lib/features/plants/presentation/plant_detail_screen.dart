@@ -50,7 +50,7 @@ class PlantDetailScreen extends ConsumerWidget {
           : ListView(
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               children: [
-                _Hero(plant: plant, catalog: catalog, areas: areas, theme: theme),
+                _Hero(plant: plant, catalog: catalog, areas: areas),
                 const SizedBox(height: 16),
                 Text(
                   t.plant_detail.history_title,
@@ -63,8 +63,6 @@ class PlantDetailScreen extends ConsumerWidget {
                 _History(
                   history: history,
                   catalog: taskTypes,
-                  t: t,
-                  theme: theme,
                 ),
               ],
             ),
@@ -77,16 +75,15 @@ class _Hero extends StatelessWidget {
     required this.plant,
     required this.catalog,
     required this.areas,
-    required this.theme,
   });
 
   final UserPlant plant;
   final Map<String, Plant> catalog;
   final Map<String, Area> areas;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final catalogPlant = plant.plantId != null ? catalog[plant.plantId] : null;
     final scientific = catalogPlant?.scientificName;
     final areaName = plant.areaId != null ? areas[plant.areaId]?.name : null;
@@ -131,17 +128,15 @@ class _History extends StatelessWidget {
   const _History({
     required this.history,
     required this.catalog,
-    required this.t,
-    required this.theme,
   });
 
   final List<Task>? history;
   final Map<String, TaskType>? catalog;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final tasks = history;
     if (tasks == null) {
       return const Center(child: CircularProgressIndicator.adaptive());
@@ -160,7 +155,7 @@ class _History extends StatelessWidget {
                 indent: 56,
                 color: theme.colorScheme.outlineVariant,
               ),
-            _HistoryRow(task: tasks[i], catalog: catalog, theme: theme),
+            _HistoryRow(task: tasks[i], catalog: catalog),
           ],
         ],
       ),
@@ -172,15 +167,14 @@ class _HistoryRow extends StatelessWidget {
   const _HistoryRow({
     required this.task,
     required this.catalog,
-    required this.theme,
   });
 
   final Task task;
   final Map<String, TaskType>? catalog;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final type = catalog?[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
     final icon = type?.icon ?? '📋';

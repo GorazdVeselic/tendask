@@ -173,7 +173,6 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final theme = Theme.of(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -209,7 +208,6 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                       _DateSegment(
                         option: _dateOption,
                         customDate: _customDate,
-                        t: t,
                         onChanged: (opt) => setState(() => _dateOption = opt),
                         onPickDate: _pickDate,
                       ),
@@ -234,7 +232,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                         ),
                       ],
                       const SizedBox(height: 16),
-                      _InfoHint(text: t.notes.info, theme: theme),
+                      _InfoHint(text: t.notes.info),
                       if (_isEdit) ...[
                         const SizedBox(height: 24),
                         DestructiveButton(
@@ -264,19 +262,18 @@ class _DateSegment extends StatelessWidget {
   const _DateSegment({
     required this.option,
     required this.customDate,
-    required this.t,
     required this.onChanged,
     required this.onPickDate,
   });
 
   final _DateOption option;
   final DateTime? customDate;
-  final Translations t;
   final ValueChanged<_DateOption> onChanged;
   final VoidCallback onPickDate;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final customLabel = customDate != null && option == _DateOption.custom
         ? formatDmy(customDate!)
         : t.notes.pick_date;
@@ -343,13 +340,13 @@ class _AreaField extends ConsumerWidget {
 }
 
 class _InfoHint extends StatelessWidget {
-  const _InfoHint({required this.text, required this.theme});
+  const _InfoHint({required this.text});
 
   final String text;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Text(
       text,
       textAlign: TextAlign.center,

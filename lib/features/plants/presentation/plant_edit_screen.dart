@@ -172,8 +172,6 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                   plantId: _plantId,
                   customName: _customName,
                   catalog: catalog,
-                  t: t,
-                  theme: theme,
                   onPick: _pickSpecies,
                 ),
                 const SizedBox(height: 16),
@@ -200,7 +198,6 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                   isEdit: _isEdit,
                   selectedAdd: _areaIds,
                   selectedEdit: _editAreaId,
-                  t: t,
                   onToggleAdd: (id, sel) => setState(
                       () => sel ? _areaIds.add(id) : _areaIds.remove(id)),
                   onSelectEdit: (id) => setState(() => _editAreaId =
@@ -235,20 +232,18 @@ class _SpeciesField extends StatelessWidget {
     required this.plantId,
     required this.customName,
     required this.catalog,
-    required this.t,
-    required this.theme,
     required this.onPick,
   });
 
   final String? plantId;
   final String? customName;
   final Map<String, Plant> catalog;
-  final Translations t;
-  final ThemeData theme;
   final VoidCallback onPick;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final plant = plantId != null ? catalog[plantId] : null;
     final hasSpecies = plant != null || customName != null;
     final icon = plant?.icon ?? (customName != null ? '🌿' : null);
@@ -282,7 +277,6 @@ class _LocationField extends StatelessWidget {
     required this.isEdit,
     required this.selectedAdd,
     required this.selectedEdit,
-    required this.t,
     required this.onToggleAdd,
     required this.onSelectEdit,
     required this.onNewArea,
@@ -292,13 +286,13 @@ class _LocationField extends StatelessWidget {
   final bool isEdit;
   final Set<String> selectedAdd;
   final String? selectedEdit;
-  final Translations t;
   final void Function(String id, bool selected) onToggleAdd;
   final ValueChanged<String> onSelectEdit;
   final VoidCallback onNewArea;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     return Card(
       child: Column(
         children: [

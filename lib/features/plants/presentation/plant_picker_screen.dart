@@ -131,7 +131,6 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                                   ),
                                 _CatalogRow(
                                   plant: results[i],
-                                  theme: theme,
                                   onTap: () => context.pop(
                                     (plantId: results[i].id, customName: null),
                                   ),
@@ -144,8 +143,6 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                       const SizedBox(height: 12),
                       _CustomEntry(
                         query: _query.trim(),
-                        t: t,
-                        theme: theme,
                         onAdd: (name) =>
                             context.pop((plantId: null, customName: name)),
                       ),
@@ -161,16 +158,15 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
 class _CatalogRow extends StatelessWidget {
   const _CatalogRow({
     required this.plant,
-    required this.theme,
     required this.onTap,
   });
 
   final Plant plant;
-  final ThemeData theme;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final sub = plant.scientificName != null
         ? '${plant.scientificName} · ${plant.category}'
         : plant.category;
@@ -187,18 +183,16 @@ class _CatalogRow extends StatelessWidget {
 class _CustomEntry extends StatelessWidget {
   const _CustomEntry({
     required this.query,
-    required this.t,
-    required this.theme,
     required this.onAdd,
   });
 
   final String query;
-  final Translations t;
-  final ThemeData theme;
   final ValueChanged<String> onAdd;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     if (query.isEmpty) return const SizedBox.shrink();
     return Card(
       shape: RoundedRectangleBorder(

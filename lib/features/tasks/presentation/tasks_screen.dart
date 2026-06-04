@@ -63,8 +63,6 @@ class TasksScreen extends ConsumerWidget {
               tasks: pending,
               catalog: catalog,
               subjectLabels: subjectLabels,
-              t: t,
-              theme: theme,
               onComplete: (id) => repo.complete(id),
               onPostpone: (id) => repo.postponeOneDay(id),
               onDuplicate: (id) => repo.duplicate(id),
@@ -81,8 +79,6 @@ class _TasksList extends StatelessWidget {
     required this.tasks,
     required this.catalog,
     required this.subjectLabels,
-    required this.t,
-    required this.theme,
     required this.onComplete,
     required this.onPostpone,
     required this.onDuplicate,
@@ -92,8 +88,6 @@ class _TasksList extends StatelessWidget {
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
   final Map<String, String> subjectLabels;
-  final Translations t;
-  final ThemeData theme;
   final void Function(String id) onComplete;
   final void Function(String id) onPostpone;
   final void Function(String id) onDuplicate;
@@ -101,6 +95,7 @@ class _TasksList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     if (tasks.isEmpty) return EmptyState(t.tasks_list.empty);
 
     final grouped = _groupTasks(tasks);
@@ -136,8 +131,6 @@ class _TasksList extends StatelessWidget {
           taskType: catalog[task.taskTypeId],
           subjectLabel: subjectLabels[task.id],
           group: group,
-          t: t,
-          theme: theme,
           onComplete: () => onComplete(task.id),
           onPostpone: () => onPostpone(task.id),
           onEdit: () => context.pushNamed(
@@ -195,8 +188,6 @@ class _TaskRow extends StatelessWidget {
     required this.taskType,
     required this.subjectLabel,
     required this.group,
-    required this.t,
-    required this.theme,
     required this.onComplete,
     required this.onPostpone,
     required this.onEdit,
@@ -208,8 +199,6 @@ class _TaskRow extends StatelessWidget {
   final TaskType? taskType;
   final String? subjectLabel;
   final _Group group;
-  final Translations t;
-  final ThemeData theme;
   final VoidCallback onComplete;
   final VoidCallback onPostpone;
   final VoidCallback onEdit;
@@ -218,6 +207,7 @@ class _TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final icon = taskType?.icon ?? '📋';
     final label =
         taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
@@ -259,7 +249,7 @@ class _TaskRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
-              _StatusBadge(task: task, group: group, t: t, theme: theme),
+              _StatusBadge(task: task, group: group),
               IconButton(
                 icon: const Icon(Icons.more_horiz),
                 iconSize: 20,
@@ -277,8 +267,6 @@ class _TaskRow extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => _ActionSheet(
-        t: t,
-        theme: theme,
         onComplete: () { Navigator.of(ctx).pop(); onComplete(); },
         onPostpone: () { Navigator.of(ctx).pop(); onPostpone(); },
         onEdit: () { Navigator.of(ctx).pop(); onEdit(); },
@@ -295,19 +283,17 @@ class _StatusBadge extends StatelessWidget {
   const _StatusBadge({
     required this.task,
     required this.group,
-    required this.t,
-    required this.theme,
   });
 
   final Task task;
   final _Group group;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final (text, color) = switch (group) {
-      _Group.overdue => (_overdueText(), theme.colorScheme.error),
+      _Group.overdue => (_overdueText(t), theme.colorScheme.error),
       _Group.today =>
         (t.tasks_list.status_today, theme.colorScheme.primary),
       _Group.tomorrow =>
@@ -325,7 +311,7 @@ class _StatusBadge extends StatelessWidget {
     );
   }
 
-  String _overdueText() {
+  String _overdueText(Translations t) {
     final days = startOfDay(DateTime.now())
         .difference(startOfDay(task.date.toLocal()))
         .inDays;
@@ -342,8 +328,6 @@ class _StatusBadge extends StatelessWidget {
 
 class _ActionSheet extends StatelessWidget {
   const _ActionSheet({
-    required this.t,
-    required this.theme,
     required this.onComplete,
     required this.onPostpone,
     required this.onEdit,
@@ -351,8 +335,6 @@ class _ActionSheet extends StatelessWidget {
     required this.onDelete,
   });
 
-  final Translations t;
-  final ThemeData theme;
   final VoidCallback onComplete;
   final VoidCallback onPostpone;
   final VoidCallback onEdit;
@@ -361,6 +343,8 @@ class _ActionSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     return SafeArea(
       child: Column(
         mainAxisSize: MainAxisSize.min,

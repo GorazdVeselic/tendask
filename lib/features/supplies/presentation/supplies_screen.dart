@@ -49,25 +49,24 @@ class SuppliesScreen extends ConsumerWidget {
               : ListView.builder(
                   padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                   itemCount: supplies.length,
-                  itemBuilder: (_, i) =>
-                      _SupplyRow(supply: supplies[i], t: t, theme: theme),
+                  itemBuilder: (_, i) => _SupplyRow(supply: supplies[i]),
                 ),
     );
   }
 }
 
 class _SupplyRow extends StatelessWidget {
-  const _SupplyRow({required this.supply, required this.t, required this.theme});
+  const _SupplyRow({required this.supply});
 
   final Supply supply;
-  final Translations t;
-  final ThemeData theme;
 
   bool get _isLow =>
       supply.lowThreshold != null && supply.quantity <= supply.lowThreshold!;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final unit = supply.unit ?? '';
     final qtyText = t.supplies.qty(q: _fmt(supply.quantity), unit: unit);
 

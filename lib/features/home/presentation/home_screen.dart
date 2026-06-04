@@ -108,13 +108,13 @@ class _HomeBody extends StatelessWidget {
         if (todayTasks.isEmpty)
           _DashboardHint(t.home.no_tasks_today)
         else
-          _TaskList(tasks: todayTasks, catalog: catalog, now: now, t: t),
+          _TaskList(tasks: todayTasks, catalog: catalog, now: now),
         const SizedBox(height: 16),
         SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
         if (recentTasks.isEmpty)
           _DashboardHint(t.home.no_recent)
         else
-          _TaskList(tasks: recentTasks, catalog: catalog, now: now, t: t),
+          _TaskList(tasks: recentTasks, catalog: catalog, now: now),
       ],
     );
   }
@@ -178,13 +178,11 @@ class _TaskList extends StatelessWidget {
     required this.tasks,
     required this.catalog,
     required this.now,
-    required this.t,
   });
 
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
   final DateTime now;
-  final Translations t;
 
   @override
   Widget build(BuildContext context) {
@@ -202,7 +200,6 @@ class _TaskList extends StatelessWidget {
               task: tasks[i],
               taskType: catalog[tasks[i].taskTypeId],
               now: now,
-              t: t,
             ),
           ],
         ],
@@ -216,17 +213,16 @@ class _TaskTile extends StatelessWidget {
     required this.task,
     required this.taskType,
     required this.now,
-    required this.t,
   });
 
   final Task task;
   final TaskType? taskType;
   final DateTime now;
-  final Translations t;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final t = context.t;
     final label =
         taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
     final icon = taskType?.icon ?? '📋';

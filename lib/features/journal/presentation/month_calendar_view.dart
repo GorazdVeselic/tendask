@@ -113,7 +113,6 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
           label: ml.formatMonthYear(_visibleMonth),
           onPrev: () => _shift(-1),
           onNext: () => _shift(1),
-          theme: theme,
         ),
         const SizedBox(height: 4),
         Text(
@@ -128,7 +127,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
               color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
         ),
         const SizedBox(height: 12),
-        _WeekdayHeader(ml: ml, theme: theme),
+        _WeekdayHeader(ml: ml),
         const SizedBox(height: 4),
         GridView.builder(
           shrinkWrap: true,
@@ -148,7 +147,6 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
               isToday: startOfDay(day) == today,
               selected: _selectedDay != null &&
                   startOfDay(day) == startOfDay(_selectedDay!),
-              theme: theme,
               onTap: () => setState(() => _selectedDay = day),
             );
           },
@@ -191,16 +189,15 @@ class _MonthNav extends StatelessWidget {
     required this.label,
     required this.onPrev,
     required this.onNext,
-    required this.theme,
   });
 
   final String label;
   final VoidCallback onPrev;
   final VoidCallback onNext;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -225,13 +222,13 @@ class _MonthNav extends StatelessWidget {
 }
 
 class _WeekdayHeader extends StatelessWidget {
-  const _WeekdayHeader({required this.ml, required this.theme});
+  const _WeekdayHeader({required this.ml});
 
   final MaterialLocalizations ml;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         for (var i = 0; i < 7; i++)
@@ -256,7 +253,6 @@ class _DayCell extends StatelessWidget {
     required this.count,
     required this.isToday,
     required this.selected,
-    required this.theme,
     required this.onTap,
   });
 
@@ -264,11 +260,11 @@ class _DayCell extends StatelessWidget {
   final int count;
   final bool isToday;
   final bool selected;
-  final ThemeData theme;
   final VoidCallback onTap;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,

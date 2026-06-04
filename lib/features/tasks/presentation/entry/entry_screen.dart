@@ -299,7 +299,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       body: Column(
         children: [
           _ProgressBar(count: active.length, current: pos < 0 ? 0 : pos),
-          _StepTitle(step: _step, position: pos, t: t),
+          _StepTitle(step: _step, position: pos),
           Expanded(
             child: PageView(
               controller: _pageController,
@@ -403,13 +403,13 @@ class _ProgressBar extends StatelessWidget {
 }
 
 class _StepTitle extends StatelessWidget {
-  const _StepTitle({required this.step, required this.position, required this.t});
+  const _StepTitle({required this.step, required this.position});
   final EntryStep step;
   final int position;
-  final Translations t;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
     final text = switch (step) {
       EntryStep.type => '${t.entry.step} ${position + 1} · ${t.entry.type_title}',
