@@ -47,7 +47,7 @@ final class WeatherDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$weatherDioHash() => r'80b076171d63fe52344f56f4bae089da74d6a9b3';
+String _$weatherDioHash() => r'af9c004dd22009f8d83b1f4dc37c83aa45c4445a';
 
 @ProviderFor(openMeteoClient)
 final openMeteoClientProvider = OpenMeteoClientProvider._();

@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../area_type.dart';
+import '../sync/sync_status.dart';
 import '../task_status.dart';
 import 'tables/catalog_tables.dart';
 import 'tables/user_tables.dart';

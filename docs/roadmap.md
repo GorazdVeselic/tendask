@@ -189,7 +189,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** drift ↔ Supabase, LWW po `updated_at`, brez razreševanja konfliktov (MVP enouporabniški). §2 tech-stack.
 
-- [ ] **6.1 — Povezljivost + infra.** `connectivity_plus`; `sync_status` označevanje ob zapisih. *Commit:* `feat: connectivity + sync_status infra`
+- [~] **6.1 — Povezljivost + infra.** `connectivity_plus`; `sync_status` označevanje ob zapisih. Razrezan na **6.1a** (povezljivost + konstante) + **6.1b** (anonimna seja + currentUserId).
+  - [x] **6.1a — Povezljivost + sync_status konstante.** *Commit:* `feat: connectivity_plus + sync_status konstante`
+  - [ ] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
 - [ ] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
 - [ ] **6.3 — Pull.** `updated_at > last_pulled_at` → upsert v drift; `deleted=true` → odstrani lokalno. *Commit:* `feat: sync pull`
 - [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
@@ -291,6 +293,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **6.1a — Povezljivost + sync_status konstante (M6 začet).** Dodan `connectivity_plus`
+  `^6.1.0` (→ 6.1.5, major pinnan; predpisan v `tech-stack.md §2`). `core/sync/connectivity.dart`:
+  `onlineStatusProvider` (`Stream<bool>`, `keepAlive`, ročni dedup stanja prek `await for` — brez
+  nepotrebnih emisij); konzument pride v 6.4 (sprožilci). `core/sync/sync_status.dart`: konstanti
+  `kSyncPending`/`kSyncSynced` — zamenjal magic-string `'pending'` čez 6 repozitorijev (tasks/areas/
+  user_plants/notes/supplies/profile) + drift default v `user_tables.dart`. **Ugotovitev:** `sync_status`
+  označevanje ob zapisih je bilo **že vgrajeno** (vsak update/softDelete postavi `pending`, insert pade na
+  drift default) — 6.1 obseg se je tako skrčil na povezljivost + utrditev konstant. **Gotcha:** `kSyncPending`
+  je bilo treba importati tudi v glavni `app_database.dart`, sicer `part`-generirani `*.g.dart` pade v CFE
+  (`flutter test`), a NE v `flutter analyze` (isti vzorec kot enum-import gotcha v CLAUDE.md). Namerno
+  nedotaknjeno: `'pending'` literal v raw-SQL migraciji v3 (zgodovinske migracije morajo ostati
+  deterministične, neodvisne od trenutne konstante). flutter analyze čist, **72/72 testov**. Commit: `feat:`.
+  **Odločitev na začetku M6 (z uporabnikom):** auth za sync = **`signInAnonymously` že v M6** (pravi
+  `auth.uid()` za RLS; M7 doda le UI/linkanje) → 6.1b. **Naslednji: 6.1b (anonimna seja + currentUserId).**
 - 2026-06-04 — **5.4 — uveljavitev + preverba → M5 ZAKLJUČEN.** Migraciji uveljavljeni v živo prek
   **Supabase CLI** (isti postopek kot hexatory): `supabase init` → `link --project-ref jlmkkeijmmnwkizutvkg`
   (Frankfurt; DB geslo prek `SUPABASE_DB_PASSWORD` env, ne v repo) → `db push` → **0001 + 0002 aplicirani

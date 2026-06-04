@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../area_type.dart';
+import '../../sync/sync_status.dart';
 import '../../task_status.dart';
 import 'catalog_tables.dart';
 
@@ -18,7 +19,7 @@ class Profiles extends Table {
   TextColumn get lang => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {userId};
@@ -40,7 +41,7 @@ class Areas extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -64,7 +65,7 @@ class UserPlants extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -89,7 +90,7 @@ class Tasks extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -110,7 +111,7 @@ class TaskSubjects extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -134,7 +135,7 @@ class TaskReminders extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -157,7 +158,7 @@ class Notes extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -179,7 +180,7 @@ class Supplies extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -199,7 +200,7 @@ class Recipes extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};
@@ -219,7 +220,7 @@ class TaskSupplies extends Table {
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
-      text().withDefault(const Constant('pending'))();
+      text().withDefault(const Constant(kSyncPending))();
 
   @override
   Set<Column> get primaryKey => {id};

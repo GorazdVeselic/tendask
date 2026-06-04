@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/sync/sync_status.dart';
 import 'supply_spec.dart';
 
 class SuppliesRepository {
@@ -68,7 +69,7 @@ class SuppliesRepository {
         quantity: Value(quantity),
         lowThreshold: Value(lowThreshold),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -78,7 +79,7 @@ class SuppliesRepository {
       SuppliesCompanion(
         deleted: const Value(true),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -138,7 +139,7 @@ class SuppliesRepository {
       SuppliesCompanion(
         quantity: Value(supply.quantity + delta),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -149,7 +150,7 @@ class SuppliesRepository {
         .write(TaskSuppliesCompanion(
       applied: Value(applied),
       updatedAt: Value(_clock.now()),
-      syncStatus: const Value('pending'),
+      syncStatus: const Value(kSyncPending),
     ));
   }
 
@@ -158,7 +159,7 @@ class SuppliesRepository {
       TaskSuppliesCompanion(
         deleted: const Value(true),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }

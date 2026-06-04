@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/sync/sync_status.dart';
 import 'plant_spec.dart';
 
 class UserPlantsRepository {
@@ -115,7 +116,7 @@ class UserPlantsRepository {
         areaId: Value(areaId),
         personalAlias: Value(personalAlias),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -127,7 +128,7 @@ class UserPlantsRepository {
       UserPlantsCompanion(
         deleted: const Value(true),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }

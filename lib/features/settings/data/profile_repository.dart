@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/sync/sync_status.dart';
 
 class ProfileRepository {
   ProfileRepository(this._db, {this._clock = const SystemClock()});
@@ -30,7 +31,7 @@ class ProfileRepository {
             userId: _localUserId,
             lang: Value(lang),
             updatedAt: now,
-            syncStatus: const Value('pending'),
+            syncStatus: const Value(kSyncPending),
           ));
     } else {
       // Update only lang — never clobber future h3* cells (M7).
@@ -39,7 +40,7 @@ class ProfileRepository {
           .write(ProfilesCompanion(
         lang: Value(lang),
         updatedAt: Value(now),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ));
     }
   }

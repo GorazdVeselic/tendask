@@ -1500,7 +1500,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -1969,7 +1969,7 @@ class $AreasTable extends Areas with TableInfo<$AreasTable, Area> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -2511,7 +2511,7 @@ class $UserPlantsTable extends UserPlants
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -3136,7 +3136,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -3768,7 +3768,7 @@ class $TaskSubjectsTable extends TaskSubjects
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -4239,7 +4239,7 @@ class $TaskRemindersTable extends TaskReminders
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -4742,7 +4742,7 @@ class $NotesTable extends Notes with TableInfo<$NotesTable, Note> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -5342,7 +5342,7 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -5887,7 +5887,7 @@ class $RecipesTable extends Recipes with TableInfo<$RecipesTable, Recipe> {
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [
@@ -6408,7 +6408,7 @@ class $TaskSuppliesTable extends TaskSupplies
     false,
     type: DriftSqlType.string,
     requiredDuringInsert: false,
-    defaultValue: const Constant('pending'),
+    defaultValue: const Constant(kSyncPending),
   );
   @override
   List<GeneratedColumn> get $columns => [

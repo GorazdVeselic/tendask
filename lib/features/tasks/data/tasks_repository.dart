@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
 
@@ -259,7 +260,7 @@ class TasksRepository {
           date: Value(date.toUtc()),
           note: Value(note),
           updatedAt: Value(now),
-          syncStatus: const Value('pending'),
+          syncStatus: const Value(kSyncPending),
         ),
       );
       // Soft-delete current subjects (so the change syncs) then insert fresh.
@@ -268,7 +269,7 @@ class TasksRepository {
           .write(TaskSubjectsCompanion(
         deleted: const Value(true),
         updatedAt: Value(now),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ));
       await _insertSubjects(id, subjects, now);
       // Same soft-delete-then-reinsert for reminders.
@@ -277,7 +278,7 @@ class TasksRepository {
           .write(TaskRemindersCompanion(
         deleted: const Value(true),
         updatedAt: Value(now),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ));
       await _insertReminders(id, reminders, now);
     });
@@ -321,7 +322,7 @@ class TasksRepository {
         TasksCompanion(
           status: const Value(TaskStatus.done),
           updatedAt: Value(_clock.now()),
-          syncStatus: const Value('pending'),
+          syncStatus: const Value(kSyncPending),
         ),
       );
       // Deduct supplies from stock now that the task is done.
@@ -347,7 +348,7 @@ class TasksRepository {
         .write(TasksCompanion(
       weather: Value(json),
       updatedAt: Value(_clock.now()),
-      syncStatus: const Value('pending'),
+      syncStatus: const Value(kSyncPending),
     ));
   }
 
@@ -357,7 +358,7 @@ class TasksRepository {
         TasksCompanion(
           deleted: const Value(true),
           updatedAt: Value(_clock.now()),
-          syncStatus: const Value('pending'),
+          syncStatus: const Value(kSyncPending),
         ),
       );
       // Return any booked consumption to stock.
@@ -373,7 +374,7 @@ class TasksRepository {
       TasksCompanion(
         date: Value(task.date.add(const Duration(days: 1))),
         updatedAt: Value(now),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -385,7 +386,7 @@ class TasksRepository {
       TasksCompanion(
         date: Value(date.toUtc()),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -396,7 +397,7 @@ class TasksRepository {
         TasksCompanion(
           status: const Value(TaskStatus.waiting),
           updatedAt: Value(_clock.now()),
-          syncStatus: const Value('pending'),
+          syncStatus: const Value(kSyncPending),
         ),
       );
       // No longer done — return supplies to stock.

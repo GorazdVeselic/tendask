@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/sync/sync_status.dart';
 
 class NotesRepository {
   NotesRepository(this._db, {this._clock = const SystemClock()});
@@ -55,7 +56,7 @@ class NotesRepository {
         areaId: Value(areaId),
         userPlantId: Value(userPlantId),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
@@ -65,7 +66,7 @@ class NotesRepository {
       NotesCompanion(
         deleted: const Value(true),
         updatedAt: Value(_clock.now()),
-        syncStatus: const Value('pending'),
+        syncStatus: const Value(kSyncPending),
       ),
     );
   }
