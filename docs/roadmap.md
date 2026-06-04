@@ -253,7 +253,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Zabeleženo med razvojem; ni vezano na trenutni mejnik. Implementira se kot ločen korak po dogovoru.
 
-- **FR-1 — Grid tipov opravil: razširi/skrij + sort po pogostosti.** Grid (~26 tipov) v Hitrem
+- **FR-1 — Grid tipov opravil: razširi/skrij + sort po pogostosti.** ✅ **Implementirano 2026-06-04.**
+  Sort po pogostosti + razširi/skrij sta narejena (`type_step`); del »ekstrahiraj skupni `TaskTypeGrid`
+  (podvojen v 02/07)« je odpadel — po stepperju je grid samo še en klicalec. Grid (~26 tipov) v Hitrem
   vnosu (02) in obrazcu (07) privzeto pokaže le ~6 (2–3 vrstice) + gumb **Razširi** (prikaže vse) /
   **Skrij** (nazaj na 6). Bonus: sortiranje po pogostosti uporabe **per user** — izvedljivo brez nove
   sheme prek `SELECT task_type_id, COUNT(*) FROM task WHERE deleted=0 GROUP BY task_type_id ORDER BY 2 DESC`
@@ -286,6 +288,18 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **FR-1 (grid tipov) + fix weather overflow + dev.bat** (po M4, pred M5).
+  **(1) FR-1:** grid tipov na koraku 1 stepperja urejen po **pogostosti per user** (`watchTaskTypeUsage()` =
+  COUNT po `task_type_id`, ne-izbrisani; ob izenačenju seed vrstni red) → najpogostejši na vrhu. Privzeto
+  prikaže prvih `kTaskTypeGridCollapsed` (**9**, konfig. v `config.dart`) + gumb »Pokaži vse (N)«/»Pokaži manj«;
+  izbrani tip vedno viden. `TypeStepBody` → `ConsumerStatefulWidget`. i18n `type_show_all(n)`/`type_show_less`
+  (sl/en/de). +1 unit test. Del backloga »ekstrahiraj skupni `TaskTypeGrid` (02/07)« odpadel (en klicalec).
+  Po UX odločitvi: brez avto-razširi ob scrollu (dvoumno, framework cleverness) — samo eksplicitni gumb.
+  **(2) Fix weather overflow:** `CurrentWeatherCard` (Domov) je desno prelival (~8px) — srednji stolpec
+  (temp+opis) ni bil omejen, `Spacer` padel na 0; zdaj stolpec v `Expanded` + opis `maxLines:1` z elipso.
+  **(3) dev.bat:** dvoklik-prijazen razvojni zagon (debug + hot reload r/R; kliče `deploy.bat hot`).
+  flutter analyze čist, **72/72 testov**. Commiti: `feat:` (FR-1), `fix:` (overflow), `chore:` (dev.bat).
+  **Naslednji: M5 (Supabase zaledje).**
 - 2026-06-04 — **FR-6 »Ponovi zadnje« + fix privzetega statusa + deploy.bat hot reload** (po M4, pred M5).
   **(1) FR-6:** kartica »↻ Ponovi zadnje« na koraku 1 (Tip) stepperja — predizpolni tip + subjekte +
   sredstva + opombo iz zadnjega opravila in skoči na Pregled; datum/ura ostane »zdaj« (status izpeljan),
