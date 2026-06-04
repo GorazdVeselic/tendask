@@ -1,5 +1,8 @@
 base_locale: sl
 fallback_strategy: base_locale
+# Eager-load all locales (3 small ones): lets plural resolvers register for
+# every locale up front and avoids deferred-library loading in tests.
+lazy: false
 input_directory: lib/i18n
 input_file_pattern: .i18n.json
 output_directory: lib/i18n
