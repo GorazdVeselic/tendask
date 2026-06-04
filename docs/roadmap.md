@@ -270,10 +270,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   `suppliesListProvider` so StreamProvider nad drift `watchAll()`, zato se nov element takoj prikaže.
   Prazen vrt ni dead-end (gumbi so vidni tudi brez vnosov). Originalni predlog: ponudi inline povezavo
   **"+ Dodaj območje"** → odpre obrazec → vrne z izbranim (+ isti vzorec za rastlino/sredstvo).
-- **FR-4 — Navigacija po dnevih na časovnici Dnevnika.** Wireframe 03 predvideva mini koledarski
-  trak (vodoravni dnevi) na vrhu časovnice za hiter skok/premik po dnevih (prejšnji/naslednji); v
-  M2.5 ni bil implementiran (časovnica je le kronološki seznam + filter). Dodati trak (skok na dan)
-  ali ‹ › dnevno navigacijo.
+- **FR-4 — Navigacija po dnevih na časovnici Dnevnika.** ✗ **Umaknjeno (2026-06-04).** Prototip dnevnega
+  traku (skok na dan) je bil implementiran in po pregledu na napravi **zavrnjen** — dodal je vizualni šum
+  brez prave vrednosti. Navigacijo po datumih že pokrivata kronološka časovnica (s skupinami po dnevih) in
+  mesečni pogled. Ne implementiramo, dokler ne bo jasne potrebe in boljšega dizajna.
 - **FR-5 — Ponavljanje opravil (nice-to-have).** Korak »Kdaj« v vnosu predvideva izbiro ponavljanja
   (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
   dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
