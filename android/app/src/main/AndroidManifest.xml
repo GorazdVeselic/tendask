@@ -1,4 +1,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Required for Open-Meteo weather, Supabase sync (M5/M6) and Sentry.
+         The app is offline-first, but network access must be declared so the
+         release build (debug/ adds it only for hot reload) can reach them. -->
+    <uses-permission android:name="android.permission.INTERNET"/>
     <application
         android:label="tendask"
         android:name="${applicationName}"
