@@ -286,6 +286,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **Code-quality cleanup (po M4, brez funkcijskih sprememb)** — pregled M4 kode + odprava
+  prop-drilling `theme`/`t` čez **vso presentation plast** (weather UI + `task_detail` + 13 zaslonov:
+  home/tasks/journal/areas/plants/supplies/entry): pomožni widgeti zdaj berejo `Theme.of(context)`/`context.t`
+  **lokalno** namesto prek konstruktorjev (CLAUDE.md pravilo); static helperji obdržijo `Translations` parameter
+  (klicani z lokalno vrednostjo). Dodatno v weather UI: odstranjeni mrtvi `t` parametri, `WeatherForecastStrip`/
+  `conditionLabel` → privatna, `OpenMeteoClient.fetch` brez neuporabljenih `pastDays`/`forecastDays` (YAGNI).
+  Brez sprememb vedenja/postavitve/stilov; ~−85 vrstic šuma. analyze čist, **69/69 testov**. Commiti: `refactor:`
+  ×4 (weather UI · task_detail · presentation plast). Doslednost s CLAUDE.md pred M5.
 - 2026-06-04 — **M4 ZAKLJUČEN (vreme, Open-Meteo)** — **4.1** Open-Meteo client: paketi `dio`+`freezed`/
   `json_serializable` (tech-stack §1); tolerantni DTO `OpenMeteoResponse` (vsa polja optional, ne crasha ob
   delnem odgovoru); tanek transport client (en request → vsi 3 pasovi §7.10 + temp. tal + ET₀), vrže ob
