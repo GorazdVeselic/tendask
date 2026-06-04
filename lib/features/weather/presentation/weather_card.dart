@@ -110,20 +110,23 @@ class CurrentWeatherCard extends StatelessWidget {
           children: [
             Text(weatherEmoji(condition), style: const TextStyle(fontSize: 28)),
             const SizedBox(width: 12),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(_temp(snap.temperature),
-                    style: theme.textTheme.titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w800)),
-                Text(_conditionLabel(condition, context.t),
-                    style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant)),
-              ],
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(_temp(snap.temperature),
+                      style: theme.textTheme.titleMedium
+                          ?.copyWith(fontWeight: FontWeight.w800)),
+                  Text(_conditionLabel(condition, context.t),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant)),
+                ],
+              ),
             ),
-            const Spacer(),
             if (snap.forecast.isNotEmpty)
-              Flexible(child: _ForecastStrip(snap.forecast, compact: true)),
+              _ForecastStrip(snap.forecast, compact: true),
           ],
         ),
       ),
