@@ -2,6 +2,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/auth/auth_service.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/features/settings/application/profile_providers.dart';
 import 'package:tendask/features/settings/data/profile_repository.dart';
@@ -41,8 +42,9 @@ void main() {
       expect(LocaleSettings.currentLocale, AppLocale.en);
 
       // setLang is fire-and-forget; let it settle on the real event loop.
+      // No Supabase in tests → AuthService falls back to kLocalUserId.
       await tester.runAsync(() async {
-        expect(await repo.getLang(), 'en');
+        expect(await repo.getLang(kLocalUserId), 'en');
       });
     });
   });

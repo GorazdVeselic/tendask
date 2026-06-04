@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/auth/auth_service.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
@@ -106,8 +107,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     final pick = await context.pushNamed<PlantPick>('plant-picker');
     if (pick == null || !mounted) return;
     final id = await ref.read(userPlantsRepositoryProvider).createForArea(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
+          userId: ref.read(authServiceProvider).userId,
           areaId: _areaId!,
           plantId: pick.plantId,
           customName: pick.customName,
@@ -142,8 +142,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
         );
       } else {
         await repo.create(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
+          userId: ref.read(authServiceProvider).userId,
           date: _selectedDate,
           content: content,
           areaId: _areaId,

@@ -189,9 +189,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** drift ↔ Supabase, LWW po `updated_at`, brez razreševanja konfliktov (MVP enouporabniški). §2 tech-stack.
 
-- [~] **6.1 — Povezljivost + infra.** `connectivity_plus`; `sync_status` označevanje ob zapisih. Razrezan na **6.1a** (povezljivost + konstante) + **6.1b** (anonimna seja + currentUserId).
-  - [x] **6.1a — Povezljivost + sync_status konstante.** *Commit:* `feat: connectivity_plus + sync_status konstante`
-  - [ ] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
+- [x] **6.1 — Povezljivost + infra.** `connectivity_plus`; `sync_status` označevanje ob zapisih. Razrezan na **6.1a** (povezljivost + konstante) + **6.1b** (anonimna seja + currentUserId).
+  - [x] **6.1a — Povezljivost + sync_status konstante.** *Commit:* `feat: connectivity_plus + sync_status konstante` (`9bc57f9`)
+  - [x] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
 - [ ] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
 - [ ] **6.3 — Pull.** `updated_at > last_pulled_at` → upsert v drift; `deleted=true` → odstrani lokalno. *Commit:* `feat: sync pull`
 - [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
@@ -293,6 +293,25 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **6.1b — Anonimna seja + currentUserId (sync auth infra) → 6.1 ZAKLJUČEN.**
+  `core/auth/auth_service.dart`: `AuthService` (`userId` = `auth.currentUser?.id ?? kLocalUserId` — bere živ
+  klient; `hasSession`; `ensureAnonymousSession()` graceful) + `authServiceProvider` (null client = Supabase
+  nekonfiguriran → offline build). `core/auth/local_row_claim.dart`: `claimLocalRows(db, uid)` posvoji vse
+  `user_id='local'` vrstice v 7 owned tabelah (transakcija, raw-SQL zanka prek `TableInfo`, stream-aware),
+  označi `pending`; no-op dokler ni seje (child tabele lastništvo prek task). `main.dart`: neblokirajoč
+  `_bootstrapSession` (`unawaited`) — prijava + claim v ozadju (NE blokira first paint); `getLang` bere
+  `authService.userId`. `ProfileRepository` sprejme `userId` (odstranjen hardcode `_localUserId`). Zamenjan
+  hardcoded `'local'` → `ref.read(authServiceProvider).userId` v 6 presentation (entry/subject/area/note/
+  plant/supply) + settings. +6 testov (claim: no-op/claims+pending/multi-table/selektivnost; auth null-fallback).
+  **Ročna preverba na napravi (PASS, DB dokaz):** 2 anonimna userja v `auth.users` projekta jlmkk… (poizvedba
+  `tmp/check_users.py` prek pooler). **Naučeno med preverbo (3 zanke):** (1) anonimne prijave morajo biti
+  **omočene** v Supabase (Auth → Sign In/Providers → Anonymous = privzeto OFF); (2) `connectivity_plus` rabi
+  **`ACCESS_NETWORK_STATE`** permission (dodan v main manifest); (3) `checkConnectivity()` na napravi traja
+  **~1.6 s** (NE visi — prvotni sklep o visenju je bil prehiter logcat dump) → **online-gate odstranjen iz
+  bootstrap**: prijava se ne veže na connectivity, `signInAnonymously` sam graceful pade offline (čistejši
+  offline-first); `onlineStatusProvider` ostane za 6.4 (flush trigger); (4) Supabase Studio → Users ima
+  **email-search filter**, ki skrije anonimne (brez e-pošte) — od tod lažni »ni userja«. flutter analyze čist,
+  **78/78 testov**. Commit: `feat:`. **Naslednji: 6.2 (push: pending → upsert v Supabase, FK vrstni red).**
 - 2026-06-04 — **6.1a — Povezljivost + sync_status konstante (M6 začet).** Dodan `connectivity_plus`
   `^6.1.0` (→ 6.1.5, major pinnan; predpisan v `tech-stack.md §2`). `core/sync/connectivity.dart`:
   `onlineStatusProvider` (`Stream<bool>`, `keepAlive`, ročni dedup stanja prek `await for` — brez

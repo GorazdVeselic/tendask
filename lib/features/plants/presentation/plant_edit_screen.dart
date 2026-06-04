@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -88,6 +89,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
     setState(() => _isSaving = true);
     try {
       final repo = ref.read(userPlantsRepositoryProvider);
+      final userId = ref.read(authServiceProvider).userId;
       final alias = _aliasController.text.trim();
       final aliasOrNull = alias.isEmpty ? null : alias;
       // Created instance ids — returned to callers that auto-select the new
@@ -102,8 +104,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
       } else if (_areaIds.isEmpty) {
         created = [
           await repo.create(
-            // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-            userId: 'local',
+            userId: userId,
             plantId: _plantId,
             customName: _customName,
             personalAlias: aliasOrNull,
@@ -113,7 +114,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
         created = [
           for (final areaId in _areaIds)
             await repo.create(
-              userId: 'local',
+              userId: userId,
               areaId: areaId,
               plantId: _plantId,
               customName: _customName,

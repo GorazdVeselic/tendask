@@ -20,6 +20,7 @@ void main() {
   late ProfileRepository repo;
 
   final t0 = DateTime.utc(2026, 6, 2, 8);
+  const userId = 'user-1';
 
   setUp(() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
@@ -30,24 +31,24 @@ void main() {
   tearDown(() async => db.close());
 
   test('getLang returns null on an empty profile', () async {
-    expect(await repo.getLang(), isNull);
+    expect(await repo.getLang(userId), isNull);
   });
 
   test('setLang inserts the row and marks it pending', () async {
-    await repo.setLang('en');
+    await repo.setLang(userId, 'en');
 
-    expect(await repo.getLang(), 'en');
+    expect(await repo.getLang(userId), 'en');
     final row = await db.select(db.profiles).getSingle();
-    expect(row.userId, 'local');
+    expect(row.userId, userId);
     expect(row.syncStatus, 'pending');
   });
 
   test('setLang twice updates in place (single row, no duplicate)', () async {
-    await repo.setLang('en');
+    await repo.setLang(userId, 'en');
     clock.advance(const Duration(minutes: 5));
-    await repo.setLang('de');
+    await repo.setLang(userId, 'de');
 
-    expect(await repo.getLang(), 'de');
+    expect(await repo.getLang(userId), 'de');
     final rows = await db.select(db.profiles).get();
     expect(rows.length, 1);
   });

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/auth/auth_service.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
@@ -261,8 +262,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         taskId = widget.taskId!;
       } else {
         taskId = await repo.create(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
+          userId: ref.read(authServiceProvider).userId,
           taskTypeId: _taskTypeId!,
           date: _date,
           status: _status,

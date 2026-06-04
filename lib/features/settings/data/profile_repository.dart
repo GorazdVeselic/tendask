@@ -10,33 +10,29 @@ class ProfileRepository {
   final AppDatabase _db;
   final Clock _clock;
 
-  // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-  static const _localUserId = 'local';
-
-  /// Stored UI language code ('sl'/'en'/'de'), or null if never chosen.
-  Future<String?> getLang() async {
+  /// Stored UI language code ('sl'/'en'/'de') for [userId], or null if unset.
+  Future<String?> getLang(String userId) async {
     final row = await (_db.select(_db.profiles)
-          ..where((p) => p.userId.equals(_localUserId)))
+          ..where((p) => p.userId.equals(userId)))
         .getSingleOrNull();
     return row?.lang;
   }
 
-  Future<void> setLang(String lang) async {
+  Future<void> setLang(String userId, String lang) async {
     final exists = await (_db.select(_db.profiles)
-          ..where((p) => p.userId.equals(_localUserId)))
+          ..where((p) => p.userId.equals(userId)))
         .getSingleOrNull();
     final now = _clock.now();
     if (exists == null) {
       await _db.into(_db.profiles).insert(ProfilesCompanion.insert(
-            userId: _localUserId,
+            userId: userId,
             lang: Value(lang),
             updatedAt: now,
             syncStatus: const Value(kSyncPending),
           ));
     } else {
       // Update only lang — never clobber future h3* cells (M7).
-      await (_db.update(_db.profiles)
-            ..where((p) => p.userId.equals(_localUserId)))
+      await (_db.update(_db.profiles)..where((p) => p.userId.equals(userId)))
           .write(ProfilesCompanion(
         lang: Value(lang),
         updatedAt: Value(now),

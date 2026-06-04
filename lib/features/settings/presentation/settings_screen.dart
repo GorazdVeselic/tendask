@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/auth/auth_service.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/profile_providers.dart';
@@ -19,8 +20,10 @@ class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
   void _setLang(WidgetRef ref, AppLocale loc) {
+    final userId = ref.read(authServiceProvider).userId;
     unawaited(LocaleSettings.setLocale(loc));
-    unawaited(ref.read(profileRepositoryProvider).setLang(loc.languageCode));
+    unawaited(
+        ref.read(profileRepositoryProvider).setLang(userId, loc.languageCode));
   }
 
   @override

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/auth/auth_service.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
@@ -99,8 +100,7 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
       id = widget.supplyId!;
     } else {
       id = await repo.create(
-          // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-          userId: 'local',
+          userId: ref.read(authServiceProvider).userId,
           name: name,
           unit: unit,
           quantity: quantity,

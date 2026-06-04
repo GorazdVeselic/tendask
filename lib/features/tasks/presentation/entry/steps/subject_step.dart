@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
@@ -45,10 +46,10 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
   }
 
   Future<void> _addFromCatalog(String plantId) async {
-    final id = await ref
-        .read(userPlantsRepositoryProvider)
-        // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-        .create(userId: 'local', plantId: plantId);
+    final id = await ref.read(userPlantsRepositoryProvider).create(
+          userId: ref.read(authServiceProvider).userId,
+          plantId: plantId,
+        );
     widget.onTogglePlant(id, true);
   }
 

@@ -3,6 +3,8 @@
          The app is offline-first, but network access must be declared so the
          release build (debug/ adds it only for hot reload) can reach them. -->
     <uses-permission android:name="android.permission.INTERNET"/>
+    <!-- connectivity_plus: read the network interface state (online/offline). -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <application
         android:label="tendask"
         android:name="${applicationName}"

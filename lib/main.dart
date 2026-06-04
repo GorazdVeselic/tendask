@@ -1,8 +1,12 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
+import 'core/auth/auth_service.dart';
+import 'core/auth/local_row_claim.dart';
 import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
@@ -28,8 +32,13 @@ void main() async {
   await SeedService(container.read(databaseProvider)).runIfNeeded();
 
   // Restore the user's chosen language (offline-first: drift is the source).
-  final savedLang = await container.read(profileRepositoryProvider).getLang();
+  final userId = container.read(authServiceProvider).userId;
+  final savedLang =
+      await container.read(profileRepositoryProvider).getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
+
+  // Bring up the anonymous session in the background — never block first paint.
+  unawaited(_bootstrapSession(container));
 
   runApp(
     TranslationProvider(
@@ -39,4 +48,15 @@ void main() async {
       ),
     ),
   );
+}
+
+/// Signs in anonymously so sync has a real auth.uid(), then claims any rows
+/// created locally before the session existed. Offline-first: sign-in fails
+/// gracefully when offline (no-op), and M6.4 retries on reconnect.
+Future<void> _bootstrapSession(ProviderContainer container) async {
+  final auth = container.read(authServiceProvider);
+  if (!auth.hasSession) await auth.ensureAnonymousSession();
+  if (auth.hasSession) {
+    await claimLocalRows(container.read(databaseProvider), auth.userId);
+  }
 }

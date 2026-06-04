@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/area_type.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -96,8 +97,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
 
     setState(() => _isSaving = true);
     try {
-      // TODO(gorazd, 2026-12-01): replace with real auth.uid() in M7
-      const userId = 'local';
+      final userId = ref.read(authServiceProvider).userId;
       final repo = ref.read(areasRepositoryProvider);
       final String areaId;
       if (_isEdit) {
