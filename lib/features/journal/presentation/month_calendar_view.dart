@@ -45,13 +45,20 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     super.initState();
     final now = DateTime.now();
     _visibleMonth = DateTime(now.year, now.month);
+    // Open on today so the day list is populated immediately.
+    _selectedDay = DateTime(now.year, now.month, now.day);
   }
 
   void _shift(int months) {
     setState(() {
       _visibleMonth =
           DateTime(_visibleMonth.year, _visibleMonth.month + months);
-      _selectedDay = null;
+      final now = DateTime.now();
+      // Preselect today when landing on the current month, else clear.
+      _selectedDay = _visibleMonth.year == now.year &&
+              _visibleMonth.month == now.month
+          ? DateTime(now.year, now.month, now.day)
+          : null;
     });
   }
 
@@ -267,12 +274,14 @@ class _DayCell extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: (selected || isToday)
-              ? theme.colorScheme.primaryContainer
+          // Selected = honey fill (distinct from today's green); today keeps a
+          // light fill so the task dots stay visible.
+          color: selected
+              ? theme.colorScheme.secondary.withValues(alpha: 0.18)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
           border: selected
-              ? Border.all(color: theme.colorScheme.primary, width: 2.5)
+              ? Border.all(color: theme.colorScheme.secondary, width: 2.5)
               : isToday
                   ? Border.all(color: theme.colorScheme.primary, width: 1.5)
                   : null,
@@ -283,7 +292,10 @@ class _DayCell extends StatelessWidget {
             Text(
               '${day.day}',
               style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: isToday ? FontWeight.w700 : FontWeight.w500,
+                fontWeight:
+                    (isToday || selected) ? FontWeight.w700 : FontWeight.w500,
+                // Today's number stays green even when the day is selected.
+                color: isToday ? theme.colorScheme.primary : null,
               ),
             ),
             const SizedBox(height: 3),
