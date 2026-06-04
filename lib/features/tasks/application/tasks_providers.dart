@@ -1,18 +1,31 @@
+import 'dart:convert';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
 import '../../supplies/application/supplies_providers.dart';
+import '../../weather/application/weather_service.dart';
 import '../data/tasks_repository.dart';
 
 part 'tasks_providers.g.dart';
 
 @Riverpod(keepAlive: true)
 TasksRepository tasksRepository(Ref ref) {
+  final weather = ref.watch(weatherServiceProvider);
   return TasksRepository(
     ref.watch(databaseProvider),
     ref.watch(suppliesRepositoryProvider),
+    weatherCapture: () async {
+      // TODO(gorazd, 2026-12-01): use the H3 cell centroid as the source in M7.
+      final snapshot = await weather.capture(
+        latitude: kDefaultLatitude,
+        longitude: kDefaultLongitude,
+      );
+      return snapshot == null ? null : jsonEncode(snapshot.toJson());
+    },
   );
 }
 

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
@@ -5,6 +7,11 @@ import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
+
+/// Captures a weather snapshot as JSON (or null when offline/unavailable).
+/// Injected so the repo stays agnostic of the weather feature — composition,
+/// not a features→features dependency (the provider wires it to WeatherService).
+typedef WeatherCapture = Future<String?> Function();
 
 /// A subject on the repository boundary: a plant OR an area-as-subject.
 /// Keeps drift types out of the UI (see CLAUDE.md — no Companion in signatures).
@@ -33,11 +40,17 @@ class ReminderSpec {
 }
 
 class TasksRepository {
-  TasksRepository(this._db, this._supplies, {this._clock = const SystemClock()});
+  TasksRepository(
+    this._db,
+    this._supplies, {
+    this._clock = const SystemClock(),
+    this._weatherCapture,
+  });
 
   final AppDatabase _db;
   final SuppliesRepository _supplies;
   final Clock _clock;
+  final WeatherCapture? _weatherCapture;
   final _uuid = const Uuid();
 
   Stream<Task?> watchById(String id) =>
@@ -199,6 +212,8 @@ class TasksRepository {
       await _insertSubjects(id, subjects, now);
       await _insertReminders(id, reminders, now);
     });
+    // Logged as already done → freeze a weather snapshot (§7.10).
+    if (status == TaskStatus.done) unawaited(_captureWeather(id));
     return id;
   }
 
@@ -289,6 +304,28 @@ class TasksRepository {
       // Deduct supplies from stock now that the task is done.
       await _supplies.applyForTask(id);
     });
+    // Freeze a weather snapshot for the moment of completion (§7.10).
+    unawaited(_captureWeather(id));
+  }
+
+  /// Fetches a weather snapshot (fire-and-forget) and stores it only if the task
+  /// still has none — the snapshot is frozen and never overwritten. Offline
+  /// (capture returns null) leaves `weather` empty, to be filled another time.
+  Future<void> _captureWeather(String id) async {
+    final capture = _weatherCapture;
+    if (capture == null) return;
+    final json = await capture();
+    if (json == null) return;
+    await (_db.update(_db.tasks)
+          ..where((t) =>
+              t.id.equals(id) &
+              t.weather.isNull() &
+              t.deleted.equals(false)))
+        .write(TasksCompanion(
+      weather: Value(json),
+      updatedAt: Value(_clock.now()),
+      syncStatus: const Value('pending'),
+    ));
   }
 
   Future<void> softDelete(String id) async {
