@@ -291,6 +291,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **DB pregled 0001/0002 (2 neodvisna agenta) + utrjevanje.** Adversarni pregled sheme +
+  RLS. **Agent RLS/varnost/indeksi: čisto** (RLS na vseh 14 tabelah, EXISTS izolacija pravilna, GDPR cascade
+  poln, indeksi popolni — vsak runtime FK pokrit). **Agent shema-fidelity: 1 najdba** — `plant_synonym`
+  UNIQUE, ki ga drift NIMA = divergenca → **odstranjen** (zrcali točno). Dodatno utrjeno: eksplicitni
+  `GRANT`-i v 0002 (deterministični PostgREST dostop — RLS gata vrstice, grant gata tabelo), `task_supply.amount
+  ≥ 0` CHECK, zabeležene namerne ne-dodaje (brez natural-key UNIQUE na M:N; brez id server defaulta = sync
+  korektnost). Commit: `refactor:` (`5203eec`). Migracije pripravljene za uveljavitev (5.4).
 - 2026-06-04 — **5.3 — RLS politike.** `supabase/migrations/0002_rls.sql` (uveljavi se takoj za 0001).
   **(1) Auth binding:** `user_id → auth.users(id) ON DELETE CASCADE` na 7 user tabelah (profile/area/
   user_plant/task/note/supply/recipe) = GDPR cascade root (child sledijo prek `task_id`). **(2) RLS vklop**
