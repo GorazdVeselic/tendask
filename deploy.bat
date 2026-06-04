@@ -17,6 +17,16 @@ if /i "%~1"=="hot"   set MODE=dev
 if /i "%~1"=="dev"   set MODE=dev
 if /i "%~1"=="debug" set MODE=dev
 
+REM Skrivnosti (Supabase url/anonKey) iz lokalne, gitignored datoteke.
+set DEFINES=
+if exist "%~dp0dart_defines.json" (
+  set DEFINES=--dart-define-from-file="%~dp0dart_defines.json"
+) else (
+  echo OPOZORILO: dart_defines.json ne obstaja - Supabase NE bo konfiguriran.
+  echo Kopiraj dart_defines.example.json -^> dart_defines.json in vnesi kljuce.
+  echo.
+)
+
 echo === Tendask deploy [%MODE%] ===
 echo.
 echo Povezane naprave:
@@ -36,7 +46,7 @@ echo.
 
 REM flutter run = zgradi + namesti + zazene + strani dnevnik (za rocno preverbo).
 REM Ce je priklopljenih vec naprav, te flutter vprasa, katero izbrati.
-call flutter run %RUNARGS%
+call flutter run %RUNARGS% %DEFINES%
 set RC=%ERRORLEVEL%
 
 if not "%RC%"=="0" (

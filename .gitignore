@@ -4,6 +4,10 @@
 # Temporary / scratch outputs (CLAUDE.md konvencija)
 /tmp/
 
+# Local secrets — nikoli v repo (CLAUDE.md)
+/dart_defines.json
+.env
+
 # Miscellaneous
 *.class
 *.log

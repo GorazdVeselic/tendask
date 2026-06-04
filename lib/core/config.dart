@@ -31,3 +31,11 @@ const kTaskTypeGridCollapsed = 9;
 /// and 10 s proved too tight on slow mobile networks (gardens).
 const kWeatherConnectTimeout = Duration(seconds: 10);
 const kWeatherReceiveTimeout = Duration(seconds: 20);
+
+/// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
+/// --dart-define (never committed — see dart_defines.json, gitignored). When
+/// empty the app stays fully offline (drift is the source of truth), so the
+/// bootstrap skips Supabase init instead of crashing.
+const kSupabaseUrl = String.fromEnvironment('SUPABASE_URL');
+const kSupabasePublishableKey =
+    String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
