@@ -92,7 +92,6 @@ class _Translations$common$en extends Translations$common$sl {
 
 	// Translations
 	@override String get today => 'Today';
-	@override String get today_lower => 'today';
 	@override String get yesterday => 'yesterday';
 }
 
@@ -156,9 +155,6 @@ class _Translations$task_detail$en extends Translations$task_detail$sl {
 	// Translations
 	@override String get section_weather => 'Weather snapshot';
 	@override String get section_details => 'Details';
-	@override String get label_area => 'Area';
-	@override String get label_subjects => 'For';
-	@override String get label_plant => 'Plant';
 	@override String get label_supplies => 'Supplies';
 	@override String get label_reminder => 'Reminder';
 	@override String get label_recurrence => 'Recurrence';
@@ -219,15 +215,7 @@ class _Translations$subject_picker$en extends Translations$subject_picker$sl {
 
 	// Translations
 	@override String get title => 'Plant or area';
-	@override String get hint => 'plant or area';
-	@override String get search_hint => 'Search plant or area…';
-	@override String get section_plants => 'Plants';
-	@override String get section_areas => 'Areas';
-	@override String get from_catalog => 'Add from catalog';
 	@override String get choose => 'Choose';
-	@override String get confirm => 'Confirm';
-	@override String get err_select => 'Choose at least one plant or lawn.';
-	@override String get empty => 'No plants or areas. Add them in the Garden tab.';
 }
 
 // Path: entry
@@ -258,9 +246,7 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get subject_from_catalog => 'Add from catalog';
 	@override String get subject_areas_context => 'Areas:';
 	@override String get subject_area_section => 'Or the whole area';
-	@override String get subject_area_hint => '(e.g. lawn)';
 	@override String get subject_area_note => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).';
-	@override String get subject_empty => 'No plants or areas yet. Add them in the Garden tab.';
 	@override String get when_title => 'When';
 	@override String get when_today => 'Today';
 	@override String get when_tomorrow => 'Tomorrow';
@@ -497,7 +483,6 @@ extension on TranslationsEn {
 			'home.no_tasks_today' => 'No tasks planned for today.',
 			'home.no_recent' => 'No completed tasks yet.',
 			'common.today' => 'Today',
-			'common.today_lower' => 'today',
 			'common.yesterday' => 'yesterday',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
@@ -531,9 +516,6 @@ extension on TranslationsEn {
 			'notes.info' => '🌧️ Weather is saved automatically.',
 			'task_detail.section_weather' => 'Weather snapshot',
 			'task_detail.section_details' => 'Details',
-			'task_detail.label_area' => 'Area',
-			'task_detail.label_subjects' => 'For',
-			'task_detail.label_plant' => 'Plant',
 			'task_detail.label_supplies' => 'Supplies',
 			'task_detail.label_reminder' => 'Reminder',
 			'task_detail.label_recurrence' => 'Recurrence',
@@ -573,15 +555,7 @@ extension on TranslationsEn {
 			'tasks_list.delete_yes' => 'Delete',
 			'tasks_list.delete_cancel' => 'Cancel',
 			'subject_picker.title' => 'Plant or area',
-			'subject_picker.hint' => 'plant or area',
-			'subject_picker.search_hint' => 'Search plant or area…',
-			'subject_picker.section_plants' => 'Plants',
-			'subject_picker.section_areas' => 'Areas',
-			'subject_picker.from_catalog' => 'Add from catalog',
 			'subject_picker.choose' => 'Choose',
-			'subject_picker.confirm' => 'Confirm',
-			'subject_picker.err_select' => 'Choose at least one plant or lawn.',
-			'subject_picker.empty' => 'No plants or areas. Add them in the Garden tab.',
 			'entry.title_new' => 'New task',
 			'entry.title_review' => 'Review',
 			'entry.kContinue' => 'Continue',
@@ -603,9 +577,7 @@ extension on TranslationsEn {
 			'entry.subject_from_catalog' => 'Add from catalog',
 			'entry.subject_areas_context' => 'Areas:',
 			'entry.subject_area_section' => 'Or the whole area',
-			'entry.subject_area_hint' => '(e.g. lawn)',
 			'entry.subject_area_note' => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).',
-			'entry.subject_empty' => 'No plants or areas yet. Add them in the Garden tab.',
 			'entry.when_title' => 'When',
 			'entry.when_today' => 'Today',
 			'entry.when_tomorrow' => 'Tomorrow',

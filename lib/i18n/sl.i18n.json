@@ -14,7 +14,6 @@
   },
   "common": {
     "today": "Danes",
-    "today_lower": "danes",
     "yesterday": "včeraj"
   },
   "journal": {
@@ -59,9 +58,6 @@
   "task_detail": {
     "section_weather": "Vremenski posnetek",
     "section_details": "Podrobnosti",
-    "label_area": "Območje",
-    "label_subjects": "Za kaj",
-    "label_plant": "Rastlina",
     "label_supplies": "Sredstva",
     "label_reminder": "Opomnik",
     "label_recurrence": "Ponavljanje",
@@ -110,15 +106,7 @@
   },
   "subject_picker": {
     "title": "Rastlina ali območje",
-    "hint": "rastlina ali območje",
-    "search_hint": "Išči rastlino ali območje…",
-    "section_plants": "Rastline",
-    "section_areas": "Območja",
-    "from_catalog": "Dodaj iz kataloga",
-    "choose": "Izberi",
-    "confirm": "Potrdi",
-    "err_select": "Izberi vsaj eno rastlino ali trato.",
-    "empty": "Ni rastlin ali območij. Dodaj jih v zavihku Vrt."
+    "choose": "Izberi"
   },
   "entry": {
     "title_new": "Novo opravilo",
@@ -142,9 +130,7 @@
     "subject_from_catalog": "Dodaj iz kataloga",
     "subject_areas_context": "Območja:",
     "subject_area_section": "Ali celotno območje",
-    "subject_area_hint": "(npr. trata)",
     "subject_area_note": "Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).",
-    "subject_empty": "Ni rastlin ali območij. Dodaj jih v zavihku Vrt.",
     "when_title": "Kdaj",
     "when_today": "Danes",
     "when_tomorrow": "Jutri",

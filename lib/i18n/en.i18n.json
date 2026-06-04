@@ -14,7 +14,6 @@
   },
   "common": {
     "today": "Today",
-    "today_lower": "today",
     "yesterday": "yesterday"
   },
   "journal": {
@@ -57,9 +56,6 @@
   "task_detail": {
     "section_weather": "Weather snapshot",
     "section_details": "Details",
-    "label_area": "Area",
-    "label_subjects": "For",
-    "label_plant": "Plant",
     "label_supplies": "Supplies",
     "label_reminder": "Reminder",
     "label_recurrence": "Recurrence",
@@ -106,15 +102,7 @@
   },
   "subject_picker": {
     "title": "Plant or area",
-    "hint": "plant or area",
-    "search_hint": "Search plant or area…",
-    "section_plants": "Plants",
-    "section_areas": "Areas",
-    "from_catalog": "Add from catalog",
-    "choose": "Choose",
-    "confirm": "Confirm",
-    "err_select": "Choose at least one plant or lawn.",
-    "empty": "No plants or areas. Add them in the Garden tab."
+    "choose": "Choose"
   },
   "entry": {
     "title_new": "New task",
@@ -138,9 +126,7 @@
     "subject_from_catalog": "Add from catalog",
     "subject_areas_context": "Areas:",
     "subject_area_section": "Or the whole area",
-    "subject_area_hint": "(e.g. lawn)",
     "subject_area_note": "Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).",
-    "subject_empty": "No plants or areas yet. Add them in the Garden tab.",
     "when_title": "When",
     "when_today": "Today",
     "when_tomorrow": "Tomorrow",

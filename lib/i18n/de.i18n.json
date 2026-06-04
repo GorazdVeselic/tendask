@@ -14,7 +14,6 @@
   },
   "common": {
     "today": "Heute",
-    "today_lower": "heute",
     "yesterday": "gestern"
   },
   "journal": {
@@ -57,9 +56,6 @@
   "task_detail": {
     "section_weather": "Wetteraufnahme",
     "section_details": "Details",
-    "label_area": "Bereich",
-    "label_subjects": "Wofür",
-    "label_plant": "Pflanze",
     "label_supplies": "Mittel",
     "label_reminder": "Erinnerung",
     "label_recurrence": "Wiederholung",
@@ -106,15 +102,7 @@
   },
   "subject_picker": {
     "title": "Pflanze oder Bereich",
-    "hint": "Pflanze oder Bereich",
-    "search_hint": "Pflanze oder Bereich suchen…",
-    "section_plants": "Pflanzen",
-    "section_areas": "Bereiche",
-    "from_catalog": "Aus Katalog hinzufügen",
-    "choose": "Wählen",
-    "confirm": "Bestätigen",
-    "err_select": "Wähle mindestens eine Pflanze oder einen Rasen.",
-    "empty": "Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu."
+    "choose": "Wählen"
   },
   "entry": {
     "title_new": "Neue Aufgabe",
@@ -138,9 +126,7 @@
     "subject_from_catalog": "Aus Katalog hinzufügen",
     "subject_areas_context": "Bereiche:",
     "subject_area_section": "Oder der ganze Bereich",
-    "subject_area_hint": "(z. B. Rasen)",
     "subject_area_note": "Wähle einen Bereich nur, wenn die Aufgabe für das Ganze ohne einzelne Pflanze gilt (Mähen, ein ganzes Beet mulchen).",
-    "subject_empty": "Noch keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.",
     "when_title": "Wann",
     "when_today": "Heute",
     "when_tomorrow": "Morgen",

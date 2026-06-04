@@ -92,7 +92,6 @@ class _Translations$common$de extends Translations$common$sl {
 
 	// Translations
 	@override String get today => 'Heute';
-	@override String get today_lower => 'heute';
 	@override String get yesterday => 'gestern';
 }
 
@@ -156,9 +155,6 @@ class _Translations$task_detail$de extends Translations$task_detail$sl {
 	// Translations
 	@override String get section_weather => 'Wetteraufnahme';
 	@override String get section_details => 'Details';
-	@override String get label_area => 'Bereich';
-	@override String get label_subjects => 'Wofür';
-	@override String get label_plant => 'Pflanze';
 	@override String get label_supplies => 'Mittel';
 	@override String get label_reminder => 'Erinnerung';
 	@override String get label_recurrence => 'Wiederholung';
@@ -219,15 +215,7 @@ class _Translations$subject_picker$de extends Translations$subject_picker$sl {
 
 	// Translations
 	@override String get title => 'Pflanze oder Bereich';
-	@override String get hint => 'Pflanze oder Bereich';
-	@override String get search_hint => 'Pflanze oder Bereich suchen…';
-	@override String get section_plants => 'Pflanzen';
-	@override String get section_areas => 'Bereiche';
-	@override String get from_catalog => 'Aus Katalog hinzufügen';
 	@override String get choose => 'Wählen';
-	@override String get confirm => 'Bestätigen';
-	@override String get err_select => 'Wähle mindestens eine Pflanze oder einen Rasen.';
-	@override String get empty => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
 }
 
 // Path: entry
@@ -258,9 +246,7 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get subject_from_catalog => 'Aus Katalog hinzufügen';
 	@override String get subject_areas_context => 'Bereiche:';
 	@override String get subject_area_section => 'Oder der ganze Bereich';
-	@override String get subject_area_hint => '(z. B. Rasen)';
 	@override String get subject_area_note => 'Wähle einen Bereich nur, wenn die Aufgabe für das Ganze ohne einzelne Pflanze gilt (Mähen, ein ganzes Beet mulchen).';
-	@override String get subject_empty => 'Noch keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.';
 	@override String get when_title => 'Wann';
 	@override String get when_today => 'Heute';
 	@override String get when_tomorrow => 'Morgen';
@@ -497,7 +483,6 @@ extension on TranslationsDe {
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'common.today' => 'Heute',
-			'common.today_lower' => 'heute',
 			'common.yesterday' => 'gestern',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
@@ -531,9 +516,6 @@ extension on TranslationsDe {
 			'notes.info' => '🌧️ Das Wetter wird automatisch gespeichert.',
 			'task_detail.section_weather' => 'Wetteraufnahme',
 			'task_detail.section_details' => 'Details',
-			'task_detail.label_area' => 'Bereich',
-			'task_detail.label_subjects' => 'Wofür',
-			'task_detail.label_plant' => 'Pflanze',
 			'task_detail.label_supplies' => 'Mittel',
 			'task_detail.label_reminder' => 'Erinnerung',
 			'task_detail.label_recurrence' => 'Wiederholung',
@@ -573,15 +555,7 @@ extension on TranslationsDe {
 			'tasks_list.delete_yes' => 'Löschen',
 			'tasks_list.delete_cancel' => 'Abbrechen',
 			'subject_picker.title' => 'Pflanze oder Bereich',
-			'subject_picker.hint' => 'Pflanze oder Bereich',
-			'subject_picker.search_hint' => 'Pflanze oder Bereich suchen…',
-			'subject_picker.section_plants' => 'Pflanzen',
-			'subject_picker.section_areas' => 'Bereiche',
-			'subject_picker.from_catalog' => 'Aus Katalog hinzufügen',
 			'subject_picker.choose' => 'Wählen',
-			'subject_picker.confirm' => 'Bestätigen',
-			'subject_picker.err_select' => 'Wähle mindestens eine Pflanze oder einen Rasen.',
-			'subject_picker.empty' => 'Keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
 			'entry.title_new' => 'Neue Aufgabe',
 			'entry.title_review' => 'Überprüfen',
 			'entry.kContinue' => 'Weiter',
@@ -603,9 +577,7 @@ extension on TranslationsDe {
 			'entry.subject_from_catalog' => 'Aus Katalog hinzufügen',
 			'entry.subject_areas_context' => 'Bereiche:',
 			'entry.subject_area_section' => 'Oder der ganze Bereich',
-			'entry.subject_area_hint' => '(z. B. Rasen)',
 			'entry.subject_area_note' => 'Wähle einen Bereich nur, wenn die Aufgabe für das Ganze ohne einzelne Pflanze gilt (Mähen, ein ganzes Beet mulchen).',
-			'entry.subject_empty' => 'Noch keine Pflanzen oder Bereiche. Füge sie im Garten-Tab hinzu.',
 			'entry.when_title' => 'Wann',
 			'entry.when_today' => 'Heute',
 			'entry.when_tomorrow' => 'Morgen',

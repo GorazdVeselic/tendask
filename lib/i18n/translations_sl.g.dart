@@ -114,9 +114,6 @@ class Translations$common$sl {
 	/// sl: 'Danes'
 	String get today => 'Danes';
 
-	/// sl: 'danes'
-	String get today_lower => 'danes';
-
 	/// sl: 'včeraj'
 	String get yesterday => 'včeraj';
 }
@@ -247,15 +244,6 @@ class Translations$task_detail$sl {
 
 	/// sl: 'Podrobnosti'
 	String get section_details => 'Podrobnosti';
-
-	/// sl: 'Območje'
-	String get label_area => 'Območje';
-
-	/// sl: 'Za kaj'
-	String get label_subjects => 'Za kaj';
-
-	/// sl: 'Rastlina'
-	String get label_plant => 'Rastlina';
 
 	/// sl: 'Sredstva'
 	String get label_supplies => 'Sredstva';
@@ -397,32 +385,8 @@ class Translations$subject_picker$sl {
 	/// sl: 'Rastlina ali območje'
 	String get title => 'Rastlina ali območje';
 
-	/// sl: 'rastlina ali območje'
-	String get hint => 'rastlina ali območje';
-
-	/// sl: 'Išči rastlino ali območje…'
-	String get search_hint => 'Išči rastlino ali območje…';
-
-	/// sl: 'Rastline'
-	String get section_plants => 'Rastline';
-
-	/// sl: 'Območja'
-	String get section_areas => 'Območja';
-
-	/// sl: 'Dodaj iz kataloga'
-	String get from_catalog => 'Dodaj iz kataloga';
-
 	/// sl: 'Izberi'
 	String get choose => 'Izberi';
-
-	/// sl: 'Potrdi'
-	String get confirm => 'Potrdi';
-
-	/// sl: 'Izberi vsaj eno rastlino ali trato.'
-	String get err_select => 'Izberi vsaj eno rastlino ali trato.';
-
-	/// sl: 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.'
-	String get empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
 }
 
 // Path: entry
@@ -496,14 +460,8 @@ class Translations$entry$sl {
 	/// sl: 'Ali celotno območje'
 	String get subject_area_section => 'Ali celotno območje';
 
-	/// sl: '(npr. trata)'
-	String get subject_area_hint => '(npr. trata)';
-
 	/// sl: 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).'
 	String get subject_area_note => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).';
-
-	/// sl: 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.'
-	String get subject_empty => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.';
 
 	/// sl: 'Kdaj'
 	String get when_title => 'Kdaj';
@@ -1046,7 +1004,6 @@ extension on Translations {
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'common.today' => 'Danes',
-			'common.today_lower' => 'danes',
 			'common.yesterday' => 'včeraj',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
@@ -1080,9 +1037,6 @@ extension on Translations {
 			'notes.info' => '🌧️ Vreme se shrani samodejno.',
 			'task_detail.section_weather' => 'Vremenski posnetek',
 			'task_detail.section_details' => 'Podrobnosti',
-			'task_detail.label_area' => 'Območje',
-			'task_detail.label_subjects' => 'Za kaj',
-			'task_detail.label_plant' => 'Rastlina',
 			'task_detail.label_supplies' => 'Sredstva',
 			'task_detail.label_reminder' => 'Opomnik',
 			'task_detail.label_recurrence' => 'Ponavljanje',
@@ -1122,15 +1076,7 @@ extension on Translations {
 			'tasks_list.delete_yes' => 'Izbriši',
 			'tasks_list.delete_cancel' => 'Prekliči',
 			'subject_picker.title' => 'Rastlina ali območje',
-			'subject_picker.hint' => 'rastlina ali območje',
-			'subject_picker.search_hint' => 'Išči rastlino ali območje…',
-			'subject_picker.section_plants' => 'Rastline',
-			'subject_picker.section_areas' => 'Območja',
-			'subject_picker.from_catalog' => 'Dodaj iz kataloga',
 			'subject_picker.choose' => 'Izberi',
-			'subject_picker.confirm' => 'Potrdi',
-			'subject_picker.err_select' => 'Izberi vsaj eno rastlino ali trato.',
-			'subject_picker.empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
 			'entry.title_new' => 'Novo opravilo',
 			'entry.title_review' => 'Pregled',
 			'entry.kContinue' => 'Nadaljuj',
@@ -1152,9 +1098,7 @@ extension on Translations {
 			'entry.subject_from_catalog' => 'Dodaj iz kataloga',
 			'entry.subject_areas_context' => 'Območja:',
 			'entry.subject_area_section' => 'Ali celotno območje',
-			'entry.subject_area_hint' => '(npr. trata)',
 			'entry.subject_area_note' => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).',
-			'entry.subject_empty' => 'Ni rastlin ali območij. Dodaj jih v zavihku Vrt.',
 			'entry.when_title' => 'Kdaj',
 			'entry.when_today' => 'Danes',
 			'entry.when_tomorrow' => 'Jutri',
