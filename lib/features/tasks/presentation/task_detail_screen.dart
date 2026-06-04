@@ -133,7 +133,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_weather, theme: theme),
-                      _WeatherSection(task: task, t: t, theme: theme),
+                      _WeatherSection(task: task),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_details, theme: theme),
                       _DetailsCard(
@@ -470,14 +470,14 @@ class _SubjectsCard extends StatelessWidget {
 // ─── Weather section ──────────────────────────────────────────────────────────
 
 class _WeatherSection extends StatelessWidget {
-  const _WeatherSection({required this.task, required this.t, required this.theme});
+  const _WeatherSection({required this.task});
 
   final Task task;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
     final snapshot = decodeWeatherSnapshot(task.weather);
     if (snapshot != null) return WeatherSnapshotCard(snapshot: snapshot);
 

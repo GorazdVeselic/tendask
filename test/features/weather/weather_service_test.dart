@@ -24,8 +24,6 @@ class _StubClient implements OpenMeteoClient {
   Future<OpenMeteoResponse> fetch({
     required double latitude,
     required double longitude,
-    int pastDays = 2,
-    int forecastDays = 3,
   }) async {
     calls++;
     final r = next;

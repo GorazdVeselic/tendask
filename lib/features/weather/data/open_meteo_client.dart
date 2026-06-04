@@ -24,13 +24,11 @@ class OpenMeteoClient {
       'weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,'
       'et0_fao_evapotranspiration';
 
-  /// Fetches the forecast for a coordinate. Bands 2/3 span [pastDays] back and
-  /// [forecastDays] ahead (§7.10: 24–48 h back, 24–72 h ahead).
+  /// Fetches the forecast for a coordinate. Covers §7.10's bands: 2 days back
+  /// (rain look-back) and 3 days ahead (forecast).
   Future<OpenMeteoResponse> fetch({
     required double latitude,
     required double longitude,
-    int pastDays = 2,
-    int forecastDays = 3,
   }) async {
     final res = await _dio.get<Map<String, dynamic>>(
       _baseUrl,
@@ -40,8 +38,8 @@ class OpenMeteoClient {
         'current': _current,
         'hourly': _hourly,
         'daily': _daily,
-        'past_days': pastDays,
-        'forecast_days': forecastDays,
+        'past_days': 2,
+        'forecast_days': 3,
         'timezone': 'auto',
       },
     );

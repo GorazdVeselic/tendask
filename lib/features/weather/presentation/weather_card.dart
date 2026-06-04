@@ -34,7 +34,7 @@ class WeatherSnapshotCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(conditionLabel(condition, t),
+                      Text(_conditionLabel(condition, t),
                           style: theme.textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.w700)),
                       Text(_temp(snapshot.temperature),
@@ -46,13 +46,12 @@ class WeatherSnapshotCard extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 10),
-            _Metrics(snapshot: snapshot, t: t, theme: theme),
+            _Metrics(snapshot),
             if (snapshot.rainPast48h != null) ...[
               const SizedBox(height: 10),
               _BandRow(
                 label: t.weather.rain_past48h,
                 value: '${_round1(snapshot.rainPast48h!)} mm',
-                theme: theme,
               ),
             ],
             if (snapshot.forecast.isNotEmpty) ...[
@@ -62,7 +61,7 @@ class WeatherSnapshotCard extends StatelessWidget {
                       color: theme.colorScheme.onSurfaceVariant,
                       letterSpacing: 0.4)),
               const SizedBox(height: 8),
-              WeatherForecastStrip(days: snapshot.forecast, t: t, theme: theme),
+              _ForecastStrip(snapshot.forecast),
             ],
           ],
         ),
@@ -80,7 +79,6 @@ class CurrentWeatherCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     final theme = Theme.of(context);
     final snap = snapshot;
 
@@ -94,7 +92,7 @@ class CurrentWeatherCard extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(t.weather.home_unavailable,
+                child: Text(context.t.weather.home_unavailable,
                     style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant)),
               ),
@@ -118,17 +116,14 @@ class CurrentWeatherCard extends StatelessWidget {
                 Text(_temp(snap.temperature),
                     style: theme.textTheme.titleMedium
                         ?.copyWith(fontWeight: FontWeight.w800)),
-                Text(conditionLabel(condition, t),
+                Text(_conditionLabel(condition, context.t),
                     style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant)),
               ],
             ),
             const Spacer(),
             if (snap.forecast.isNotEmpty)
-              Flexible(
-                child: WeatherForecastStrip(
-                    days: snap.forecast, t: t, theme: theme, compact: true),
-              ),
+              Flexible(child: _ForecastStrip(snap.forecast, compact: true)),
           ],
         ),
       ),
@@ -137,22 +132,15 @@ class CurrentWeatherCard extends StatelessWidget {
 }
 
 /// A row of mini forecast days (date · emoji · max/min).
-class WeatherForecastStrip extends StatelessWidget {
-  const WeatherForecastStrip({
-    super.key,
-    required this.days,
-    required this.t,
-    required this.theme,
-    this.compact = false,
-  });
+class _ForecastStrip extends StatelessWidget {
+  const _ForecastStrip(this.days, {this.compact = false});
 
   final List<WeatherDay> days;
-  final Translations t;
-  final ThemeData theme;
   final bool compact;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       mainAxisAlignment:
           compact ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
@@ -180,45 +168,17 @@ class WeatherForecastStrip extends StatelessWidget {
   }
 }
 
-// ── Shared bits ───────────────────────────────────────────────────────────────
-
-String conditionLabel(WeatherCondition c, Translations t) => switch (c) {
-      WeatherCondition.clear => t.weather.cond_clear,
-      WeatherCondition.mainlyClear => t.weather.cond_mainly_clear,
-      WeatherCondition.cloudy => t.weather.cond_cloudy,
-      WeatherCondition.fog => t.weather.cond_fog,
-      WeatherCondition.drizzle => t.weather.cond_drizzle,
-      WeatherCondition.rain => t.weather.cond_rain,
-      WeatherCondition.snow => t.weather.cond_snow,
-      WeatherCondition.showers => t.weather.cond_showers,
-      WeatherCondition.thunderstorm => t.weather.cond_thunderstorm,
-      WeatherCondition.unknown => t.weather.cond_unknown,
-    };
-
-String _temp(double? c) => c == null ? '—' : '${c.round()}°C';
-
-String _minMax(double? min, double? max) {
-  final lo = min == null ? '—' : '${min.round()}°';
-  final hi = max == null ? '—' : '${max.round()}°';
-  return '$hi/$lo';
-}
-
-String _round1(double v) =>
-    v == v.roundToDouble() ? v.toInt().toString() : v.toStringAsFixed(1);
-
 class _Metrics extends StatelessWidget {
-  const _Metrics({required this.snapshot, required this.t, required this.theme});
+  const _Metrics(this.snapshot);
 
   final WeatherSnapshot snapshot;
-  final Translations t;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     final chips = <String>[
       if (snapshot.humidity != null) '💧 ${snapshot.humidity!.round()}%',
-      if (snapshot.windSpeed != null)
-        '🌬 ${_round1(snapshot.windSpeed!)} km/h',
+      if (snapshot.windSpeed != null) '🌬 ${_round1(snapshot.windSpeed!)} km/h',
       if (snapshot.precipitation != null)
         '🌧 ${_round1(snapshot.precipitation!)} mm',
       if (snapshot.soilTemperature != null)
@@ -241,15 +201,14 @@ class _Metrics extends StatelessWidget {
 }
 
 class _BandRow extends StatelessWidget {
-  const _BandRow(
-      {required this.label, required this.value, required this.theme});
+  const _BandRow({required this.label, required this.value});
 
   final String label;
   final String value;
-  final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
     return Row(
       children: [
         Text(label,
@@ -263,3 +222,27 @@ class _BandRow extends StatelessWidget {
     );
   }
 }
+
+String _conditionLabel(WeatherCondition c, Translations t) => switch (c) {
+      WeatherCondition.clear => t.weather.cond_clear,
+      WeatherCondition.mainlyClear => t.weather.cond_mainly_clear,
+      WeatherCondition.cloudy => t.weather.cond_cloudy,
+      WeatherCondition.fog => t.weather.cond_fog,
+      WeatherCondition.drizzle => t.weather.cond_drizzle,
+      WeatherCondition.rain => t.weather.cond_rain,
+      WeatherCondition.snow => t.weather.cond_snow,
+      WeatherCondition.showers => t.weather.cond_showers,
+      WeatherCondition.thunderstorm => t.weather.cond_thunderstorm,
+      WeatherCondition.unknown => t.weather.cond_unknown,
+    };
+
+String _temp(double? c) => c == null ? '—' : '${c.round()}°C';
+
+String _minMax(double? min, double? max) {
+  final lo = min == null ? '—' : '${min.round()}°';
+  final hi = max == null ? '—' : '${max.round()}°';
+  return '$hi/$lo';
+}
+
+String _round1(double v) =>
+    v == v.roundToDouble() ? v.toInt().toString() : v.toStringAsFixed(1);
