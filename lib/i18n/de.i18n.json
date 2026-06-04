@@ -29,11 +29,13 @@
     "empty_notes": "Noch keine Notizen.",
     "timeline": "Zeitlinie",
     "month_view": "Monat",
-    "month_hint": "💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).",
+    "month_hint": "💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.",
     "month_count(n)": {
       "one": "{n} Aufgabe diesen Monat",
       "other": "{n} Aufgaben diesen Monat"
-    }
+    },
+    "day_empty": "Keine Aufgaben an diesem Tag.",
+    "day_add": "Aufgabe an diesem Tag hinzufügen"
   },
   "notes": {
     "title_new": "Neue Notiz",

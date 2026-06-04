@@ -4,9 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/database/app_database.dart';
+import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
+import '../../tasks/presentation/subject_labels.dart';
+import 'widgets/task_entry_tile.dart';
 
 /// Cells for the month grid: leading `null`s to align the 1st under the right
 /// weekday, then one [DateTime] per day. [firstWeekday] is 0=Sunday..6=Saturday
@@ -31,6 +38,7 @@ class MonthCalendarView extends ConsumerStatefulWidget {
 
 class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
   late DateTime _visibleMonth;
+  DateTime? _selectedDay;
 
   @override
   void initState() {
@@ -40,8 +48,11 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
   }
 
   void _shift(int months) {
-    setState(() =>
-        _visibleMonth = DateTime(_visibleMonth.year, _visibleMonth.month + months));
+    setState(() {
+      _visibleMonth =
+          DateTime(_visibleMonth.year, _visibleMonth.month + months);
+      _selectedDay = null;
+    });
   }
 
   void _addTask(DateTime day) {
@@ -57,6 +68,22 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     final theme = Theme.of(context);
     final ml = MaterialLocalizations.of(context);
     final tasks = ref.watch(allTasksProvider).asData?.value ?? const [];
+    final catalog = ref.watch(taskTypesMapProvider).asData?.value ?? const {};
+    final subjectLabels = subjectLabelsByTask(
+      ref.watch(allTaskSubjectsProvider).asData?.value ?? const [],
+      areas: ref.watch(areasMapProvider).asData?.value ?? const {},
+      userPlants: ref.watch(userPlantsMapProvider).asData?.value ?? const {},
+      plants: ref.watch(plantsMapProvider).asData?.value ?? const {},
+    );
+
+    // Tasks of the selected day (oldest first), for the day list below.
+    final dayTasks = _selectedDay == null
+        ? const <Task>[]
+        : (tasks
+            .where((t) =>
+                startOfDay(t.date.toLocal()) == startOfDay(_selectedDay!))
+            .toList()
+          ..sort((a, b) => a.date.compareTo(b.date)));
 
     // Tasks per day-of-month within the visible month.
     final counts = <int, int>{};
@@ -112,11 +139,41 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
               day: day,
               count: counts[day.day] ?? 0,
               isToday: startOfDay(day) == today,
+              selected: _selectedDay != null &&
+                  startOfDay(day) == startOfDay(_selectedDay!),
               theme: theme,
-              onTap: () => _addTask(day),
+              onTap: () => setState(() => _selectedDay = day),
             );
           },
         ),
+        if (_selectedDay != null) ...[
+          const SizedBox(height: 20),
+          SectionLabel(formatDmy(_selectedDay!),
+              padding: const EdgeInsets.fromLTRB(4, 0, 4, 4)),
+          if (dayTasks.isEmpty)
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
+              child: Text(t.journal.day_empty,
+                  style: theme.textTheme.bodySmall
+                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            )
+          else
+            for (final task in dayTasks)
+              TaskEntryTile(
+                task: task,
+                taskType: catalog[task.taskTypeId],
+                subjectLabel: subjectLabels[task.id],
+              ),
+          const SizedBox(height: 4),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: TextButton.icon(
+              onPressed: () => _addTask(_selectedDay!),
+              icon: const Icon(Icons.add, size: 18),
+              label: Text(t.journal.day_add),
+            ),
+          ),
+        ],
       ],
     );
   }
@@ -191,6 +248,7 @@ class _DayCell extends StatelessWidget {
     required this.day,
     required this.count,
     required this.isToday,
+    required this.selected,
     required this.theme,
     required this.onTap,
   });
@@ -198,6 +256,7 @@ class _DayCell extends StatelessWidget {
   final DateTime day;
   final int count;
   final bool isToday;
+  final bool selected;
   final ThemeData theme;
   final VoidCallback onTap;
 
@@ -208,13 +267,15 @@ class _DayCell extends StatelessWidget {
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          color: isToday
+          color: (selected || isToday)
               ? theme.colorScheme.primaryContainer
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
-          border: isToday
-              ? Border.all(color: theme.colorScheme.primary, width: 1.5)
-              : null,
+          border: selected
+              ? Border.all(color: theme.colorScheme.primary, width: 2.5)
+              : isToday
+                  ? Border.all(color: theme.colorScheme.primary, width: 1.5)
+                  : null,
         ),
         padding: const EdgeInsets.only(top: 5),
         child: Column(

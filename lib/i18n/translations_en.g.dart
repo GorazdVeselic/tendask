@@ -113,11 +113,13 @@ class _Translations$journal$en extends Translations$journal$sl {
 	@override String get empty_notes => 'No notes yet.';
 	@override String get timeline => 'Timeline';
 	@override String get month_view => 'Month';
-	@override String get month_hint => '💡 Tap a day to add a task (past or planned).';
+	@override String get month_hint => '💡 Tap a day to view and add tasks.';
 	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: '{n} task this month',
 		other: '{n} tasks this month',
 	);
+	@override String get day_empty => 'No tasks on this day.';
+	@override String get day_add => 'Add task on this day';
 }
 
 // Path: notes
@@ -482,8 +484,10 @@ extension on TranslationsEn {
 			'journal.empty_notes' => 'No notes yet.',
 			'journal.timeline' => 'Timeline',
 			'journal.month_view' => 'Month',
-			'journal.month_hint' => '💡 Tap a day to add a task (past or planned).',
+			'journal.month_hint' => '💡 Tap a day to view and add tasks.',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '{n} task this month', other: '{n} tasks this month', ), 
+			'journal.day_empty' => 'No tasks on this day.',
+			'journal.day_add' => 'Add task on this day',
 			'notes.title_new' => 'New note',
 			'notes.title_edit' => 'Edit note',
 			'notes.content_label' => 'Note',

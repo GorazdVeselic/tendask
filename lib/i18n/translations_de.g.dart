@@ -113,11 +113,13 @@ class _Translations$journal$de extends Translations$journal$sl {
 	@override String get empty_notes => 'Noch keine Notizen.';
 	@override String get timeline => 'Zeitlinie';
 	@override String get month_view => 'Monat';
-	@override String get month_hint => '💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).';
+	@override String get month_hint => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.';
 	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
 		one: '{n} Aufgabe diesen Monat',
 		other: '{n} Aufgaben diesen Monat',
 	);
+	@override String get day_empty => 'Keine Aufgaben an diesem Tag.';
+	@override String get day_add => 'Aufgabe an diesem Tag hinzufügen';
 }
 
 // Path: notes
@@ -482,8 +484,10 @@ extension on TranslationsDe {
 			'journal.empty_notes' => 'Noch keine Notizen.',
 			'journal.timeline' => 'Zeitlinie',
 			'journal.month_view' => 'Monat',
-			'journal.month_hint' => '💡 Tippe auf einen Tag, um eine Aufgabe hinzuzufügen (vergangen oder geplant).',
+			'journal.month_hint' => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '{n} Aufgabe diesen Monat', other: '{n} Aufgaben diesen Monat', ), 
+			'journal.day_empty' => 'Keine Aufgaben an diesem Tag.',
+			'journal.day_add' => 'Aufgabe an diesem Tag hinzufügen',
 			'notes.title_new' => 'Neue Notiz',
 			'notes.title_edit' => 'Notiz bearbeiten',
 			'notes.content_label' => 'Notiz',

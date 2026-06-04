@@ -29,11 +29,13 @@
     "empty_notes": "Ni opomb.",
     "timeline": "Časovnica",
     "month_view": "Mesec",
-    "month_hint": "💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).",
+    "month_hint": "💡 Tapni na dan za pregled in dodajanje opravil.",
     "month_count(n)": {
       "one": "{n} opravilo ta mesec",
       "other": "{n} opravil ta mesec"
-    }
+    },
+    "day_empty": "Ni opravil ta dan.",
+    "day_add": "Dodaj opravilo na ta dan"
   },
   "notes": {
     "title_new": "Nova opomba",

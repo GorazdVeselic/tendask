@@ -161,14 +161,20 @@ class Translations$journal$sl {
 	/// sl: 'Mesec'
 	String get month_view => 'Mesec';
 
-	/// sl: '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).'
-	String get month_hint => '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).';
+	/// sl: '💡 Tapni na dan za pregled in dodajanje opravil.'
+	String get month_hint => '💡 Tapni na dan za pregled in dodajanje opravil.';
 
 	/// sl: '(one) {{n} opravilo ta mesec} (other) {{n} opravil ta mesec}'
 	String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: '{n} opravilo ta mesec',
 		other: '{n} opravil ta mesec',
 	);
+
+	/// sl: 'Ni opravil ta dan.'
+	String get day_empty => 'Ni opravil ta dan.';
+
+	/// sl: 'Dodaj opravilo na ta dan'
+	String get day_add => 'Dodaj opravilo na ta dan';
 }
 
 // Path: notes
@@ -991,8 +997,10 @@ extension on Translations {
 			'journal.empty_notes' => 'Ni opomb.',
 			'journal.timeline' => 'Časovnica',
 			'journal.month_view' => 'Mesec',
-			'journal.month_hint' => '💡 Tapni na dan in dodaj opravilo (preteklo ali načrtovano).',
+			'journal.month_hint' => '💡 Tapni na dan za pregled in dodajanje opravil.',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '{n} opravilo ta mesec', other: '{n} opravil ta mesec', ), 
+			'journal.day_empty' => 'Ni opravil ta dan.',
+			'journal.day_add' => 'Dodaj opravilo na ta dan',
 			'notes.title_new' => 'Nova opomba',
 			'notes.title_edit' => 'Uredi opombo',
 			'notes.content_label' => 'Zapis',

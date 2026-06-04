@@ -29,11 +29,13 @@
     "empty_notes": "No notes yet.",
     "timeline": "Timeline",
     "month_view": "Month",
-    "month_hint": "💡 Tap a day to add a task (past or planned).",
+    "month_hint": "💡 Tap a day to view and add tasks.",
     "month_count(n)": {
       "one": "{n} task this month",
       "other": "{n} tasks this month"
-    }
+    },
+    "day_empty": "No tasks on this day.",
+    "day_add": "Add task on this day"
   },
   "notes": {
     "title_new": "New note",

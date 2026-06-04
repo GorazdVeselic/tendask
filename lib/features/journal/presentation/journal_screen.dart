@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
@@ -15,6 +14,7 @@ import '../../../i18n/translations.g.dart';
 import '../application/notes_providers.dart';
 import 'journal_entry.dart';
 import 'month_calendar_view.dart';
+import 'widgets/task_entry_tile.dart';
 
 enum _Filter { all, tasks, notes }
 
@@ -317,11 +317,10 @@ class _DayGroup extends StatelessWidget {
                       color: theme.colorScheme.outlineVariant,
                     ),
                   switch (entries[i]) {
-                    TaskJournalEntry(:final task) => _TaskEntry(
+                    TaskJournalEntry(:final task) => TaskEntryTile(
                         task: task,
                         taskType: catalog[task.taskTypeId],
                         subjectLabel: subjectLabels[task.id],
-                        theme: theme,
                       ),
                     NoteJournalEntry(:final note) => _NoteEntry(
                         note: note,
@@ -368,48 +367,6 @@ class _DayHeader extends StatelessWidget {
         color: theme.colorScheme.onSurfaceVariant,
         fontWeight: FontWeight.w600,
       ),
-    );
-  }
-}
-
-class _TaskEntry extends StatelessWidget {
-  const _TaskEntry({
-    required this.task,
-    required this.taskType,
-    required this.subjectLabel,
-    required this.theme,
-  });
-
-  final Task task;
-  final TaskType? taskType;
-  final String? subjectLabel;
-  final ThemeData theme;
-
-  @override
-  Widget build(BuildContext context) {
-    final icon = taskType?.icon ?? '📋';
-    final label =
-        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
-    final timeStr = formatHm(task.date.toLocal());
-
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        child: Text(icon, style: const TextStyle(fontSize: 18)),
-      ),
-      title: Text(label, style: theme.textTheme.bodyMedium),
-      subtitle: (subjectLabel != null && subjectLabel!.isNotEmpty)
-          ? Text('🪴 $subjectLabel',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
-          : null,
-      trailing: Text(timeStr,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      onTap: () => context.pushNamed('task-detail',
-          pathParameters: {'id': task.id}),
     );
   }
 }
