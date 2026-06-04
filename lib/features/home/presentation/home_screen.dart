@@ -6,6 +6,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
@@ -105,13 +106,13 @@ class _HomeBody extends StatelessWidget {
         if (todayTasks.isEmpty)
           _DashboardHint(t.home.no_tasks_today)
         else
-          _TaskList(tasks: todayTasks, catalog: catalog),
+          _TaskList(tasks: todayTasks, catalog: catalog, now: now, t: t),
         const SizedBox(height: 16),
         SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
         if (recentTasks.isEmpty)
           _DashboardHint(t.home.no_recent)
         else
-          _TaskList(tasks: recentTasks, catalog: catalog, showRelativeDate: true, now: now, t: t),
+          _TaskList(tasks: recentTasks, catalog: catalog, now: now, t: t),
       ],
     );
   }
@@ -171,16 +172,14 @@ class _TaskList extends StatelessWidget {
   const _TaskList({
     required this.tasks,
     required this.catalog,
-    this.showRelativeDate = false,
-    this.now,
-    this.t,
+    required this.now,
+    required this.t,
   });
 
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
-  final bool showRelativeDate;
-  final DateTime? now;
-  final Translations? t;
+  final DateTime now;
+  final Translations t;
 
   @override
   Widget build(BuildContext context) {
@@ -197,36 +196,28 @@ class _TaskList extends StatelessWidget {
             _TaskTile(
               task: tasks[i],
               taskType: catalog[tasks[i].taskTypeId],
-              trailingText: showRelativeDate && now != null && t != null
-                  ? _relative(tasks[i].date, now!, t!)
-                  : null,
+              now: now,
+              t: t,
             ),
           ],
         ],
       ),
     );
   }
-
-  static String _relative(DateTime date, DateTime now, Translations t) {
-    final d = date.toLocal();
-    final diff = now.difference(d);
-    if (diff.inDays < 1) return t.common.today;
-    if (diff.inDays < 2) return t.common.yesterday;
-    return '${d.day}. ${d.month}.';
-  }
-
 }
 
 class _TaskTile extends StatelessWidget {
   const _TaskTile({
     required this.task,
     required this.taskType,
-    this.trailingText,
+    required this.now,
+    required this.t,
   });
 
   final Task task;
   final TaskType? taskType;
-  final String? trailingText;
+  final DateTime now;
+  final Translations t;
 
   @override
   Widget build(BuildContext context) {
@@ -234,20 +225,45 @@ class _TaskTile extends StatelessWidget {
     final label =
         taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
     final icon = taskType?.icon ?? '📋';
+    final isDone = task.status == TaskStatus.done;
+    // Done tasks show their (calendar-correct) date; waiting tasks show the time.
+    final trailingText = isDone
+        ? _relative(task.date, now, t)
+        : formatHm(task.date.toLocal());
 
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
-      trailing: trailingText != null
-          ? Text(
-              trailingText!,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            )
-          : null,
+      trailing: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            isDone ? Icons.check_circle : Icons.schedule,
+            size: 16,
+            color: isDone
+                ? theme.colorScheme.primary
+                : theme.colorScheme.onSurfaceVariant,
+          ),
+          const SizedBox(width: 4),
+          Text(
+            trailingText,
+            style: theme.textTheme.bodySmall
+                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          ),
+        ],
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      onTap: () => context.pushNamed('task-detail', pathParameters: {'id': task.id}),
+      onTap: () =>
+          context.pushNamed('task-detail', pathParameters: {'id': task.id}),
     );
+  }
+
+  /// Calendar-day relative label (not 24h windows): yesterday 22:00 reads as
+  /// "yesterday", not "today".
+  static String _relative(DateTime date, DateTime now, Translations t) {
+    final days = startOfDay(now).difference(startOfDay(date.toLocal())).inDays;
+    if (days <= 0) return t.common.today;
+    if (days == 1) return t.common.yesterday;
+    return formatDmy(date.toLocal());
   }
 }
