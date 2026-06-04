@@ -288,6 +288,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **Weather receiveTimeout 10s→20s + diagnoza Open-Meteo izpada** (po M4, pred M5).
+  Vreme na Domov se v debug ni naložilo. Diagnoza prek `adb logcat` + `adb shell ping` + brskalnik na napravi:
+  napake so **nihale** (`receive timeout` → `connection timeout` → brskalnik vrne **502 Bad Gateway**) — torej
+  **zunanji izpad Open-Meteo** (5xx, server-side), NE aplikacija in NE uporabnikova mreža (ping 8.8.8.8 in
+  api.open-meteo.com oba 0% loss; DNS OK). App pravilno gracefully degradira na »vreme ni na voljo«, brez crasha.
+  Edini ukrep na naši strani: `receiveTimeout` 10s→20s + oba timeouta v `config.dart` (`kWeatherConnectTimeout`,
+  `kWeatherReceiveTimeout`) — robustnost proti počasnemu prejemu obsežnega odgovora (hourly ~5 dni) v debug
+  (non-AOT) in na počasnih mrežah; ne reši izpada Open-Meteo. flutter analyze čist, **72/72 testov**. Commit
+  `fix:`. **Naslednji: M5 (Supabase zaledje).**
 - 2026-06-04 — **FR-1 (grid tipov) + fix weather overflow + dev.bat** (po M4, pred M5).
   **(1) FR-1:** grid tipov na koraku 1 stepperja urejen po **pogostosti per user** (`watchTaskTypeUsage()` =
   COUNT po `task_type_id`, ne-izbrisani; ob izenačenju seed vrstni red) → najpogostejši na vrhu. Privzeto
