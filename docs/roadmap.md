@@ -291,6 +291,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **Pregled prevodov + čiščenje.** Po vseh popravkih pregled i18n (`slang analyze --full`):
+  struktura sl/en/de **popolna** (brez manjkajočih/odvečnih), brez `{}` interpolacije. Odstranjenih **14
+  mrtvih ključev** (ostanki refaktoringov: `common.today_lower`, `task_detail.label_area/subjects/plant`,
+  `subject_picker.*` razen title/choose, `entry.subject_area_hint/subject_empty`). Plural resolverji
+  ekstrahirani v `i18n/plural_resolvers.dart` (klic iz main + `test/flutter_test_config.dart` → čist testni
+  izpis); slang `lazy: false` (eager 3 locale, sicer `setPluralResolverSync(de)` pade na deferred loadingu v
+  testih). analyze čist, **72/72 testov**. Commiti: `chore:` (mrtvi ključi), `refactor:` (resolver+bootstrap).
 - 2026-06-04 — **Fix plural ključev + FR-4 umaknjen.** (1) **Plural:** `month_count`/`overdue_days` sta
   uporabljala `{n}` (ICU), ki ga slang ne interpolira → na zaslonu dobesedni »{n}«. Zamenjano z `$n`; sl dobi
   pravilne oblike (one/two/few/other), v `main.dart` registriran cardinal resolver za sl+de (slang nima
