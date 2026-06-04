@@ -21,3 +21,7 @@ const kWeatherRetryDelays = <Duration>[
 /// How long a fetched dashboard weather snapshot stays fresh before a re-fetch.
 /// Avoids a network call on every visit to Home (weather changes slowly).
 const kWeatherCacheTtl = Duration(minutes: 30);
+
+/// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
+/// The rest stay collapsed until expanded; sorted by per-user frequency.
+const kTaskTypeGridCollapsed = 9;

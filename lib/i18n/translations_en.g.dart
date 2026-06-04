@@ -248,6 +248,8 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get repeat_last => 'Repeat last';
 	@override String get type_title => 'What did you do?';
 	@override String get type_hint => 'Tapping a task takes you forward automatically.';
+	@override String type_show_all({required Object n}) => 'Show all (${n})';
+	@override String get type_show_less => 'Show less';
 	@override String get subject_title => 'For what?';
 	@override String get subject_search_hint => 'Search plant…';
 	@override String get subject_plants => 'Plants';
@@ -591,6 +593,8 @@ extension on TranslationsEn {
 			'entry.repeat_last' => 'Repeat last',
 			'entry.type_title' => 'What did you do?',
 			'entry.type_hint' => 'Tapping a task takes you forward automatically.',
+			'entry.type_show_all' => ({required Object n}) => 'Show all (${n})',
+			'entry.type_show_less' => 'Show less',
 			'entry.subject_title' => 'For what?',
 			'entry.subject_search_hint' => 'Search plant…',
 			'entry.subject_plants' => 'Plants',

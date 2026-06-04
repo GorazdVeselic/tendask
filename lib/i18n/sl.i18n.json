@@ -128,6 +128,8 @@
     "repeat_last": "Ponovi zadnje",
     "type_title": "Kaj boš naredil?",
     "type_hint": "Tap na opravilo te samodejno pelje naprej.",
+    "type_show_all(n)": "Pokaži vse ($n)",
+    "type_show_less": "Pokaži manj",
     "subject_title": "Za kaj?",
     "subject_search_hint": "Išči rastlino…",
     "subject_plants": "Rastline",

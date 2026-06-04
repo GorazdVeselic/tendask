@@ -89,6 +89,20 @@ class TasksRepository {
           ..limit(1)
       ).watchSingleOrNull();
 
+  /// How many (non-deleted) tasks exist per task type — drives the per-user
+  /// frequency sort of the type grid (most used first).
+  Stream<Map<String, int>> watchTaskTypeUsage() {
+    final count = _db.tasks.id.count();
+    final query = _db.selectOnly(_db.tasks)
+      ..addColumns([_db.tasks.taskTypeId, count])
+      ..where(_db.tasks.deleted.equals(false))
+      ..groupBy([_db.tasks.taskTypeId]);
+    return query.watch().map((rows) => {
+          for (final row in rows)
+            row.read(_db.tasks.taskTypeId)!: row.read(count) ?? 0,
+        });
+  }
+
   // ── Subjects ────────────────────────────────────────────────────────────
 
   /// All non-deleted subject links — for resolving subject labels in lists.

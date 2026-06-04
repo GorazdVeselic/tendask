@@ -128,6 +128,8 @@
     "repeat_last": "Letztes wiederholen",
     "type_title": "Was hast du gemacht?",
     "type_hint": "Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.",
+    "type_show_all(n)": "Alle anzeigen ($n)",
+    "type_show_less": "Weniger anzeigen",
     "subject_title": "Wofür?",
     "subject_search_hint": "Pflanze suchen…",
     "subject_plants": "Pflanzen",

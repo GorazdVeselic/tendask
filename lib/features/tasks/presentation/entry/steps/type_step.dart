@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/catalog_labels.dart';
+import '../../../../../core/config.dart';
+import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
@@ -10,8 +12,9 @@ import '../../../application/tasks_providers.dart';
 import '../../subject_labels.dart';
 import '../../widgets/task_type_tile.dart';
 
-/// Step 1 — pick the task type. Tapping a tile auto-advances (onSelect).
-class TypeStepBody extends ConsumerWidget {
+/// Step 1 — pick the task type. Tapping a tile auto-advances (onSelect). Types
+/// are sorted by per-user frequency; only the first few show until "show all".
+class TypeStepBody extends ConsumerStatefulWidget {
   const TypeStepBody({
     super.key,
     required this.selected,
@@ -28,15 +31,45 @@ class TypeStepBody extends ConsumerWidget {
   final ValueChanged<String>? onRepeatLast;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TypeStepBody> createState() => _TypeStepBodyState();
+}
+
+class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
+  bool _expanded = false;
+
+  /// Catalog ordered by usage (most used first); ties keep the seed order.
+  List<TaskType> _sortedByUsage(
+      Map<String, TaskType> catalog, Map<String, int> usage) {
+    final list = catalog.values.toList();
+    final seedOrder = {for (var i = 0; i < list.length; i++) list[i].id: i};
+    list.sort((a, b) {
+      final byUse = (usage[b.id] ?? 0).compareTo(usage[a.id] ?? 0);
+      return byUse != 0 ? byUse : seedOrder[a.id]!.compareTo(seedOrder[b.id]!);
+    });
+    return list;
+  }
+
+  /// Keeps the currently selected type visible even when it falls outside the
+  /// collapsed window (e.g. returning to this step from review).
+  List<TaskType> _ensureSelected(List<TaskType> visible, List<TaskType> all) {
+    final sel = widget.selected;
+    if (sel == null || visible.any((t) => t.id == sel)) return visible;
+    final extra = all.where((t) => t.id == sel);
+    return extra.isEmpty ? visible : [...visible, extra.first];
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
     final catalogAsync = ref.watch(taskTypesMapProvider);
+    final usage = ref.watch(taskTypeUsageProvider).asData?.value ?? const {};
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
       children: [
-        if (onRepeatLast != null) _RepeatLastCard(onTap: onRepeatLast!),
+        if (widget.onRepeatLast != null)
+          _RepeatLastCard(onTap: widget.onRepeatLast!),
         catalogAsync.when(
           loading: () => const Padding(
             padding: EdgeInsets.all(24),
@@ -45,30 +78,51 @@ class TypeStepBody extends ConsumerWidget {
           error: (_, _) => Padding(
             padding: const EdgeInsets.all(24),
             child: Center(
-              child: Icon(Icons.error_outline,
-                  color: theme.colorScheme.error),
+              child: Icon(Icons.error_outline, color: theme.colorScheme.error),
             ),
           ),
-          data: (catalog) => GridView.builder(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 3,
-              mainAxisSpacing: 8,
-              crossAxisSpacing: 8,
-              childAspectRatio: 1.2,
-            ),
-            itemCount: catalog.length,
-            itemBuilder: (context, i) {
-              final type = catalog.values.elementAt(i);
-              return TaskTypeTile(
-                icon: type.icon,
-                label: catalogLabel(type.labels),
-                selected: type.id == selected,
-                onTap: () => onSelect(type.id),
-              );
-            },
-          ),
+          data: (catalog) {
+            final sorted = _sortedByUsage(catalog, usage);
+            final showToggle = sorted.length > kTaskTypeGridCollapsed;
+            final visible = _expanded || !showToggle
+                ? sorted
+                : _ensureSelected(
+                    sorted.take(kTaskTypeGridCollapsed).toList(), sorted);
+            return Column(
+              children: [
+                GridView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate:
+                      const SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    mainAxisSpacing: 8,
+                    crossAxisSpacing: 8,
+                    childAspectRatio: 1.2,
+                  ),
+                  itemCount: visible.length,
+                  itemBuilder: (context, i) {
+                    final type = visible[i];
+                    return TaskTypeTile(
+                      icon: type.icon,
+                      label: catalogLabel(type.labels),
+                      selected: type.id == widget.selected,
+                      onTap: () => widget.onSelect(type.id),
+                    );
+                  },
+                ),
+                if (showToggle)
+                  TextButton.icon(
+                    onPressed: () => setState(() => _expanded = !_expanded),
+                    icon: Icon(
+                        _expanded ? Icons.expand_less : Icons.expand_more),
+                    label: Text(_expanded
+                        ? t.entry.type_show_less
+                        : t.entry.type_show_all(n: sorted.length)),
+                  ),
+              ],
+            );
+          },
         ),
         const SizedBox(height: 12),
         Text(
@@ -82,7 +136,7 @@ class TypeStepBody extends ConsumerWidget {
           color: theme.colorScheme.surfaceContainerHighest,
           child: InkWell(
             borderRadius: BorderRadius.circular(12),
-            onTap: onNoteTap,
+            onTap: widget.onNoteTap,
             child: Padding(
               padding:
                   const EdgeInsets.symmetric(horizontal: 14, vertical: 12),

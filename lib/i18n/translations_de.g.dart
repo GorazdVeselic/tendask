@@ -248,6 +248,8 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get repeat_last => 'Letztes wiederholen';
 	@override String get type_title => 'Was hast du gemacht?';
 	@override String get type_hint => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.';
+	@override String type_show_all({required Object n}) => 'Alle anzeigen (${n})';
+	@override String get type_show_less => 'Weniger anzeigen';
 	@override String get subject_title => 'Wofür?';
 	@override String get subject_search_hint => 'Pflanze suchen…';
 	@override String get subject_plants => 'Pflanzen';
@@ -591,6 +593,8 @@ extension on TranslationsDe {
 			'entry.repeat_last' => 'Letztes wiederholen',
 			'entry.type_title' => 'Was hast du gemacht?',
 			'entry.type_hint' => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.',
+			'entry.type_show_all' => ({required Object n}) => 'Alle anzeigen (${n})',
+			'entry.type_show_less' => 'Weniger anzeigen',
 			'entry.subject_title' => 'Wofür?',
 			'entry.subject_search_hint' => 'Pflanze suchen…',
 			'entry.subject_plants' => 'Pflanzen',

@@ -165,6 +165,24 @@ void main() {
     });
   });
 
+  group('TasksRepository.watchTaskTypeUsage', () {
+    test('counts non-deleted tasks per type, excluding deleted', () async {
+      await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+      await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+      await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+      await repo.softDelete(await repo.create(
+          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0));
+
+      final usage = await repo.watchTaskTypeUsage().first;
+      expect(usage['water'], 2);
+      expect(usage['mow'], 1);
+      expect(usage.containsKey('prune'), false);
+    });
+  });
+
   group('TasksRepository.duplicate', () {
     test('creates a copy with a new ID and status=waiting', () async {
       final id = await repo.create(

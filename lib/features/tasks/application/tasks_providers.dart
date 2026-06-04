@@ -47,6 +47,11 @@ final lastTaskProvider = StreamProvider.autoDispose<Task?>((ref) {
   return ref.watch(tasksRepositoryProvider).watchLast();
 });
 
+/// Per-type task counts — for the frequency sort of the entry type grid.
+final taskTypeUsageProvider = StreamProvider.autoDispose<Map<String, int>>((ref) {
+  return ref.watch(tasksRepositoryProvider).watchTaskTypeUsage();
+});
+
 final taskByIdProvider =
     StreamProvider.autoDispose.family<Task?, String>((ref, id) {
   return ref.watch(tasksRepositoryProvider).watchById(id);

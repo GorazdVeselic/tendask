@@ -128,6 +128,8 @@
     "repeat_last": "Repeat last",
     "type_title": "What did you do?",
     "type_hint": "Tapping a task takes you forward automatically.",
+    "type_show_all(n)": "Show all ($n)",
+    "type_show_less": "Show less",
     "subject_title": "For what?",
     "subject_search_hint": "Search plant…",
     "subject_plants": "Plants",

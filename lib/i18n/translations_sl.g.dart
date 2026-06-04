@@ -462,6 +462,12 @@ class Translations$entry$sl {
 	/// sl: 'Tap na opravilo te samodejno pelje naprej.'
 	String get type_hint => 'Tap na opravilo te samodejno pelje naprej.';
 
+	/// sl: 'Pokaži vse ($n)'
+	String type_show_all({required Object n}) => 'Pokaži vse (${n})';
+
+	/// sl: 'Pokaži manj'
+	String get type_show_less => 'Pokaži manj';
+
 	/// sl: 'Za kaj?'
 	String get subject_title => 'Za kaj?';
 
@@ -1132,6 +1138,8 @@ extension on Translations {
 			'entry.repeat_last' => 'Ponovi zadnje',
 			'entry.type_title' => 'Kaj boš naredil?',
 			'entry.type_hint' => 'Tap na opravilo te samodejno pelje naprej.',
+			'entry.type_show_all' => ({required Object n}) => 'Pokaži vse (${n})',
+			'entry.type_show_less' => 'Pokaži manj',
 			'entry.subject_title' => 'Za kaj?',
 			'entry.subject_search_hint' => 'Išči rastlino…',
 			'entry.subject_plants' => 'Rastline',
