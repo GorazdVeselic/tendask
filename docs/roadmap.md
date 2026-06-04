@@ -291,6 +291,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **Fix plural ključev + FR-4 umaknjen.** (1) **Plural:** `month_count`/`overdue_days` sta
+  uporabljala `{n}` (ICU), ki ga slang ne interpolira → na zaslonu dobesedni »{n}«. Zamenjano z `$n`; sl dobi
+  pravilne oblike (one/two/few/other), v `main.dart` registriran cardinal resolver za sl+de (slang nima
+  vgrajenih). (2) **FR-4 umaknjen** — prototip dnevnega traku na časovnici zavrnjen kot vizualni šum (koda
+  restored, backlog označen ✗). flutter analyze čist, **72/72 testov**. Commiti: `fix:` (plural), `docs:` ×2.
 - 2026-06-04 — **FR-2 potrjen kot že implementiran (brez sprememb kode).** Pregled pokazal, da so vsi trije
   »ustvari sproti« vzorci že v stepperju: subject_step »+ Dodaj območje« (`area-new`→`area_form` vrne `areaId`
   prek `pop`→auto-select), »+ Dodaj rastlino« (`plant-new`), supplies_step »pick_new« (`showSupplyEditSheet`).
