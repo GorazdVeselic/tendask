@@ -273,7 +273,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
   dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
   beleženje. Kasneje: definiraj pravilo ponavljanja + generator + UI za serijo. Do takrat je vsako opravilo enkratno.
-- **FR-6 — »Ponovi zadnje« (hitrost ponavljajočega beleženja).** Vrt pogosto pomeni isto opravilo na
+- **FR-6 — »Ponovi zadnje« (hitrost ponavljajočega beleženja).** ✅ **Implementirano 2026-06-04.** Vrt pogosto pomeni isto opravilo na
   istih subjektih večkrat (zalivam paradižnik vsak večer). Predlog: na koraku 1 (Tip) stepperja na vrhu
   kartica »↻ Ponovi zadnje — 💧 Zalivanje · Paradižnik …«; tap predizpolni tip + subjekte + sredstva +
   opombo iz zadnjega ustvarjenega opravila, datum/uro resetira na zdaj (status izpeljan iz datuma) in
@@ -286,6 +286,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **FR-6 »Ponovi zadnje« + fix privzetega statusa + deploy.bat hot reload** (po M4, pred M5).
+  **(1) FR-6:** kartica »↻ Ponovi zadnje« na koraku 1 (Tip) stepperja — predizpolni tip + subjekte +
+  sredstva + opombo iz zadnjega opravila in skoči na Pregled; datum/ura ostane »zdaj« (status izpeljan),
+  opomniki se NE kopirajo (vezani na konkreten načrtovan datum). Vir = najnovejše ne-izbrisano opravilo po
+  `updated_at` (`watchLast()` + `lastTaskProvider`; `created_at` stolpca nimamo). Kartica skrita v edit-mode
+  in ko ni opravil. +2 unit testa (`watchLast`). **(2) Fix:** privzeti status se zdaj izpelje iz **polnega
+  datuma+ure** proti zdaj (`d.isAfter(now)`), ne le koledarskega dne — privzeti datum (danes ob naslednji
+  polni uri) je v prihodnosti → privzeto **Čaka** (prej nedosledno »opravljeno«). i18n `when_status_note`
+  posodobljen (sl/en/de). **(3) deploy.bat:** argument `hot`/`dev`/`debug` → debug build s hot reload (r/R);
+  privzeto ostane release. flutter analyze čist, **71/71 testov**. Commiti: `feat:` (FR-6), `fix:` (status),
+  `chore:` (deploy.bat). **Naslednji: M5 (Supabase zaledje).**
 - 2026-06-04 — **Code-quality cleanup (po M4, brez funkcijskih sprememb)** — pregled M4 kode + odprava
   prop-drilling `theme`/`t` čez **vso presentation plast** (weather UI + `task_detail` + 13 zaslonov:
   home/tasks/journal/areas/plants/supplies/entry): pomožni widgeti zdaj berejo `Theme.of(context)`/`context.t`
