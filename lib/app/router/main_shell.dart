@@ -27,7 +27,10 @@ class MainShell extends StatelessWidget {
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
-        onDestinationSelected: shell.goBranch,
+        // Every tab tap returns to that tab's root screen (resets its stack),
+        // so an open detail/entity is never shown when switching tabs.
+        onDestinationSelected: (index) =>
+            shell.goBranch(index, initialLocation: true),
         destinations: [
           NavigationDestination(
             icon: const Icon(Icons.home_outlined),

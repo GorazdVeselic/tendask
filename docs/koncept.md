@@ -360,8 +360,12 @@ OPRAVILO = { tip · SUBJEKTI[] (rastlina ALI območje, M:N — §7.15) · DATUM 
   Opravila (dnevna akcija) naprej, Dnevnik (zgodovina) za njim, Vrt (struktura) na
   koncu. **FAB ＋ (vnos) le na Domov + Opravila** — Dnevnik je bralni zgodovinski
   pogled (brez ＋); Opravila izgubi ＋ v AppBar (nadomesti ga FAB).
+- **Bottom nav = vedno root (2026-06-04):** tap na zavihek vedno odpre njegov osnovni
+  zaslon (reset sklada, `goBranch(initialLocation: true)`) — odprt detajl/entiteta se
+  ob preklopu med zavihki ne ohrani.
 
-**Mesečni koledar:** tap na dan → dodaj opravilo (preteklo ali načrtovano).
+**Mesečni koledar (2026-06-04):** tap na dan **izbere dan** in spodaj izlista njegova
+opravila + ponudi »Dodaj na ta dan« (prej tap = takoj nov vnos).
 
 ---
 
