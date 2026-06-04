@@ -5,9 +5,14 @@
 --     default/backfill in the same migration (old APKs must not crash on pull).
 --   * sync_status does NOT exist in the cloud — it is a LOCAL drift column only.
 --   * JSON fields (labels/weather/recurrence/items) = jsonb; time = timestamptz (UTC);
---     user id/user_id = uuid (device-generated UUID); catalog id = text (slug).
+--     catalog id = text (slug).
 --   * Quantities = double precision (NOT numeric): drift stores REAL (double) and is
 --     the source of truth; the server mirrors it, avoiding a client<->server type skew.
+--
+-- User id/user_id = uuid, generated ON THE DEVICE (uuid pkg) before insert. There is
+-- DELIBERATELY no `default gen_random_uuid()`: the id is the upsert identity for sync,
+-- so a missing id must fail loudly, never be silently replaced by a server-side id
+-- (which would create a duplicate row on the next pull).
 --
 -- DELIBERATELY no updated_at trigger: the device owns updated_at — it is the LWW key
 -- for sync (offline). A server-side trigger overwriting now() on UPDATE would corrupt
@@ -42,12 +47,13 @@ create table plant (
   icon            text
 );
 
+-- No UNIQUE on (plant_id, lang, text_norm): drift has none, so adding one here would
+-- diverge from the source schema. Mirror exactly; dedupe is the seed's responsibility.
 create table plant_synonym (
   id        bigint generated always as identity primary key,
   plant_id  text not null references plant(id),
   lang      text not null,
-  text_norm text not null,                      -- normalized (lowercase, trimmed)
-  constraint plant_synonym_unique unique (plant_id, lang, text_norm)
+  text_norm text not null                       -- normalized (lowercase, trimmed)
 );
 
 create table category_task_type (
@@ -112,6 +118,9 @@ create table task (
 );
 
 -- M:N task subjects (a plant OR an area); no user_id -> ownership via task.
+-- No natural-key UNIQUE (e.g. task_id+user_plant_id) on purpose: with soft-delete +
+-- offline concurrent creation, duplicate-looking rows must coexist; a UNIQUE would
+-- reject a legitimate sync upsert. The uuid id is the only identity.
 create table task_subject (
   id            uuid primary key,
   task_id       uuid not null references task(id) on delete cascade,
@@ -174,7 +183,8 @@ create table task_supply (
   amount     double precision not null,
   applied    boolean not null default false,     -- whether booked into supply.quantity yet
   updated_at timestamptz not null default now(),
-  deleted    boolean not null default false
+  deleted    boolean not null default false,
+  constraint task_supply_amount_check check (amount >= 0)
 );
 
 -- ============================================================

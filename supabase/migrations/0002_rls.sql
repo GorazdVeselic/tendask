@@ -62,6 +62,24 @@ alter table recipe             enable row level security;
 alter table task_supply        enable row level security;
 
 -- ============================================================
+-- 2b. Table grants. RLS gates ROWS; grants gate TABLE access — PostgREST needs both.
+-- Explicit (not relying on default privileges) so the API works deterministically
+-- regardless of who/how the tables were created. Catalog = read-only for clients.
+-- ============================================================
+
+grant select on
+  task_type, plant, plant_synonym, category_task_type
+  to anon, authenticated;
+
+grant select, insert, update, delete on
+  profile, area, user_plant, task, task_subject, task_reminder,
+  note, supply, recipe, task_supply
+  to authenticated;
+
+-- plant_synonym uses an identity column; no sequence grant needed (clients never
+-- insert catalog rows — seeding runs as the service role, which bypasses grants/RLS).
+
+-- ============================================================
 -- 3a. Catalog — public read (anon + authenticated); no writes from clients
 -- ============================================================
 
