@@ -1,6 +1,6 @@
 # Tendask — Roadmap / Task list (MVP)
 
-> **Status:** živ dokument · zadnja posodobitev 2026-06-02
+> **Status:** živ dokument · zadnja posodobitev 2026-06-04
 > **Namen:** edini vir resnice za "kaj delamo naprej". PM + Flutter dev + tester pogled.
 > **Bere ga AI agent (Claude Code) IN človek.** Sledi mu korak za korakom.
 >
@@ -46,7 +46,7 @@
 | **M0** | Temelj projekta | Skeleton: mape, tema, router, i18n, CI | `[x]` |
 | **M1** | Lokalna baza + seed | drift sheme + katalog/uporabnik tabele + seed | `[x]` |
 | **M2** | Jedro opravil (offline) | Vnos/pregled/urejanje opravil nad drift | `[x]` |
-| **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[ ]` |
+| **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[x]` |
 | **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[ ]` |
 | **M5** | Supabase zaledje | Projekt + shema + RLS | `[ ]` |
 | **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[ ]` |
@@ -159,7 +159,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **3.4 — Opombe (18).** Samostojna opomba → v vrtni dnevnik; vstop iz Hitrega vnosa. *Commit:* `feat: opombe (18)`
 - [x] **3.5 — Mesečni koledar (11).** Tap na dan → dodaj opravilo. *Commit:* `feat: mesečni koledar (11)`
 - [x] **3.6 — Nastavitve/profil (12).** Jezik, (placeholder lokacija/obvestila). *Commit:* `feat: nastavitve/profil (12)`
-- [ ] **3.7 — Testi M3.** Widget + ročna preverba. *Commit:* `test: M3 zasloni`
+- [x] **3.7 — Testi M3.** Widget + ročna preverba. *Commit:* `test: M3 zasloni`
 
 ---
 
@@ -273,11 +273,37 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
   dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
   beleženje. Kasneje: definiraj pravilo ponavljanja + generator + UI za serijo. Do takrat je vsako opravilo enkratno.
+- **FR-6 — »Ponovi zadnje« (hitrost ponavljajočega beleženja).** Vrt pogosto pomeni isto opravilo na
+  istih subjektih večkrat (zalivam paradižnik vsak večer). Predlog: na koraku 1 (Tip) stepperja na vrhu
+  kartica »↻ Ponovi zadnje — 💧 Zalivanje · Paradižnik …«; tap predizpolni tip + subjekte + sredstva +
+  opombo iz zadnjega ustvarjenega opravila, datum/uro resetira na zdaj (status izpeljan iz datuma) in
+  skoči naravnost na Pregled. Vir = zadnji task iz baze (`watchAll()` že obstaja), offline-OK, brez novega
+  state managementa. Odprto pri implementaciji: ali pristati na Pregledu ali na koraku Subjekti (subjekti se
+  najpogosteje spremenijo). NE predizpolnjevati koraka 1 z zadnjim tipom (ubije auto-advance). Premišljeno
+  med UX validacijo stepperja 2026-06-04, odloženo na po-MVP.
 
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-04 — **3.7 + M3 ZAKLJUČEN** — Po 3.6 je sledil **prefokus na vnos opravila** (ne nov mejnik, ampak
+  večja prenova jedra M2/M3): (1) **Vnos = horizontalni stepper** (`features/tasks/presentation/entry/`) —
+  6 pogojnih korakov (tip · subjekti multi-select · kdaj+ura+status · opomnik [če čaka] · sredstva [če tip
+  troši] · pregled); nadomesti stari Hiter vnos + obrazec (oba IZBRISANA); edit odpre Pregled; `consumesSupplies`
+  polje v katalogu (schemaVersion 4). (2) **UI polish**: tema (medel hint, error barve), poenoteni komponentni
+  widgeti (SectionLabel/FieldLabel/DestructiveButton/EmptyState/TaskEntryTile) + komponentni katalog v CLAUDE.md.
+  (3) **Nav reorganizacija**: vrstni red Domov · Opravila · Dnevnik · Vrt; FAB ＋ na Domov+Opravila (Dnevnik =
+  bralni); vsak tab vedno odpre svoj root (`goBranch(initialLocation: true)`). (4) **Mesečni pregled — tap na dan**:
+  izbere dan + izlista opravila + »Dodaj na ta dan« (today privzeto izbran, izbran dan rumen, today zelen border).
+  (5) **Domov status**: ⏰/✓ ikone + popravek relativnega datuma (koledarski dnevi prek startOfDay). (6) **Detajl**:
+  »Opravljeno/Načrtovano: datum« + Premakni = pravi date-picker (`repo.reschedule`). (7) 🔴 **KRITIČNI offline-first
+  font fix**: `google_fonts` je font nalagal runtime prek omrežja (`fonts.gstatic.com`) → offline (vrt!) crash;
+  Plus Jakarta Sans zdaj **bundlan** lokalno (`assets/fonts/`, `google_fonts` odstranjen) — **potrjeno na napravi
+  offline**. Pravilo zapisano v CLAUDE.md (nič runtime fetcha sredstev). Počiščena mrtva koda + odvečni wireframi.
+  **UX validacija stepperja** (2026-06-04): auto-advance koraka 1, pogojni koraki in opomba na Pregledu ocenjeni
+  kot OK (brez sprememb); »ponovi zadnje« odložen v backlog (FR-6). M3 widget testi (mesečni koledar, opombe,
+  rastline, zaloge, nastavitve, journal/tasks) + repo testi obstajajo, ročna preverba na napravi opravljena.
+  flutter analyze čist, **55/55 testov zelenih**. **M3 zaključen → naslednji M4 (vreme, Open-Meteo).**
 - 2026-06-02 — **3.6** — Nastavitve/profil (12): nova feature `settings/`; `ProfileRepository` (getLang/setLang nad drift `profile`, userId='local'/TODO M7, update-or-insert brez prepisa bodočih h3*) + `profileRepository` provider; `SettingsScreen` poln skeleton (Profil/Lokacija/Obvestila/Račun&podatki = placeholder → "Na voljo kmalu" snackbar; Jezik `SegmentedButton` sl/en/de z endonimi + Vrt vstopa = aktivna); jezik persistira prek `profile.lang` (main.dart bootstrap po seedu bere getLang → `setLocaleRaw`, offline-first brez novega paketa); Domov ⚙ → `settings`; router `/settings`; Vrt → Zaloge (`/supplies`, rešen odprt vstop M3.3) + Območja (`/areas`); `settings.*` i18n sl/en/de; unit testi ProfileRepository (null→set→update v isto vrstico). Odločitvi: profile.lang persistenca + poln skeleton z placeholderji. flutter analyze čist, 50/50 testov zelenih.
 - 2026-06-02 — **3.5** — Mesečni koledar (11): `TasksRepository.watchAll` (vsa ne-deleted, vsa stanja) + `allTasksProvider`; `TaskFormScreen` +`initialDate` (router `task-new` bere `?date=ISO`, deep-link varno); nov `month_calendar_view` (mesečna navigacija ‹ › prek `MaterialLocalizations.formatMonthYear`, lokaliziran prvi dan tedna+narrowWeekdays, grid 7 stolpcev, do 3 enobarvne pike/dan, today obroba, štetje opravil, tap na dan → Novo opravilo s tem datumom); čista funkcija `monthCells(month, firstWeekday)` (testabilna); `journal_screen` `SegmentedButton` Časovnica/Mesec (filter bar le v časovnici); `journal.month_hint`+`month_count` (plural) i18n sl/en/de. Odločitve: tap→07 z datumom, koledar kaže vsa opravila, do 3 enobarvne pike (26 tipov ni mapljivih na 5 barv); setveni koledar = po-MVP (izpuščen). flutter analyze čist, 47/47 testov zelenih.
 - 2026-06-02 — **3.4** — Opombe (18): `NotesRepository` (watchAll desc/byId/create/updateNote/softDelete; uuid+UTC+pending+Clock) + `notesProvider`; drift tabela `note` že obstaja (brez spremembe sheme); `PlantField` ekstrahiran v `plants/presentation/widgets/` (skupen task_form+note_form, odpravljen verbatim copy); `note_form_screen` (18) create/edit (Zapis textarea + Kdaj segmented + Območje neobvezno deselect + Rastlina prek PlantField ko je območje izbran), 🗑 v AppBar → confirm_dialog → softDelete; `sealed JournalEntry` (Task/Note) + `journal_screen` meša opombe+opravila po datumu (`switch` na sealed), ✍️ vnos tap→note-edit, filter Opombe oživljen; Hiter vnos (02) ✍️ kartica → `note-new`; router `/notes/new`+`/notes/:id/edit`; `notes` i18n sl/en/de. Odločitve: rastlina kot task_form (vezana na območje), edit prek forme + izbris v formi, brez inline "+ Novo". flutter analyze čist, 42/42 testov zelenih.
