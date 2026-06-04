@@ -30,8 +30,8 @@
     "month_view": "Monat",
     "month_hint": "💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.",
     "month_count(n)": {
-      "one": "{n} Aufgabe diesen Monat",
-      "other": "{n} Aufgaben diesen Monat"
+      "one": "$n Aufgabe diesen Monat",
+      "other": "$n Aufgaben diesen Monat"
     },
     "day_empty": "Keine Aufgaben an diesem Tag.",
     "day_add": "Aufgabe an diesem Tag hinzufügen"
@@ -90,7 +90,7 @@
     "empty": "Keine offenen Aufgaben. Mit + hinzufügen.",
     "overdue_days(n)": {
       "one": "1 Tag überfällig",
-      "other": "{n} Tage überfällig"
+      "other": "$n Tage überfällig"
     },
     "status_today": "heute",
     "status_tomorrow": "morgen",

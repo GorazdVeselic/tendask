@@ -30,8 +30,8 @@
     "month_view": "Month",
     "month_hint": "💡 Tap a day to view and add tasks.",
     "month_count(n)": {
-      "one": "{n} task this month",
-      "other": "{n} tasks this month"
+      "one": "$n task this month",
+      "other": "$n tasks this month"
     },
     "day_empty": "No tasks on this day.",
     "day_add": "Add task on this day"
@@ -90,7 +90,7 @@
     "empty": "No pending tasks. Add one with +.",
     "overdue_days(n)": {
       "one": "overdue 1 day",
-      "other": "overdue {n} days"
+      "other": "overdue $n days"
     },
     "status_today": "today",
     "status_tomorrow": "tomorrow",

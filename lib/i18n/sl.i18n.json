@@ -30,8 +30,10 @@
     "month_view": "Mesec",
     "month_hint": "💡 Tapni na dan za pregled in dodajanje opravil.",
     "month_count(n)": {
-      "one": "{n} opravilo ta mesec",
-      "other": "{n} opravil ta mesec"
+      "one": "$n opravilo ta mesec",
+      "two": "$n opravili ta mesec",
+      "few": "$n opravila ta mesec",
+      "other": "$n opravil ta mesec"
     },
     "day_empty": "Ni opravil ta dan.",
     "day_add": "Dodaj opravilo na ta dan"
@@ -90,7 +92,9 @@
     "empty": "Ni čakajočih opravil. Dodaj novo z +.",
     "overdue_days(n)": {
       "one": "zamuja 1 dan",
-      "other": "zamuja {n} dni"
+      "two": "zamuja $n dni",
+      "few": "zamuja $n dni",
+      "other": "zamuja $n dni"
     },
     "status_today": "danes",
     "status_tomorrow": "jutri",

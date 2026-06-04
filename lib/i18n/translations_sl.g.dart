@@ -162,10 +162,12 @@ class Translations$journal$sl {
 	/// sl: '💡 Tapni na dan za pregled in dodajanje opravil.'
 	String get month_hint => '💡 Tapni na dan za pregled in dodajanje opravil.';
 
-	/// sl: '(one) {{n} opravilo ta mesec} (other) {{n} opravil ta mesec}'
+	/// sl: '(one) {$n opravilo ta mesec} (two) {$n opravili ta mesec} (few) {$n opravila ta mesec} (other) {$n opravil ta mesec}'
 	String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
-		one: '{n} opravilo ta mesec',
-		other: '{n} opravil ta mesec',
+		one: '${n} opravilo ta mesec',
+		two: '${n} opravili ta mesec',
+		few: '${n} opravila ta mesec',
+		other: '${n} opravil ta mesec',
 	);
 
 	/// sl: 'Ni opravil ta dan.'
@@ -342,10 +344,12 @@ class Translations$tasks_list$sl {
 	/// sl: 'Ni čakajočih opravil. Dodaj novo z +.'
 	String get empty => 'Ni čakajočih opravil. Dodaj novo z +.';
 
-	/// sl: '(one) {zamuja 1 dan} (other) {zamuja {n} dni}'
+	/// sl: '(one) {zamuja 1 dan} (two) {zamuja $n dni} (few) {zamuja $n dni} (other) {zamuja $n dni}'
 	String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: 'zamuja 1 dan',
-		other: 'zamuja {n} dni',
+		two: 'zamuja ${n} dni',
+		few: 'zamuja ${n} dni',
+		other: 'zamuja ${n} dni',
 	);
 
 	/// sl: 'danes'
@@ -1055,7 +1059,7 @@ extension on Translations {
 			'journal.timeline' => 'Časovnica',
 			'journal.month_view' => 'Mesec',
 			'journal.month_hint' => '💡 Tapni na dan za pregled in dodajanje opravil.',
-			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '{n} opravilo ta mesec', other: '{n} opravil ta mesec', ), 
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '${n} opravilo ta mesec', two: '${n} opravili ta mesec', few: '${n} opravila ta mesec', other: '${n} opravil ta mesec', ), 
 			'journal.day_empty' => 'Ni opravil ta dan.',
 			'journal.day_add' => 'Dodaj opravilo na ta dan',
 			'notes.title_new' => 'Nova opomba',
@@ -1105,7 +1109,7 @@ extension on Translations {
 			'tasks_list.section_this_week' => 'Ta teden',
 			'tasks_list.section_later' => 'Pozneje',
 			'tasks_list.empty' => 'Ni čakajočih opravil. Dodaj novo z +.',
-			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: 'zamuja 1 dan', other: 'zamuja {n} dni', ), 
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: 'zamuja 1 dan', two: 'zamuja ${n} dni', few: 'zamuja ${n} dni', other: 'zamuja ${n} dni', ), 
 			'tasks_list.status_today' => 'danes',
 			'tasks_list.status_tomorrow' => 'jutri',
 			'tasks_list.action_complete' => 'Opravljeno',

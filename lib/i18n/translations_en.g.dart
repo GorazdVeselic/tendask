@@ -115,8 +115,8 @@ class _Translations$journal$en extends Translations$journal$sl {
 	@override String get month_view => 'Month';
 	@override String get month_hint => '💡 Tap a day to view and add tasks.';
 	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
-		one: '{n} task this month',
-		other: '{n} tasks this month',
+		one: '${n} task this month',
+		other: '${n} tasks this month',
 	);
 	@override String get day_empty => 'No tasks on this day.';
 	@override String get day_add => 'Add task on this day';
@@ -196,7 +196,7 @@ class _Translations$tasks_list$en extends Translations$tasks_list$sl {
 	@override String get empty => 'No pending tasks. Add one with +.';
 	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: 'overdue 1 day',
-		other: 'overdue {n} days',
+		other: 'overdue ${n} days',
 	);
 	@override String get status_today => 'today';
 	@override String get status_tomorrow => 'tomorrow';
@@ -510,7 +510,7 @@ extension on TranslationsEn {
 			'journal.timeline' => 'Timeline',
 			'journal.month_view' => 'Month',
 			'journal.month_hint' => '💡 Tap a day to view and add tasks.',
-			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '{n} task this month', other: '{n} tasks this month', ), 
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '${n} task this month', other: '${n} tasks this month', ), 
 			'journal.day_empty' => 'No tasks on this day.',
 			'journal.day_add' => 'Add task on this day',
 			'notes.title_new' => 'New note',
@@ -560,7 +560,7 @@ extension on TranslationsEn {
 			'tasks_list.section_this_week' => 'This week',
 			'tasks_list.section_later' => 'Later',
 			'tasks_list.empty' => 'No pending tasks. Add one with +.',
-			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'overdue 1 day', other: 'overdue {n} days', ), 
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'overdue 1 day', other: 'overdue ${n} days', ), 
 			'tasks_list.status_today' => 'today',
 			'tasks_list.status_tomorrow' => 'tomorrow',
 			'tasks_list.action_complete' => 'Complete',

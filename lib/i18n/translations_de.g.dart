@@ -115,8 +115,8 @@ class _Translations$journal$de extends Translations$journal$sl {
 	@override String get month_view => 'Monat';
 	@override String get month_hint => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.';
 	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
-		one: '{n} Aufgabe diesen Monat',
-		other: '{n} Aufgaben diesen Monat',
+		one: '${n} Aufgabe diesen Monat',
+		other: '${n} Aufgaben diesen Monat',
 	);
 	@override String get day_empty => 'Keine Aufgaben an diesem Tag.';
 	@override String get day_add => 'Aufgabe an diesem Tag hinzufügen';
@@ -196,7 +196,7 @@ class _Translations$tasks_list$de extends Translations$tasks_list$sl {
 	@override String get empty => 'Keine offenen Aufgaben. Mit + hinzufügen.';
 	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
 		one: '1 Tag überfällig',
-		other: '{n} Tage überfällig',
+		other: '${n} Tage überfällig',
 	);
 	@override String get status_today => 'heute';
 	@override String get status_tomorrow => 'morgen';
@@ -510,7 +510,7 @@ extension on TranslationsDe {
 			'journal.timeline' => 'Zeitlinie',
 			'journal.month_view' => 'Monat',
 			'journal.month_hint' => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.',
-			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '{n} Aufgabe diesen Monat', other: '{n} Aufgaben diesen Monat', ), 
+			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '${n} Aufgabe diesen Monat', other: '${n} Aufgaben diesen Monat', ), 
 			'journal.day_empty' => 'Keine Aufgaben an diesem Tag.',
 			'journal.day_add' => 'Aufgabe an diesem Tag hinzufügen',
 			'notes.title_new' => 'Neue Notiz',
@@ -560,7 +560,7 @@ extension on TranslationsDe {
 			'tasks_list.section_this_week' => 'Diese Woche',
 			'tasks_list.section_later' => 'Später',
 			'tasks_list.empty' => 'Keine offenen Aufgaben. Mit + hinzufügen.',
-			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 Tag überfällig', other: '{n} Tage überfällig', ), 
+			'tasks_list.overdue_days' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 Tag überfällig', other: '${n} Tage überfällig', ), 
 			'tasks_list.status_today' => 'heute',
 			'tasks_list.status_tomorrow' => 'morgen',
 			'tasks_list.action_complete' => 'Erledigt',
