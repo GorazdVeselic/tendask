@@ -25,3 +25,9 @@ const kWeatherCacheTtl = Duration(minutes: 30);
 /// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;
+
+/// Open-Meteo network timeouts. Receive is generous: the forecast payload
+/// (hourly bands for ~5 days) is sizable and decodes slower in debug (non-AOT),
+/// and 10 s proved too tight on slow mobile networks (gardens).
+const kWeatherConnectTimeout = Duration(seconds: 10);
+const kWeatherReceiveTimeout = Duration(seconds: 20);

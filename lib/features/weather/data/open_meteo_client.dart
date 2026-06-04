@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../../../core/config.dart';
 import 'open_meteo_response.dart';
 
 part 'open_meteo_client.g.dart';
@@ -63,8 +64,8 @@ class OpenMeteoException implements Exception {
 @riverpod
 Dio weatherDio(Ref ref) => Dio(
       BaseOptions(
-        connectTimeout: const Duration(seconds: 10),
-        receiveTimeout: const Duration(seconds: 10),
+        connectTimeout: kWeatherConnectTimeout,
+        receiveTimeout: kWeatherReceiveTimeout,
       ),
     );
 
