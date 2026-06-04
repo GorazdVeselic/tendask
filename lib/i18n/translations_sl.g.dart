@@ -525,8 +525,8 @@ class Translations$entry$sl {
 	/// sl: 'Opravljeno'
 	String get when_status_done => 'Opravljeno';
 
-	/// sl: 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.'
-	String get when_status_note => 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.';
+	/// sl: 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.'
+	String get when_status_note => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.';
 
 	/// sl: 'Opomnik'
 	String get reminder_title => 'Opomnik';
@@ -1153,7 +1153,7 @@ extension on Translations {
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Čaka',
 			'entry.when_status_done' => 'Opravljeno',
-			'entry.when_status_note' => 'Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.',
+			'entry.when_status_note' => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.',
 			'entry.reminder_title' => 'Opomnik',
 			'entry.optional' => '(neobvezno)',
 			'entry.reminder_why' => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.',

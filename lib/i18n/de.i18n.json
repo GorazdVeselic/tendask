@@ -149,7 +149,7 @@
     "when_status": "Status",
     "when_status_waiting": "Wartet",
     "when_status_done": "Erledigt",
-    "when_status_note": "Standard aus dem Datum: Zukunft = wartet, heute oder Vergangenheit = erledigt.",
+    "when_status_note": "Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.",
     "reminder_title": "Erinnerung",
     "optional": "(optional)",
     "reminder_why": "Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.",

@@ -269,7 +269,7 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get when_status => 'Status';
 	@override String get when_status_waiting => 'Wartet';
 	@override String get when_status_done => 'Erledigt';
-	@override String get when_status_note => 'Standard aus dem Datum: Zukunft = wartet, heute oder Vergangenheit = erledigt.';
+	@override String get when_status_note => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.';
 	@override String get reminder_title => 'Erinnerung';
 	@override String get optional => '(optional)';
 	@override String get reminder_why => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.';
@@ -612,7 +612,7 @@ extension on TranslationsDe {
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Wartet',
 			'entry.when_status_done' => 'Erledigt',
-			'entry.when_status_note' => 'Standard aus dem Datum: Zukunft = wartet, heute oder Vergangenheit = erledigt.',
+			'entry.when_status_note' => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.',
 			'entry.reminder_title' => 'Erinnerung',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.',

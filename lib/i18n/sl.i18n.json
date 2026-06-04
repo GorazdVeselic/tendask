@@ -149,7 +149,7 @@
     "when_status": "Status",
     "when_status_waiting": "Čaka",
     "when_status_done": "Opravljeno",
-    "when_status_note": "Privzeto izpeljano iz datuma: prihodnost = čaka, danes ali preteklost = opravljeno.",
+    "when_status_note": "Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.",
     "reminder_title": "Opomnik",
     "optional": "(neobvezno)",
     "reminder_why": "Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.",

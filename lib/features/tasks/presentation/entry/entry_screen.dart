@@ -5,7 +5,6 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
-import '../../../../core/date_format.dart';
 import '../../../../core/task_status.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../supplies/application/supplies_providers.dart';
@@ -107,12 +106,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   static DateTime _nextFullHour(DateTime now) =>
       DateTime(now.year, now.month, now.day, now.hour + 1);
 
-  TaskStatus _statusFromDate(DateTime d) {
-    final today = startOfDay(DateTime.now());
-    return startOfDay(d).isAfter(today)
-        ? TaskStatus.waiting
-        : TaskStatus.done;
-  }
+  // Derived from the full date+time vs now: anything in the future is planned
+  // (waiting), now/past is logged as done.
+  TaskStatus _statusFromDate(DateTime d) =>
+      d.isAfter(DateTime.now()) ? TaskStatus.waiting : TaskStatus.done;
 
   // ── Loading (edit) ────────────────────────────────────────────────────────
 

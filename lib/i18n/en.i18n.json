@@ -149,7 +149,7 @@
     "when_status": "Status",
     "when_status_waiting": "Waiting",
     "when_status_done": "Done",
-    "when_status_note": "Default derived from the date: future = waiting, today or past = done.",
+    "when_status_note": "Default derived from the date and time: future = waiting, otherwise = done.",
     "reminder_title": "Reminder",
     "optional": "(optional)",
     "reminder_why": "This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.",

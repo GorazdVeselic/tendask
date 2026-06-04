@@ -269,7 +269,7 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get when_status => 'Status';
 	@override String get when_status_waiting => 'Waiting';
 	@override String get when_status_done => 'Done';
-	@override String get when_status_note => 'Default derived from the date: future = waiting, today or past = done.';
+	@override String get when_status_note => 'Default derived from the date and time: future = waiting, otherwise = done.';
 	@override String get reminder_title => 'Reminder';
 	@override String get optional => '(optional)';
 	@override String get reminder_why => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.';
@@ -612,7 +612,7 @@ extension on TranslationsEn {
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Waiting',
 			'entry.when_status_done' => 'Done',
-			'entry.when_status_note' => 'Default derived from the date: future = waiting, today or past = done.',
+			'entry.when_status_note' => 'Default derived from the date and time: future = waiting, otherwise = done.',
 			'entry.reminder_title' => 'Reminder',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.',
