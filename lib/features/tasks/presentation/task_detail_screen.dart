@@ -13,6 +13,8 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../supplies/application/supplies_providers.dart';
+import '../../weather/data/weather_snapshot.dart';
+import '../../weather/presentation/weather_card.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
@@ -131,7 +133,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       ),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_weather, theme: theme),
-                      _WeatherPlaceholder(t: t, theme: theme),
+                      _WeatherSection(task: task, t: t, theme: theme),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_details, theme: theme),
                       _DetailsCard(
@@ -465,16 +467,25 @@ class _SubjectsCard extends StatelessWidget {
   }
 }
 
-// ─── Weather placeholder ──────────────────────────────────────────────────────
+// ─── Weather section ──────────────────────────────────────────────────────────
 
-class _WeatherPlaceholder extends StatelessWidget {
-  const _WeatherPlaceholder({required this.t, required this.theme});
+class _WeatherSection extends StatelessWidget {
+  const _WeatherSection({required this.task, required this.t, required this.theme});
 
+  final Task task;
   final Translations t;
   final ThemeData theme;
 
   @override
   Widget build(BuildContext context) {
+    final snapshot = decodeWeatherSnapshot(task.weather);
+    if (snapshot != null) return WeatherSnapshotCard(snapshot: snapshot);
+
+    // No snapshot: waiting tasks capture on completion; a done task without one
+    // was logged offline (graceful — it may fill in later).
+    final hint = task.status == TaskStatus.waiting
+        ? t.weather.detail_waiting
+        : t.weather.detail_none;
     return Card(
       child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -485,7 +496,7 @@ class _WeatherPlaceholder extends StatelessWidget {
             const SizedBox(width: 12),
             Expanded(
               child: Text(
-                t.task_detail.weather_placeholder,
+                hint,
                 style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant),
               ),

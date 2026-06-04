@@ -10,8 +10,7 @@
     "today": "Today",
     "recent": "Recent",
     "no_tasks_today": "No tasks planned for today.",
-    "no_recent": "No completed tasks yet.",
-    "weather_placeholder": "Weather coming in M4."
+    "no_recent": "No completed tasks yet."
   },
   "common": {
     "today": "Today",
@@ -57,7 +56,6 @@
   },
   "task_detail": {
     "section_weather": "Weather snapshot",
-    "weather_placeholder": "Weather snapshot will be available in M4.",
     "section_details": "Details",
     "label_area": "Area",
     "label_subjects": "For",
@@ -290,5 +288,22 @@
     "delete_account": "Delete account and all data",
     "coming_soon": "Coming soon",
     "version": "Tendask · v1 (MVP)"
+  },
+  "weather": {
+    "cond_clear": "Clear",
+    "cond_mainly_clear": "Mostly clear",
+    "cond_cloudy": "Cloudy",
+    "cond_fog": "Fog",
+    "cond_drizzle": "Drizzle",
+    "cond_rain": "Rain",
+    "cond_snow": "Snow",
+    "cond_showers": "Showers",
+    "cond_thunderstorm": "Thunderstorm",
+    "cond_unknown": "—",
+    "band_forecast": "Forecast",
+    "rain_past48h": "Rain last 48 h:",
+    "detail_waiting": "Weather will be recorded when you mark the task done.",
+    "detail_none": "No weather snapshot (captured offline).",
+    "home_unavailable": "Weather is currently unavailable."
   }
 }

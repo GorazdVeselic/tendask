@@ -55,6 +55,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
 	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
 	late final Translations$settings$sl settings = Translations$settings$sl.internal(_root);
+	late final Translations$weather$sl weather = Translations$weather$sl.internal(_root);
 }
 
 // Path: nav
@@ -100,9 +101,6 @@ class Translations$home$sl {
 
 	/// sl: 'Še ni opravljenih opravil.'
 	String get no_recent => 'Še ni opravljenih opravil.';
-
-	/// sl: 'Vreme bo na voljo v M4.'
-	String get weather_placeholder => 'Vreme bo na voljo v M4.';
 }
 
 // Path: common
@@ -244,9 +242,6 @@ class Translations$task_detail$sl {
 
 	/// sl: 'Vremenski posnetek'
 	String get section_weather => 'Vremenski posnetek';
-
-	/// sl: 'Vremenski posnetek bo na voljo v M4.'
-	String get weather_placeholder => 'Vremenski posnetek bo na voljo v M4.';
 
 	/// sl: 'Podrobnosti'
 	String get section_details => 'Podrobnosti';
@@ -966,6 +961,60 @@ class Translations$settings$sl {
 	String get version => 'Tendask · v1 (MVP)';
 }
 
+// Path: weather
+class Translations$weather$sl {
+	Translations$weather$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Jasno'
+	String get cond_clear => 'Jasno';
+
+	/// sl: 'Pretežno jasno'
+	String get cond_mainly_clear => 'Pretežno jasno';
+
+	/// sl: 'Oblačno'
+	String get cond_cloudy => 'Oblačno';
+
+	/// sl: 'Megla'
+	String get cond_fog => 'Megla';
+
+	/// sl: 'Rosenje'
+	String get cond_drizzle => 'Rosenje';
+
+	/// sl: 'Dež'
+	String get cond_rain => 'Dež';
+
+	/// sl: 'Sneg'
+	String get cond_snow => 'Sneg';
+
+	/// sl: 'Plohe'
+	String get cond_showers => 'Plohe';
+
+	/// sl: 'Nevihta'
+	String get cond_thunderstorm => 'Nevihta';
+
+	/// sl: '—'
+	String get cond_unknown => '—';
+
+	/// sl: 'Napoved'
+	String get band_forecast => 'Napoved';
+
+	/// sl: 'Dež zadnjih 48 h:'
+	String get rain_past48h => 'Dež zadnjih 48 h:';
+
+	/// sl: 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.'
+	String get detail_waiting => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.';
+
+	/// sl: 'Vremenski posnetek ni na voljo (zajet brez povezave).'
+	String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
+
+	/// sl: 'Vreme trenutno ni na voljo.'
+	String get home_unavailable => 'Vreme trenutno ni na voljo.';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -983,7 +1032,6 @@ extension on Translations {
 			'home.recent' => 'Nazadnje',
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
-			'home.weather_placeholder' => 'Vreme bo na voljo v M4.',
 			'common.today' => 'Danes',
 			'common.today_lower' => 'danes',
 			'common.yesterday' => 'včeraj',
@@ -1018,7 +1066,6 @@ extension on Translations {
 			'notes.delete_confirm' => 'To dejanje je nepopravljivo.',
 			'notes.info' => '🌧️ Vreme se shrani samodejno.',
 			'task_detail.section_weather' => 'Vremenski posnetek',
-			'task_detail.weather_placeholder' => 'Vremenski posnetek bo na voljo v M4.',
 			'task_detail.section_details' => 'Podrobnosti',
 			'task_detail.label_area' => 'Območje',
 			'task_detail.label_subjects' => 'Za kaj',
@@ -1230,6 +1277,21 @@ extension on Translations {
 			'settings.delete_account' => 'Izbriši račun in vse podatke',
 			'settings.coming_soon' => 'Na voljo kmalu',
 			'settings.version' => 'Tendask · v1 (MVP)',
+			'weather.cond_clear' => 'Jasno',
+			'weather.cond_mainly_clear' => 'Pretežno jasno',
+			'weather.cond_cloudy' => 'Oblačno',
+			'weather.cond_fog' => 'Megla',
+			'weather.cond_drizzle' => 'Rosenje',
+			'weather.cond_rain' => 'Dež',
+			'weather.cond_snow' => 'Sneg',
+			'weather.cond_showers' => 'Plohe',
+			'weather.cond_thunderstorm' => 'Nevihta',
+			'weather.cond_unknown' => '—',
+			'weather.band_forecast' => 'Napoved',
+			'weather.rain_past48h' => 'Dež zadnjih 48 h:',
+			'weather.detail_waiting' => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.',
+			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
+			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			_ => null,
 		};
 	}

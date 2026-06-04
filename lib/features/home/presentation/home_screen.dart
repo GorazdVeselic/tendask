@@ -9,6 +9,8 @@ import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
+import '../../../features/weather/application/weather_service.dart';
+import '../../../features/weather/presentation/weather_card.dart';
 import '../../../i18n/translations.g.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -100,7 +102,7 @@ class _HomeBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
       children: [
-        _WeatherPlaceholder(label: t.home.weather_placeholder),
+        const _WeatherSection(),
         const SizedBox(height: 16),
         SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
         if (todayTasks.isEmpty)
@@ -118,29 +120,32 @@ class _HomeBody extends StatelessWidget {
   }
 }
 
-class _WeatherPlaceholder extends StatelessWidget {
-  const _WeatherPlaceholder({required this.label});
-  final String label;
+/// Live weather context for the dashboard. Offline → a quiet "unavailable" card.
+class _WeatherSection extends ConsumerWidget {
+  const _WeatherSection();
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final weather = ref.watch(currentWeatherProvider);
+    if (weather.isLoading) return const _WeatherLoadingCard();
+    return CurrentWeatherCard(snapshot: weather.asData?.value);
+  }
+}
+
+class _WeatherLoadingCard extends StatelessWidget {
+  const _WeatherLoadingCard();
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Card(
+    return const Card(
       child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          children: [
-            const Text('🌤️', style: TextStyle(fontSize: 28)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Text(
-                label,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                ),
-              ),
-            ),
-          ],
+        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        child: Center(
+          child: SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+          ),
         ),
       ),
     );

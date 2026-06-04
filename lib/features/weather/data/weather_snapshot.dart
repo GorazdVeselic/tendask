@@ -1,7 +1,20 @@
+import 'dart:convert';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'weather_snapshot.freezed.dart';
 part 'weather_snapshot.g.dart';
+
+/// Decodes a stored `weather` JSON column into a snapshot, or null when empty or
+/// unparseable (tolerant — a malformed/legacy payload must never crash the UI).
+WeatherSnapshot? decodeWeatherSnapshot(String? json) {
+  if (json == null || json.isEmpty) return null;
+  try {
+    return WeatherSnapshot.fromJson(jsonDecode(json) as Map<String, dynamic>);
+  } on Exception {
+    return null;
+  }
+}
 
 /// Frozen weather snapshot stored on a task/note (`weather` JSON column). Holds
 /// the three bands of §7.10: conditions at capture, the 48 h rain look-back, and

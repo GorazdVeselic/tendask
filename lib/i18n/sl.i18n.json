@@ -10,8 +10,7 @@
     "today": "Danes",
     "recent": "Nazadnje",
     "no_tasks_today": "Danes ni načrtovanih opravil.",
-    "no_recent": "Še ni opravljenih opravil.",
-    "weather_placeholder": "Vreme bo na voljo v M4."
+    "no_recent": "Še ni opravljenih opravil."
   },
   "common": {
     "today": "Danes",
@@ -57,7 +56,6 @@
   },
   "task_detail": {
     "section_weather": "Vremenski posnetek",
-    "weather_placeholder": "Vremenski posnetek bo na voljo v M4.",
     "section_details": "Podrobnosti",
     "label_area": "Območje",
     "label_subjects": "Za kaj",
@@ -290,5 +288,22 @@
     "delete_account": "Izbriši račun in vse podatke",
     "coming_soon": "Na voljo kmalu",
     "version": "Tendask · v1 (MVP)"
+  },
+  "weather": {
+    "cond_clear": "Jasno",
+    "cond_mainly_clear": "Pretežno jasno",
+    "cond_cloudy": "Oblačno",
+    "cond_fog": "Megla",
+    "cond_drizzle": "Rosenje",
+    "cond_rain": "Dež",
+    "cond_snow": "Sneg",
+    "cond_showers": "Plohe",
+    "cond_thunderstorm": "Nevihta",
+    "cond_unknown": "—",
+    "band_forecast": "Napoved",
+    "rain_past48h": "Dež zadnjih 48 h:",
+    "detail_waiting": "Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.",
+    "detail_none": "Vremenski posnetek ni na voljo (zajet brez povezave).",
+    "home_unavailable": "Vreme trenutno ni na voljo."
   }
 }

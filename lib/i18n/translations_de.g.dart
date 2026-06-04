@@ -54,6 +54,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
+	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
 }
 
 // Path: nav
@@ -81,7 +82,6 @@ class _Translations$home$de extends Translations$home$sl {
 	@override String get recent => 'Zuletzt';
 	@override String get no_tasks_today => 'Heute keine geplanten Aufgaben.';
 	@override String get no_recent => 'Noch keine erledigten Aufgaben.';
-	@override String get weather_placeholder => 'Wetter kommt in M4.';
 }
 
 // Path: common
@@ -155,7 +155,6 @@ class _Translations$task_detail$de extends Translations$task_detail$sl {
 
 	// Translations
 	@override String get section_weather => 'Wetteraufnahme';
-	@override String get weather_placeholder => 'Wetteraufnahme wird in M4 verfügbar sein.';
 	@override String get section_details => 'Details';
 	@override String get label_area => 'Bereich';
 	@override String get label_subjects => 'Wofür';
@@ -453,6 +452,30 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get version => 'Tendask · v1 (MVP)';
 }
 
+// Path: weather
+class _Translations$weather$de extends Translations$weather$sl {
+	_Translations$weather$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get cond_clear => 'Klar';
+	@override String get cond_mainly_clear => 'Überwiegend klar';
+	@override String get cond_cloudy => 'Bewölkt';
+	@override String get cond_fog => 'Nebel';
+	@override String get cond_drizzle => 'Nieselregen';
+	@override String get cond_rain => 'Regen';
+	@override String get cond_snow => 'Schnee';
+	@override String get cond_showers => 'Schauer';
+	@override String get cond_thunderstorm => 'Gewitter';
+	@override String get cond_unknown => '—';
+	@override String get band_forecast => 'Vorhersage';
+	@override String get rain_past48h => 'Regen letzte 48 h:';
+	@override String get detail_waiting => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.';
+	@override String get detail_none => 'Keine Wetteraufnahme (offline erfasst).';
+	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -470,7 +493,6 @@ extension on TranslationsDe {
 			'home.recent' => 'Zuletzt',
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
-			'home.weather_placeholder' => 'Wetter kommt in M4.',
 			'common.today' => 'Heute',
 			'common.today_lower' => 'heute',
 			'common.yesterday' => 'gestern',
@@ -505,7 +527,6 @@ extension on TranslationsDe {
 			'notes.delete_confirm' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
 			'notes.info' => '🌧️ Das Wetter wird automatisch gespeichert.',
 			'task_detail.section_weather' => 'Wetteraufnahme',
-			'task_detail.weather_placeholder' => 'Wetteraufnahme wird in M4 verfügbar sein.',
 			'task_detail.section_details' => 'Details',
 			'task_detail.label_area' => 'Bereich',
 			'task_detail.label_subjects' => 'Wofür',
@@ -717,6 +738,21 @@ extension on TranslationsDe {
 			'settings.delete_account' => 'Konto und alle Daten löschen',
 			'settings.coming_soon' => 'Demnächst',
 			'settings.version' => 'Tendask · v1 (MVP)',
+			'weather.cond_clear' => 'Klar',
+			'weather.cond_mainly_clear' => 'Überwiegend klar',
+			'weather.cond_cloudy' => 'Bewölkt',
+			'weather.cond_fog' => 'Nebel',
+			'weather.cond_drizzle' => 'Nieselregen',
+			'weather.cond_rain' => 'Regen',
+			'weather.cond_snow' => 'Schnee',
+			'weather.cond_showers' => 'Schauer',
+			'weather.cond_thunderstorm' => 'Gewitter',
+			'weather.cond_unknown' => '—',
+			'weather.band_forecast' => 'Vorhersage',
+			'weather.rain_past48h' => 'Regen letzte 48 h:',
+			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
+			'weather.detail_none' => 'Keine Wetteraufnahme (offline erfasst).',
+			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			_ => null,
 		};
 	}

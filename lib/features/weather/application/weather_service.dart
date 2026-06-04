@@ -46,3 +46,12 @@ class WeatherService {
 @riverpod
 WeatherService weatherService(Ref ref) =>
     WeatherService(ref.watch(openMeteoClientProvider));
+
+/// Live weather for the dashboard (current conditions + short forecast) at the
+/// default location. Null when offline — the UI degrades to a quiet hint.
+@riverpod
+Future<WeatherSnapshot?> currentWeather(Ref ref) =>
+    ref.watch(weatherServiceProvider).capture(
+          latitude: kDefaultLatitude,
+          longitude: kDefaultLongitude,
+        );

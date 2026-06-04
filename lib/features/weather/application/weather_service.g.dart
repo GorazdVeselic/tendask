@@ -49,3 +49,50 @@ final class WeatherServiceProvider
 }
 
 String _$weatherServiceHash() => r'661d7955bf1cec5bd6f1d1c90a1c6d3210f7623d';
+
+/// Live weather for the dashboard (current conditions + short forecast) at the
+/// default location. Null when offline — the UI degrades to a quiet hint.
+
+@ProviderFor(currentWeather)
+final currentWeatherProvider = CurrentWeatherProvider._();
+
+/// Live weather for the dashboard (current conditions + short forecast) at the
+/// default location. Null when offline — the UI degrades to a quiet hint.
+
+final class CurrentWeatherProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<WeatherSnapshot?>,
+          WeatherSnapshot?,
+          FutureOr<WeatherSnapshot?>
+        >
+    with $FutureModifier<WeatherSnapshot?>, $FutureProvider<WeatherSnapshot?> {
+  /// Live weather for the dashboard (current conditions + short forecast) at the
+  /// default location. Null when offline — the UI degrades to a quiet hint.
+  CurrentWeatherProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'currentWeatherProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$currentWeatherHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<WeatherSnapshot?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<WeatherSnapshot?> create(Ref ref) {
+    return currentWeather(ref);
+  }
+}
+
+String _$currentWeatherHash() => r'fb65e6736eb3dea35c666b7ca0c64da02cfb72c7';

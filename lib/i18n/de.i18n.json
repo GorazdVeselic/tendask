@@ -10,8 +10,7 @@
     "today": "Heute",
     "recent": "Zuletzt",
     "no_tasks_today": "Heute keine geplanten Aufgaben.",
-    "no_recent": "Noch keine erledigten Aufgaben.",
-    "weather_placeholder": "Wetter kommt in M4."
+    "no_recent": "Noch keine erledigten Aufgaben."
   },
   "common": {
     "today": "Heute",
@@ -57,7 +56,6 @@
   },
   "task_detail": {
     "section_weather": "Wetteraufnahme",
-    "weather_placeholder": "Wetteraufnahme wird in M4 verfügbar sein.",
     "section_details": "Details",
     "label_area": "Bereich",
     "label_subjects": "Wofür",
@@ -290,5 +288,22 @@
     "delete_account": "Konto und alle Daten löschen",
     "coming_soon": "Demnächst",
     "version": "Tendask · v1 (MVP)"
+  },
+  "weather": {
+    "cond_clear": "Klar",
+    "cond_mainly_clear": "Überwiegend klar",
+    "cond_cloudy": "Bewölkt",
+    "cond_fog": "Nebel",
+    "cond_drizzle": "Nieselregen",
+    "cond_rain": "Regen",
+    "cond_snow": "Schnee",
+    "cond_showers": "Schauer",
+    "cond_thunderstorm": "Gewitter",
+    "cond_unknown": "—",
+    "band_forecast": "Vorhersage",
+    "rain_past48h": "Regen letzte 48 h:",
+    "detail_waiting": "Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.",
+    "detail_none": "Keine Wetteraufnahme (offline erfasst).",
+    "home_unavailable": "Wetter derzeit nicht verfügbar."
   }
 }
