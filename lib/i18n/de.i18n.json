@@ -30,6 +30,17 @@
     "nearby_title": "Deine Umgebung",
     "nearby_body": "Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat."
   },
+  "auth": {
+    "title": "Willkommen bei Tendask",
+    "value_prop": "Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.",
+    "continue_apple": "Mit Apple fortfahren",
+    "continue_google": "Mit Google fortfahren",
+    "continue_email": "Mit E-Mail fortfahren",
+    "guest": "Ohne Konto ausprobieren",
+    "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
+    "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
+    "coming_soon": "Demnächst verfügbar."
+  },
   "journal": {
     "title": "Tagebuch",
     "subtitle": "Gartentagebuch",

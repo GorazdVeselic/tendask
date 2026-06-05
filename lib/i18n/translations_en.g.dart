@@ -43,6 +43,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
+	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
@@ -115,6 +116,24 @@ class _Translations$onboarding$en extends Translations$onboarding$sl {
 	@override String get remind_body => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".';
 	@override String get nearby_title => 'Your area';
 	@override String get nearby_body => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.';
+}
+
+// Path: auth
+class _Translations$auth$en extends Translations$auth$sl {
+	_Translations$auth$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Welcome to Tendask';
+	@override String get value_prop => 'Save your garden journal and don\'t lose your history when you change phones.';
+	@override String get continue_apple => 'Continue with Apple';
+	@override String get continue_google => 'Continue with Google';
+	@override String get continue_email => 'Continue with email';
+	@override String get guest => 'Try without an account';
+	@override String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
+	@override String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
+	@override String get coming_soon => 'Coming soon.';
 }
 
 // Path: journal
@@ -518,6 +537,15 @@ extension on TranslationsEn {
 			'onboarding.remind_body' => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".',
 			'onboarding.nearby_title' => 'Your area',
 			'onboarding.nearby_body' => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.',
+			'auth.title' => 'Welcome to Tendask',
+			'auth.value_prop' => 'Save your garden journal and don\'t lose your history when you change phones.',
+			'auth.continue_apple' => 'Continue with Apple',
+			'auth.continue_google' => 'Continue with Google',
+			'auth.continue_email' => 'Continue with email',
+			'auth.guest' => 'Try without an account',
+			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
+			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
+			'auth.coming_soon' => 'Coming soon.',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',

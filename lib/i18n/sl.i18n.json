@@ -30,6 +30,17 @@
     "nearby_title": "Tvoja okolica",
     "nearby_body": "Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno."
   },
+  "auth": {
+    "title": "Dobrodošel v Tendask",
+    "value_prop": "Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.",
+    "continue_apple": "Nadaljuj z Apple",
+    "continue_google": "Nadaljuj z Google",
+    "continue_email": "Nadaljuj z e-pošto",
+    "guest": "Preizkusi brez računa",
+    "legal": "Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.",
+    "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
+    "coming_soon": "Na voljo kmalu."
+  },
   "journal": {
     "title": "Dnevnik",
     "subtitle": "vrtni dnevnik",

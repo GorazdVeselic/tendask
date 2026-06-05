@@ -27,8 +27,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Future<void> _finish() async {
     await ref.read(localPrefsProvider).setOnboardingSeen();
     if (!mounted) return;
-    // Login (13) is inserted before home in M7.3; for now go straight to home.
-    context.go('/home');
+    context.go('/login');
   }
 
   void _next(int last) {

@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
+	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
@@ -162,6 +163,42 @@ class Translations$onboarding$sl {
 
 	/// sl: 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.'
 	String get nearby_body => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
+}
+
+// Path: auth
+class Translations$auth$sl {
+	Translations$auth$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Dobrodošel v Tendask'
+	String get title => 'Dobrodošel v Tendask';
+
+	/// sl: 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.'
+	String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
+
+	/// sl: 'Nadaljuj z Apple'
+	String get continue_apple => 'Nadaljuj z Apple';
+
+	/// sl: 'Nadaljuj z Google'
+	String get continue_google => 'Nadaljuj z Google';
+
+	/// sl: 'Nadaljuj z e-pošto'
+	String get continue_email => 'Nadaljuj z e-pošto';
+
+	/// sl: 'Preizkusi brez računa'
+	String get guest => 'Preizkusi brez računa';
+
+	/// sl: 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.'
+	String get legal => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.';
+
+	/// sl: 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.'
+	String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
+
+	/// sl: 'Na voljo kmalu.'
+	String get coming_soon => 'Na voljo kmalu.';
 }
 
 // Path: journal
@@ -1063,6 +1100,15 @@ extension on Translations {
 			'onboarding.remind_body' => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.',
 			'onboarding.nearby_title' => 'Tvoja okolica',
 			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
+			'auth.title' => 'Dobrodošel v Tendask',
+			'auth.value_prop' => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.',
+			'auth.continue_apple' => 'Nadaljuj z Apple',
+			'auth.continue_google' => 'Nadaljuj z Google',
+			'auth.continue_email' => 'Nadaljuj z e-pošto',
+			'auth.guest' => 'Preizkusi brez računa',
+			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
+			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
+			'auth.coming_soon' => 'Na voljo kmalu.',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',

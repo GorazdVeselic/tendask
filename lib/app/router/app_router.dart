@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import '../../features/areas/presentation/area_detail_screen.dart';
 import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
+import '../../features/auth/presentation/login_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
@@ -86,6 +87,11 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/onboarding',
       name: 'onboarding',
       builder: (context, state) => const OnboardingScreen(),
+    ),
+    GoRoute(
+      path: '/login',
+      name: 'login',
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/plant-picker',

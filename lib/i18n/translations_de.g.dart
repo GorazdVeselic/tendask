@@ -43,6 +43,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
+	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$notes$de notes = _Translations$notes$de._(_root);
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
@@ -115,6 +116,24 @@ class _Translations$onboarding$de extends Translations$onboarding$sl {
 	@override String get remind_body => 'Plane Aufgaben, erhalte eine Erinnerung auf dein Handy und einen Wetterhinweis — „morgen früh trocken, gute Zeit zum Spritzen“.';
 	@override String get nearby_title => 'Deine Umgebung';
 	@override String get nearby_body => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.';
+}
+
+// Path: auth
+class _Translations$auth$de extends Translations$auth$sl {
+	_Translations$auth$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Willkommen bei Tendask';
+	@override String get value_prop => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.';
+	@override String get continue_apple => 'Mit Apple fortfahren';
+	@override String get continue_google => 'Mit Google fortfahren';
+	@override String get continue_email => 'Mit E-Mail fortfahren';
+	@override String get guest => 'Ohne Konto ausprobieren';
+	@override String get legal => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.';
+	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
+	@override String get coming_soon => 'Demnächst verfügbar.';
 }
 
 // Path: journal
@@ -518,6 +537,15 @@ extension on TranslationsDe {
 			'onboarding.remind_body' => 'Plane Aufgaben, erhalte eine Erinnerung auf dein Handy und einen Wetterhinweis — „morgen früh trocken, gute Zeit zum Spritzen“.',
 			'onboarding.nearby_title' => 'Deine Umgebung',
 			'onboarding.nearby_body' => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.',
+			'auth.title' => 'Willkommen bei Tendask',
+			'auth.value_prop' => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.',
+			'auth.continue_apple' => 'Mit Apple fortfahren',
+			'auth.continue_google' => 'Mit Google fortfahren',
+			'auth.continue_email' => 'Mit E-Mail fortfahren',
+			'auth.guest' => 'Ohne Konto ausprobieren',
+			'auth.legal' => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.',
+			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
+			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
 			'journal.filter_all' => 'Alle',

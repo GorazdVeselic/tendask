@@ -223,7 +223,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
 - [x] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
 - [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
-  - [ ] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
+  - [x] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
   - [ ] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
   - [ ] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
 - [ ] **7.4 — Linkanje identitete (Google native).** `google_sign_in`+`signInWithIdToken`/`linkIdentity`; opozorilo "izguba podatkov" pri anonimnem (wireframe 13); po link → pull; 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: linkIdentity (Google) + opozorilo`
@@ -316,6 +316,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.3a — Login zaslon (13).** `features/auth/presentation/login_screen.dart`: brand mark
+  (Icons.eco v soft containerju), naslov + value-prop, gumbi Google (OutlinedButton) + e-pošta
+  (FilledButton.icon accent), »Preizkusi brez računa« (underline TextButton), `guest_warning` (cs.error) +
+  `legal` (muted). **Apple gumb le na iOS** (`Platform.isIOS` → M10, na Androidu skrit; `_DarkButton`).
+  Router: dodana `/login` route; onboarding `_finish()` zdaj → `/login` (prej `/home`). Flow: 15→13→…→home.
+  **Gumbi začasno:** Google + e-pošta → SnackBar `auth.coming_soon` (ožičita 7.3b OTP / 7.4 Google); »brez
+  računa« → `/home` (anon seja že iz M6; location 16 se vrine 7.3c). i18n `auth.*` sl/en/de. flutter analyze
+  čist, **123/123 testov**. Commit: `feat: prijava zaslon (13)`. **Naslednji: 7.3b (e-pošta OTP).**
 - 2026-06-05 — **7.2 — Onboarding intro (15/15b/15c/15d) + jezikovni pregled i18n.** Drift **v7**: local-only
   `local_flag` (key/value) tabela za »seen-once« flage (`LocalFlags` v `tables/sync_tables.dart`, migracija
   `if (from < 7) createTable`). `core/local_prefs/local_prefs.dart`: `LocalPrefsRepository`

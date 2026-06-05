@@ -30,6 +30,17 @@
     "nearby_title": "Your area",
     "nearby_body": "Later: see what gardeners in a similar climate near you are doing — anonymous and private."
   },
+  "auth": {
+    "title": "Welcome to Tendask",
+    "value_prop": "Save your garden journal and don't lose your history when you change phones.",
+    "continue_apple": "Continue with Apple",
+    "continue_google": "Continue with Google",
+    "continue_email": "Continue with email",
+    "guest": "Try without an account",
+    "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
+    "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
+    "coming_soon": "Coming soon."
+  },
   "journal": {
     "title": "Journal",
     "subtitle": "garden journal",
