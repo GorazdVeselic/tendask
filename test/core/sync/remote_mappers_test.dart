@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
@@ -136,5 +138,91 @@ void main() {
     ));
     expect(map['quantity'], 12.5);
     expect(map['low_threshold'], isNull);
+  });
+
+  // ── Remote → drift (pull) ─────────────────────────────────────────────────
+
+  test('areaFromRemote: parses ISO + enum, stamps synced', () {
+    final c = areaFromRemote({
+      'id': 'a1',
+      'user_id': 'u1',
+      'name': 'Bed',
+      'type': 'bed',
+      'protected': true,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+      'deleted': false,
+    });
+    expect(c.id.value, 'a1');
+    expect(c.type.value, AreaType.bed);
+    expect(c.protected.value, isTrue);
+    expect(c.updatedAt.value.isAtSameMomentAs(t0), isTrue);
+    expect(c.syncStatus.value, kSyncSynced);
+  });
+
+  test('areaFromRemote: unknown enum falls back to the default (tolerant)', () {
+    final c = areaFromRemote({
+      'id': 'a1',
+      'user_id': 'u1',
+      'name': 'X',
+      'type': 'patio', // not a known AreaType
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.type.value, AreaType.other);
+    expect(c.protected.value, isFalse); // missing optional → default
+  });
+
+  test('taskFromRemote: jsonb object re-encoded to text, status parsed', () {
+    final c = taskFromRemote({
+      'id': 't1',
+      'user_id': 'u1',
+      'task_type_id': 'water',
+      'date': '2026-06-05T10:00:00.000Z',
+      'status': 'done',
+      'note': null,
+      // supabase decodes jsonb to a Map → store as a JSON string in drift.
+      'weather': {'tempC': 5, 'code': 61},
+      'recurrence': null,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+      'deleted': false,
+    });
+    expect(c.status.value, TaskStatus.done);
+    expect(c.weather.value, jsonEncode({'tempC': 5, 'code': 61}));
+    expect(c.recurrence.value, isNull);
+  });
+
+  test('taskFromRemote: unknown status falls back to waiting', () {
+    final c = taskFromRemote({
+      'id': 't1',
+      'user_id': 'u1',
+      'task_type_id': 'water',
+      'date': '2026-06-05T10:00:00.000Z',
+      'status': 'archived',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.status.value, TaskStatus.waiting);
+  });
+
+  test('noteFromRemote: the "text" column maps back to content', () {
+    final c = noteFromRemote({
+      'id': 'n1',
+      'user_id': 'u1',
+      'date': '2026-06-05T10:00:00.000Z',
+      'text': 'first frost',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.content.value, 'first frost');
+  });
+
+  test('supplyFromRemote: numeric quantity to double, null threshold', () {
+    final c = supplyFromRemote({
+      'id': 's1',
+      'user_id': 'u1',
+      'name': 'Compost',
+      'quantity': 12, // int from JSON → double
+      'low_threshold': null,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.quantity.value, 12.0);
+    expect(c.lowThreshold.value, isNull);
   });
 }

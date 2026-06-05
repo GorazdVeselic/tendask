@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../auth/auth_service.dart';
 import '../config.dart';
 import '../database/app_database.dart';
 import '../database/database_provider.dart';
@@ -36,7 +37,8 @@ class SyncPushService {
     var n = 0;
     n += await _pushTable(
       _db.profiles,
-      () => _pending(_db.profiles, (t) => t.syncStatus),
+      () => _pending(_db.profiles, (t) => t.syncStatus,
+          ownerId: (t) => t.userId),
       profileToRemote,
       keyColumn: 'user_id',
       keyOf: (r) => r.userId,
@@ -44,42 +46,45 @@ class SyncPushService {
     );
     n += await _pushTable(
       _db.areas,
-      () => _pending(_db.areas, (t) => t.syncStatus),
+      () => _pending(_db.areas, (t) => t.syncStatus, ownerId: (t) => t.userId),
       areaToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.supplies,
-      () => _pending(_db.supplies, (t) => t.syncStatus),
+      () => _pending(_db.supplies, (t) => t.syncStatus,
+          ownerId: (t) => t.userId),
       supplyToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.recipes,
-      () => _pending(_db.recipes, (t) => t.syncStatus),
+      () => _pending(_db.recipes, (t) => t.syncStatus,
+          ownerId: (t) => t.userId),
       recipeToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.userPlants,
-      () => _pending(_db.userPlants, (t) => t.syncStatus),
+      () => _pending(_db.userPlants, (t) => t.syncStatus,
+          ownerId: (t) => t.userId),
       userPlantToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.tasks,
-      () => _pending(_db.tasks, (t) => t.syncStatus),
+      () => _pending(_db.tasks, (t) => t.syncStatus, ownerId: (t) => t.userId),
       taskToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.notes,
-      () => _pending(_db.notes, (t) => t.syncStatus),
+      () => _pending(_db.notes, (t) => t.syncStatus, ownerId: (t) => t.userId),
       noteToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
@@ -110,9 +115,18 @@ class SyncPushService {
 
   Future<List<D>> _pending<T extends Table, D>(
     TableInfo<T, D> table,
-    GeneratedColumn<String> Function(T) syncStatus,
-  ) =>
-      (_db.select(table)..where((t) => syncStatus(t).equals(kSyncPending)))
+    GeneratedColumn<String> Function(T) syncStatus, {
+    GeneratedColumn<String> Function(T)? ownerId,
+  }) =>
+      (_db.select(table)
+            ..where((t) {
+              final pending = syncStatus(t).equals(kSyncPending);
+              // Never push rows still owned by 'local' — it is not a valid uuid
+              // (Postgres would reject it) and claimLocalRows re-owns them once
+              // a session exists. Child tables (no user_id) rely on that claim.
+              if (ownerId == null) return pending;
+              return pending & ownerId(t).equals(kLocalUserId).not();
+            }))
           .get();
 
   Future<int> _pushTable<D>(

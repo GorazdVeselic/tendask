@@ -9,6 +9,7 @@ import '../area_type.dart';
 import '../sync/sync_status.dart';
 import '../task_status.dart';
 import 'tables/catalog_tables.dart';
+import 'tables/sync_tables.dart';
 import 'tables/user_tables.dart';
 
 part 'app_database.g.dart';
@@ -30,6 +31,8 @@ part 'app_database.g.dart';
   Supplies,
   Recipes,
   TaskSupplies,
+  // local-only sync bookkeeping (never synced)
+  SyncCursors,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -38,7 +41,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 4;
+  int get schemaVersion => 5;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -64,6 +67,10 @@ class AppDatabase extends _$AppDatabase {
           // data yet, so we rely on fresh install (onCreate + re-seed) rather
           // than a data-backfill migration. Add real migration steps here once
           // the app ships and existing DBs must survive upgrades.
+          // v5: sync_cursor tracks the incremental-pull high-watermark (M6.3).
+          if (from < 5) {
+            await m.createTable(syncCursors);
+          }
         },
       );
 }

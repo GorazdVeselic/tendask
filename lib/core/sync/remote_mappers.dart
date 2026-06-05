@@ -1,6 +1,11 @@
 import 'dart:convert';
 
+import 'package:drift/drift.dart';
+
+import '../area_type.dart';
 import '../database/app_database.dart';
+import '../task_status.dart';
+import 'sync_status.dart';
 
 /// Maps a drift data class to the Postgres row shape the push upsert sends.
 /// Pure (no I/O) so the push payload is unit-testable without Supabase.
@@ -120,3 +125,152 @@ Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
       'updated_at': _ts(r.updatedAt),
       'deleted': r.deleted,
     };
+
+// ── Remote → drift (pull) ───────────────────────────────────────────────────
+//
+// Maps a Postgres row (decoded JSON from supabase) to a drift Companion stamped
+// `synced` (it came from the cloud). Pure so the parse is unit-testable. Mirror
+// of the *ToRemote maps above, plus the inverse conversions:
+//   * ISO-8601 timestamptz string → DateTime;
+//   * jsonb (decoded to a Map/List by supabase) → JSON string for the TEXT cell;
+//   * enum string → enum, tolerantly (unknown value falls back to the default).
+// Tolerant by design: unknown keys are ignored, missing optionals default.
+
+DateTime _dt(Object? v) => DateTime.parse(v as String);
+
+String? _text(Object? v) {
+  if (v == null) return null;
+  if (v is String) return v; // already JSON text — don't double-encode
+  return jsonEncode(v);
+}
+
+double? _double(Object? v) => (v as num?)?.toDouble();
+
+AreaType _areaType(Object? v) => AreaType.values.firstWhere(
+      (e) => e.name == v,
+      orElse: () => AreaType.other,
+    );
+
+TaskStatus _taskStatus(Object? v) => TaskStatus.values.firstWhere(
+      (e) => e.name == v,
+      orElse: () => TaskStatus.waiting,
+    );
+
+ProfilesCompanion profileFromRemote(Map<String, dynamic> r) => ProfilesCompanion(
+      userId: Value(r['user_id'] as String),
+      h3R7: Value(r['h3_r7'] as String?),
+      h3R6: Value(r['h3_r6'] as String?),
+      h3R5: Value(r['h3_r5'] as String?),
+      lang: Value(r['lang'] as String?),
+      updatedAt: Value(_dt(r['updated_at'])),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+AreasCompanion areaFromRemote(Map<String, dynamic> r) => AreasCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      name: Value(r['name'] as String),
+      type: Value(_areaType(r['type'])),
+      protected: Value(r['protected'] as bool? ?? false),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+UserPlantsCompanion userPlantFromRemote(Map<String, dynamic> r) =>
+    UserPlantsCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      areaId: Value(r['area_id'] as String?),
+      plantId: Value(r['plant_id'] as String?),
+      customName: Value(r['custom_name'] as String?),
+      personalAlias: Value(r['personal_alias'] as String?),
+      isCustom: Value(r['is_custom'] as bool? ?? false),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      taskTypeId: Value(r['task_type_id'] as String),
+      date: Value(_dt(r['date'])),
+      status: Value(_taskStatus(r['status'])),
+      note: Value(r['note'] as String?),
+      weather: Value(_text(r['weather'])),
+      recurrence: Value(_text(r['recurrence'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+TaskSubjectsCompanion taskSubjectFromRemote(Map<String, dynamic> r) =>
+    TaskSubjectsCompanion(
+      id: Value(r['id'] as String),
+      taskId: Value(r['task_id'] as String),
+      userPlantId: Value(r['user_plant_id'] as String?),
+      areaId: Value(r['area_id'] as String?),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+TaskRemindersCompanion taskReminderFromRemote(Map<String, dynamic> r) =>
+    TaskRemindersCompanion(
+      id: Value(r['id'] as String),
+      taskId: Value(r['task_id'] as String),
+      offset: Value((r['offset'] as num).toInt()),
+      reminderTime: Value(r['reminder_time'] as String?),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+NotesCompanion noteFromRemote(Map<String, dynamic> r) => NotesCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      areaId: Value(r['area_id'] as String?),
+      userPlantId: Value(r['user_plant_id'] as String?),
+      date: Value(_dt(r['date'])),
+      content: Value(r['text'] as String),
+      weather: Value(_text(r['weather'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+SuppliesCompanion supplyFromRemote(Map<String, dynamic> r) => SuppliesCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      name: Value(r['name'] as String),
+      unit: Value(r['unit'] as String?),
+      quantity: Value(_double(r['quantity']) ?? 0),
+      lowThreshold: Value(_double(r['low_threshold'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+RecipesCompanion recipeFromRemote(Map<String, dynamic> r) => RecipesCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      name: Value(r['name'] as String),
+      equipment: Value(r['equipment'] as String?),
+      items: Value(_text(r['items'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+TaskSuppliesCompanion taskSupplyFromRemote(Map<String, dynamic> r) =>
+    TaskSuppliesCompanion(
+      id: Value(r['id'] as String),
+      taskId: Value(r['task_id'] as String),
+      supplyId: Value(r['supply_id'] as String),
+      amount: Value((r['amount'] as num).toDouble()),
+      applied: Value(r['applied'] as bool? ?? false),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );

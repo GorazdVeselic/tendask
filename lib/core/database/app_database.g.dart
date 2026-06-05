@@ -6823,6 +6823,226 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
   }
 }
 
+class $SyncCursorsTable extends SyncCursors
+    with TableInfo<$SyncCursorsTable, SyncCursor> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SyncCursorsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _nameMeta = const VerificationMeta('name');
+  @override
+  late final GeneratedColumn<String> name = GeneratedColumn<String>(
+    'name',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastPulledAtMeta = const VerificationMeta(
+    'lastPulledAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastPulledAt = GeneratedColumn<DateTime>(
+    'last_pulled_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [name, lastPulledAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'sync_cursor';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SyncCursor> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('name')) {
+      context.handle(
+        _nameMeta,
+        name.isAcceptableOrUnknown(data['name']!, _nameMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_nameMeta);
+    }
+    if (data.containsKey('last_pulled_at')) {
+      context.handle(
+        _lastPulledAtMeta,
+        lastPulledAt.isAcceptableOrUnknown(
+          data['last_pulled_at']!,
+          _lastPulledAtMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_lastPulledAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {name};
+  @override
+  SyncCursor map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SyncCursor(
+      name: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}name'],
+      )!,
+      lastPulledAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_pulled_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SyncCursorsTable createAlias(String alias) {
+    return $SyncCursorsTable(attachedDatabase, alias);
+  }
+}
+
+class SyncCursor extends DataClass implements Insertable<SyncCursor> {
+  final String name;
+  final DateTime lastPulledAt;
+  const SyncCursor({required this.name, required this.lastPulledAt});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['name'] = Variable<String>(name);
+    map['last_pulled_at'] = Variable<DateTime>(lastPulledAt);
+    return map;
+  }
+
+  SyncCursorsCompanion toCompanion(bool nullToAbsent) {
+    return SyncCursorsCompanion(
+      name: Value(name),
+      lastPulledAt: Value(lastPulledAt),
+    );
+  }
+
+  factory SyncCursor.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SyncCursor(
+      name: serializer.fromJson<String>(json['name']),
+      lastPulledAt: serializer.fromJson<DateTime>(json['lastPulledAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'name': serializer.toJson<String>(name),
+      'lastPulledAt': serializer.toJson<DateTime>(lastPulledAt),
+    };
+  }
+
+  SyncCursor copyWith({String? name, DateTime? lastPulledAt}) => SyncCursor(
+    name: name ?? this.name,
+    lastPulledAt: lastPulledAt ?? this.lastPulledAt,
+  );
+  SyncCursor copyWithCompanion(SyncCursorsCompanion data) {
+    return SyncCursor(
+      name: data.name.present ? data.name.value : this.name,
+      lastPulledAt: data.lastPulledAt.present
+          ? data.lastPulledAt.value
+          : this.lastPulledAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncCursor(')
+          ..write('name: $name, ')
+          ..write('lastPulledAt: $lastPulledAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(name, lastPulledAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SyncCursor &&
+          other.name == this.name &&
+          other.lastPulledAt == this.lastPulledAt);
+}
+
+class SyncCursorsCompanion extends UpdateCompanion<SyncCursor> {
+  final Value<String> name;
+  final Value<DateTime> lastPulledAt;
+  final Value<int> rowid;
+  const SyncCursorsCompanion({
+    this.name = const Value.absent(),
+    this.lastPulledAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SyncCursorsCompanion.insert({
+    required String name,
+    required DateTime lastPulledAt,
+    this.rowid = const Value.absent(),
+  }) : name = Value(name),
+       lastPulledAt = Value(lastPulledAt);
+  static Insertable<SyncCursor> custom({
+    Expression<String>? name,
+    Expression<DateTime>? lastPulledAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (name != null) 'name': name,
+      if (lastPulledAt != null) 'last_pulled_at': lastPulledAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SyncCursorsCompanion copyWith({
+    Value<String>? name,
+    Value<DateTime>? lastPulledAt,
+    Value<int>? rowid,
+  }) {
+    return SyncCursorsCompanion(
+      name: name ?? this.name,
+      lastPulledAt: lastPulledAt ?? this.lastPulledAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (name.present) {
+      map['name'] = Variable<String>(name.value);
+    }
+    if (lastPulledAt.present) {
+      map['last_pulled_at'] = Variable<DateTime>(lastPulledAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SyncCursorsCompanion(')
+          ..write('name: $name, ')
+          ..write('lastPulledAt: $lastPulledAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -6841,6 +7061,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SuppliesTable supplies = $SuppliesTable(this);
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $TaskSuppliesTable taskSupplies = $TaskSuppliesTable(this);
+  late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -6860,6 +7081,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     supplies,
     recipes,
     taskSupplies,
+    syncCursors,
   ];
 }
 
@@ -13013,6 +13235,151 @@ typedef $$TaskSuppliesTableProcessedTableManager =
       TaskSupply,
       PrefetchHooks Function({bool taskId, bool supplyId})
     >;
+typedef $$SyncCursorsTableCreateCompanionBuilder =
+    SyncCursorsCompanion Function({
+      required String name,
+      required DateTime lastPulledAt,
+      Value<int> rowid,
+    });
+typedef $$SyncCursorsTableUpdateCompanionBuilder =
+    SyncCursorsCompanion Function({
+      Value<String> name,
+      Value<DateTime> lastPulledAt,
+      Value<int> rowid,
+    });
+
+class $$SyncCursorsTableFilterComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastPulledAt => $composableBuilder(
+    column: $table.lastPulledAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SyncCursorsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get name => $composableBuilder(
+    column: $table.name,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastPulledAt => $composableBuilder(
+    column: $table.lastPulledAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SyncCursorsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SyncCursorsTable> {
+  $$SyncCursorsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get name =>
+      $composableBuilder(column: $table.name, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get lastPulledAt => $composableBuilder(
+    column: $table.lastPulledAt,
+    builder: (column) => column,
+  );
+}
+
+class $$SyncCursorsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SyncCursorsTable,
+          SyncCursor,
+          $$SyncCursorsTableFilterComposer,
+          $$SyncCursorsTableOrderingComposer,
+          $$SyncCursorsTableAnnotationComposer,
+          $$SyncCursorsTableCreateCompanionBuilder,
+          $$SyncCursorsTableUpdateCompanionBuilder,
+          (
+            SyncCursor,
+            BaseReferences<_$AppDatabase, $SyncCursorsTable, SyncCursor>,
+          ),
+          SyncCursor,
+          PrefetchHooks Function()
+        > {
+  $$SyncCursorsTableTableManager(_$AppDatabase db, $SyncCursorsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SyncCursorsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SyncCursorsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SyncCursorsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> name = const Value.absent(),
+                Value<DateTime> lastPulledAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SyncCursorsCompanion(
+                name: name,
+                lastPulledAt: lastPulledAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String name,
+                required DateTime lastPulledAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SyncCursorsCompanion.insert(
+                name: name,
+                lastPulledAt: lastPulledAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SyncCursorsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SyncCursorsTable,
+      SyncCursor,
+      $$SyncCursorsTableFilterComposer,
+      $$SyncCursorsTableOrderingComposer,
+      $$SyncCursorsTableAnnotationComposer,
+      $$SyncCursorsTableCreateCompanionBuilder,
+      $$SyncCursorsTableUpdateCompanionBuilder,
+      (
+        SyncCursor,
+        BaseReferences<_$AppDatabase, $SyncCursorsTable, SyncCursor>,
+      ),
+      SyncCursor,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13045,4 +13412,6 @@ class $AppDatabaseManager {
       $$RecipesTableTableManager(_db, _db.recipes);
   $$TaskSuppliesTableTableManager get taskSupplies =>
       $$TaskSuppliesTableTableManager(_db, _db.taskSupplies);
+  $$SyncCursorsTableTableManager get syncCursors =>
+      $$SyncCursorsTableTableManager(_db, _db.syncCursors);
 }
