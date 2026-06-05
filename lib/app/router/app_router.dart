@@ -6,6 +6,7 @@ import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
+import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
@@ -16,8 +17,10 @@ import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
 
-final appRouter = GoRouter(
-  initialLocation: '/home',
+/// Builds the app router. [initialLocation] depends on first-run state (M7.2):
+/// '/onboarding' until the intro is seen, '/home' afterwards (resolved in main).
+GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
+  initialLocation: initialLocation,
   routes: [
     StatefulShellRoute.indexedStack(
       builder: (context, state, shell) => MainShell(shell: shell),
@@ -79,6 +82,11 @@ final appRouter = GoRouter(
       ],
     ),
     // Full-screen routes above the shell (no bottom nav)
+    GoRoute(
+      path: '/onboarding',
+      name: 'onboarding',
+      builder: (context, state) => const OnboardingScreen(),
+    ),
     GoRoute(
       path: '/plant-picker',
       name: 'plant-picker',

@@ -34,6 +34,7 @@ part 'app_database.g.dart';
   // local-only (never synced)
   SyncCursors,
   DeviceLocations,
+  LocalFlags,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -42,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 6;
+  int get schemaVersion => 7;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -76,6 +77,10 @@ class AppDatabase extends _$AppDatabase {
           // for weather (M7.1b); only the derived H3 cells sync to profile.
           if (from < 6) {
             await m.createTable(deviceLocations);
+          }
+          // v7: local_flag holds device-local UI flags (onboarding seen, M7.2).
+          if (from < 7) {
+            await m.createTable(localFlags);
           }
         },
       );

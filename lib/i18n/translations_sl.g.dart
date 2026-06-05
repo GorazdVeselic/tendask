@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
+	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
@@ -116,6 +117,51 @@ class Translations$common$sl {
 
 	/// sl: 'včeraj'
 	String get yesterday => 'včeraj';
+}
+
+// Path: onboarding
+class Translations$onboarding$sl {
+	Translations$onboarding$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Preskoči ›'
+	String get skip => 'Preskoči ›';
+
+	/// sl: 'Naprej'
+	String get next => 'Naprej';
+
+	/// sl: 'Začni 🌿'
+	String get start => 'Začni 🌿';
+
+	/// sl: 'kmalu (V2)'
+	String get soon_badge => 'kmalu (V2)';
+
+	/// sl: 'Dobrodošel v Tendask'
+	String get welcome_title => 'Dobrodošel v Tendask';
+
+	/// sl: 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.'
+	String get welcome_body => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.';
+
+	/// sl: 'Beleži v sekundi'
+	String get log_title => 'Beleži v sekundi';
+
+	/// sl: 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.'
+	String get log_body => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.';
+
+	/// sl: 'Opomniki + vreme'
+	String get remind_title => 'Opomniki + vreme';
+
+	/// sl: 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.'
+	String get remind_body => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.';
+
+	/// sl: 'Tvoja okolica'
+	String get nearby_title => 'Tvoja okolica';
+
+	/// sl: 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.'
+	String get nearby_body => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
 }
 
 // Path: journal
@@ -424,8 +470,8 @@ class Translations$entry$sl {
 	/// sl: 'Ponovi zadnje'
 	String get repeat_last => 'Ponovi zadnje';
 
-	/// sl: 'Kaj boš naredil?'
-	String get type_title => 'Kaj boš naredil?';
+	/// sl: 'Katero opravilo?'
+	String get type_title => 'Katero opravilo?';
 
 	/// sl: 'Tap na opravilo te samodejno pelje naprej.'
 	String get type_hint => 'Tap na opravilo te samodejno pelje naprej.';
@@ -610,8 +656,8 @@ class Translations$plant_edit$sl {
 	/// sl: 'Osebno ime (neobvezno)'
 	String get alias => 'Osebno ime (neobvezno)';
 
-	/// sl: 'npr. „stara jablana ob ograji“'
-	String get alias_hint => 'npr. „stara jablana ob ograji“';
+	/// sl: 'npr. »stara jablana ob ograji«'
+	String get alias_hint => 'npr. »stara jablana ob ograji«';
 
 	/// sl: 'Vidiš ga samo ti; prikaže se namesto privzetega imena.'
 	String get alias_note => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.';
@@ -793,8 +839,8 @@ class Translations$plants$sl {
 	/// sl: 'Ne najdeš?'
 	String get not_found => 'Ne najdeš?';
 
-	/// sl: '+ Dodaj po meri: „$q“'
-	String custom_add({required Object q}) => '+ Dodaj po meri: „${q}“';
+	/// sl: '+ Dodaj po meri: »$q«'
+	String custom_add({required Object q}) => '+ Dodaj po meri: »${q}«';
 
 	/// sl: 'Lasten vnos je zaseben in se ne deli s skupnostjo.'
 	String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
@@ -1005,6 +1051,18 @@ extension on Translations {
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
+			'onboarding.skip' => 'Preskoči ›',
+			'onboarding.next' => 'Naprej',
+			'onboarding.start' => 'Začni 🌿',
+			'onboarding.soon_badge' => 'kmalu (V2)',
+			'onboarding.welcome_title' => 'Dobrodošel v Tendask',
+			'onboarding.welcome_body' => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.',
+			'onboarding.log_title' => 'Beleži v sekundi',
+			'onboarding.log_body' => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.',
+			'onboarding.remind_title' => 'Opomniki + vreme',
+			'onboarding.remind_body' => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.',
+			'onboarding.nearby_title' => 'Tvoja okolica',
+			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',
@@ -1086,7 +1144,7 @@ extension on Translations {
 			'entry.note_card_title' => 'Le zapis brez opravila?',
 			'entry.note_card_action' => 'Opomba ›',
 			'entry.repeat_last' => 'Ponovi zadnje',
-			'entry.type_title' => 'Kaj boš naredil?',
+			'entry.type_title' => 'Katero opravilo?',
 			'entry.type_hint' => 'Tap na opravilo te samodejno pelje naprej.',
 			'entry.type_show_all' => ({required Object n}) => 'Pokaži vse (${n})',
 			'entry.type_show_less' => 'Pokaži manj',
@@ -1145,7 +1203,7 @@ extension on Translations {
 			'plant_edit.species_choose' => 'Izberi vrsto',
 			'plant_edit.species_change' => 'Spremeni',
 			'plant_edit.alias' => 'Osebno ime (neobvezno)',
-			'plant_edit.alias_hint' => 'npr. „stara jablana ob ograji“',
+			'plant_edit.alias_hint' => 'npr. »stara jablana ob ograji«',
 			'plant_edit.alias_note' => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.',
 			'plant_edit.locations' => 'Kje raste',
 			'plant_edit.locations_hint' => 'izberi eno ali več območij',
@@ -1197,7 +1255,7 @@ extension on Translations {
 			'plants.cat_lawn' => 'Trata',
 			'plants.from_catalog' => 'Iz baze',
 			'plants.not_found' => 'Ne najdeš?',
-			'plants.custom_add' => ({required Object q}) => '+ Dodaj po meri: „${q}“',
+			'plants.custom_add' => ({required Object q}) => '+ Dodaj po meri: »${q}«',
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',

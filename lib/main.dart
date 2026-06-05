@@ -7,6 +7,7 @@ import 'core/auth/auth_service.dart';
 import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
+import 'core/local_prefs/local_prefs.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -40,11 +41,16 @@ void main() async {
   // never blocks first paint; offline fails gracefully and a later trigger retries.
   container.read(syncCoordinatorProvider.notifier).start();
 
+  // First-run gating (M7.2): show the onboarding intro until the user passes it.
+  final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();
+
   runApp(
     TranslationProvider(
       child: UncontrolledProviderScope(
         container: container,
-        child: const TendaskApp(),
+        child: TendaskApp(
+          initialLocation: onboardingSeen ? '/home' : '/onboarding',
+        ),
       ),
     ),
   );

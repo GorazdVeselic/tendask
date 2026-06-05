@@ -42,6 +42,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
+	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
@@ -93,6 +94,27 @@ class _Translations$common$en extends Translations$common$sl {
 	// Translations
 	@override String get today => 'Today';
 	@override String get yesterday => 'yesterday';
+}
+
+// Path: onboarding
+class _Translations$onboarding$en extends Translations$onboarding$sl {
+	_Translations$onboarding$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get skip => 'Skip ›';
+	@override String get next => 'Next';
+	@override String get start => 'Get started 🌿';
+	@override String get soon_badge => 'soon (V2)';
+	@override String get welcome_title => 'Welcome to Tendask';
+	@override String get welcome_body => 'Your simple diary for the garden, lawn and hedge — every task in one place.';
+	@override String get log_title => 'Log it in seconds';
+	@override String get log_body => 'Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.';
+	@override String get remind_title => 'Reminders + weather';
+	@override String get remind_body => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".';
+	@override String get nearby_title => 'Your area';
+	@override String get nearby_body => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.';
 }
 
 // Path: journal
@@ -234,7 +256,7 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get note_card_title => 'Just a note, no task?';
 	@override String get note_card_action => 'Note ›';
 	@override String get repeat_last => 'Repeat last';
-	@override String get type_title => 'What did you do?';
+	@override String get type_title => 'Which task?';
 	@override String get type_hint => 'Tapping a task takes you forward automatically.';
 	@override String type_show_all({required Object n}) => 'Show all (${n})';
 	@override String get type_show_less => 'Show less';
@@ -484,6 +506,18 @@ extension on TranslationsEn {
 			'home.no_recent' => 'No completed tasks yet.',
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
+			'onboarding.skip' => 'Skip ›',
+			'onboarding.next' => 'Next',
+			'onboarding.start' => 'Get started 🌿',
+			'onboarding.soon_badge' => 'soon (V2)',
+			'onboarding.welcome_title' => 'Welcome to Tendask',
+			'onboarding.welcome_body' => 'Your simple diary for the garden, lawn and hedge — every task in one place.',
+			'onboarding.log_title' => 'Log it in seconds',
+			'onboarding.log_body' => 'Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.',
+			'onboarding.remind_title' => 'Reminders + weather',
+			'onboarding.remind_body' => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".',
+			'onboarding.nearby_title' => 'Your area',
+			'onboarding.nearby_body' => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',
@@ -565,7 +599,7 @@ extension on TranslationsEn {
 			'entry.note_card_title' => 'Just a note, no task?',
 			'entry.note_card_action' => 'Note ›',
 			'entry.repeat_last' => 'Repeat last',
-			'entry.type_title' => 'What did you do?',
+			'entry.type_title' => 'Which task?',
 			'entry.type_hint' => 'Tapping a task takes you forward automatically.',
 			'entry.type_show_all' => ({required Object n}) => 'Show all (${n})',
 			'entry.type_show_less' => 'Show less',

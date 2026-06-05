@@ -16,6 +16,20 @@
     "today": "Today",
     "yesterday": "yesterday"
   },
+  "onboarding": {
+    "skip": "Skip ›",
+    "next": "Next",
+    "start": "Get started 🌿",
+    "soon_badge": "soon (V2)",
+    "welcome_title": "Welcome to Tendask",
+    "welcome_body": "Your simple diary for the garden, lawn and hedge — every task in one place.",
+    "log_title": "Log it in seconds",
+    "log_body": "Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.",
+    "remind_title": "Reminders + weather",
+    "remind_body": "Plan tasks, get a reminder on your phone and a weather hint — \"dry tomorrow morning, a good time to spray\".",
+    "nearby_title": "Your area",
+    "nearby_body": "Later: see what gardeners in a similar climate near you are doing — anonymous and private."
+  },
   "journal": {
     "title": "Journal",
     "subtitle": "garden journal",
@@ -114,7 +128,7 @@
     "note_card_title": "Just a note, no task?",
     "note_card_action": "Note ›",
     "repeat_last": "Repeat last",
-    "type_title": "What did you do?",
+    "type_title": "Which task?",
     "type_hint": "Tapping a task takes you forward automatically.",
     "type_show_all(n)": "Show all ($n)",
     "type_show_less": "Show less",

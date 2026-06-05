@@ -42,6 +42,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$de nav = _Translations$nav$de._(_root);
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
+	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$notes$de notes = _Translations$notes$de._(_root);
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
@@ -95,6 +96,27 @@ class _Translations$common$de extends Translations$common$sl {
 	@override String get yesterday => 'gestern';
 }
 
+// Path: onboarding
+class _Translations$onboarding$de extends Translations$onboarding$sl {
+	_Translations$onboarding$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get skip => 'Überspringen ›';
+	@override String get next => 'Weiter';
+	@override String get start => 'Loslegen 🌿';
+	@override String get soon_badge => 'bald (V2)';
+	@override String get welcome_title => 'Willkommen bei Tendask';
+	@override String get welcome_body => 'Dein einfaches Tagebuch für Garten, Rasen und Hecke — jede Aufgabe an einem Ort.';
+	@override String get log_title => 'In Sekunden festhalten';
+	@override String get log_body => 'Gemäht, gegossen, gedüngt? Notiere was, wann und wo — mit wenigen Fingertipps. Das Wetter wird automatisch gespeichert.';
+	@override String get remind_title => 'Erinnerungen + Wetter';
+	@override String get remind_body => 'Plane Aufgaben, erhalte eine Erinnerung auf dein Handy und einen Wetterhinweis — „morgen früh trocken, gute Zeit zum Spritzen“.';
+	@override String get nearby_title => 'Deine Umgebung';
+	@override String get nearby_body => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.';
+}
+
 // Path: journal
 class _Translations$journal$de extends Translations$journal$sl {
 	_Translations$journal$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -110,7 +132,7 @@ class _Translations$journal$de extends Translations$journal$sl {
 	@override String get empty => 'Noch keine Einträge.';
 	@override String get empty_tasks => 'Keine erledigten Aufgaben.';
 	@override String get empty_notes => 'Noch keine Notizen.';
-	@override String get timeline => 'Zeitlinie';
+	@override String get timeline => 'Zeitleiste';
 	@override String get month_view => 'Monat';
 	@override String get month_hint => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.';
 	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
@@ -234,7 +256,7 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get note_card_title => 'Nur eine Notiz, keine Aufgabe?';
 	@override String get note_card_action => 'Notiz ›';
 	@override String get repeat_last => 'Letztes wiederholen';
-	@override String get type_title => 'Was hast du gemacht?';
+	@override String get type_title => 'Welche Aufgabe?';
 	@override String get type_hint => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.';
 	@override String type_show_all({required Object n}) => 'Alle anzeigen (${n})';
 	@override String get type_show_less => 'Weniger anzeigen';
@@ -267,7 +289,7 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get supplies_why => 'Dieser Schritt ist da, weil die Aufgabe normalerweise Mittel verbraucht. Sie werden vom Bestand abgezogen.';
 	@override String get supplies_add => 'Mittel aus Bestand hinzufügen';
 	@override String get supplies_note => 'Eine Mischung für alle gewählten Pflanzen — einmal abgezogen.';
-	@override String get review_title => 'Prüfe es — tippe eine Zeile zum Bearbeiten';
+	@override String get review_title => 'Überprüfen — tippe eine Zeile zum Bearbeiten';
 	@override String get review_type => 'Aufgabe';
 	@override String get review_subject => 'Wofür';
 	@override String get review_when => 'Wann';
@@ -484,6 +506,18 @@ extension on TranslationsDe {
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
+			'onboarding.skip' => 'Überspringen ›',
+			'onboarding.next' => 'Weiter',
+			'onboarding.start' => 'Loslegen 🌿',
+			'onboarding.soon_badge' => 'bald (V2)',
+			'onboarding.welcome_title' => 'Willkommen bei Tendask',
+			'onboarding.welcome_body' => 'Dein einfaches Tagebuch für Garten, Rasen und Hecke — jede Aufgabe an einem Ort.',
+			'onboarding.log_title' => 'In Sekunden festhalten',
+			'onboarding.log_body' => 'Gemäht, gegossen, gedüngt? Notiere was, wann und wo — mit wenigen Fingertipps. Das Wetter wird automatisch gespeichert.',
+			'onboarding.remind_title' => 'Erinnerungen + Wetter',
+			'onboarding.remind_body' => 'Plane Aufgaben, erhalte eine Erinnerung auf dein Handy und einen Wetterhinweis — „morgen früh trocken, gute Zeit zum Spritzen“.',
+			'onboarding.nearby_title' => 'Deine Umgebung',
+			'onboarding.nearby_body' => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
 			'journal.filter_all' => 'Alle',
@@ -492,7 +526,7 @@ extension on TranslationsDe {
 			'journal.empty' => 'Noch keine Einträge.',
 			'journal.empty_tasks' => 'Keine erledigten Aufgaben.',
 			'journal.empty_notes' => 'Noch keine Notizen.',
-			'journal.timeline' => 'Zeitlinie',
+			'journal.timeline' => 'Zeitleiste',
 			'journal.month_view' => 'Monat',
 			'journal.month_hint' => '💡 Tippe auf einen Tag, um Aufgaben zu sehen und hinzuzufügen.',
 			'journal.month_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '${n} Aufgabe diesen Monat', other: '${n} Aufgaben diesen Monat', ), 
@@ -565,7 +599,7 @@ extension on TranslationsDe {
 			'entry.note_card_title' => 'Nur eine Notiz, keine Aufgabe?',
 			'entry.note_card_action' => 'Notiz ›',
 			'entry.repeat_last' => 'Letztes wiederholen',
-			'entry.type_title' => 'Was hast du gemacht?',
+			'entry.type_title' => 'Welche Aufgabe?',
 			'entry.type_hint' => 'Ein Tipp auf eine Aufgabe bringt dich automatisch weiter.',
 			'entry.type_show_all' => ({required Object n}) => 'Alle anzeigen (${n})',
 			'entry.type_show_less' => 'Weniger anzeigen',
@@ -598,7 +632,7 @@ extension on TranslationsDe {
 			'entry.supplies_why' => 'Dieser Schritt ist da, weil die Aufgabe normalerweise Mittel verbraucht. Sie werden vom Bestand abgezogen.',
 			'entry.supplies_add' => 'Mittel aus Bestand hinzufügen',
 			'entry.supplies_note' => 'Eine Mischung für alle gewählten Pflanzen — einmal abgezogen.',
-			'entry.review_title' => 'Prüfe es — tippe eine Zeile zum Bearbeiten',
+			'entry.review_title' => 'Überprüfen — tippe eine Zeile zum Bearbeiten',
 			'entry.review_type' => 'Aufgabe',
 			'entry.review_subject' => 'Wofür',
 			'entry.review_when' => 'Wann',

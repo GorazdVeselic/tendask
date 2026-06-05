@@ -7340,6 +7340,214 @@ class DeviceLocationsCompanion extends UpdateCompanion<DeviceLocation> {
   }
 }
 
+class $LocalFlagsTable extends LocalFlags
+    with TableInfo<$LocalFlagsTable, LocalFlag> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $LocalFlagsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _valueMeta = const VerificationMeta('value');
+  @override
+  late final GeneratedColumn<String> value = GeneratedColumn<String>(
+    'value',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, value];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'local_flag';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<LocalFlag> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('value')) {
+      context.handle(
+        _valueMeta,
+        value.isAcceptableOrUnknown(data['value']!, _valueMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_valueMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  LocalFlag map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return LocalFlag(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      value: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}value'],
+      )!,
+    );
+  }
+
+  @override
+  $LocalFlagsTable createAlias(String alias) {
+    return $LocalFlagsTable(attachedDatabase, alias);
+  }
+}
+
+class LocalFlag extends DataClass implements Insertable<LocalFlag> {
+  final String key;
+  final String value;
+  const LocalFlag({required this.key, required this.value});
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['value'] = Variable<String>(value);
+    return map;
+  }
+
+  LocalFlagsCompanion toCompanion(bool nullToAbsent) {
+    return LocalFlagsCompanion(key: Value(key), value: Value(value));
+  }
+
+  factory LocalFlag.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return LocalFlag(
+      key: serializer.fromJson<String>(json['key']),
+      value: serializer.fromJson<String>(json['value']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'value': serializer.toJson<String>(value),
+    };
+  }
+
+  LocalFlag copyWith({String? key, String? value}) =>
+      LocalFlag(key: key ?? this.key, value: value ?? this.value);
+  LocalFlag copyWithCompanion(LocalFlagsCompanion data) {
+    return LocalFlag(
+      key: data.key.present ? data.key.value : this.key,
+      value: data.value.present ? data.value.value : this.value,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalFlag(')
+          ..write('key: $key, ')
+          ..write('value: $value')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, value);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is LocalFlag &&
+          other.key == this.key &&
+          other.value == this.value);
+}
+
+class LocalFlagsCompanion extends UpdateCompanion<LocalFlag> {
+  final Value<String> key;
+  final Value<String> value;
+  final Value<int> rowid;
+  const LocalFlagsCompanion({
+    this.key = const Value.absent(),
+    this.value = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  LocalFlagsCompanion.insert({
+    required String key,
+    required String value,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       value = Value(value);
+  static Insertable<LocalFlag> custom({
+    Expression<String>? key,
+    Expression<String>? value,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (value != null) 'value': value,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  LocalFlagsCompanion copyWith({
+    Value<String>? key,
+    Value<String>? value,
+    Value<int>? rowid,
+  }) {
+    return LocalFlagsCompanion(
+      key: key ?? this.key,
+      value: value ?? this.value,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (value.present) {
+      map['value'] = Variable<String>(value.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('LocalFlagsCompanion(')
+          ..write('key: $key, ')
+          ..write('value: $value, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -7362,6 +7570,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $DeviceLocationsTable deviceLocations = $DeviceLocationsTable(
     this,
   );
+  late final $LocalFlagsTable localFlags = $LocalFlagsTable(this);
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -7383,6 +7592,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     taskSupplies,
     syncCursors,
     deviceLocations,
+    localFlags,
   ];
 }
 
@@ -13862,6 +14072,142 @@ typedef $$DeviceLocationsTableProcessedTableManager =
       DeviceLocation,
       PrefetchHooks Function()
     >;
+typedef $$LocalFlagsTableCreateCompanionBuilder =
+    LocalFlagsCompanion Function({
+      required String key,
+      required String value,
+      Value<int> rowid,
+    });
+typedef $$LocalFlagsTableUpdateCompanionBuilder =
+    LocalFlagsCompanion Function({
+      Value<String> key,
+      Value<String> value,
+      Value<int> rowid,
+    });
+
+class $$LocalFlagsTableFilterComposer
+    extends Composer<_$AppDatabase, $LocalFlagsTable> {
+  $$LocalFlagsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$LocalFlagsTableOrderingComposer
+    extends Composer<_$AppDatabase, $LocalFlagsTable> {
+  $$LocalFlagsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get value => $composableBuilder(
+    column: $table.value,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$LocalFlagsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $LocalFlagsTable> {
+  $$LocalFlagsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get value =>
+      $composableBuilder(column: $table.value, builder: (column) => column);
+}
+
+class $$LocalFlagsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $LocalFlagsTable,
+          LocalFlag,
+          $$LocalFlagsTableFilterComposer,
+          $$LocalFlagsTableOrderingComposer,
+          $$LocalFlagsTableAnnotationComposer,
+          $$LocalFlagsTableCreateCompanionBuilder,
+          $$LocalFlagsTableUpdateCompanionBuilder,
+          (
+            LocalFlag,
+            BaseReferences<_$AppDatabase, $LocalFlagsTable, LocalFlag>,
+          ),
+          LocalFlag,
+          PrefetchHooks Function()
+        > {
+  $$LocalFlagsTableTableManager(_$AppDatabase db, $LocalFlagsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$LocalFlagsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$LocalFlagsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$LocalFlagsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> value = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => LocalFlagsCompanion(key: key, value: value, rowid: rowid),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String value,
+                Value<int> rowid = const Value.absent(),
+              }) => LocalFlagsCompanion.insert(
+                key: key,
+                value: value,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$LocalFlagsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $LocalFlagsTable,
+      LocalFlag,
+      $$LocalFlagsTableFilterComposer,
+      $$LocalFlagsTableOrderingComposer,
+      $$LocalFlagsTableAnnotationComposer,
+      $$LocalFlagsTableCreateCompanionBuilder,
+      $$LocalFlagsTableUpdateCompanionBuilder,
+      (LocalFlag, BaseReferences<_$AppDatabase, $LocalFlagsTable, LocalFlag>),
+      LocalFlag,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -13898,4 +14244,6 @@ class $AppDatabaseManager {
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
   $$DeviceLocationsTableTableManager get deviceLocations =>
       $$DeviceLocationsTableTableManager(_db, _db.deviceLocations);
+  $$LocalFlagsTableTableManager get localFlags =>
+      $$LocalFlagsTableTableManager(_db, _db.localFlags);
 }

@@ -16,6 +16,20 @@
     "today": "Danes",
     "yesterday": "včeraj"
   },
+  "onboarding": {
+    "skip": "Preskoči ›",
+    "next": "Naprej",
+    "start": "Začni 🌿",
+    "soon_badge": "kmalu (V2)",
+    "welcome_title": "Dobrodošel v Tendask",
+    "welcome_body": "Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.",
+    "log_title": "Beleži v sekundi",
+    "log_body": "Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.",
+    "remind_title": "Opomniki + vreme",
+    "remind_body": "Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.",
+    "nearby_title": "Tvoja okolica",
+    "nearby_body": "Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno."
+  },
   "journal": {
     "title": "Dnevnik",
     "subtitle": "vrtni dnevnik",
@@ -118,7 +132,7 @@
     "note_card_title": "Le zapis brez opravila?",
     "note_card_action": "Opomba ›",
     "repeat_last": "Ponovi zadnje",
-    "type_title": "Kaj boš naredil?",
+    "type_title": "Katero opravilo?",
     "type_hint": "Tap na opravilo te samodejno pelje naprej.",
     "type_show_all(n)": "Pokaži vse ($n)",
     "type_show_less": "Pokaži manj",
@@ -179,7 +193,7 @@
     "species_choose": "Izberi vrsto",
     "species_change": "Spremeni",
     "alias": "Osebno ime (neobvezno)",
-    "alias_hint": "npr. „stara jablana ob ograji“",
+    "alias_hint": "npr. »stara jablana ob ograji«",
     "alias_note": "Vidiš ga samo ti; prikaže se namesto privzetega imena.",
     "locations": "Kje raste",
     "locations_hint": "izberi eno ali več območij",
@@ -237,7 +251,7 @@
     "cat_lawn": "Trata",
     "from_catalog": "Iz baze",
     "not_found": "Ne najdeš?",
-    "custom_add(q)": "+ Dodaj po meri: „$q“",
+    "custom_add(q)": "+ Dodaj po meri: »$q«",
     "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo.",
     "field_add": "Izberi rastlino",
     "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."

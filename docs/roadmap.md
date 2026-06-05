@@ -221,7 +221,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.1a — Viri lokacije.** `geolocator`+`h3_flutter` v pubspec (+§1); Android dovoljenja (`ACCESS_FINE/COARSE_LOCATION`); `LocationService` (GPS→lat/lon, graceful zavrnitev); Open-Meteo Geocoding client (kraj→lat/lon, obstoječi dio). *Commit:* `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`
   - [x] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
   - [x] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
-- [ ] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
+- [x] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
 - [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
   - [ ] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
   - [ ] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
@@ -316,6 +316,24 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.2 — Onboarding intro (15/15b/15c/15d) + jezikovni pregled i18n.** Drift **v7**: local-only
+  `local_flag` (key/value) tabela za »seen-once« flage (`LocalFlags` v `tables/sync_tables.dart`, migracija
+  `if (from < 7) createTable`). `core/local_prefs/local_prefs.dart`: `LocalPrefsRepository`
+  (`onboardingSeen()`/`setOnboardingSeen()` prek key-value) + `localPrefsProvider` — razširljivo (notif
+  priming 21, location). `features/onboarding/presentation/onboarding_screen.dart`: 4-slide `PageView`
+  (Dobrodošel/Beleži/Opomniki+vreme/Okolica+badge »kmalu V2«), animiran `_Dots`, »Preskoči ›« (strani 0–2) +
+  »Naprej«/»Začni 🌿«; brand `colorScheme`, Material ikone (brez `flutter_svg`); `PageController` disposed.
+  i18n `onboarding.*` v sl/en/de. **Routing/gating:** `appRouter`→`createAppRouter({initialLocation})` +
+  `/onboarding` route; `TendaskApp`→StatefulWidget (router enkraten); `main.dart` prebere `onboardingSeen`
+  pred runApp → `initialLocation = seen ? '/home' : '/onboarding'`; po »Začni«/»Preskoči« → `setOnboardingSeen()`
+  + `go('/home')` (login 13 se vrine v 7.3). **Gotcha:** slang ima ločen CLI (`dart run slang`), build_runner
+  ga ne ujame. **Jezikovni pregled vseh i18n** (na zahtevo): SL onboarding kalki→knjižno (»vsa opravila«,
+  »z nekaj dotiki«, »samodejno«, »Pozneje«, »podnebje«), poenoteni `»…«` narekovaji; **DE pomenska napaka**
+  `log_body` »mit wenigen Tipps« (=nasveti!) → »Fingertipps«, `Zeitlinie`→`Zeitleiste`, `Prüfe es`→`Überprüfen`;
+  EN `log_body` »weather saves itself«→»Weather is saved automatically«. **`entry.type_title` usklajen na
+  nevtralno** (prej SL prihodnjik »Kaj boš naredil?« vs EN/DE preteklik): SL »Katero opravilo?« / EN »Which
+  task?« / DE »Welche Aufgabe?«. flutter analyze čist, **123/123 testov**. On-device (prej): app teče brez
+  crasha, vreme dela, migracija v6 OK. Commit: `feat: onboarding intro (15)`. **Naslednji: 7.3a (prijava 13).**
 - 2026-06-05 — **7.1c — Vreme uporabi shranjeno lokacijo → 7.1 (data plast) ZAKLJUČEN.** En reaktiven vir
   lokacije namesto podvojenega »stored-or-default«: `gardenLocationProvider` (StreamProvider v
   `location_repository.dart`) bere `device_location` prek `watchGardenCoordinates()`, fallback na

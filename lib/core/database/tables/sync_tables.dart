@@ -34,3 +34,16 @@ class DeviceLocations extends Table {
   @override
   Set<Column> get primaryKey => {id};
 }
+
+/// Device-local key/value flags — onboarding-seen now, later notification
+/// priming / location prompt. Per-device UI state, never synced.
+class LocalFlags extends Table {
+  @override
+  String get tableName => 'local_flag';
+
+  TextColumn get key => text()();
+  TextColumn get value => text()();
+
+  @override
+  Set<Column> get primaryKey => {key};
+}
