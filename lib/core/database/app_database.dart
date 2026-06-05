@@ -31,8 +31,9 @@ part 'app_database.g.dart';
   Supplies,
   Recipes,
   TaskSupplies,
-  // local-only sync bookkeeping (never synced)
+  // local-only (never synced)
   SyncCursors,
+  DeviceLocations,
 ])
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
@@ -41,7 +42,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 5;
+  int get schemaVersion => 6;
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
@@ -70,6 +71,11 @@ class AppDatabase extends _$AppDatabase {
           // v5: sync_cursor tracks the incremental-pull high-watermark (M6.3).
           if (from < 5) {
             await m.createTable(syncCursors);
+          }
+          // v6: device_location holds the garden's raw coordinates device-local
+          // for weather (M7.1b); only the derived H3 cells sync to profile.
+          if (from < 6) {
+            await m.createTable(deviceLocations);
           }
         },
       );

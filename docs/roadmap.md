@@ -219,7 +219,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 - [ ] **7.1 — Lokacija + H3 na napravi (data plast).**
   - [x] **7.1a — Viri lokacije.** `geolocator`+`h3_flutter` v pubspec (+§1); Android dovoljenja (`ACCESS_FINE/COARSE_LOCATION`); `LocationService` (GPS→lat/lon, graceful zavrnitev); Open-Meteo Geocoding client (kraj→lat/lon, obstoječi dio). *Commit:* `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`
-  - [ ] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
+  - [x] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
   - [ ] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
 - [ ] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
 - [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
@@ -316,6 +316,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.1b — H3 + lokalna shramba koordinat.** Drift shema **v6**: nova local-only tabela
+  `device_location` (`tables/sync_tables.dart`, single-row `id=0`→upsert; lat/lon/updatedAt) registrirana
+  v `app_database.dart` + migracija `if (from < 6) createTable(deviceLocations)`. **Push/pull seznama sta
+  eksplicitna** (ročno naštete tabele) → nova tabela samodejno NI sinhronizirana = koordinate ne zapustijo
+  naprave. `core/location/h3_cells.dart`: čista `deriveH3Cells(h3, lat, lon)` → `H3Cells` record (r7/r6/r5
+  lowercase hex prek `geoToCell` + `cellToParent`; res-7 finest, res-6/5 starša za V2 roll-up) — testabilna
+  ločeno od FFI/shrambe. `core/location/location_repository.dart`: `saveGardenLocation()` v transakciji —
+  koordinate v `device_location` (insertOnConflictUpdate, local-only), izpeljane H3 celice upsert v `profile`
+  (pending, brez clobbera `lang` — vzorec `ProfileRepository.setLang`); `gardenCoordinates()` za vreme (7.1c).
+  `h3Provider` keepAlive (FFI `H3Factory().load()` enkrat) + `locationRepositoryProvider`. **Supabase:**
+  `profile.h3_r7/r6/r5` že v migraciji `0001` → zrcalo, brez nove migracije; `device_location` ostane lokalno.
+  flutter analyze čist, **123/123 testov** (nova tabela + schemaVersion bump nič ne zlomi; `forTesting`
+  uporablja `createAll`). H3 native FFI = ročna preverba pri 7.3c; unit izpeljave = 7.6. Commit:
+  `feat: H3 celice + lokalna shramba koordinat`. **Naslednji: 7.1c (vreme uporabi shranjeno lokacijo).**
 - 2026-06-05 — **7.1a — Viri lokacije (M7 začet).** Najprej **podroben razrez M7** (zgoraj) +
   razrešene 4 odločitve z uporabnikom (GPS=`geolocator`+Open-Meteo geocoding; OAuth=e-pošta OTP +
   Google native, Apple→M10; koordinate=lokalno-only ne-sync + H3→oblak; obseg=polno, lokacija nahrani
