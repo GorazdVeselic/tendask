@@ -150,12 +150,12 @@ class _Translations$email_login$de extends Translations$email_login$sl {
 	@override String get send_code => 'Code senden';
 	@override String get intro => 'Wir senden dir einen Einmalcode — ohne Passwort.';
 	@override String get code_label => 'Code aus der E-Mail';
-	@override String get code_hint => '6-stelliger Code';
+	@override String get code_hint => 'Erhaltenen Code eingeben';
 	@override String code_sent({required Object email}) => 'Wir haben einen Code an ${email} gesendet. Gib ihn unten ein.';
 	@override String get verify => 'Bestätigen und anmelden';
 	@override String get resend => 'Neuen Code senden';
 	@override String get err_email => 'Gib eine gültige E-Mail-Adresse ein.';
-	@override String get err_code => 'Gib den 6-stelligen Code ein.';
+	@override String get err_code => 'Gib den Code aus der E-Mail ein.';
 	@override String get err_send => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get err_verify => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.';
 }
@@ -487,6 +487,7 @@ class _Translations$settings$de extends Translations$settings$sl {
 	// Translations
 	@override String get title => 'Einstellungen';
 	@override String get profile_guest => 'Gast (nicht angemeldet)';
+	@override String get sign_in_prompt => 'Melde dich an, um deine Daten zu sichern';
 	@override String get section_location => 'Standort';
 	@override String get location_placeholder => 'Wetter-Standort';
 	@override String get section_language => 'Sprache';
@@ -576,12 +577,12 @@ extension on TranslationsDe {
 			'email_login.send_code' => 'Code senden',
 			'email_login.intro' => 'Wir senden dir einen Einmalcode — ohne Passwort.',
 			'email_login.code_label' => 'Code aus der E-Mail',
-			'email_login.code_hint' => '6-stelliger Code',
+			'email_login.code_hint' => 'Erhaltenen Code eingeben',
 			'email_login.code_sent' => ({required Object email}) => 'Wir haben einen Code an ${email} gesendet. Gib ihn unten ein.',
 			'email_login.verify' => 'Bestätigen und anmelden',
 			'email_login.resend' => 'Neuen Code senden',
 			'email_login.err_email' => 'Gib eine gültige E-Mail-Adresse ein.',
-			'email_login.err_code' => 'Gib den 6-stelligen Code ein.',
+			'email_login.err_code' => 'Gib den Code aus der E-Mail ein.',
 			'email_login.err_send' => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.',
 			'email_login.err_verify' => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.',
 			'journal.title' => 'Tagebuch',
@@ -799,6 +800,7 @@ extension on TranslationsDe {
 			'supplies.add_confirm' => 'Hinzufügen',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
+			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
 			'settings.section_location' => 'Standort',
 			'settings.location_placeholder' => 'Wetter-Standort',
 			'settings.section_language' => 'Sprache',

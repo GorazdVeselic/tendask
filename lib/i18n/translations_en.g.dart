@@ -150,12 +150,12 @@ class _Translations$email_login$en extends Translations$email_login$sl {
 	@override String get send_code => 'Send code';
 	@override String get intro => 'We\'ll send you a one-time code — no password.';
 	@override String get code_label => 'Code from email';
-	@override String get code_hint => '6-digit code';
+	@override String get code_hint => 'Enter the code you received';
 	@override String code_sent({required Object email}) => 'We sent a code to ${email}. Enter it below.';
 	@override String get verify => 'Confirm and sign in';
 	@override String get resend => 'Send a new code';
 	@override String get err_email => 'Enter a valid email address.';
-	@override String get err_code => 'Enter the 6-digit code.';
+	@override String get err_code => 'Enter the code from the email.';
 	@override String get err_send => 'Couldn\'t send the code. Check your connection and try again.';
 	@override String get err_verify => 'The code is wrong or has expired. Try again.';
 }
@@ -487,6 +487,7 @@ class _Translations$settings$en extends Translations$settings$sl {
 	// Translations
 	@override String get title => 'Settings';
 	@override String get profile_guest => 'Guest (not signed in)';
+	@override String get sign_in_prompt => 'Sign in to back up your data';
 	@override String get section_location => 'Location';
 	@override String get location_placeholder => 'Weather location';
 	@override String get section_language => 'Language';
@@ -576,12 +577,12 @@ extension on TranslationsEn {
 			'email_login.send_code' => 'Send code',
 			'email_login.intro' => 'We\'ll send you a one-time code — no password.',
 			'email_login.code_label' => 'Code from email',
-			'email_login.code_hint' => '6-digit code',
+			'email_login.code_hint' => 'Enter the code you received',
 			'email_login.code_sent' => ({required Object email}) => 'We sent a code to ${email}. Enter it below.',
 			'email_login.verify' => 'Confirm and sign in',
 			'email_login.resend' => 'Send a new code',
 			'email_login.err_email' => 'Enter a valid email address.',
-			'email_login.err_code' => 'Enter the 6-digit code.',
+			'email_login.err_code' => 'Enter the code from the email.',
 			'email_login.err_send' => 'Couldn\'t send the code. Check your connection and try again.',
 			'email_login.err_verify' => 'The code is wrong or has expired. Try again.',
 			'journal.title' => 'Journal',
@@ -799,6 +800,7 @@ extension on TranslationsEn {
 			'supplies.add_confirm' => 'Add',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
+			'settings.sign_in_prompt' => 'Sign in to back up your data',
 			'settings.section_location' => 'Location',
 			'settings.location_placeholder' => 'Weather location',
 			'settings.section_language' => 'Language',

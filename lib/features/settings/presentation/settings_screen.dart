@@ -53,13 +53,16 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
         children: [
-          // Profile (placeholder — M7 auth)
+          // Profile — entry point to sign in / link an account. Auth-aware
+          // state (show email, sign out) is wired in M7.5; for now a guest can
+          // reach the login screen from here at any time.
           Card(
             child: ListTile(
               leading: const CircleAvatar(child: Text('👤')),
               title: Text(t.settings.profile_guest),
-              subtitle: Text(t.settings.coming_soon),
-              onTap: comingSoon,
+              subtitle: Text(t.settings.sign_in_prompt),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push('/login'),
             ),
           ),
 

@@ -48,12 +48,12 @@
     "send_code": "Pošlji kodo",
     "intro": "Poslali ti bomo enkratno kodo — brez gesla.",
     "code_label": "Koda iz e-pošte",
-    "code_hint": "6-mestna koda",
+    "code_hint": "Vnesi prejeto kodo",
     "code_sent(email)": "Kodo smo poslali na $email. Vpiši jo spodaj.",
     "verify": "Potrdi in se prijavi",
     "resend": "Pošlji novo kodo",
     "err_email": "Vpiši veljaven e-poštni naslov.",
-    "err_code": "Vpiši 6-mestno kodo.",
+    "err_code": "Vpiši kodo iz e-pošte.",
     "err_send": "Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.",
     "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova."
   },
@@ -305,6 +305,7 @@
   "settings": {
     "title": "Nastavitve",
     "profile_guest": "Gost (brez prijave)",
+    "sign_in_prompt": "Prijavi se in shrani podatke v oblak",
     "section_location": "Lokacija",
     "location_placeholder": "Lokacija za vreme",
     "section_language": "Jezik",

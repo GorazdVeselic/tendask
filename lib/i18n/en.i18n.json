@@ -48,12 +48,12 @@
     "send_code": "Send code",
     "intro": "We'll send you a one-time code — no password.",
     "code_label": "Code from email",
-    "code_hint": "6-digit code",
+    "code_hint": "Enter the code you received",
     "code_sent(email)": "We sent a code to $email. Enter it below.",
     "verify": "Confirm and sign in",
     "resend": "Send a new code",
     "err_email": "Enter a valid email address.",
-    "err_code": "Enter the 6-digit code.",
+    "err_code": "Enter the code from the email.",
     "err_send": "Couldn't send the code. Check your connection and try again.",
     "err_verify": "The code is wrong or has expired. Try again."
   },
@@ -301,6 +301,7 @@
   "settings": {
     "title": "Settings",
     "profile_guest": "Guest (not signed in)",
+    "sign_in_prompt": "Sign in to back up your data",
     "section_location": "Location",
     "location_placeholder": "Weather location",
     "section_language": "Language",

@@ -228,8 +228,8 @@ class Translations$email_login$sl {
 	/// sl: 'Koda iz e-pošte'
 	String get code_label => 'Koda iz e-pošte';
 
-	/// sl: '6-mestna koda'
-	String get code_hint => '6-mestna koda';
+	/// sl: 'Vnesi prejeto kodo'
+	String get code_hint => 'Vnesi prejeto kodo';
 
 	/// sl: 'Kodo smo poslali na $email. Vpiši jo spodaj.'
 	String code_sent({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.';
@@ -243,8 +243,8 @@ class Translations$email_login$sl {
 	/// sl: 'Vpiši veljaven e-poštni naslov.'
 	String get err_email => 'Vpiši veljaven e-poštni naslov.';
 
-	/// sl: 'Vpiši 6-mestno kodo.'
-	String get err_code => 'Vpiši 6-mestno kodo.';
+	/// sl: 'Vpiši kodo iz e-pošte.'
+	String get err_code => 'Vpiši kodo iz e-pošte.';
 
 	/// sl: 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.'
 	String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
@@ -1015,6 +1015,9 @@ class Translations$settings$sl {
 	/// sl: 'Gost (brez prijave)'
 	String get profile_guest => 'Gost (brez prijave)';
 
+	/// sl: 'Prijavi se in shrani podatke v oblak'
+	String get sign_in_prompt => 'Prijavi se in shrani podatke v oblak';
+
 	/// sl: 'Lokacija'
 	String get section_location => 'Lokacija';
 
@@ -1167,12 +1170,12 @@ extension on Translations {
 			'email_login.send_code' => 'Pošlji kodo',
 			'email_login.intro' => 'Poslali ti bomo enkratno kodo — brez gesla.',
 			'email_login.code_label' => 'Koda iz e-pošte',
-			'email_login.code_hint' => '6-mestna koda',
+			'email_login.code_hint' => 'Vnesi prejeto kodo',
 			'email_login.code_sent' => ({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.',
 			'email_login.verify' => 'Potrdi in se prijavi',
 			'email_login.resend' => 'Pošlji novo kodo',
 			'email_login.err_email' => 'Vpiši veljaven e-poštni naslov.',
-			'email_login.err_code' => 'Vpiši 6-mestno kodo.',
+			'email_login.err_code' => 'Vpiši kodo iz e-pošte.',
 			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
 			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
 			'journal.title' => 'Dnevnik',
@@ -1390,6 +1393,7 @@ extension on Translations {
 			'supplies.add_confirm' => 'Dodaj',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
+			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',
 			'settings.section_location' => 'Lokacija',
 			'settings.location_placeholder' => 'Lokacija za vreme',
 			'settings.section_language' => 'Jezik',

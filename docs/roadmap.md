@@ -328,8 +328,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   `email_login.*` sl/en/de (param `code_sent(email)`). flutter analyze čist, **123/123 testov**.
   **👤 Supabase TODO za on-device:** email auth provider ✅ že vklopljen; **email template »Confirm email
   change« mora vsebovati `{{ .Token }}`** (sprememba iz brez-email na email pošlje na ta template), sicer
-  uporabnik prejme magic link namesto 6-mestne kode. Commit: `feat: e-pošta OTP prijava`. **Naslednji: 7.3c
-  (lokacija zaslon 16).**
+  uporabnik prejme magic link namesto kode. Commit: `feat: e-pošta OTP prijava`.
+- 2026-06-05 — **7.3b popravek (on-device).** Ob živi preverbi 3 odpravljene zadeve: (1) **OTP koda 8-mestna**
+  (Supabase strežniška nastavitev), app je zahteval fiksno 6 → fleksibilno `code.length < 6` + `maxLength 10` +
+  `counterText ''`; (2) **error handling pokaže pravo `AuthException.message`** (prej generično sporočilo je
+  skrilo vzrok); (3) **vstopna točka za prijavo iz nastavitev** — profil tile »Gost« → `push('/login')` (gating
+  sicer login skril po onboardingu; gost se zdaj prijavi/poveže kadarkoli — realna funkcija + omogoči test).
+  i18n `sign_in_prompt` + posplošen `code_hint`/`err_code` (brez »6-mestno«). **👤 Supabase setup (z uporabnikom):**
+  custom SMTP = Resend (sender `onboarding@resend.dev`; brez verificirane domene pošlje le na lastni Resend
+  e-naslov — domena `tendask.com` = M9), template »Change email address« z `{{ .Token }}`. **ON-DEVICE ✅:**
+  email OTP prijava uspela, e-pošta povezana z obstoječim anon `user.id` (podatki ohranjeni, vidno v Supabase
+  users). Commit: `fix: e-pošta OTP popravki (dolžina kode, napake, vstop)`. **Naslednji: 7.3c (lokacija 16).**
 - 2026-06-05 — **7.3a — Login zaslon (13).** `features/auth/presentation/login_screen.dart`: brand mark
   (Icons.eco v soft containerju), naslov + value-prop, gumbi Google (OutlinedButton) + e-pošta
   (FilledButton.icon accent), »Preizkusi brez računa« (underline TextButton), `guest_warning` (cs.error) +

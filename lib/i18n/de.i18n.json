@@ -48,12 +48,12 @@
     "send_code": "Code senden",
     "intro": "Wir senden dir einen Einmalcode — ohne Passwort.",
     "code_label": "Code aus der E-Mail",
-    "code_hint": "6-stelliger Code",
+    "code_hint": "Erhaltenen Code eingeben",
     "code_sent(email)": "Wir haben einen Code an $email gesendet. Gib ihn unten ein.",
     "verify": "Bestätigen und anmelden",
     "resend": "Neuen Code senden",
     "err_email": "Gib eine gültige E-Mail-Adresse ein.",
-    "err_code": "Gib den 6-stelligen Code ein.",
+    "err_code": "Gib den Code aus der E-Mail ein.",
     "err_send": "Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.",
     "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut."
   },
@@ -301,6 +301,7 @@
   "settings": {
     "title": "Einstellungen",
     "profile_guest": "Gast (nicht angemeldet)",
+    "sign_in_prompt": "Melde dich an, um deine Daten zu sichern",
     "section_location": "Standort",
     "location_placeholder": "Wetter-Standort",
     "section_language": "Sprache",

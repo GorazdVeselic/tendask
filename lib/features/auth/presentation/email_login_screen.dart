@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../i18n/translations.g.dart';
@@ -50,9 +51,12 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       await ref.read(authServiceProvider).sendEmailOtp(email);
       if (!mounted) return;
       setState(() => _step = _Step.code);
-    } on Object {
+    } on AuthException catch (e) {
       if (!mounted) return;
-      setState(() => _error = t.email_login.err_send);
+      setState(() => _error = '${t.email_login.err_send}\n${e.message}');
+    } on Object catch (e) {
+      if (!mounted) return;
+      setState(() => _error = '${t.email_login.err_send}\n$e');
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -62,7 +66,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     final t = context.t;
     final email = _emailController.text.trim();
     final code = _codeController.text.trim();
-    if (code.length != 6) {
+    // OTP length is a server setting (6–8+); don't hard-code it, just sanity-check.
+    if (code.length < 6) {
       setState(() => _error = t.email_login.err_code);
       return;
     }
@@ -126,11 +131,12 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                   controller: _codeController,
                   keyboardType: TextInputType.number,
                   autofocus: true,
-                  maxLength: 6,
+                  maxLength: 10,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
                     labelText: t.email_login.code_label,
                     hintText: t.email_login.code_hint,
+                    counterText: '',
                   ),
                   onSubmitted: (_) => _loading ? null : _verify(),
                 ),
