@@ -38,6 +38,11 @@ const kWeatherReceiveTimeout = Duration(seconds: 20);
 /// battery use down (CLAUDE.md §efficiency).
 const kSyncInterval = Duration(minutes: 15);
 
+/// Debounce window for push-on-save: a write to a synced table schedules a push
+/// after this delay, batching rapid edits so a change reaches the cloud within
+/// seconds (not on the next [kSyncInterval] tick) without a push per keystroke.
+const kPushDebounce = Duration(seconds: 2);
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the

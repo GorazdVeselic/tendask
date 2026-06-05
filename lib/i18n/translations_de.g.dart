@@ -45,6 +45,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
+	@override late final _Translations$location$de location = _Translations$location$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
 	@override late final _Translations$notes$de notes = _Translations$notes$de._(_root);
 	@override late final _Translations$task_detail$de task_detail = _Translations$task_detail$de._(_root);
@@ -127,6 +128,7 @@ class _Translations$auth$de extends Translations$auth$sl {
 
 	// Translations
 	@override String get title => 'Willkommen bei Tendask';
+	@override String get title_link => 'Konto verknüpfen';
 	@override String get value_prop => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.';
 	@override String get continue_apple => 'Mit Apple fortfahren';
 	@override String get continue_google => 'Mit Google fortfahren';
@@ -158,6 +160,36 @@ class _Translations$email_login$de extends Translations$email_login$sl {
 	@override String get err_code => 'Gib den Code aus der E-Mail ein.';
 	@override String get err_send => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get err_verify => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.';
+	@override String get switch_warn_title => 'Konto wechseln?';
+	@override String get switch_warn_body => 'Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.';
+	@override String get switch_warn_confirm => 'Trotzdem wechseln';
+	@override String get switch_warn_cancel => 'Abbrechen';
+}
+
+// Path: location
+class _Translations$location$de extends Translations$location$sl {
+	_Translations$location$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Wo gärtnerst du?';
+	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
+	@override String get use_gps => 'Meinen Standort verwenden';
+	@override String get or_enter => 'oder Ort eingeben';
+	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
+	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
+	@override String get search => 'Suchen';
+	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.';
+	@override String get kContinue => 'Weiter';
+	@override String get detecting => 'Standort wird ermittelt…';
+	@override String get set_gps => 'Standort festgelegt.';
+	@override String set_place({required Object name}) => 'Standort: ${name}';
+	@override String get err_denied => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.';
+	@override String get err_disabled => 'Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.';
+	@override String get err_unavailable => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.';
+	@override String get err_search => 'Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.';
+	@override String get no_results => 'Keine Treffer für diesen Ort.';
 }
 
 // Path: journal
@@ -503,6 +535,10 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get units => 'Einheiten';
 	@override String get export_data => 'Daten exportieren (DSGVO)';
 	@override String get logout => 'Abmelden';
+	@override String get logout_confirm_title => 'Abmelden?';
+	@override String get logout_confirm_body => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.';
+	@override String get logout_cancel => 'Abbrechen';
+	@override String get logout_offline => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.';
 	@override String get delete_account => 'Konto und alle Daten löschen';
 	@override String get coming_soon => 'Demnächst';
 	@override String get version => 'Tendask · v1 (MVP)';
@@ -564,6 +600,7 @@ extension on TranslationsDe {
 			'onboarding.nearby_title' => 'Deine Umgebung',
 			'onboarding.nearby_body' => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.',
 			'auth.title' => 'Willkommen bei Tendask',
+			'auth.title_link' => 'Konto verknüpfen',
 			'auth.value_prop' => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.',
 			'auth.continue_apple' => 'Mit Apple fortfahren',
 			'auth.continue_google' => 'Mit Google fortfahren',
@@ -586,6 +623,27 @@ extension on TranslationsDe {
 			'email_login.err_code' => 'Gib den Code aus der E-Mail ein.',
 			'email_login.err_send' => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.',
 			'email_login.err_verify' => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.',
+			'email_login.switch_warn_title' => 'Konto wechseln?',
+			'email_login.switch_warn_body' => 'Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.',
+			'email_login.switch_warn_confirm' => 'Trotzdem wechseln',
+			'email_login.switch_warn_cancel' => 'Abbrechen',
+			'location.title' => 'Wo gärtnerst du?',
+			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
+			'location.use_gps' => 'Meinen Standort verwenden',
+			'location.or_enter' => 'oder Ort eingeben',
+			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
+			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
+			'location.search' => 'Suchen',
+			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.',
+			'location.kContinue' => 'Weiter',
+			'location.detecting' => 'Standort wird ermittelt…',
+			'location.set_gps' => 'Standort festgelegt.',
+			'location.set_place' => ({required Object name}) => 'Standort: ${name}',
+			'location.err_denied' => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.',
+			'location.err_disabled' => 'Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.',
+			'location.err_unavailable' => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.',
+			'location.err_search' => 'Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.',
+			'location.no_results' => 'Keine Treffer für diesen Ort.',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
 			'journal.filter_all' => 'Alle',
@@ -817,6 +875,10 @@ extension on TranslationsDe {
 			'settings.units' => 'Einheiten',
 			'settings.export_data' => 'Daten exportieren (DSGVO)',
 			'settings.logout' => 'Abmelden',
+			'settings.logout_confirm_title' => 'Abmelden?',
+			'settings.logout_confirm_body' => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.',
+			'settings.logout_cancel' => 'Abbrechen',
+			'settings.logout_offline' => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.',
 			'settings.delete_account' => 'Konto und alle Daten löschen',
 			'settings.coming_soon' => 'Demnächst',
 			'settings.version' => 'Tendask · v1 (MVP)',

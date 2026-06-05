@@ -102,4 +102,49 @@ void main() {
       await svc.sync(includeCatalog: true); // must not throw
     });
   });
+
+  group('SyncService.flushPush', () {
+    test('ensures session then pushes, returns true on success', () async {
+      final calls = <String>[];
+      final svc = SyncService(
+        hasSession: () => true,
+        ensureSession: () async => calls.add('session'),
+        push: () async => calls.add('push'),
+      );
+
+      expect(await svc.flushPush(), isTrue);
+      expect(calls, ['session', 'push']);
+    });
+
+    test('offline build (no push seam) returns true without pushing', () async {
+      final svc = SyncService(
+        hasSession: () => true,
+        ensureSession: () async {},
+      );
+
+      expect(await svc.flushPush(), isTrue);
+    });
+
+    test('returns false when no session can be established', () async {
+      var pushes = 0;
+      final svc = SyncService(
+        hasSession: () => false,
+        ensureSession: () async {},
+        push: () async => pushes++,
+      );
+
+      expect(await svc.flushPush(), isFalse);
+      expect(pushes, 0); // never pushes without a session
+    });
+
+    test('returns false when the push fails (offline)', () async {
+      final svc = SyncService(
+        hasSession: () => true,
+        ensureSession: () async {},
+        push: () async => throw Exception('offline'),
+      );
+
+      expect(await svc.flushPush(), isFalse);
+    });
+  });
 }

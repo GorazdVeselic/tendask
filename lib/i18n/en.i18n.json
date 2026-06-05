@@ -32,6 +32,7 @@
   },
   "auth": {
     "title": "Welcome to Tendask",
+    "title_link": "Link your account",
     "value_prop": "Save your garden journal and don't lose your history when you change phones.",
     "continue_apple": "Continue with Apple",
     "continue_google": "Continue with Google",
@@ -55,7 +56,30 @@
     "err_email": "Enter a valid email address.",
     "err_code": "Enter the code from the email.",
     "err_send": "Couldn't send the code. Check your connection and try again.",
-    "err_verify": "The code is wrong or has expired. Try again."
+    "err_verify": "The code is wrong or has expired. Try again.",
+    "switch_warn_title": "Switch account?",
+    "switch_warn_body": "Signing into this account will remove the data on this device. To keep it, cancel and use \"Link account\" in Settings.",
+    "switch_warn_confirm": "Switch anyway",
+    "switch_warn_cancel": "Cancel"
+  },
+  "location": {
+    "title": "Where do you garden?",
+    "why": "We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.",
+    "use_gps": "Use my location",
+    "or_enter": "or enter a place",
+    "place_hint": "Village, town or address (e.g. Šentjur)",
+    "place_note": "A village or town is enough — no exact address needed.",
+    "search": "Search",
+    "privacy": "We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.",
+    "continue": "Continue",
+    "detecting": "Detecting location…",
+    "set_gps": "Location set.",
+    "set_place(name)": "Location: $name",
+    "err_denied": "Location access denied. Enter a place or grant permission in system settings.",
+    "err_disabled": "Location services are off. Turn them on or enter a place.",
+    "err_unavailable": "Couldn't determine your location. Try again or enter a place.",
+    "err_search": "Search failed. Check your connection and try again.",
+    "no_results": "No matches for that place."
   },
   "journal": {
     "title": "Journal",
@@ -317,6 +341,10 @@
     "units": "Units",
     "export_data": "Export data (GDPR)",
     "logout": "Sign out",
+    "logout_confirm_title": "Sign out?",
+    "logout_confirm_body": "Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.",
+    "logout_cancel": "Cancel",
+    "logout_offline": "Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.",
     "delete_account": "Delete account and all data",
     "coming_soon": "Coming soon",
     "version": "Tendask · v1 (MVP)"

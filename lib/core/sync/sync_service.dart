@@ -64,6 +64,24 @@ class SyncService {
     }
   }
 
+  /// Flushes pending rows to the cloud and reports whether the local data is now
+  /// safely uploaded. Unlike [sync] this surfaces failure, so a caller can avoid
+  /// a destructive local wipe (logout / account switch) while offline. Returns
+  /// true when there is no cloud to flush to (offline build) or the push
+  /// succeeded; false when a configured cloud is unreachable.
+  Future<bool> flushPush() async {
+    final push = _push;
+    if (push == null) return true; // offline build: no cloud, nothing to lose
+    try {
+      await _ensureSession();
+      if (!_hasSession()) return false;
+      await push();
+      return true;
+    } catch (_) {
+      return false;
+    }
+  }
+
   Future<void> _phase(String name, Future<void> Function()? op) async {
     if (op == null) return;
     try {

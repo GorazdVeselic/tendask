@@ -45,6 +45,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
 	@override late final _Translations$email_login$en email_login = _Translations$email_login$en._(_root);
+	@override late final _Translations$location$en location = _Translations$location$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
@@ -127,6 +128,7 @@ class _Translations$auth$en extends Translations$auth$sl {
 
 	// Translations
 	@override String get title => 'Welcome to Tendask';
+	@override String get title_link => 'Link your account';
 	@override String get value_prop => 'Save your garden journal and don\'t lose your history when you change phones.';
 	@override String get continue_apple => 'Continue with Apple';
 	@override String get continue_google => 'Continue with Google';
@@ -158,6 +160,36 @@ class _Translations$email_login$en extends Translations$email_login$sl {
 	@override String get err_code => 'Enter the code from the email.';
 	@override String get err_send => 'Couldn\'t send the code. Check your connection and try again.';
 	@override String get err_verify => 'The code is wrong or has expired. Try again.';
+	@override String get switch_warn_title => 'Switch account?';
+	@override String get switch_warn_body => 'Signing into this account will remove the data on this device. To keep it, cancel and use "Link account" in Settings.';
+	@override String get switch_warn_confirm => 'Switch anyway';
+	@override String get switch_warn_cancel => 'Cancel';
+}
+
+// Path: location
+class _Translations$location$en extends Translations$location$sl {
+	_Translations$location$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Where do you garden?';
+	@override String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
+	@override String get use_gps => 'Use my location';
+	@override String get or_enter => 'or enter a place';
+	@override String get place_hint => 'Village, town or address (e.g. Šentjur)';
+	@override String get place_note => 'A village or town is enough — no exact address needed.';
+	@override String get search => 'Search';
+	@override String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
+	@override String get kContinue => 'Continue';
+	@override String get detecting => 'Detecting location…';
+	@override String get set_gps => 'Location set.';
+	@override String set_place({required Object name}) => 'Location: ${name}';
+	@override String get err_denied => 'Location access denied. Enter a place or grant permission in system settings.';
+	@override String get err_disabled => 'Location services are off. Turn them on or enter a place.';
+	@override String get err_unavailable => 'Couldn\'t determine your location. Try again or enter a place.';
+	@override String get err_search => 'Search failed. Check your connection and try again.';
+	@override String get no_results => 'No matches for that place.';
 }
 
 // Path: journal
@@ -503,6 +535,10 @@ class _Translations$settings$en extends Translations$settings$sl {
 	@override String get units => 'Units';
 	@override String get export_data => 'Export data (GDPR)';
 	@override String get logout => 'Sign out';
+	@override String get logout_confirm_title => 'Sign out?';
+	@override String get logout_confirm_body => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.';
+	@override String get logout_cancel => 'Cancel';
+	@override String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
 	@override String get delete_account => 'Delete account and all data';
 	@override String get coming_soon => 'Coming soon';
 	@override String get version => 'Tendask · v1 (MVP)';
@@ -564,6 +600,7 @@ extension on TranslationsEn {
 			'onboarding.nearby_title' => 'Your area',
 			'onboarding.nearby_body' => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.',
 			'auth.title' => 'Welcome to Tendask',
+			'auth.title_link' => 'Link your account',
 			'auth.value_prop' => 'Save your garden journal and don\'t lose your history when you change phones.',
 			'auth.continue_apple' => 'Continue with Apple',
 			'auth.continue_google' => 'Continue with Google',
@@ -586,6 +623,27 @@ extension on TranslationsEn {
 			'email_login.err_code' => 'Enter the code from the email.',
 			'email_login.err_send' => 'Couldn\'t send the code. Check your connection and try again.',
 			'email_login.err_verify' => 'The code is wrong or has expired. Try again.',
+			'email_login.switch_warn_title' => 'Switch account?',
+			'email_login.switch_warn_body' => 'Signing into this account will remove the data on this device. To keep it, cancel and use "Link account" in Settings.',
+			'email_login.switch_warn_confirm' => 'Switch anyway',
+			'email_login.switch_warn_cancel' => 'Cancel',
+			'location.title' => 'Where do you garden?',
+			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
+			'location.use_gps' => 'Use my location',
+			'location.or_enter' => 'or enter a place',
+			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
+			'location.place_note' => 'A village or town is enough — no exact address needed.',
+			'location.search' => 'Search',
+			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.',
+			'location.kContinue' => 'Continue',
+			'location.detecting' => 'Detecting location…',
+			'location.set_gps' => 'Location set.',
+			'location.set_place' => ({required Object name}) => 'Location: ${name}',
+			'location.err_denied' => 'Location access denied. Enter a place or grant permission in system settings.',
+			'location.err_disabled' => 'Location services are off. Turn them on or enter a place.',
+			'location.err_unavailable' => 'Couldn\'t determine your location. Try again or enter a place.',
+			'location.err_search' => 'Search failed. Check your connection and try again.',
+			'location.no_results' => 'No matches for that place.',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',
@@ -817,6 +875,10 @@ extension on TranslationsEn {
 			'settings.units' => 'Units',
 			'settings.export_data' => 'Export data (GDPR)',
 			'settings.logout' => 'Sign out',
+			'settings.logout_confirm_title' => 'Sign out?',
+			'settings.logout_confirm_body' => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.',
+			'settings.logout_cancel' => 'Cancel',
+			'settings.logout_offline' => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.',
 			'settings.delete_account' => 'Delete account and all data',
 			'settings.coming_soon' => 'Coming soon',
 			'settings.version' => 'Tendask · v1 (MVP)',

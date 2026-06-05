@@ -32,6 +32,7 @@
   },
   "auth": {
     "title": "Willkommen bei Tendask",
+    "title_link": "Konto verknüpfen",
     "value_prop": "Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.",
     "continue_apple": "Mit Apple fortfahren",
     "continue_google": "Mit Google fortfahren",
@@ -55,7 +56,30 @@
     "err_email": "Gib eine gültige E-Mail-Adresse ein.",
     "err_code": "Gib den Code aus der E-Mail ein.",
     "err_send": "Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.",
-    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut."
+    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut.",
+    "switch_warn_title": "Konto wechseln?",
+    "switch_warn_body": "Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.",
+    "switch_warn_confirm": "Trotzdem wechseln",
+    "switch_warn_cancel": "Abbrechen"
+  },
+  "location": {
+    "title": "Wo gärtnerst du?",
+    "why": "Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.",
+    "use_gps": "Meinen Standort verwenden",
+    "or_enter": "oder Ort eingeben",
+    "place_hint": "Dorf, Stadt oder Adresse (z. B. Šentjur)",
+    "place_note": "Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.",
+    "search": "Suchen",
+    "privacy": "Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.",
+    "continue": "Weiter",
+    "detecting": "Standort wird ermittelt…",
+    "set_gps": "Standort festgelegt.",
+    "set_place(name)": "Standort: $name",
+    "err_denied": "Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.",
+    "err_disabled": "Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.",
+    "err_unavailable": "Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.",
+    "err_search": "Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
+    "no_results": "Keine Treffer für diesen Ort."
   },
   "journal": {
     "title": "Tagebuch",
@@ -317,6 +341,10 @@
     "units": "Einheiten",
     "export_data": "Daten exportieren (DSGVO)",
     "logout": "Abmelden",
+    "logout_confirm_title": "Abmelden?",
+    "logout_confirm_body": "Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.",
+    "logout_cancel": "Abbrechen",
+    "logout_offline": "Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.",
     "delete_account": "Konto und alle Daten löschen",
     "coming_soon": "Demnächst",
     "version": "Tendask · v1 (MVP)"

@@ -5,6 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/database/database_provider.dart';
+import '../../../core/sync/sync_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/profile_providers.dart';
@@ -24,6 +27,40 @@ class SettingsScreen extends ConsumerWidget {
     unawaited(LocaleSettings.setLocale(loc));
     unawaited(
         ref.read(profileRepositoryProvider).setLang(userId, loc.languageCode));
+  }
+
+  /// Sign out + wipe local data + start a fresh anonymous session, then return
+  /// to onboarding — a full reset to clean state (M7.5b).
+  Future<void> _logout(BuildContext context, WidgetRef ref) async {
+    final t = context.t;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: t.settings.logout_confirm_title,
+      body: t.settings.logout_confirm_body,
+      confirmLabel: t.settings.logout,
+      cancelLabel: t.settings.logout_cancel,
+    );
+    if (!confirmed || !context.mounted) return;
+    final auth = ref.read(authServiceProvider);
+    // Flush pending to the cloud while the session is still valid, so a re-login
+    // with the same account restores it; clearUserData is irreversible. If the
+    // cloud is unreachable (offline), keep local data and abort the sign-out.
+    final flushed = await ref.read(syncServiceProvider).flushPush();
+    if (!context.mounted) return;
+    if (!flushed) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(t.settings.logout_offline),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    await auth.signOut();
+    await ref.read(databaseProvider).clearUserData();
+    await auth.ensureAnonymousSession();
+    if (!context.mounted) return;
+    context.go('/onboarding');
   }
 
   @override
@@ -70,18 +107,19 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(t.settings.profile_guest),
                     subtitle: Text(t.settings.sign_in_prompt),
                     trailing: const Icon(Icons.chevron_right),
-                    onTap: () => context.push('/login'),
+                    // Guest already has local data → link mode (keep it).
+                    onTap: () => context.push('/login?link=true'),
                   ),
           ),
 
-          // Location (placeholder — M7)
+          // Location — opens the location screen (set/update garden location).
           SectionLabel(t.settings.section_location),
           Card(
             child: ListTile(
               leading: const Text('📍', style: TextStyle(fontSize: 22)),
               title: Text(t.settings.location_placeholder),
-              subtitle: Text(t.settings.coming_soon),
-              onTap: comingSoon,
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.push('/location'),
             ),
           ),
 
@@ -144,7 +182,9 @@ class SettingsScreen extends ConsumerWidget {
                 _PlaceholderTile(
                     label: t.settings.export_data, onTap: comingSoon),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
-                _PlaceholderTile(label: t.settings.logout, onTap: comingSoon),
+                _PlaceholderTile(
+                    label: t.settings.logout,
+                    onTap: () => unawaited(_logout(context, ref))),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
                   label: t.settings.delete_account,

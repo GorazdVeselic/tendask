@@ -5,15 +5,25 @@ import 'package:go_router/go_router.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/database/database_provider.dart';
+import '../../../core/sync/sync_coordinator.dart';
+import '../../../core/sync/sync_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../i18n/translations.g.dart';
 
 enum _Step { email, code }
 
-/// Email OTP sign-in (M7.3b). Two steps: enter email → enter the 6-digit code.
-/// Upgrades the anonymous session in place (AuthService.sendEmailOtp), so the
-/// local data is kept; on success the user has a permanent email account.
+/// Email OTP (M7.3b). Two steps: enter email → enter the code. Two modes:
+/// - link ([widget.link] true): upgrade the anonymous session in place
+///   (updateUser) → keeps local data → home.
+/// - sign-in (false): sign into a new/existing account (signInWithOtp) → clear
+///   the previous session's local rows, pull this account's data → location.
 class EmailLoginScreen extends ConsumerStatefulWidget {
-  const EmailLoginScreen({super.key});
+  const EmailLoginScreen({super.key, this.link = false});
+
+  /// True = link email to the current anonymous account (keep data); false =
+  /// sign in to an email account (switch account).
+  final bool link;
 
   @override
   ConsumerState<EmailLoginScreen> createState() => _EmailLoginScreenState();
@@ -48,7 +58,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       _error = null;
     });
     try {
-      await ref.read(authServiceProvider).sendEmailOtp(email);
+      final auth = ref.read(authServiceProvider);
+      await (widget.link ? auth.sendLinkOtp(email) : auth.sendSignInOtp(email));
       if (!mounted) return;
       setState(() => _step = _Step.code);
     } on AuthException catch (e) {
@@ -71,15 +82,47 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       setState(() => _error = t.email_login.err_code);
       return;
     }
+    // Sign-in switches accounts and drops this device's current data. Warn first
+    // when there is local content — the keep-data path is "Link account".
+    if (!widget.link) {
+      final hasData = await ref.read(databaseProvider).hasUserData();
+      if (!mounted) return;
+      if (hasData) {
+        final ok = await showConfirmDialog(
+          context,
+          title: t.email_login.switch_warn_title,
+          body: t.email_login.switch_warn_body,
+          confirmLabel: t.email_login.switch_warn_confirm,
+          cancelLabel: t.email_login.switch_warn_cancel,
+        );
+        if (!ok || !mounted) return;
+      }
+    }
     setState(() {
       _loading = true;
       _error = null;
     });
     try {
-      await ref.read(authServiceProvider).verifyEmailOtp(email, code);
-      if (!mounted) return;
-      // Location (16) is inserted before home in M7.3c; for now go to home.
-      context.go('/home');
+      final auth = ref.read(authServiceProvider);
+      if (widget.link) {
+        await auth.verifyLinkOtp(email, code);
+        if (!mounted) return;
+        // Same uid — keep local data; sync pushes it to the cloud.
+        ref.read(syncCoordinatorProvider.notifier).start();
+        context.go('/home');
+      } else {
+        // Back up the current account's pending rows before leaving it
+        // (recoverable if it had an email; harmless for a guest). Best-effort:
+        // verifySignInOtp below needs the network anyway.
+        await ref.read(syncServiceProvider).flushPush();
+        await auth.verifySignInOtp(email, code);
+        // Switched account — drop the previous session's rows, keep onboarding
+        // flag, then pull this account's data.
+        await ref.read(databaseProvider).clearUserData(keepFlags: true);
+        if (!mounted) return;
+        ref.read(syncCoordinatorProvider.notifier).start();
+        context.go('/location');
+      }
     } on Object {
       if (!mounted) return;
       setState(() => _error = t.email_login.err_verify);

@@ -222,14 +222,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
   - [x] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
 - [x] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
-- [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
+- [x] **7.3 — Prijava + lokacija zaslona (13, 16).**
   - [x] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
   - [x] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
-  - [ ] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
+  - [x] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
 - [ ] **7.4 — Linkanje identitete (Google native).** `google_sign_in`+`signInWithIdToken`/`linkIdentity`; opozorilo "izguba podatkov" pri anonimnem (wireframe 13); po link → pull; 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: linkIdentity (Google) + opozorilo`
 - [ ] **7.5 — Auth lifecycle.**
-  - [ ] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). *Commit:* `feat: eager pull po prijavi`
-  - [ ] **7.5b — Odjava + clear** lokalne drift baze + reset na `kLocalUserId` + clear lokalnih koordinat (GDPR clean state); gumb v nastavitvah (12). *Commit:* `feat: odjava + clear lokalne baze`
+  - [x] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). Pokrito prek `syncCoordinator.start()` ob verify (link+signin) → takojšen cikel (push→pull). Dodatno **push-ob-shranjevanju** (debounce 2 s prek `db.tableUpdates`) → spremembe v oblaku v sekundah, ne čez periodični tick.
+  - [x] **7.5b — Odjava + reset/clear + email dve poti.** Odjava (potrditev → signOut + `clearUserData` + nova anon → onboarding); **flush push pred clear** (prepreči izgubo nepush-anih podatkov, offline→prekini); »Prijava« (signInWithOtp, preklop računa, clear+pull) vs »Poveži račun« (updateUser, ohrani podatke) + opozorilo gostu. GDPR izbris računa = M9. *Commit:* (združeno) `feat: lokacija (16) + odjava/email poti + fix izguba podatkov`
 - [ ] **7.6 — Testi M7.** Unit: H3 izpeljava (res7→6→5), geocoding parser, OTP/link servis (mock Supabase), clear-on-signout, lokalne koordinate ne-sync. Widget: onboarding skip, login flow, lokacija zajem. Ročna preverba na napravi. *Commit:* `test: auth + H3`
 
 ---
@@ -316,6 +316,23 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.3c + 7.5a/b — Lokacija (16), odjava/reset, email dve poti + FIX izguba podatkov.**
+  **Bug (diagnosticiran z dejstvi, `tmp/sync_verify.py`):** po logout→login z obstoječim emailom se podatki niso
+  vrnili. Vzrok = **podatki nikoli push-ani v oblak** (push je bil le periodičen/ob-zagonu/reconnect; `clearUserData`
+  ob odjavi/preklopu jih je izbrisal lokalno PRED push-em). Pull po loginu pravilno vrnil nič. **Popravek (2 dela):**
+  (1) **varovalo** — `SyncService.flushPush()` (vrne `bool`, izpostavi napako za razliko od `sync()`); settings
+  `_logout` flush-a PRED `clearUserData`, offline→snackbar+prekini (ne izbriše); email signin pot flush-a star račun
+  pred clear + **opozori gosta** z lokalnimi podatki (naj uporabi »Poveži račun«) prek `showConfirmDialog`
+  (`AppDatabase.hasUserData()`). (2) **push-ob-shranjevanju** — `SyncCoordinator` posluša `db.tableUpdates(...)` na
+  sync tabelah + debounce `kPushDebounce=2s` → `push()` (direktno, brez claim → ni zanke); push je inkrementalen
+  (samo `pending`). **7.3c:** `LocationScreen` (GPS prek `LocationService` + vnos kraja prek `GeocodingClient`) →
+  `saveGardenLocation` (H3→profile, koordinate device-local); router `/location`; flow login/email-verify → `/location`,
+  settings »Lokacija za vreme« → `push('/location')`. **Email dve poti:** `auth_service` `sendLinkOtp`/`verifyLinkOtp`
+  (updateUser/emailChange, ohrani uid+podatke) vs `sendSignInOtp`/`verifySignInOtp` (signInWithOtp/email, preklop);
+  `link` param skozi LoginScreen+EmailLoginScreen+router `?link=`. i18n location/email_login.switch_warn/settings.logout*
+  sl/en/de. flutter analyze čist, **127/127 testov** (+4 flushPush). **ON-DEVICE ✅ (release, SM RZCT70XGC5P):** push-ob-
+  shranjevanju (area »Trata«+task »mow« v oblaku v sekundah), logout→login z `exogenus@gmail.com` **vrne podatke**
+  (isti uid `bad8ff62`, brez podvojitev — idempotenten pull). Commit: `feat: lokacija (16) + odjava/email poti + fix izguba podatkov`.
 - 2026-06-05 — **7.3b — E-pošta OTP.** **Odločitev (tehnično enolična za ohranitev podatkov):** anonimni →
   e-pošta prek `updateUser(UserAttributes(email:))` + `verifyOTP(type: OtpType.emailChange)` — **ohrani isti
   `user.id`**, zato lokalni podatki (claim-ani na anon uid v M6) ostanejo (skladno wireframe 13). `signInWithOtp`/

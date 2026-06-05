@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
 	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
+	late final Translations$location$sl location = Translations$location$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
@@ -177,6 +178,9 @@ class Translations$auth$sl {
 	/// sl: 'Dobrodošel v Tendask'
 	String get title => 'Dobrodošel v Tendask';
 
+	/// sl: 'Poveži račun'
+	String get title_link => 'Poveži račun';
+
 	/// sl: 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.'
 	String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
 
@@ -251,6 +255,78 @@ class Translations$email_login$sl {
 
 	/// sl: 'Koda ni pravilna ali je potekla. Poskusi znova.'
 	String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
+
+	/// sl: 'Preklop računa?'
+	String get switch_warn_title => 'Preklop računa?';
+
+	/// sl: 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.'
+	String get switch_warn_body => 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.';
+
+	/// sl: 'Vseeno preklopi'
+	String get switch_warn_confirm => 'Vseeno preklopi';
+
+	/// sl: 'Prekliči'
+	String get switch_warn_cancel => 'Prekliči';
+}
+
+// Path: location
+class Translations$location$sl {
+	Translations$location$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Kje vrtnariš?'
+	String get title => 'Kje vrtnariš?';
+
+	/// sl: 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.'
+	String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
+
+	/// sl: 'Uporabi mojo lokacijo'
+	String get use_gps => 'Uporabi mojo lokacijo';
+
+	/// sl: 'ali vpiši kraj'
+	String get or_enter => 'ali vpiši kraj';
+
+	/// sl: 'Vas, mesto ali naslov (npr. Šentjur)'
+	String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
+
+	/// sl: 'Dovolj je vas ali mesto — natančen naslov ni potreben.'
+	String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
+
+	/// sl: 'Poišči'
+	String get search => 'Poišči';
+
+	/// sl: 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.'
+	String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.';
+
+	/// sl: 'Nadaljuj'
+	String get kContinue => 'Nadaljuj';
+
+	/// sl: 'Določam lokacijo…'
+	String get detecting => 'Določam lokacijo…';
+
+	/// sl: 'Lokacija je nastavljena.'
+	String get set_gps => 'Lokacija je nastavljena.';
+
+	/// sl: 'Lokacija: $name'
+	String set_place({required Object name}) => 'Lokacija: ${name}';
+
+	/// sl: 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.'
+	String get err_denied => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.';
+
+	/// sl: 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.'
+	String get err_disabled => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.';
+
+	/// sl: 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.'
+	String get err_unavailable => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.';
+
+	/// sl: 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.'
+	String get err_search => 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.';
+
+	/// sl: 'Za ta kraj ni zadetkov.'
+	String get no_results => 'Za ta kraj ni zadetkov.';
 }
 
 // Path: journal
@@ -1063,6 +1139,18 @@ class Translations$settings$sl {
 	/// sl: 'Odjava'
 	String get logout => 'Odjava';
 
+	/// sl: 'Odjava?'
+	String get logout_confirm_title => 'Odjava?';
+
+	/// sl: 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.'
+	String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
+
+	/// sl: 'Prekliči'
+	String get logout_cancel => 'Prekliči';
+
+	/// sl: 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.'
+	String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
+
 	/// sl: 'Izbriši račun in vse podatke'
 	String get delete_account => 'Izbriši račun in vse podatke';
 
@@ -1159,6 +1247,7 @@ extension on Translations {
 			'onboarding.nearby_title' => 'Tvoja okolica',
 			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
 			'auth.title' => 'Dobrodošel v Tendask',
+			'auth.title_link' => 'Poveži račun',
 			'auth.value_prop' => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.',
 			'auth.continue_apple' => 'Nadaljuj z Apple',
 			'auth.continue_google' => 'Nadaljuj z Google',
@@ -1181,6 +1270,27 @@ extension on Translations {
 			'email_login.err_code' => 'Vpiši kodo iz e-pošte.',
 			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
 			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
+			'email_login.switch_warn_title' => 'Preklop računa?',
+			'email_login.switch_warn_body' => 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.',
+			'email_login.switch_warn_confirm' => 'Vseeno preklopi',
+			'email_login.switch_warn_cancel' => 'Prekliči',
+			'location.title' => 'Kje vrtnariš?',
+			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
+			'location.use_gps' => 'Uporabi mojo lokacijo',
+			'location.or_enter' => 'ali vpiši kraj',
+			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
+			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
+			'location.search' => 'Poišči',
+			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.',
+			'location.kContinue' => 'Nadaljuj',
+			'location.detecting' => 'Določam lokacijo…',
+			'location.set_gps' => 'Lokacija je nastavljena.',
+			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',
+			'location.err_denied' => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.',
+			'location.err_disabled' => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.',
+			'location.err_unavailable' => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.',
+			'location.err_search' => 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.',
+			'location.no_results' => 'Za ta kraj ni zadetkov.',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',
@@ -1412,6 +1522,10 @@ extension on Translations {
 			'settings.units' => 'Enote',
 			'settings.export_data' => 'Izvozi podatke (GDPR)',
 			'settings.logout' => 'Odjava',
+			'settings.logout_confirm_title' => 'Odjava?',
+			'settings.logout_confirm_body' => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.',
+			'settings.logout_cancel' => 'Prekliči',
+			'settings.logout_offline' => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.',
 			'settings.delete_account' => 'Izbriši račun in vse podatke',
 			'settings.coming_soon' => 'Na voljo kmalu',
 			'settings.version' => 'Tendask · v1 (MVP)',

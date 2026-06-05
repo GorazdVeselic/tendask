@@ -4,6 +4,7 @@ import '../../features/areas/presentation/area_detail_screen.dart';
 import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/auth/presentation/email_login_screen.dart';
+import '../../features/auth/presentation/location_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
@@ -92,12 +93,19 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
     GoRoute(
       path: '/login',
       name: 'login',
-      builder: (context, state) => const LoginScreen(),
+      builder: (context, state) =>
+          LoginScreen(link: state.uri.queryParameters['link'] == 'true'),
     ),
     GoRoute(
       path: '/login-email',
       name: 'login-email',
-      builder: (context, state) => const EmailLoginScreen(),
+      builder: (context, state) =>
+          EmailLoginScreen(link: state.uri.queryParameters['link'] == 'true'),
+    ),
+    GoRoute(
+      path: '/location',
+      name: 'location',
+      builder: (context, state) => const LocationScreen(),
     ),
     GoRoute(
       path: '/plant-picker',

@@ -32,6 +32,7 @@
   },
   "auth": {
     "title": "Dobrodošel v Tendask",
+    "title_link": "Poveži račun",
     "value_prop": "Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.",
     "continue_apple": "Nadaljuj z Apple",
     "continue_google": "Nadaljuj z Google",
@@ -55,7 +56,30 @@
     "err_email": "Vpiši veljaven e-poštni naslov.",
     "err_code": "Vpiši kodo iz e-pošte.",
     "err_send": "Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.",
-    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova."
+    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova.",
+    "switch_warn_title": "Preklop računa?",
+    "switch_warn_body": "S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.",
+    "switch_warn_confirm": "Vseeno preklopi",
+    "switch_warn_cancel": "Prekliči"
+  },
+  "location": {
+    "title": "Kje vrtnariš?",
+    "why": "Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.",
+    "use_gps": "Uporabi mojo lokacijo",
+    "or_enter": "ali vpiši kraj",
+    "place_hint": "Vas, mesto ali naslov (npr. Šentjur)",
+    "place_note": "Dovolj je vas ali mesto — natančen naslov ni potreben.",
+    "search": "Poišči",
+    "privacy": "Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.",
+    "continue": "Nadaljuj",
+    "detecting": "Določam lokacijo…",
+    "set_gps": "Lokacija je nastavljena.",
+    "set_place(name)": "Lokacija: $name",
+    "err_denied": "Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.",
+    "err_disabled": "Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.",
+    "err_unavailable": "Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.",
+    "err_search": "Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.",
+    "no_results": "Za ta kraj ni zadetkov."
   },
   "journal": {
     "title": "Dnevnik",
@@ -321,6 +345,10 @@
     "units": "Enote",
     "export_data": "Izvozi podatke (GDPR)",
     "logout": "Odjava",
+    "logout_confirm_title": "Odjava?",
+    "logout_confirm_body": "Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.",
+    "logout_cancel": "Prekliči",
+    "logout_offline": "Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.",
     "delete_account": "Izbriši račun in vse podatke",
     "coming_soon": "Na voljo kmalu",
     "version": "Tendask · v1 (MVP)"
