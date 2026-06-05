@@ -224,7 +224,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
 - [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
   - [x] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
-  - [ ] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
+  - [x] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
   - [ ] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
 - [ ] **7.4 — Linkanje identitete (Google native).** `google_sign_in`+`signInWithIdToken`/`linkIdentity`; opozorilo "izguba podatkov" pri anonimnem (wireframe 13); po link → pull; 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: linkIdentity (Google) + opozorilo`
 - [ ] **7.5 — Auth lifecycle.**
@@ -316,6 +316,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.3b — E-pošta OTP.** **Odločitev (tehnično enolična za ohranitev podatkov):** anonimni →
+  e-pošta prek `updateUser(UserAttributes(email:))` + `verifyOTP(type: OtpType.emailChange)` — **ohrani isti
+  `user.id`**, zato lokalni podatki (claim-ani na anon uid v M6) ostanejo (skladno wireframe 13). `signInWithOtp`/
+  `OtpType.email` bi ustvaril NOVEGA userja (izguba) → ne uporabljen. `core/auth/auth_service.dart`:
+  `sendEmailOtp(email)` (ensureAnonymousSession + updateUser) + `verifyEmailOtp(email, token)`; throwata
+  `AuthException` če klient null (offline build). `features/auth/presentation/email_login_screen.dart`:
+  dvostopenjski (email→koda), validacija, `digitsOnly`+maxLength 6, loading spinner na gumbu, error
+  (`err_send`/`err_verify`), »Pošlji novo kodo«; po uspehu → `/home` (location 16 vrine 7.3c); mounted check po
+  await, controllerji disposed. Router `/login-email`; login e-pošta gumb → `push('/login-email')`. i18n
+  `email_login.*` sl/en/de (param `code_sent(email)`). flutter analyze čist, **123/123 testov**.
+  **👤 Supabase TODO za on-device:** email auth provider ✅ že vklopljen; **email template »Confirm email
+  change« mora vsebovati `{{ .Token }}`** (sprememba iz brez-email na email pošlje na ta template), sicer
+  uporabnik prejme magic link namesto 6-mestne kode. Commit: `feat: e-pošta OTP prijava`. **Naslednji: 7.3c
+  (lokacija zaslon 16).**
 - 2026-06-05 — **7.3a — Login zaslon (13).** `features/auth/presentation/login_screen.dart`: brand mark
   (Icons.eco v soft containerju), naslov + value-prop, gumbi Google (OutlinedButton) + e-pošta
   (FilledButton.icon accent), »Preizkusi brez računa« (underline TextButton), `guest_warning` (cs.error) +

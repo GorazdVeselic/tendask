@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
+	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
 	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
 	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
 	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
@@ -199,6 +200,57 @@ class Translations$auth$sl {
 
 	/// sl: 'Na voljo kmalu.'
 	String get coming_soon => 'Na voljo kmalu.';
+}
+
+// Path: email_login
+class Translations$email_login$sl {
+	Translations$email_login$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Prijava z e-pošto'
+	String get title => 'Prijava z e-pošto';
+
+	/// sl: 'E-poštni naslov'
+	String get email_label => 'E-poštni naslov';
+
+	/// sl: 'ti@primer.si'
+	String get email_hint => 'ti@primer.si';
+
+	/// sl: 'Pošlji kodo'
+	String get send_code => 'Pošlji kodo';
+
+	/// sl: 'Poslali ti bomo enkratno kodo — brez gesla.'
+	String get intro => 'Poslali ti bomo enkratno kodo — brez gesla.';
+
+	/// sl: 'Koda iz e-pošte'
+	String get code_label => 'Koda iz e-pošte';
+
+	/// sl: '6-mestna koda'
+	String get code_hint => '6-mestna koda';
+
+	/// sl: 'Kodo smo poslali na $email. Vpiši jo spodaj.'
+	String code_sent({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.';
+
+	/// sl: 'Potrdi in se prijavi'
+	String get verify => 'Potrdi in se prijavi';
+
+	/// sl: 'Pošlji novo kodo'
+	String get resend => 'Pošlji novo kodo';
+
+	/// sl: 'Vpiši veljaven e-poštni naslov.'
+	String get err_email => 'Vpiši veljaven e-poštni naslov.';
+
+	/// sl: 'Vpiši 6-mestno kodo.'
+	String get err_code => 'Vpiši 6-mestno kodo.';
+
+	/// sl: 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.'
+	String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
+
+	/// sl: 'Koda ni pravilna ali je potekla. Poskusi znova.'
+	String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
 }
 
 // Path: journal
@@ -1109,6 +1161,20 @@ extension on Translations {
 			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
 			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
+			'email_login.title' => 'Prijava z e-pošto',
+			'email_login.email_label' => 'E-poštni naslov',
+			'email_login.email_hint' => 'ti@primer.si',
+			'email_login.send_code' => 'Pošlji kodo',
+			'email_login.intro' => 'Poslali ti bomo enkratno kodo — brez gesla.',
+			'email_login.code_label' => 'Koda iz e-pošte',
+			'email_login.code_hint' => '6-mestna koda',
+			'email_login.code_sent' => ({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.',
+			'email_login.verify' => 'Potrdi in se prijavi',
+			'email_login.resend' => 'Pošlji novo kodo',
+			'email_login.err_email' => 'Vpiši veljaven e-poštni naslov.',
+			'email_login.err_code' => 'Vpiši 6-mestno kodo.',
+			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
+			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',

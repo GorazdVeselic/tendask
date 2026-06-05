@@ -41,6 +41,22 @@
     "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
     "coming_soon": "Na voljo kmalu."
   },
+  "email_login": {
+    "title": "Prijava z e-pošto",
+    "email_label": "E-poštni naslov",
+    "email_hint": "ti@primer.si",
+    "send_code": "Pošlji kodo",
+    "intro": "Poslali ti bomo enkratno kodo — brez gesla.",
+    "code_label": "Koda iz e-pošte",
+    "code_hint": "6-mestna koda",
+    "code_sent(email)": "Kodo smo poslali na $email. Vpiši jo spodaj.",
+    "verify": "Potrdi in se prijavi",
+    "resend": "Pošlji novo kodo",
+    "err_email": "Vpiši veljaven e-poštni naslov.",
+    "err_code": "Vpiši 6-mestno kodo.",
+    "err_send": "Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.",
+    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova."
+  },
   "journal": {
     "title": "Dnevnik",
     "subtitle": "vrtni dnevnik",

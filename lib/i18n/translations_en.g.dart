@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
+	@override late final _Translations$email_login$en email_login = _Translations$email_login$en._(_root);
 	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
 	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
 	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
@@ -134,6 +135,29 @@ class _Translations$auth$en extends Translations$auth$sl {
 	@override String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
 	@override String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
 	@override String get coming_soon => 'Coming soon.';
+}
+
+// Path: email_login
+class _Translations$email_login$en extends Translations$email_login$sl {
+	_Translations$email_login$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Sign in with email';
+	@override String get email_label => 'Email address';
+	@override String get email_hint => 'you@example.com';
+	@override String get send_code => 'Send code';
+	@override String get intro => 'We\'ll send you a one-time code — no password.';
+	@override String get code_label => 'Code from email';
+	@override String get code_hint => '6-digit code';
+	@override String code_sent({required Object email}) => 'We sent a code to ${email}. Enter it below.';
+	@override String get verify => 'Confirm and sign in';
+	@override String get resend => 'Send a new code';
+	@override String get err_email => 'Enter a valid email address.';
+	@override String get err_code => 'Enter the 6-digit code.';
+	@override String get err_send => 'Couldn\'t send the code. Check your connection and try again.';
+	@override String get err_verify => 'The code is wrong or has expired. Try again.';
 }
 
 // Path: journal
@@ -546,6 +570,20 @@ extension on TranslationsEn {
 			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
 			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
 			'auth.coming_soon' => 'Coming soon.',
+			'email_login.title' => 'Sign in with email',
+			'email_login.email_label' => 'Email address',
+			'email_login.email_hint' => 'you@example.com',
+			'email_login.send_code' => 'Send code',
+			'email_login.intro' => 'We\'ll send you a one-time code — no password.',
+			'email_login.code_label' => 'Code from email',
+			'email_login.code_hint' => '6-digit code',
+			'email_login.code_sent' => ({required Object email}) => 'We sent a code to ${email}. Enter it below.',
+			'email_login.verify' => 'Confirm and sign in',
+			'email_login.resend' => 'Send a new code',
+			'email_login.err_email' => 'Enter a valid email address.',
+			'email_login.err_code' => 'Enter the 6-digit code.',
+			'email_login.err_send' => 'Couldn\'t send the code. Check your connection and try again.',
+			'email_login.err_verify' => 'The code is wrong or has expired. Try again.',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',

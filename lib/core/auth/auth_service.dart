@@ -37,6 +37,28 @@ class AuthService {
       // kLocalUserId. M6.4 retries; rows are claimed once a session exists.
     }
   }
+
+  /// Sends a 6-digit OTP to [email] to upgrade the current (anonymous) session
+  /// to a permanent email account. Uses updateUser (not signInWithOtp) so the
+  /// user id is preserved — the local data claimed to the anonymous uid stays.
+  /// Requires connectivity; throws [AuthException] when unavailable.
+  Future<void> sendEmailOtp(String email) async {
+    final client = _client;
+    if (client == null) throw const AuthException('Auth not configured');
+    await ensureAnonymousSession();
+    await client.auth.updateUser(UserAttributes(email: email));
+  }
+
+  /// Verifies the OTP [token] sent to [email], completing the email link.
+  Future<void> verifyEmailOtp(String email, String token) async {
+    final client = _client;
+    if (client == null) throw const AuthException('Auth not configured');
+    await client.auth.verifyOTP(
+      email: email,
+      token: token,
+      type: OtpType.emailChange,
+    );
+  }
 }
 
 @Riverpod(keepAlive: true)

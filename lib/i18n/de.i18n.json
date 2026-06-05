@@ -41,6 +41,22 @@
     "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
     "coming_soon": "Demnächst verfügbar."
   },
+  "email_login": {
+    "title": "Mit E-Mail anmelden",
+    "email_label": "E-Mail-Adresse",
+    "email_hint": "du@beispiel.de",
+    "send_code": "Code senden",
+    "intro": "Wir senden dir einen Einmalcode — ohne Passwort.",
+    "code_label": "Code aus der E-Mail",
+    "code_hint": "6-stelliger Code",
+    "code_sent(email)": "Wir haben einen Code an $email gesendet. Gib ihn unten ein.",
+    "verify": "Bestätigen und anmelden",
+    "resend": "Neuen Code senden",
+    "err_email": "Gib eine gültige E-Mail-Adresse ein.",
+    "err_code": "Gib den 6-stelligen Code ein.",
+    "err_send": "Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.",
+    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut."
+  },
   "journal": {
     "title": "Tagebuch",
     "subtitle": "Gartentagebuch",

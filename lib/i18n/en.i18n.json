@@ -41,6 +41,22 @@
     "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
     "coming_soon": "Coming soon."
   },
+  "email_login": {
+    "title": "Sign in with email",
+    "email_label": "Email address",
+    "email_hint": "you@example.com",
+    "send_code": "Send code",
+    "intro": "We'll send you a one-time code — no password.",
+    "code_label": "Code from email",
+    "code_hint": "6-digit code",
+    "code_sent(email)": "We sent a code to $email. Enter it below.",
+    "verify": "Confirm and sign in",
+    "resend": "Send a new code",
+    "err_email": "Enter a valid email address.",
+    "err_code": "Enter the 6-digit code.",
+    "err_send": "Couldn't send the code. Check your connection and try again.",
+    "err_verify": "The code is wrong or has expired. Try again."
+  },
   "journal": {
     "title": "Journal",
     "subtitle": "garden journal",

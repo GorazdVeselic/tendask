@@ -87,7 +87,7 @@ class LoginScreen extends StatelessWidget {
               SizedBox(
                 height: 52,
                 child: FilledButton.icon(
-                  onPressed: () => _comingSoon(context),
+                  onPressed: () => context.push('/login-email'),
                   icon: const Icon(Icons.mail_outline, size: 20),
                   label: Text(t.auth.continue_email),
                 ),
