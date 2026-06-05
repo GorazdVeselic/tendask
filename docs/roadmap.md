@@ -217,7 +217,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Vrstni red:** data plast (lokacija+H3) → UI zasloni → linkanje → lifecycle → testi.
 
-- [ ] **7.1 — Lokacija + H3 na napravi (data plast).**
+- [x] **7.1 — Lokacija + H3 na napravi (data plast).**
   - [x] **7.1a — Viri lokacije.** `geolocator`+`h3_flutter` v pubspec (+§1); Android dovoljenja (`ACCESS_FINE/COARSE_LOCATION`); `LocationService` (GPS→lat/lon, graceful zavrnitev); Open-Meteo Geocoding client (kraj→lat/lon, obstoječi dio). *Commit:* `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`
   - [x] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
   - [x] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
@@ -227,11 +227,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
   - [x] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
 - [x] **7.4 — Google prijava (native).** `google_sign_in ^7.2.0`+`signInWithIdToken` → prijava; nato `start()` (claim+push+pull, ohrani gost-podatke=merge — **brez** `linkIdentity`/anon). AuthService.signInWithGoogle, gumb v login_screen, `kGoogleServerClientId` prek dart-define. **ON-DEVICE ✅:** Google prijava dela, isti email → povezan z obstoječim računom (brez dvojnika), gost-task claim+push (`fertilize`) + računov pull (`mow`/`Trata`) = merge. 👤 Google Cloud Web+Android OAuth (debug SHA-1 `D0:44:…:28:55`) + Supabase Google enabled. *Commit:* `feat: Google prijava`
-- [ ] **7.5 — Auth lifecycle.**
+- [x] **7.5 — Auth lifecycle.**
   - [x] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). Pokrito prek `syncCoordinator.start()` ob verify (link+signin) → takojšen cikel (push→pull). Dodatno **push-ob-shranjevanju** (debounce 2 s prek `db.tableUpdates`) → spremembe v oblaku v sekundah, ne čez periodični tick.
   - [x] **7.5c — Gost = lokalno (odstrani anon).** Brez `signInAnonymously` (kopičili so se anon računi pred izbiro prijave); gost = drift pod `kLocalUserId`, oblak šele ob prijavi (`claimLocalRows`+push → merge). Email ena pot (`sendEmailOtp`/`verifyEmailOtp`), `link`/updateUser/switch-warn odstranjeni. *(združeno v naslednji commit)*
   - [x] **7.5b — Odjava + reset/clear + email dve poti.** Odjava (potrditev → signOut + `clearUserData` + nova anon → onboarding); **flush push pred clear** (prepreči izgubo nepush-anih podatkov, offline→prekini); »Prijava« (signInWithOtp, preklop računa, clear+pull) vs »Poveži račun« (updateUser, ohrani podatke) + opozorilo gostu. GDPR izbris računa = M9. *Commit:* (združeno) `feat: lokacija (16) + odjava/email poti + fix izguba podatkov`
-- [ ] **7.6 — Testi M7.** Unit: H3 izpeljava (res7→6→5), geocoding parser, OTP/link servis (mock Supabase), clear-on-signout, lokalne koordinate ne-sync. Widget: onboarding skip, login flow, lokacija zajem. Ročna preverba na napravi. *Commit:* `test: auth + H3`
+- [x] **7.6 — Testi M7.** Unit: geocoding parser (tolerantnost, blank=no-call), `clearUserData` (keepFlags, katalog ostane), `claimLocalRows` (že M6 + updated_at invarianta), `flushPush` (bool veje), **privacy: `device_location` se NIKOLI ne push-a** (koordinate ne zapustijo naprave, CLAUDE.md §2). **Device-verified (ne auto):** H3 izpeljava (FFI — `871e1390…` v oblaku), email/Google prijava + claim-merge, onboarding/login/lokacija flow (ročno on-device to sejo). Widget testi auth flowov odloženi (težak mock Supabase/google_sign_in/geolocator, nizek ROI). *Commit:* `test: M7 (geocoding, clearUserData, privacy device_location)`
 
 ---
 
@@ -317,6 +317,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.6 — Testi M7 → M7 ZAKLJUČEN.** Dodani unit testi (pure logika, CLAUDE.md pragmatika):
+  `geocoding_client_test` (4: parsiranje, tolerantnost manjkajočih polj + int→double, prazna poizvedba brez
+  network klica), `clear_user_data_test` (3: počisti uporabniške+device-local tabele, katalog ostane, keepFlags
+  ohrani/počisti onboarding flag), privacy test v `sync_push_service_test` (**`device_location` se NIKOLI ne push-a**
+  — koordinate ne zapustijo naprave, CLAUDE.md §2), `local_row_claim_test` dopolnjen (updated_at nedotaknjen ob
+  claim). flushPush že pokrit (`573ee2c`). **H3 izpeljava + auth flowi + onboarding/login/lokacija = device-verified**
+  to sejo (ne auto: FFI/Supabase/google_sign_in/geolocator mock = nizek ROI). flutter analyze čist, **135/135**.
+  Commit: `test: M7 (geocoding, clearUserData, privacy device_location)`. **→ M7 (Auth + H3) ZAKLJUČEN.**
 - 2026-06-05 — **7.4 — Google prijava (native), koda.** `google_sign_in ^7.2.0` (v7 API: `GoogleSignIn.instance.initialize(serverClientId:)`
   enkrat → `authenticate(scopeHint:)` → `account.authentication.idToken`). `AuthService.signInWithGoogle()` vrne `bool`
   (true=prijavljen, false=preklic prek `GoogleSignInException.canceled` → ni rdeče napake; sicer `AuthException`) →

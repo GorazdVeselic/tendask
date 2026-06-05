@@ -38,6 +38,9 @@ void main() {
     final a1 = await area('a1');
     expect(a1.userId, 'uid-1');
     expect(a1.syncStatus, kSyncPending);
+    // Claiming is ownership, not a content edit — updated_at must be untouched
+    // (drift reads timestamps back in local time, so compare the moment).
+    expect(a1.updatedAt.isAtSameMomentAs(t0), isTrue);
   });
 
   test('claims across every owned table at once', () async {

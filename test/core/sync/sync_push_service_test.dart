@@ -113,6 +113,20 @@ void main() {
     expect(a1.syncStatus, kSyncPending); // newer change must still flush later
   });
 
+  test('never pushes device_location — raw coordinates stay on the device',
+      () async {
+    // Privacy by design (CLAUDE.md §2): only derived H3 cells (in profile) sync;
+    // the raw lat/lon in device_location must never reach the cloud.
+    await db.into(db.deviceLocations).insert(DeviceLocationsCompanion.insert(
+        latitude: 46.05, longitude: 14.5, updatedAt: t0));
+    await insertArea('a1'); // a pending owned row so the push actually runs
+
+    await service.push();
+
+    expect(upsert.calls, isNot(contains('device_location')));
+    expect(upsert.calls, ['area']); // only the owned table, never coordinates
+  });
+
   test('fail-fast: a failing table aborts the rest, leaving them pending',
       () async {
     await insertArea('a1');
