@@ -1018,6 +1018,9 @@ class Translations$settings$sl {
 	/// sl: 'Prijavi se in shrani podatke v oblak'
 	String get sign_in_prompt => 'Prijavi se in shrani podatke v oblak';
 
+	/// sl: 'Prijavljen — podatki v oblaku'
+	String get signed_in => 'Prijavljen — podatki v oblaku';
+
 	/// sl: 'Lokacija'
 	String get section_location => 'Lokacija';
 
@@ -1394,6 +1397,7 @@ extension on Translations {
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',
+			'settings.signed_in' => 'Prijavljen — podatki v oblaku',
 			'settings.section_location' => 'Lokacija',
 			'settings.location_placeholder' => 'Lokacija za vreme',
 			'settings.section_language' => 'Jezik',

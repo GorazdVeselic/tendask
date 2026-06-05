@@ -302,6 +302,7 @@
     "title": "Einstellungen",
     "profile_guest": "Gast (nicht angemeldet)",
     "sign_in_prompt": "Melde dich an, um deine Daten zu sichern",
+    "signed_in": "Angemeldet — Daten gesichert",
     "section_location": "Standort",
     "location_placeholder": "Wetter-Standort",
     "section_language": "Sprache",

@@ -488,6 +488,7 @@ class _Translations$settings$en extends Translations$settings$sl {
 	@override String get title => 'Settings';
 	@override String get profile_guest => 'Guest (not signed in)';
 	@override String get sign_in_prompt => 'Sign in to back up your data';
+	@override String get signed_in => 'Signed in — data backed up';
 	@override String get section_location => 'Location';
 	@override String get location_placeholder => 'Weather location';
 	@override String get section_language => 'Language';
@@ -801,6 +802,7 @@ extension on TranslationsEn {
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',
+			'settings.signed_in' => 'Signed in — data backed up',
 			'settings.section_location' => 'Location',
 			'settings.location_placeholder' => 'Weather location',
 			'settings.section_language' => 'Language',

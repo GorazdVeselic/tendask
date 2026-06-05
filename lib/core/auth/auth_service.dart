@@ -24,6 +24,10 @@ class AuthService {
 
   bool get hasSession => _client?.auth.currentUser != null;
 
+  /// The signed-in email, or null for a guest (anonymous) / offline build.
+  /// Anonymous sessions have no email, so this doubles as a "signed in" signal.
+  String? get email => _client?.auth.currentUser?.email;
+
   /// Signs in anonymously when configured and not already signed in. Offline is
   /// a no-op: the app stays on [kLocalUserId] and a later sync trigger (M6.4)
   /// retries; local rows are claimed once a session exists.
@@ -66,4 +70,12 @@ AuthService authService(Ref ref) {
   // Supabase.instance throws when initialize() was skipped (no config).
   final client = kSupabaseUrl.isEmpty ? null : Supabase.instance.client;
   return AuthService(client);
+}
+
+/// Emits on sign-in/out/email-link so auth-dependent UI (e.g. settings profile)
+/// rebuilds. Empty stream on an offline build (no Supabase configured).
+@riverpod
+Stream<AuthState> authStateChanges(Ref ref) {
+  if (kSupabaseUrl.isEmpty) return const Stream.empty();
+  return Supabase.instance.client.auth.onAuthStateChange;
 }

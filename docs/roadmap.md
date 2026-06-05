@@ -338,7 +338,12 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   custom SMTP = Resend (sender `onboarding@resend.dev`; brez verificirane domene pošlje le na lastni Resend
   e-naslov — domena `tendask.com` = M9), template »Change email address« z `{{ .Token }}`. **ON-DEVICE ✅:**
   email OTP prijava uspela, e-pošta povezana z obstoječim anon `user.id` (podatki ohranjeni, vidno v Supabase
-  users). Commit: `fix: e-pošta OTP popravki (dolžina kode, napake, vstop)`. **Naslednji: 7.3c (lokacija 16).**
+  users). Commit: `fix: e-pošta OTP popravki (dolžina kode, napake, vstop)`.
+- 2026-06-05 — **Auth-aware profil v nastavitvah.** Profil tile v Nastavitvah je bil statičen (»Gost« tudi po
+  prijavi). `AuthService.email` getter + `authStateChangesProvider` (StreamProvider nad Supabase
+  `onAuthStateChange`); Settings watcha stream → rebuild ob prijavi/odjavi: prijavljen = prikaz e-pošte +
+  `signed_in`, gost = poziv → `/login`. Odjava ostane 7.5b. i18n `signed_in`. flutter analyze čist, 123/123.
+  Commit: `feat: auth-aware profil v nastavitvah`. **Naslednji: 7.3c (lokacija 16).**
 - 2026-06-05 — **7.3a — Login zaslon (13).** `features/auth/presentation/login_screen.dart`: brand mark
   (Icons.eco v soft containerju), naslov + value-prop, gumbi Google (OutlinedButton) + e-pošta
   (FilledButton.icon accent), »Preizkusi brez računa« (underline TextButton), `guest_warning` (cs.error) +

@@ -302,6 +302,7 @@
     "title": "Settings",
     "profile_guest": "Guest (not signed in)",
     "sign_in_prompt": "Sign in to back up your data",
+    "signed_in": "Signed in — data backed up",
     "section_location": "Location",
     "location_placeholder": "Weather location",
     "section_language": "Language",

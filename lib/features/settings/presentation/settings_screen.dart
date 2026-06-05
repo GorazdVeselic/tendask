@@ -31,6 +31,9 @@ class SettingsScreen extends ConsumerWidget {
     final t = context.t;
     final theme = Theme.of(context);
     final current = LocaleSettings.currentLocale;
+    // Rebuild on sign-in/out so the profile tile reflects the current account.
+    ref.watch(authStateChangesProvider);
+    final email = ref.read(authServiceProvider).email;
 
     void comingSoon() {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -53,17 +56,22 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
         children: [
-          // Profile — entry point to sign in / link an account. Auth-aware
-          // state (show email, sign out) is wired in M7.5; for now a guest can
-          // reach the login screen from here at any time.
+          // Profile. Signed in → show the email; guest → entry point to sign in
+          // (link account, keeps data). Sign-out is wired in M7.5.
           Card(
-            child: ListTile(
-              leading: const CircleAvatar(child: Text('👤')),
-              title: Text(t.settings.profile_guest),
-              subtitle: Text(t.settings.sign_in_prompt),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push('/login'),
-            ),
+            child: email != null
+                ? ListTile(
+                    leading: const CircleAvatar(child: Icon(Icons.person)),
+                    title: Text(email),
+                    subtitle: Text(t.settings.signed_in),
+                  )
+                : ListTile(
+                    leading: const CircleAvatar(child: Text('👤')),
+                    title: Text(t.settings.profile_guest),
+                    subtitle: Text(t.settings.sign_in_prompt),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () => context.push('/login'),
+                  ),
           ),
 
           // Location (placeholder — M7)

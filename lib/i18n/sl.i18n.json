@@ -306,6 +306,7 @@
     "title": "Nastavitve",
     "profile_guest": "Gost (brez prijave)",
     "sign_in_prompt": "Prijavi se in shrani podatke v oblak",
+    "signed_in": "Prijavljen — podatki v oblaku",
     "section_location": "Lokacija",
     "location_placeholder": "Lokacija za vreme",
     "section_language": "Jezik",

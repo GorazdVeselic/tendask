@@ -488,6 +488,7 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get title => 'Einstellungen';
 	@override String get profile_guest => 'Gast (nicht angemeldet)';
 	@override String get sign_in_prompt => 'Melde dich an, um deine Daten zu sichern';
+	@override String get signed_in => 'Angemeldet — Daten gesichert';
 	@override String get section_location => 'Standort';
 	@override String get location_placeholder => 'Wetter-Standort';
 	@override String get section_language => 'Sprache';
@@ -801,6 +802,7 @@ extension on TranslationsDe {
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
+			'settings.signed_in' => 'Angemeldet — Daten gesichert',
 			'settings.section_location' => 'Standort',
 			'settings.location_placeholder' => 'Wetter-Standort',
 			'settings.section_language' => 'Sprache',
