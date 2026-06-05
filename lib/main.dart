@@ -1,15 +1,13 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
 import 'core/auth/auth_service.dart';
-import 'core/auth/local_row_claim.dart';
 import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
+import 'core/sync/sync_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
 import 'i18n/translations.g.dart';
@@ -37,8 +35,10 @@ void main() async {
       await container.read(profileRepositoryProvider).getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
-  // Bring up the anonymous session in the background — never block first paint.
-  unawaited(_bootstrapSession(container));
+  // Start the background sync coordinator: a first cycle now (sign-in + claim +
+  // push + pull + catalog) plus reconnect/periodic triggers. Fire-and-forget —
+  // never blocks first paint; offline fails gracefully and a later trigger retries.
+  container.read(syncCoordinatorProvider.notifier).start();
 
   runApp(
     TranslationProvider(
@@ -48,15 +48,4 @@ void main() async {
       ),
     ),
   );
-}
-
-/// Signs in anonymously so sync has a real auth.uid(), then claims any rows
-/// created locally before the session existed. Offline-first: sign-in fails
-/// gracefully when offline (no-op), and M6.4 retries on reconnect.
-Future<void> _bootstrapSession(ProviderContainer container) async {
-  final auth = container.read(authServiceProvider);
-  if (!auth.hasSession) await auth.ensureAnonymousSession();
-  if (auth.hasSession) {
-    await claimLocalRows(container.read(databaseProvider), auth.userId);
-  }
 }

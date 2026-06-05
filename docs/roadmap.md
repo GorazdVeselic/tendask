@@ -197,7 +197,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **6.3 — Pull.** `updated_at >= last_pulled_at` → upsert v drift; `deleted=true` → soft-delete lokalno. Razrezan na **6.3a** (user tabele) + **6.3b** (katalog pull + reaktiven provider).
   - [x] **6.3a — User-table pull.** Reverse mapperji (remote→drift Companion, `synced`), `SyncPullService` (inkluzivni kurzor + idempotenten upsert, LWW po `updated_at` prek `DoUpdate(where:)`, tombstone=soft-delete, FK red, child brez user_id filtra=RLS), `SyncCursors` tabela (v5), push guard (izključi `user_id='local'`). *Commit:* `feat: sync pull (user tabele)`
   - [x] **6.3b — Katalog pull + reaktivnost.** `CatalogSyncService` (full-pull, upsert po slug; category=insert-or-ignore); `catalog_provider` → StreamProvider (pull reaktivno osveži UI); SeedService **ostane** (offline fallback). Generator refaktoriran (`buildCatalogSql()` čista fn) + parnost test (committan `catalog.sql` == regeneriran) + id-kanoničnost test. *Commit:* `feat: katalog pull + reaktiven provider`
-- [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
+- [x] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at` (že v 6.3). `SyncService` orkestrator (seja+claim→push→pull→katalog; re-entrancy guard; izolirane faze; katalog le ob zagonu/reconnectu) + `SyncCoordinator` (3 sprožilci prek `onlineStatusProvider` + `Timer.periodic`). *Commit:* `feat: sync sprožilci + LWW`
 - [ ] **6.5 — Testi M6.** Unit (LWW logika, vrstni red) + integracijski proti testnemu projektu. *Commit:* `test: sync`
 
 ---
@@ -296,6 +296,26 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **6.4 — Sprožilci + LWW.** LWW je bil že uveljavljen v 6.3 (`DoUpdate(where:)` v pull); 6.4
+  doda samo **žico sprožilcev** (`tech-stack §2`: zagon · povezava · periodično). `core/sync/sync_service.dart`:
+  `SyncService.sync({includeCatalog})` = en cikel **seja(+claim) → push → pull → katalog**, z **re-entrancy
+  guardom** (`_running` → prekrivajoči se sprožilci se ne izvajajo hkrati; tekoči cikel že pokrije delo) in
+  **izolacijo faz** (`_phase()` ujame napako → `debugPrint`, ne blokira ostalih faz; offline je normalno stanje,
+  vrstice ostanejo `pending` za naslednji sprožilec). Push/pull gated na `hasSession()`; **katalog teče tudi brez
+  seje** (public-read), a **le ob `includeCatalog`** (zagon/reconnect) — periodični tick kataloga NE pulla (redki
+  pull, baterija/podatki, §5). Odvisnosti prek **funkcijskih šivov** (`bool Function() hasSession`, `Future<void>
+  Function() ensureSession/push/pull/catalog`; null šiv = offline build → faza skipped) kot obstoječi
+  `RemoteUpsert`/`RemoteFetch` → orkestracija testabilna brez Supabase. `core/sync/sync_coordinator.dart`:
+  keepAlive `SyncCoordinator` notifier — **reconnect** prek `ref.listen(onlineStatusProvider)` (fire le ob prehodu
+  v online: `next.asData?.value==true && prev != true`), **periodično** `Timer.periodic(kSyncInterval)` (brez
+  kataloga), `ref.onDispose` počisti timer; **zagon** prek `start()` (cikel z katalogom). `config.dart`:
+  `kSyncInterval = 15 min`. `main.dart`: `_bootstrapSession` (prej le ensure+claim) **zamenjal**
+  `coordinator.start()` — startup cikel zdaj poganja tudi push/pull/katalog; fire-and-forget, ne blokira first
+  paint. +6 testov (`sync_service_test.dart`: vrstni red faz / gating brez seje (katalog vseeno) / `includeCatalog`
+  gate / izolacija napake faze / re-entrancy skip+sprostitev / null-šivi). Mimogrede odstranjen neuporabljen
+  `drift/drift.dart` import v `catalog_sync_service_test.dart`. flutter analyze čist, **119/119 testov**.
+  **Ročna preverba na napravi = del M6.5** (timer/connectivity sprožilci so tanka žica). Commit:
+  `feat: sync sprožilci + LWW`. **Naslednji: 6.5 (testi M6: integracijski proti testnemu projektu).**
 - 2026-06-05 — **6.3b — Katalog pull + reaktivnost → 6.3 ZAKLJUČEN.** **Odločitev (z uporabnikom, popravek
   6.2.0 dnevnika):** SeedService **OSTANE** (bundlan offline fallback — prvi zagon na vrtu brez signala deluje;
   skladno `tech-stack.md §2` »bundled seed + redki pull«). Prejšnji »pull-only, umakni seed« plan **zavržen**

@@ -1,0 +1,75 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'sync_coordinator.dart';
+
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
+/// keepAlive — lives for the whole app session. Instantiate once after the
+/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+
+@ProviderFor(SyncCoordinator)
+final syncCoordinatorProvider = SyncCoordinatorProvider._();
+
+/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
+/// keepAlive — lives for the whole app session. Instantiate once after the
+/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+final class SyncCoordinatorProvider
+    extends $NotifierProvider<SyncCoordinator, void> {
+  /// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
+  /// keepAlive — lives for the whole app session. Instantiate once after the
+  /// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+  SyncCoordinatorProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'syncCoordinatorProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$syncCoordinatorHash();
+
+  @$internal
+  @override
+  SyncCoordinator create() => SyncCoordinator();
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(void value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<void>(value),
+    );
+  }
+}
+
+String _$syncCoordinatorHash() => r'e70dad9a95b7a24dd145fc471d4ee016341e322d';
+
+/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
+/// keepAlive — lives for the whole app session. Instantiate once after the
+/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+
+abstract class _$SyncCoordinator extends $Notifier<void> {
+  void build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<void, void>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<void, void>,
+              void,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

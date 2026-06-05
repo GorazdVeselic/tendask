@@ -32,6 +32,12 @@ const kTaskTypeGridCollapsed = 9;
 const kWeatherConnectTimeout = Duration(seconds: 10);
 const kWeatherReceiveTimeout = Duration(seconds: 20);
 
+/// Periodic background sync cadence while the app is running. Sync is
+/// incremental and light; the catalog (rarely changes) is pulled only on
+/// startup/reconnect, not on every tick — keeps the garden device's data and
+/// battery use down (CLAUDE.md §efficiency).
+const kSyncInterval = Duration(minutes: 15);
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the
