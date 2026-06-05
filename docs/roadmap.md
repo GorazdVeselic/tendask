@@ -49,7 +49,7 @@
 | **M3** | Območja · rastline · zaloge · opombe | Preostali offline zasloni | `[x]` |
 | **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[x]` |
 | **M5** | Supabase zaledje | Projekt + shema + RLS | `[x]` |
-| **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[ ]` |
+| **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[x]` |
 | **M7** | Auth + H3 | Anonimno + linkanje + lokacija/H3 na napravi | `[ ]` |
 | **M8** | Lokalna obvestila (plast A) | Opomniki + deep-link + zasloni 19–22 | `[ ]` |
 | **M9** | Polish + monitoring + Android release | Sentry, ikona/splash, neskladja, Play test | `[ ]` |
@@ -198,7 +198,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **6.3a — User-table pull.** Reverse mapperji (remote→drift Companion, `synced`), `SyncPullService` (inkluzivni kurzor + idempotenten upsert, LWW po `updated_at` prek `DoUpdate(where:)`, tombstone=soft-delete, FK red, child brez user_id filtra=RLS), `SyncCursors` tabela (v5), push guard (izključi `user_id='local'`). *Commit:* `feat: sync pull (user tabele)`
   - [x] **6.3b — Katalog pull + reaktivnost.** `CatalogSyncService` (full-pull, upsert po slug; category=insert-or-ignore); `catalog_provider` → StreamProvider (pull reaktivno osveži UI); SeedService **ostane** (offline fallback). Generator refaktoriran (`buildCatalogSql()` čista fn) + parnost test (committan `catalog.sql` == regeneriran) + id-kanoničnost test. *Commit:* `feat: katalog pull + reaktiven provider`
 - [x] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at` (že v 6.3). `SyncService` orkestrator (seja+claim→push→pull→katalog; re-entrancy guard; izolirane faze; katalog le ob zagonu/reconnectu) + `SyncCoordinator` (3 sprožilci prek `onlineStatusProvider` + `Timer.periodic`). *Commit:* `feat: sync sprožilci + LWW`
-- [ ] **6.5 — Testi M6.** Unit (LWW logika, vrstni red) + integracijski proti testnemu projektu. *Commit:* `test: sync`
+- [x] **6.5 — Testi M6.** Unit (LWW + vrstni red) so že pokriti v 6.2–6.4; dodan **integracijski round-trip** (`sync_roundtrip_test.dart`): `_FakeCloud` služi push upsert + pull fetch nad eno shrambo → cikel teče skozi realne `*ToRemote`/`*FromRemote` mapperje (2 drift bazi = 2 napravi); pokriva fidelity, jsonb/enum, LWW med napravama, tombstone. Živa integracija proti testnemu projektu = on-device preverba (6.4). *Commit:* `test: sync`
 
 ---
 
@@ -296,6 +296,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **6.5 — Testi M6 → M6 ZAKLJUČEN.** Unit del (LWW logika + FK vrstni red) je bil **že
+  pokrit** v 6.2 (push: FK red, mark-synced, updated_at guard, fail-fast), 6.3a (pull: LWW obe smeri,
+  tombstone, inkluzivni kurzor, child-RLS filter), 6.3b (katalog), 6.4 (orchestrator: vrstni red faz,
+  gating, re-entrancy, izolacija). Prava vrzel = **integracijski round-trip**: push in pull sta bila
+  testirana ločeno z ročno hranjenimi podatki na vsaki strani. `test/core/sync/sync_roundtrip_test.dart`:
+  `_FakeCloud` služi **oba šiva hkrati** (`upsert`=push tarča, `fetch`=pull vir) nad eno `Map` shrambo →
+  push-nato-pull teče skozi **realne `*ToRemote`+`*FromRemote` mapperje** (ujame asimetrijo, ki je per-service
+  testi ne morejo). 2 in-memory drift bazi = 2 napravi prek enega oblaka. 4 testi: (1) area fidelity
+  (ime/enum/protected, vir→synced); (2) task enum status + jsonb weather round-trip + sočasna area; (3) **LWW
+  med napravama** (B uredi novejše → A-jev starejši synced povozi ob pull); (4) tombstone (B soft-delete →
+  propagira kot lokalni soft-delete na A). **Odločitev o "integracijski proti testnemu projektu":** skladno
+  `CLAUDE.md` (mock zunanje dep-e, brez e2e; CI nima Supabase ključev) avtomatizirani suite ostane
+  fake-cloud; **živa integracija proti pravemu projektu = on-device preverba (6.4, opravljena)**. flutter
+  analyze čist, **123/123 testov**. Commit: `test: sync`. **M6 ZAKLJUČEN → naslednji M7 (Auth + H3 na napravi).**
 - 2026-06-05 — **6.4 — Sprožilci + LWW.** LWW je bil že uveljavljen v 6.3 (`DoUpdate(where:)` v pull); 6.4
   doda samo **žico sprožilcev** (`tech-stack §2`: zagon · povezava · periodično). `core/sync/sync_service.dart`:
   `SyncService.sync({includeCatalog})` = en cikel **seja(+claim) → push → pull → katalog**, z **re-entrancy
@@ -314,8 +328,12 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   paint. +6 testov (`sync_service_test.dart`: vrstni red faz / gating brez seje (katalog vseeno) / `includeCatalog`
   gate / izolacija napake faze / re-entrancy skip+sprostitev / null-šivi). Mimogrede odstranjen neuporabljen
   `drift/drift.dart` import v `catalog_sync_service_test.dart`. flutter analyze čist, **119/119 testov**.
-  **Ročna preverba na napravi = del M6.5** (timer/connectivity sprožilci so tanka žica). Commit:
-  `feat: sync sprožilci + LWW`. **Naslednji: 6.5 (testi M6: integracijski proti testnemu projektu).**
+  Commit: `feat: sync sprožilci + LWW`.
+  **On-device preverba ✅ (SM A536B / Android 16, debug build, headless — drift baza prek `run-as`, oblak
+  prek pooler):** (1) startup→nova anon seja (`auth.users` 2→3); (2) **PUSH** lokalna area+task → oblak,
+  `synced`; (3) **PULL** oblačno vstavljena area → lokalno `synced`; (4) inkrementalni kurzor (`sync_cursor`,
+  ednina!) napreduje na `updated_at` zadnje pull vrstice; (5) katalog 26/34/57=oblak; (6) brez crasha čez več
+  sync ciklov. **Naslednji: 6.5 (testi M6: integracijski proti testnemu projektu).**
 - 2026-06-05 — **6.3b — Katalog pull + reaktivnost → 6.3 ZAKLJUČEN.** **Odločitev (z uporabnikom, popravek
   6.2.0 dnevnika):** SeedService **OSTANE** (bundlan offline fallback — prvi zagon na vrtu brez signala deluje;
   skladno `tech-stack.md §2` »bundled seed + redki pull«). Prejšnji »pull-only, umakni seed« plan **zavržen**
