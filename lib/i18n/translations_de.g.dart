@@ -128,7 +128,6 @@ class _Translations$auth$de extends Translations$auth$sl {
 
 	// Translations
 	@override String get title => 'Willkommen bei Tendask';
-	@override String get title_link => 'Konto verknüpfen';
 	@override String get value_prop => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.';
 	@override String get continue_apple => 'Mit Apple fortfahren';
 	@override String get continue_google => 'Mit Google fortfahren';
@@ -160,10 +159,6 @@ class _Translations$email_login$de extends Translations$email_login$sl {
 	@override String get err_code => 'Gib den Code aus der E-Mail ein.';
 	@override String get err_send => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get err_verify => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.';
-	@override String get switch_warn_title => 'Konto wechseln?';
-	@override String get switch_warn_body => 'Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.';
-	@override String get switch_warn_confirm => 'Trotzdem wechseln';
-	@override String get switch_warn_cancel => 'Abbrechen';
 }
 
 // Path: location
@@ -600,7 +595,6 @@ extension on TranslationsDe {
 			'onboarding.nearby_title' => 'Deine Umgebung',
 			'onboarding.nearby_body' => 'Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.',
 			'auth.title' => 'Willkommen bei Tendask',
-			'auth.title_link' => 'Konto verknüpfen',
 			'auth.value_prop' => 'Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.',
 			'auth.continue_apple' => 'Mit Apple fortfahren',
 			'auth.continue_google' => 'Mit Google fortfahren',
@@ -623,10 +617,6 @@ extension on TranslationsDe {
 			'email_login.err_code' => 'Gib den Code aus der E-Mail ein.',
 			'email_login.err_send' => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.',
 			'email_login.err_verify' => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.',
-			'email_login.switch_warn_title' => 'Konto wechseln?',
-			'email_login.switch_warn_body' => 'Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.',
-			'email_login.switch_warn_confirm' => 'Trotzdem wechseln',
-			'email_login.switch_warn_cancel' => 'Abbrechen',
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',

@@ -29,8 +29,8 @@ class SettingsScreen extends ConsumerWidget {
         ref.read(profileRepositoryProvider).setLang(userId, loc.languageCode));
   }
 
-  /// Sign out + wipe local data + start a fresh anonymous session, then return
-  /// to onboarding — a full reset to clean state (M7.5b).
+  /// Sign out + wipe local data, then return to onboarding — back to a clean
+  /// local guest state (M7.5b). Cloud data stays and returns on re-sign-in.
   Future<void> _logout(BuildContext context, WidgetRef ref) async {
     final t = context.t;
     final confirmed = await showConfirmDialog(
@@ -42,23 +42,24 @@ class SettingsScreen extends ConsumerWidget {
     );
     if (!confirmed || !context.mounted) return;
     final auth = ref.read(authServiceProvider);
-    // Flush pending to the cloud while the session is still valid, so a re-login
-    // with the same account restores it; clearUserData is irreversible. If the
-    // cloud is unreachable (offline), keep local data and abort the sign-out.
-    final flushed = await ref.read(syncServiceProvider).flushPush();
-    if (!context.mounted) return;
-    if (!flushed) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(t.settings.logout_offline),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-      return;
+    // Signed in: flush pending to the cloud first so a re-login restores it;
+    // clearUserData is irreversible, so abort if the cloud is unreachable. A
+    // guest has no cloud account — nothing to flush, just reset to clean state.
+    if (auth.hasSession) {
+      final flushed = await ref.read(syncServiceProvider).flushPush();
+      if (!context.mounted) return;
+      if (!flushed) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(t.settings.logout_offline),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+        return;
+      }
     }
     await auth.signOut();
     await ref.read(databaseProvider).clearUserData();
-    await auth.ensureAnonymousSession();
     if (!context.mounted) return;
     context.go('/onboarding');
   }
@@ -107,8 +108,8 @@ class SettingsScreen extends ConsumerWidget {
                     title: Text(t.settings.profile_guest),
                     subtitle: Text(t.settings.sign_in_prompt),
                     trailing: const Icon(Icons.chevron_right),
-                    // Guest already has local data → link mode (keep it).
-                    onTap: () => context.push('/login?link=true'),
+                    // Signing in keeps the guest's local data (claimed on sign-in).
+                    onTap: () => context.push('/login'),
                   ),
           ),
 

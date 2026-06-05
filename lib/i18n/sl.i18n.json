@@ -32,7 +32,6 @@
   },
   "auth": {
     "title": "Dobrodošel v Tendask",
-    "title_link": "Poveži račun",
     "value_prop": "Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.",
     "continue_apple": "Nadaljuj z Apple",
     "continue_google": "Nadaljuj z Google",
@@ -56,11 +55,7 @@
     "err_email": "Vpiši veljaven e-poštni naslov.",
     "err_code": "Vpiši kodo iz e-pošte.",
     "err_send": "Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.",
-    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova.",
-    "switch_warn_title": "Preklop računa?",
-    "switch_warn_body": "S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.",
-    "switch_warn_confirm": "Vseeno preklopi",
-    "switch_warn_cancel": "Prekliči"
+    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova."
   },
   "location": {
     "title": "Kje vrtnariš?",

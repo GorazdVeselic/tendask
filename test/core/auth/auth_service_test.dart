@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:tendask/core/auth/auth_service.dart';
 
 void main() {
@@ -8,9 +9,14 @@ void main() {
     final auth = AuthService(null);
     expect(auth.userId, kLocalUserId);
     expect(auth.hasSession, isFalse);
+    expect(auth.email, isNull);
   });
 
-  test('ensureAnonymousSession is a no-op with no client', () async {
-    await AuthService(null).ensureAnonymousSession();
+  test('email OTP methods throw with no client (offline build)', () async {
+    final auth = AuthService(null);
+    await expectLater(
+        auth.sendEmailOtp('a@b.si'), throwsA(isA<AuthException>()));
+    await expectLater(
+        auth.verifyEmailOtp('a@b.si', '123456'), throwsA(isA<AuthException>()));
   });
 }

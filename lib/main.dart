@@ -36,9 +36,10 @@ void main() async {
       await container.read(profileRepositoryProvider).getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
-  // Start the background sync coordinator: a first cycle now (sign-in + claim +
-  // push + pull + catalog) plus reconnect/periodic triggers. Fire-and-forget —
-  // never blocks first paint; offline fails gracefully and a later trigger retries.
+  // Start the background sync coordinator: a first cycle now (claim + push +
+  // pull when signed in; catalog always) plus reconnect/periodic/push-on-save
+  // triggers. Guests stay local (no session) — sync activates on sign-in.
+  // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
   container.read(syncCoordinatorProvider.notifier).start();
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.

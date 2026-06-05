@@ -32,7 +32,6 @@
   },
   "auth": {
     "title": "Willkommen bei Tendask",
-    "title_link": "Konto verknüpfen",
     "value_prop": "Sichere dein Gartentagebuch und verliere deine Historie nicht beim Handywechsel.",
     "continue_apple": "Mit Apple fortfahren",
     "continue_google": "Mit Google fortfahren",
@@ -56,11 +55,7 @@
     "err_email": "Gib eine gültige E-Mail-Adresse ein.",
     "err_code": "Gib den Code aus der E-Mail ein.",
     "err_send": "Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.",
-    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut.",
-    "switch_warn_title": "Konto wechseln?",
-    "switch_warn_body": "Beim Anmelden mit diesem Konto werden die Daten auf diesem Gerät entfernt. Um sie zu behalten, brich ab und nutze „Konto verknüpfen“ in den Einstellungen.",
-    "switch_warn_confirm": "Trotzdem wechseln",
-    "switch_warn_cancel": "Abbrechen"
+    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut."
   },
   "location": {
     "title": "Wo gärtnerst du?",

@@ -45,22 +45,6 @@ class AppDatabase extends _$AppDatabase {
   @override
   int get schemaVersion => 7;
 
-  /// True if the user has any local content — used to warn before a destructive
-  /// account switch (signing into a different account drops this device's rows).
-  Future<bool> hasUserData() async {
-    for (final table in <TableInfo<Table, dynamic>>[
-      areas,
-      tasks,
-      userPlants,
-      supplies,
-      notes,
-    ]) {
-      final any = await (select(table)..limit(1)).get();
-      if (any.isNotEmpty) return true;
-    }
-    return false;
-  }
-
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
   /// true → keep onboarding flag, just drop the previous session's rows before

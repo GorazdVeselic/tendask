@@ -178,9 +178,6 @@ class Translations$auth$sl {
 	/// sl: 'Dobrodošel v Tendask'
 	String get title => 'Dobrodošel v Tendask';
 
-	/// sl: 'Poveži račun'
-	String get title_link => 'Poveži račun';
-
 	/// sl: 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.'
 	String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
 
@@ -255,18 +252,6 @@ class Translations$email_login$sl {
 
 	/// sl: 'Koda ni pravilna ali je potekla. Poskusi znova.'
 	String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
-
-	/// sl: 'Preklop računa?'
-	String get switch_warn_title => 'Preklop računa?';
-
-	/// sl: 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.'
-	String get switch_warn_body => 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.';
-
-	/// sl: 'Vseeno preklopi'
-	String get switch_warn_confirm => 'Vseeno preklopi';
-
-	/// sl: 'Prekliči'
-	String get switch_warn_cancel => 'Prekliči';
 }
 
 // Path: location
@@ -1247,7 +1232,6 @@ extension on Translations {
 			'onboarding.nearby_title' => 'Tvoja okolica',
 			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
 			'auth.title' => 'Dobrodošel v Tendask',
-			'auth.title_link' => 'Poveži račun',
 			'auth.value_prop' => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.',
 			'auth.continue_apple' => 'Nadaljuj z Apple',
 			'auth.continue_google' => 'Nadaljuj z Google',
@@ -1270,10 +1254,6 @@ extension on Translations {
 			'email_login.err_code' => 'Vpiši kodo iz e-pošte.',
 			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
 			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
-			'email_login.switch_warn_title' => 'Preklop računa?',
-			'email_login.switch_warn_body' => 'S prijavo v ta račun bodo podatki s te naprave odstranjeni. Če jih želiš obdržati, prekliči in v Nastavitvah uporabi »Poveži račun«.',
-			'email_login.switch_warn_confirm' => 'Vseeno preklopi',
-			'email_login.switch_warn_cancel' => 'Prekliči',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',

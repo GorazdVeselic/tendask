@@ -93,14 +93,12 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
     GoRoute(
       path: '/login',
       name: 'login',
-      builder: (context, state) =>
-          LoginScreen(link: state.uri.queryParameters['link'] == 'true'),
+      builder: (context, state) => const LoginScreen(),
     ),
     GoRoute(
       path: '/login-email',
       name: 'login-email',
-      builder: (context, state) =>
-          EmailLoginScreen(link: state.uri.queryParameters['link'] == 'true'),
+      builder: (context, state) => const EmailLoginScreen(),
     ),
     GoRoute(
       path: '/location',

@@ -226,9 +226,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
   - [x] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
   - [x] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
-- [ ] **7.4 — Linkanje identitete (Google native).** `google_sign_in`+`signInWithIdToken`/`linkIdentity`; opozorilo "izguba podatkov" pri anonimnem (wireframe 13); po link → pull; 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: linkIdentity (Google) + opozorilo`
+- [ ] **7.4 — Google prijava (native).** `google_sign_in`+`signInWithIdToken` → prijava; nato `claimLocalRows`+push+pull (ohrani gost-podatke, merge — **brez** `linkIdentity`/anon, glej odločitev »gost=lokalno« 7.5c). 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: Google prijava`
 - [ ] **7.5 — Auth lifecycle.**
   - [x] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). Pokrito prek `syncCoordinator.start()` ob verify (link+signin) → takojšen cikel (push→pull). Dodatno **push-ob-shranjevanju** (debounce 2 s prek `db.tableUpdates`) → spremembe v oblaku v sekundah, ne čez periodični tick.
+  - [x] **7.5c — Gost = lokalno (odstrani anon).** Brez `signInAnonymously` (kopičili so se anon računi pred izbiro prijave); gost = drift pod `kLocalUserId`, oblak šele ob prijavi (`claimLocalRows`+push → merge). Email ena pot (`sendEmailOtp`/`verifyEmailOtp`), `link`/updateUser/switch-warn odstranjeni. *(združeno v naslednji commit)*
   - [x] **7.5b — Odjava + reset/clear + email dve poti.** Odjava (potrditev → signOut + `clearUserData` + nova anon → onboarding); **flush push pred clear** (prepreči izgubo nepush-anih podatkov, offline→prekini); »Prijava« (signInWithOtp, preklop računa, clear+pull) vs »Poveži račun« (updateUser, ohrani podatke) + opozorilo gostu. GDPR izbris računa = M9. *Commit:* (združeno) `feat: lokacija (16) + odjava/email poti + fix izguba podatkov`
 - [ ] **7.6 — Testi M7.** Unit: H3 izpeljava (res7→6→5), geocoding parser, OTP/link servis (mock Supabase), clear-on-signout, lokalne koordinate ne-sync. Widget: onboarding skip, login flow, lokacija zajem. Ročna preverba na napravi. *Commit:* `test: auth + H3`
 
@@ -316,6 +317,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.5c — Gost = lokalno (odstrani anonimne seje).** **Odločitev (z uporabnikom):** anonimni `auth.users`
+  so se kopičili še preden je uporabnik izbral način prijave (vsak zagon online + vsaka odjava + »Prijava« =
+  ločen račun → sirote). Rešitev = **gost popolnoma lokalno** (drift pod `kLocalUserId`, **brez** `signInAnonymously`);
+  oblak se vključi šele ob pravi prijavi (email/Google) → `claimLocalRows` posvoji gost-vrstice na nov uid + push →
+  **prijava ohrani podatke (merge, ne reset)**. Ujema se z UI obljubo »brez računa = podatki lokalni«. Spremembe:
+  `auth_service` brez `ensureAnonymousSession`/`signInAnonymously`; **email ena pot** `sendEmailOtp`/`verifyEmailOtp`
+  (odstranjene `sendLinkOtp`/`verifyLinkOtp` = updateUser/emailChange + `sendSignInOtp`/`verifySignInOtp`);
+  `sync_service.ensureSession` ne ustvarja več anon (le claim ob seji); `email_login`/`login` brez `link` veje +
+  `switch_warn`/flush-pred-switch/`hasUserData` odstranjeni (prijava ne briše več); settings `_logout` brez ensureAnon
+  (→ gost stanje; **flush le ob seji** — gost reset brez lažnega offline sporočila), gost tile → `/login`; router brez
+  `?link=`. Branje ni filtrirano po `user_id` (`watchAll` le `deleted=false`)
+  → gost-podatki ob prijavi ostanejo vidni brez utripa (claim teče v ozadju prek `start()`). **Poenostavi 7.4**
+  (Google = `signInWithIdToken`+claim, ne `linkIdentity`). docs: tech-stack §3. **👤 Supabase:** izklopi Anonymous
+  sign-ins + pobriši obstoječe anon userje. flutter analyze čist, **127/127**. Commit: *(združen s spodnjim)*.
 - 2026-06-05 — **7.3c + 7.5a/b — Lokacija (16), odjava/reset, email dve poti + FIX izguba podatkov.**
   **Bug (diagnosticiran z dejstvi, `tmp/sync_verify.py`):** po logout→login z obstoječim emailom se podatki niso
   vrnili. Vzrok = **podatki nikoli push-ani v oblak** (push je bil le periodičen/ob-zagonu/reconnect; `clearUserData`

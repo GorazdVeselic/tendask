@@ -77,11 +77,11 @@ Vsaka uporabniška vrstica (`area`, `user_plant`, `task`, `task_reminder`, `note
 
 ## 3. Auth (Supabase)
 
-- Ponudniki: **Apple · Google · e-pošta OTP · anonimno**.
-- **"Brez računa"** = `signInAnonymously()` → kasneje `linkIdentity()` ob nadgradnji (ohrani podatke).
-- RLS povsod: `user_id = auth.uid()`. Anonimni uporabnik ima veljaven `auth.uid()` → RLS deluje enako.
-- Po prijavi: zaženi prvi **pull**; ob odjavi: počisti lokalno bazo.
-- Opozorilo "izguba podatkov" pri anonimnem (skladno z wireframom 13).
+- Ponudniki: **Apple · Google · e-pošta OTP**.
+- **"Brez računa" = popolnoma lokalno** (drift pod `kLocalUserId`, **brez** Supabase seje — anon račun se NE ustvari, M7 odločitev 2026-06-05). Oblak se vključi šele ob prijavi: `claimLocalRows` posvoji gost-vrstice na nov `auth.uid()` + push → **prijava ohrani gost-podatke (merge)**. Razlog: anon računi so se sicer kopičili še pred izbiro načina prijave; lokalni gost se ujema z UI obljubo (»podatki se ob odstranitvi izgubijo«).
+- RLS povsod: `user_id = auth.uid()` (prijavljen email/Google). Katalog = javno-bralni.
+- Po prijavi: `claimLocalRows` + push + prvi **pull** (eager, prek `start()`); ob odjavi: `flushPush` → `signOut` → počisti lokalno bazo → gost stanje.
+- Opozorilo "izguba podatkov" za gosta (skladno z wireframom 13).
 
 ---
 

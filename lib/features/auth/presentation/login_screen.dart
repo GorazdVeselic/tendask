@@ -6,13 +6,10 @@ import 'package:go_router/go_router.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Sign-in / onboarding choice (wireframe 13): Apple (iOS only — M10), Google
-/// and email, or continue as a guest. Two modes: onboarding sign-in ([link]
-/// false) or "link account" from settings ([link] true → keep current guest
-/// data, no guest option).
+/// and email, or continue as a guest. Signing in keeps the guest's local data
+/// (claimed to the account on sign-in) — there is no separate "link" mode.
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key, this.link = false});
-
-  final bool link;
+  const LoginScreen({super.key});
 
   void _comingSoon(BuildContext context) {
     final t = context.t;
@@ -54,7 +51,7 @@ class LoginScreen extends StatelessWidget {
                     ),
                     const SizedBox(height: 18),
                     Text(
-                      link ? t.auth.title_link : t.auth.title,
+                      t.auth.title,
                       style: theme.textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
@@ -90,31 +87,25 @@ class LoginScreen extends StatelessWidget {
               SizedBox(
                 height: 52,
                 child: FilledButton.icon(
-                  onPressed: () =>
-                      context.push('/login-email${link ? '?link=true' : ''}'),
+                  onPressed: () => context.push('/login-email'),
                   icon: const Icon(Icons.mail_outline, size: 20),
                   label: Text(t.auth.continue_email),
                 ),
               ),
-              // Guest option / data-loss warning only in the onboarding sign-in
-              // flow; in "link account" mode the user is already a guest.
-              if (!link) ...[
-                const SizedBox(height: 6),
-                TextButton(
-                  onPressed: () => _continueAsGuest(context),
-                  child: Text(
-                    t.auth.guest,
-                    style:
-                        const TextStyle(decoration: TextDecoration.underline),
-                  ),
+              const SizedBox(height: 6),
+              TextButton(
+                onPressed: () => _continueAsGuest(context),
+                child: Text(
+                  t.auth.guest,
+                  style: const TextStyle(decoration: TextDecoration.underline),
                 ),
-                const SizedBox(height: 8),
-                Text(
-                  t.auth.guest_warning,
-                  style: theme.textTheme.bodySmall?.copyWith(color: cs.error),
-                  textAlign: TextAlign.center,
-                ),
-              ],
+              ),
+              const SizedBox(height: 8),
+              Text(
+                t.auth.guest_warning,
+                style: theme.textTheme.bodySmall?.copyWith(color: cs.error),
+                textAlign: TextAlign.center,
+              ),
               const SizedBox(height: 10),
               Text(
                 t.auth.legal,

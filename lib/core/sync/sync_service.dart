@@ -103,10 +103,9 @@ SyncService syncService(Ref ref) {
   final catalog = ref.watch(catalogSyncServiceProvider);
   return SyncService(
     hasSession: () => auth.hasSession,
-    // Bring up the anonymous session, then re-own any rows created offline so
-    // the cloud RLS with-check accepts them on the push that follows.
+    // No session for guests (local-only); only when signed in do we re-own any
+    // rows created as a guest so the cloud RLS with-check accepts them on push.
     ensureSession: () async {
-      if (!auth.hasSession) await auth.ensureAnonymousSession();
       if (auth.hasSession) await claimLocalRows(db, auth.userId);
     },
     push: push == null ? null : () async => push.push(),

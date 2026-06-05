@@ -32,7 +32,6 @@
   },
   "auth": {
     "title": "Welcome to Tendask",
-    "title_link": "Link your account",
     "value_prop": "Save your garden journal and don't lose your history when you change phones.",
     "continue_apple": "Continue with Apple",
     "continue_google": "Continue with Google",
@@ -56,11 +55,7 @@
     "err_email": "Enter a valid email address.",
     "err_code": "Enter the code from the email.",
     "err_send": "Couldn't send the code. Check your connection and try again.",
-    "err_verify": "The code is wrong or has expired. Try again.",
-    "switch_warn_title": "Switch account?",
-    "switch_warn_body": "Signing into this account will remove the data on this device. To keep it, cancel and use \"Link account\" in Settings.",
-    "switch_warn_confirm": "Switch anyway",
-    "switch_warn_cancel": "Cancel"
+    "err_verify": "The code is wrong or has expired. Try again."
   },
   "location": {
     "title": "Where do you garden?",

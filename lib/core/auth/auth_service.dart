@@ -5,13 +5,18 @@ import '../config.dart';
 
 part 'auth_service.g.dart';
 
-/// Owner id for rows created before the first sign-in (offline-first: the garden
-/// may have no signal on first launch). Claimed to the real auth.uid() once a
-/// session exists — see claimLocalRows.
+/// Owner id for a guest's rows: the app stays fully local until the user signs
+/// in (no anonymous cloud account is ever created). Claimed to the real
+/// auth.uid() on sign-in — see claimLocalRows.
 const kLocalUserId = 'local';
 
 /// Thin wrapper over Supabase auth. A null client means Supabase was not
 /// configured (fully offline build) → everything falls back to [kLocalUserId].
+///
+/// Guests have no cloud session: the app reads/writes drift under [kLocalUserId]
+/// and only creates a real account when the user signs in with email/Google.
+/// At that point claimLocalRows re-owns the guest's rows to the new uid and they
+/// sync up — so signing in keeps the guest's data (a merge, never a reset).
 class AuthService {
   AuthService(this._client);
 
@@ -19,71 +24,31 @@ class AuthService {
 
   /// Owner id for new rows: the real auth.uid() when signed in, else
   /// [kLocalUserId]. Reads the live client so callers always see the current
-  /// value (a session may appear after an async anonymous sign-in).
+  /// value (a session appears after a sign-in completes).
   String get userId => _client?.auth.currentUser?.id ?? kLocalUserId;
 
   bool get hasSession => _client?.auth.currentUser != null;
 
-  /// The signed-in email, or null for a guest (anonymous) / offline build.
-  /// Anonymous sessions have no email, so this doubles as a "signed in" signal.
+  /// The signed-in email, or null for a guest / offline build. Doubles as a
+  /// "signed in" signal (a guest has no session and therefore no email).
   String? get email => _client?.auth.currentUser?.email;
 
-  /// Signs in anonymously when configured and not already signed in. Offline is
-  /// a no-op: the app stays on [kLocalUserId] and a later sync trigger (M6.4)
-  /// retries; local rows are claimed once a session exists.
-  Future<void> ensureAnonymousSession() async {
-    final client = _client;
-    if (client == null || client.auth.currentUser != null) return;
-    try {
-      await client.auth.signInAnonymously();
-    } on AuthException catch (_) {
-      // Network down / auth unreachable — expected offline; stay on
-      // kLocalUserId. M6.4 retries; rows are claimed once a session exists.
-    }
-  }
-
-  /// Ends the current session. The caller clears local data and starts a fresh
-  /// anonymous session afterwards (sign-out + reset to clean state).
+  /// Ends the current session → back to a local guest. The caller flushes any
+  /// pending push first, then clears local data (sign-out + reset).
   Future<void> signOut() async => _client?.auth.signOut();
 
-  // ---- Link an email to the current anonymous session (keeps data) ----
-
-  /// Sends an OTP to [email] to upgrade the current (anonymous) session to a
-  /// permanent email account. Uses updateUser (not signInWithOtp) so the user
-  /// id is preserved — the local data claimed to the anonymous uid stays.
+  /// Sends an OTP to [email] — creates the account if new, else signs into the
+  /// existing one. After verifying, the caller claims the guest's local rows to
+  /// this account and syncs, so the device's data is kept (merged), not lost.
   /// Requires connectivity; throws [AuthException] when unavailable.
-  Future<void> sendLinkOtp(String email) async {
-    final client = _client;
-    if (client == null) throw const AuthException('Auth not configured');
-    await ensureAnonymousSession();
-    await client.auth.updateUser(UserAttributes(email: email));
-  }
-
-  /// Verifies the OTP [token] for the email-link flow (emailChange).
-  Future<void> verifyLinkOtp(String email, String token) async {
-    final client = _client;
-    if (client == null) throw const AuthException('Auth not configured');
-    await client.auth.verifyOTP(
-      email: email,
-      token: token,
-      type: OtpType.emailChange,
-    );
-  }
-
-  // ---- Sign in with an email account (new or returning) ----
-
-  /// Sends an OTP to sign in to [email] — creates the account if new, else signs
-  /// into the existing one. After verifying, the caller clears the previous
-  /// (anonymous) session's local rows, then pulls this account's data.
-  Future<void> sendSignInOtp(String email) async {
+  Future<void> sendEmailOtp(String email) async {
     final client = _client;
     if (client == null) throw const AuthException('Auth not configured');
     await client.auth.signInWithOtp(email: email);
   }
 
-  /// Verifies the OTP [token] for the sign-in flow (email), switching the
-  /// session to that account.
-  Future<void> verifySignInOtp(String email, String token) async {
+  /// Verifies the OTP [token] for [email], establishing the session.
+  Future<void> verifyEmailOtp(String email, String token) async {
     final client = _client;
     if (client == null) throw const AuthException('Auth not configured');
     await client.auth.verifyOTP(
