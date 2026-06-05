@@ -39,7 +39,8 @@
     "guest": "Preizkusi brez računa",
     "legal": "Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.",
     "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
-    "coming_soon": "Na voljo kmalu."
+    "coming_soon": "Na voljo kmalu.",
+    "google_error": "Prijava z Google ni uspela. Poskusi znova."
   },
   "email_login": {
     "title": "Prijava z e-pošto",

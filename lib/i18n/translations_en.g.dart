@@ -136,6 +136,7 @@ class _Translations$auth$en extends Translations$auth$sl {
 	@override String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
 	@override String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
 	@override String get coming_soon => 'Coming soon.';
+	@override String get google_error => 'Google sign-in failed. Please try again.';
 }
 
 // Path: email_login
@@ -603,6 +604,7 @@ extension on TranslationsEn {
 			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
 			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
 			'auth.coming_soon' => 'Coming soon.',
+			'auth.google_error' => 'Google sign-in failed. Please try again.',
 			'email_login.title' => 'Sign in with email',
 			'email_login.email_label' => 'Email address',
 			'email_login.email_hint' => 'you@example.com',

@@ -21,6 +21,7 @@
 | **Lokalna baza (offline vir resnice)** | **drift** (SQLite) | `drift`, `sqlite3_flutter_libs`, `drift_dev` |
 | **Sync** | **ročni push/pull** (brez zunanje storitve) | — (lastna koda) |
 | Zaledje | **Supabase** (Postgres + Auth + RLS + Storage) | `supabase_flutter` |
+| Prijava (Google native) | **google_sign_in** (idToken → `signInWithIdToken`, M7.4); e-pošta OTP = Supabase native | `google_sign_in` |
 | Modeli/serializacija | **freezed + json_serializable** | `freezed`, `json_annotation`, `json_serializable` |
 | i18n (SL/EN/DE) | **slang** (tip-varni ključi) | `slang`, `slang_flutter` |
 | HTTP (Open-Meteo) | **dio** + tanek lasten client | `dio` |
@@ -77,7 +78,7 @@ Vsaka uporabniška vrstica (`area`, `user_plant`, `task`, `task_reminder`, `note
 
 ## 3. Auth (Supabase)
 
-- Ponudniki: **Apple · Google · e-pošta OTP**.
+- Ponudniki: **Apple (M10) · Google native (`google_sign_in` → `signInWithIdToken`, serverClientId = Web OAuth client) · e-pošta OTP (Supabase native)**.
 - **"Brez računa" = popolnoma lokalno** (drift pod `kLocalUserId`, **brez** Supabase seje — anon račun se NE ustvari, M7 odločitev 2026-06-05). Oblak se vključi šele ob prijavi: `claimLocalRows` posvoji gost-vrstice na nov `auth.uid()` + push → **prijava ohrani gost-podatke (merge)**. Razlog: anon računi so se sicer kopičili še pred izbiro načina prijave; lokalni gost se ujema z UI obljubo (»podatki se ob odstranitvi izgubijo«).
 - RLS povsod: `user_id = auth.uid()` (prijavljen email/Google). Katalog = javno-bralni.
 - Po prijavi: `claimLocalRows` + push + prvi **pull** (eager, prek `start()`); ob odjavi: `flushPush` → `signOut` → počisti lokalno bazo → gost stanje.

@@ -50,3 +50,8 @@ const kPushDebounce = Duration(seconds: 2);
 const kSupabaseUrl = String.fromEnvironment('SUPABASE_URL');
 const kSupabasePublishableKey =
     String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+
+/// Google OAuth **Web** client id (serverClientId for native Google sign-in,
+/// M7.4). Arrives via --dart-define (see dart_defines.json). Empty → the Google
+/// button stays disabled (the rest of the app, incl. email sign-in, still works).
+const kGoogleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');

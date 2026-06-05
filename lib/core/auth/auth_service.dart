@@ -1,3 +1,4 @@
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -21,6 +22,9 @@ class AuthService {
   AuthService(this._client);
 
   final SupabaseClient? _client;
+
+  /// [GoogleSignIn.instance] must be initialized exactly once before use.
+  bool _googleInitialized = false;
 
   /// Owner id for new rows: the real auth.uid() when signed in, else
   /// [kLocalUserId]. Reads the live client so callers always see the current
@@ -56,6 +60,38 @@ class AuthService {
       token: token,
       type: OtpType.email,
     );
+  }
+
+  /// Native Google sign-in (M7.4): obtains a Google ID token and exchanges it
+  /// for a Supabase session. Returns false if the user cancels the picker (not
+  /// an error); throws [AuthException] on a real failure or missing config. The
+  /// caller then claims the guest's local rows and syncs (sign-in keeps data).
+  Future<bool> signInWithGoogle() async {
+    final client = _client;
+    if (client == null) throw const AuthException('Auth not configured');
+    if (kGoogleServerClientId.isEmpty) {
+      throw const AuthException('Google sign-in is not configured');
+    }
+    if (!_googleInitialized) {
+      await GoogleSignIn.instance
+          .initialize(serverClientId: kGoogleServerClientId);
+      _googleInitialized = true;
+    }
+    try {
+      final account = await GoogleSignIn.instance
+          .authenticate(scopeHint: const ['email', 'profile']);
+      final idToken = account.authentication.idToken;
+      if (idToken == null) {
+        throw const AuthException('Google sign-in returned no ID token');
+      }
+      await client.auth
+          .signInWithIdToken(provider: OAuthProvider.google, idToken: idToken);
+      return true;
+    } on GoogleSignInException catch (e) {
+      // User dismissed the picker — a normal outcome, not an error to surface.
+      if (e.code == GoogleSignInExceptionCode.canceled) return false;
+      throw AuthException('Google sign-in failed: ${e.description ?? e.code}');
+    }
   }
 }
 

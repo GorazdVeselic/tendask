@@ -136,6 +136,7 @@ class _Translations$auth$de extends Translations$auth$sl {
 	@override String get legal => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.';
 	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
 	@override String get coming_soon => 'Demnächst verfügbar.';
+	@override String get google_error => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
 }
 
 // Path: email_login
@@ -603,6 +604,7 @@ extension on TranslationsDe {
 			'auth.legal' => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.',
 			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
 			'auth.coming_soon' => 'Demnächst verfügbar.',
+			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
 			'email_login.title' => 'Mit E-Mail anmelden',
 			'email_login.email_label' => 'E-Mail-Adresse',
 			'email_login.email_hint' => 'du@beispiel.de',

@@ -39,7 +39,8 @@
     "guest": "Ohne Konto ausprobieren",
     "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
     "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
-    "coming_soon": "Demnächst verfügbar."
+    "coming_soon": "Demnächst verfügbar.",
+    "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut."
   },
   "email_login": {
     "title": "Mit E-Mail anmelden",

@@ -53,6 +53,7 @@ dependencies:
   connectivity_plus: ^6.1.0
   geolocator: ^14.0.2
   h3_flutter: ^0.7.1
+  google_sign_in: ^7.2.0
 
 dev_dependencies:
   flutter_test:

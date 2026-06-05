@@ -1,26 +1,57 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/auth/auth_service.dart';
+import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Sign-in / onboarding choice (wireframe 13): Apple (iOS only — M10), Google
 /// and email, or continue as a guest. Signing in keeps the guest's local data
 /// (claimed to the account on sign-in) — there is no separate "link" mode.
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key});
 
-  void _comingSoon(BuildContext context) {
+  @override
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends ConsumerState<LoginScreen> {
+  bool _googleLoading = false;
+
+  void _comingSoon() {
     final t = context.t;
     ScaffoldMessenger.of(context)
       ..hideCurrentSnackBar()
       ..showSnackBar(SnackBar(content: Text(t.auth.coming_soon)));
   }
 
-  void _continueAsGuest(BuildContext context) {
-    // Guest continues to the location step (an anonymous session already runs).
+  void _continueAsGuest() {
+    // Guest stays local (no cloud session) — straight to the location step.
     context.go('/location');
+  }
+
+  Future<void> _signInWithGoogle() async {
+    final t = context.t;
+    setState(() => _googleLoading = true);
+    try {
+      final signedIn = await ref.read(authServiceProvider).signInWithGoogle();
+      if (!mounted) return;
+      if (!signedIn) return; // user dismissed the picker
+      // start() claims the guest's local rows to this account, pushes them, and
+      // pulls the account's existing data (a merge — sign-in keeps data).
+      ref.read(syncCoordinatorProvider.notifier).start();
+      context.go('/location');
+    } on Object {
+      if (!mounted) return;
+      ScaffoldMessenger.of(context)
+        ..hideCurrentSnackBar()
+        ..showSnackBar(SnackBar(content: Text(t.auth.google_error)));
+    } finally {
+      if (mounted) setState(() => _googleLoading = false);
+    }
   }
 
   @override
@@ -28,6 +59,7 @@ class LoginScreen extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final busy = _googleLoading;
 
     return Scaffold(
       body: SafeArea(
@@ -72,29 +104,35 @@ class LoginScreen extends StatelessWidget {
                 _DarkButton(
                   icon: Icons.apple,
                   label: t.auth.continue_apple,
-                  onPressed: () => _comingSoon(context),
+                  onPressed: busy ? null : _comingSoon,
                 ),
                 const SizedBox(height: 10),
               ],
               SizedBox(
                 height: 52,
                 child: OutlinedButton(
-                  onPressed: () => _comingSoon(context),
-                  child: Text(t.auth.continue_google),
+                  onPressed: busy ? null : _signInWithGoogle,
+                  child: _googleLoading
+                      ? const SizedBox(
+                          width: 22,
+                          height: 22,
+                          child: CircularProgressIndicator(strokeWidth: 2.5),
+                        )
+                      : Text(t.auth.continue_google),
                 ),
               ),
               const SizedBox(height: 10),
               SizedBox(
                 height: 52,
                 child: FilledButton.icon(
-                  onPressed: () => context.push('/login-email'),
+                  onPressed: busy ? null : () => context.push('/login-email'),
                   icon: const Icon(Icons.mail_outline, size: 20),
                   label: Text(t.auth.continue_email),
                 ),
               ),
               const SizedBox(height: 6),
               TextButton(
-                onPressed: () => _continueAsGuest(context),
+                onPressed: busy ? null : _continueAsGuest,
                 child: Text(
                   t.auth.guest,
                   style: const TextStyle(decoration: TextDecoration.underline),
@@ -129,7 +167,7 @@ class _DarkButton extends StatelessWidget {
 
   final IconData icon;
   final String label;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
 
   @override
   Widget build(BuildContext context) {

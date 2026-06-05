@@ -39,7 +39,8 @@
     "guest": "Try without an account",
     "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
     "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
-    "coming_soon": "Coming soon."
+    "coming_soon": "Coming soon.",
+    "google_error": "Google sign-in failed. Please try again."
   },
   "email_login": {
     "title": "Sign in with email",

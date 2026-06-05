@@ -201,6 +201,9 @@ class Translations$auth$sl {
 
 	/// sl: 'Na voljo kmalu.'
 	String get coming_soon => 'Na voljo kmalu.';
+
+	/// sl: 'Prijava z Google ni uspela. Poskusi znova.'
+	String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
 }
 
 // Path: email_login
@@ -1240,6 +1243,7 @@ extension on Translations {
 			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
 			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
+			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
 			'email_login.title' => 'Prijava z e-pošto',
 			'email_login.email_label' => 'E-poštni naslov',
 			'email_login.email_hint' => 'ti@primer.si',

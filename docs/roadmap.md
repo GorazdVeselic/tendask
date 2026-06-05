@@ -226,7 +226,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
   - [x] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
   - [x] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
-- [ ] **7.4 — Google prijava (native).** `google_sign_in`+`signInWithIdToken` → prijava; nato `claimLocalRows`+push+pull (ohrani gost-podatke, merge — **brez** `linkIdentity`/anon, glej odločitev »gost=lokalno« 7.5c). 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: Google prijava`
+- [x] **7.4 — Google prijava (native).** `google_sign_in ^7.2.0`+`signInWithIdToken` → prijava; nato `start()` (claim+push+pull, ohrani gost-podatke=merge — **brez** `linkIdentity`/anon). AuthService.signInWithGoogle, gumb v login_screen, `kGoogleServerClientId` prek dart-define. **ON-DEVICE ✅:** Google prijava dela, isti email → povezan z obstoječim računom (brez dvojnika), gost-task claim+push (`fertilize`) + računov pull (`mow`/`Trata`) = merge. 👤 Google Cloud Web+Android OAuth (debug SHA-1 `D0:44:…:28:55`) + Supabase Google enabled. *Commit:* `feat: Google prijava`
 - [ ] **7.5 — Auth lifecycle.**
   - [x] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). Pokrito prek `syncCoordinator.start()` ob verify (link+signin) → takojšen cikel (push→pull). Dodatno **push-ob-shranjevanju** (debounce 2 s prek `db.tableUpdates`) → spremembe v oblaku v sekundah, ne čez periodični tick.
   - [x] **7.5c — Gost = lokalno (odstrani anon).** Brez `signInAnonymously` (kopičili so se anon računi pred izbiro prijave); gost = drift pod `kLocalUserId`, oblak šele ob prijavi (`claimLocalRows`+push → merge). Email ena pot (`sendEmailOtp`/`verifyEmailOtp`), `link`/updateUser/switch-warn odstranjeni. *(združeno v naslednji commit)*
@@ -317,6 +317,18 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.4 — Google prijava (native), koda.** `google_sign_in ^7.2.0` (v7 API: `GoogleSignIn.instance.initialize(serverClientId:)`
+  enkrat → `authenticate(scopeHint:)` → `account.authentication.idToken`). `AuthService.signInWithGoogle()` vrne `bool`
+  (true=prijavljen, false=preklic prek `GoogleSignInException.canceled` → ni rdeče napake; sicer `AuthException`) →
+  `supabase signInWithIdToken(provider: google, idToken)`. Po uspehu `start()` (claim+push+pull = merge gost-podatkov,
+  enako kot email; **brez** linkIdentity/anon). `login_screen` → `ConsumerStatefulWidget`, Google gumb ožičen
+  (loading spinner, gumbi disabled med prijavo). `kGoogleServerClientId` prek `--dart-define` (prazno → throw
+  »not configured«, ostalo dela). i18n `auth.google_error`. tech-stack §1/§3. flutter analyze čist, **127/127**.
+  **👤 Faze 1–4 narejene** (Google Cloud Web+Android OAuth client z debug SHA-1, Supabase Google enabled).
+  **ON-DEVICE ✅ (debug build — debug SHA-1 registriran):** Google prijava uspela; isti email kot email-OTP →
+  Supabase **povezal identiteti pod en račun** (`bad8ff62`, brez dvojnika); gost ustvaril task → Google prijava →
+  claim+push (`fertilize` v oblaku) + pull računovih (`mow`/`Trata`) = **oba vidna (merge potrjen)**. **Opomba:** Google
+  zahteva debug-podpisan build (release keystore = drug SHA-1, dodati pred Play). Commit: `feat: Google prijava`.
 - 2026-06-05 — **7.5c — Gost = lokalno (odstrani anonimne seje).** **Odločitev (z uporabnikom):** anonimni `auth.users`
   so se kopičili še preden je uporabnik izbral način prijave (vsak zagon online + vsaka odjava + »Prijava« =
   ločen račun → sirote). Rešitev = **gost popolnoma lokalno** (drift pod `kLocalUserId`, **brez** `signInAnonymously`);
