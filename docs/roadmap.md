@@ -204,13 +204,33 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 ## M7 — Auth + H3 na napravi
 
-**Cilj:** anonimno "brez računa" → kasneje linkanje; lokacija → H3 celice (brez koordinat). §3, §5 tech-stack.
+**Cilj:** anonimno "brez računa" → kasneje linkanje; lokacija → H3 celice (oblak) + lokalne koordinate (za vreme, ne zapustijo naprave). §3, §5 tech-stack. Zasloni 13, 15/15b-d, 16.
 
-- [ ] **7.1 — Anonimno.** `signInAnonymously()`; po prijavi prvi pull; ob odjavi clear lokalne baze. *Commit:* `feat: anonimna prijava + pull/clear`
-- [ ] **7.2 — Onboarding + prijava (13, 15/15b-d, 16).** Zasloni + flow. *Commit:* `feat: onboarding + prijava`
-- [ ] **7.3 — Linkanje identitete.** `linkIdentity` (Apple/Google/email OTP); opozorilo izguba podatkov (anonimno). *Commit:* `feat: linkIdentity + opozorilo`
-- [ ] **7.4 — H3 na napravi.** `h3_flutter`: iz GPS → res-7, izpelji res-6/5; shrani **samo celice** v `profile`. *Commit:* `feat: H3 celice na napravi (zasebnost)`
-- [ ] **7.5 — Testi M7.** *Commit:* `test: auth + H3`
+**Razrešene odločitve (2026-06-05, z uporabnikom):**
+1. **GPS:** `geolocator` (1 nov paket, §1) za GPS; vpisan kraj → lat/lon prek **Open-Meteo Geocoding API** (brez ključa, obstoječi dio — brez paketa).
+2. **OAuth:** **e-pošta OTP** (Supabase native, 0 paketov) + **Google native** (`google_sign_in` + `signInWithIdToken`, 1 nov paket + 👤 Google Cloud OAuth client). **Apple odložen na M10** (rabi iOS/macOS + Apple Developer) → gumb na Androidu **skrit**.
+3. **Koordinate vs zasebnost:** lat/lon shranjen **lokalno-only** (ne-sync drift tabela, push jo izpusti) → vreme bere pravo lokacijo; **samo H3 celice** gredo v `profile` → oblak. CLAUDE.md "ne shrani koordinat" = "ne zapustijo naprave" (skladno wireframe 16).
+4. **Obseg:** polno — lokacija ob onboardingu **nahrani vreme** (zamenja `kDefaultLatitude`) + H3 za V2.
+5. **Izbris računa (GDPR):** **odložen na M9** (polish); M7 ima samo odjavo + clear lokalne baze.
+
+> **Nova paketa izven §1:** `geolocator`, `google_sign_in` — ob izvedbi posodobi `tech-stack.md §1+§3`.
+
+**Vrstni red:** data plast (lokacija+H3) → UI zasloni → linkanje → lifecycle → testi.
+
+- [ ] **7.1 — Lokacija + H3 na napravi (data plast).**
+  - [x] **7.1a — Viri lokacije.** `geolocator`+`h3_flutter` v pubspec (+§1); Android dovoljenja (`ACCESS_FINE/COARSE_LOCATION`); `LocationService` (GPS→lat/lon, graceful zavrnitev); Open-Meteo Geocoding client (kraj→lat/lon, obstoječi dio). *Commit:* `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`
+  - [ ] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
+  - [ ] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
+- [ ] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
+- [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
+  - [ ] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
+  - [ ] **7.3b — E-pošta OTP.** `signInWithOtp`→vnos kode→`verifyOTP` (Supabase native). *Commit:* `feat: e-pošta OTP prijava`
+  - [ ] **7.3c — Lokacija zaslon (16).** Gumb GPS + vnos kraja → 7.1 servis → home. *Commit:* `feat: lokacija zaslon (16)`
+- [ ] **7.4 — Linkanje identitete (Google native).** `google_sign_in`+`signInWithIdToken`/`linkIdentity`; opozorilo "izguba podatkov" pri anonimnem (wireframe 13); po link → pull; 👤 Google Cloud OAuth client (+SHA-1). *Commit:* `feat: linkIdentity (Google) + opozorilo`
+- [ ] **7.5 — Auth lifecycle.**
+  - [ ] **7.5a — Eager prvi pull** po prijavi/linku (ne čakaj periodičnega). *Commit:* `feat: eager pull po prijavi`
+  - [ ] **7.5b — Odjava + clear** lokalne drift baze + reset na `kLocalUserId` + clear lokalnih koordinat (GDPR clean state); gumb v nastavitvah (12). *Commit:* `feat: odjava + clear lokalne baze`
+- [ ] **7.6 — Testi M7.** Unit: H3 izpeljava (res7→6→5), geocoding parser, OTP/link servis (mock Supabase), clear-on-signout, lokalne koordinate ne-sync. Widget: onboarding skip, login flow, lokacija zajem. Ročna preverba na napravi. *Commit:* `test: auth + H3`
 
 ---
 
@@ -296,6 +316,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.1a — Viri lokacije (M7 začet).** Najprej **podroben razrez M7** (zgoraj) +
+  razrešene 4 odločitve z uporabnikom (GPS=`geolocator`+Open-Meteo geocoding; OAuth=e-pošta OTP +
+  Google native, Apple→M10; koordinate=lokalno-only ne-sync + H3→oblak; obseg=polno, lokacija nahrani
+  vreme). Dodana `geolocator ^14.0.2` + `h3_flutter ^0.7.1` (h3 že v §1; geolocator dopisan v §1).
+  Android manifest: `ACCESS_COARSE/FINE_LOCATION` (koordinate ne zapustijo naprave — le H3 sync).
+  `core/location/location_service.dart`: `LocationService.currentCoordinates()` prek geolocator,
+  sealed `LocationResult` (`LocationCoords`/`LocationDenied{permanent}`/`LocationServiceDisabled`/
+  `LocationUnavailable`) modelira permission stanja za zaslon 16; **medium accuracy** (H3 r7 ≈ 1 km,
+  fini fix bi tratil baterijo). `core/location/geocoding_client.dart`: `GeocodingClient.search()`
+  (Open-Meteo Geocoding, brez ključa, lasten dio z `kWeather*Timeout`), `GeoPlace` model; throwa
+  `DioException` (transport plast kot weather client — caller degradira graceful). flutter analyze čist.
+  Geolocator runtime poziv = ročna preverba pri 7.3c; geocoding parser test = 7.6. Commit:
+  `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`. **Naslednji: 7.1b (H3 + lokalna shramba).**
 - 2026-06-05 — **6.5 — Testi M6 → M6 ZAKLJUČEN.** Unit del (LWW logika + FK vrstni red) je bil **že
   pokrit** v 6.2 (push: FK red, mark-synced, updated_at guard, fail-fast), 6.3a (pull: LWW obe smeri,
   tombstone, inkluzivni kurzor, child-RLS filter), 6.3b (katalog), 6.4 (orchestrator: vrstni red faz,

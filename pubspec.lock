@@ -321,6 +321,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  ffi_leak_tracker:
+    dependency: transitive
+    description:
+      name: ffi_leak_tracker
+      sha256: "4093d4ef9ca06ffe2786e73bfb25e22aa92112b9bb4ec941f11e3e6b61489a97"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.2"
   file:
     dependency: transitive
     description:
@@ -405,6 +413,78 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.0"
+  geoclue:
+    dependency: transitive
+    description:
+      name: geoclue
+      sha256: c2a998c77474fc57aa00c6baa2928e58f4b267649057a1c76738656e9dbd2a7f
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
+  geojson2h3:
+    dependency: transitive
+    description:
+      name: geojson2h3
+      sha256: "54305801c0bac29dc2c192dcfe30d2bd95830fa0935b695423187741bb18d300"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
+  geolocator:
+    dependency: "direct main"
+    description:
+      name: geolocator
+      sha256: "79939537046c9025be47ec645f35c8090ecadb6fe98eba146a0d25e8c1357516"
+      url: "https://pub.dev"
+    source: hosted
+    version: "14.0.2"
+  geolocator_android:
+    dependency: transitive
+    description:
+      name: geolocator_android
+      sha256: "179c3cb66dfa674fc9ccbf2be872a02658724d1c067634e2c427cf6df7df901a"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.2"
+  geolocator_apple:
+    dependency: transitive
+    description:
+      name: geolocator_apple
+      sha256: dbdd8789d5aaf14cf69f74d4925ad1336b4433a6efdf2fce91e8955dc921bf22
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.3.13"
+  geolocator_linux:
+    dependency: transitive
+    description:
+      name: geolocator_linux
+      sha256: b02993d59b753bf1967ed28862002841aec5cdd5090c1f495213b32ce488aced
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
+  geolocator_platform_interface:
+    dependency: transitive
+    description:
+      name: geolocator_platform_interface
+      sha256: "30cb64f0b9adcc0fb36f628b4ebf4f731a2961a0ebd849f4b56200205056fe67"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.6"
+  geolocator_web:
+    dependency: transitive
+    description:
+      name: geolocator_web
+      sha256: b1ae9bdfd90f861fde8fd4f209c37b953d65e92823cb73c7dee1fa021b06f172
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.3"
+  geolocator_windows:
+    dependency: transitive
+    description:
+      name: geolocator_windows
+      sha256: "175435404d20278ffd220de83c2ca293b73db95eafbdc8131fe8609be1421eb6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.5"
   glob:
     dependency: transitive
     description:
@@ -437,6 +517,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.3.2"
+  gsettings:
+    dependency: transitive
+    description:
+      name: gsettings
+      sha256: "1b0ce661f5436d2db1e51f3c4295a49849f03d304003a7ba177d01e3a858249c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.2.8"
   gtk:
     dependency: transitive
     description:
@@ -445,6 +533,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  h3_common:
+    dependency: transitive
+    description:
+      name: h3_common
+      sha256: "974d33d58c49ccaaf9cb1eb0bf860a21dbe25a8708c26e00fb742ba85525a905"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
+  h3_ffi:
+    dependency: transitive
+    description:
+      name: h3_ffi
+      sha256: e8d1b3abfb74242f71750fe909c3dd4c571f90185b3fe9fd25a776a382e878df
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
+  h3_flutter:
+    dependency: "direct main"
+    description:
+      name: h3_flutter
+      sha256: a33492b925705854468ae09d4b7430f0e1ed68e7ac190ea6b67f3c14adf9fb39
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.1"
+  h3_web:
+    dependency: transitive
+    description:
+      name: h3_web
+      sha256: beeb3c07ebff03b74f3f1d2ea1494428132b076a2866c080084fc6308ee4c8f3
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   hooks:
     dependency: transitive
     description:
@@ -509,6 +629,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  js:
+    dependency: transitive
+    description:
+      name: js
+      sha256: "53385261521cc4a0c4658fd0ad07a7d14591cf8fc33abbceae306ddb974888dc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.2"
   json_annotation:
     dependency: "direct main"
     description:
@@ -653,6 +781,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+  package_info_plus:
+    dependency: transitive
+    description:
+      name: package_info_plus
+      sha256: "4bf625947f6c7713ee242296a682e23e44823c09cf9d79e4f1238923c92db852"
+      url: "https://pub.dev"
+    source: hosted
+    version: "10.1.0"
+  package_info_plus_platform_interface:
+    dependency: transitive
+    description:
+      name: package_info_plus_platform_interface
+      sha256: db762cb2f4f25ee60fb6359773861b0f199e00b90d237bd85a76a1e806b46ef4
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.1.0"
   path:
     dependency: "direct main"
     description:
@@ -1258,6 +1402,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
+  win32:
+    dependency: transitive
+    description:
+      name: win32
+      sha256: ba6f4bba816c8d7e3c1580e170f3786d216951cc6b94babc3b814c08d2cb2738
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.3.0"
   xdg_directories:
     dependency: transitive
     description:
