@@ -274,3 +274,37 @@ TaskSuppliesCompanion taskSupplyFromRemote(Map<String, dynamic> r) =>
       deleted: Value(r['deleted'] as bool? ?? false),
       syncStatus: const Value(kSyncSynced),
     );
+
+// ── Catalog: remote → drift (pull) ──────────────────────────────────────────
+//
+// Read-only catalog. No sync_status/updated_at/deleted — it is not per-user
+// synced; the cloud is the source of truth and ids are stable slugs, so the
+// upsert merges into any seeded rows. `labels` is jsonb (a Map from supabase) →
+// stored as a JSON string, matching the on-device seed.
+
+TaskTypesCompanion taskTypeFromRemote(Map<String, dynamic> r) =>
+    TaskTypesCompanion(
+      id: Value(r['id'] as String),
+      labels: Value(_text(r['labels']) ?? '{}'),
+      icon: Value(r['icon'] as String),
+      category: Value(r['category'] as String),
+      requiresSubject: Value(r['requires_subject'] as bool? ?? false),
+      weatherSensitive: Value(r['weather_sensitive'] as bool? ?? false),
+      consumesSupplies: Value(r['consumes_supplies'] as bool? ?? false),
+      defaultCadence: Value((r['default_cadence'] as num?)?.toInt()),
+    );
+
+PlantsCompanion plantFromRemote(Map<String, dynamic> r) => PlantsCompanion(
+      id: Value(r['id'] as String),
+      labels: Value(_text(r['labels']) ?? '{}'),
+      scientificName: Value(r['scientific_name'] as String?),
+      category: Value(r['category'] as String),
+      icon: Value(r['icon'] as String?),
+    );
+
+CategoryTaskTypesCompanion categoryTaskTypeFromRemote(
+        Map<String, dynamic> r) =>
+    CategoryTaskTypesCompanion(
+      category: Value(r['category'] as String),
+      taskTypeId: Value(r['task_type_id'] as String),
+    );

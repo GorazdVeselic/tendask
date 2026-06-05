@@ -54,14 +54,15 @@ void main() {
                 .overrideWith((ref) => Stream.value(<Task>[])),
             notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
             taskTypesMapProvider
-                .overrideWith((ref) async => <String, TaskType>{}),
+                .overrideWith((ref) => Stream.value(<String, TaskType>{})),
             areasMapProvider
                 .overrideWith((ref) => Stream.value(<String, Area>{})),
             allTaskSubjectsProvider
                 .overrideWith((ref) => Stream.value(<TaskSubject>[])),
             userPlantsMapProvider
                 .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-            plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
+            plantsMapProvider
+                .overrideWith((ref) => Stream.value(<String, Plant>{})),
           ],
           child: MaterialApp.router(routerConfig: router),
         ),

@@ -194,9 +194,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
 - [x] **6.2.0 — Katalog v oblak (vir resnice).** Generator iz Dart seed → `supabase/seed/catalog.sql` (idempotenten upsert), apliciran prek pooler; FK na katalog zdaj zadovoljen za push. **Odločitev (z uporabnikom):** oblak = vir resnice kataloga, naprave pull (6.3); bundlan seed = pred-release TODO. *Commit:* `feat: katalog v oblak (seed vir resnice)`
 - [x] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
-- [ ] **6.3 — Pull.** `updated_at >= last_pulled_at` → upsert v drift; `deleted=true` → soft-delete lokalno. Razrezan na **6.3a** (user tabele) + **6.3b** (katalog pull + reaktiven provider).
+- [x] **6.3 — Pull.** `updated_at >= last_pulled_at` → upsert v drift; `deleted=true` → soft-delete lokalno. Razrezan na **6.3a** (user tabele) + **6.3b** (katalog pull + reaktiven provider).
   - [x] **6.3a — User-table pull.** Reverse mapperji (remote→drift Companion, `synced`), `SyncPullService` (inkluzivni kurzor + idempotenten upsert, LWW po `updated_at` prek `DoUpdate(where:)`, tombstone=soft-delete, FK red, child brez user_id filtra=RLS), `SyncCursors` tabela (v5), push guard (izključi `user_id='local'`). *Commit:* `feat: sync pull (user tabele)`
-  - [ ] **6.3b — Katalog pull + reaktivnost.** Obdrži seed (offline fallback); catalog full-pull (upsert po slug); `catalog_provider` → Stream; generator-parnost + id-kanoničnost test. *Commit:* `feat: katalog pull + reaktiven provider`
+  - [x] **6.3b — Katalog pull + reaktivnost.** `CatalogSyncService` (full-pull, upsert po slug; category=insert-or-ignore); `catalog_provider` → StreamProvider (pull reaktivno osveži UI); SeedService **ostane** (offline fallback). Generator refaktoriran (`buildCatalogSql()` čista fn) + parnost test (committan `catalog.sql` == regeneriran) + id-kanoničnost test. *Commit:* `feat: katalog pull + reaktiven provider`
 - [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
 - [ ] **6.5 — Testi M6.** Unit (LWW logika, vrstni red) + integracijski proti testnemu projektu. *Commit:* `test: sync`
 
@@ -296,6 +296,23 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **6.3b — Katalog pull + reaktivnost → 6.3 ZAKLJUČEN.** **Odločitev (z uporabnikom, popravek
+  6.2.0 dnevnika):** SeedService **OSTANE** (bundlan offline fallback — prvi zagon na vrtu brez signala deluje;
+  skladno `tech-stack.md §2` »bundled seed + redki pull«). Prejšnji »pull-only, umakni seed« plan **zavržen**
+  (kršil offline-first #1). `core/sync/catalog_sync_service.dart`: `CatalogSyncService.pull()` — full-pull
+  (katalog nima `updated_at`), upsert po **slug PK** → zlije s seedom (ne podvoji, ker so slug-i iz enega vira
+  `catalog_seed.dart`); task_type/plant `DoUpdate`, category_task_type `insertOrIgnore` (le PK stolpci, zrcali
+  oblačni `do nothing`); plant_synonym izpuščen (prazen v seedu+oblaku, identity-id bi se razhajal). 3 katalog
+  reverse mapperji (jsonb labels→text). `RemoteSelectAll` typedef meja. `core/database/catalog_provider.dart`:
+  FutureProvider → **StreamProvider** (drift `.watch()`) → pull reaktivno osveži vse zaslone; konzumenti berejo
+  `AsyncValue` prek `.asData?.value` → transparentno (7 test override-ov Future→`Stream.value`). **Invarianta #4
+  (generator-parnost) zdaj test, ne disciplina:** `tool/gen_catalog_sql.dart` refaktoriran v čisto
+  `buildCatalogSql()`; `test/tool/catalog_sql_parity_test.dart` potrdi committan `catalog.sql` == regeneriran iz
+  seeda (EOL-normaliziran) → oblak ⊇ vsak referenciran id (preprečuje push FK-fail). **Invarianta #2
+  (id-kanoničnost):** test, da `Uuid().v4()` + repo `create()` dasta Postgres-kanonični lowercase v4 (push/pull
+  bereta id verbatim → brez duplikata/orphana local↔cloud). **Pull trigger (startup/connectivity/periodic) =
+  6.4.** flutter analyze čist, **113/113 testov**. Commit: `feat: katalog pull + reaktiven provider`.
+  **Naslednji: 6.4 (sprožilci: push→pull+katalog ob zagonu/povezavi/periodično; LWW že v 6.3).**
 - 2026-06-05 — **6.3a — User-table pull.** **Pred kodo zasnova z uporabnikom (id/UUID-pravilnost):** ločitev
   katalog-slug (deterministični, en vir) vs user-UUID (naprava) vs `user_id` (`local`→`auth.uid()` claim).
   7 invariant zapisanih; 6.3a uveljavi #5–#7. `core/database/tables/sync_tables.dart`: `SyncCursors` (globalni

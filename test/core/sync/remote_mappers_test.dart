@@ -225,4 +225,43 @@ void main() {
     expect(c.quantity.value, 12.0);
     expect(c.lowThreshold.value, isNull);
   });
+
+  // ── Catalog: remote → drift (pull) ────────────────────────────────────────
+
+  test('taskTypeFromRemote: jsonb labels to text, bools, null cadence', () {
+    final c = taskTypeFromRemote({
+      'id': 'water',
+      'labels': {'sl': 'Zalivanje', 'en': 'Watering', 'de': 'Gießen'},
+      'icon': '💧',
+      'category': 'care',
+      'requires_subject': true,
+      'weather_sensitive': true,
+      'consumes_supplies': false,
+      'default_cadence': null,
+    });
+    expect(c.id.value, 'water');
+    expect(c.labels.value, jsonEncode({'sl': 'Zalivanje', 'en': 'Watering', 'de': 'Gießen'}));
+    expect(c.requiresSubject.value, isTrue);
+    expect(c.defaultCadence.value, isNull);
+  });
+
+  test('plantFromRemote: labels + nullable scientific_name/icon', () {
+    final c = plantFromRemote({
+      'id': 'tomato',
+      'labels': {'sl': 'Paradižnik'},
+      'scientific_name': 'Solanum lycopersicum',
+      'category': 'vegetable',
+      'icon': null,
+    });
+    expect(c.id.value, 'tomato');
+    expect(c.scientificName.value, 'Solanum lycopersicum');
+    expect(c.icon.value, isNull);
+  });
+
+  test('categoryTaskTypeFromRemote: category + task_type_id', () {
+    final c = categoryTaskTypeFromRemote(
+        {'category': 'vegetable', 'task_type_id': 'water'});
+    expect(c.category.value, 'vegetable');
+    expect(c.taskTypeId.value, 'water');
+  });
 }

@@ -108,12 +108,14 @@ void main() {
           child: ProviderScope(
             overrides: [
               tasksRepositoryProvider.overrideWith((ref) => repo),
-              taskTypesMapProvider.overrideWith((ref) async => taskTypeMap),
+              taskTypesMapProvider
+                  .overrideWith((ref) => Stream.value(taskTypeMap)),
               areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
               userPlantsMapProvider
                   .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-              plantsMapProvider.overrideWith((ref) async => <String, Plant>{}),
-              plantsListProvider.overrideWith((ref) async => <Plant>[]),
+              plantsMapProvider
+                  .overrideWith((ref) => Stream.value(<String, Plant>{})),
+              plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
               suppliesListProvider
                   .overrideWith((ref) => Stream.value(<Supply>[])),
             ],
@@ -217,7 +219,8 @@ void main() {
           child: ProviderScope(
             overrides: [
               tasksRepositoryProvider.overrideWith((ref) => repo),
-              taskTypesMapProvider.overrideWith((ref) async => taskTypeMap),
+              taskTypesMapProvider
+                  .overrideWith((ref) => Stream.value(taskTypeMap)),
               areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
               pendingTasksProvider.overrideWith(
                 (ref) => Stream.value([pendingTask!]),
@@ -242,7 +245,7 @@ void main() {
                 (ref) => Stream.value(<String, UserPlant>{}),
               ),
               plantsMapProvider.overrideWith(
-                (ref) async => <String, Plant>{},
+                (ref) => Stream.value(<String, Plant>{}),
               ),
             ],
             child: MaterialApp.router(routerConfig: router),
