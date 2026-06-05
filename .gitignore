@@ -1,8 +1,10 @@
 # Claude Code (local, machine-specific permissions)
 .claude/settings.local.json
 
-# Temporary / scratch outputs (CLAUDE.md konvencija)
+# Temporary / scratch outputs + screenshots (CLAUDE.md konvencija: gredo v tmp/)
 /tmp/
+# `flutter screenshot` saves flutter_NN.png in the repo root by default
+/flutter_*.png
 
 # Local secrets — nikoli v repo (CLAUDE.md)
 /dart_defines.json
