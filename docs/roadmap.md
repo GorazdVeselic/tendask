@@ -192,6 +192,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **6.1 — Povezljivost + infra.** `connectivity_plus`; `sync_status` označevanje ob zapisih. Razrezan na **6.1a** (povezljivost + konstante) + **6.1b** (anonimna seja + currentUserId).
   - [x] **6.1a — Povezljivost + sync_status konstante.** *Commit:* `feat: connectivity_plus + sync_status konstante` (`9bc57f9`)
   - [x] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
+- [x] **6.2.0 — Katalog v oblak (vir resnice).** Generator iz Dart seed → `supabase/seed/catalog.sql` (idempotenten upsert), apliciran prek pooler; FK na katalog zdaj zadovoljen za push. **Odločitev (z uporabnikom):** oblak = vir resnice kataloga, naprave pull (6.3); bundlan seed = pred-release TODO. *Commit:* `feat: katalog v oblak (seed vir resnice)`
 - [ ] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
 - [ ] **6.3 — Pull.** `updated_at > last_pulled_at` → upsert v drift; `deleted=true` → odstrani lokalno. *Commit:* `feat: sync pull`
 - [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
@@ -293,6 +294,18 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **6.2.0 — Katalog v oblak (vir resnice).** **Odločitev (z uporabnikom, popravek smeri):** oblak
+  Supabase = **vir resnice za katalog**, naprave ga **pull-ajo** (skladno §2 + dolgoročna vizija Supabase-kot-vir);
+  FK na katalog **OSTANE** (ne odstranjujemo — kratkoviden tehnični dolg). Vrzel priznana: M5 je postavil FK, a
+  ne koraka »seed katalog v oblak« → push bi padel na FK. `tool/gen_catalog_sql.dart` (Dart, en vir = `lib/data/
+  seed/catalog_seed.dart`) generira `supabase/seed/catalog.sql` — **idempotenten** `on conflict do update`
+  (task_type/plant) / `do nothing` (category_task_type); pravilno escapani jsonb labels, emoji, null cadence.
+  `supabase/seed/apply_catalog.py` (pooler, postgres role obide RLS) aplicira + verificira. **V oblaku: 26
+  task_type, 34 plant, 57 category_task_type** (idempotentnost potrjena — 2× zagon = isti count). Pravilo zapisano
+  v `CLAUDE.md` (katalog vir resnice + **id-ji add-only, nikoli preimenuj** — sicer osiroti user_plant.plant_id/
+  task.task_type_id; offline-bundle = pred-release TODO). **6.3 bo:** pull katalog+user, catalog_provider →
+  reaktiven (zdaj FutureProvider, ne osveži po pull), umik lokalnega `SeedService` (pull-only), nato clean test na
+  napravi. flutter analyze čist, **78/78 testov**. Commit: `feat:`. **Naslednji: 6.2 (push user → upsert).**
 - 2026-06-04 — **6.1b — Anonimna seja + currentUserId (sync auth infra) → 6.1 ZAKLJUČEN.**
   `core/auth/auth_service.dart`: `AuthService` (`userId` = `auth.currentUser?.id ?? kLocalUserId` — bere živ
   klient; `hasSession`; `ensureAnonymousSession()` graceful) + `authServiceProvider` (null client = Supabase
