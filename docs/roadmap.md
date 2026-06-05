@@ -193,7 +193,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   - [x] **6.1a — Povezljivost + sync_status konstante.** *Commit:* `feat: connectivity_plus + sync_status konstante` (`9bc57f9`)
   - [x] **6.1b — Anonimna seja + currentUserId (sync auth infra).** *Commit:* `feat: anonimna seja + currentUserId`
 - [x] **6.2.0 — Katalog v oblak (vir resnice).** Generator iz Dart seed → `supabase/seed/catalog.sql` (idempotenten upsert), apliciran prek pooler; FK na katalog zdaj zadovoljen za push. **Odločitev (z uporabnikom):** oblak = vir resnice kataloga, naprave pull (6.3); bundlan seed = pred-release TODO. *Commit:* `feat: katalog v oblak (seed vir resnice)`
-- [ ] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
+- [x] **6.2 — Push.** `pending` vrstice → `upsert` v Supabase (FK vrstni red: area→user_plant→task→…) → `synced`. *Commit:* `feat: sync push`
 - [ ] **6.3 — Pull.** `updated_at > last_pulled_at` → upsert v drift; `deleted=true` → odstrani lokalno. *Commit:* `feat: sync pull`
 - [ ] **6.4 — Sprožilci + LWW.** Ob zagonu/povezavi/periodično; LWW po `updated_at`. *Commit:* `feat: sync sprožilci + LWW`
 - [ ] **6.5 — Testi M6.** Unit (LWW logika, vrstni red) + integracijski proti testnemu projektu. *Commit:* `test: sync`
@@ -294,6 +294,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **6.2 — Push (pending → upsert v Supabase).** `core/sync/remote_mappers.dart`: čiste funkcije
+  drift vrstica → Postgres payload (10 tabel). Popravijo, kar drift `toJson()` za oblak naredi narobe:
+  camelCase→snake_case, DateTime→ISO-8601 UTC (`.toUtc()`), jsonb stolpci (lokalno JSON string) → dekodiran
+  objekt; `sync_status` se **nikoli** ne pošlje (lokalni stolpec). `core/sync/sync_push_service.dart`:
+  `SyncPushService.push()` vzame vse `pending` → `upsert` → `synced`, v **FK-varnem vrstnem redu** (profile→
+  area→supply→recipe→user_plant→task→note→task_subject→task_reminder→task_supply). **Fail-fast:** napaka pri
+  tabeli ustavi ostale (FK-odvisne), pusti `pending` za naslednji sprožilec. **`updated_at` zaščita pri
+  mark-synced:** vrstica, urejena med branjem in označevanjem (med mrežnim upsertom), ostane `pending` — sicer
+  bi se novejša sprememba tiho izgubila iz synca. **Supabase meja injicirana** (`RemoteUpsert` typedef) →
+  orkestracija testabilna brez Supabase; provider zapre pravi klient (`null` = offline build). **Caller pogodba
+  (prepuščeno 6.4):** push zahteva sejo + že-claimane lokalne vrstice (sicer RLS zavrne) — servis sam le splakne
+  `pending`. +12 testov (7 mapper: enum.name/jsonb decode/UTC/content→text/brez sync_status; 5 servis: FK red/
+  samo pending/mark-synced/updated_at zaščita/fail-fast). flutter analyze čist, **90/90 testov**. Commit:
+  `feat: sync push`. **Naslednji: 6.3 (pull: updated_at > last_pulled_at → upsert v drift; deleted → odstrani).**
 - 2026-06-05 — **6.2.0 — Katalog v oblak (vir resnice).** **Odločitev (z uporabnikom, popravek smeri):** oblak
   Supabase = **vir resnice za katalog**, naprave ga **pull-ajo** (skladno §2 + dolgoročna vizija Supabase-kot-vir);
   FK na katalog **OSTANE** (ne odstranjujemo — kratkoviden tehnični dolg). Vrzel priznana: M5 je postavil FK, a
