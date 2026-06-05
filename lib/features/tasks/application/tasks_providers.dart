@@ -3,9 +3,9 @@ import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/database_provider.dart';
+import '../../../core/location/location_repository.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../../weather/application/weather_service.dart';
 import '../data/tasks_repository.dart';
@@ -19,10 +19,10 @@ TasksRepository tasksRepository(Ref ref) {
     ref.watch(databaseProvider),
     ref.watch(suppliesRepositoryProvider),
     weatherCapture: () async {
-      // TODO(gorazd, 2026-12-01): use the H3 cell centroid as the source in M7.
+      final loc = await ref.read(gardenLocationProvider.future);
       final snapshot = await weather.capture(
-        latitude: kDefaultLatitude,
-        longitude: kDefaultLongitude,
+        latitude: loc.latitude,
+        longitude: loc.longitude,
       );
       return snapshot == null ? null : jsonEncode(snapshot.toJson());
     },

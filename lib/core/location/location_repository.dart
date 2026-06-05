@@ -3,12 +3,17 @@ import 'package:h3_flutter/h3_flutter.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../clock.dart';
+import '../config.dart';
 import '../database/app_database.dart';
 import '../database/database_provider.dart';
 import '../sync/sync_status.dart';
 import 'h3_cells.dart';
 
 part 'location_repository.g.dart';
+
+/// A garden coordinate pair — stored device-local, used only for the weather
+/// lookup. Never synced.
+typedef GardenCoords = ({double latitude, double longitude});
 
 /// The garden location, split by privacy: raw coordinates stay device-local
 /// (for the weather lookup), only the derived H3 cells reach profile → cloud.
@@ -63,10 +68,20 @@ class LocationRepository {
   }
 
   /// The stored garden coordinates for the weather lookup, or null if unset.
-  Future<({double latitude, double longitude})?> gardenCoordinates() async {
+  Future<GardenCoords?> gardenCoordinates() async {
     final row = await _db.select(_db.deviceLocations).getSingleOrNull();
     if (row == null) return null;
     return (latitude: row.latitude, longitude: row.longitude);
+  }
+
+  /// Reactive coordinates: emits whenever the stored location changes, so the
+  /// weather provider re-fetches after onboarding/settings set it.
+  Stream<GardenCoords?> watchGardenCoordinates() {
+    return _db.select(_db.deviceLocations).watchSingleOrNull().map(
+          (row) => row == null
+              ? null
+              : (latitude: row.latitude, longitude: row.longitude),
+        );
   }
 }
 
@@ -79,3 +94,12 @@ LocationRepository locationRepository(Ref ref) => LocationRepository(
       ref.watch(databaseProvider),
       ref.watch(h3Provider),
     );
+
+/// The garden location for the weather lookup: the stored device-local
+/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
+/// one. Reactive — weather re-fetches when the user picks a location.
+@riverpod
+Stream<GardenCoords> gardenLocation(Ref ref) => ref
+    .watch(locationRepositoryProvider)
+    .watchGardenCoordinates()
+    .map((c) => c ?? (latitude: kDefaultLatitude, longitude: kDefaultLongitude));

@@ -3,6 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/config.dart';
+import '../../../core/location/location_repository.dart';
 import '../data/open_meteo_client.dart';
 import '../data/weather_snapshot.dart';
 import '../data/weather_snapshot_builder.dart';
@@ -76,11 +77,13 @@ WeatherService weatherService(Ref ref) =>
     WeatherService(ref.watch(openMeteoClientProvider));
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
 /// prior snapshot — the UI degrades to a quiet hint.
 @riverpod
-Future<WeatherSnapshot?> currentWeather(Ref ref) =>
-    ref.watch(weatherServiceProvider).captureCached(
-          latitude: kDefaultLatitude,
-          longitude: kDefaultLongitude,
-        );
+Future<WeatherSnapshot?> currentWeather(Ref ref) async {
+  final loc = await ref.watch(gardenLocationProvider.future);
+  return ref.watch(weatherServiceProvider).captureCached(
+        latitude: loc.latitude,
+        longitude: loc.longitude,
+      );
+}

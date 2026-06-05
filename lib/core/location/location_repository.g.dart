@@ -100,3 +100,53 @@ final class LocationRepositoryProvider
 
 String _$locationRepositoryHash() =>
     r'4b6927e710ae6da1cb8731f58a227abde192fdb6';
+
+/// The garden location for the weather lookup: the stored device-local
+/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
+/// one. Reactive — weather re-fetches when the user picks a location.
+
+@ProviderFor(gardenLocation)
+final gardenLocationProvider = GardenLocationProvider._();
+
+/// The garden location for the weather lookup: the stored device-local
+/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
+/// one. Reactive — weather re-fetches when the user picks a location.
+
+final class GardenLocationProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<GardenCoords>,
+          GardenCoords,
+          Stream<GardenCoords>
+        >
+    with $FutureModifier<GardenCoords>, $StreamProvider<GardenCoords> {
+  /// The garden location for the weather lookup: the stored device-local
+  /// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
+  /// one. Reactive — weather re-fetches when the user picks a location.
+  GardenLocationProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gardenLocationProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gardenLocationHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<GardenCoords> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<GardenCoords> create(Ref ref) {
+    return gardenLocation(ref);
+  }
+}
+
+String _$gardenLocationHash() => r'85f01ea5ca0fef23f9815510aa9103266a4c9e0d';

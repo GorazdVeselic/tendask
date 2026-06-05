@@ -51,14 +51,14 @@ final class WeatherServiceProvider
 String _$weatherServiceHash() => r'6c2622973d324582c991140b525a1b62b7dd78ee';
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
 /// prior snapshot — the UI degrades to a quiet hint.
 
 @ProviderFor(currentWeather)
 final currentWeatherProvider = CurrentWeatherProvider._();
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
 /// prior snapshot — the UI degrades to a quiet hint.
 
 final class CurrentWeatherProvider
@@ -70,7 +70,7 @@ final class CurrentWeatherProvider
         >
     with $FutureModifier<WeatherSnapshot?>, $FutureProvider<WeatherSnapshot?> {
   /// Live weather for the dashboard (current conditions + short forecast) at the
-  /// default location, cached for [kWeatherCacheTtl]. Null when offline with no
+  /// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
   /// prior snapshot — the UI degrades to a quiet hint.
   CurrentWeatherProvider._()
     : super(
@@ -98,4 +98,4 @@ final class CurrentWeatherProvider
   }
 }
 
-String _$currentWeatherHash() => r'43d22e43b5403021014506636e47c83190dd92b1';
+String _$currentWeatherHash() => r'4a5e7d3d2e4a0038aa04874332d87c6b83cedbcc';

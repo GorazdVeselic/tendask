@@ -220,7 +220,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [ ] **7.1 — Lokacija + H3 na napravi (data plast).**
   - [x] **7.1a — Viri lokacije.** `geolocator`+`h3_flutter` v pubspec (+§1); Android dovoljenja (`ACCESS_FINE/COARSE_LOCATION`); `LocationService` (GPS→lat/lon, graceful zavrnitev); Open-Meteo Geocoding client (kraj→lat/lon, obstoječi dio). *Commit:* `feat: lokacijski viri (geolocator + Open-Meteo geocoding)`
   - [x] **7.1b — H3 + lokalna shramba.** lat/lon→res-7→izpelji res-6/5; H3 v `profile` (sync→oblak), lat/lon v **novo local-only tabelo** (push izpusti) — migracija v6; `LocationRepository` + provider. *Commit:* `feat: H3 celice + lokalna shramba koordinat`
-  - [ ] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
+  - [x] **7.1c — Vreme uporabi pravo lokacijo.** `weather_service`/`tasks_providers` berejo shranjeno lokacijo (fallback `kDefault*`). *Commit:* `feat: vreme uporabi shranjeno lokacijo`
 - [ ] **7.2 — Onboarding intro (15/15b/15c/15d).** 4-slide `PageView` + indikator; "Preskoči ›"/"Začni 🌿" → login; first-run gating (lokalni flag, samo prvič). *Commit:* `feat: onboarding intro (15)`
 - [ ] **7.3 — Prijava + lokacija zaslona (13, 16).**
   - [ ] **7.3a — Login zaslon (13).** UI: Apple (skrit — M10), Google, e-pošta, "Preizkusi brez računa"; flow routing. *Commit:* `feat: prijava zaslon (13)`
@@ -316,6 +316,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-05 — **7.1c — Vreme uporabi shranjeno lokacijo → 7.1 (data plast) ZAKLJUČEN.** En reaktiven vir
+  lokacije namesto podvojenega »stored-or-default«: `gardenLocationProvider` (StreamProvider v
+  `location_repository.dart`) bere `device_location` prek `watchGardenCoordinates()`, fallback na
+  `kDefaultLatitude/Longitude` dokler onboarding ne nastavi lokacije; reaktiven (drift `.watch`, vzorec kot
+  `catalog_provider`) → vreme se osveži ko uporabnik izbere lokacijo. `currentWeather` → async,
+  `await ref.watch(gardenLocationProvider.future)`. `tasksRepository.weatherCapture` (posnetek ob izvedbi) →
+  bere isti provider; **odstranjen TODO(gorazd, 2026-12-01)** o H3 centroidu (zdaj implementirano). `kDefault*`
+  ostane le še fallback znotraj providerja; `config` import odstranjen iz `tasks_providers`. **Gotcha:** `part`
+  direktiva mora pred deklaracije — `typedef GardenCoords` premaknjen za `part`. flutter analyze čist,
+  **123/123 testov** (tasks/weather testi prek databaseProvider override → device_location prazna → fallback).
+  Commit: `feat: vreme uporabi shranjeno lokacijo`. **Naslednji: 7.2 (onboarding intro 15/15b-d).**
 - 2026-06-05 — **7.1b — H3 + lokalna shramba koordinat.** Drift shema **v6**: nova local-only tabela
   `device_location` (`tables/sync_tables.dart`, single-row `id=0`→upsert; lat/lon/updatedAt) registrirana
   v `app_database.dart` + migracija `if (from < 6) createTable(deviceLocations)`. **Push/pull seznama sta
