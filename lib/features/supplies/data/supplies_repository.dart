@@ -132,6 +132,14 @@ class SuppliesRepository {
     }
   }
 
+  /// Soft-deletes every consumption link of a task (parent task deleted) so the
+  /// deletion syncs. Stock return is a separate concern — see [revertForTask].
+  Future<void> softDeleteForTask(String taskId) async {
+    for (final ts in await _byTask(taskId)) {
+      await _softDeleteTaskSupply(ts.id);
+    }
+  }
+
   Future<void> _adjustQuantity(String supplyId, double delta) async {
     final supply = await byId(supplyId);
     if (supply == null) return;

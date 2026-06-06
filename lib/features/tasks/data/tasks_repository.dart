@@ -353,16 +353,34 @@ class TasksRepository {
   }
 
   Future<void> softDelete(String id) async {
+    final now = _clock.now();
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
           deleted: const Value(true),
-          updatedAt: Value(_clock.now()),
+          updatedAt: Value(now),
           syncStatus: const Value(kSyncPending),
         ),
       );
-      // Return any booked consumption to stock.
+      // Cascade the soft-delete to children so the deletion syncs (mirrors
+      // updateTask) — otherwise child rows stay deleted=false in the cloud.
+      await (_db.update(_db.taskSubjects)
+            ..where((s) => s.taskId.equals(id) & s.deleted.equals(false)))
+          .write(TaskSubjectsCompanion(
+        deleted: const Value(true),
+        updatedAt: Value(now),
+        syncStatus: const Value(kSyncPending),
+      ));
+      await (_db.update(_db.taskReminders)
+            ..where((r) => r.taskId.equals(id) & r.deleted.equals(false)))
+          .write(TaskRemindersCompanion(
+        deleted: const Value(true),
+        updatedAt: Value(now),
+        syncStatus: const Value(kSyncPending),
+      ));
+      // Return any booked consumption to stock, then soft-delete the links.
       await _supplies.revertForTask(id);
+      await _supplies.softDeleteForTask(id);
     });
   }
 

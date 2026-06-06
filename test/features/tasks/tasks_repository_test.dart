@@ -130,6 +130,31 @@ void main() {
       final pending = await repo.watchPending().first;
       expect(pending, isEmpty);
     });
+
+    test('cascades the soft-delete to children so the deletion syncs', () async {
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 0)],
+      );
+
+      await repo.softDelete(id);
+
+      // Active (deleted=false) children are gone from the repo views...
+      expect(await repo.subjectsForTask(id), isEmpty);
+      expect(await repo.remindersForTask(id), isEmpty);
+
+      // ...but the rows persist as deleted=true + pending, so the delete pushes.
+      final reminder =
+          (await db.select(db.taskReminders).get()).single;
+      expect(reminder.deleted, true);
+      expect(reminder.syncStatus, 'pending');
+      final subject = (await db.select(db.taskSubjects).get()).single;
+      expect(subject.deleted, true);
+      expect(subject.syncStatus, 'pending');
+    });
   });
 
   group('TasksRepository.postponeOneDay', () {
