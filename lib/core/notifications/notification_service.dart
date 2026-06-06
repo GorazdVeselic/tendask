@@ -78,17 +78,6 @@ class NotificationService {
   Future<void> openExactAlarmSettings() async =>
       _android?.requestExactAlarmsPermission();
 
-  /// Ensures exact-alarm scheduling is allowed (Android 13+). When not granted,
-  /// opens the system "Alarms & reminders" page. Reminders use exact alarms so
-  /// they fire on time even in Doze. Returns whether exact alarms can be used.
-  Future<bool> ensureExactAlarms() async {
-    final android = _android;
-    if (android == null) return false;
-    if (await android.canScheduleExactNotifications() ?? false) return true;
-    await android.requestExactAlarmsPermission();
-    return await android.canScheduleExactNotifications() ?? false;
-  }
-
   /// Schedules an exact notification at [when] (a local wall-clock time).
   /// Reusing the same [id] replaces a previously scheduled one. [payload] carries
   /// the task id for the deep-link (M8.3). Exact + allow-while-idle so it fires
@@ -133,37 +122,6 @@ class NotificationService {
   void _onTap(NotificationResponse response) {
     final payload = response.payload;
     if (payload != null && payload.isNotEmpty) _taps.add(payload);
-  }
-
-  // ── M8.1 smoke-test helpers ────────────────────────────────────────────────
-  // Temporary: drive the notification pipeline by hand from a debug button to
-  // verify it works on-device (incl. Samsung Doze timing) before the real,
-  // task_reminder-driven scheduling lands in M8.2. Remove with the debug button.
-
-  Future<void> showNow({required String title, required String body}) async {
-    await init();
-    await _plugin.show(
-      id: 0,
-      title: title,
-      body: body,
-      notificationDetails: _reminderDetails,
-    );
-  }
-
-  Future<void> scheduleIn(
-    Duration delay, {
-    required String title,
-    required String body,
-  }) async {
-    await init();
-    await _plugin.zonedSchedule(
-      id: 1,
-      title: title,
-      body: body,
-      scheduledDate: tz.TZDateTime.now(tz.local).add(delay),
-      notificationDetails: _reminderDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-    );
   }
 }
 

@@ -1,13 +1,11 @@
 import 'dart:async';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/database/database_provider.dart';
-import '../../../core/notifications/notification_service.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
@@ -64,27 +62,6 @@ class SettingsScreen extends ConsumerWidget {
     await ref.read(databaseProvider).clearUserData();
     if (!context.mounted) return;
     context.go('/onboarding');
-  }
-
-  // TEMPORARY (M8.1 smoke-test): drive the notification pipeline by hand to
-  // verify it works on-device (incl. Samsung Doze timing) before M8.2. Remove
-  // this and the debug card below once scheduling is task_reminder-driven.
-  Future<void> _smokeTestNotif(BuildContext context, WidgetRef ref) async {
-    final svc = ref.read(notificationServiceProvider);
-    await svc.init();
-    await svc.requestPermission();
-    final exact = await svc.ensureExactAlarms();
-    if (!context.mounted) return;
-    await svc.showNow(title: 'Tendask', body: 'Takojšnje obvestilo deluje 🌿');
-    await svc.scheduleIn(
-      const Duration(minutes: 1),
-      title: 'Tendask (razporejeno)',
-      body: 'To se je prožilo ~1 min kasneje',
-    );
-    if (!context.mounted) return;
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Test: takoj + čez 1 min (exact: $exact)')),
-    );
   }
 
   @override
@@ -218,19 +195,6 @@ class SettingsScreen extends ConsumerWidget {
               ],
             ),
           ),
-
-          // TEMPORARY debug-only smoke test (M8.1) — never shown in release.
-          if (kDebugMode) ...[
-            const SectionLabel('Debug (M8.1 — odstrani)'),
-            Card(
-              child: ListTile(
-                leading: const Icon(Icons.bug_report),
-                title: const Text('Test obvestila'),
-                subtitle: const Text('dovoljenje + takoj + čez 1 min'),
-                onTap: () => unawaited(_smokeTestNotif(context, ref)),
-              ),
-            ),
-          ],
 
           const SizedBox(height: 20),
           Center(

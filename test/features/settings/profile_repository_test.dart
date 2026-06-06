@@ -2,6 +2,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/notifications/notification_settings.dart';
 import 'package:tendask/features/settings/data/profile_repository.dart';
 
 class _FakeClock implements Clock {
@@ -49,6 +50,39 @@ void main() {
     await repo.setLang(userId, 'de');
 
     expect(await repo.getLang(userId), 'de');
+    final rows = await db.select(db.profiles).get();
+    expect(rows.length, 1);
+  });
+
+  test('notificationSettings returns defaults on an empty profile', () async {
+    final s = await repo.notificationSettings(userId);
+    expect(s.taskRemindersEnabled, true);
+    expect(s.defaultReminderOffset, isNot(0));
+  });
+
+  test('setNotificationSettings inserts the row and marks it pending', () async {
+    await repo.setNotificationSettings(
+        userId, const NotificationSettings(taskRemindersEnabled: false));
+
+    final s = await repo.notificationSettings(userId);
+    expect(s.taskRemindersEnabled, false);
+    final rows = await db.select(db.profiles).get();
+    expect(rows.length, 1);
+    expect(rows.single.syncStatus, 'pending');
+  });
+
+  test('settings and lang do not clobber each other', () async {
+    await repo.setLang(userId, 'de');
+    await repo.setNotificationSettings(
+        userId, const NotificationSettings(quietHoursEnabled: true));
+
+    // Writing settings must not wipe lang …
+    expect(await repo.getLang(userId), 'de');
+    // … and writing lang must not wipe settings.
+    await repo.setLang(userId, 'sl');
+    final s = await repo.notificationSettings(userId);
+    expect(s.quietHoursEnabled, true);
+
     final rows = await db.select(db.profiles).get();
     expect(rows.length, 1);
   });
