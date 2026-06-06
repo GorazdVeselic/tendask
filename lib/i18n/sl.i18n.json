@@ -369,6 +369,7 @@
     "rain_past48h": "Dež zadnjih 48 h:",
     "detail_waiting": "Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.",
     "detail_none": "Vremenski posnetek ni na voljo (zajet brez povezave).",
-    "home_unavailable": "Vreme trenutno ni na voljo."
+    "home_unavailable": "Vreme trenutno ni na voljo.",
+    "home_retry": "Tapni za ponovni poskus"
   }
 }

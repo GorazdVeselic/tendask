@@ -5,6 +5,7 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/location/location_repository.dart';
 import '../data/open_meteo_client.dart';
+import '../data/weather_cache_repository.dart';
 import '../data/weather_snapshot.dart';
 import '../data/weather_snapshot_builder.dart';
 
@@ -15,19 +16,20 @@ part 'weather_service.g.dart';
 /// null instead of throwing, so the caller can save the task without weather.
 class WeatherService {
   WeatherService(
-    this._client, {
+    this._client,
+    this._cache, {
     this._clock = const SystemClock(),
     this._retryDelays = kWeatherRetryDelays,
-    this._cacheTtl = kWeatherCacheTtl,
+    this._freshTtl = kWeatherCacheTtl,
+    this._staleTtl = kWeatherStaleTtl,
   });
 
   final OpenMeteoClient _client;
+  final WeatherCacheRepository _cache;
   final Clock _clock;
   final List<Duration> _retryDelays;
-  final Duration _cacheTtl;
-
-  WeatherSnapshot? _cached;
-  DateTime? _cachedAt;
+  final Duration _freshTtl;
+  final Duration _staleTtl;
 
   Future<WeatherSnapshot?> capture({
     required double latitude,
@@ -48,33 +50,39 @@ class WeatherService {
     }
   }
 
-  /// Cached variant for the dashboard: returns the last snapshot while it is
-  /// younger than the TTL, otherwise re-fetches. On a failed re-fetch it falls
-  /// back to the last known snapshot (graceful degrade) rather than null.
+  /// Cached variant for the dashboard, backed by a device-local persistent cache
+  /// (survives app restarts). Returns the stored snapshot while it is younger
+  /// than [_freshTtl]; otherwise re-fetches. On a failed re-fetch it falls back
+  /// to the stored snapshot while it is still within [_staleTtl], else null.
   Future<WeatherSnapshot?> captureCached({
     required double latitude,
     required double longitude,
   }) async {
-    final cached = _cached;
-    final at = _cachedAt;
-    if (cached != null && at != null &&
-        _clock.now().difference(at) < _cacheTtl) {
+    final cached = await _cache.load();
+    final now = _clock.now();
+    if (cached != null && now.difference(cached.capturedAt) < _freshTtl) {
       return cached;
     }
     final fresh = await capture(latitude: latitude, longitude: longitude);
     if (fresh != null) {
-      _cached = fresh;
-      _cachedAt = _clock.now();
+      await _cache.save(fresh);
       return fresh;
     }
-    return cached;
+    // Re-fetch failed (offline): show the last snapshot while it is still recent
+    // enough, otherwise degrade to "unavailable".
+    if (cached != null && now.difference(cached.capturedAt) < _staleTtl) {
+      return cached;
+    }
+    return null;
   }
 }
 
-// keepAlive so the snapshot cache survives between visits to Home.
+// keepAlive so the service (and its cache reads) survive between visits to Home.
 @Riverpod(keepAlive: true)
-WeatherService weatherService(Ref ref) =>
-    WeatherService(ref.watch(openMeteoClientProvider));
+WeatherService weatherService(Ref ref) => WeatherService(
+      ref.watch(openMeteoClientProvider),
+      ref.watch(weatherCacheRepositoryProvider),
+    );
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
 /// garden location, cached for [kWeatherCacheTtl]. Null when offline with no

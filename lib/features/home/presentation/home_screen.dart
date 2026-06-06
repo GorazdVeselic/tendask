@@ -67,7 +67,7 @@ class HomeScreen extends ConsumerWidget {
   }
 }
 
-class _HomeBody extends StatelessWidget {
+class _HomeBody extends ConsumerWidget {
   const _HomeBody({
     required this.pending,
     required this.completed,
@@ -81,7 +81,7 @@ class _HomeBody extends StatelessWidget {
   final DateTime now;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
 
     final todayTasks = switch (pending) {
@@ -99,23 +99,30 @@ class _HomeBody extends StatelessWidget {
       _ => <Task>[],
     };
 
-    return ListView(
-      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-      children: [
-        const _WeatherSection(),
-        const SizedBox(height: 16),
-        SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
-        if (todayTasks.isEmpty)
-          _DashboardHint(t.home.no_tasks_today)
-        else
-          _TaskList(tasks: todayTasks, catalog: catalog, now: now),
-        const SizedBox(height: 16),
-        SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
-        if (recentTasks.isEmpty)
-          _DashboardHint(t.home.no_recent)
-        else
-          _TaskList(tasks: recentTasks, catalog: catalog, now: now),
-      ],
+    return RefreshIndicator(
+      onRefresh: () async {
+        ref.invalidate(currentWeatherProvider);
+        await ref.read(currentWeatherProvider.future);
+      },
+      child: ListView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+        children: [
+          const _WeatherSection(),
+          const SizedBox(height: 16),
+          SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
+          if (todayTasks.isEmpty)
+            _DashboardHint(t.home.no_tasks_today)
+          else
+            _TaskList(tasks: todayTasks, catalog: catalog, now: now),
+          const SizedBox(height: 16),
+          SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
+          if (recentTasks.isEmpty)
+            _DashboardHint(t.home.no_recent)
+          else
+            _TaskList(tasks: recentTasks, catalog: catalog, now: now),
+        ],
+      ),
     );
   }
 }
@@ -128,7 +135,15 @@ class _WeatherSection extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final weather = ref.watch(currentWeatherProvider);
     if (weather.isLoading) return const _WeatherLoadingCard();
-    return CurrentWeatherCard(snapshot: weather.asData?.value);
+    final snapshot = weather.asData?.value;
+    if (snapshot == null) {
+      return InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => ref.invalidate(currentWeatherProvider),
+        child: const CurrentWeatherCard(snapshot: null),
+      );
+    }
+    return CurrentWeatherCard(snapshot: snapshot);
   }
 }
 

@@ -1220,6 +1220,9 @@ class Translations$weather$sl {
 
 	/// sl: 'Vreme trenutno ni na voljo.'
 	String get home_unavailable => 'Vreme trenutno ni na voljo.';
+
+	/// sl: 'Tapni za ponovni poskus'
+	String get home_retry => 'Tapni za ponovni poskus';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1550,6 +1553,7 @@ extension on Translations {
 			'weather.detail_waiting' => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.',
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
+			'weather.home_retry' => 'Tapni za ponovni poskus',
 			_ => null,
 		};
 	}

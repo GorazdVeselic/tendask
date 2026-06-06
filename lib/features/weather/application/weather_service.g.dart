@@ -48,7 +48,7 @@ final class WeatherServiceProvider
   }
 }
 
-String _$weatherServiceHash() => r'6c2622973d324582c991140b525a1b62b7dd78ee';
+String _$weatherServiceHash() => r'b5bb3beda866575759dc239d55821f9ceb7ece55';
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
 /// garden location, cached for [kWeatherCacheTtl]. Null when offline with no

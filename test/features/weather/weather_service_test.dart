@@ -4,6 +4,8 @@ import 'package:tendask/core/clock.dart';
 import 'package:tendask/features/weather/application/weather_service.dart';
 import 'package:tendask/features/weather/data/open_meteo_client.dart';
 import 'package:tendask/features/weather/data/open_meteo_response.dart';
+import 'package:tendask/features/weather/data/weather_cache_repository.dart';
+import 'package:tendask/features/weather/data/weather_snapshot.dart';
 
 class _FakeClock implements Clock {
   _FakeClock(this._now);
@@ -34,8 +36,25 @@ class _StubClient implements OpenMeteoClient {
   }
 }
 
-WeatherService _service(_StubClient client, _FakeClock clock) => WeatherService(
+/// In-memory cache standing in for the local_flag-backed repository.
+class _FakeCache implements WeatherCacheRepository {
+  WeatherSnapshot? stored;
+
+  @override
+  Future<WeatherSnapshot?> load() async => stored;
+
+  @override
+  Future<void> save(WeatherSnapshot snapshot) async => stored = snapshot;
+}
+
+WeatherService _service(
+  _StubClient client,
+  _FakeClock clock, {
+  WeatherCacheRepository? cache,
+}) =>
+    WeatherService(
       client,
+      cache ?? _FakeCache(),
       clock: clock,
       retryDelays: const [], // no waiting in tests
     );
@@ -96,6 +115,40 @@ void main() {
           await service.captureCached(latitude: 46, longitude: 14.5);
       expect(degraded?.temperature, 20);
       expect(client.calls, 2);
+    });
+
+    test('drops the stale snapshot once past the stale TTL', () async {
+      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+      final client = _StubClient()..next = _respWithTemp(20);
+      final service = _service(client, clock);
+
+      await service.captureCached(latitude: 46, longitude: 14.5);
+
+      // 3 h later and offline: beyond the 2 h stale window → unavailable.
+      clock.advance(const Duration(hours: 3));
+      client.next = null;
+      final result =
+          await service.captureCached(latitude: 46, longitude: 14.5);
+      expect(result, isNull);
+    });
+
+    test('reuses the persisted snapshot across a new service (restart)',
+        () async {
+      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+      final cache = _FakeCache();
+      final client = _StubClient()..next = _respWithTemp(20);
+
+      await _service(client, clock, cache: cache)
+          .captureCached(latitude: 46, longitude: 14.5);
+
+      // New service instance (app restart), offline within the fresh TTL →
+      // serves the persisted snapshot without any network call.
+      final offline = _StubClient(); // always throws
+      final restarted = _service(offline, clock, cache: cache);
+      final result =
+          await restarted.captureCached(latitude: 46, longitude: 14.5);
+      expect(result?.temperature, 20);
+      expect(offline.calls, 0);
     });
 
     test('returns null when offline with no prior snapshot', () async {

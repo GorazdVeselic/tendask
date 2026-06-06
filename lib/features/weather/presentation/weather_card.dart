@@ -83,6 +83,7 @@ class CurrentWeatherCard extends StatelessWidget {
     final snap = snapshot;
 
     if (snap == null) {
+      final t = context.t;
       return Card(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
@@ -92,10 +93,20 @@ class CurrentWeatherCard extends StatelessWidget {
                   color: theme.colorScheme.onSurfaceVariant),
               const SizedBox(width: 12),
               Expanded(
-                child: Text(context.t.weather.home_unavailable,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant)),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(t.weather.home_unavailable,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant)),
+                    Text(t.weather.home_retry,
+                        style: theme.textTheme.labelSmall?.copyWith(
+                            color: theme.colorScheme.primary)),
+                  ],
+                ),
               ),
+              Icon(Icons.refresh,
+                  color: theme.colorScheme.onSurfaceVariant, size: 20),
             ],
           ),
         ),

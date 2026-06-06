@@ -575,6 +575,7 @@ class _Translations$weather$en extends Translations$weather$sl {
 	@override String get detail_waiting => 'Weather will be recorded when you mark the task done.';
 	@override String get detail_none => 'No weather snapshot (captured offline).';
 	@override String get home_unavailable => 'Weather is currently unavailable.';
+	@override String get home_retry => 'Tap to retry';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -905,6 +906,7 @@ extension on TranslationsEn {
 			'weather.detail_waiting' => 'Weather will be recorded when you mark the task done.',
 			'weather.detail_none' => 'No weather snapshot (captured offline).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
+			'weather.home_retry' => 'Tap to retry',
 			_ => null,
 		};
 	}

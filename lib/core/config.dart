@@ -22,6 +22,11 @@ const kWeatherRetryDelays = <Duration>[
 /// Avoids a network call on every visit to Home (weather changes slowly).
 const kWeatherCacheTtl = Duration(minutes: 30);
 
+/// How long a persisted snapshot may still be shown when a re-fetch fails
+/// (offline). Past this the dashboard degrades to "unavailable" rather than
+/// showing a stale forecast. Survives app restarts (device-local cache).
+const kWeatherStaleTtl = Duration(hours: 2);
+
 /// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;

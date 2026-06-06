@@ -575,6 +575,7 @@ class _Translations$weather$de extends Translations$weather$sl {
 	@override String get detail_waiting => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.';
 	@override String get detail_none => 'Keine Wetteraufnahme (offline erfasst).';
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
+	@override String get home_retry => 'Zum Wiederholen tippen';
 }
 
 /// The flat map containing all translations for locale <de>.
@@ -905,6 +906,7 @@ extension on TranslationsDe {
 			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
 			'weather.detail_none' => 'Keine Wetteraufnahme (offline erfasst).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
+			'weather.home_retry' => 'Zum Wiederholen tippen',
 			_ => null,
 		};
 	}
