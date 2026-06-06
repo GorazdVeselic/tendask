@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$notifications$en notifications = _Translations$notifications$en._(_root);
 	@override late final _Translations$notif_settings$en notif_settings = _Translations$notif_settings$en._(_root);
+	@override late final _Translations$notif_preview$en notif_preview = _Translations$notif_preview$en._(_root);
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
 	@override late final _Translations$email_login$en email_login = _Translations$email_login$en._(_root);
@@ -136,9 +137,34 @@ class _Translations$notif_settings$en extends Translations$notif_settings$sl {
 	@override String get frequency_cap => 'At most 1 hint per day';
 	@override String get frequency_cap_sub => 'weather and nearby combined into one summary';
 	@override String get section_more => 'More';
+	@override String get preview => 'Notification preview';
+	@override String get preview_sub => 'how they look on the lock screen';
 	@override String get system_permission => 'System permission';
 	@override String get system_permission_on => 'device: allowed';
 	@override String get system_permission_off => 'exact reminders not allowed — tap for settings';
+}
+
+// Path: notif_preview
+class _Translations$notif_preview$en extends Translations$notif_preview$sl {
+	_Translations$notif_preview$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Notification appearance';
+	@override String get date => 'Tuesday, 1 June';
+	@override String get rem_now => 'now';
+	@override String get rem_title => '⏰ Foliar spraying · 07:00';
+	@override String get rem_body => 'Hedge + lawn · the morning is dry — a good time.';
+	@override String get rem_tag => 'task reminder';
+	@override String get wx_title => 'Tomorrow morning will be dry ☀️';
+	@override String get wx_body => 'A good time for foliar spraying of cherry laurels.';
+	@override String get wx_tag => 'smart hint · weather';
+	@override String get com_yesterday => 'yesterday';
+	@override String get com_title => 'Your area';
+	@override String get com_body => '68% of gardeners near you fertilised their lawn for the first time this week.';
+	@override String get com_tag => 'nearby hint · V2';
+	@override String get footer => 'Tapping a notification opens the right screen (task · hint · nearby).';
 }
 
 // Path: onboarding
@@ -651,9 +677,25 @@ extension on TranslationsEn {
 			'notif_settings.frequency_cap' => 'At most 1 hint per day',
 			'notif_settings.frequency_cap_sub' => 'weather and nearby combined into one summary',
 			'notif_settings.section_more' => 'More',
+			'notif_settings.preview' => 'Notification preview',
+			'notif_settings.preview_sub' => 'how they look on the lock screen',
 			'notif_settings.system_permission' => 'System permission',
 			'notif_settings.system_permission_on' => 'device: allowed',
 			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
+			'notif_preview.title' => 'Notification appearance',
+			'notif_preview.date' => 'Tuesday, 1 June',
+			'notif_preview.rem_now' => 'now',
+			'notif_preview.rem_title' => '⏰ Foliar spraying · 07:00',
+			'notif_preview.rem_body' => 'Hedge + lawn · the morning is dry — a good time.',
+			'notif_preview.rem_tag' => 'task reminder',
+			'notif_preview.wx_title' => 'Tomorrow morning will be dry ☀️',
+			'notif_preview.wx_body' => 'A good time for foliar spraying of cherry laurels.',
+			'notif_preview.wx_tag' => 'smart hint · weather',
+			'notif_preview.com_yesterday' => 'yesterday',
+			'notif_preview.com_title' => 'Your area',
+			'notif_preview.com_body' => '68% of gardeners near you fertilised their lawn for the first time this week.',
+			'notif_preview.com_tag' => 'nearby hint · V2',
+			'notif_preview.footer' => 'Tapping a notification opens the right screen (task · hint · nearby).',
 			'onboarding.skip' => 'Skip ›',
 			'onboarding.next' => 'Next',
 			'onboarding.start' => 'Get started 🌿',

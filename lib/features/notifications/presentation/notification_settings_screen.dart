@@ -148,9 +148,22 @@ class _Body extends ConsumerWidget {
           ),
         ),
 
-        // System permission status (exact alarms — the one reminders need).
+        // Preview + system permission status (exact alarms — reminders need it).
         SectionLabel(t.notif_settings.section_more),
-        const Card(child: _PermissionTile()),
+        Card(
+          child: Column(
+            children: [
+              ListTile(
+                leading: const Text('👁', style: TextStyle(fontSize: 20)),
+                title: Text(t.notif_settings.preview),
+                subtitle: Text(t.notif_settings.preview_sub),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('notification-preview'),
+              ),
+              const _PermissionTile(),
+            ],
+          ),
+        ),
       ],
     );
   }

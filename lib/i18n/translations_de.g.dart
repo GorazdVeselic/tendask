@@ -44,6 +44,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
+	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
@@ -136,9 +137,34 @@ class _Translations$notif_settings$de extends Translations$notif_settings$sl {
 	@override String get frequency_cap => 'Höchstens 1 Hinweis pro Tag';
 	@override String get frequency_cap_sub => 'Wetter und Umgebung in einer Zusammenfassung';
 	@override String get section_more => 'Mehr';
+	@override String get preview => 'Benachrichtigungs-Vorschau';
+	@override String get preview_sub => 'wie sie auf dem Sperrbildschirm aussehen';
 	@override String get system_permission => 'Systemberechtigung';
 	@override String get system_permission_on => 'Gerät: erlaubt';
 	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
+}
+
+// Path: notif_preview
+class _Translations$notif_preview$de extends Translations$notif_preview$sl {
+	_Translations$notif_preview$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Benachrichtigungen — Vorschau';
+	@override String get date => 'Dienstag, 1. Juni';
+	@override String get rem_now => 'jetzt';
+	@override String get rem_title => '⏰ Blattspritzung · 07:00';
+	@override String get rem_body => 'Hecke + Rasen · der Morgen ist trocken — guter Zeitpunkt.';
+	@override String get rem_tag => 'Aufgaben-Erinnerung';
+	@override String get wx_title => 'Morgen früh wird es trocken ☀️';
+	@override String get wx_body => 'Guter Zeitpunkt für die Blattspritzung von Kirschlorbeer.';
+	@override String get wx_tag => 'Smarter Hinweis · Wetter';
+	@override String get com_yesterday => 'gestern';
+	@override String get com_title => 'Deine Umgebung';
+	@override String get com_body => '68 % der Gärtner in deiner Nähe haben diese Woche zum ersten Mal den Rasen gedüngt.';
+	@override String get com_tag => 'Hinweis aus der Umgebung · V2';
+	@override String get footer => 'Ein Tippen auf eine Benachrichtigung öffnet den passenden Bildschirm (Aufgabe · Hinweis · Umgebung).';
 }
 
 // Path: onboarding
@@ -651,9 +677,25 @@ extension on TranslationsDe {
 			'notif_settings.frequency_cap' => 'Höchstens 1 Hinweis pro Tag',
 			'notif_settings.frequency_cap_sub' => 'Wetter und Umgebung in einer Zusammenfassung',
 			'notif_settings.section_more' => 'Mehr',
+			'notif_settings.preview' => 'Benachrichtigungs-Vorschau',
+			'notif_settings.preview_sub' => 'wie sie auf dem Sperrbildschirm aussehen',
 			'notif_settings.system_permission' => 'Systemberechtigung',
 			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
 			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
+			'notif_preview.title' => 'Benachrichtigungen — Vorschau',
+			'notif_preview.date' => 'Dienstag, 1. Juni',
+			'notif_preview.rem_now' => 'jetzt',
+			'notif_preview.rem_title' => '⏰ Blattspritzung · 07:00',
+			'notif_preview.rem_body' => 'Hecke + Rasen · der Morgen ist trocken — guter Zeitpunkt.',
+			'notif_preview.rem_tag' => 'Aufgaben-Erinnerung',
+			'notif_preview.wx_title' => 'Morgen früh wird es trocken ☀️',
+			'notif_preview.wx_body' => 'Guter Zeitpunkt für die Blattspritzung von Kirschlorbeer.',
+			'notif_preview.wx_tag' => 'Smarter Hinweis · Wetter',
+			'notif_preview.com_yesterday' => 'gestern',
+			'notif_preview.com_title' => 'Deine Umgebung',
+			'notif_preview.com_body' => '68 % der Gärtner in deiner Nähe haben diese Woche zum ersten Mal den Rasen gedüngt.',
+			'notif_preview.com_tag' => 'Hinweis aus der Umgebung · V2',
+			'notif_preview.footer' => 'Ein Tippen auf eine Benachrichtigung öffnet den passenden Bildschirm (Aufgabe · Hinweis · Umgebung).',
 			'onboarding.skip' => 'Überspringen ›',
 			'onboarding.next' => 'Weiter',
 			'onboarding.start' => 'Loslegen 🌿',

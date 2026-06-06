@@ -159,8 +159,37 @@ Supabase strošek majhen. Zato:
   za cross-user deduplikacijo (Supabase prihranek) + cron backstop. To pride, ko gre server-side
   (community motor) itak v tek.
 
-## 9. Dependency opozorilo
+## 9. Dependency opozorilo (Open-Meteo)
 
-Open-Meteo brezplačni plan je fair-use (nekomercialno / ~10k klicev/dan). Pri 10k uporabnikih =
-**komercialna raba** → plačljiv plan ali self-host. Deduplikacija po celici to ublaži: cron naredi
-nekaj tisoč klicev/dan (na celico, ne na uporabnika ali task). Odločitev pred V2/launch.
+Dve **ločeni** omejitvi, ki ju je lahko zamešati: tehnični throttling in licenca. (Aktualno
+preverjeno 2026-06-06; politika se lahko spremeni.)
+
+### 9.1 Tehnični throttling — **per IP naslov**
+Free tier: **600 klicev/min · 5.000/h · 10.000/dan**, rezано **per IP**, ne per ključ/aplikacija.
+Klici so uteženi: `weight = nLocations × (nDays/14) × (nVariables/10)` → en Tendask klic (1 lokacija,
+~5 dni, ~10 spremenljivk) šteje kot **~1**.
+
+**Posledica za arhitekturo — kje throttling boli, je odvisno od tega, od kod klic izhaja:**
+- **Client-side (MVP, kot zdaj):** vsak uporabnik = svoj IP = svoja kvota. 10k uporabnikov z nekaj
+  klici/dan je daleč pod limitom. Throttling **ni problem**. (To je glavna prednost, da vreme kličemo
+  iz naprave, ne iz backenda.)
+- **Server-side (V2 cron backstop):** vsi klici skozi **en** strežniški IP = ena skupna kvota →
+  10k uporabnikov razbije 10.000/dan. Cron zato rabi plačljiv plan **ali self-host** (§9.3).
+- **Past — CGNAT:** mobilni operater lahko skrije veliko naročnikov za en javni NAT IP → si delijo
+  kvoto. Pri 10k razpršenih uporabnikih nizko tveganje (prag je visok, klicev malo), a ne ničelno
+  za zelo goste skupine na istem operaterju.
+
+### 9.2 Licenca — **ni odvisna od volumna ali IP razpršenosti**
+Free tier je **samo nekomercialen**. Komercialna raba zahteva plačljivo naročnino **ne glede na
+število klicev** ("regardless of call volume"). Torej: per-IP razpršenost (§9.1) reši *throttling*,
+**ne** licence. Če bo Tendask komercialen (naročnine, oglasi, for-profit), potrebuje plačljiv
+Open-Meteo plan, čeprav so klici client-side in razpršeni. Če bo res nekomercialen (brezplačen,
+brez oglasov/naročnin), je free tier legitimen. Poslovna/pravna odločitev, ne tehnična.
+
+### 9.3 Tretja možnost — self-host
+Open-Meteo je **odprtokoden** → lahko teče na lastnem strežniku. Reši **oboje** hkrati: ni rate-limita
+(lastna instanca) in ni komercialne licenčne omejitve. Cena = strežnik + vzdrževanje. Smiselno ravno
+za V2 cron backstop, ki bi sicer trčil v throttling (§9.1) in licenco (§9.2) hkrati.
+
+**Vir:** [pricing](https://open-meteo.com/en/pricing) · [terms](https://open-meteo.com/en/terms) ·
+[discussion #853](https://github.com/open-meteo/open-meteo/discussions/853). Odločitev pred V2/launch.

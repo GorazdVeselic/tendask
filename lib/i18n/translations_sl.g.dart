@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
 	late final Translations$notif_settings$sl notif_settings = Translations$notif_settings$sl.internal(_root);
+	late final Translations$notif_preview$sl notif_preview = Translations$notif_preview$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
 	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
@@ -198,6 +199,12 @@ class Translations$notif_settings$sl {
 	/// sl: 'Več'
 	String get section_more => 'Več';
 
+	/// sl: 'Predogled obvestil'
+	String get preview => 'Predogled obvestil';
+
+	/// sl: 'kako izgledajo na zaklenjenem zaslonu'
+	String get preview_sub => 'kako izgledajo na zaklenjenem zaslonu';
+
 	/// sl: 'Sistemsko dovoljenje'
 	String get system_permission => 'Sistemsko dovoljenje';
 
@@ -206,6 +213,57 @@ class Translations$notif_settings$sl {
 
 	/// sl: 'točni opomniki niso dovoljeni — tapni za nastavitve'
 	String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
+}
+
+// Path: notif_preview
+class Translations$notif_preview$sl {
+	Translations$notif_preview$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Videz obvestil'
+	String get title => 'Videz obvestil';
+
+	/// sl: 'torek, 1. junij'
+	String get date => 'torek, 1. junij';
+
+	/// sl: 'zdaj'
+	String get rem_now => 'zdaj';
+
+	/// sl: '⏰ Foliarno škropljenje · 07:00'
+	String get rem_title => '⏰ Foliarno škropljenje · 07:00';
+
+	/// sl: 'Živa meja + trata · jutro je suho — primeren čas.'
+	String get rem_body => 'Živa meja + trata · jutro je suho — primeren čas.';
+
+	/// sl: 'opomnik opravila'
+	String get rem_tag => 'opomnik opravila';
+
+	/// sl: 'Jutri zjutraj bo suho ☀️'
+	String get wx_title => 'Jutri zjutraj bo suho ☀️';
+
+	/// sl: 'Primeren čas za foliarno škropljenje lovorikovcev.'
+	String get wx_body => 'Primeren čas za foliarno škropljenje lovorikovcev.';
+
+	/// sl: 'pametni namig · vreme'
+	String get wx_tag => 'pametni namig · vreme';
+
+	/// sl: 'včeraj'
+	String get com_yesterday => 'včeraj';
+
+	/// sl: 'Tvoja okolica'
+	String get com_title => 'Tvoja okolica';
+
+	/// sl: '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.'
+	String get com_body => '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.';
+
+	/// sl: 'namig okolice · V2'
+	String get com_tag => 'namig okolice · V2';
+
+	/// sl: 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).'
+	String get footer => 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).';
 }
 
 // Path: onboarding
@@ -1348,9 +1406,25 @@ extension on Translations {
 			'notif_settings.frequency_cap' => 'Največ 1 namig na dan',
 			'notif_settings.frequency_cap_sub' => 'vreme in okolico združimo v en povzetek',
 			'notif_settings.section_more' => 'Več',
+			'notif_settings.preview' => 'Predogled obvestil',
+			'notif_settings.preview_sub' => 'kako izgledajo na zaklenjenem zaslonu',
 			'notif_settings.system_permission' => 'Sistemsko dovoljenje',
 			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
 			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
+			'notif_preview.title' => 'Videz obvestil',
+			'notif_preview.date' => 'torek, 1. junij',
+			'notif_preview.rem_now' => 'zdaj',
+			'notif_preview.rem_title' => '⏰ Foliarno škropljenje · 07:00',
+			'notif_preview.rem_body' => 'Živa meja + trata · jutro je suho — primeren čas.',
+			'notif_preview.rem_tag' => 'opomnik opravila',
+			'notif_preview.wx_title' => 'Jutri zjutraj bo suho ☀️',
+			'notif_preview.wx_body' => 'Primeren čas za foliarno škropljenje lovorikovcev.',
+			'notif_preview.wx_tag' => 'pametni namig · vreme',
+			'notif_preview.com_yesterday' => 'včeraj',
+			'notif_preview.com_title' => 'Tvoja okolica',
+			'notif_preview.com_body' => '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.',
+			'notif_preview.com_tag' => 'namig okolice · V2',
+			'notif_preview.footer' => 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).',
 			'onboarding.skip' => 'Preskoči ›',
 			'onboarding.next' => 'Naprej',
 			'onboarding.start' => 'Začni 🌿',

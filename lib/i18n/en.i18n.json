@@ -38,9 +38,27 @@
     "frequency_cap": "At most 1 hint per day",
     "frequency_cap_sub": "weather and nearby combined into one summary",
     "section_more": "More",
+    "preview": "Notification preview",
+    "preview_sub": "how they look on the lock screen",
     "system_permission": "System permission",
     "system_permission_on": "device: allowed",
     "system_permission_off": "exact reminders not allowed — tap for settings"
+  },
+  "notif_preview": {
+    "title": "Notification appearance",
+    "date": "Tuesday, 1 June",
+    "rem_now": "now",
+    "rem_title": "⏰ Foliar spraying · 07:00",
+    "rem_body": "Hedge + lawn · the morning is dry — a good time.",
+    "rem_tag": "task reminder",
+    "wx_title": "Tomorrow morning will be dry ☀️",
+    "wx_body": "A good time for foliar spraying of cherry laurels.",
+    "wx_tag": "smart hint · weather",
+    "com_yesterday": "yesterday",
+    "com_title": "Your area",
+    "com_body": "68% of gardeners near you fertilised their lawn for the first time this week.",
+    "com_tag": "nearby hint · V2",
+    "footer": "Tapping a notification opens the right screen (task · hint · nearby)."
   },
   "onboarding": {
     "skip": "Skip ›",

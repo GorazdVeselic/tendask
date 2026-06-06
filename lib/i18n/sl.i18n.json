@@ -38,9 +38,27 @@
     "frequency_cap": "Največ 1 namig na dan",
     "frequency_cap_sub": "vreme in okolico združimo v en povzetek",
     "section_more": "Več",
+    "preview": "Predogled obvestil",
+    "preview_sub": "kako izgledajo na zaklenjenem zaslonu",
     "system_permission": "Sistemsko dovoljenje",
     "system_permission_on": "naprava: dovoljeno",
     "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve"
+  },
+  "notif_preview": {
+    "title": "Videz obvestil",
+    "date": "torek, 1. junij",
+    "rem_now": "zdaj",
+    "rem_title": "⏰ Foliarno škropljenje · 07:00",
+    "rem_body": "Živa meja + trata · jutro je suho — primeren čas.",
+    "rem_tag": "opomnik opravila",
+    "wx_title": "Jutri zjutraj bo suho ☀️",
+    "wx_body": "Primeren čas za foliarno škropljenje lovorikovcev.",
+    "wx_tag": "pametni namig · vreme",
+    "com_yesterday": "včeraj",
+    "com_title": "Tvoja okolica",
+    "com_body": "68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.",
+    "com_tag": "namig okolice · V2",
+    "footer": "Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica)."
   },
   "onboarding": {
     "skip": "Preskoči ›",

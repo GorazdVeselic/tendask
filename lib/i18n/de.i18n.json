@@ -38,9 +38,27 @@
     "frequency_cap": "Höchstens 1 Hinweis pro Tag",
     "frequency_cap_sub": "Wetter und Umgebung in einer Zusammenfassung",
     "section_more": "Mehr",
+    "preview": "Benachrichtigungs-Vorschau",
+    "preview_sub": "wie sie auf dem Sperrbildschirm aussehen",
     "system_permission": "Systemberechtigung",
     "system_permission_on": "Gerät: erlaubt",
     "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen"
+  },
+  "notif_preview": {
+    "title": "Benachrichtigungen — Vorschau",
+    "date": "Dienstag, 1. Juni",
+    "rem_now": "jetzt",
+    "rem_title": "⏰ Blattspritzung · 07:00",
+    "rem_body": "Hecke + Rasen · der Morgen ist trocken — guter Zeitpunkt.",
+    "rem_tag": "Aufgaben-Erinnerung",
+    "wx_title": "Morgen früh wird es trocken ☀️",
+    "wx_body": "Guter Zeitpunkt für die Blattspritzung von Kirschlorbeer.",
+    "wx_tag": "Smarter Hinweis · Wetter",
+    "com_yesterday": "gestern",
+    "com_title": "Deine Umgebung",
+    "com_body": "68 % der Gärtner in deiner Nähe haben diese Woche zum ersten Mal den Rasen gedüngt.",
+    "com_tag": "Hinweis aus der Umgebung · V2",
+    "footer": "Ein Tippen auf eine Benachrichtigung öffnet den passenden Bildschirm (Aufgabe · Hinweis · Umgebung)."
   },
   "onboarding": {
     "skip": "Überspringen ›",
