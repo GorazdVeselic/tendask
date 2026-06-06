@@ -133,10 +133,17 @@ class TasksRepository {
   // ── Reminders ─────────────────────────────────────────────────────────────
 
   Future<List<TaskReminder>> remindersForTask(String taskId) =>
-      (_db.select(_db.taskReminders)
-            ..where((r) => r.taskId.equals(taskId) & r.deleted.equals(false))
-            ..orderBy([(r) => OrderingTerm.asc(r.offset)]))
-          .get();
+      _remindersQuery(taskId).get();
+
+  /// Active reminders of one task, soonest offset first — for the detail screen.
+  Stream<List<TaskReminder>> watchRemindersForTask(String taskId) =>
+      _remindersQuery(taskId).watch();
+
+  SimpleSelectStatement<$TaskRemindersTable, TaskReminder> _remindersQuery(
+          String taskId) =>
+      _db.select(_db.taskReminders)
+        ..where((r) => r.taskId.equals(taskId) & r.deleted.equals(false))
+        ..orderBy([(r) => OrderingTerm.asc(r.offset)]);
 
   /// Task ids that have at least one active reminder — drives the bell marker in
   /// task lists. Reactive (drift stream).

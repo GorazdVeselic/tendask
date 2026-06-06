@@ -75,6 +75,12 @@ final taskSubjectsForTaskProvider =
   return ref.watch(tasksRepositoryProvider).watchSubjectsForTask(id);
 });
 
+/// Active reminders of a single task — for the task detail screen.
+final remindersForTaskProvider =
+    StreamProvider.autoDispose.family<List<TaskReminder>, String>((ref, id) {
+  return ref.watch(tasksRepositoryProvider).watchRemindersForTask(id);
+});
+
 /// Task history for one plant instance — for the plant detail screen.
 final tasksByPlantProvider =
     StreamProvider.autoDispose.family<List<Task>, String>((ref, userPlantId) {

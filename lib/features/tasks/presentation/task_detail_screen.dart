@@ -18,6 +18,7 @@ import '../../weather/presentation/weather_card.dart';
 import '../application/tasks_providers.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
+import 'entry/steps/reminder_step.dart';
 import 'subject_labels.dart';
 import 'widgets/confirm_delete_dialog.dart';
 
@@ -104,6 +105,18 @@ class TaskDetailScreen extends ConsumerWidget {
                   return '${s?.name ?? ts.supplyId} $amt$unit';
                 }).join(', ');
 
+          // Active reminders, e.g. "1 dan prej ob 18:00, 1 ura prej".
+          final reminders =
+              ref.watch(remindersForTaskProvider(task.id)).asData?.value ??
+                  const [];
+          final remindersLabel = reminders.isEmpty
+              ? null
+              : reminders
+                  .map((r) => reminderLabel(
+                      ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
+                      t))
+                  .join(', ');
+
           return Column(
             children: [
               Expanded(
@@ -131,7 +144,11 @@ class TaskDetailScreen extends ConsumerWidget {
                       _WeatherSection(task: task),
                       const SizedBox(height: 20),
                       _SectionTitle(t.task_detail.section_details),
-                      _DetailsCard(task: task, suppliesLabel: suppliesLabel),
+                      _DetailsCard(
+                        task: task,
+                        suppliesLabel: suppliesLabel,
+                        remindersLabel: remindersLabel,
+                      ),
                     ],
                   ),
                 ),
@@ -495,10 +512,15 @@ class _WeatherSection extends StatelessWidget {
 // ─── Details card ─────────────────────────────────────────────────────────────
 
 class _DetailsCard extends StatelessWidget {
-  const _DetailsCard({required this.task, required this.suppliesLabel});
+  const _DetailsCard({
+    required this.task,
+    required this.suppliesLabel,
+    required this.remindersLabel,
+  });
 
   final Task task;
   final String? suppliesLabel;
+  final String? remindersLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -519,7 +541,7 @@ class _DetailsCard extends StatelessWidget {
     final rows = [
       (whenLabel, '${formatDmy(local)} · ${formatHm(local)}'),
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
-      (t.task_detail.label_reminder, t.task_detail.none), // M8
+      (t.task_detail.label_reminder, remindersLabel ?? t.task_detail.none),
       (t.task_detail.label_recurrence, recurrenceLabel),
       if (task.note != null && task.note!.isNotEmpty)
         (t.task_detail.label_note, task.note!),
