@@ -8,21 +8,21 @@ part of 'sync_coordinator.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
-/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
-/// keepAlive — lives for the whole app session. Instantiate once after the
-/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+/// Wires the sync triggers (tech-stack §2): startup, reconnect, periodic, plus
+/// push-on-save. keepAlive — lives for the whole app session. Instantiate once
+/// after the bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
 
 @ProviderFor(SyncCoordinator)
 final syncCoordinatorProvider = SyncCoordinatorProvider._();
 
-/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
-/// keepAlive — lives for the whole app session. Instantiate once after the
-/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+/// Wires the sync triggers (tech-stack §2): startup, reconnect, periodic, plus
+/// push-on-save. keepAlive — lives for the whole app session. Instantiate once
+/// after the bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
 final class SyncCoordinatorProvider
     extends $NotifierProvider<SyncCoordinator, void> {
-  /// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
-  /// keepAlive — lives for the whole app session. Instantiate once after the
-  /// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+  /// Wires the sync triggers (tech-stack §2): startup, reconnect, periodic, plus
+  /// push-on-save. keepAlive — lives for the whole app session. Instantiate once
+  /// after the bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
   SyncCoordinatorProvider._()
     : super(
         from: null,
@@ -50,11 +50,11 @@ final class SyncCoordinatorProvider
   }
 }
 
-String _$syncCoordinatorHash() => r'216198993644f0f399effeec12b49186f8886a79';
+String _$syncCoordinatorHash() => r'cb03c8d7f0643b8f9eacfb727c95c2ee32c5755f';
 
-/// Wires the three sync triggers (tech-stack §2): startup, reconnect, periodic.
-/// keepAlive — lives for the whole app session. Instantiate once after the
-/// bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
+/// Wires the sync triggers (tech-stack §2): startup, reconnect, periodic, plus
+/// push-on-save. keepAlive — lives for the whole app session. Instantiate once
+/// after the bootstrap via `ref.read(syncCoordinatorProvider.notifier).start()`.
 
 abstract class _$SyncCoordinator extends $Notifier<void> {
   void build();

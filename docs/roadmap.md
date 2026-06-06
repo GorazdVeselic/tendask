@@ -239,11 +239,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** deterministični opomniki opravil, delujejo offline; deep-link na Detajl. §4 tech-stack. Zasloni 19–22.
 
-- [ ] **8.1 — Setup.** `flutter_local_notifications` + `timezone`. *Commit:* `feat: lokalna obvestila setup`
-- [ ] **8.2 — Razporejanje.** Po `task_reminder(offset, time)`; več opomnikov na opravilo; časovni pasovi. *Commit:* `feat: razporejanje opomnikov`
+- [x] **8.1 — Setup.** `flutter_local_notifications` + `timezone` + `flutter_timezone`; core-library desugaring, dovoljenja (`POST_NOTIFICATIONS`/`RECEIVE_BOOT_COMPLETED`/`SCHEDULE_EXACT_ALARM`) + **vsi 3 plugin receiverji** (Scheduled/ActionBroadcast/Boot — plugin jih NE deklarira sam), začasna eco ikona; `NotificationService` (init+tz+dovoljenje+exact). On-device potrjeno (takoj + razporejeno; zaprt app + ugasnjen zaslon). *Commit:* `feat: lokalna obvestila setup`
+- [ ] **8.2 — Razporejanje.** Po `task_reminder(offset, time)`; več opomnikov na opravilo; časovni pasovi. **Uporabi `Clock` (tu ga uvedi).** Lokaliziraj ime kanala (slang prek `LocaleSettings`, zdaj hardcoded SL). *Commit:* `feat: razporejanje opomnikov`
 - [ ] **8.3 — Deep-link.** Tap → `go_router` na Detajl (17). *Commit:* `feat: deep-link obvestilo → detajl`
 - [ ] **8.4 — Zasloni 19/20/21/22.** Dodaj obvestilo (19), videz (20), priming dovoljenje (21, pred sistemskim pozivom), nastavitve (22: tihe ure, kapica, opt-in). *Commit:* `feat: zasloni obvestil (19–22)`
-- [ ] **8.5 — Testi M8.** *Commit:* `test: opomniki`
+- [ ] **8.5 — Testi M8.** Odstrani debug smoke-test gumb (Nastavitve, kDebugMode). Na napravi: exact alarmi delujejo na Samsung A53 brez battery-exemption — **preveri še recents-swipe + druge OEM-e**; če odpove, dodaj `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` poziv. *Commit:* `test: opomniki`
 
 ---
 
@@ -317,6 +317,22 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-06 — **8.1 — Lokalna obvestila (setup) → M8 začet.** Paketi `flutter_local_notifications ^21.0.0`,
+  `timezone ^0.11.0`, `flutter_timezone ^5.1.0` (zadnji izven §1 — z dovoljenjem, §1 dopolnjen). Android: core-library
+  desugaring (`desugar_jdk_libs:2.1.4`, rabi ga `zonedSchedule`); manifest dovoljenja `POST_NOTIFICATIONS` +
+  `RECEIVE_BOOT_COMPLETED` + `SCHEDULE_EXACT_ALARM` + **vsi 3 plugin receiverji** (`ScheduledNotificationReceiver`,
+  `ActionBroadcastReceiver`, `ScheduledNotificationBootReceiver`); začasna eco vector ikona (`ic_stat_notify`,
+  prava v M9). `core/notifications/notification_service.dart`: tanek ovoj — `init()` (tz baza + lokalna IANA cona
+  prek flutter_timezone + plugin init), `requestPermission()` (odložen na priming 21), `ensureExactAlarms()`,
+  keepAlive provider; init fire-and-forget v `main.dart`. **Odločitvi (z uporabnikom):** (1) **točni alarmi**
+  (`exactAllowWhileIdle`) — ne inexact (na Samsungu odloženi/nezanesljivi); (2) `flutter_timezone` za IANA cono.
+  **DEVICE DEBUG SAGA (ključen nauk):** takojšnje obvestilo je delovalo, razporejeno NIKOLI — po diagnostiki
+  (`exact:true`, `pending:1`, prava cona, brez napake) ni bil ne Doze ne koda, ampak **manjkajoč
+  `ScheduledNotificationReceiver` v manifestu** (plugin receiverjev NE deklarira sam → AlarmManager se sproži, a
+  nima kdo prikazati obvestila). Po dodajanju vseh 3 receiverjev: on-device potrjeno takoj + razporejeno, zaprt app,
+  **ugasnjen zaslon** (Samsung A53, exact alarmi delujejo brez battery-exemption). Začasen kDebugMode smoke-test gumb
+  v Nastavitvah (ostane skozi M8, odstrani v 8.5). flutter analyze čist, 135/135, debug APK gradi. docs: tech-stack §1.
+  Commit: `feat: lokalna obvestila setup`.
 - 2026-06-05 — **7.6 — Testi M7 → M7 ZAKLJUČEN.** Dodani unit testi (pure logika, CLAUDE.md pragmatika):
   `geocoding_client_test` (4: parsiranje, tolerantnost manjkajočih polj + int→double, prazna poizvedba brez
   network klica), `clear_user_data_test` (3: počisti uporabniške+device-local tabele, katalog ostane, keepFlags

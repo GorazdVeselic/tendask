@@ -28,7 +28,7 @@
 | Vreme | **Open-Meteo** (brez ključa, brez stroška) | — |
 | H3 (na napravi) | **h3_flutter** (FFI binding) | `h3_flutter` |
 | Lokacija (GPS) | **geolocator** (M7); vpisan kraj → **Open-Meteo Geocoding** (brez ključa, dio) | `geolocator` |
-| Lokalna obvestila (plast A) | **flutter_local_notifications** + tz | `flutter_local_notifications`, `timezone` |
+| Lokalna obvestila (plast A) | **flutter_local_notifications** + tz (IANA cona prek `flutter_timezone`) | `flutter_local_notifications`, `timezone`, `flutter_timezone` |
 | Push (plast B) | **Firebase FCM** — **ODLOŽENO**, ne v prvem MVP | `firebase_messaging` (kasneje) |
 | Crash/monitoring | **Sentry** | `sentry_flutter` |
 | Analitika | **brez v MVP** (kasneje PostHog self-host, opcijsko) | — |

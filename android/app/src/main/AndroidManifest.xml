@@ -11,6 +11,16 @@
          coordinates never leave the device — only H3 cells sync. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!-- Local task reminders (M8). POST_NOTIFICATIONS is a runtime prompt on
+         Android 13+, requested from the priming screen (21). RECEIVE_BOOT_COMPLETED
+         lets the plugin reschedule pending reminders after a reboot.
+         SCHEDULE_EXACT_ALARM: reminders must fire at the set time even in Doze
+         (inexact alarms were deferred indefinitely on Samsung) — exact timing is
+         the core function of a reminder app (Play-policy compliant). On Android
+         13+ the user grants it via the system "Alarms & reminders" page. -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM"/>
     <application
         android:label="tendask"
         android:name="${applicationName}"
@@ -37,6 +47,27 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <!-- flutter_local_notifications receivers (the plugin's own manifest
+             declares none). ScheduledNotificationReceiver is the one AlarmManager
+             triggers at the scheduled time to actually post the notification —
+             without it scheduled reminders are queued but never fire. The boot
+             receiver reschedules pending reminders after a reboot. -->
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ActionBroadcastReceiver"
+            android:exported="false"/>
+        <receiver
+            android:name="com.dexterous.flutterlocalnotifications.ScheduledNotificationBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED"/>
+                <action android:name="android.intent.action.QUICKBOOT_POWERON"/>
+                <action android:name="com.htc.intent.action.QUICKBOOT_POWERON"/>
+            </intent-filter>
+        </receiver>
         <!-- Don't delete the meta-data below.
              This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
         <meta-data

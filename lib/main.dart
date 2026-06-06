@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -8,6 +10,7 @@ import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
+import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -41,6 +44,11 @@ void main() async {
   // triggers. Guests stay local (no session) — sync activates on sign-in.
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
   container.read(syncCoordinatorProvider.notifier).start();
+
+  // Local notifications (M8): load timezone data + init the plugin. The
+  // permission prompt is deferred to the priming screen (21), never at startup.
+  // Fire-and-forget — never blocks first paint.
+  unawaited(container.read(notificationServiceProvider).init());
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();
