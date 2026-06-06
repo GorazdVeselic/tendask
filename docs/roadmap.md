@@ -240,7 +240,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 **Cilj:** deterministični opomniki opravil, delujejo offline; deep-link na Detajl. §4 tech-stack. Zasloni 19–22.
 
 - [x] **8.1 — Setup.** `flutter_local_notifications` + `timezone` + `flutter_timezone`; core-library desugaring, dovoljenja (`POST_NOTIFICATIONS`/`RECEIVE_BOOT_COMPLETED`/`SCHEDULE_EXACT_ALARM`) + **vsi 3 plugin receiverji** (Scheduled/ActionBroadcast/Boot — plugin jih NE deklarira sam), začasna eco ikona; `NotificationService` (init+tz+dovoljenje+exact). On-device potrjeno (takoj + razporejeno; zaprt app + ugasnjen zaslon). *Commit:* `feat: lokalna obvestila setup`
-- [ ] **8.2 — Razporejanje.** Po `task_reminder(offset, time)`; več opomnikov na opravilo; časovni pasovi. **Uporabi `Clock` (tu ga uvedi).** Lokaliziraj ime kanala (slang prek `LocaleSettings`, zdaj hardcoded SL). *Commit:* `feat: razporejanje opomnikov`
+- [x] **8.2 — Razporejanje.** `reminder_schedule.dart` (čista `reminderFireTime`: dnevni offset+ura → dan-X ob uri, sicer taskDate−offset; stabilen 31-bit `reminderNotificationId` iz UUID). `ReminderCoordinator` (keepAlive): reconcile razporedi prihodnje opomnike čakajočih opravil + prekliče osirotele (le pending, ne prikazanih), reaktivno na `tableUpdates([tasks, taskReminders])` + debounce + ob zagonu. `NotificationService.scheduleAt/cancel/pendingIds` (payload=task id za 8.3). i18n `notifications.today/tomorrow`. On-device potrjeno (»1h prej« sproži). **Odloženo:** ime kanala še hardcoded SL + `Clock` v coordinatorju `const SystemClock()` (trigger-time je čista, testirana fn) — uredi v 8.4/8.5. *Commit:* `feat: razporejanje opomnikov`
 - [ ] **8.3 — Deep-link.** Tap → `go_router` na Detajl (17). *Commit:* `feat: deep-link obvestilo → detajl`
 - [ ] **8.4 — Zasloni 19/20/21/22.** Dodaj obvestilo (19), videz (20), priming dovoljenje (21, pred sistemskim pozivom), nastavitve (22: tihe ure, kapica, opt-in). *Commit:* `feat: zasloni obvestil (19–22)`
 - [ ] **8.5 — Testi M8.** Odstrani debug smoke-test gumb (Nastavitve, kDebugMode). Na napravi: exact alarmi delujejo na Samsung A53 brez battery-exemption — **preveri še recents-swipe + druge OEM-e**; če odpove, dodaj `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` poziv. *Commit:* `test: opomniki`
@@ -317,6 +317,16 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-06 — **8.2 — Razporejanje opomnikov.** Čista `reminderFireTime` (dnevni offset+ura → dan-X ob uri; sicer
+  taskDate−offset) + stabilen 31-bit `reminderNotificationId` iz UUID (`reminder_schedule.dart`, 6 testov).
+  `ReminderCoordinator` (keepAlive): reconcile razporedi prihodnje opomnike čakajočih opravil prek `scheduleAt`
+  (payload=task id za 8.3) in prekliče osirotele (`pendingIds` − `desired`, le pending), re-entrancy guard +
+  reaktivno na `tableUpdates([tasks, taskReminders])` + debounce (`kReminderDebounce`) + `start()` v `main`.
+  Naslov=ikona+tip, telo=subjekt·datum (danes/jutri prek slang `notifications.*`). `tasksRepository.pendingTasks()`.
+  **Odloženo:** ime kanala hardcoded SL + `Clock` v coordinatorju `const SystemClock()` (trigger-time je čista fn) →
+  8.4/8.5. On-device potrjeno (»1h prej« sproži). analyze čist, 142/142. Commit: `feat: razporejanje opomnikov`.
+  Med sejo še `fix: soft-delete opravila kaskadira na otroke` (`52c195a`): `softDelete` zdaj soft-deleta tudi
+  `task_subject`/`task_reminder`/`task_supply` (prej so v oblaku ostali `deleted=false` pod izbrisanim opravilom).
 - 2026-06-06 — **8.1 — Lokalna obvestila (setup) → M8 začet.** Paketi `flutter_local_notifications ^21.0.0`,
   `timezone ^0.11.0`, `flutter_timezone ^5.1.0` (zadnji izven §1 — z dovoljenjem, §1 dopolnjen). Android: core-library
   desugaring (`desugar_jdk_libs:2.1.4`, rabi ga `zonedSchedule`); manifest dovoljenja `POST_NOTIFICATIONS` +

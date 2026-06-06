@@ -12,6 +12,7 @@ import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
+import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
 import 'i18n/translations.g.dart';
@@ -49,6 +50,10 @@ void main() async {
   // permission prompt is deferred to the priming screen (21), never at startup.
   // Fire-and-forget — never blocks first paint.
   unawaited(container.read(notificationServiceProvider).init());
+
+  // Reconcile OS reminders with the task_reminder rows now, then reactively on
+  // every task/reminder change (M8.2). Fire-and-forget.
+  container.read(reminderCoordinatorProvider.notifier).start();
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();

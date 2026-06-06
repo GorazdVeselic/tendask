@@ -42,6 +42,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$de nav = _Translations$nav$de._(_root);
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
+	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
@@ -97,6 +98,17 @@ class _Translations$common$de extends Translations$common$sl {
 	// Translations
 	@override String get today => 'Heute';
 	@override String get yesterday => 'gestern';
+}
+
+// Path: notifications
+class _Translations$notifications$de extends Translations$notifications$sl {
+	_Translations$notifications$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get today => 'Heute';
+	@override String get tomorrow => 'Morgen';
 }
 
 // Path: onboarding
@@ -584,6 +596,8 @@ extension on TranslationsDe {
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
+			'notifications.today' => 'Heute',
+			'notifications.tomorrow' => 'Morgen',
 			'onboarding.skip' => 'Überspringen ›',
 			'onboarding.next' => 'Weiter',
 			'onboarding.start' => 'Loslegen 🌿',

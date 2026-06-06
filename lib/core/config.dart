@@ -43,6 +43,10 @@ const kSyncInterval = Duration(minutes: 15);
 /// seconds (not on the next [kSyncInterval] tick) without a push per keystroke.
 const kPushDebounce = Duration(seconds: 2);
 
+/// Debounce window for reminder reconcile: a write to task/task_reminder
+/// reschedules OS notifications after this delay, coalescing rapid edits.
+const kReminderDebounce = Duration(milliseconds: 800);
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the

@@ -16,6 +16,10 @@
     "today": "Today",
     "yesterday": "yesterday"
   },
+  "notifications": {
+    "today": "Today",
+    "tomorrow": "Tomorrow"
+  },
   "onboarding": {
     "skip": "Skip ›",
     "next": "Next",

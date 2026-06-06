@@ -74,6 +74,14 @@ class TasksRepository {
           ..orderBy([(t) => OrderingTerm.desc(t.date)])
       ).watch();
 
+  /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
+  Future<List<Task>> pendingTasks() => (
+        _db.select(_db.tasks)
+          ..where((t) =>
+              t.deleted.equals(false) &
+              t.status.equalsValue(TaskStatus.waiting))
+      ).get();
+
   /// Every non-deleted task (any status), oldest first — for the month calendar.
   Stream<List<Task>> watchAll() => (
         _db.select(_db.tasks)

@@ -43,6 +43,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
+	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
 	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
@@ -120,6 +121,21 @@ class Translations$common$sl {
 
 	/// sl: 'včeraj'
 	String get yesterday => 'včeraj';
+}
+
+// Path: notifications
+class Translations$notifications$sl {
+	Translations$notifications$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Danes'
+	String get today => 'Danes';
+
+	/// sl: 'Jutri'
+	String get tomorrow => 'Jutri';
 }
 
 // Path: onboarding
@@ -1225,6 +1241,8 @@ extension on Translations {
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
+			'notifications.today' => 'Danes',
+			'notifications.tomorrow' => 'Jutri',
 			'onboarding.skip' => 'Preskoči ›',
 			'onboarding.next' => 'Naprej',
 			'onboarding.start' => 'Začni 🌿',

@@ -69,6 +69,36 @@ class NotificationService {
     return await android.canScheduleExactNotifications() ?? false;
   }
 
+  /// Schedules an exact notification at [when] (a local wall-clock time).
+  /// Reusing the same [id] replaces a previously scheduled one. [payload] carries
+  /// the task id for the deep-link (M8.3). Exact + allow-while-idle so it fires
+  /// on time even in Doze (verified on-device, M8.1).
+  Future<void> scheduleAt({
+    required int id,
+    required DateTime when,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    await init();
+    await _plugin.zonedSchedule(
+      id: id,
+      title: title,
+      body: body,
+      payload: payload,
+      scheduledDate: tz.TZDateTime.from(when, tz.local),
+      notificationDetails: _reminderDetails,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+    );
+  }
+
+  Future<void> cancel(int id) => _plugin.cancel(id: id);
+
+  /// Ids of notifications currently scheduled (pending) with the OS — used to
+  /// cancel orphaned reminders without touching already-delivered ones.
+  Future<Set<int>> pendingIds() async =>
+      (await _plugin.pendingNotificationRequests()).map((r) => r.id).toSet();
+
   void _onTap(NotificationResponse response) {
     // Deep-link to the task detail (17) is wired in M8.3.
     debugPrint('notification tapped: ${response.payload}');

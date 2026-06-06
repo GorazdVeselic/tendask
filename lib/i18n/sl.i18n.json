@@ -16,6 +16,10 @@
     "today": "Danes",
     "yesterday": "včeraj"
   },
+  "notifications": {
+    "today": "Danes",
+    "tomorrow": "Jutri"
+  },
   "onboarding": {
     "skip": "Preskoči ›",
     "next": "Naprej",
