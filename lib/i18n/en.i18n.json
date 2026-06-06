@@ -256,6 +256,7 @@
     "title": "Garden",
     "subtitle": "plants and lawns",
     "empty": "No areas yet. Add your first with +.",
+    "unassigned": "No area",
     "last_prefix": "last:",
     "type_lawn": "Lawn",
     "type_hedge": "Hedge",

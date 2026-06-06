@@ -260,6 +260,7 @@
     "title": "Vrt",
     "subtitle": "rastline in trate",
     "empty": "Ni območij. Dodaj prvo z +.",
+    "unassigned": "Brez območja",
     "last_prefix": "zadnje:",
     "type_lawn": "Trata",
     "type_hedge": "Živa meja",

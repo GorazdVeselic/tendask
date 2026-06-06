@@ -62,8 +62,13 @@ class AreasScreen extends ConsumerWidget {
     final plantCatalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     final plantsByArea = <String, List<UserPlant>>{};
+    final unassigned = <UserPlant>[];
     for (final p in userPlants?.values ?? const <UserPlant>[]) {
-      if (p.areaId != null) (plantsByArea[p.areaId!] ??= []).add(p);
+      if (p.areaId != null) {
+        (plantsByArea[p.areaId!] ??= []).add(p);
+      } else {
+        unassigned.add(p);
+      }
     }
 
     return Scaffold(
@@ -98,6 +103,7 @@ class AreasScreen extends ConsumerWidget {
               latest: latest ?? const {},
               catalog: catalog,
               plantsByArea: plantsByArea,
+              unassigned: unassigned,
               plantCatalog: plantCatalog,
             ),
     );
@@ -112,6 +118,7 @@ class _AreasList extends StatelessWidget {
     required this.latest,
     required this.catalog,
     required this.plantsByArea,
+    required this.unassigned,
     required this.plantCatalog,
   });
 
@@ -119,15 +126,21 @@ class _AreasList extends StatelessWidget {
   final Map<String, Task> latest;
   final Map<String, TaskType> catalog;
   final Map<String, List<UserPlant>> plantsByArea;
+  final List<UserPlant> unassigned;
   final Map<String, Plant> plantCatalog;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    if (areas.isEmpty) return EmptyState(t.areas.empty);
+    if (areas.isEmpty && unassigned.isEmpty) return EmptyState(t.areas.empty);
 
-    // Flat list: AreaType (section header), Area (row), then its UserPlant rows.
+    // Flat list: section header (String or AreaType), Area row, then UserPlant rows.
     final items = <Object>[];
+    // Plants added without an area (e.g. from quick-add task step 2) go first.
+    if (unassigned.isNotEmpty) {
+      items.add(t.areas.unassigned);
+      items.addAll(unassigned);
+    }
     for (final type in AreaType.values) {
       final inType = areas.where((a) => a.type == type).toList();
       if (inType.isEmpty) continue;
@@ -143,6 +156,9 @@ class _AreasList extends StatelessWidget {
       itemCount: items.length,
       itemBuilder: (context, i) {
         final item = items[i];
+        if (item is String) {
+          return _SectionHeader(label: item);
+        }
         if (item is AreaType) {
           return _SectionHeader(label: areaTypeLabel(item, t));
         }

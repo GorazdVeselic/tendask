@@ -875,6 +875,9 @@ class Translations$areas$sl {
 	/// sl: 'Ni območij. Dodaj prvo z +.'
 	String get empty => 'Ni območij. Dodaj prvo z +.';
 
+	/// sl: 'Brez območja'
+	String get unassigned => 'Brez območja';
+
 	/// sl: 'zadnje:'
 	String get last_prefix => 'zadnje:';
 
@@ -1431,6 +1434,7 @@ extension on Translations {
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
 			'areas.empty' => 'Ni območij. Dodaj prvo z +.',
+			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
 			'areas.type_lawn' => 'Trata',
 			'areas.type_hedge' => 'Živa meja',

@@ -256,6 +256,7 @@
     "title": "Garten",
     "subtitle": "Pflanzen und Rasen",
     "empty": "Noch keine Bereiche. Füge den ersten mit + hinzu.",
+    "unassigned": "Ohne Bereich",
     "last_prefix": "zuletzt:",
     "type_lawn": "Rasen",
     "type_hedge": "Hecke",

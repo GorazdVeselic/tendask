@@ -429,6 +429,7 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get title => 'Garden';
 	@override String get subtitle => 'plants and lawns';
 	@override String get empty => 'No areas yet. Add your first with +.';
+	@override String get unassigned => 'No area';
 	@override String get last_prefix => 'last:';
 	@override String get type_lawn => 'Lawn';
 	@override String get type_hedge => 'Hedge';
@@ -792,6 +793,7 @@ extension on TranslationsEn {
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
 			'areas.empty' => 'No areas yet. Add your first with +.',
+			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
 			'areas.type_lawn' => 'Lawn',
 			'areas.type_hedge' => 'Hedge',

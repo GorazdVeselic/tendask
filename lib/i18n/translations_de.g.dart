@@ -429,6 +429,7 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get title => 'Garten';
 	@override String get subtitle => 'Pflanzen und Rasen';
 	@override String get empty => 'Noch keine Bereiche. Füge den ersten mit + hinzu.';
+	@override String get unassigned => 'Ohne Bereich';
 	@override String get last_prefix => 'zuletzt:';
 	@override String get type_lawn => 'Rasen';
 	@override String get type_hedge => 'Hecke';
@@ -792,6 +793,7 @@ extension on TranslationsDe {
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
 			'areas.empty' => 'Noch keine Bereiche. Füge den ersten mit + hinzu.',
+			'areas.unassigned' => 'Ohne Bereich',
 			'areas.last_prefix' => 'zuletzt:',
 			'areas.type_lawn' => 'Rasen',
 			'areas.type_hedge' => 'Hecke',
