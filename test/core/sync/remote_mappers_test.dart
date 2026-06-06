@@ -87,9 +87,36 @@ void main() {
       'h3_r6': null,
       'h3_r5': null,
       'lang': 'sl',
+      'notification_settings': null,
       'updated_at': '2026-06-05T10:00:00.000Z',
     });
     expect(map.containsKey('deleted'), isFalse);
+  });
+
+  test('profile notification_settings: jsonb round-trips through text', () {
+    const json = '{"task_reminders":false,"default_offset":60}';
+    final map = profileToRemote(Profile(
+      userId: 'u1',
+      h3R7: null,
+      h3R6: null,
+      h3R5: null,
+      lang: null,
+      notificationSettings: json,
+      updatedAt: t0,
+      syncStatus: kSyncPending,
+    ));
+    // Local JSON text → decoded object for Postgres jsonb.
+    expect(map['notification_settings'],
+        {'task_reminders': false, 'default_offset': 60});
+
+    // Postgres returns a Map → stored back as JSON text in drift.
+    final c = profileFromRemote({
+      'user_id': 'u1',
+      'notification_settings': {'task_reminders': false, 'default_offset': 60},
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.notificationSettings.value,
+        jsonEncode({'task_reminders': false, 'default_offset': 60}));
   });
 
   test('noteToRemote: content maps to the "text" column', () {

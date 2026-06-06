@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
+	late final Translations$notif_settings$sl notif_settings = Translations$notif_settings$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
 	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
 	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
@@ -136,6 +137,75 @@ class Translations$notifications$sl {
 
 	/// sl: 'Jutri'
 	String get tomorrow => 'Jutri';
+}
+
+// Path: notif_settings
+class Translations$notif_settings$sl {
+	Translations$notif_settings$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Obvestila'
+	String get title => 'Obvestila';
+
+	/// sl: 'Nastavitev ni bilo mogoče naložiti.'
+	String get load_error => 'Nastavitev ni bilo mogoče naložiti.';
+
+	/// sl: 'Vrste obvestil'
+	String get section_types => 'Vrste obvestil';
+
+	/// sl: 'Opomniki opravil'
+	String get type_reminders => 'Opomniki opravil';
+
+	/// sl: 'lokalno · delujejo brez interneta'
+	String get type_reminders_sub => 'lokalno · delujejo brez interneta';
+
+	/// sl: 'Pametni namigi (vreme)'
+	String get type_weather => 'Pametni namigi (vreme)';
+
+	/// sl: 'kmalu · prek strežnika'
+	String get type_weather_sub => 'kmalu · prek strežnika';
+
+	/// sl: 'Namigi okolice'
+	String get type_community => 'Namigi okolice';
+
+	/// sl: 'kmalu (V2)'
+	String get type_community_sub => 'kmalu (V2)';
+
+	/// sl: 'Privzeti zamik opomnika'
+	String get section_default_offset => 'Privzeti zamik opomnika';
+
+	/// sl: 'Predizpolni nova opravila; vedno lahko spremeniš.'
+	String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
+
+	/// sl: 'Da te ne zasipa'
+	String get section_quiet => 'Da te ne zasipa';
+
+	/// sl: 'Tihe ure'
+	String get quiet_hours => 'Tihe ure';
+
+	/// sl: '$range brez obvestil'
+	String quiet_hours_sub({required Object range}) => '${range} brez obvestil';
+
+	/// sl: 'Največ 1 namig na dan'
+	String get frequency_cap => 'Največ 1 namig na dan';
+
+	/// sl: 'vreme in okolico združimo v en povzetek'
+	String get frequency_cap_sub => 'vreme in okolico združimo v en povzetek';
+
+	/// sl: 'Več'
+	String get section_more => 'Več';
+
+	/// sl: 'Sistemsko dovoljenje'
+	String get system_permission => 'Sistemsko dovoljenje';
+
+	/// sl: 'naprava: dovoljeno'
+	String get system_permission_on => 'naprava: dovoljeno';
+
+	/// sl: 'točni opomniki niso dovoljeni — tapni za nastavitve'
+	String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
 }
 
 // Path: onboarding
@@ -1261,6 +1331,26 @@ extension on Translations {
 			'common.yesterday' => 'včeraj',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
+			'notif_settings.title' => 'Obvestila',
+			'notif_settings.load_error' => 'Nastavitev ni bilo mogoče naložiti.',
+			'notif_settings.section_types' => 'Vrste obvestil',
+			'notif_settings.type_reminders' => 'Opomniki opravil',
+			'notif_settings.type_reminders_sub' => 'lokalno · delujejo brez interneta',
+			'notif_settings.type_weather' => 'Pametni namigi (vreme)',
+			'notif_settings.type_weather_sub' => 'kmalu · prek strežnika',
+			'notif_settings.type_community' => 'Namigi okolice',
+			'notif_settings.type_community_sub' => 'kmalu (V2)',
+			'notif_settings.section_default_offset' => 'Privzeti zamik opomnika',
+			'notif_settings.default_offset_hint' => 'Predizpolni nova opravila; vedno lahko spremeniš.',
+			'notif_settings.section_quiet' => 'Da te ne zasipa',
+			'notif_settings.quiet_hours' => 'Tihe ure',
+			'notif_settings.quiet_hours_sub' => ({required Object range}) => '${range} brez obvestil',
+			'notif_settings.frequency_cap' => 'Največ 1 namig na dan',
+			'notif_settings.frequency_cap_sub' => 'vreme in okolico združimo v en povzetek',
+			'notif_settings.section_more' => 'Več',
+			'notif_settings.system_permission' => 'Sistemsko dovoljenje',
+			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
+			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
 			'onboarding.skip' => 'Preskoči ›',
 			'onboarding.next' => 'Naprej',
 			'onboarding.start' => 'Začni 🌿',

@@ -20,6 +20,28 @@
     "today": "Heute",
     "tomorrow": "Morgen"
   },
+  "notif_settings": {
+    "title": "Benachrichtigungen",
+    "load_error": "Einstellungen konnten nicht geladen werden.",
+    "section_types": "Benachrichtigungsarten",
+    "type_reminders": "Aufgaben-Erinnerungen",
+    "type_reminders_sub": "lokal · funktionieren ohne Internet",
+    "type_weather": "Smarte Hinweise (Wetter)",
+    "type_weather_sub": "demnächst · über Server",
+    "type_community": "Hinweise aus der Umgebung",
+    "type_community_sub": "demnächst (V2)",
+    "section_default_offset": "Standard-Vorlaufzeit",
+    "default_offset_hint": "Füllt neue Aufgaben vor; jederzeit änderbar.",
+    "section_quiet": "Damit du nicht überflutet wirst",
+    "quiet_hours": "Ruhezeiten",
+    "quiet_hours_sub(range)": "$range, keine Benachrichtigungen",
+    "frequency_cap": "Höchstens 1 Hinweis pro Tag",
+    "frequency_cap_sub": "Wetter und Umgebung in einer Zusammenfassung",
+    "section_more": "Mehr",
+    "system_permission": "Systemberechtigung",
+    "system_permission_on": "Gerät: erlaubt",
+    "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen"
+  },
   "onboarding": {
     "skip": "Überspringen ›",
     "next": "Weiter",

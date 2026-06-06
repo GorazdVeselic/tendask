@@ -43,6 +43,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$notifications$en notifications = _Translations$notifications$en._(_root);
+	@override late final _Translations$notif_settings$en notif_settings = _Translations$notif_settings$en._(_root);
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
 	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
 	@override late final _Translations$email_login$en email_login = _Translations$email_login$en._(_root);
@@ -109,6 +110,35 @@ class _Translations$notifications$en extends Translations$notifications$sl {
 	// Translations
 	@override String get today => 'Today';
 	@override String get tomorrow => 'Tomorrow';
+}
+
+// Path: notif_settings
+class _Translations$notif_settings$en extends Translations$notif_settings$sl {
+	_Translations$notif_settings$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Notifications';
+	@override String get load_error => 'Couldn\'t load settings.';
+	@override String get section_types => 'Notification types';
+	@override String get type_reminders => 'Task reminders';
+	@override String get type_reminders_sub => 'local · work without internet';
+	@override String get type_weather => 'Smart hints (weather)';
+	@override String get type_weather_sub => 'soon · via server';
+	@override String get type_community => 'Nearby hints';
+	@override String get type_community_sub => 'soon (V2)';
+	@override String get section_default_offset => 'Default reminder offset';
+	@override String get default_offset_hint => 'Prefills new tasks; you can always change it.';
+	@override String get section_quiet => 'So you\'re not overwhelmed';
+	@override String get quiet_hours => 'Quiet hours';
+	@override String quiet_hours_sub({required Object range}) => '${range}, no notifications';
+	@override String get frequency_cap => 'At most 1 hint per day';
+	@override String get frequency_cap_sub => 'weather and nearby combined into one summary';
+	@override String get section_more => 'More';
+	@override String get system_permission => 'System permission';
+	@override String get system_permission_on => 'device: allowed';
+	@override String get system_permission_off => 'exact reminders not allowed — tap for settings';
 }
 
 // Path: onboarding
@@ -604,6 +634,26 @@ extension on TranslationsEn {
 			'common.yesterday' => 'yesterday',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
+			'notif_settings.title' => 'Notifications',
+			'notif_settings.load_error' => 'Couldn\'t load settings.',
+			'notif_settings.section_types' => 'Notification types',
+			'notif_settings.type_reminders' => 'Task reminders',
+			'notif_settings.type_reminders_sub' => 'local · work without internet',
+			'notif_settings.type_weather' => 'Smart hints (weather)',
+			'notif_settings.type_weather_sub' => 'soon · via server',
+			'notif_settings.type_community' => 'Nearby hints',
+			'notif_settings.type_community_sub' => 'soon (V2)',
+			'notif_settings.section_default_offset' => 'Default reminder offset',
+			'notif_settings.default_offset_hint' => 'Prefills new tasks; you can always change it.',
+			'notif_settings.section_quiet' => 'So you\'re not overwhelmed',
+			'notif_settings.quiet_hours' => 'Quiet hours',
+			'notif_settings.quiet_hours_sub' => ({required Object range}) => '${range}, no notifications',
+			'notif_settings.frequency_cap' => 'At most 1 hint per day',
+			'notif_settings.frequency_cap_sub' => 'weather and nearby combined into one summary',
+			'notif_settings.section_more' => 'More',
+			'notif_settings.system_permission' => 'System permission',
+			'notif_settings.system_permission_on' => 'device: allowed',
+			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
 			'onboarding.skip' => 'Skip ›',
 			'onboarding.next' => 'Next',
 			'onboarding.start' => 'Get started 🌿',

@@ -52,6 +52,17 @@ const kPushDebounce = Duration(seconds: 2);
 /// reschedules OS notifications after this delay, coalescing rapid edits.
 const kReminderDebounce = Duration(milliseconds: 800);
 
+/// Default reminder offset (minutes before the task) prefilled when adding a new
+/// reminder. 1440 = one day before. User-overridable in notification settings.
+const kDefaultReminderOffset = 1440;
+
+/// Quiet-hours window shown in notification settings (display only in MVP). It
+/// is stored as a device-local preference and governs the future weather/
+/// community hints (FCM, deferred), NOT explicit task reminders — see
+/// koncept.md §"Vodenje proti motečnosti".
+const kQuietHoursStartHour = 22;
+const kQuietHoursEndHour = 7;
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the

@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/auth/auth_service.dart';
+import '../../../../../core/config.dart';
 import '../../../../../core/notifications/notification_service.dart';
 import '../../../../../core/widgets/confirm_dialog.dart';
 import '../../../../../i18n/translations.g.dart';
+import '../../../../settings/application/profile_providers.dart';
 import '../../../data/tasks_repository.dart';
 
 /// Human label for a reminder spec, e.g. "1 dan prej ob 18:00".
@@ -65,8 +68,12 @@ class ReminderStepBody extends ConsumerWidget {
       if (open) await notif.openExactAlarmSettings();
       return;
     }
+    final userId = ref.read(authServiceProvider).userId;
+    final settings =
+        await ref.read(profileRepositoryProvider).notificationSettings(userId);
     if (!context.mounted) return;
-    final spec = await showReminderEditSheet(context, taskDate, reminders);
+    final spec = await showReminderEditSheet(context, taskDate, reminders,
+        initialOffset: settings.defaultReminderOffset);
     if (spec != null) onAdd(spec);
   }
 
@@ -136,11 +143,13 @@ class ReminderStepBody extends ConsumerWidget {
 // ─── Edit sheet ──────────────────────────────────────────────────────────────
 
 Future<ReminderSpec?> showReminderEditSheet(
-    BuildContext context, DateTime taskDate, List<ReminderSpec> existing) {
+    BuildContext context, DateTime taskDate, List<ReminderSpec> existing,
+    {required int initialOffset}) {
   return showModalBottomSheet<ReminderSpec>(
     context: context,
     isScrollControlled: true,
-    builder: (_) => _ReminderEditSheet(taskDate: taskDate, existing: existing),
+    builder: (_) => _ReminderEditSheet(
+        taskDate: taskDate, existing: existing, initialOffset: initialOffset),
   );
 }
 
@@ -148,16 +157,23 @@ Future<ReminderSpec?> showReminderEditSheet(
 const _offsets = [0, 10, 60, 1440, 2880];
 
 class _ReminderEditSheet extends StatefulWidget {
-  const _ReminderEditSheet({required this.taskDate, required this.existing});
+  const _ReminderEditSheet({
+    required this.taskDate,
+    required this.existing,
+    required this.initialOffset,
+  });
   final DateTime taskDate;
   final List<ReminderSpec> existing;
+  final int initialOffset;
 
   @override
   State<_ReminderEditSheet> createState() => _ReminderEditSheetState();
 }
 
 class _ReminderEditSheetState extends State<_ReminderEditSheet> {
-  int _offset = 1440;
+  late int _offset = _offsets.contains(widget.initialOffset)
+      ? widget.initialOffset
+      : kDefaultReminderOffset;
   TimeOfDay _time = const TimeOfDay(hour: 18, minute: 0);
 
   bool get _isDayBased => _offset >= 1440;

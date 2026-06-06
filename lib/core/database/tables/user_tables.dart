@@ -17,6 +17,8 @@ class Profiles extends Table {
   TextColumn get h3R6 => text().nullable()();
   TextColumn get h3R5 => text().nullable()();
   TextColumn get lang => text().nullable()();
+  // Notification preferences (screen 22), stored as JSON text → Supabase jsonb.
+  TextColumn get notificationSettings => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
       text().withDefault(const Constant(kSyncPending))();

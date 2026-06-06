@@ -20,6 +20,28 @@
     "today": "Today",
     "tomorrow": "Tomorrow"
   },
+  "notif_settings": {
+    "title": "Notifications",
+    "load_error": "Couldn't load settings.",
+    "section_types": "Notification types",
+    "type_reminders": "Task reminders",
+    "type_reminders_sub": "local · work without internet",
+    "type_weather": "Smart hints (weather)",
+    "type_weather_sub": "soon · via server",
+    "type_community": "Nearby hints",
+    "type_community_sub": "soon (V2)",
+    "section_default_offset": "Default reminder offset",
+    "default_offset_hint": "Prefills new tasks; you can always change it.",
+    "section_quiet": "So you're not overwhelmed",
+    "quiet_hours": "Quiet hours",
+    "quiet_hours_sub(range)": "$range, no notifications",
+    "frequency_cap": "At most 1 hint per day",
+    "frequency_cap_sub": "weather and nearby combined into one summary",
+    "section_more": "More",
+    "system_permission": "System permission",
+    "system_permission_on": "device: allowed",
+    "system_permission_off": "exact reminders not allowed — tap for settings"
+  },
   "onboarding": {
     "skip": "Skip ›",
     "next": "Next",

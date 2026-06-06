@@ -43,7 +43,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 7;
+  int get schemaVersion => 8;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -108,6 +108,10 @@ class AppDatabase extends _$AppDatabase {
           // v7: local_flag holds device-local UI flags (onboarding seen, M7.2).
           if (from < 7) {
             await m.createTable(localFlags);
+          }
+          // v8: notification settings (screen 22, M8.4) live in profile and sync.
+          if (from < 8) {
+            await m.addColumn(profiles, profiles.notificationSettings);
           }
         },
       );

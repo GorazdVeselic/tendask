@@ -1479,6 +1479,17 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _notificationSettingsMeta =
+      const VerificationMeta('notificationSettings');
+  @override
+  late final GeneratedColumn<String> notificationSettings =
+      GeneratedColumn<String>(
+        'notification_settings',
+        aliasedName,
+        true,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -1509,6 +1520,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     h3R6,
     h3R5,
     lang,
+    notificationSettings,
     updatedAt,
     syncStatus,
   ];
@@ -1556,6 +1568,15 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         lang.isAcceptableOrUnknown(data['lang']!, _langMeta),
       );
     }
+    if (data.containsKey('notification_settings')) {
+      context.handle(
+        _notificationSettingsMeta,
+        notificationSettings.isAcceptableOrUnknown(
+          data['notification_settings']!,
+          _notificationSettingsMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -1599,6 +1620,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.string,
         data['${effectivePrefix}lang'],
       ),
+      notificationSettings: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}notification_settings'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -1622,6 +1647,7 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? h3R6;
   final String? h3R5;
   final String? lang;
+  final String? notificationSettings;
   final DateTime updatedAt;
   final String syncStatus;
   const Profile({
@@ -1630,6 +1656,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.h3R6,
     this.h3R5,
     this.lang,
+    this.notificationSettings,
     required this.updatedAt,
     required this.syncStatus,
   });
@@ -1649,6 +1676,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || lang != null) {
       map['lang'] = Variable<String>(lang);
     }
+    if (!nullToAbsent || notificationSettings != null) {
+      map['notification_settings'] = Variable<String>(notificationSettings);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
@@ -1661,6 +1691,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       h3R6: h3R6 == null && nullToAbsent ? const Value.absent() : Value(h3R6),
       h3R5: h3R5 == null && nullToAbsent ? const Value.absent() : Value(h3R5),
       lang: lang == null && nullToAbsent ? const Value.absent() : Value(lang),
+      notificationSettings: notificationSettings == null && nullToAbsent
+          ? const Value.absent()
+          : Value(notificationSettings),
       updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
     );
@@ -1677,6 +1710,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       h3R6: serializer.fromJson<String?>(json['h3R6']),
       h3R5: serializer.fromJson<String?>(json['h3R5']),
       lang: serializer.fromJson<String?>(json['lang']),
+      notificationSettings: serializer.fromJson<String?>(
+        json['notificationSettings'],
+      ),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
@@ -1690,6 +1726,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'h3R6': serializer.toJson<String?>(h3R6),
       'h3R5': serializer.toJson<String?>(h3R5),
       'lang': serializer.toJson<String?>(lang),
+      'notificationSettings': serializer.toJson<String?>(notificationSettings),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
@@ -1701,6 +1738,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<String?> h3R6 = const Value.absent(),
     Value<String?> h3R5 = const Value.absent(),
     Value<String?> lang = const Value.absent(),
+    Value<String?> notificationSettings = const Value.absent(),
     DateTime? updatedAt,
     String? syncStatus,
   }) => Profile(
@@ -1709,6 +1747,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     h3R6: h3R6.present ? h3R6.value : this.h3R6,
     h3R5: h3R5.present ? h3R5.value : this.h3R5,
     lang: lang.present ? lang.value : this.lang,
+    notificationSettings: notificationSettings.present
+        ? notificationSettings.value
+        : this.notificationSettings,
     updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
   );
@@ -1719,6 +1760,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       h3R6: data.h3R6.present ? data.h3R6.value : this.h3R6,
       h3R5: data.h3R5.present ? data.h3R5.value : this.h3R5,
       lang: data.lang.present ? data.lang.value : this.lang,
+      notificationSettings: data.notificationSettings.present
+          ? data.notificationSettings.value
+          : this.notificationSettings,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -1734,6 +1778,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('h3R6: $h3R6, ')
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
+          ..write('notificationSettings: $notificationSettings, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
@@ -1741,8 +1786,16 @@ class Profile extends DataClass implements Insertable<Profile> {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(userId, h3R7, h3R6, h3R5, lang, updatedAt, syncStatus);
+  int get hashCode => Object.hash(
+    userId,
+    h3R7,
+    h3R6,
+    h3R5,
+    lang,
+    notificationSettings,
+    updatedAt,
+    syncStatus,
+  );
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
@@ -1752,6 +1805,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.h3R6 == this.h3R6 &&
           other.h3R5 == this.h3R5 &&
           other.lang == this.lang &&
+          other.notificationSettings == this.notificationSettings &&
           other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus);
 }
@@ -1762,6 +1816,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String?> h3R6;
   final Value<String?> h3R5;
   final Value<String?> lang;
+  final Value<String?> notificationSettings;
   final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
@@ -1771,6 +1826,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R6 = const Value.absent(),
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
+    this.notificationSettings = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1781,6 +1837,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R6 = const Value.absent(),
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
+    this.notificationSettings = const Value.absent(),
     required DateTime updatedAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1792,6 +1849,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? h3R6,
     Expression<String>? h3R5,
     Expression<String>? lang,
+    Expression<String>? notificationSettings,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
@@ -1802,6 +1860,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (h3R6 != null) 'h3_r6': h3R6,
       if (h3R5 != null) 'h3_r5': h3R5,
       if (lang != null) 'lang': lang,
+      if (notificationSettings != null)
+        'notification_settings': notificationSettings,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
@@ -1814,6 +1874,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String?>? h3R6,
     Value<String?>? h3R5,
     Value<String?>? lang,
+    Value<String?>? notificationSettings,
     Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<int>? rowid,
@@ -1824,6 +1885,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       h3R6: h3R6 ?? this.h3R6,
       h3R5: h3R5 ?? this.h3R5,
       lang: lang ?? this.lang,
+      notificationSettings: notificationSettings ?? this.notificationSettings,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
@@ -1848,6 +1910,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (lang.present) {
       map['lang'] = Variable<String>(lang.value);
     }
+    if (notificationSettings.present) {
+      map['notification_settings'] = Variable<String>(
+        notificationSettings.value,
+      );
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1868,6 +1935,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('h3R6: $h3R6, ')
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
+          ..write('notificationSettings: $notificationSettings, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
@@ -9043,6 +9111,7 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String?> h3R6,
       Value<String?> h3R5,
       Value<String?> lang,
+      Value<String?> notificationSettings,
       required DateTime updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9054,6 +9123,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String?> h3R6,
       Value<String?> h3R5,
       Value<String?> lang,
+      Value<String?> notificationSettings,
       Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9090,6 +9160,11 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<String> get lang => $composableBuilder(
     column: $table.lang,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get notificationSettings => $composableBuilder(
+    column: $table.notificationSettings,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9138,6 +9213,11 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get notificationSettings => $composableBuilder(
+    column: $table.notificationSettings,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -9172,6 +9252,11 @@ class $$ProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get lang =>
       $composableBuilder(column: $table.lang, builder: (column) => column);
+
+  GeneratedColumn<String> get notificationSettings => $composableBuilder(
+    column: $table.notificationSettings,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -9215,6 +9300,7 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R6 = const Value.absent(),
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
+                Value<String?> notificationSettings = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9224,6 +9310,7 @@ class $$ProfilesTableTableManager
                 h3R6: h3R6,
                 h3R5: h3R5,
                 lang: lang,
+                notificationSettings: notificationSettings,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -9235,6 +9322,7 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R6 = const Value.absent(),
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
+                Value<String?> notificationSettings = const Value.absent(),
                 required DateTime updatedAt,
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9244,6 +9332,7 @@ class $$ProfilesTableTableManager
                 h3R6: h3R6,
                 h3R5: h3R5,
                 lang: lang,
+                notificationSettings: notificationSettings,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,

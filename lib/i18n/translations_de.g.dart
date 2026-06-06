@@ -43,6 +43,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
+	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
@@ -109,6 +110,35 @@ class _Translations$notifications$de extends Translations$notifications$sl {
 	// Translations
 	@override String get today => 'Heute';
 	@override String get tomorrow => 'Morgen';
+}
+
+// Path: notif_settings
+class _Translations$notif_settings$de extends Translations$notif_settings$sl {
+	_Translations$notif_settings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Benachrichtigungen';
+	@override String get load_error => 'Einstellungen konnten nicht geladen werden.';
+	@override String get section_types => 'Benachrichtigungsarten';
+	@override String get type_reminders => 'Aufgaben-Erinnerungen';
+	@override String get type_reminders_sub => 'lokal · funktionieren ohne Internet';
+	@override String get type_weather => 'Smarte Hinweise (Wetter)';
+	@override String get type_weather_sub => 'demnächst · über Server';
+	@override String get type_community => 'Hinweise aus der Umgebung';
+	@override String get type_community_sub => 'demnächst (V2)';
+	@override String get section_default_offset => 'Standard-Vorlaufzeit';
+	@override String get default_offset_hint => 'Füllt neue Aufgaben vor; jederzeit änderbar.';
+	@override String get section_quiet => 'Damit du nicht überflutet wirst';
+	@override String get quiet_hours => 'Ruhezeiten';
+	@override String quiet_hours_sub({required Object range}) => '${range}, keine Benachrichtigungen';
+	@override String get frequency_cap => 'Höchstens 1 Hinweis pro Tag';
+	@override String get frequency_cap_sub => 'Wetter und Umgebung in einer Zusammenfassung';
+	@override String get section_more => 'Mehr';
+	@override String get system_permission => 'Systemberechtigung';
+	@override String get system_permission_on => 'Gerät: erlaubt';
+	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
 }
 
 // Path: onboarding
@@ -604,6 +634,26 @@ extension on TranslationsDe {
 			'common.yesterday' => 'gestern',
 			'notifications.today' => 'Heute',
 			'notifications.tomorrow' => 'Morgen',
+			'notif_settings.title' => 'Benachrichtigungen',
+			'notif_settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
+			'notif_settings.section_types' => 'Benachrichtigungsarten',
+			'notif_settings.type_reminders' => 'Aufgaben-Erinnerungen',
+			'notif_settings.type_reminders_sub' => 'lokal · funktionieren ohne Internet',
+			'notif_settings.type_weather' => 'Smarte Hinweise (Wetter)',
+			'notif_settings.type_weather_sub' => 'demnächst · über Server',
+			'notif_settings.type_community' => 'Hinweise aus der Umgebung',
+			'notif_settings.type_community_sub' => 'demnächst (V2)',
+			'notif_settings.section_default_offset' => 'Standard-Vorlaufzeit',
+			'notif_settings.default_offset_hint' => 'Füllt neue Aufgaben vor; jederzeit änderbar.',
+			'notif_settings.section_quiet' => 'Damit du nicht überflutet wirst',
+			'notif_settings.quiet_hours' => 'Ruhezeiten',
+			'notif_settings.quiet_hours_sub' => ({required Object range}) => '${range}, keine Benachrichtigungen',
+			'notif_settings.frequency_cap' => 'Höchstens 1 Hinweis pro Tag',
+			'notif_settings.frequency_cap_sub' => 'Wetter und Umgebung in einer Zusammenfassung',
+			'notif_settings.section_more' => 'Mehr',
+			'notif_settings.system_permission' => 'Systemberechtigung',
+			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
+			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
 			'onboarding.skip' => 'Überspringen ›',
 			'onboarding.next' => 'Weiter',
 			'onboarding.start' => 'Loslegen 🌿',

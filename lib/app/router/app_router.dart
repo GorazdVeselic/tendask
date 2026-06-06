@@ -9,6 +9,7 @@ import '../../features/auth/presentation/login_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
+import '../../features/notifications/presentation/notification_settings_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
@@ -136,6 +137,11 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/settings',
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/notification-settings',
+      name: 'notification-settings',
+      builder: (context, state) => const NotificationSettingsScreen(),
     ),
     // Path must not collide with the shell '/areas/:id' (area-detail):
     // '/areas/new' would match ':id'="new". Use a distinct prefix.

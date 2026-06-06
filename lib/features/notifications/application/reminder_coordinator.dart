@@ -9,12 +9,14 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/auth/auth_service.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
+import '../../settings/application/profile_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
 import 'reminder_schedule.dart';
@@ -46,7 +48,8 @@ class ReminderCoordinator extends _$ReminderCoordinator {
     ref.listen(plantsMapProvider, (_, _) {});
 
     final sub = db
-        .tableUpdates(TableUpdateQuery.onAllTables([db.tasks, db.taskReminders]))
+        .tableUpdates(TableUpdateQuery.onAllTables(
+            [db.tasks, db.taskReminders, db.profiles]))
         .listen((_) {
       _debounce?.cancel();
       _debounce = Timer(kReminderDebounce, () => unawaited(_reconcile()));
@@ -72,6 +75,18 @@ class ReminderCoordinator extends _$ReminderCoordinator {
     try {
       final notif = ref.read(notificationServiceProvider);
       final repo = ref.read(tasksRepositoryProvider);
+
+      // Master switch off: cancel everything we scheduled, schedule nothing.
+      final userId = ref.read(authServiceProvider).userId;
+      final settings =
+          await ref.read(profileRepositoryProvider).notificationSettings(userId);
+      if (!settings.taskRemindersEnabled) {
+        for (final id in await notif.pendingIds()) {
+          await notif.cancel(id);
+        }
+        return;
+      }
+
       final types = await ref.read(taskTypesMapProvider.future);
       final areas = await ref.read(areasMapProvider.future);
       final userPlants = await ref.read(userPlantsMapProvider.future);

@@ -20,6 +20,28 @@
     "today": "Danes",
     "tomorrow": "Jutri"
   },
+  "notif_settings": {
+    "title": "Obvestila",
+    "load_error": "Nastavitev ni bilo mogoče naložiti.",
+    "section_types": "Vrste obvestil",
+    "type_reminders": "Opomniki opravil",
+    "type_reminders_sub": "lokalno · delujejo brez interneta",
+    "type_weather": "Pametni namigi (vreme)",
+    "type_weather_sub": "kmalu · prek strežnika",
+    "type_community": "Namigi okolice",
+    "type_community_sub": "kmalu (V2)",
+    "section_default_offset": "Privzeti zamik opomnika",
+    "default_offset_hint": "Predizpolni nova opravila; vedno lahko spremeniš.",
+    "section_quiet": "Da te ne zasipa",
+    "quiet_hours": "Tihe ure",
+    "quiet_hours_sub(range)": "$range brez obvestil",
+    "frequency_cap": "Največ 1 namig na dan",
+    "frequency_cap_sub": "vreme in okolico združimo v en povzetek",
+    "section_more": "Več",
+    "system_permission": "Sistemsko dovoljenje",
+    "system_permission_on": "naprava: dovoljeno",
+    "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve"
+  },
   "onboarding": {
     "skip": "Preskoči ›",
     "next": "Naprej",
