@@ -17,7 +17,7 @@
 2. **Local-first UI.** Vrstni red: skeleton → drift+seed → **jedro UI nad lokalno bazo (offline)**
    → Supabase → sync → auth → obvestila. (Ne spreminja potrjenega sklada, le vrstni red iz §9.)
 3. **Seed iz obstoječega osnutka.** ~22 tipov opravil + ~35 rastlin zdaj; razširitev na 100–200
-   (Wikidata/GBIF) = ločen ne-blokirajoč tir kasneje.
+   (Wikidata/GBIF) je **pred-release korak — glej 9.6** (mora pred internim testom).
 4. **Pragmatično testiranje.** Unit testi za logiko (drift/sync/vreme/pravila) + widget testi
    ključnih zaslonov + ročna preverba na napravi ob mejniku. Brez e2e zaenkrat.
 
@@ -255,7 +255,8 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [ ] **9.2 — Ikona + splash (00).** Iz `docs/brand/assets/`. *Commit:* `chore: app ikona + splash`
 - [ ] **9.3 — Pregled neskladij.** UI vs wireframi; i18n popolnost (sl/en/de); dostopnost; vsi nizi prevedeni. *Commit:* `fix: neskladja UI/wireframi + i18n`
 - [ ] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. *Commit:* `chore: Android release konfiguracija`
-- [ ] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track.
+- [ ] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~35 → **~100–200 vrst** (koncept §225): seed iz **Wikidata/GBIF** z atribucijo (NE ročno), nato agronomska kuracija — SL/EN/DE ljudska imena, `category` razvrstitev + **plant↔task_type matrika** (katera opravila veljajo za vrsto), sinonimi, ikone. Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **⚠️ PRE-RELEASE OKNO za reseed:** ker app še ni live, smemo obstoječe `plant.id`/`task_type.id` **povoziti / na novo seedati** (telefon + Supabase) — po prvem živem uporabniku postanejo id-ji **add-only/immutable** (FK iz `user_plant.plant_id`/`task.task_type_id`), zato to okno velja LE do launcha. Bundlan seed = offline prvi zagon. *Commit:* `feat: razširjen katalog rastlin (Wikidata/GBIF seed + kuracija)`
+- [ ] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).**
 
 ---
 
@@ -271,7 +272,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 > Plast B: dnevni paketni pregled (cron/Edge Function) + FCM push, 3–4 kurirana pravila (brez AI),
 > vodenje proti gnjavljenju (cooldown, vremenske straže, dedup, frekvenčna kapica). Glej
 > [`pametni-motor.md`](pametni-motor.md) + `koncept.md` §7.13. V2: percentili okolice (`activity_agg`, §8).
-> Vzporedni ne-blokirajoč tir: **razširitev kataloga rastlin 35 → 100–200** (Wikidata/GBIF) + preverba prevodov.
+> Razširitev kataloga rastlin 35 → 100–200 (Wikidata/GBIF) je **premaknjena na PRED-RELEASE → glej 9.6** (mora biti pred internim testom; ne čaka na M11).
 
 ---
 
