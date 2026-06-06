@@ -242,7 +242,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **8.1 — Setup.** `flutter_local_notifications` + `timezone` + `flutter_timezone`; core-library desugaring, dovoljenja (`POST_NOTIFICATIONS`/`RECEIVE_BOOT_COMPLETED`/`SCHEDULE_EXACT_ALARM`) + **vsi 3 plugin receiverji** (Scheduled/ActionBroadcast/Boot — plugin jih NE deklarira sam), začasna eco ikona; `NotificationService` (init+tz+dovoljenje+exact). On-device potrjeno (takoj + razporejeno; zaprt app + ugasnjen zaslon). *Commit:* `feat: lokalna obvestila setup`
 - [x] **8.2 — Razporejanje.** `reminder_schedule.dart` (čista `reminderFireTime`: dnevni offset+ura → dan-X ob uri, sicer taskDate−offset; stabilen 31-bit `reminderNotificationId` iz UUID). `ReminderCoordinator` (keepAlive): reconcile razporedi prihodnje opomnike čakajočih opravil + prekliče osirotele (le pending, ne prikazanih), reaktivno na `tableUpdates([tasks, taskReminders])` + debounce + ob zagonu. `NotificationService.scheduleAt/cancel/pendingIds` (payload=task id za 8.3). i18n `notifications.today/tomorrow`. On-device potrjeno (»1h prej« sproži). **Odloženo:** ime kanala še hardcoded SL + `Clock` v coordinatorju `const SystemClock()` (trigger-time je čista, testirana fn) — uredi v 8.4/8.5. *Commit:* `feat: razporejanje opomnikov`
 - [x] **8.3 — Deep-link.** Tap obvestila → Detajl (17). `NotificationService` oddaja tapnjen task id prek `taps` streama (live) + `initialPayload()` (cold start prek `getNotificationAppLaunchDetails`); servis ločen od routerja (core/ ne kliče features/). `TendaskApp`→`ConsumerStatefulWidget` posluša `taps`→`goNamed('task-detail')`; `main` razreši cold-start v `initialLocation /tasks/:id`. *Commit:* `feat: deep-link obvestilo na detajl`
-- [ ] **8.4 — Zasloni 19/20/21/22.** ~~priming dovoljenje (21)~~ delno ✅ (`cb2efe7`: kontekstualni gate ob dodajanju opomnika — POST_NOTIFICATIONS + točni alarmi prek `canScheduleExactAlarms`/`openExactAlarmSettings`; brez duplikatov v izbirniku). Preostane: dodaj obvestilo (19), videz (20), nastavitve (22: tihe ure 22:00–7:00, kapica, opt-in). *Commit:* `feat: zasloni obvestil (19–22)`
+- [x] **8.4 — Zasloni 19/21/22 (+ prikaz na 17).** Detajl (17) kaže dejanske opomnike (`watchRemindersForTask`→`remindersForTaskProvider`, oznake prek `reminderLabel`). **Dovoljenja (21)** ✅ (`cb2efe7`): kontekstualni gate ob dodajanju (POST_NOTIFICATIONS + točni alarmi prek `canScheduleExactAlarms`/`openExactAlarmSettings`; brez duplikatov v izbirniku). **Dodaj obvestilo (19)** ✅ pokrit z reminder edit sheet. **Nastavitve (22)** ✅: vrste (opomniki aktivni; vreme/okolica disabled do FCM), privzeti zamik (ožičen v prefill), tihe ure + kapica (store-only za FCM-namige, NE vplivajo na eksplicitne opomnike — odločitev: skladno s konceptom), status točnih alarmov. Master stikalo gate-a `ReminderCoordinator`. Nastavitve v **`profile.notification_settings` jsonb** (LWW sync, sledijo uporabniku), drift v7→v8 + Supabase `0003`. **Preostane:** videz/predogled (20). *Commit:* `feat: prikaz opomnikov na detajlu opravila (17)` + `feat: nastavitve obvestil (zaslon 22) + sync v profile`
 - [ ] **8.5 — Testi M8.** Odstrani debug smoke-test gumb (Nastavitve, kDebugMode). Na napravi: exact alarmi delujejo na Samsung A53 brez battery-exemption — **preveri še recents-swipe + druge OEM-e**; če odpove, dodaj `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` poziv. *Commit:* `test: opomniki`
 
 ---
@@ -312,11 +312,33 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   state managementa. Odprto pri implementaciji: ali pristati na Pregledu ali na koraku Subjekti (subjekti se
   najpogosteje spremenijo). NE predizpolnjevati koraka 1 z zadnjim tipom (ubije auto-advance). Premišljeno
   med UX validacijo stepperja 2026-06-04, odloženo na po-MVP.
+- **FR-7 — Vreme: deduplikacija + okno ±1 dan.** 📝 **Odločeno na papirju 2026-06-06, neimplementirano.**
+  Polna specifikacija: [`vreme-shranjevanje.md`](vreme-shranjevanje.md). Vreme je danes denormaliziran JSON
+  blob na vsakem tasku (~600 B × 3,6 M opravil/leto pri 10k uporabnikih ≈ ~2,1 GB/leto, večinoma podvojeno).
+  Model: vreme = `f(h3_r7, dan)` → **hibrid**: (A) trenutni pogoji ob kliku ✓ = kompakten frozen blob na
+  tasku (urno, zaseben); (B) dnevni povzetki dan −1/0/+1 = skupna `weather_observation(h3_r7, dan)`
+  (`weather_code`, `temp_max`, `temp_min`, `precipitation_sum`, javno-bralna kot katalog). Dan +1 = najprej
+  napoved → samozdravljenje v dejansko (lazy ob branju, vezano na celico; cron backstop V2). Zasebnost: cron
+  uporabi centroid celice (`cellToLatLng`), ne koordinat. **Faznost:** MVP = lokalni hibrid + kompaktiranje
+  blob-a; shared cloud `weather_observation` + cross-user dedup + cron = V2 (skala). Posledica: posodobi
+  `koncept.md` §7.9/§7.10 (frozen → hibrid) ob implementaciji. Opozorilo: Open-Meteo pri 10k = komercialna raba.
 
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-06 — **8.4 nastavitve obvestil (zaslon 22) + prikaz na detajlu + sync.** Detajl (17): vrstica opomnik
+  kaže dejanske opomnike (`watchRemindersForTask`→`remindersForTaskProvider`, oznake prek `reminderLabel`).
+  Zaslon 22 (`notification_settings_screen`): vrste (opomniki aktivni; vreme/okolica disabled do FCM), privzeti
+  zamik (segmented {0,60,1440}, ožičen v prefill reminder sheeta), tihe ure + kapica (store-only — odločitev z
+  uporabnikom: NE vplivajo na eksplicitne opomnike, skladno s konceptom §"Vodenje proti motečnosti"; tihe ure
+  semantika A), status točnih alarmov. **Master stikalo** gate-a `ReminderCoordinator` (izklop prekliče
+  razporejene; watcha `profiles`). **Sync**: nastavitve premaknjene iz device-local `local_flag` v
+  **`profile.notification_settings` jsonb** (LWW, `claimLocalRows` že pokriva profile → sledijo uporabniku);
+  `NotificationSettings` (core/notifications) + toJson/fromJson tolerantno; drift **v7→v8** (additive addColumn) +
+  Supabase **`0003`** (`alter table profile add column ... jsonb`, db push aplicirano). +4 testi (jsonb round-trip,
+  JSON tolerantnost). On-device potrjeno (migracija, zaslon, master toggle, prefill, persist). analyze čist,
+  148/148. *Commit:* `feat: prikaz opomnikov na detajlu opravila (17)`, `feat: nastavitve obvestil (zaslon 22) + sync v profile`
 - 2026-06-06 — **8.3 deep-link + dovoljenja + zvonček + fix.** **8.3** (`41f9792`): tap obvestila → Detajl (17);
   `NotificationService` oddaja tapnjen task id prek `taps` streama (live) + `initialPayload()` (cold start), ločen od
   routerja; `TendaskApp`→ConsumerStatefulWidget posluša→`goNamed('task-detail')`, `main` razreši cold-start v
