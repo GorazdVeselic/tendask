@@ -578,7 +578,9 @@ bistvo — uporabnik dela opravila **zaradi rastlin** (jagode→tretiram, trava�
   **sredstva in vreme skupna** (en odpis, en posnetek).
 - **Subjekt = instanca, ne vrsta.** `user_plant` = vrsta × območje; ista vrsta na več območjih
   (jablana–vrt, jablana–sadovnjak) = več instanc → ob izbiri vrste **odkljukaš območja**.
-- `user_plant.area_id` → **nullable** (lončnica brez imenovanega območja).
+- `user_plant.area_id` → **nullable** (lončnica brez imenovanega območja). Take rastline (npr.
+  dodane v hitrem vnosu brez izbire območja) se na zavihku **Vrt** prikažejo v sekciji
+  **»Brez območja«** na vrhu — ne smejo tiho izpasti iz seznama.
 
 **IA / UX (popravek):**
 - Zavihek **"Območja" → "Vrt"** (rastline grupirane po območjih + trate). **Nov zaslon
