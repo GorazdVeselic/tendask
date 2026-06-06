@@ -797,6 +797,21 @@ class Translations$entry$sl {
 
 	/// sl: 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).'
 	String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+
+	/// sl: 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.'
+	String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
+
+	/// sl: 'Dovoli točne opomnike'
+	String get rem_exact_title => 'Dovoli točne opomnike';
+
+	/// sl: 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.'
+	String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
+
+	/// sl: 'Odpri nastavitve'
+	String get rem_exact_open => 'Odpri nastavitve';
+
+	/// sl: 'že dodano'
+	String get rem_added => 'že dodano';
 }
 
 // Path: plant_edit
@@ -1433,6 +1448,11 @@ extension on Translations {
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
+			'entry.rem_perm_denied' => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.',
+			'entry.rem_exact_title' => 'Dovoli točne opomnike',
+			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
+			'entry.rem_exact_open' => 'Odpri nastavitve',
+			'entry.rem_added' => 'že dodano',
 			'plant_edit.title_new' => 'Dodaj rastlino',
 			'plant_edit.title_edit' => 'Uredi rastlino',
 			'plant_edit.species' => 'Vrsta',

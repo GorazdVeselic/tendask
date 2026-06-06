@@ -62,10 +62,21 @@ class NotificationService {
       _plugin.resolvePlatformSpecificImplementation<
           AndroidFlutterLocalNotificationsPlugin>();
 
-  /// Requests POST_NOTIFICATIONS (Android 13+). Call from the priming screen
-  /// (21), after explaining the value — not at startup. Returns whether granted.
+  /// Requests POST_NOTIFICATIONS (Android 13+). Asked in context when the user
+  /// adds a reminder (not at startup). Returns whether granted.
   Future<bool> requestPermission() async =>
       await _android?.requestNotificationsPermission() ?? false;
+
+  /// Whether the OS currently allows exact alarms (Android 13+). Reminders use
+  /// exact alarms so they fire on time even in Doze; without this they throw.
+  Future<bool> canScheduleExactAlarms() async =>
+      await _android?.canScheduleExactNotifications() ?? false;
+
+  /// Opens the system "Alarms & reminders" settings so the user can allow exact
+  /// alarms. Returns after launching settings — the grant happens out-of-app, so
+  /// the caller re-checks [canScheduleExactAlarms] on the next attempt.
+  Future<void> openExactAlarmSettings() async =>
+      _android?.requestExactAlarmsPermission();
 
   /// Ensures exact-alarm scheduling is allowed (Android 13+). When not granted,
   /// opens the system "Alarms & reminders" page. Reminders use exact alarms so

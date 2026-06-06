@@ -392,6 +392,11 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String rem_at({required Object t}) => 'at ${t}';
 	@override String get rem_choose_time => 'At time';
 	@override String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
+	@override String get rem_perm_denied => 'Notifications are disabled, so a reminder can\'t be added.';
+	@override String get rem_exact_title => 'Allow exact reminders';
+	@override String get rem_exact_body => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.';
+	@override String get rem_exact_open => 'Open settings';
+	@override String get rem_added => 'already added';
 }
 
 // Path: plant_edit
@@ -786,6 +791,11 @@ extension on TranslationsEn {
 			'entry.rem_at' => ({required Object t}) => 'at ${t}',
 			'entry.rem_choose_time' => 'At time',
 			'entry.rem_time_note' => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").',
+			'entry.rem_perm_denied' => 'Notifications are disabled, so a reminder can\'t be added.',
+			'entry.rem_exact_title' => 'Allow exact reminders',
+			'entry.rem_exact_body' => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.',
+			'entry.rem_exact_open' => 'Open settings',
+			'entry.rem_added' => 'already added',
 			'plant_edit.title_new' => 'Add plant',
 			'plant_edit.title_edit' => 'Edit plant',
 			'plant_edit.species' => 'Species',

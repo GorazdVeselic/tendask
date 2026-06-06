@@ -392,6 +392,11 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String rem_at({required Object t}) => 'um ${t}';
 	@override String get rem_choose_time => 'Um Uhrzeit';
 	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
+	@override String get rem_perm_denied => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.';
+	@override String get rem_exact_title => 'Exakte Erinnerungen erlauben';
+	@override String get rem_exact_body => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.';
+	@override String get rem_exact_open => 'Einstellungen öffnen';
+	@override String get rem_added => 'bereits hinzugefügt';
 }
 
 // Path: plant_edit
@@ -786,6 +791,11 @@ extension on TranslationsDe {
 			'entry.rem_at' => ({required Object t}) => 'um ${t}',
 			'entry.rem_choose_time' => 'Um Uhrzeit',
 			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',
+			'entry.rem_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.',
+			'entry.rem_exact_title' => 'Exakte Erinnerungen erlauben',
+			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',
+			'entry.rem_exact_open' => 'Einstellungen öffnen',
+			'entry.rem_added' => 'bereits hinzugefügt',
 			'plant_edit.title_new' => 'Pflanze hinzufügen',
 			'plant_edit.title_edit' => 'Pflanze bearbeiten',
 			'plant_edit.species' => 'Art',

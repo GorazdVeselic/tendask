@@ -231,7 +231,12 @@
     "rem_2day": "2 days before",
     "rem_at(t)": "at $t",
     "rem_choose_time": "At time",
-    "rem_time_note": "The time applies to day-based offsets (e.g. \"1 day before at 18:00\")."
+    "rem_time_note": "The time applies to day-based offsets (e.g. \"1 day before at 18:00\").",
+    "rem_perm_denied": "Notifications are disabled, so a reminder can't be added.",
+    "rem_exact_title": "Allow exact reminders",
+    "rem_exact_body": "To fire at the exact time, Tendask needs the \"Alarms & reminders\" permission. Enable it in settings, then add the reminder again.",
+    "rem_exact_open": "Open settings",
+    "rem_added": "already added"
   },
   "plant_edit": {
     "title_new": "Add plant",

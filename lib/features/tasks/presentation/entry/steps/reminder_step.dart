@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/notifications/notification_service.dart';
+import '../../../../../core/widgets/confirm_dialog.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../data/tasks_repository.dart';
 
@@ -20,8 +23,9 @@ String reminderLabel(ReminderSpec r, Translations t) {
 }
 
 /// Step 4 — reminders (notifications). Shown only when the task is waiting.
-/// Persists the model; actual scheduling lands in M8.
-class ReminderStepBody extends StatelessWidget {
+/// Adding a reminder first ensures the OS permissions it needs (notifications +
+/// exact alarms) — without them a scheduled reminder would never fire.
+class ReminderStepBody extends ConsumerWidget {
   const ReminderStepBody({
     super.key,
     required this.reminders,
@@ -35,13 +39,39 @@ class ReminderStepBody extends StatelessWidget {
   final ValueChanged<ReminderSpec> onAdd;
   final ValueChanged<int> onRemove;
 
-  Future<void> _add(BuildContext context) async {
-    final spec = await showReminderEditSheet(context, taskDate);
+  Future<void> _add(BuildContext context, WidgetRef ref) async {
+    final t = context.t;
+    final notif = ref.read(notificationServiceProvider);
+    final messenger = ScaffoldMessenger.of(context);
+
+    // Notifications permission (Android 13+), requested in context on intent.
+    if (!await notif.requestPermission()) {
+      messenger.showSnackBar(
+          SnackBar(content: Text(t.entry.rem_perm_denied)));
+      return;
+    }
+    // Exact alarms are granted only via system settings (not a dialog), so we
+    // explain and send the user there; they re-tap + after enabling.
+    if (!await notif.canScheduleExactAlarms()) {
+      if (!context.mounted) return;
+      final open = await showConfirmDialog(
+        context,
+        title: t.entry.rem_exact_title,
+        body: t.entry.rem_exact_body,
+        confirmLabel: t.entry.rem_exact_open,
+        cancelLabel: t.tasks_list.delete_cancel,
+        destructive: false,
+      );
+      if (open) await notif.openExactAlarmSettings();
+      return;
+    }
+    if (!context.mounted) return;
+    final spec = await showReminderEditSheet(context, taskDate, reminders);
     if (spec != null) onAdd(spec);
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final theme = Theme.of(context);
 
@@ -83,7 +113,7 @@ class ReminderStepBody extends StatelessWidget {
               Align(
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
-                  onPressed: () => _add(context),
+                  onPressed: () => _add(context, ref),
                   icon: const Icon(Icons.add, size: 18),
                   label: Text(t.entry.reminder_add),
                   style: TextButton.styleFrom(
@@ -106,11 +136,11 @@ class ReminderStepBody extends StatelessWidget {
 // ─── Edit sheet ──────────────────────────────────────────────────────────────
 
 Future<ReminderSpec?> showReminderEditSheet(
-    BuildContext context, DateTime taskDate) {
+    BuildContext context, DateTime taskDate, List<ReminderSpec> existing) {
   return showModalBottomSheet<ReminderSpec>(
     context: context,
     isScrollControlled: true,
-    builder: (_) => _ReminderEditSheet(taskDate: taskDate),
+    builder: (_) => _ReminderEditSheet(taskDate: taskDate, existing: existing),
   );
 }
 
@@ -118,8 +148,9 @@ Future<ReminderSpec?> showReminderEditSheet(
 const _offsets = [0, 10, 60, 1440, 2880];
 
 class _ReminderEditSheet extends StatefulWidget {
-  const _ReminderEditSheet({required this.taskDate});
+  const _ReminderEditSheet({required this.taskDate, required this.existing});
   final DateTime taskDate;
+  final List<ReminderSpec> existing;
 
   @override
   State<_ReminderEditSheet> createState() => _ReminderEditSheetState();
@@ -130,6 +161,14 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
   TimeOfDay _time = const TimeOfDay(hour: 18, minute: 0);
 
   bool get _isDayBased => _offset >= 1440;
+
+  /// An exact duplicate of an already-added reminder (same offset and time).
+  bool _isTaken(int offset, String? time) => widget.existing
+      .any((r) => r.offsetMinutes == offset && r.time == time);
+
+  /// A non-day-based offset has no time, so once added it can only repeat —
+  /// disable it. Day-based offsets vary by time, so they stay selectable.
+  bool _offsetTaken(int offset) => offset < 1440 && _isTaken(offset, null);
 
   String _label(int offset, Translations t) => switch (offset) {
         0 => t.entry.rem_event,
@@ -180,7 +219,13 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                   for (final offset in _offsets)
                     RadioListTile<int>(
                       value: offset,
+                      enabled: !_offsetTaken(offset),
                       title: Text(_label(offset, t)),
+                      subtitle: _offsetTaken(offset)
+                          ? Text(t.entry.rem_added,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant))
+                          : null,
                       secondary:
                           const Text('🔔', style: TextStyle(fontSize: 16)),
                       dense: true,
@@ -210,7 +255,11 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
               width: double.infinity,
               height: 48,
               child: FilledButton(
-                onPressed: _confirm,
+                // Day-based offsets stay selectable but a same-time pick would
+                // duplicate — block the add then.
+                onPressed: _isTaken(_offset, _isDayBased ? _timeText : null)
+                    ? null
+                    : _confirm,
                 child: Text(t.entry.reminder_add),
               ),
             ),

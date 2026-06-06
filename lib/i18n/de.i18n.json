@@ -231,7 +231,12 @@
     "rem_2day": "2 Tage vorher",
     "rem_at(t)": "um $t",
     "rem_choose_time": "Um Uhrzeit",
-    "rem_time_note": "Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“)."
+    "rem_time_note": "Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).",
+    "rem_perm_denied": "Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.",
+    "rem_exact_title": "Exakte Erinnerungen erlauben",
+    "rem_exact_body": "Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.",
+    "rem_exact_open": "Einstellungen öffnen",
+    "rem_added": "bereits hinzugefügt"
   },
   "plant_edit": {
     "title_new": "Pflanze hinzufügen",

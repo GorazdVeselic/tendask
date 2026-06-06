@@ -235,7 +235,12 @@
     "rem_2day": "2 dni prej",
     "rem_at(t)": "ob $t",
     "rem_choose_time": "Ob uri",
-    "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«)."
+    "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).",
+    "rem_perm_denied": "Obvestila so onemogočena, zato opomnika ni mogoče dodati.",
+    "rem_exact_title": "Dovoli točne opomnike",
+    "rem_exact_body": "Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.",
+    "rem_exact_open": "Odpri nastavitve",
+    "rem_added": "že dodano"
   },
   "plant_edit": {
     "title_new": "Dodaj rastlino",
