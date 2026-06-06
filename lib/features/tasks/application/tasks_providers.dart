@@ -57,6 +57,12 @@ final taskByIdProvider =
   return ref.watch(tasksRepositoryProvider).watchById(id);
 });
 
+/// Ids of tasks that have an active reminder — drives the bell marker in lists.
+final taskIdsWithRemindersProvider =
+    StreamProvider.autoDispose<Set<String>>((ref) {
+  return ref.watch(tasksRepositoryProvider).watchTaskIdsWithReminders();
+});
+
 /// All subject links — used to resolve "for what" labels in task lists.
 final allTaskSubjectsProvider =
     StreamProvider.autoDispose<List<TaskSubject>>((ref) {

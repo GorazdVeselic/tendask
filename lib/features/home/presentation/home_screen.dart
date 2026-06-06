@@ -83,6 +83,8 @@ class _HomeBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
+    final reminderTaskIds =
+        ref.watch(taskIdsWithRemindersProvider).asData?.value ?? const {};
 
     final todayTasks = switch (pending) {
       AsyncData(:final value) => value.where((task) {
@@ -109,18 +111,22 @@ class _HomeBody extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
         children: [
           const _WeatherSection(),
-          const SizedBox(height: 16),
-          SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
-          if (todayTasks.isEmpty)
-            _DashboardHint(t.home.no_tasks_today)
-          else
-            _TaskList(tasks: todayTasks, catalog: catalog, now: now),
-          const SizedBox(height: 16),
-          SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
-          if (recentTasks.isEmpty)
-            _DashboardHint(t.home.no_recent)
-          else
-            _TaskList(tasks: recentTasks, catalog: catalog, now: now),
+        const SizedBox(height: 16),
+        SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
+        if (todayTasks.isEmpty)
+          _DashboardHint(t.home.no_tasks_today)
+        else
+          _TaskList(
+              tasks: todayTasks,
+              catalog: catalog,
+              now: now,
+              reminderTaskIds: reminderTaskIds),
+        const SizedBox(height: 16),
+        SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
+        if (recentTasks.isEmpty)
+          _DashboardHint(t.home.no_recent)
+        else
+          _TaskList(tasks: recentTasks, catalog: catalog, now: now),
         ],
       ),
     );
@@ -193,11 +199,13 @@ class _TaskList extends StatelessWidget {
     required this.tasks,
     required this.catalog,
     required this.now,
+    this.reminderTaskIds = const {},
   });
 
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
   final DateTime now;
+  final Set<String> reminderTaskIds;
 
   @override
   Widget build(BuildContext context) {
@@ -215,6 +223,7 @@ class _TaskList extends StatelessWidget {
               task: tasks[i],
               taskType: catalog[tasks[i].taskTypeId],
               now: now,
+              hasReminder: reminderTaskIds.contains(tasks[i].id),
             ),
           ],
         ],
@@ -228,11 +237,13 @@ class _TaskTile extends StatelessWidget {
     required this.task,
     required this.taskType,
     required this.now,
+    this.hasReminder = false,
   });
 
   final Task task;
   final TaskType? taskType;
   final DateTime now;
+  final bool hasReminder;
 
   @override
   Widget build(BuildContext context) {
@@ -253,6 +264,11 @@ class _TaskTile extends StatelessWidget {
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
+          if (hasReminder && !isDone) ...[
+            Icon(Icons.notifications_outlined,
+                size: 15, color: theme.colorScheme.onSurfaceVariant),
+            const SizedBox(width: 6),
+          ],
           Icon(
             isDone ? Icons.check_circle : Icons.schedule,
             size: 16,

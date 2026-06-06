@@ -52,6 +52,8 @@ void main() {
                 .overrideWith((ref) => Stream.value(<Task>[])),
             completedTasksProvider
                 .overrideWith((ref) => Stream.value(<Task>[])),
+            taskIdsWithRemindersProvider
+                .overrideWith((ref) => Stream.value(<String>{})),
             notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
             taskTypesMapProvider
                 .overrideWith((ref) => Stream.value(<String, TaskType>{})),

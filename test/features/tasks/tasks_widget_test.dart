@@ -228,6 +228,9 @@ void main() {
               completedTasksProvider.overrideWith(
                 (ref) => Stream.value(<Task>[]),
               ),
+              taskIdsWithRemindersProvider.overrideWith(
+                (ref) => Stream.value(<String>{}),
+              ),
               // Subject label plumbing — kept static so the test stays hermetic.
               allTaskSubjectsProvider.overrideWith(
                 (ref) => Stream.value([

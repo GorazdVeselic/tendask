@@ -138,6 +138,18 @@ class TasksRepository {
             ..orderBy([(r) => OrderingTerm.asc(r.offset)]))
           .get();
 
+  /// Task ids that have at least one active reminder — drives the bell marker in
+  /// task lists. Reactive (drift stream).
+  Stream<Set<String>> watchTaskIdsWithReminders() {
+    final taskId = _db.taskReminders.taskId;
+    final query = _db.selectOnly(_db.taskReminders, distinct: true)
+      ..addColumns([taskId])
+      ..where(_db.taskReminders.deleted.equals(false));
+    return query.watch().map((rows) => {
+          for (final row in rows) ?row.read(taskId),
+        });
+  }
+
   /// Task history for one area (newest first): tasks whose subject is the area
   /// itself OR a plant located in that area. Deduped by task id.
   Stream<List<Task>> watchByArea(String areaId) {

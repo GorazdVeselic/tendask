@@ -29,6 +29,8 @@ class TasksScreen extends ConsumerWidget {
     final pending = ref.watch(pendingTasksProvider).asData?.value;
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
     final areas = ref.watch(areasMapProvider).asData?.value;
+    final reminderTaskIds =
+        ref.watch(taskIdsWithRemindersProvider).asData?.value ?? const {};
     final repo = ref.read(tasksRepositoryProvider);
 
     final subjectLabels = subjectLabelsByTask(
@@ -63,6 +65,7 @@ class TasksScreen extends ConsumerWidget {
               tasks: pending,
               catalog: catalog,
               subjectLabels: subjectLabels,
+              reminderTaskIds: reminderTaskIds,
               onComplete: (id) => repo.complete(id),
               onPostpone: (id) => repo.postponeOneDay(id),
               onDuplicate: (id) => repo.duplicate(id),
@@ -79,6 +82,7 @@ class _TasksList extends StatelessWidget {
     required this.tasks,
     required this.catalog,
     required this.subjectLabels,
+    required this.reminderTaskIds,
     required this.onComplete,
     required this.onPostpone,
     required this.onDuplicate,
@@ -88,6 +92,7 @@ class _TasksList extends StatelessWidget {
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
   final Map<String, String> subjectLabels;
+  final Set<String> reminderTaskIds;
   final void Function(String id) onComplete;
   final void Function(String id) onPostpone;
   final void Function(String id) onDuplicate;
@@ -130,6 +135,7 @@ class _TasksList extends StatelessWidget {
           task: task,
           taskType: catalog[task.taskTypeId],
           subjectLabel: subjectLabels[task.id],
+          hasReminder: reminderTaskIds.contains(task.id),
           group: group,
           onComplete: () => onComplete(task.id),
           onPostpone: () => onPostpone(task.id),
@@ -187,6 +193,7 @@ class _TaskRow extends StatelessWidget {
     required this.task,
     required this.taskType,
     required this.subjectLabel,
+    required this.hasReminder,
     required this.group,
     required this.onComplete,
     required this.onPostpone,
@@ -198,6 +205,7 @@ class _TaskRow extends StatelessWidget {
   final Task task;
   final TaskType? taskType;
   final String? subjectLabel;
+  final bool hasReminder;
   final _Group group;
   final VoidCallback onComplete;
   final VoidCallback onPostpone;
@@ -249,6 +257,11 @@ class _TaskRow extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 8),
+              if (hasReminder) ...[
+                Icon(Icons.notifications_outlined,
+                    size: 15, color: theme.colorScheme.onSurfaceVariant),
+                const SizedBox(width: 6),
+              ],
               _StatusBadge(task: task, group: group),
               IconButton(
                 icon: const Icon(Icons.more_horiz),
