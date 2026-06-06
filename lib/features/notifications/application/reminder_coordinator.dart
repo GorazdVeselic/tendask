@@ -35,6 +35,16 @@ class ReminderCoordinator extends _$ReminderCoordinator {
   void build() {
     final db = ref.watch(databaseProvider);
 
+    // Keep the label sources alive for our whole lifetime. They are autoDispose,
+    // so without a listener `ref.read(.future)` in _reconcile would dispose them
+    // mid-load (when no screen watches them, e.g. app backgrounded) and throw —
+    // aborting the reschedule. listen (not watch) keeps them alive without
+    // rebuilding us; their changes are cosmetic so the empty callback is fine.
+    ref.listen(taskTypesMapProvider, (_, _) {});
+    ref.listen(areasMapProvider, (_, _) {});
+    ref.listen(userPlantsMapProvider, (_, _) {});
+    ref.listen(plantsMapProvider, (_, _) {});
+
     final sub = db
         .tableUpdates(TableUpdateQuery.onAllTables([db.tasks, db.taskReminders]))
         .listen((_) {
