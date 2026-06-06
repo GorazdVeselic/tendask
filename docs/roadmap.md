@@ -241,8 +241,8 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 - [x] **8.1 — Setup.** `flutter_local_notifications` + `timezone` + `flutter_timezone`; core-library desugaring, dovoljenja (`POST_NOTIFICATIONS`/`RECEIVE_BOOT_COMPLETED`/`SCHEDULE_EXACT_ALARM`) + **vsi 3 plugin receiverji** (Scheduled/ActionBroadcast/Boot — plugin jih NE deklarira sam), začasna eco ikona; `NotificationService` (init+tz+dovoljenje+exact). On-device potrjeno (takoj + razporejeno; zaprt app + ugasnjen zaslon). *Commit:* `feat: lokalna obvestila setup`
 - [x] **8.2 — Razporejanje.** `reminder_schedule.dart` (čista `reminderFireTime`: dnevni offset+ura → dan-X ob uri, sicer taskDate−offset; stabilen 31-bit `reminderNotificationId` iz UUID). `ReminderCoordinator` (keepAlive): reconcile razporedi prihodnje opomnike čakajočih opravil + prekliče osirotele (le pending, ne prikazanih), reaktivno na `tableUpdates([tasks, taskReminders])` + debounce + ob zagonu. `NotificationService.scheduleAt/cancel/pendingIds` (payload=task id za 8.3). i18n `notifications.today/tomorrow`. On-device potrjeno (»1h prej« sproži). **Odloženo:** ime kanala še hardcoded SL + `Clock` v coordinatorju `const SystemClock()` (trigger-time je čista, testirana fn) — uredi v 8.4/8.5. *Commit:* `feat: razporejanje opomnikov`
-- [ ] **8.3 — Deep-link.** Tap → `go_router` na Detajl (17). *Commit:* `feat: deep-link obvestilo → detajl`
-- [ ] **8.4 — Zasloni 19/20/21/22.** Dodaj obvestilo (19), videz (20), priming dovoljenje (21, pred sistemskim pozivom), nastavitve (22: tihe ure, kapica, opt-in). *Commit:* `feat: zasloni obvestil (19–22)`
+- [x] **8.3 — Deep-link.** Tap obvestila → Detajl (17). `NotificationService` oddaja tapnjen task id prek `taps` streama (live) + `initialPayload()` (cold start prek `getNotificationAppLaunchDetails`); servis ločen od routerja (core/ ne kliče features/). `TendaskApp`→`ConsumerStatefulWidget` posluša `taps`→`goNamed('task-detail')`; `main` razreši cold-start v `initialLocation /tasks/:id`. *Commit:* `feat: deep-link obvestilo na detajl`
+- [ ] **8.4 — Zasloni 19/20/21/22.** ~~priming dovoljenje (21)~~ delno ✅ (`cb2efe7`: kontekstualni gate ob dodajanju opomnika — POST_NOTIFICATIONS + točni alarmi prek `canScheduleExactAlarms`/`openExactAlarmSettings`; brez duplikatov v izbirniku). Preostane: dodaj obvestilo (19), videz (20), nastavitve (22: tihe ure 22:00–7:00, kapica, opt-in). *Commit:* `feat: zasloni obvestil (19–22)`
 - [ ] **8.5 — Testi M8.** Odstrani debug smoke-test gumb (Nastavitve, kDebugMode). Na napravi: exact alarmi delujejo na Samsung A53 brez battery-exemption — **preveri še recents-swipe + druge OEM-e**; če odpove, dodaj `REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` poziv. *Commit:* `test: opomniki`
 
 ---
@@ -317,6 +317,16 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-06 — **8.3 deep-link + dovoljenja + zvonček + fix.** **8.3** (`41f9792`): tap obvestila → Detajl (17);
+  `NotificationService` oddaja tapnjen task id prek `taps` streama (live) + `initialPayload()` (cold start), ločen od
+  routerja; `TendaskApp`→ConsumerStatefulWidget posluša→`goNamed('task-detail')`, `main` razreši cold-start v
+  `initialLocation`. **Dovoljenja+brez duplikatov** (`cb2efe7`, del 8.4): kontekstualni gate ob dodajanju opomnika
+  (POST_NOTIFICATIONS + točni alarmi prek `canScheduleExactAlarms`/`openExactAlarmSettings`); v izbirniku že dodani
+  zamiki onemogočeni. **Zvonček** (`8ecefe6`): Domov+Opravila kažeta ikono obvestila pri opravilih z opomnikom
+  (`watchTaskIdsWithReminders`→`taskIdsWithRemindersProvider`). **Fix** (`e79344b`): reconcile drži autoDispose
+  label-mape žive prek `ref.listen` (prej »disposed during loading« → padel). **Nauk: SCHEDULE_EXACT_ALARM na
+  Android 14+ ni privzet — svež deploy ga ponastavi → `exact_alarms_not_permitted`.** On-device potrjeno razporejanje
+  + gate; deep-link/zvonček še ne. analyze čist, 144/144.
 - 2026-06-06 — **8.2 — Razporejanje opomnikov.** Čista `reminderFireTime` (dnevni offset+ura → dan-X ob uri; sicer
   taskDate−offset) + stabilen 31-bit `reminderNotificationId` iz UUID (`reminder_schedule.dart`, 6 testov).
   `ReminderCoordinator` (keepAlive): reconcile razporedi prihodnje opomnike čakajočih opravil prek `scheduleAt`
