@@ -1,4 +1,5 @@
-import 'package:flutter/foundation.dart';
+import 'dart:async';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -22,14 +23,22 @@ const _reminderDetails = NotificationDetails(
 
 /// Thin wrapper around flutter_local_notifications for local task reminders.
 /// [init] runs at bootstrap (timezone + plugin); the permission prompt is
-/// deferred to the priming screen (21) and never fired at startup. Scheduling
-/// lands in M8.2, deep-link handling in M8.3.
+/// deferred to the priming screen (21) and never fired at startup. Taps deep-link
+/// to the task detail (17): live taps via [taps], cold-start via [initialPayload].
 class NotificationService {
   NotificationService({FlutterLocalNotificationsPlugin? plugin})
       : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _ready = false;
+
+  // Task ids of tapped reminders, consumed by the app layer to navigate. The
+  // service stays decoupled from the router (core/ must not call features/).
+  final _taps = StreamController<String>.broadcast();
+
+  /// Task ids from reminders tapped while the app is alive (foreground or
+  /// background). Cold-start launches are resolved via [initialPayload] instead.
+  Stream<String> get taps => _taps.stream;
 
   /// Loads the timezone database, resolves the device's local zone, and
   /// initializes the plugin. Idempotent. Safe to fire-and-forget at bootstrap.
@@ -99,9 +108,20 @@ class NotificationService {
   Future<Set<int>> pendingIds() async =>
       (await _plugin.pendingNotificationRequests()).map((r) => r.id).toSet();
 
+  /// Payload (task id) of the reminder that cold-started the app, or null when
+  /// the app was launched normally. Checked once at startup — the [_onTap]
+  /// callback does not fire for the launch notification.
+  Future<String?> initialPayload() async {
+    await init();
+    final details = await _plugin.getNotificationAppLaunchDetails();
+    if (!(details?.didNotificationLaunchApp ?? false)) return null;
+    final payload = details!.notificationResponse?.payload;
+    return (payload != null && payload.isNotEmpty) ? payload : null;
+  }
+
   void _onTap(NotificationResponse response) {
-    // Deep-link to the task detail (17) is wired in M8.3.
-    debugPrint('notification tapped: ${response.payload}');
+    final payload = response.payload;
+    if (payload != null && payload.isNotEmpty) _taps.add(payload);
   }
 
   // ── M8.1 smoke-test helpers ────────────────────────────────────────────────

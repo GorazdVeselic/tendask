@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -46,10 +44,12 @@ void main() async {
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
   container.read(syncCoordinatorProvider.notifier).start();
 
-  // Local notifications (M8): load timezone data + init the plugin. The
-  // permission prompt is deferred to the priming screen (21), never at startup.
-  // Fire-and-forget — never blocks first paint.
-  unawaited(container.read(notificationServiceProvider).init());
+  // Local notifications (M8): init the plugin (timezone + plugin), needed to
+  // resolve a cold-start deep-link below. The permission prompt stays deferred to
+  // the priming screen (21), never at startup. If a tapped reminder launched the
+  // app (M8.3), open its task detail instead of home.
+  final launchTaskId =
+      await container.read(notificationServiceProvider).initialPayload();
 
   // Reconcile OS reminders with the task_reminder rows now, then reactively on
   // every task/reminder change (M8.2). Fire-and-forget.
@@ -58,13 +58,20 @@ void main() async {
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();
 
+  final String initialLocation;
+  if (!onboardingSeen) {
+    initialLocation = '/onboarding';
+  } else if (launchTaskId != null) {
+    initialLocation = '/tasks/$launchTaskId';
+  } else {
+    initialLocation = '/home';
+  }
+
   runApp(
     TranslationProvider(
       child: UncontrolledProviderScope(
         container: container,
-        child: TendaskApp(
-          initialLocation: onboardingSeen ? '/home' : '/onboarding',
-        ),
+        child: TendaskApp(initialLocation: initialLocation),
       ),
     ),
   );
