@@ -255,7 +255,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **9.2 — Ikona + splash (00).** Iz `docs/brand/assets/`. SVG→PNG prek node `sharp` (`tmp/icongen`, scratch) → `assets/icon/{icon-1024,foreground}.png` + `assets/splash/splash-logo.png`. `flutter_launcher_icons ^0.14.4` (android+ios, adaptive bg `#2e7d32` + transparent foreground, `remove_alpha_ios`) + `flutter_native_splash ^2.4.8` (color `#2e7d32` + bel logomark, android_12 blok) — konfig v `flutter_launcher_icons.yaml` + `flutter_native_splash.yaml`. Generirano za Android (mipmap + adaptive + splash drawable + styles v31) in iOS (AppIcon + LaunchImage, pripravljeno za M10). **Flutter splash zaslon** (`features/splash/`, zaslon 00): ker Android 12+ native splash kaže le ikono brez teksta, kratek in-app splash (zeleni radial gradient + logo + „Tendask" + verzija prek `package_info_plus`) na `/splash?next=…` → po `kSplashMinDuration` (1,2 s) routа na home/onboarding/deep-link. On-device potrjeno (ikona, native + Flutter splash z imenom+verzijo). *Commit:* `chore: app ikona + splash`
 - [ ] **9.3 — Pregled neskladij.** UI vs wireframi; i18n popolnost (sl/en/de); dostopnost; vsi nizi prevedeni. *Commit:* `fix: neskladja UI/wireframi + i18n`
 - [ ] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. *Commit:* `chore: Android release konfiguracija`
-- [ ] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~35 → **~100–200 vrst** (koncept §225): seed iz **Wikidata/GBIF** z atribucijo (NE ročno), nato agronomska kuracija — SL/EN/DE ljudska imena, `category` razvrstitev + **plant↔task_type matrika** (katera opravila veljajo za vrsto), sinonimi, ikone. Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **⚠️ PRE-RELEASE OKNO za reseed:** ker app še ni live, smemo obstoječe `plant.id`/`task_type.id` **povoziti / na novo seedati** (telefon + Supabase) — po prvem živem uporabniku postanejo id-ji **add-only/immutable** (FK iz `user_plant.plant_id`/`task.task_type_id`), zato to okno velja LE do launcha. Bundlan seed = offline prvi zagon. *Commit:* `feat: razširjen katalog rastlin (Wikidata/GBIF seed + kuracija)`
+- [x] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~34 → **128 vrst** čez **12 kategorij** (lawn, fruit_tree, berries, vegetable, herbs, perennial, shrub, climber, bulb, conifer, hedge, houseplant). Metoda (z uporabnikom): **kuracija (SL/EN/DE ljudska imena, pogovorna) + GBIF preverba znanstvenih imen** (match API — vsa veljavna) + **Wikidata navzkrižna preverba SL imen** (batch SPARQL — potrdila imena; popravljen `hibiscus`→`sirski oslez`). Povezava rastlina→opravila prek **kategorije** (razširjena `categoryMatrix`, 93 vrstic). Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **Reseed (pre-release okno):** oblak posodobljen prek `apply_catalog.py` (128 plant, 93 matrika; počiščene osirotele `ornamental`/`container` matrika vrstice); naprava pull-a ob zagonu + bundlan seed (offline prvi zagon) = 128. Brez podvojenih id-jev, 151/151 testov, analyze čist. On-device pull verifikacija = ob naslednji priklopljeni napravi (USB se je odklopil). *Commit:* `feat: razširjen katalog rastlin (128 vrst, GBIF/Wikidata preverba)`
 - [ ] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).**
 
 ---
@@ -328,6 +328,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-07 — **9.6 — Razširitev kataloga rastlin (~34 → 128).** 12 kategorij (dodane perennial,
+  shrub, climber, bulb, conifer, hedge, houseplant; opuščeni nerabljeni ornamental/container). Metoda
+  (z uporabnikom): kuracija SL/EN/DE pogovornih imen + **GBIF** preverba znanstvenih imen (vsa veljavna;
+  flagi le hibridni × / hortikulturni sinonimi / GBIF quirk pri samostojnih rodovih) + **Wikidata** batch
+  SPARQL navzkrižna preverba SL imen (potrdila pogovorna imena; edini popravek `hibiscus`→`sirski oslez`).
+  Dodanih 19 pogosto manjkajočih (pelargonija, lešnik, sončnica, zelena, blitva, motovilec, rukola,
+  brstični ohrovt, melisa, pehtran, kamilica, kaki, aronija, perunika, šmarnica, rododendron, magnolija,
+  tisa, aloja). `categoryMatrix` razširjena (93 vrstic; +`sow` za trajnice/cvetlice). Pipeline:
+  `catalog_seed.dart`→`gen_catalog_sql.dart`→`catalog.sql`; oblak reseedan prek `apply_catalog.py` (počiščene
+  osirotele matrika vrstice). Brez podvojenih id-jev, 151/151, analyze čist. On-device pull = naslednjič
+  (USB odklop). *Commit:* `feat: razširjen katalog rastlin (128 vrst, GBIF/Wikidata preverba)`
 - 2026-06-07 — **9.2 — Ikona + splash (zaslon 00).** SVG (vir resnice `docs/brand/assets/`) → PNG prek node
   `sharp` v `tmp/icongen` (scratch, gitignored): `app-icon.svg`→`assets/icon/icon-1024.png` (gradient + mark),
   `app-icon-foreground.svg`→`assets/icon/foreground.png` (transparent, 66% safe zone), `logomark.svg`→

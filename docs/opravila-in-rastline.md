@@ -180,12 +180,15 @@
 
 ## D) Odprto / TODO za ta katalog
 
-**→ Razširitev kataloga = naloga implementacijske faze (odločeno 2026-06-01), v enem koraku:**
-- [ ] **Taksonomija + obseg hkrati:** razširi kategorije + seed 100–200+ vrst iz **Wikidata/GBIF**
-      (z atribucijo, §7.7); šele nato kuracija. (Ne ročno vnaprej.)
-- [ ] Preveriti **DE prevode + znanstvena imena** (ob kuraciji seedanih podatkov).
-- [ ] Dodati **sloj sinonimov/aliasov po jezikih** (npr. „paradajz" → `tomato`), §7.7.
-- [ ] Finalne **ikone** (nekatere trata-specifične nimajo dobrega emojija).
+**→ Razširitev kataloga = OPRAVLJENO v M9.6 (2026-06-07).** Katalog razširjen na **128 vrst čez 12
+kategorij** (lawn, fruit_tree, berries, vegetable, herbs, perennial, shrub, climber, bulb, conifer, hedge,
+houseplant). Vir resnice = `lib/data/seed/catalog_seed.dart`; ta tabela ostaja le zgodovinski vzorec.
+- [x] **Taksonomija + obseg:** kategorije razširjene + 128 vrst. Metoda: kuracija SL/EN/DE (pogovorna imena)
+      + **GBIF** preverba znanstvenih imen + **Wikidata** navzkrižna preverba SL imen (batch SPARQL).
+- [x] **DE prevodi + znanstvena imena** preverjeni (GBIF match API; Wikidata DE oznake).
+- [ ] Dodati **sloj sinonimov/aliasov po jezikih** (npr. „paradajz" → `tomato`), §7.7. *(plant_synonym tabela
+      obstaja, a še prazna — naslednji korak po potrebi.)*
+- [ ] Finalne **ikone** (nekatere vrste delijo generičen 🌿/🌸/🌲 emoji — dovolj za MVP).
 
 **Lahko že prej (ni odvisno od obsega vrst):**
 - [ ] Privezati **privzeta sredstva/recepte** na tipe (gnojenje/tretiranje) — povezava z Zalogami.
