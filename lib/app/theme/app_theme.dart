@@ -12,6 +12,8 @@ abstract final class AppTheme {
       colorScheme: const ColorScheme.light(
         primary: AppColors.green,
         onPrimary: Colors.white,
+        primaryContainer: AppColors.soft,
+        onPrimaryContainer: AppColors.green900,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
         surface: AppColors.surface,
@@ -23,6 +25,7 @@ abstract final class AppTheme {
         onError: Colors.white,
       ),
       inputDecorationTheme: _inputTheme(AppColors.muted),
+      chipTheme: _chipTheme(AppColors.soft, AppColors.green900),
     );
   }
 
@@ -36,6 +39,8 @@ abstract final class AppTheme {
       colorScheme: const ColorScheme.dark(
         primary: AppColors.green400,
         onPrimary: Colors.white,
+        primaryContainer: AppColors.greenContainerDark,
+        onPrimaryContainer: AppColors.onGreenContainerDark,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
         surface: Color(0xFF1A2E1C),
@@ -46,11 +51,21 @@ abstract final class AppTheme {
         onError: Color(0xFF690005),
       ),
       inputDecorationTheme: _inputTheme(const Color(0xFF8A988E)),
+      chipTheme: _chipTheme(
+          AppColors.greenContainerDark, AppColors.onGreenContainerDark),
     );
   }
 
   /// Hints must read as placeholders, not entered text — keep them muted.
   static InputDecorationTheme _inputTheme(Color hint) => InputDecorationTheme(
         hintStyle: TextStyle(color: hint, fontWeight: FontWeight.w400),
+      );
+
+  /// Selected chips read green (brand), not the M3 baseline purple that an
+  /// under-specified ColorScheme would otherwise leak.
+  static ChipThemeData _chipTheme(Color selected, Color onSelected) =>
+      ChipThemeData(
+        selectedColor: selected,
+        checkmarkColor: onSelected,
       );
 }

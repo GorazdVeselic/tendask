@@ -21,4 +21,8 @@ abstract final class AppColors {
   static const Color dangerSoft = Color(0xFFFCEDEC);
   // Lighter destructive tone for dark theme.
   static const Color danger300 = Color(0xFFFFB4AB);
+  // Green container tones for the dark theme (selected chips, swipe-move bg) —
+  // the light theme reuses [soft]/[green900].
+  static const Color greenContainerDark = Color(0xFF24432A);
+  static const Color onGreenContainerDark = Color(0xFFBCEAC2);
 }
