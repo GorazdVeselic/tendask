@@ -100,24 +100,30 @@ class _SplashScreenState extends State<SplashScreen>
             Positioned(
               left: 0,
               right: 0,
-              bottom: 70,
-              child: _LoadingDots(controller: _dotsController),
-            ),
-            if (_version != null)
-              Positioned(
-                left: 0,
-                right: 0,
-                bottom: 34,
-                child: Text(
-                  'v$_version',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.7),
-                    fontSize: 13,
-                    fontWeight: FontWeight.w500,
+              bottom: 0,
+              child: SafeArea(
+                top: false,
+                child: Padding(
+                  padding: const EdgeInsets.only(bottom: 24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _LoadingDots(controller: _dotsController),
+                      const SizedBox(height: 24),
+                      Text(
+                        _version == null ? '' : 'v$_version',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.7),
+                          fontSize: 13,
+                          fontWeight: FontWeight.w500,
+                        ),
+                      ),
+                    ],
                   ),
                 ),
               ),
+            ),
           ],
         ),
       ),
