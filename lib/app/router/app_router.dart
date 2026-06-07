@@ -139,7 +139,7 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/plant/:id/edit',
       name: 'plant-edit',
       builder: (context, state) =>
-          PlantEditScreen(userPlantId: state.pathParameters['id']),
+          PlantEditScreen(userPlantId: state.pathParameters['id']!),
     ),
     GoRoute(
       path: '/supplies',

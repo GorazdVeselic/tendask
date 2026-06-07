@@ -294,6 +294,7 @@
     "alias": "Osebno ime (neobvezno)",
     "alias_hint": "npr. »stara jablana ob ograji«",
     "alias_note": "Vidiš ga samo ti; prikaže se namesto privzetega imena.",
+    "location_label": "Območje",
     "locations": "Kje raste",
     "locations_hint": "izberi eno ali več območij",
     "locations_note": "Brez območja je tudi v redu (npr. lončnica na terasi).",

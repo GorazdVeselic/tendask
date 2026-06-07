@@ -988,6 +988,9 @@ class Translations$plant_edit$sl {
 	/// sl: 'Vidiš ga samo ti; prikaže se namesto privzetega imena.'
 	String get alias_note => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.';
 
+	/// sl: 'Območje'
+	String get location_label => 'Območje';
+
 	/// sl: 'Kje raste'
 	String get locations => 'Kje raste';
 
@@ -1691,6 +1694,7 @@ extension on Translations {
 			'plant_edit.alias' => 'Osebno ime (neobvezno)',
 			'plant_edit.alias_hint' => 'npr. »stara jablana ob ograji«',
 			'plant_edit.alias_note' => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.',
+			'plant_edit.location_label' => 'Območje',
 			'plant_edit.locations' => 'Kje raste',
 			'plant_edit.locations_hint' => 'izberi eno ali več območij',
 			'plant_edit.locations_note' => 'Brez območja je tudi v redu (npr. lončnica na terasi).',

@@ -290,6 +290,7 @@
     "alias": "Eigener Name (optional)",
     "alias_hint": "z. B. „alter Apfel am Zaun“",
     "alias_note": "Nur du siehst ihn; wird statt des Standardnamens angezeigt.",
+    "location_label": "Bereich",
     "locations": "Wo sie wächst",
     "locations_hint": "einen oder mehrere Bereiche wählen",
     "locations_note": "Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).",

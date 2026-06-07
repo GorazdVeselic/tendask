@@ -482,6 +482,7 @@ class _Translations$plant_edit$de extends Translations$plant_edit$sl {
 	@override String get alias => 'Eigener Name (optional)';
 	@override String get alias_hint => 'z. B. „alter Apfel am Zaun“';
 	@override String get alias_note => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.';
+	@override String get location_label => 'Bereich';
 	@override String get locations => 'Wo sie wächst';
 	@override String get locations_hint => 'einen oder mehrere Bereiche wählen';
 	@override String get locations_note => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).';
@@ -932,6 +933,7 @@ extension on TranslationsDe {
 			'plant_edit.alias' => 'Eigener Name (optional)',
 			'plant_edit.alias_hint' => 'z. B. „alter Apfel am Zaun“',
 			'plant_edit.alias_note' => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.',
+			'plant_edit.location_label' => 'Bereich',
 			'plant_edit.locations' => 'Wo sie wächst',
 			'plant_edit.locations_hint' => 'einen oder mehrere Bereiche wählen',
 			'plant_edit.locations_note' => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).',

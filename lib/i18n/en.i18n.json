@@ -290,6 +290,7 @@
     "alias": "Personal name (optional)",
     "alias_hint": "e.g. “old apple by the fence”",
     "alias_note": "Only you see it; shown instead of the default name.",
+    "location_label": "Area",
     "locations": "Where it grows",
     "locations_hint": "pick one or more areas",
     "locations_note": "No area is fine too (e.g. a pot on the terrace).",

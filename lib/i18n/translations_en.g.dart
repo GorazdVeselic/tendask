@@ -482,6 +482,7 @@ class _Translations$plant_edit$en extends Translations$plant_edit$sl {
 	@override String get alias => 'Personal name (optional)';
 	@override String get alias_hint => 'e.g. “old apple by the fence”';
 	@override String get alias_note => 'Only you see it; shown instead of the default name.';
+	@override String get location_label => 'Area';
 	@override String get locations => 'Where it grows';
 	@override String get locations_hint => 'pick one or more areas';
 	@override String get locations_note => 'No area is fine too (e.g. a pot on the terrace).';
@@ -932,6 +933,7 @@ extension on TranslationsEn {
 			'plant_edit.alias' => 'Personal name (optional)',
 			'plant_edit.alias_hint' => 'e.g. “old apple by the fence”',
 			'plant_edit.alias_note' => 'Only you see it; shown instead of the default name.',
+			'plant_edit.location_label' => 'Area',
 			'plant_edit.locations' => 'Where it grows',
 			'plant_edit.locations_hint' => 'pick one or more areas',
 			'plant_edit.locations_note' => 'No area is fine too (e.g. a pot on the terrace).',

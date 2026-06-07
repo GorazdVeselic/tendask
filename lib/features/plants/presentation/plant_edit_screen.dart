@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -13,14 +12,15 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
-import 'plant_picker_screen.dart';
+import 'widgets/area_pick_sheet.dart';
 
-/// Add or edit a personal plant. Add mode: pick species + alias + one or more
-/// areas (one instance per area). Edit mode: alias + the instance's area + delete.
+/// Edit a personal plant instance: alias + its area (single — move) + delete.
+/// Species is identity (set when the plant was added) and is shown read-only;
+/// adding plants is the separate instant-add screen.
 class PlantEditScreen extends ConsumerStatefulWidget {
-  const PlantEditScreen({super.key, this.userPlantId});
+  const PlantEditScreen({required this.userPlantId, super.key});
 
-  final String? userPlantId;
+  final String userPlantId;
 
   @override
   ConsumerState<PlantEditScreen> createState() => _PlantEditScreenState();
@@ -30,20 +30,14 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
   String? _plantId;
   String? _customName;
   final _aliasController = TextEditingController();
-  final Set<String> _areaIds = {}; // add mode: one instance per area
-  String? _editAreaId; // edit mode: the single instance's area
-  bool _isLoading = false;
+  String? _areaId;
+  bool _isLoading = true;
   bool _isSaving = false;
-
-  bool get _isEdit => widget.userPlantId != null;
 
   @override
   void initState() {
     super.initState();
-    if (_isEdit) {
-      _isLoading = true;
-      Future.microtask(_load);
-    }
+    Future.microtask(_load);
   }
 
   @override
@@ -54,75 +48,40 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
 
   Future<void> _load() async {
     final plant =
-        await ref.read(userPlantsRepositoryProvider).byId(widget.userPlantId!);
+        await ref.read(userPlantsRepositoryProvider).byId(widget.userPlantId);
     if (!mounted) return;
     if (plant != null) {
       setState(() {
         _plantId = plant.plantId;
         _customName = plant.customName;
         _aliasController.text = plant.personalAlias ?? '';
-        _editAreaId = plant.areaId;
+        _areaId = plant.areaId;
       });
     }
     setState(() => _isLoading = false);
   }
 
-  Future<void> _pickSpecies() async {
-    final pick = await context.pushNamed<PlantPick>('plant-picker');
+  Future<void> _changeArea() async {
+    final t = context.t;
+    final pick = await showAreaPickSheet(
+      context,
+      title: t.area_pick.choose_title,
+      currentAreaId: _areaId,
+    );
     if (pick == null || !mounted) return;
-    setState(() {
-      _plantId = pick.plantId;
-      _customName = pick.customName;
-    });
+    setState(() => _areaId = pick.areaId);
   }
 
   Future<void> _save() async {
-    final t = context.t;
-    if (_plantId == null && _customName == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-            content: Text(t.plant_edit.err_species),
-            behavior: SnackBarBehavior.floating),
-      );
-      return;
-    }
     setState(() => _isSaving = true);
     try {
-      final repo = ref.read(userPlantsRepositoryProvider);
-      final userId = ref.read(authServiceProvider).userId;
       final alias = _aliasController.text.trim();
-      final aliasOrNull = alias.isEmpty ? null : alias;
-      // Created instance ids — returned to callers that auto-select the new
-      // plant (e.g. the entry subject step). Null on edit.
-      List<String>? created;
-      if (_isEdit) {
-        await repo.update(
-          id: widget.userPlantId!,
-          areaId: _editAreaId,
-          personalAlias: aliasOrNull,
-        );
-      } else if (_areaIds.isEmpty) {
-        created = [
-          await repo.create(
-            userId: userId,
-            plantId: _plantId,
-            customName: _customName,
-            personalAlias: aliasOrNull,
-          ),
-        ];
-      } else {
-        created = [
-          for (final areaId in _areaIds)
-            await repo.create(
-              userId: userId,
-              areaId: areaId,
-              plantId: _plantId,
-              customName: _customName,
-              personalAlias: aliasOrNull,
-            ),
-        ];
-      }
-      if (mounted) context.pop(created);
+      await ref.read(userPlantsRepositoryProvider).update(
+            id: widget.userPlantId,
+            areaId: _areaId,
+            personalAlias: alias.isEmpty ? null : alias,
+          );
+      if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -136,9 +95,10 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
       body: t.plant_edit.delete_note,
       confirmLabel: t.plant_edit.delete,
       cancelLabel: t.tasks_list.delete_cancel,
+      destructive: true,
     );
     if (!confirmed) return;
-    await ref.read(userPlantsRepositoryProvider).softDelete(widget.userPlantId!);
+    await ref.read(userPlantsRepositoryProvider).softDelete(widget.userPlantId);
     if (mounted) context.pop();
   }
 
@@ -147,7 +107,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
     final t = context.t;
     final theme = Theme.of(context);
     final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
-    final areas = ref.watch(areasListProvider).asData?.value ?? const [];
+    final areas = ref.watch(areasMapProvider).asData?.value ?? const {};
 
     if (_isLoading) {
       return Scaffold(
@@ -158,8 +118,9 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(icon: const Icon(Icons.close), onPressed: context.pop),
-        title: Text(_isEdit ? t.plant_edit.title_edit : t.plant_edit.title_new),
+        leading:
+            IconButton(icon: const Icon(Icons.close), onPressed: context.pop),
+        title: Text(t.plant_edit.title_edit),
         centerTitle: true,
       ),
       body: Column(
@@ -169,11 +130,10 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 8),
               children: [
                 FieldLabel(t.plant_edit.species),
-                _SpeciesField(
+                _SpeciesCard(
                   plantId: _plantId,
                   customName: _customName,
                   catalog: catalog,
-                  onPick: _pickSpecies,
                 ),
                 const SizedBox(height: 16),
                 FieldLabel(t.plant_edit.alias),
@@ -193,31 +153,23 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                           color: theme.colorScheme.onSurfaceVariant)),
                 ),
                 const SizedBox(height: 16),
-                FieldLabel('${t.plant_edit.locations} · ${t.plant_edit.locations_hint}'),
-                _LocationField(
-                  areas: areas,
-                  isEdit: _isEdit,
-                  selectedAdd: _areaIds,
-                  selectedEdit: _editAreaId,
-                  onToggleAdd: (id, sel) => setState(
-                      () => sel ? _areaIds.add(id) : _areaIds.remove(id)),
-                  onSelectEdit: (id) => setState(() => _editAreaId =
-                      _editAreaId == id ? null : id),
-                  onNewArea: () => context.pushNamed('area-new'),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(top: 6),
-                  child: Text(t.plant_edit.locations_note,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant)),
-                ),
-                if (_isEdit) ...[
-                  const SizedBox(height: 24),
-                  DestructiveButton(
-                    label: t.plant_edit.delete,
-                    onPressed: _delete,
+                FieldLabel(t.plant_edit.location_label),
+                Card(
+                  child: ListTile(
+                    leading: Icon(Icons.place_outlined,
+                        color: theme.colorScheme.onSurfaceVariant),
+                    title: Text(
+                        _areaId != null ? areas[_areaId]?.name ?? t.area_pick.none : t.area_pick.none),
+                    trailing: Icon(Icons.chevron_right,
+                        color: theme.colorScheme.onSurfaceVariant),
+                    onTap: _changeArea,
                   ),
-                ],
+                ),
+                const SizedBox(height: 24),
+                DestructiveButton(
+                  label: t.plant_edit.delete,
+                  onPressed: _delete,
+                ),
               ],
             ),
           ),
@@ -228,99 +180,30 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
   }
 }
 
-class _SpeciesField extends StatelessWidget {
-  const _SpeciesField({
+class _SpeciesCard extends StatelessWidget {
+  const _SpeciesCard({
     required this.plantId,
     required this.customName,
     required this.catalog,
-    required this.onPick,
   });
 
   final String? plantId;
   final String? customName;
   final Map<String, Plant> catalog;
-  final VoidCallback onPick;
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
     final plant = plantId != null ? catalog[plantId] : null;
-    final hasSpecies = plant != null || customName != null;
-    final icon = plant?.icon ?? (customName != null ? '🌿' : null);
-    final label = plant != null
-        ? catalogLabel(plant.labels)
-        : (customName ?? t.plant_edit.species_choose);
+    final icon = plant?.icon ?? '🌿';
+    final label = plant != null ? catalogLabel(plant.labels) : (customName ?? '🌿');
 
     return Card(
       child: ListTile(
-        leading: icon != null
-            ? Text(icon, style: const TextStyle(fontSize: 22))
-            : Icon(Icons.eco_outlined, color: theme.colorScheme.onSurfaceVariant),
+        leading: Text(icon, style: const TextStyle(fontSize: 22)),
         title: Text(label),
         subtitle: plant?.scientificName != null
             ? Text(plant!.scientificName!)
             : null,
-        trailing: Text(
-          hasSpecies ? t.plant_edit.species_change : t.plant_edit.species_choose,
-          style: TextStyle(
-              color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
-        ),
-        onTap: onPick,
-      ),
-    );
-  }
-}
-
-class _LocationField extends StatelessWidget {
-  const _LocationField({
-    required this.areas,
-    required this.isEdit,
-    required this.selectedAdd,
-    required this.selectedEdit,
-    required this.onToggleAdd,
-    required this.onSelectEdit,
-    required this.onNewArea,
-  });
-
-  final List<Area> areas;
-  final bool isEdit;
-  final Set<String> selectedAdd;
-  final String? selectedEdit;
-  final void Function(String id, bool selected) onToggleAdd;
-  final ValueChanged<String> onSelectEdit;
-  final VoidCallback onNewArea;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    return Card(
-      child: Column(
-        children: [
-          for (final area in areas)
-            CheckboxListTile(
-              value: isEdit
-                  ? selectedEdit == area.id
-                  : selectedAdd.contains(area.id),
-              onChanged: (sel) => isEdit
-                  ? onSelectEdit(area.id)
-                  : onToggleAdd(area.id, sel ?? false),
-              title: Text(area.name),
-              dense: true,
-              controlAffinity: ListTileControlAffinity.leading,
-            ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: TextButton.icon(
-              onPressed: onNewArea,
-              icon: const Icon(Icons.add, size: 18),
-              label: Text(t.plant_edit.new_area),
-              style: TextButton.styleFrom(
-                  padding: const EdgeInsets.symmetric(horizontal: 16),
-                  visualDensity: VisualDensity.compact),
-            ),
-          ),
-        ],
       ),
     );
   }
