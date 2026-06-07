@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/sync/sync_status.dart';
 import 'package:tendask/features/plants/data/user_plants_repository.dart';
 import 'package:tendask/features/plants/presentation/plant_display.dart';
 
@@ -54,6 +55,49 @@ void main() {
       expect(rows.single.isCustom, true);
       expect(rows.single.customName, 'Babičina sorta');
       expect(rows.single.plantId, isNull);
+    });
+  });
+
+  group('recentPlantIds', () {
+    test('distinct species, newest first, excludes custom + deleted + limit',
+        () async {
+      final t1 = t0.add(const Duration(minutes: 1));
+      final t2 = t0.add(const Duration(minutes: 2));
+      final repo1 = UserPlantsRepository(db, clock: _FakeClock(t1));
+      final repo2 = UserPlantsRepository(db, clock: _FakeClock(t2));
+
+      await repo.create(userId: userId, areaId: areaId, plantId: 'apple');
+      await repo1.create(userId: userId, areaId: areaId, plantId: 'pear');
+      // Duplicate 'apple', now the newest use of that species.
+      await repo2.create(userId: userId, areaId: areaId, plantId: 'apple');
+      // Custom entry (no plantId) is excluded.
+      await repo.create(userId: userId, areaId: areaId, customName: 'Babica');
+      // Deleted row is excluded.
+      final delId =
+          await repo.create(userId: userId, areaId: areaId, plantId: 'plum');
+      await repo.softDelete(delId);
+
+      expect(await repo.recentPlantIds(), ['apple', 'pear']);
+      expect(await repo.recentPlantIds(limit: 1), ['apple']);
+    });
+  });
+
+  group('update', () {
+    test('changes area, keeps the passed alias, marks pending', () async {
+      final id = await repo.create(
+          userId: userId,
+          areaId: areaId,
+          plantId: 'apple',
+          personalAlias: 'Stara');
+      await (db.update(db.userPlants)..where((p) => p.id.equals(id)))
+          .write(const UserPlantsCompanion(syncStatus: Value(kSyncSynced)));
+
+      await repo.update(id: id, areaId: null, personalAlias: 'Stara');
+
+      final row = await repo.byId(id);
+      expect(row!.areaId, isNull);
+      expect(row.personalAlias, 'Stara');
+      expect(row.syncStatus, kSyncPending);
     });
   });
 
