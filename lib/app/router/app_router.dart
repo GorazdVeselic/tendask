@@ -16,6 +16,7 @@ import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
+import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
@@ -87,6 +88,12 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       ],
     ),
     // Full-screen routes above the shell (no bottom nav)
+    GoRoute(
+      path: '/splash',
+      name: 'splash',
+      builder: (context, state) =>
+          SplashScreen(next: state.uri.queryParameters['next'] ?? '/home'),
+    ),
     GoRoute(
       path: '/onboarding',
       name: 'onboarding',

@@ -76,6 +76,10 @@ const kSupabasePublishableKey =
 /// button stays disabled (the rest of the app, incl. email sign-in, still works).
 const kGoogleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 
+/// Minimum time the branded splash (zaslon 00) stays visible before routing on,
+/// so the logo + wordmark + version are readable on a fast cold start.
+const kSplashMinDuration = Duration(milliseconds: 1200);
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

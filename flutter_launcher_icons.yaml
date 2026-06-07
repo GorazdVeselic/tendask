@@ -1,0 +1,13 @@
+# App launcher icons (M9.2). Source PNGs in assets/icon/ are rasterized from
+# docs/brand/assets/*.svg (recipe: brand.md §4). Regenerate native icons after
+# changing the PNGs:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/icon/icon-1024.png"
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  # Android adaptive icon: solid brand-green background + transparent foreground.
+  adaptive_icon_background: "#2e7d32"
+  adaptive_icon_foreground: "assets/icon/foreground.png"

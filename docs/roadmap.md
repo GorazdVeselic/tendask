@@ -251,8 +251,8 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** MVP pripravljen za interni Android test.
 
-- [x] **9.1 — Sentry.** `sentry_flutter ^8.14.2` init v `main.dart`: bootstrap ekstrahiran v `_bootstrap()`, ovit v `SentryFlutter.init(appRunner:)` → zajame tudi napake ob zagonu. Gate na DSN (prazen → off, app teče normalno; isti offline-first vzorec kot Supabase). `environment` = `production`/`development` po `kReleaseMode`; brez tracinga/PII. DSN `kSentryDsn` prek `--dart-define` (`SENTRY_DSN` v gitignored `dart_defines.json`). DSN/pipeline preverjen (testni dogodek dostavljen v Sentry → Issues, projekt `tendask`). On-device crash-capture = ob naslednji priklopljeni napravi. *Commit:* `feat: Sentry monitoring`
-- [ ] **9.2 — Ikona + splash (00).** Iz `docs/brand/assets/`. *Commit:* `chore: app ikona + splash`
+- [x] **9.1 — Sentry.** **Čisti Dart `sentry ^9.21.0`** (NE `sentry_flutter`): 8.x se ne prevede na svežem Android skladu (Kotlin 2.3.20/AGP 9 — sentry 8.x trdo kodira `compileSdk 34` + `languageVersion 1.6`), 9.x pa poriše `jni 1.0.0→0.14.1` in zlomi `h3_flutter`. Pure Dart paket nima native modula → se vedno prevede. `main.dart`: gate na DSN (prazen → off, offline-first kot Supabase); ko je DSN, `Sentry.init` + `runZonedGuarded(_bootstrap, …)` (async napake) + ročno `FlutterError.onError` in `PlatformDispatcher.onError` → captureException. `environment` `production`/`development` po `kReleaseMode`. DSN `kSentryDsn` prek `--dart-define`. Pipeline preverjen (dogodek v Sentry → Issues, projekt `tendask`). On-device: app se zažene brez crasha (release crash-capture = naslednjič). *Commit:* `feat: Sentry monitoring`, `fix: Sentry pure-Dart paket`
+- [x] **9.2 — Ikona + splash (00).** Iz `docs/brand/assets/`. SVG→PNG prek node `sharp` (`tmp/icongen`, scratch) → `assets/icon/{icon-1024,foreground}.png` + `assets/splash/splash-logo.png`. `flutter_launcher_icons ^0.14.4` (android+ios, adaptive bg `#2e7d32` + transparent foreground, `remove_alpha_ios`) + `flutter_native_splash ^2.4.8` (color `#2e7d32` + bel logomark, android_12 blok) — konfig v `flutter_launcher_icons.yaml` + `flutter_native_splash.yaml`. Generirano za Android (mipmap + adaptive + splash drawable + styles v31) in iOS (AppIcon + LaunchImage, pripravljeno za M10). **Flutter splash zaslon** (`features/splash/`, zaslon 00): ker Android 12+ native splash kaže le ikono brez teksta, kratek in-app splash (zeleni radial gradient + logo + „Tendask" + verzija prek `package_info_plus`) na `/splash?next=…` → po `kSplashMinDuration` (1,2 s) routа na home/onboarding/deep-link. On-device potrjeno (ikona, native + Flutter splash z imenom+verzijo). *Commit:* `chore: app ikona + splash`
 - [ ] **9.3 — Pregled neskladij.** UI vs wireframi; i18n popolnost (sl/en/de); dostopnost; vsi nizi prevedeni. *Commit:* `fix: neskladja UI/wireframi + i18n`
 - [ ] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. *Commit:* `chore: Android release konfiguracija`
 - [ ] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~35 → **~100–200 vrst** (koncept §225): seed iz **Wikidata/GBIF** z atribucijo (NE ročno), nato agronomska kuracija — SL/EN/DE ljudska imena, `category` razvrstitev + **plant↔task_type matrika** (katera opravila veljajo za vrsto), sinonimi, ikone. Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **⚠️ PRE-RELEASE OKNO za reseed:** ker app še ni live, smemo obstoječe `plant.id`/`task_type.id` **povoziti / na novo seedati** (telefon + Supabase) — po prvem živem uporabniku postanejo id-ji **add-only/immutable** (FK iz `user_plant.plant_id`/`task.task_type_id`), zato to okno velja LE do launcha. Bundlan seed = offline prvi zagon. *Commit:* `feat: razširjen katalog rastlin (Wikidata/GBIF seed + kuracija)`
@@ -328,6 +328,18 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-07 — **9.2 — Ikona + splash (zaslon 00).** SVG (vir resnice `docs/brand/assets/`) → PNG prek node
+  `sharp` v `tmp/icongen` (scratch, gitignored): `app-icon.svg`→`assets/icon/icon-1024.png` (gradient + mark),
+  `app-icon-foreground.svg`→`assets/icon/foreground.png` (transparent, 66% safe zone), `logomark.svg`→
+  `assets/splash/splash-logo.png` (bel šesterokotnik + zelen list). `flutter_launcher_icons ^0.14.4` (dev):
+  android+ios, **adaptive icon** bg `#2e7d32` + transparent foreground, `remove_alpha_ios`, `min_sdk 21` →
+  generiral mipmape, `mipmap-anydpi-v26` adaptive, `colors.xml`, iOS AppIcon set. `flutter_native_splash ^2.4.8`
+  (dev): `color #2e7d32` + centriran logomark + `android_12` blok (sistemski splash API) → splash drawable +
+  `values-v31`/`values-night-v31` styles + iOS LaunchImage. Konfig ločen (`flutter_launcher_icons.yaml`,
+  `flutter_native_splash.yaml`) da ne zatrpa pubspec. Vir-PNG-ji vizualno preverjeni (gradient/mark/transparentnost
+  pravilni; bel šesterokotnik je na beli predogled nasloni neviden = pričakovano, na zeleni podlagi viden). iOS
+  generiran vnaprej (pripravljeno za M10). On-device videz (home ikona + boot splash) = ob naslednji napravi.
+  analyze čist, testi nedotaknjeni (151/151). *Commit:* `chore: app ikona + splash`
 - 2026-06-07 — **9.1 — Sentry monitoring → M9 začet.** `sentry_flutter ^8.14.2` (potrjen sklad §1, free dev
   tier). `main.dart`: bootstrap ekstrahiran v `_bootstrap()` + ovit v `SentryFlutter.init(appRunner:)` (zajame
   tudi startup napake, ne le runtime). Gate na DSN (prazen → Sentry off, app boota normalno — isti offline-first

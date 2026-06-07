@@ -1,0 +1,16 @@
+# Native splash screen (M9.2, zaslon 00). White logomark centered on brand-green.
+# Source PNG in assets/splash/ is rasterized from docs/brand/assets/logomark.svg
+# (recipe: brand.md §4). Regenerate after changes:
+#   dart run flutter_native_splash:create
+flutter_native_splash:
+  color: "#2e7d32"
+  image: assets/splash/splash-logo.png
+  android: true
+  ios: true
+  web: false
+  # Android 12+ uses the system splash API (icon in a circle on a solid window
+  # background). Keep the same brand-green so it matches the legacy splash.
+  android_12:
+    image: assets/splash/splash-logo.png
+    color: "#2e7d32"
+    icon_background_color: "#2e7d32"

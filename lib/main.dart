@@ -1,7 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+import 'package:sentry/sentry.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
@@ -18,26 +20,44 @@ import 'i18n/plural_resolvers.dart';
 import 'i18n/translations.g.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-
-  // Crash/error monitoring (M9.1). When no DSN is configured (dev without the
-  // key, or fully offline builds) Sentry stays off and the app boots normally —
-  // same offline-first pattern as Supabase. Running the whole bootstrap inside
-  // the appRunner zone means startup errors are captured too, not just runtime.
+  // Crash/error monitoring (M9.1). Pure-Dart sentry (no native build deps, so it
+  // compiles on any Android toolchain). When no DSN is configured (dev without
+  // the key, or fully offline builds) Sentry stays off and the app boots
+  // normally — same offline-first pattern as Supabase.
   if (kSentryDsn.isEmpty) {
     await _bootstrap();
     return;
   }
-  await SentryFlutter.init(
-    (options) {
-      options.dsn = kSentryDsn;
-      options.environment = kReleaseMode ? 'production' : 'development';
-    },
-    appRunner: _bootstrap,
-  );
+  await Sentry.init((options) {
+    options.dsn = kSentryDsn;
+    options.environment = kReleaseMode ? 'production' : 'development';
+  });
+  // runZonedGuarded captures uncaught async errors during the whole run;
+  // framework + platform errors are forwarded from inside _bootstrap.
+  await runZonedGuarded(_bootstrap, (error, stack) {
+    unawaited(Sentry.captureException(error, stackTrace: stack));
+  });
 }
 
 Future<void> _bootstrap() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Pure-Dart sentry has no automatic Flutter integration, so forward framework
+  // and platform-dispatcher errors to it (only when configured).
+  if (kSentryDsn.isNotEmpty) {
+    final priorOnError = FlutterError.onError;
+    FlutterError.onError = (details) {
+      priorOnError?.call(details); // keep default console logging
+      unawaited(
+        Sentry.captureException(details.exception, stackTrace: details.stack),
+      );
+    };
+    WidgetsBinding.instance.platformDispatcher.onError = (error, stack) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+      return false; // let the default handler run too
+    };
+  }
+
   await LocaleSettings.useDeviceLocale();
   configurePluralResolvers();
 
@@ -79,14 +99,18 @@ Future<void> _bootstrap() async {
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();
 
-  final String initialLocation;
+  final String target;
   if (!onboardingSeen) {
-    initialLocation = '/onboarding';
+    target = '/onboarding';
   } else if (launchTaskId != null) {
-    initialLocation = '/tasks/$launchTaskId';
+    target = '/tasks/$launchTaskId';
   } else {
-    initialLocation = '/home';
+    target = '/home';
   }
+
+  // Start on the branded splash (M9.2), which routes to [target] after a brief
+  // readable delay.
+  final initialLocation = '/splash?next=${Uri.encodeComponent(target)}';
 
   runApp(
     TranslationProvider(

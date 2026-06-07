@@ -30,7 +30,7 @@
 | Lokacija (GPS) | **geolocator** (M7); vpisan kraj → **Open-Meteo Geocoding** (brez ključa, dio) | `geolocator` |
 | Lokalna obvestila (plast A) | **flutter_local_notifications** + tz (IANA cona prek `flutter_timezone`) | `flutter_local_notifications`, `timezone`, `flutter_timezone` |
 | Push (plast B) | **Firebase FCM** — **ODLOŽENO**, ne v prvem MVP | `firebase_messaging` (kasneje) |
-| Crash/monitoring | **Sentry** | `sentry_flutter` |
+| Crash/monitoring | **Sentry** (čisti Dart `sentry` — `sentry_flutter` 8.x se ne prevede na svežem Android skladu Kotlin 2.3/AGP 9, 9.x pa poriše `jni` navzdol in zlomi `h3_flutter`; zato Dart paket + ročna `FlutterError`/`PlatformDispatcher` integracija) | `sentry` |
 | Analitika | **brez v MVP** (kasneje PostHog self-host, opcijsko) | — |
 | CI/CD | **GitHub Actions** (lint + test + build) | — |
 
