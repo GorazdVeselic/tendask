@@ -7,12 +7,14 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/plant_category.dart';
+import '../../../core/widgets/removable_chip.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
 import 'plant_display.dart';
 import 'widgets/area_pick_sheet.dart';
+import 'widgets/plant_select_row.dart';
 
 /// Navigation args for the plant-add screen (passed via go_router `extra`).
 class PlantAddArgs {
@@ -245,10 +247,13 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                         sliver: SliverList.separated(
                           itemCount: results.length,
-                          itemBuilder: (_, i) => _CatalogAddRow(
-                            plant: results[i],
-                            added: addedPlantIds.contains(results[i].id),
-                            onToggle: () => _toggle(results[i]),
+                          itemBuilder: (_, i) => PlantSelectRow(
+                            icon: results[i].icon ?? '🌿',
+                            title: catalogLabel(results[i].labels),
+                            subtitle: plantCategoryLabel(
+                                coarsePlantCategory(results[i].category), t),
+                            selected: addedPlantIds.contains(results[i].id),
+                            onTap: () => _toggle(results[i]),
                           ),
                           separatorBuilder: (_, _) => Divider(
                             height: 1,
@@ -299,50 +304,6 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
         _searchController.clear();
       }
     });
-  }
-}
-
-// ─── Catalog row (instant add) ───────────────────────────────────────────────
-
-class _CatalogAddRow extends StatelessWidget {
-  const _CatalogAddRow({
-    required this.plant,
-    required this.added,
-    required this.onToggle,
-  });
-
-  final Plant plant;
-  final bool added;
-  final VoidCallback onToggle;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    return ListTile(
-      tileColor: added ? cs.primaryContainer.withValues(alpha: 0.4) : null,
-      shape: added
-          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
-          : null,
-      leading: Text(plant.icon ?? '🌿', style: const TextStyle(fontSize: 22)),
-      title: Text(catalogLabel(plant.labels), style: theme.textTheme.bodyMedium),
-      subtitle: Text(
-          plantCategoryLabel(coarsePlantCategory(plant.category), t),
-          style: theme.textTheme.bodySmall),
-      trailing: Container(
-        width: 30,
-        height: 30,
-        alignment: Alignment.center,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: added ? cs.primary : cs.primaryContainer,
-        ),
-        child: Icon(added ? Icons.check : Icons.add,
-            size: 18, color: added ? cs.onPrimary : cs.primary),
-      ),
-      onTap: onToggle,
-    );
   }
 }
 
@@ -512,7 +473,7 @@ class _AddedBar extends StatelessWidget {
                       scrollDirection: Axis.horizontal,
                       itemCount: items.length,
                       separatorBuilder: (_, _) => const SizedBox(width: 6),
-                      itemBuilder: (_, i) => _AddedChip(
+                      itemBuilder: (_, i) => RemovableChip(
                         label: items[i].label,
                         onRemove: () => onRemove(items[i]),
                       ),
@@ -533,39 +494,3 @@ class _AddedBar extends StatelessWidget {
   }
 }
 
-/// A compact removable chip for the added-footer — tapping it (or its ✕)
-/// removes that single plant.
-class _AddedChip extends StatelessWidget {
-  const _AddedChip({required this.label, required this.onRemove});
-
-  final String label;
-  final VoidCallback onRemove;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    return Material(
-      color: cs.primaryContainer,
-      borderRadius: BorderRadius.circular(999),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(999),
-        onTap: onRemove,
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(12, 0, 8, 0),
-          child: Row(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(label,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.onPrimaryContainer,
-                      fontWeight: FontWeight.w600)),
-              const SizedBox(width: 4),
-              Icon(Icons.close, size: 16, color: cs.onPrimaryContainer),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
