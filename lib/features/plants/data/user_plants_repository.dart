@@ -5,7 +5,6 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
-import 'plant_spec.dart';
 
 class UserPlantsRepository {
   UserPlantsRepository(this._db, {this._clock = const SystemClock()});
@@ -93,35 +92,6 @@ class UserPlantsRepository {
         customName: customName,
         personalAlias: personalAlias,
       );
-
-  /// Reconciles an area's plants with [specs] in a single transaction:
-  /// inserts specs without an id, soft-deletes existing rows no longer present.
-  Future<void> syncForArea({
-    required String userId,
-    required String areaId,
-    required List<PlantSpec> specs,
-  }) async {
-    await _db.transaction(() async {
-      final existing = await byArea(areaId);
-      final keepIds =
-          specs.map((s) => s.userPlantId).whereType<String>().toSet();
-
-      for (final row in existing) {
-        if (!keepIds.contains(row.id)) {
-          await _softDelete(row.id);
-        }
-      }
-      for (final spec in specs.where((s) => s.userPlantId == null)) {
-        await createForArea(
-          userId: userId,
-          areaId: areaId,
-          plantId: spec.plantId,
-          customName: spec.customName,
-          personalAlias: spec.personalAlias,
-        );
-      }
-    });
-  }
 
   /// Edits one plant instance (alias and/or its area).
   Future<void> update({

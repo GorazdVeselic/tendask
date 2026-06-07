@@ -542,6 +542,11 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get type_other => 'Other';
 	@override String get history_title => 'Task history';
 	@override String get history_empty => 'No tasks in this area yet.';
+	@override String get plants_section => 'Plants';
+	@override String add_plant_here({required Object area}) => 'Add plant to ${area}';
+	@override String get swipe_move => 'Move';
+	@override String get swipe_remove => 'Remove';
+	@override String get delete_reparent_note => 'Plants in this area move to “No area” (they are not deleted).';
 	@override String get action_edit => 'Edit';
 	@override String get action_delete => 'Delete';
 	@override String get delete_confirm_title => 'Delete area?';
@@ -966,6 +971,11 @@ extension on TranslationsEn {
 			'areas.type_other' => 'Other',
 			'areas.history_title' => 'Task history',
 			'areas.history_empty' => 'No tasks in this area yet.',
+			'areas.plants_section' => 'Plants',
+			'areas.add_plant_here' => ({required Object area}) => 'Add plant to ${area}',
+			'areas.swipe_move' => 'Move',
+			'areas.swipe_remove' => 'Remove',
+			'areas.delete_reparent_note' => 'Plants in this area move to “No area” (they are not deleted).',
 			'areas.action_edit' => 'Edit',
 			'areas.action_delete' => 'Delete',
 			'areas.delete_confirm_title' => 'Delete area?',

@@ -1114,6 +1114,21 @@ class Translations$areas$sl {
 	/// sl: 'Na tem območju še ni opravil.'
 	String get history_empty => 'Na tem območju še ni opravil.';
 
+	/// sl: 'Rastline'
+	String get plants_section => 'Rastline';
+
+	/// sl: 'Dodaj rastlino v $area'
+	String add_plant_here({required Object area}) => 'Dodaj rastlino v ${area}';
+
+	/// sl: 'Premakni'
+	String get swipe_move => 'Premakni';
+
+	/// sl: 'Odstrani'
+	String get swipe_remove => 'Odstrani';
+
+	/// sl: 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).'
+	String get delete_reparent_note => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).';
+
 	/// sl: 'Uredi'
 	String get action_edit => 'Uredi';
 
@@ -1727,6 +1742,11 @@ extension on Translations {
 			'areas.type_other' => 'Drugo',
 			'areas.history_title' => 'Zgodovina opravil',
 			'areas.history_empty' => 'Na tem območju še ni opravil.',
+			'areas.plants_section' => 'Rastline',
+			'areas.add_plant_here' => ({required Object area}) => 'Dodaj rastlino v ${area}',
+			'areas.swipe_move' => 'Premakni',
+			'areas.swipe_remove' => 'Odstrani',
+			'areas.delete_reparent_note' => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).',
 			'areas.action_edit' => 'Uredi',
 			'areas.action_delete' => 'Izbriši',
 			'areas.delete_confirm_title' => 'Izbriši območje?',

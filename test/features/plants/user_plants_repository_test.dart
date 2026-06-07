@@ -4,7 +4,6 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
-import 'package:tendask/features/plants/data/plant_spec.dart';
 import 'package:tendask/features/plants/data/user_plants_repository.dart';
 import 'package:tendask/features/plants/presentation/plant_display.dart';
 
@@ -55,42 +54,6 @@ void main() {
       expect(rows.single.isCustom, true);
       expect(rows.single.customName, 'Babičina sorta');
       expect(rows.single.plantId, isNull);
-    });
-  });
-
-  group('syncForArea', () {
-    test('inserts new specs into an empty area', () async {
-      await repo.syncForArea(userId: userId, areaId: areaId, specs: const [
-        PlantSpec(plantId: 'tomato'),
-        PlantSpec(customName: 'Moja sorta'),
-      ]);
-      final rows = await repo.byArea(areaId);
-      expect(rows, hasLength(2));
-    });
-
-    test('keeps existing, soft-deletes removed, adds new', () async {
-      final keepId =
-          await repo.createForArea(userId: userId, areaId: areaId, plantId: 'tomato');
-      final dropId =
-          await repo.createForArea(userId: userId, areaId: areaId, plantId: 'lettuce');
-
-      await repo.syncForArea(userId: userId, areaId: areaId, specs: [
-        PlantSpec(userPlantId: keepId, plantId: 'tomato'),
-        const PlantSpec(plantId: 'pepper'),
-      ]);
-
-      final rows = await repo.byArea(areaId);
-      final ids = rows.map((r) => r.id).toSet();
-      expect(ids, contains(keepId));
-      expect(ids, isNot(contains(dropId))); // soft-deleted, excluded by byArea
-      expect(rows, hasLength(2)); // kept + new pepper
-      expect(rows.any((r) => r.plantId == 'pepper'), true);
-    });
-
-    test('empty specs soft-deletes everything', () async {
-      await repo.createForArea(userId: userId, areaId: areaId, plantId: 'tomato');
-      await repo.syncForArea(userId: userId, areaId: areaId, specs: const []);
-      expect(await repo.byArea(areaId), isEmpty);
     });
   });
 

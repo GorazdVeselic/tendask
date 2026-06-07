@@ -542,6 +542,11 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get type_other => 'Sonstiges';
 	@override String get history_title => 'Aufgabenverlauf';
 	@override String get history_empty => 'Noch keine Aufgaben in diesem Bereich.';
+	@override String get plants_section => 'Pflanzen';
+	@override String add_plant_here({required Object area}) => 'Pflanze zu ${area} hinzufügen';
+	@override String get swipe_move => 'Verschieben';
+	@override String get swipe_remove => 'Entfernen';
+	@override String get delete_reparent_note => 'Pflanzen in diesem Bereich wechseln zu „Ohne Bereich“ (sie werden nicht gelöscht).';
 	@override String get action_edit => 'Bearbeiten';
 	@override String get action_delete => 'Löschen';
 	@override String get delete_confirm_title => 'Bereich löschen?';
@@ -966,6 +971,11 @@ extension on TranslationsDe {
 			'areas.type_other' => 'Sonstiges',
 			'areas.history_title' => 'Aufgabenverlauf',
 			'areas.history_empty' => 'Noch keine Aufgaben in diesem Bereich.',
+			'areas.plants_section' => 'Pflanzen',
+			'areas.add_plant_here' => ({required Object area}) => 'Pflanze zu ${area} hinzufügen',
+			'areas.swipe_move' => 'Verschieben',
+			'areas.swipe_remove' => 'Entfernen',
+			'areas.delete_reparent_note' => 'Pflanzen in diesem Bereich wechseln zu „Ohne Bereich“ (sie werden nicht gelöscht).',
 			'areas.action_edit' => 'Bearbeiten',
 			'areas.action_delete' => 'Löschen',
 			'areas.delete_confirm_title' => 'Bereich löschen?',

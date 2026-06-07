@@ -4,18 +4,17 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/area_type.dart';
 import '../../../core/auth/auth_service.dart';
-import '../../../core/catalog_labels.dart';
-import '../../../core/database/app_database.dart';
-import '../../../core/database/catalog_provider.dart';
+import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
-import '../../plants/application/plants_providers.dart';
-import '../../plants/data/plant_spec.dart';
-import '../../plants/presentation/plant_picker_screen.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
 
+/// Add or edit an area: name + type only. Plants are attached from the plant
+/// side (add screen / move), never here — an area is a place, not a container
+/// of plants (koncept.md §7.15).
 class AreaFormScreen extends ConsumerStatefulWidget {
   const AreaFormScreen({super.key, this.areaId});
 
@@ -29,7 +28,6 @@ class AreaFormScreen extends ConsumerStatefulWidget {
 class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
   final _nameController = TextEditingController();
   AreaType _type = AreaType.other;
-  final List<PlantSpec> _plants = [];
   bool _isLoading = false;
   bool _isSaving = false;
 
@@ -44,41 +42,22 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
     }
   }
 
+  @override
+  void dispose() {
+    _nameController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadArea() async {
     final area = await ref.read(areasRepositoryProvider).byId(widget.areaId!);
-    final plants =
-        await ref.read(userPlantsRepositoryProvider).byArea(widget.areaId!);
     if (!mounted) return;
     if (area != null) {
       setState(() {
         _nameController.text = area.name;
         _type = area.type;
-        _plants
-          ..clear()
-          ..addAll(plants.map((p) => PlantSpec(
-                userPlantId: p.id,
-                plantId: p.plantId,
-                customName: p.customName,
-                personalAlias: p.personalAlias,
-              )));
       });
     }
     setState(() => _isLoading = false);
-  }
-
-  Future<void> _addPlant() async {
-    final pick = await context.pushNamed<PlantPick>('plant-picker');
-    if (pick == null || !mounted) return;
-    setState(() => _plants.add(PlantSpec(
-          plantId: pick.plantId,
-          customName: pick.customName,
-        )));
-  }
-
-  @override
-  void dispose() {
-    _nameController.dispose();
-    super.dispose();
   }
 
   void _showError(String msg) {
@@ -97,33 +76,41 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
 
     setState(() => _isSaving = true);
     try {
-      final userId = ref.read(authServiceProvider).userId;
       final repo = ref.read(areasRepositoryProvider);
-      final String areaId;
       if (_isEdit) {
         await repo.update(id: widget.areaId!, name: name, type: _type);
-        areaId = widget.areaId!;
+        if (mounted) context.pop();
       } else {
-        areaId = await repo.create(userId: userId, name: name, type: _type);
+        final userId = ref.read(authServiceProvider).userId;
+        final areaId = await repo.create(userId: userId, name: name, type: _type);
+        // Return the new id so callers can auto-select it (area-pick sheet,
+        // entry subject step).
+        if (mounted) context.pop(areaId);
       }
-      await ref.read(userPlantsRepositoryProvider).syncForArea(
-            userId: userId,
-            areaId: areaId,
-            specs: _plants,
-          );
-      // Return the new area id so callers can auto-select it (entry subject
-      // step). Null on edit.
-      if (mounted) context.pop(_isEdit ? null : areaId);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
+  }
+
+  Future<void> _delete() async {
+    final t = context.t;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: t.areas.delete_confirm_title,
+      body: t.areas.delete_confirm_body,
+      confirmLabel: t.areas.action_delete,
+      cancelLabel: t.tasks_list.delete_cancel,
+      destructive: true,
+    );
+    if (!confirmed) return;
+    await ref.read(areasRepositoryProvider).softDelete(widget.areaId!);
+    if (mounted) context.pop();
   }
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     return Scaffold(
       appBar: AppBar(
@@ -166,23 +153,22 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                             ),
                         ],
                       ),
-                      const SizedBox(height: 16),
-                      FieldLabel(t.areas.form_plants),
-                      _PlantsSection(
-                        plants: _plants,
-                        catalog: catalog,
-                        onAdd: _addPlant,
-                        onRemove: (i) => setState(() => _plants.removeAt(i)),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 4, bottom: 4),
-                        child: Text(
-                          t.areas.form_plants_note,
-                          style: theme.textTheme.bodySmall?.copyWith(
-                              color: theme.colorScheme.onSurfaceVariant),
+                      if (_isEdit) ...[
+                        const SizedBox(height: 24),
+                        DestructiveButton(
+                          label: t.areas.action_delete,
+                          onPressed: _delete,
                         ),
-                      ),
-                      const SizedBox(height: 12),
+                        Padding(
+                          padding: const EdgeInsets.only(top: 8),
+                          child: Text(
+                            t.areas.delete_reparent_note,
+                            textAlign: TextAlign.center,
+                            style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant),
+                          ),
+                        ),
+                      ],
                     ],
                   ),
                 ),
@@ -196,85 +182,3 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
     );
   }
 }
-
-class _PlantsSection extends StatelessWidget {
-  const _PlantsSection({
-    required this.plants,
-    required this.catalog,
-    required this.onAdd,
-    required this.onRemove,
-  });
-
-  final List<PlantSpec> plants;
-  final Map<String, Plant> catalog;
-  final VoidCallback onAdd;
-  final ValueChanged<int> onRemove;
-
-  String _label(PlantSpec spec) {
-    if (spec.customName != null) return spec.customName!;
-    final plant = spec.plantId != null ? catalog[spec.plantId] : null;
-    return plant != null ? catalogLabel(plant.labels) : '🌿';
-  }
-
-  String _icon(PlantSpec spec) {
-    final plant = spec.plantId != null ? catalog[spec.plantId] : null;
-    return plant?.icon ?? '🌿';
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    return Card(
-      child: Column(
-        children: [
-          if (plants.isEmpty)
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  t.areas.plants_empty,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
-                ),
-              ),
-            )
-          else
-            for (var i = 0; i < plants.length; i++)
-              ListTile(
-                leading:
-                    Text(_icon(plants[i]), style: const TextStyle(fontSize: 20)),
-                title:
-                    Text(_label(plants[i]), style: theme.textTheme.bodyMedium),
-                trailing: IconButton(
-                  icon: Icon(Icons.close,
-                      size: 18, color: theme.colorScheme.onSurfaceVariant),
-                  tooltip: t.areas.plant_remove,
-                  onPressed: () => onRemove(i),
-                ),
-                dense: true,
-              ),
-          Divider(height: 1, color: theme.colorScheme.outlineVariant),
-          InkWell(
-            borderRadius: const BorderRadius.vertical(bottom: Radius.circular(12)),
-            onTap: onAdd,
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-              child: Row(
-                children: [
-                  Icon(Icons.add, size: 18, color: theme.colorScheme.primary),
-                  const SizedBox(width: 10),
-                  Text(t.areas.form_plants_add,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: theme.colorScheme.primary)),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-

@@ -8,8 +8,12 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../plants/presentation/garden_plant_add_screen.dart';
+import '../../plants/presentation/widgets/plant_row.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
 
@@ -26,6 +30,8 @@ class AreaDetailScreen extends ConsumerWidget {
     final area = ref.watch(areaByIdProvider(id)).asData?.value;
     final history = ref.watch(areaHistoryProvider(id)).asData?.value;
     final catalog = ref.watch(taskTypesMapProvider).asData?.value;
+    final plants = ref.watch(userPlantsByAreaProvider(id)).asData?.value;
+    final plantCatalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
 
     return Scaffold(
       appBar: AppBar(
@@ -47,15 +53,26 @@ class AreaDetailScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               children: [
                 _Hero(area: area),
-                const SizedBox(height: 16),
-                Text(
-                  t.areas.history_title,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
+                const SizedBox(height: 8),
+                SectionLabel(t.areas.plants_section),
+                if (plants != null)
+                  for (final p in plants)
+                    PlantRow(plant: p, catalog: plantCatalog),
+                ListTile(
+                  leading:
+                      Icon(Icons.add, color: theme.colorScheme.primary),
+                  title: Text(
+                    t.areas.add_plant_here(area: area.name),
+                    style: TextStyle(color: theme.colorScheme.primary),
+                  ),
+                  onTap: () => context.pushNamed(
+                    'plant-add',
+                    extra: PlantAddArgs(areaId: id),
                   ),
                 ),
                 const SizedBox(height: 8),
+                SectionLabel(t.areas.history_title),
+                const SizedBox(height: 4),
                 _History(
                   history: history,
                   catalog: catalog,
