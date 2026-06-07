@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dodaj / uredi območje (v4)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <!-- zasenčeno ozadje -->
+  <div class="appbar"><div><h1>Vrt</h1><div class="sub">rastline in trate</div></div></div>
+  <div class="content" style="filter:blur(1px);opacity:.5;">
+    <div class="section-title">Sadovnjak</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item"><div class="avatar">🍎</div><div class="li-main"><div class="li-title">Jablana</div></div></div>
+    </div>
+  </div>
+
+  <!-- SHEET: območje (isti za novo + uredi) -->
+  <div class="sheet-overlay"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2>Uredi območje</h2>
+    <div class="sheet-sub">Samo ime + tip. Rastline dodajaš/premikaš od strani rastline.</div>
+
+    <div class="field">
+      <label>Ime</label>
+      <input class="input" value="Sadovnjak" placeholder="npr. „Trata zadaj“, „Visoka greda 1“">
+    </div>
+
+    <div class="field" style="margin-bottom:8px;">
+      <label>Tip</label>
+      <div class="chips">
+        <div class="chip">Gredica</div>
+        <div class="chip active">Sadno drevje</div>
+        <div class="chip">Okrasno</div>
+        <div class="chip">Trata</div>
+        <div class="chip">Živa meja</div>
+        <div class="chip">Drugo</div>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-top:8px;line-height:1.4;">
+        <b>Trata / živa meja</b> = celota je sama subjekt (kosiš/strižeš), brez posameznih rastlin.
+      </div>
+    </div>
+
+    <div class="smart" style="background:var(--info-soft);border-color:#cfe0f0;">
+      <span class="ico">📍</span>
+      <div class="txt" style="color:#1f4e79;font-size:13px;">
+        Območja nimajo svoje lokacije — lokacija za vreme se nastavi enkrat v profilu.
+      </div>
+    </div>
+
+    <!-- izbris (samo v uredi) -->
+    <a href="vrt_v4.html" style="text-decoration:none;">
+      <div style="text-align:center;color:var(--warn);font-weight:600;font-size:14px;margin:6px 0 2px;">
+        🗑 Izbriši območje
+      </div>
+    </a>
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;">
+      Rastline iz tega območja se premaknejo v „Brez območja“ (ne izbrišejo se).
+    </div>
+
+    <a href="vrt_v4.html" style="text-decoration:none;"><button class="btn">Shrani območje</button></a>
+  </div>
+</div>
+</body>
+</html>

@@ -598,6 +598,14 @@ prefokus IA+UX + poseg v shemo, **ne predelava**.
 **Wireframe _v2:** `01/02/04→Vrt/07/10/17/17b` + nova `plant-detail`/`plant-edit`
 (`docs/wireframes/*_v2.html`, galerija označena).
 
+**Popravek v4 (2026-06-07, implementiran):** dodajanje rastline **rastlino-prvi** =
+**en zaslon z instant-add** (tap = takoj shranjeno, večkratno), iskanje skrito za 🔍,
+območje **postransko** (na dnu, neobvezno). Subjekt = **instanca z enim `area_id`**
+(nullable) — »premik« je single-select prek `area_pick_sheet`; multi-area ob ustvarjanju
+opuščen. Vrt FAB→rastline (brez routerja), tih »Novo območje«; swipe Premakni/Odstrani.
+Brisanje območja **reparenta rastline v »Brez območja«** (ne osiroti). Brez spremembe
+sheme. Wireframi `docs/wireframes/*_v4.html`; plan `docs/vrt-v4-implementacijski-plan.md`.
+
 ---
 
 ## 7.16 Vnos = en horizontalni stepper (2026-06-03)

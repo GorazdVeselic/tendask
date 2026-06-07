@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Premakni rastlino (v4)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .opt { display:flex; align-items:center; gap:12px; padding:14px 4px; border-bottom:1px solid var(--line); }
+  .opt:last-of-type { border-bottom:none; }
+  .radio { width:22px; height:22px; border-radius:50%; border:2px solid var(--line-strong); flex:0 0 22px; position:relative; }
+  .radio.on { border-color:var(--accent); }
+  .radio.on::after { content:""; position:absolute; inset:4px; border-radius:50%; background:var(--accent); }
+  .opt .ico { font-size:20px; width:26px; text-align:center; }
+  .opt .o-main { flex:1; font-size:15px; font-weight:600; }
+  .opt .o-sub { font-size:12px; color:var(--muted); font-weight:400; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <!-- zasenčeno ozadje (detajl rastline) -->
+  <div class="appbar">
+    <span class="back">‹ Vrt</span><div class="icon-btn">⋯</div>
+  </div>
+  <div class="content" style="filter:blur(1px);opacity:.5;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="avatar" style="width:54px;height:54px;font-size:26px;">🍎</div>
+      <div><h1 style="font-size:24px;">Jablana</h1><div class="sub">Malus domestica</div></div>
+    </div>
+  </div>
+
+  <!-- SHEET: premakni (single-select) -->
+  <div class="sheet-overlay"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2>Premakni „Jablana“</h2>
+    <div class="sheet-sub">Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.</div>
+
+    <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="opt"><span class="radio"></span><span class="ico">📭</span>
+        <div class="o-main">Brez območja</div></div></a>
+    <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="opt"><span class="radio on"></span><span class="ico">🌳</span>
+        <div class="o-main">Sadovnjak <div class="o-sub">trenutno</div></div></div></a>
+    <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="opt"><span class="radio"></span><span class="ico">🪴</span>
+        <div class="o-main">Visoka greda 1</div></div></a>
+    <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="opt"><span class="radio"></span><span class="ico">🏡</span>
+        <div class="o-main">Vrt</div></div></a>
+
+    <a href="area-edit_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="add-line" style="padding:14px 4px;border-top:1px solid var(--line);margin-top:4px;">＋ Novo območje</div></a>
+  </div>
+</div>
+</body>
+</html>

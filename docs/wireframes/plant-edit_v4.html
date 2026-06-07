@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Uredi rastlino (v4)</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <!-- zasenčeno ozadje (detajl) -->
+  <div class="appbar"><span class="back">‹ Vrt</span><div class="icon-btn">⋯</div></div>
+  <div class="content" style="filter:blur(1px);opacity:.5;">
+    <div style="display:flex;align-items:center;gap:14px;">
+      <div class="avatar" style="width:54px;height:54px;font-size:26px;">🍎</div>
+      <div><h1 style="font-size:24px;">Jablana</h1></div>
+    </div>
+  </div>
+
+  <!-- SHEET: uredi -->
+  <div class="sheet-overlay"></div>
+  <div class="sheet">
+    <div class="grab"></div>
+    <h2>Uredi rastlino</h2>
+
+    <!-- vrsta = identiteta, samo prikaz -->
+    <div style="display:flex;align-items:center;gap:12px;background:#f6f8f6;border:1px solid var(--line);
+      border-radius:12px;padding:11px 14px;margin:6px 0 16px;">
+      <span style="font-size:22px;">🍎</span>
+      <div style="flex:1;">
+        <div style="font-size:15px;font-weight:600;">Jablana</div>
+        <div style="font-size:12px;color:var(--muted);">Malus domestica · sadno drevje</div>
+      </div>
+    </div>
+
+    <!-- osebno ime -->
+    <div class="field">
+      <label>Osebno ime <span style="text-transform:none;font-weight:500;">(neobvezno)</span></label>
+      <input class="input" placeholder="npr. „stara jablana ob ograji“">
+    </div>
+
+    <!-- območje = single select → odpre premakni -->
+    <div class="field">
+      <label>Območje</label>
+      <a href="plant-move_v4.html" style="text-decoration:none;">
+        <div style="display:flex;align-items:center;gap:10px;background:#f6f8f6;border:1px solid var(--line);
+          border-radius:12px;padding:13px 14px;">
+          <span style="font-size:18px;">🌳</span>
+          <span style="flex:1;font-size:15px;font-weight:600;color:var(--text);">Sadovnjak</span>
+          <span style="color:var(--accent);font-weight:600;font-size:13px;">Premakni ›</span>
+        </div>
+      </a>
+    </div>
+
+    <!-- kategorija (relevantno za lasten vnos) -->
+    <div class="field">
+      <label>Kategorija</label>
+      <div class="chips">
+        <div class="chip active">Sadno drevje</div>
+        <div class="chip">Jagodičevje</div>
+        <div class="chip">Zelenjava</div>
+        <div class="chip">Zelišča</div>
+        <div class="chip">Okrasne</div>
+      </div>
+    </div>
+
+    <!-- izbris -->
+    <a href="vrt_v4.html" style="text-decoration:none;">
+      <div style="text-align:center;color:var(--warn);font-weight:600;font-size:14px;margin:8px 0 2px;">
+        🗑 Odstrani rastlino iz vrta
+      </div>
+    </a>
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin-bottom:14px;">
+      Zgodovina opravil ostane v Dnevniku.
+    </div>
+
+    <a href="plant-detail_v4.html" style="text-decoration:none;"><button class="btn">Shrani</button></a>
+  </div>
+</div>
+</body>
+</html>

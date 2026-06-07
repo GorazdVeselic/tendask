@@ -186,3 +186,28 @@ primarni ključ, območje le filter.
 2. `_v2` wireframe za prizadete zaslone.
 3. Posodobitev `koncept.md` + dnevnik odločitev.
 4. Shema + repo + UI (ločen commit, po pregledu).
+
+---
+
+## 10. Popravek v4 (2026-06-07) — implementirano
+
+Med implementacijo je UX revizija (rastlino-prvi tok) presegla _v2 osnutek:
+
+- **Dodajanje rastline = EN zaslon z instant-add** (`garden_plant_add_screen`): tap = takoj
+  shranjeno, dodajaš več naenkrat; iskanje skrito za 🔍; »Pogosto« = nazadnje uporabljene
+  vrste (`recentPlantIds`); »Kam dodajam« (območje) je **postransko**, čisto na dnu.
+  Trije koraki iz _v2 (stepper) **opuščeni** — rastlina ima eno obvezno polje (vrsta).
+- **Subjekt = instanca z enim `area_id`** (nullable). Multi-select območij ob ustvarjanju
+  (»več instanc hkrati«) **opuščen**; »premik med območji« je **single-select** prek
+  skupnega `area_pick_sheet` (`showAreaPickSheet`), dosegljiv iz detajla (pill), urejanja,
+  in swipe na seznamu.
+- **`PlantEditScreen` = samo urejanje** (vrsta read-only, alias, območje=premik, izbris).
+- **`area_form` ne ureja več rastlin** (območje = kraj, ne vsebnik); `area_detail` našteje
+  rastline + »Dodaj rastlino v X«.
+- **Vrt**: en FAB → rastline (brez routerja »kaj dodajaš«), tih »Novo območje« na dnu,
+  empty-state z dvema CTA, swipe Premakni/Odstrani (`PlantRow`, vgrajen `Dismissible`).
+- **Popravek buga**: `areas_repository.softDelete` atomarno **reparenta** rastline v
+  »Brez območja« (prej osirotele, izginile iz UI).
+
+Brez spremembe sheme, brez nove odvisnosti. Wireframi `docs/wireframes/*_v4.html`;
+podroben plan + DoD `docs/vrt-v4-implementacijski-plan.md`. analyze čist, 153/153 testov.

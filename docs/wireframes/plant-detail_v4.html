@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detajl rastline (v4)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .area-pill { display:inline-flex; align-items:center; gap:6px; background:var(--accent-soft);
+    color:var(--accent); font-size:13px; font-weight:600; padding:5px 12px; border-radius:999px; margin-top:6px; }
+  .area-pill .mv { opacity:.8; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="vrt_v4.html" style="text-decoration:none;"><span class="back">‹ Vrt</span></a>
+    <a href="plant-edit_v4.html" style="text-decoration:none;"><div class="icon-btn">⋯</div></a>
+  </div>
+
+  <div class="content">
+    <!-- glava: subjekt = rastlina; območje je tappable pill = PREMAKNI -->
+    <div style="display:flex;align-items:center;gap:14px;margin:4px 2px 6px;">
+      <div class="avatar" style="width:54px;height:54px;font-size:26px;flex:0 0 54px;">🍎</div>
+      <div>
+        <h1 style="font-size:24px;">Jablana</h1>
+        <div class="sub">Malus domestica</div>
+        <a href="plant-move_v4.html" style="text-decoration:none;">
+          <span class="area-pill">📍 Sadovnjak <span class="mv">· premakni ⇄</span></span>
+        </a>
+      </div>
+    </div>
+
+    <!-- zgodovinski namig (osebna zgodovina po rastlini) -->
+    <div class="smart">
+      <span class="ico">📅</span>
+      <div class="txt">Lani si jablano <b>obrezal 12. marca</b> in <b>poškropil 15. aprila</b>
+        (modra galica). Spomladanski obrez si letos že opravil.</div>
+    </div>
+
+    <div class="section-title">Čaka</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="li-check"></div>
+        <div class="li-main"><div class="li-title">Redčenje plodov</div><div class="li-sub">predvideno · po cvetenju</div></div>
+        <div class="li-trail">🔔 jun</div>
+      </div>
+    </div>
+
+    <div class="section-title">Zgodovina opravil</div>
+    <div class="day-group">
+      <div class="day-head">2026</div>
+      <div class="card" style="padding:6px 16px;">
+        <div class="list-item">
+          <div class="avatar">🧪</div>
+          <div class="li-main"><div class="li-title">Folirano gnojenje</div><div class="li-sub">urea + alge · ☀️ 22°</div></div>
+          <div class="li-trail">28. maj</div>
+        </div>
+        <div class="list-item">
+          <div class="avatar">🐛</div>
+          <div class="li-main"><div class="li-title">Škropljenje</div><div class="li-sub">modra galica · 🌧️ 14°</div></div>
+          <div class="li-trail">15. apr</div>
+        </div>
+        <div class="list-item">
+          <div class="avatar">✂️</div>
+          <div class="li-main"><div class="li-title">Obrez</div><div class="li-sub">zimski obrez · ❄️ 4°</div></div>
+          <div class="li-trail">12. mar</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="vrt_v4.html"><div class="nav-item active"><span class="ico">🪴</span>Vrt</div></a>
+  </nav>
+</div>
+</body>
+</html>

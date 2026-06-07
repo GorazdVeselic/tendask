@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Detajl območja (v4)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* swipe-reveal: vrstica zamaknjena levo, za njo akciji */
+  .swipe { position:relative; overflow:hidden; border-bottom:1px solid var(--line); }
+  .swipe .actions { position:absolute; right:0; top:0; bottom:0; display:flex; }
+  .swipe .actions a { display:grid; place-items:center; width:78px; color:#fff; font-size:12px; font-weight:700; text-decoration:none; }
+  .swipe .actions .mv { background:var(--accent); }
+  .swipe .actions .rm { background:#c0492f; }
+  .swipe .front { position:relative; background:#fff; transform:translateX(-156px); display:flex; align-items:center; gap:14px; padding:14px 4px; }
+  .swipe .front .avatar { width:42px;height:42px;border-radius:12px;flex:0 0 42px;background:var(--accent-soft);display:grid;place-items:center;font-size:20px; }
+  .swipe .front .li-main { flex:1; }
+  .swipe .front .li-title { font-size:15px; font-weight:600; }
+  .swipe .front .li-sub { font-size:13px; color:var(--muted); margin-top:2px; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="vrt_v4.html" style="text-decoration:none;"><span class="back">‹ Vrt</span></a>
+    <a href="area-edit_v4.html" style="text-decoration:none;"><div class="icon-btn">⋯</div></a>
+  </div>
+
+  <div class="content">
+    <div style="display:flex;align-items:center;gap:14px;margin:4px 2px 10px;">
+      <div class="avatar" style="width:54px;height:54px;font-size:26px;flex:0 0 54px;">🌳</div>
+      <div>
+        <h1 style="font-size:24px;">Sadovnjak</h1>
+        <div class="sub">Sadno drevje · 2 rastlini</div>
+      </div>
+    </div>
+
+    <!-- rastline v območju + swipe = Premakni / Odstrani -->
+    <div class="section-title">Rastline</div>
+    <div class="card" style="padding:6px 16px;">
+      <!-- normalna vrstica -->
+      <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="list-item">
+        <div class="avatar">🍎</div>
+        <div class="li-main"><div class="li-title">Jablana</div><div class="li-sub">zadnje: obrez 12. mar</div></div>
+        <div class="li-trail">›</div>
+      </div></a>
+      <!-- swipe-razkrita vrstica (prikaz interakcije) -->
+      <div class="swipe">
+        <div class="actions">
+          <a href="plant-move_v4.html" class="mv">⇄ Premakni</a>
+          <a href="vrt_v4.html" class="rm">🗑 Odstrani</a>
+        </div>
+        <div class="front">
+          <div class="avatar">🍐</div>
+          <div class="li-main"><div class="li-title">Hruška</div><div class="li-sub">povleci levo →</div></div>
+        </div>
+      </div>
+      <!-- doda rastlino NARAVNOST v to območje (predizpolnjeno) -->
+      <a href="plant-add_v4.html" style="text-decoration:none;color:inherit;">
+        <div class="add-line">＋ Dodaj rastlino v Sadovnjak</div></a>
+    </div>
+
+    <!-- zgodovina opravil območja (skupna opravila, npr. škropljenje vseh dreves) -->
+    <div class="section-title">Zgodovina opravil</div>
+    <div class="day-group">
+      <div class="day-head">2026</div>
+      <div class="card" style="padding:6px 16px;">
+        <div class="list-item">
+          <div class="avatar">🐛</div>
+          <div class="li-main"><div class="li-title">Škropljenje</div><div class="li-sub">vsa drevesa · 🌧️ 14°</div></div>
+          <div class="li-trail">15. apr</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="vrt_v4.html"><div class="nav-item active"><span class="ico">🪴</span>Vrt</div></a>
+  </nav>
+</div>
+</body>
+</html>

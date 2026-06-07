@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dodaj rastline (v4) — en zaslon</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* optional area bar (postransko) */
+  .areabar { display:flex; align-items:center; gap:8px; font-size:13px; color:var(--muted);
+    background:#f6f8f6; border:1px solid var(--line); border-radius:999px;
+    padding:8px 14px; margin:2px 0 12px; width:fit-content; }
+  .areabar b { color:var(--text); font-weight:600; }
+  .areabar .chev { color:var(--accent); font-weight:700; }
+  /* instant-add row */
+  .pl-row { display:flex; align-items:center; gap:12px; padding:12px 4px; border-bottom:1px solid var(--line); }
+  .pl-row:last-child { border-bottom:none; }
+  .pl-row .ico { font-size:20px; width:26px; text-align:center; }
+  .pl-row .pl-main { flex:1; font-size:14.5px; font-weight:600; }
+  .pl-row .pl-sub { font-size:12px; color:var(--muted); font-weight:400; }
+  .pl-row .act { width:30px; height:30px; border-radius:50%; display:grid; place-items:center;
+    background:var(--accent-soft); color:var(--accent); font-size:18px; font-weight:700; }
+  .pl-row.added { background:var(--accent-softer); border-radius:10px; }
+  .pl-row.added .act { background:var(--accent); color:#fff; }
+  /* sticky added-summary footer */
+  .addbar { position:absolute; left:0; right:0; bottom:0; padding:12px 18px 20px;
+    background:linear-gradient(to top,#fff 72%,transparent); }
+  .added-pill { display:flex; align-items:center; gap:8px; background:var(--accent-soft);
+    border:1px solid #dcebe0; border-radius:12px; padding:9px 12px; margin-bottom:10px; }
+  .added-pill .n { background:var(--accent); color:#fff; font-size:12px; font-weight:700;
+    border-radius:999px; padding:2px 9px; }
+  .added-pill .names { font-size:12.5px; color:var(--text); flex:1; overflow:hidden; white-space:nowrap; text-overflow:ellipsis; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <a href="vrt_v4.html" style="text-decoration:none;"><span class="back">✕</span></a>
+    <div class="sub" style="font-weight:700;color:var(--text);">Dodaj rastline</div>
+    <div style="width:30px;"></div>
+  </div>
+
+  <div class="content" style="padding-bottom:140px;">
+    <!-- kategorije -->
+    <div class="chips" style="margin-bottom:6px;">
+      <div class="chip active">Vse</div>
+      <div class="chip">Zelenjava</div>
+      <div class="chip">Zelišča</div>
+      <div class="chip">Sadno drevje</div>
+      <div class="chip">Jagodičevje</div>
+      <div class="chip">Okrasne</div>
+    </div>
+
+    <!-- pogosto (hitri chipi, tap = takoj dodano) -->
+    <div class="section-title">Pogosto</div>
+    <div class="chips">
+      <div class="chip active">🍅 Paradižnik ✓</div>
+      <div class="chip active">🥬 Solata ✓</div>
+      <div class="chip">🌶️ Paprika</div>
+      <div class="chip">🍓 Jagode</div>
+      <div class="chip">🥒 Kumare</div>
+    </div>
+
+    <!-- iz baze: iskanje privzeto skrito; lupa desno ga razkrije nad seznamom -->
+    <div class="section-title" style="display:flex;justify-content:space-between;align-items:center;">
+      <span>Iz baze</span>
+      <span style="font-size:15px;color:var(--accent);" title="Razkrij iskanje">🔍</span>
+    </div>
+    <div class="card" style="padding:4px 14px;">
+      <div class="pl-row added">
+        <span class="ico">🍅</span>
+        <div class="pl-main">Paradižnik <div class="pl-sub">Solanum lycopersicum · zelenjava</div></div>
+        <span class="act">✓</span>
+      </div>
+      <div class="pl-row added">
+        <span class="ico">🌿</span>
+        <div class="pl-main">Bazilika <div class="pl-sub">Ocimum basilicum · zelišča</div></div>
+        <span class="act">✓</span>
+      </div>
+      <div class="pl-row">
+        <span class="ico">🥬</span>
+        <div class="pl-main">Solata glavnata <div class="pl-sub">Lactuca sativa · zelenjava</div></div>
+        <span class="act">＋</span>
+      </div>
+      <div class="pl-row">
+        <span class="ico">🥕</span>
+        <div class="pl-main">Korenje <div class="pl-sub">Daucus carota · zelenjava</div></div>
+        <span class="act">＋</span>
+      </div>
+      <div class="pl-row">
+        <span class="ico">🧅</span>
+        <div class="pl-main">Čebula <div class="pl-sub">Allium cepa · zelenjava</div></div>
+        <span class="act">＋</span>
+      </div>
+    </div>
+
+    <!-- po meri (poenoten en sam vzorec) -->
+    <div class="section-title">Ne najdeš?</div>
+    <div class="card" style="border-style:dashed;padding:14px;">
+      <div style="font-size:14px;font-weight:600;">＋ Dodaj po meri…</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-top:4px;">
+        Lasten vnos je <b>zaseben</b> (se ne deli s skupnostjo, V2).
+      </div>
+    </div>
+
+    <!-- POSTRANSKO, čisto na koncu: kam dodajam (privzeto brez) -->
+    <div class="section-title">Kam dodajam <span style="text-transform:none;font-weight:500;">(neobvezno)</span></div>
+    <a href="plant-move_v4.html" style="text-decoration:none;">
+      <div class="areabar">📍 <b>Brez območja</b> <span class="chev">spremeni ›</span></div>
+    </a>
+  </div>
+
+  <!-- sticky: kaj je že dodano + Končano -->
+  <div class="addbar">
+    <div class="added-pill">
+      <span class="n">3</span>
+      <span class="names">Paradižnik · Bazilika · Solata</span>
+      <span style="color:var(--muted);font-size:12px;">razveljavi</span>
+    </div>
+    <a href="vrt_v4.html" style="text-decoration:none;"><button class="btn">Končano</button></a>
+  </div>
+</div>
+</body>
+</html>

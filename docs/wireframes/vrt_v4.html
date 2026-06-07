@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vrt (v4) — seznam + FAB</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .sec-head { display:flex; justify-content:space-between; align-items:center; margin:18px 2px 10px; }
+  .sec-head .st { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+  .sec-head .ed { font-size:12px; font-weight:700; color:var(--accent); text-transform:none; letter-spacing:0; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Vrt</h1><div class="sub">rastline in trate</div></div>
+  </div>
+
+  <div class="content">
+    <div class="chips" style="margin:2px 0 6px;">
+      <div class="chip active">Vse</div>
+      <div class="chip">Rastline</div>
+      <div class="chip">Trate</div>
+    </div>
+
+    <!-- BREZ OBMOČJA = privzeti dom novih rastlin (area_id = null) -->
+    <div class="sec-head">
+      <span class="st">Brez območja</span>
+    </div>
+    <div class="card" style="padding:6px 16px;">
+      <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="list-item">
+        <div class="avatar">🍅</div>
+        <div class="li-main"><div class="li-title">Paradižnik</div><div class="li-sub">dodano danes</div></div>
+        <div class="li-trail">›</div>
+      </div></a>
+      <div class="list-item">
+        <div class="avatar">🌿</div>
+        <div class="li-main"><div class="li-title">Bazilika</div><div class="li-sub">dodano danes</div></div>
+        <div class="li-trail">›</div>
+      </div>
+    </div>
+
+    <!-- TRATA (območje-subjekt) -->
+    <div class="sec-head">
+      <span class="st">Trate</span>
+      <a href="area-detail_v4.html" style="text-decoration:none;"><span class="ed">uredi</span></a>
+    </div>
+    <div class="card" style="padding:6px 16px;">
+      <a href="area-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="list-item">
+        <div class="avatar">🌱</div>
+        <div class="li-main"><div class="li-title">Trata zadaj</div><div class="li-sub">zadnje: košnja danes</div></div>
+        <div class="li-trail">›</div>
+      </div></a>
+    </div>
+
+    <!-- SADOVNJAK (območje-vsebnik z rastlinami) -->
+    <div class="sec-head">
+      <span class="st">Sadovnjak</span>
+      <a href="area-detail_v4.html" style="text-decoration:none;"><span class="ed">uredi</span></a>
+    </div>
+    <div class="card" style="padding:6px 16px;">
+      <a href="plant-detail_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="list-item">
+        <div class="avatar">🍎</div>
+        <div class="li-main"><div class="li-title">Jablana</div><div class="li-sub">zadnje: obrez 12. mar</div></div>
+        <div class="li-trail">›</div>
+      </div></a>
+      <div class="list-item">
+        <div class="avatar">🍐</div>
+        <div class="li-main"><div class="li-title">Hruška</div><div class="li-sub">zadnje: škropljenje 15. apr</div></div>
+        <div class="li-trail">›</div>
+      </div>
+    </div>
+
+    <!-- tih, vedno prisoten vstop za NOVO območje (FAB ostane = rastline) -->
+    <a href="area-edit_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="card" style="display:flex;align-items:center;gap:10px;padding:14px 16px;margin-top:18px;border-style:dashed;">
+        <span style="font-size:18px;color:var(--accent);">＋</span>
+        <span style="font-size:14px;font-weight:600;color:var(--accent);">Novo območje</span>
+      </div>
+    </a>
+
+    <div style="font-size:12px;color:var(--muted);text-align:center;margin:14px 10px 0;">
+      💡 Povleci rastlino levo za <b>Premakni</b> ali <b>Odstrani</b>.
+    </div>
+  </div>
+
+  <!-- EN jasen ＋ → naravnost na dodajanje rastlin -->
+  <a href="plant-add_v4.html" style="text-decoration:none;"><div class="fab">＋</div></a>
+
+  <nav class="bottomnav">
+    <a href="01-home.html"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
+    <a href="06-reminders.html"><div class="nav-item"><span class="ico">📋</span>Opravila</div></a>
+    <a href="03-calendar.html"><div class="nav-item"><span class="ico">📅</span>Dnevnik</div></a>
+    <a href="vrt_v4.html"><div class="nav-item active"><span class="ico">🪴</span>Vrt</div></a>
+  </nav>
+</div>
+</body>
+</html>
