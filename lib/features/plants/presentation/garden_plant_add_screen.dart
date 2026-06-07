@@ -6,6 +6,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/plant_category.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
@@ -25,30 +26,8 @@ class PlantAddArgs {
   final bool subjectMode;
 }
 
-/// Fixed category order for the filter chips (`all` plus catalog categories).
-const _categories = [
-  'all',
-  'fruit_tree',
-  'berries',
-  'vegetable',
-  'herbs',
-  'ornamental',
-  'lawn',
-];
-
-String _categoryLabel(String category, Translations t) => switch (category) {
-      'all' => t.plants.cat_all,
-      'fruit_tree' => t.plants.cat_fruit_tree,
-      'berries' => t.plants.cat_berries,
-      'vegetable' => t.plants.cat_vegetable,
-      'herbs' => t.plants.cat_herbs,
-      'ornamental' => t.plants.cat_ornamental,
-      'lawn' => t.plants.cat_lawn,
-      _ => category,
-    };
-
 /// One plant added during this session — kept so the footer can show what was
-/// added, catalog rows can show a ✓, and the created ids can be returned/undone.
+/// added, catalog rows can show a ✓, and the created ids can be returned/removed.
 class _Added {
   const _Added(this.id, this.plantId, this.label);
   final String id;
@@ -76,10 +55,17 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
   String? _targetAreaId;
   final List<_Added> _added = [];
 
+  // Snapshot taken once on open: the "Frequent" row stays stable through the
+  // session instead of re-querying (and flickering) on every add.
+  List<String> _recentIds = const [];
+
   @override
   void initState() {
     super.initState();
     _targetAreaId = widget.args.areaId;
+    ref.read(userPlantsRepositoryProvider).recentPlantIds().then((ids) {
+      if (mounted) setState(() => _recentIds = ids);
+    });
   }
 
   @override
@@ -105,12 +91,21 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     setState(() => _added.add(_Added(id, plantId, label)));
   }
 
-  Future<void> _undo() async {
-    if (_added.isEmpty) return;
-    final last = _added.last;
-    await ref.read(userPlantsRepositoryProvider).softDelete(last.id);
+  /// Tap on a catalog/frequent plant: add it, or remove it if already added
+  /// this session (toggle). Custom entries have no plantId and never toggle.
+  Future<void> _toggle(Plant plant) async {
+    final idx = _added.indexWhere((a) => a.plantId == plant.id);
+    if (idx >= 0) {
+      await _removeAdded(_added[idx]);
+    } else {
+      await _create(plantId: plant.id, label: catalogLabel(plant.labels));
+    }
+  }
+
+  Future<void> _removeAdded(_Added added) async {
+    await ref.read(userPlantsRepositoryProvider).softDelete(added.id);
     if (!mounted) return;
-    setState(() => _added.removeLast());
+    setState(() => _added.removeWhere((a) => a.id == added.id));
   }
 
   Future<void> _changeTarget() async {
@@ -136,13 +131,14 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     final theme = Theme.of(context);
     final plants = ref.watch(plantsListProvider).asData?.value;
     final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
-    final recentIds = ref.watch(recentPlantsProvider).asData?.value ?? const [];
 
     final normQuery = _query.trim().toLowerCase();
     final results = plants == null
         ? const <Plant>[]
         : plants
-            .where((p) => _category == 'all' || p.category == _category)
+            .where((p) =>
+                _category == 'all' ||
+                coarsePlantCategory(p.category) == _category)
             .where((p) => plantMatchesQuery(p, normQuery))
             .toList();
     final addedPlantIds = {for (final a in _added) ?a.plantId};
@@ -161,134 +157,148 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
           Expanded(
             child: plants == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
-                : ListView(
-                    padding: const EdgeInsets.fromLTRB(16, 8, 16, 16),
-                    children: [
-                      // Categories
-                      SizedBox(
-                        height: 40,
-                        child: ListView(
-                          scrollDirection: Axis.horizontal,
-                          children: [
-                            for (final c in _categories)
-                              Padding(
-                                padding: const EdgeInsets.only(right: 8),
-                                child: ChoiceChip(
-                                  label: Text(_categoryLabel(c, t)),
-                                  selected: c == _category,
-                                  onSelected: (_) =>
-                                      setState(() => _category = c),
+                // Sliver list so only visible catalog rows build — the seed has
+                // ~130 plants and an eager Column rebuilt all of them on every
+                // toggle, which is what felt like a freeze on open.
+                : CustomScrollView(
+                    slivers: [
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                        sliver: SliverToBoxAdapter(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                height: 40,
+                                child: ListView(
+                                  scrollDirection: Axis.horizontal,
+                                  children: [
+                                    for (final c in kPlantCategories)
+                                      Padding(
+                                        padding: const EdgeInsets.only(right: 8),
+                                        child: ChoiceChip(
+                                          label:
+                                              Text(plantCategoryLabel(c, t)),
+                                          selected: c == _category,
+                                          onSelected: (_) =>
+                                              setState(() => _category = c),
+                                        ),
+                                      ),
+                                  ],
                                 ),
                               ),
-                          ],
-                        ),
-                      ),
-                      // Frequent (recently used)
-                      if (recentIds.isNotEmpty && normQuery.isEmpty) ...[
-                        SectionLabel(t.plants.frequent),
-                        Wrap(
-                          spacing: 8,
-                          runSpacing: 4,
-                          children: [
-                            for (final id in recentIds)
-                              if (catalog[id] case final p?)
-                                ActionChip(
-                                  avatar: Text(p.icon ?? '🌿',
-                                      style: const TextStyle(fontSize: 16)),
-                                  label: Text(catalogLabel(p.labels)),
-                                  onPressed: () => _create(
-                                      plantId: p.id, label: catalogLabel(p.labels)),
+                              if (_recentIds.isNotEmpty && normQuery.isEmpty) ...[
+                                SectionLabel(t.plants.frequent),
+                                Wrap(
+                                  spacing: 8,
+                                  runSpacing: 4,
+                                  children: [
+                                    for (final id in _recentIds)
+                                      if (catalog[id] case final p?)
+                                        FilterChip(
+                                          avatar: Text(p.icon ?? '🌿',
+                                              style:
+                                                  const TextStyle(fontSize: 16)),
+                                          label: Text(catalogLabel(p.labels)),
+                                          selected: addedPlantIds.contains(p.id),
+                                          onSelected: (_) => _toggle(p),
+                                        ),
+                                  ],
                                 ),
-                          ],
-                        ),
-                        const SizedBox(height: 4),
-                      ],
-                      // From catalog header + collapsible search
-                      Row(
-                        children: [
-                          Expanded(child: SectionLabel(t.plants.from_catalog)),
-                          IconButton(
-                            icon: Icon(_searchExpanded
-                                ? Icons.search_off
-                                : Icons.search),
-                            color: theme.colorScheme.primary,
-                            onPressed: () {
-                              setState(() {
-                                _searchExpanded = !_searchExpanded;
-                                if (!_searchExpanded) {
-                                  _query = '';
-                                  _searchController.clear();
-                                }
-                              });
-                            },
-                          ),
-                        ],
-                      ),
-                      if (_searchExpanded)
-                        Padding(
-                          padding: const EdgeInsets.only(bottom: 8),
-                          child: TextField(
-                            controller: _searchController,
-                            autofocus: true,
-                            decoration: InputDecoration(
-                              hintText: t.plants.search_hint,
-                              prefixIcon: const Icon(Icons.search),
-                              border: const OutlineInputBorder(),
-                              isDense: true,
-                            ),
-                            onChanged: (v) => setState(() => _query = v),
-                          ),
-                        ),
-                      if (results.isNotEmpty)
-                        Card(
-                          child: Column(
-                            children: [
-                              for (var i = 0; i < results.length; i++) ...[
-                                if (i > 0)
-                                  Divider(
-                                    height: 1,
-                                    indent: 56,
-                                    color: theme.colorScheme.outlineVariant,
-                                  ),
-                                _CatalogAddRow(
-                                  plant: results[i],
-                                  added: addedPlantIds.contains(results[i].id),
-                                  onAdd: () => _create(
-                                    plantId: results[i].id,
-                                    label: catalogLabel(results[i].labels),
-                                  ),
-                                ),
+                                const SizedBox(height: 4),
                               ],
+                              Row(
+                                children: [
+                                  Expanded(
+                                      child:
+                                          SectionLabel(t.plants.from_catalog)),
+                                  IconButton(
+                                    icon: Icon(_searchExpanded
+                                        ? Icons.search_off
+                                        : Icons.search),
+                                    color: theme.colorScheme.primary,
+                                    onPressed: _toggleSearch,
+                                  ),
+                                ],
+                              ),
+                              if (_searchExpanded)
+                                Padding(
+                                  padding: const EdgeInsets.only(bottom: 8),
+                                  child: TextField(
+                                    controller: _searchController,
+                                    autofocus: true,
+                                    decoration: InputDecoration(
+                                      hintText: t.plants.search_hint,
+                                      prefixIcon: const Icon(Icons.search),
+                                      border: const OutlineInputBorder(),
+                                      isDense: true,
+                                    ),
+                                    onChanged: (v) =>
+                                        setState(() => _query = v),
+                                  ),
+                                ),
                             ],
                           ),
                         ),
-                      // Custom entry
-                      if (normQuery.isNotEmpty) ...[
-                        const SizedBox(height: 12),
-                        _CustomEntry(
-                          query: _query.trim(),
-                          onAdd: (name) =>
-                              _create(customName: name, label: name),
+                      ),
+                      SliverPadding(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                        sliver: SliverList.separated(
+                          itemCount: results.length,
+                          itemBuilder: (_, i) => _CatalogAddRow(
+                            plant: results[i],
+                            added: addedPlantIds.contains(results[i].id),
+                            onToggle: () => _toggle(results[i]),
+                          ),
+                          separatorBuilder: (_, _) => Divider(
+                            height: 1,
+                            indent: 56,
+                            color: theme.colorScheme.outlineVariant,
+                          ),
                         ),
-                      ],
-                      // Optional add target — last, de-emphasised
-                      if (!widget.args.subjectMode) ...[
-                        const SizedBox(height: 8),
-                        SectionLabel(t.plants.add_to_label),
-                        _TargetRow(
-                          areaId: _targetAreaId,
-                          areas:
-                              ref.watch(areasMapProvider).asData?.value ?? const {},
-                          onTap: _changeTarget,
+                      ),
+                      if (normQuery.isNotEmpty)
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          sliver: SliverToBoxAdapter(
+                            child: _CustomEntry(
+                              query: _query.trim(),
+                              onAdd: (name) =>
+                                  _create(customName: name, label: name),
+                            ),
+                          ),
                         ),
-                      ],
                     ],
                   ),
           ),
-          if (_added.isNotEmpty) _AddedBar(added: _added, onUndo: _undo, onDone: () => context.pop(_createdIds)),
+          // Add target — pinned (secondary, but always reachable above the
+          // footer no matter how long the catalog list grows).
+          if (!widget.args.subjectMode)
+            _AreaBar(
+              areaId: _targetAreaId,
+              areas: ref.watch(areasMapProvider).asData?.value ?? const {},
+              onTap: _changeTarget,
+              bottomSafe: _added.isEmpty,
+            ),
+          if (_added.isNotEmpty)
+            _AddedBar(
+              added: _added,
+              onRemove: _removeAdded,
+              onDone: () => context.pop(_createdIds),
+            ),
         ],
       ),
     );
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _searchExpanded = !_searchExpanded;
+      if (!_searchExpanded) {
+        _query = '';
+        _searchController.clear();
+      }
+    });
   }
 }
 
@@ -298,26 +308,40 @@ class _CatalogAddRow extends StatelessWidget {
   const _CatalogAddRow({
     required this.plant,
     required this.added,
-    required this.onAdd,
+    required this.onToggle,
   });
 
   final Plant plant;
   final bool added;
-  final VoidCallback onAdd;
+  final VoidCallback onToggle;
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
-    final sub = plant.scientificName != null
-        ? '${plant.scientificName} · ${plant.category}'
-        : plant.category;
+    final cs = theme.colorScheme;
     return ListTile(
+      tileColor: added ? cs.primaryContainer.withValues(alpha: 0.4) : null,
+      shape: added
+          ? RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))
+          : null,
       leading: Text(plant.icon ?? '🌿', style: const TextStyle(fontSize: 22)),
       title: Text(catalogLabel(plant.labels), style: theme.textTheme.bodyMedium),
-      subtitle: Text(sub, style: theme.textTheme.bodySmall),
-      trailing: Icon(added ? Icons.check_circle : Icons.add_circle_outline,
-          color: theme.colorScheme.primary),
-      onTap: onAdd,
+      subtitle: Text(
+          plantCategoryLabel(coarsePlantCategory(plant.category), t),
+          style: theme.textTheme.bodySmall),
+      trailing: Container(
+        width: 30,
+        height: 30,
+        alignment: Alignment.center,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          color: added ? cs.primary : cs.primaryContainer,
+        ),
+        child: Icon(added ? Icons.check : Icons.add,
+            size: 18, color: added ? cs.onPrimary : cs.primary),
+      ),
+      onTap: onToggle,
     );
   }
 }
@@ -373,33 +397,68 @@ class _CustomEntry extends StatelessWidget {
 
 // ─── Optional add target ──────────────────────────────────────────────────────
 
-class _TargetRow extends StatelessWidget {
-  const _TargetRow({
+class _AreaBar extends StatelessWidget {
+  const _AreaBar({
     required this.areaId,
     required this.areas,
     required this.onTap,
+    required this.bottomSafe,
   });
 
   final String? areaId;
   final Map<String, Area> areas;
   final VoidCallback onTap;
 
+  /// Honour the bottom inset only when no added-bar sits below us.
+  final bool bottomSafe;
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
+    final cs = theme.colorScheme;
     final name = areaId != null ? areas[areaId]?.name : null;
-    return Card(
-      child: ListTile(
-        leading: Icon(Icons.place_outlined,
-            color: theme.colorScheme.onSurfaceVariant),
-        title: Text(name ?? t.area_pick.none),
-        trailing: Text(
-          t.plant_detail.move,
-          style: TextStyle(
-              color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
-        ),
-        onTap: onTap,
+    return Material(
+      color: cs.surface,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Divider(height: 1, color: cs.outlineVariant),
+          InkWell(
+            onTap: onTap,
+            child: SafeArea(
+              top: false,
+              bottom: bottomSafe,
+              child: Padding(
+                padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+                child: Row(
+                  children: [
+                    Icon(Icons.place_outlined,
+                        size: 18, color: cs.onSurfaceVariant),
+                    const SizedBox(width: 8),
+                    Text(t.plants.add_to_label,
+                        style: theme.textTheme.bodySmall
+                            ?.copyWith(color: cs.onSurfaceVariant)),
+                    const SizedBox(width: 6),
+                    Expanded(
+                      child: Text(
+                        name ?? t.area_pick.none,
+                        style: theme.textTheme.bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.w600),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                    Text(
+                      t.plants.choose_area,
+                      style: TextStyle(
+                          color: cs.primary, fontWeight: FontWeight.w600),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -410,19 +469,21 @@ class _TargetRow extends StatelessWidget {
 class _AddedBar extends StatelessWidget {
   const _AddedBar({
     required this.added,
-    required this.onUndo,
+    required this.onRemove,
     required this.onDone,
   });
 
   final List<_Added> added;
-  final VoidCallback onUndo;
+  final void Function(_Added) onRemove;
   final VoidCallback onDone;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final names = [for (final a in added) a.label].reversed.join(' · ');
+    final cs = theme.colorScheme;
+    // Newest first so the latest add sits at the front without scrolling.
+    final items = added.reversed.toList();
     return SafeArea(
       top: false,
       child: Padding(
@@ -430,28 +491,35 @@ class _AddedBar extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                children: [
-                  Text(t.plants.added_count(n: added.length),
-                      style: theme.textTheme.labelMedium?.copyWith(
-                          color: theme.colorScheme.primary,
-                          fontWeight: FontWeight.w700)),
-                  const SizedBox(width: 8),
-                  Expanded(
-                    child: Text(names,
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall),
+            Row(
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                  decoration: BoxDecoration(
+                    color: cs.primary,
+                    borderRadius: BorderRadius.circular(999),
                   ),
-                  TextButton(onPressed: onUndo, child: Text(t.plants.undo)),
-                ],
-              ),
+                  child: Text('${added.length}',
+                      style: theme.textTheme.labelMedium?.copyWith(
+                          color: cs.onPrimary, fontWeight: FontWeight.w700)),
+                ),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: SizedBox(
+                    height: 36,
+                    child: ListView.separated(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: items.length,
+                      separatorBuilder: (_, _) => const SizedBox(width: 6),
+                      itemBuilder: (_, i) => _AddedChip(
+                        label: items[i].label,
+                        onRemove: () => onRemove(items[i]),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(height: 8),
             SizedBox(
@@ -459,6 +527,43 @@ class _AddedBar extends StatelessWidget {
               child: FilledButton(onPressed: onDone, child: Text(t.plants.done)),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+/// A compact removable chip for the added-footer — tapping it (or its ✕)
+/// removes that single plant.
+class _AddedChip extends StatelessWidget {
+  const _AddedChip({required this.label, required this.onRemove});
+
+  final String label;
+  final VoidCallback onRemove;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return Material(
+      color: cs.primaryContainer,
+      borderRadius: BorderRadius.circular(999),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(999),
+        onTap: onRemove,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(12, 0, 8, 0),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(label,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onPrimaryContainer,
+                      fontWeight: FontWeight.w600)),
+              const SizedBox(width: 4),
+              Icon(Icons.close, size: 16, color: cs.onPrimaryContainer),
+            ],
+          ),
         ),
       ),
     );

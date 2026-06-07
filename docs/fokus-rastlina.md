@@ -195,7 +195,8 @@ Med implementacijo je UX revizija (rastlino-prvi tok) presegla _v2 osnutek:
 
 - **Dodajanje rastline = EN zaslon z instant-add** (`garden_plant_add_screen`): tap = takoj
   shranjeno, dodajaš več naenkrat; iskanje skrito za 🔍; »Pogosto« = nazadnje uporabljene
-  vrste (`recentPlantIds`); »Kam dodajam« (območje) je **postransko**, čisto na dnu.
+  vrste (`recentPlantIds`); »Kam dodajam« (območje) je **postransko**, a **sticky-pripeto**
+  nad footerjem (vedno dosegljivo ne glede na dolžino kataloga — glej §10.1).
   Trije koraki iz _v2 (stepper) **opuščeni** — rastlina ima eno obvezno polje (vrsta).
 - **Subjekt = instanca z enim `area_id`** (nullable). Multi-select območij ob ustvarjanju
   (»več instanc hkrati«) **opuščen**; »premik med območji« je **single-select** prek
@@ -211,3 +212,28 @@ Med implementacijo je UX revizija (rastlino-prvi tok) presegla _v2 osnutek:
 
 Brez spremembe sheme, brez nove odvisnosti. Wireframi `docs/wireframes/*_v4.html`;
 podroben plan + DoD `docs/vrt-v4-implementacijski-plan.md`. analyze čist, 153/153 testov.
+
+## 10.1 Popravki po pregledu (2026-06-07)
+
+Po pregledu novega toka na napravi (dark tema) odpravljeno:
+
+- **Toggle dodajanja**: tap na že dodano vrsto (katalog/»Pogosto«, po `plantId`) jo zdaj
+  **odstrani** — prej se je ista rastlina dodala večkrat. Custom vnos ostane samo-dodaj.
+- **»Pogosto« kaže izbrane** (FilterChip s ✓) in je **posnetek ob odprtju** — prej je
+  vsak dodatek sprožil reload providerja (`AsyncLoading` → sekcija je za hip izginila in
+  seznam je poskočil). `recentPlantsProvider` odstranjen; snapshot prek repo v `initState`.
+- **Dodane vrstice poudarjene** (ozadje `primaryContainer` + poln krog z ✓) — po wireframu.
+- **Območje sticky-pripeto** nad footerjem (prej na dnu scrolla, pri dolgem katalogu nevidno);
+  akcija preimenovana v »izberi« (ne »premakni«, ker se območje šele določa).
+- **Chipi zeleni, ne M3 vijolični**: `ColorScheme` (light+dark) ni definiral
+  `primaryContainer`; dodan + `ChipThemeData(selectedColor)` v `app_theme` → poenoteno app-wide.
+- **Groba taksonomija kategorij** (`core/plant_category.dart`): seed ima 12 finih kategorij
+  (`perennial/shrub/climber/bulb/conifer/hedge/houseplant`…), filter chipi pa grobe. `'okrasne'`
+  prej ni ujel ničesar; zdaj `coarsePlantCategory()` zloži fine v »Okrasne«, `houseplant` v
+  »Sobne«. Velja za `garden_plant_add` in `plant_picker`. V seznamih je vrsta **prevedena**
+  (ne surov `fruit_tree`) in **brez latinskih imen**.
+- **Hitrost odpiranja**: katalog (~130 rastlin) se zdaj renderira **lazy** (`SliverList`) —
+  prej je `Column` zgradil vse vrstice naenkrat in jih ob vsakem toggle rebuildal (občutek
+  zmrznitve). Caching ni potreben: `plantsListProvider`/`plantsMapProvider` sta že keepAlive.
+- **Footer z drsnimi chipi**: dodane rastline so zdaj vodoravno drsljivi chipi z ✕ (vsak
+  posamično odstranljiv) — prej ena skrajšana vrstica + »razveljavi« (pri >3 nevidno).

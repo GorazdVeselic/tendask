@@ -32,10 +32,3 @@ final userPlantsMapProvider =
       .watchAll()
       .map((list) => {for (final p in list) p.id: p});
 });
-
-/// Recently used catalog species (ids) for the "Frequent" row on the plant-add
-/// screen. Re-fetches when the plant set changes so fresh picks bubble up.
-final recentPlantsProvider = FutureProvider.autoDispose<List<String>>((ref) {
-  ref.watch(userPlantsMapProvider);
-  return ref.watch(userPlantsRepositoryProvider).recentPlantIds();
-});
