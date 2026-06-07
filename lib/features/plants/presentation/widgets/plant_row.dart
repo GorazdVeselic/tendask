@@ -34,7 +34,7 @@ class PlantRow extends ConsumerWidget {
         );
   }
 
-  Future<bool> _confirmRemove(BuildContext context, WidgetRef ref) async {
+  Future<void> _remove(BuildContext context, WidgetRef ref) async {
     final t = context.t;
     final ok = await showConfirmDialog(
       context,
@@ -47,7 +47,6 @@ class PlantRow extends ConsumerWidget {
     if (ok) {
       await ref.read(userPlantsRepositoryProvider).softDelete(plant.id);
     }
-    return ok;
   }
 
   @override
@@ -73,9 +72,13 @@ class PlantRow extends ConsumerWidget {
       confirmDismiss: (dir) async {
         if (dir == DismissDirection.startToEnd) {
           await _move(context, ref);
-          return false; // keep the row — only its area changed
+        } else {
+          await _remove(context, ref);
         }
-        return _confirmRemove(context, ref);
+        // Always false: the watching stream drops the row (move relocates it,
+        // remove soft-deletes it), which avoids the "dismissed widget still in
+        // tree" assert that returning true would risk on the next rebuild.
+        return false;
       },
       child: ListTile(
         leading: Text(userPlantIcon(plant, catalog),

@@ -547,6 +547,11 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get swipe_move => 'Move';
 	@override String get swipe_remove => 'Remove';
 	@override String get delete_reparent_note => 'Plants in this area move to “No area” (they are not deleted).';
+	@override String get new_area_inline => 'New area';
+	@override String get empty_title => 'Your garden is empty';
+	@override String get empty_body => 'Add the plants you have. Areas (beds, lawns) are optional.';
+	@override String get empty_cta_plant => 'Add plants';
+	@override String get empty_cta_area => 'Add area';
 	@override String get action_edit => 'Edit';
 	@override String get action_delete => 'Delete';
 	@override String get delete_confirm_title => 'Delete area?';
@@ -976,6 +981,11 @@ extension on TranslationsEn {
 			'areas.swipe_move' => 'Move',
 			'areas.swipe_remove' => 'Remove',
 			'areas.delete_reparent_note' => 'Plants in this area move to “No area” (they are not deleted).',
+			'areas.new_area_inline' => 'New area',
+			'areas.empty_title' => 'Your garden is empty',
+			'areas.empty_body' => 'Add the plants you have. Areas (beds, lawns) are optional.',
+			'areas.empty_cta_plant' => 'Add plants',
+			'areas.empty_cta_area' => 'Add area',
 			'areas.action_edit' => 'Edit',
 			'areas.action_delete' => 'Delete',
 			'areas.delete_confirm_title' => 'Delete area?',

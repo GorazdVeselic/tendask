@@ -1129,6 +1129,21 @@ class Translations$areas$sl {
 	/// sl: 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).'
 	String get delete_reparent_note => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).';
 
+	/// sl: 'Novo območje'
+	String get new_area_inline => 'Novo območje';
+
+	/// sl: 'Tvoj vrt je še prazen'
+	String get empty_title => 'Tvoj vrt je še prazen';
+
+	/// sl: 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.'
+	String get empty_body => 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.';
+
+	/// sl: 'Dodaj rastline'
+	String get empty_cta_plant => 'Dodaj rastline';
+
+	/// sl: 'Dodaj območje'
+	String get empty_cta_area => 'Dodaj območje';
+
 	/// sl: 'Uredi'
 	String get action_edit => 'Uredi';
 
@@ -1747,6 +1762,11 @@ extension on Translations {
 			'areas.swipe_move' => 'Premakni',
 			'areas.swipe_remove' => 'Odstrani',
 			'areas.delete_reparent_note' => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).',
+			'areas.new_area_inline' => 'Novo območje',
+			'areas.empty_title' => 'Tvoj vrt je še prazen',
+			'areas.empty_body' => 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.',
+			'areas.empty_cta_plant' => 'Dodaj rastline',
+			'areas.empty_cta_area' => 'Dodaj območje',
 			'areas.action_edit' => 'Uredi',
 			'areas.action_delete' => 'Izbriši',
 			'areas.delete_confirm_title' => 'Izbriši območje?',

@@ -7,45 +7,11 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
-import '../../../core/widgets/empty_state.dart';
-import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../../plants/application/plants_providers.dart';
-import '../../plants/presentation/plant_display.dart';
+import '../../plants/presentation/widgets/plant_row.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
-
-void _showAddMenu(BuildContext context) {
-  final t = context.t;
-  showModalBottomSheet<void>(
-    context: context,
-    builder: (ctx) => SafeArea(
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          const SheetHandle(),
-          ListTile(
-            leading: const Icon(Icons.eco_outlined),
-            title: Text(t.plant_edit.title_new),
-            onTap: () {
-              Navigator.of(ctx).pop();
-              context.pushNamed('plant-add');
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.yard_outlined),
-            title: Text(t.areas.form_title_new),
-            onTap: () {
-              Navigator.of(ctx).pop();
-              context.pushNamed('area-new');
-            },
-          ),
-          const SizedBox(height: 8),
-        ],
-      ),
-    ),
-  );
-}
 
 class AreasScreen extends ConsumerWidget {
   const AreasScreen({super.key});
@@ -89,12 +55,6 @@ class AreasScreen extends ConsumerWidget {
             ),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.add),
-            onPressed: () => _showAddMenu(context),
-          ),
-        ],
       ),
       body: areas == null || catalog == null
           ? const Center(child: CircularProgressIndicator.adaptive())
@@ -132,7 +92,7 @@ class _AreasList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    if (areas.isEmpty && unassigned.isEmpty) return EmptyState(t.areas.empty);
+    if (areas.isEmpty && unassigned.isEmpty) return const _GardenEmpty();
 
     // Flat list: section header (String or AreaType), Area row, then UserPlant rows.
     final items = <Object>[];
@@ -153,20 +113,17 @@ class _AreasList extends StatelessWidget {
 
     return ListView.builder(
       padding: const EdgeInsets.only(bottom: 100),
-      itemCount: items.length,
+      // +1 for the trailing "new area" entry.
+      itemCount: items.length + 1,
       itemBuilder: (context, i) {
+        if (i == items.length) return const _NewAreaButton();
         final item = items[i];
-        if (item is String) {
-          return _SectionHeader(label: item);
-        }
+        if (item is String) return _SectionHeader(label: item);
         if (item is AreaType) {
-          return _SectionHeader(label: areaTypeLabel(item, t));
+          return _SectionHeader(label: areaTypeLabel(item, context.t));
         }
         if (item is UserPlant) {
-          return _PlantRow(
-            plant: item,
-            catalog: plantCatalog,
-          );
+          return PlantRow(plant: item, catalog: plantCatalog);
         }
         final area = item as Area;
         return _AreaRow(
@@ -179,32 +136,69 @@ class _AreasList extends StatelessWidget {
   }
 }
 
-// ─── Plant row (under its area) ───────────────────────────────────────────────
+// ─── Empty state (first run) ──────────────────────────────────────────────────
 
-class _PlantRow extends StatelessWidget {
-  const _PlantRow({
-    required this.plant,
-    required this.catalog,
-  });
-
-  final UserPlant plant;
-  final Map<String, Plant> catalog;
+class _GardenEmpty extends StatelessWidget {
+  const _GardenEmpty();
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
+    return Center(
+      child: Padding(
+        padding: const EdgeInsets.all(28),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text('🌱', style: TextStyle(fontSize: 44, color: theme.colorScheme.primary)),
+            const SizedBox(height: 14),
+            Text(
+              t.areas.empty_title,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.titleMedium
+                  ?.copyWith(fontWeight: FontWeight.w700),
+            ),
+            const SizedBox(height: 8),
+            Text(
+              t.areas.empty_body,
+              textAlign: TextAlign.center,
+              style: theme.textTheme.bodyMedium
+                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            ),
+            const SizedBox(height: 20),
+            FilledButton.icon(
+              onPressed: () => context.pushNamed('plant-add'),
+              icon: const Icon(Icons.add),
+              label: Text(t.areas.empty_cta_plant),
+            ),
+            const SizedBox(height: 8),
+            OutlinedButton.icon(
+              onPressed: () => context.pushNamed('area-new'),
+              icon: const Icon(Icons.add),
+              label: Text(t.areas.empty_cta_area),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── New-area entry (quiet, always at the bottom) ─────────────────────────────
+
+class _NewAreaButton extends StatelessWidget {
+  const _NewAreaButton();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
     return Padding(
-      padding: const EdgeInsets.only(left: 28, right: 16),
-      child: ListTile(
-        dense: true,
-        leading: Text(userPlantIcon(plant, catalog),
-            style: const TextStyle(fontSize: 20)),
-        title: Text(userPlantLabel(plant, catalog),
-            style: theme.textTheme.bodyMedium),
-        trailing: Icon(Icons.chevron_right,
-            color: theme.colorScheme.onSurfaceVariant, size: 20),
-        onTap: () =>
-            context.pushNamed('plant-detail', pathParameters: {'id': plant.id}),
+      padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
+      child: OutlinedButton.icon(
+        onPressed: () => context.pushNamed('area-new'),
+        icon: const Icon(Icons.add),
+        label: Text(t.areas.new_area_inline),
       ),
     );
   }
@@ -248,7 +242,6 @@ class _AreaRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     final theme = Theme.of(context);
     return Card(
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
@@ -278,7 +271,7 @@ class _AreaRow extends StatelessWidget {
                           ?.copyWith(fontWeight: FontWeight.w500),
                     ),
                     Text(
-                      _subtitle(t),
+                      _subtitle(context.t),
                       style: theme.textTheme.bodySmall?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),

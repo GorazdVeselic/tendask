@@ -547,6 +547,11 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get swipe_move => 'Verschieben';
 	@override String get swipe_remove => 'Entfernen';
 	@override String get delete_reparent_note => 'Pflanzen in diesem Bereich wechseln zu „Ohne Bereich“ (sie werden nicht gelöscht).';
+	@override String get new_area_inline => 'Neuer Bereich';
+	@override String get empty_title => 'Dein Garten ist leer';
+	@override String get empty_body => 'Füge deine Pflanzen hinzu. Bereiche (Beete, Rasen) sind optional.';
+	@override String get empty_cta_plant => 'Pflanzen hinzufügen';
+	@override String get empty_cta_area => 'Bereich hinzufügen';
 	@override String get action_edit => 'Bearbeiten';
 	@override String get action_delete => 'Löschen';
 	@override String get delete_confirm_title => 'Bereich löschen?';
@@ -976,6 +981,11 @@ extension on TranslationsDe {
 			'areas.swipe_move' => 'Verschieben',
 			'areas.swipe_remove' => 'Entfernen',
 			'areas.delete_reparent_note' => 'Pflanzen in diesem Bereich wechseln zu „Ohne Bereich“ (sie werden nicht gelöscht).',
+			'areas.new_area_inline' => 'Neuer Bereich',
+			'areas.empty_title' => 'Dein Garten ist leer',
+			'areas.empty_body' => 'Füge deine Pflanzen hinzu. Bereiche (Beete, Rasen) sind optional.',
+			'areas.empty_cta_plant' => 'Pflanzen hinzufügen',
+			'areas.empty_cta_area' => 'Bereich hinzufügen',
 			'areas.action_edit' => 'Bearbeiten',
 			'areas.action_delete' => 'Löschen',
 			'areas.delete_confirm_title' => 'Bereich löschen?',
