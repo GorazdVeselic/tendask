@@ -29,7 +29,7 @@ void _showAddMenu(BuildContext context) {
             title: Text(t.plant_edit.title_new),
             onTap: () {
               Navigator.of(ctx).pop();
-              context.pushNamed('plant-new');
+              context.pushNamed('plant-add');
             },
           ),
           ListTile(

@@ -12,6 +12,7 @@ import '../../features/journal/presentation/note_form_screen.dart';
 import '../../features/notifications/presentation/notification_preview_screen.dart';
 import '../../features/notifications/presentation/notification_settings_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
+import '../../features/plants/presentation/garden_plant_add_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
@@ -120,9 +121,13 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       builder: (context, state) => const PlantPickerScreen(),
     ),
     GoRoute(
-      path: '/plant-new',
-      name: 'plant-new',
-      builder: (context, state) => const PlantEditScreen(),
+      path: '/plant-add',
+      name: 'plant-add',
+      builder: (context, state) {
+        final args =
+            state.extra is PlantAddArgs ? state.extra! as PlantAddArgs : const PlantAddArgs();
+        return GardenPlantAddScreen(args: args);
+      },
     ),
     GoRoute(
       path: '/plant/:id',

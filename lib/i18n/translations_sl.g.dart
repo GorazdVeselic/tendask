@@ -1207,6 +1207,24 @@ class Translations$plants$sl {
 	/// sl: 'Lasten vnos je zaseben in se ne deli s skupnostjo.'
 	String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
 
+	/// sl: 'Dodaj rastline'
+	String get add_title => 'Dodaj rastline';
+
+	/// sl: 'Pogosto'
+	String get frequent => 'Pogosto';
+
+	/// sl: 'Dodano ($n)'
+	String added_count({required Object n}) => 'Dodano (${n})';
+
+	/// sl: 'Razveljavi'
+	String get undo => 'Razveljavi';
+
+	/// sl: 'Končano'
+	String get done => 'Končano';
+
+	/// sl: 'Kam dodajam'
+	String get add_to_label => 'Kam dodajam';
+
 	/// sl: 'Izberi rastlino'
 	String get field_add => 'Izberi rastlino';
 
@@ -1734,6 +1752,12 @@ extension on Translations {
 			'plants.not_found' => 'Ne najdeš?',
 			'plants.custom_add' => ({required Object q}) => '+ Dodaj po meri: »${q}«',
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
+			'plants.add_title' => 'Dodaj rastline',
+			'plants.frequent' => 'Pogosto',
+			'plants.added_count' => ({required Object n}) => 'Dodano (${n})',
+			'plants.undo' => 'Razveljavi',
+			'plants.done' => 'Končano',
+			'plants.add_to_label' => 'Kam dodajam',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
 			'supplies.title' => 'Zaloge',

@@ -579,6 +579,12 @@ class _Translations$plants$en extends Translations$plants$sl {
 	@override String get not_found => 'Can\'t find it?';
 	@override String custom_add({required Object q}) => '+ Add custom: “${q}”';
 	@override String get custom_private => 'A custom entry is private and not shared with the community.';
+	@override String get add_title => 'Add plants';
+	@override String get frequent => 'Frequent';
+	@override String added_count({required Object n}) => 'Added (${n})';
+	@override String get undo => 'Undo';
+	@override String get done => 'Done';
+	@override String get add_to_label => 'Add to';
 	@override String get field_add => 'Select plant';
 	@override String get field_empty => 'This area has no plants yet. Add one with the button below.';
 }
@@ -987,6 +993,12 @@ extension on TranslationsEn {
 			'plants.not_found' => 'Can\'t find it?',
 			'plants.custom_add' => ({required Object q}) => '+ Add custom: “${q}”',
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
+			'plants.add_title' => 'Add plants',
+			'plants.frequent' => 'Frequent',
+			'plants.added_count' => ({required Object n}) => 'Added (${n})',
+			'plants.undo' => 'Undo',
+			'plants.done' => 'Done',
+			'plants.add_to_label' => 'Add to',
 			'plants.field_add' => 'Select plant',
 			'plants.field_empty' => 'This area has no plants yet. Add one with the button below.',
 			'supplies.title' => 'Supplies',

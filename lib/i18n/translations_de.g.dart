@@ -579,6 +579,12 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get not_found => 'Nicht gefunden?';
 	@override String custom_add({required Object q}) => '+ Eigene hinzufügen: „${q}“';
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
+	@override String get add_title => 'Pflanzen hinzufügen';
+	@override String get frequent => 'Häufig';
+	@override String added_count({required Object n}) => 'Hinzugefügt (${n})';
+	@override String get undo => 'Rückgängig';
+	@override String get done => 'Fertig';
+	@override String get add_to_label => 'Hinzufügen zu';
 	@override String get field_add => 'Pflanze auswählen';
 	@override String get field_empty => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
 }
@@ -987,6 +993,12 @@ extension on TranslationsDe {
 			'plants.not_found' => 'Nicht gefunden?',
 			'plants.custom_add' => ({required Object q}) => '+ Eigene hinzufügen: „${q}“',
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
+			'plants.add_title' => 'Pflanzen hinzufügen',
+			'plants.frequent' => 'Häufig',
+			'plants.added_count' => ({required Object n}) => 'Hinzugefügt (${n})',
+			'plants.undo' => 'Rückgängig',
+			'plants.done' => 'Fertig',
+			'plants.add_to_label' => 'Hinzufügen zu',
 			'plants.field_add' => 'Pflanze auswählen',
 			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
 			'supplies.title' => 'Vorräte',

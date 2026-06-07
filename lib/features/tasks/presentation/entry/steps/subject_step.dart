@@ -11,6 +11,7 @@ import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
 import '../../../../areas/presentation/area_type_display.dart';
 import '../../../../plants/application/plants_providers.dart';
+import '../../../../plants/presentation/garden_plant_add_screen.dart';
 import '../../../../plants/presentation/plant_display.dart';
 
 /// Step 2 — subjects: multi-select plants + areas-as-subject, with inline
@@ -55,7 +56,10 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
 
   /// Opens "add plant" (species + locations) and auto-selects what it creates.
   Future<void> _addPlant() async {
-    final ids = await context.pushNamed<List<String>>('plant-new');
+    final ids = await context.pushNamed<List<String>>(
+      'plant-add',
+      extra: const PlantAddArgs(subjectMode: true),
+    );
     if (ids != null) {
       for (final id in ids) {
         widget.onTogglePlant(id, true);
