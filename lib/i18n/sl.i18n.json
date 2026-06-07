@@ -306,7 +306,17 @@
   "plant_detail": {
     "not_found": "Rastlina ni bila najdena.",
     "history_title": "Zgodovina opravil",
-    "history_empty": "Za to rastlino še ni opravil."
+    "history_empty": "Za to rastlino še ni opravil.",
+    "move": "premakni",
+    "assign_area": "Dodeli območje"
+  },
+  "area_pick": {
+    "move_title(name)": "Premakni „${name}“",
+    "choose_title": "Izberi območje",
+    "note": "Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.",
+    "none": "Brez območja",
+    "current": "trenutno",
+    "new_area": "Novo območje"
   },
   "areas": {
     "title": "Vrt",

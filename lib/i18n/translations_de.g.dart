@@ -58,6 +58,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$entry$de entry = _Translations$entry$de._(_root);
 	@override late final _Translations$plant_edit$de plant_edit = _Translations$plant_edit$de._(_root);
 	@override late final _Translations$plant_detail$de plant_detail = _Translations$plant_detail$de._(_root);
+	@override late final _Translations$area_pick$de area_pick = _Translations$area_pick$de._(_root);
 	@override late final _Translations$areas$de areas = _Translations$areas$de._(_root);
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
@@ -501,6 +502,23 @@ class _Translations$plant_detail$de extends Translations$plant_detail$sl {
 	@override String get not_found => 'Pflanze nicht gefunden.';
 	@override String get history_title => 'Aufgabenverlauf';
 	@override String get history_empty => 'Noch keine Aufgaben für diese Pflanze.';
+	@override String get move => 'verschieben';
+	@override String get assign_area => 'Bereich zuweisen';
+}
+
+// Path: area_pick
+class _Translations$area_pick$de extends Translations$area_pick$sl {
+	_Translations$area_pick$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String move_title({required Object name}) => '„${name}“ verschieben';
+	@override String get choose_title => 'Bereich wählen';
+	@override String get note => 'Eine Pflanze gehört zu einem Bereich (oder keinem). Der Aufgabenverlauf bleibt.';
+	@override String get none => 'Kein Bereich';
+	@override String get current => 'aktuell';
+	@override String get new_area => 'Neuer Bereich';
 }
 
 // Path: areas
@@ -919,6 +937,14 @@ extension on TranslationsDe {
 			'plant_detail.not_found' => 'Pflanze nicht gefunden.',
 			'plant_detail.history_title' => 'Aufgabenverlauf',
 			'plant_detail.history_empty' => 'Noch keine Aufgaben für diese Pflanze.',
+			'plant_detail.move' => 'verschieben',
+			'plant_detail.assign_area' => 'Bereich zuweisen',
+			'area_pick.move_title' => ({required Object name}) => '„${name}“ verschieben',
+			'area_pick.choose_title' => 'Bereich wählen',
+			'area_pick.note' => 'Eine Pflanze gehört zu einem Bereich (oder keinem). Der Aufgabenverlauf bleibt.',
+			'area_pick.none' => 'Kein Bereich',
+			'area_pick.current' => 'aktuell',
+			'area_pick.new_area' => 'Neuer Bereich',
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
 			'areas.empty' => 'Noch keine Bereiche. Füge den ersten mit + hinzu.',

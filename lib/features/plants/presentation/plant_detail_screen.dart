@@ -12,6 +12,7 @@ import '../../areas/application/areas_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../application/plants_providers.dart';
 import 'plant_display.dart';
+import 'widgets/area_pick_sheet.dart';
 
 /// Read-only history of a single plant instance — the subject's home page.
 class PlantDetailScreen extends ConsumerWidget {
@@ -70,7 +71,7 @@ class PlantDetailScreen extends ConsumerWidget {
   }
 }
 
-class _Hero extends StatelessWidget {
+class _Hero extends ConsumerWidget {
   const _Hero({
     required this.plant,
     required this.catalog,
@@ -81,18 +82,36 @@ class _Hero extends StatelessWidget {
   final Map<String, Plant> catalog;
   final Map<String, Area> areas;
 
+  Future<void> _move(BuildContext context, WidgetRef ref) async {
+    final t = context.t;
+    final pick = await showAreaPickSheet(
+      context,
+      title: t.area_pick.move_title(name: userPlantLabel(plant, catalog)),
+      currentAreaId: plant.areaId,
+    );
+    if (pick == null || !context.mounted) return;
+    // Preserve the alias — update() rewrites it, so passing the current value
+    // keeps a move from clearing it.
+    await ref.read(userPlantsRepositoryProvider).update(
+          id: plant.id,
+          areaId: pick.areaId,
+          personalAlias: plant.personalAlias,
+        );
+  }
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
     final theme = Theme.of(context);
     final catalogPlant = plant.plantId != null ? catalog[plant.plantId] : null;
     final scientific = catalogPlant?.scientificName;
     final areaName = plant.areaId != null ? areas[plant.areaId]?.name : null;
-    final sub = [
-      ?scientific,
-      if (areaName != null) '🪴 $areaName',
-    ].join(' · ');
+    final pillLabel = areaName != null
+        ? '$areaName · ${t.plant_detail.move}'
+        : t.plant_detail.assign_area;
 
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         CircleAvatar(
           radius: 28,
@@ -110,12 +129,20 @@ class _Hero extends StatelessWidget {
                 style: theme.textTheme.headlineSmall
                     ?.copyWith(fontWeight: FontWeight.w700),
               ),
-              if (sub.isNotEmpty)
+              if (scientific != null)
                 Text(
-                  sub,
+                  scientific,
                   style: theme.textTheme.bodyMedium
                       ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
                 ),
+              const SizedBox(height: 8),
+              ActionChip(
+                avatar: Icon(Icons.place_outlined,
+                    size: 18, color: theme.colorScheme.primary),
+                label: Text(pillLabel),
+                onPressed: () => _move(context, ref),
+                visualDensity: VisualDensity.compact,
+              ),
             ],
           ),
         ),

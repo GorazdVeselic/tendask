@@ -302,7 +302,17 @@
   "plant_detail": {
     "not_found": "Pflanze nicht gefunden.",
     "history_title": "Aufgabenverlauf",
-    "history_empty": "Noch keine Aufgaben für diese Pflanze."
+    "history_empty": "Noch keine Aufgaben für diese Pflanze.",
+    "move": "verschieben",
+    "assign_area": "Bereich zuweisen"
+  },
+  "area_pick": {
+    "move_title(name)": "„${name}“ verschieben",
+    "choose_title": "Bereich wählen",
+    "note": "Eine Pflanze gehört zu einem Bereich (oder keinem). Der Aufgabenverlauf bleibt.",
+    "none": "Kein Bereich",
+    "current": "aktuell",
+    "new_area": "Neuer Bereich"
   },
   "areas": {
     "title": "Garten",

@@ -302,7 +302,17 @@
   "plant_detail": {
     "not_found": "Plant not found.",
     "history_title": "Task history",
-    "history_empty": "No tasks for this plant yet."
+    "history_empty": "No tasks for this plant yet.",
+    "move": "move",
+    "assign_area": "Assign area"
+  },
+  "area_pick": {
+    "move_title(name)": "Move „${name}“",
+    "choose_title": "Choose area",
+    "note": "A plant lives in one area (or none). Its task history stays.",
+    "none": "No area",
+    "current": "current",
+    "new_area": "New area"
   },
   "areas": {
     "title": "Garden",

@@ -59,6 +59,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$entry$sl entry = Translations$entry$sl.internal(_root);
 	late final Translations$plant_edit$sl plant_edit = Translations$plant_edit$sl.internal(_root);
 	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
+	late final Translations$area_pick$sl area_pick = Translations$area_pick$sl.internal(_root);
 	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
 	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
 	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
@@ -1028,6 +1029,39 @@ class Translations$plant_detail$sl {
 
 	/// sl: 'Za to rastlino še ni opravil.'
 	String get history_empty => 'Za to rastlino še ni opravil.';
+
+	/// sl: 'premakni'
+	String get move => 'premakni';
+
+	/// sl: 'Dodeli območje'
+	String get assign_area => 'Dodeli območje';
+}
+
+// Path: area_pick
+class Translations$area_pick$sl {
+	Translations$area_pick$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Premakni „${name}“'
+	String move_title({required Object name}) => 'Premakni „${name}“';
+
+	/// sl: 'Izberi območje'
+	String get choose_title => 'Izberi območje';
+
+	/// sl: 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.'
+	String get note => 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.';
+
+	/// sl: 'Brez območja'
+	String get none => 'Brez območja';
+
+	/// sl: 'trenutno'
+	String get current => 'trenutno';
+
+	/// sl: 'Novo območje'
+	String get new_area => 'Novo območje';
 }
 
 // Path: areas
@@ -1650,6 +1684,14 @@ extension on Translations {
 			'plant_detail.not_found' => 'Rastlina ni bila najdena.',
 			'plant_detail.history_title' => 'Zgodovina opravil',
 			'plant_detail.history_empty' => 'Za to rastlino še ni opravil.',
+			'plant_detail.move' => 'premakni',
+			'plant_detail.assign_area' => 'Dodeli območje',
+			'area_pick.move_title' => ({required Object name}) => 'Premakni „${name}“',
+			'area_pick.choose_title' => 'Izberi območje',
+			'area_pick.note' => 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.',
+			'area_pick.none' => 'Brez območja',
+			'area_pick.current' => 'trenutno',
+			'area_pick.new_area' => 'Novo območje',
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
 			'areas.empty' => 'Ni območij. Dodaj prvo z +.',

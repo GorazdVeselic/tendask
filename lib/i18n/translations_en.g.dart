@@ -58,6 +58,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$entry$en entry = _Translations$entry$en._(_root);
 	@override late final _Translations$plant_edit$en plant_edit = _Translations$plant_edit$en._(_root);
 	@override late final _Translations$plant_detail$en plant_detail = _Translations$plant_detail$en._(_root);
+	@override late final _Translations$area_pick$en area_pick = _Translations$area_pick$en._(_root);
 	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
 	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
 	@override late final _Translations$supplies$en supplies = _Translations$supplies$en._(_root);
@@ -501,6 +502,23 @@ class _Translations$plant_detail$en extends Translations$plant_detail$sl {
 	@override String get not_found => 'Plant not found.';
 	@override String get history_title => 'Task history';
 	@override String get history_empty => 'No tasks for this plant yet.';
+	@override String get move => 'move';
+	@override String get assign_area => 'Assign area';
+}
+
+// Path: area_pick
+class _Translations$area_pick$en extends Translations$area_pick$sl {
+	_Translations$area_pick$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String move_title({required Object name}) => 'Move „${name}“';
+	@override String get choose_title => 'Choose area';
+	@override String get note => 'A plant lives in one area (or none). Its task history stays.';
+	@override String get none => 'No area';
+	@override String get current => 'current';
+	@override String get new_area => 'New area';
 }
 
 // Path: areas
@@ -919,6 +937,14 @@ extension on TranslationsEn {
 			'plant_detail.not_found' => 'Plant not found.',
 			'plant_detail.history_title' => 'Task history',
 			'plant_detail.history_empty' => 'No tasks for this plant yet.',
+			'plant_detail.move' => 'move',
+			'plant_detail.assign_area' => 'Assign area',
+			'area_pick.move_title' => ({required Object name}) => 'Move „${name}“',
+			'area_pick.choose_title' => 'Choose area',
+			'area_pick.note' => 'A plant lives in one area (or none). Its task history stays.',
+			'area_pick.none' => 'No area',
+			'area_pick.current' => 'current',
+			'area_pick.new_area' => 'New area',
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
 			'areas.empty' => 'No areas yet. Add your first with +.',
