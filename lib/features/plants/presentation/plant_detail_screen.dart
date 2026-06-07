@@ -7,10 +7,12 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../application/plants_providers.dart';
+import '../data/user_plants_repository.dart';
 import 'plant_display.dart';
 import 'widgets/area_pick_sheet.dart';
 
@@ -90,13 +92,16 @@ class _Hero extends ConsumerWidget {
       currentAreaId: plant.areaId,
     );
     if (pick == null || !context.mounted) return;
-    // Preserve the alias — update() rewrites it, so passing the current value
-    // keeps a move from clearing it.
-    await ref.read(userPlantsRepositoryProvider).update(
+    // Preserve the alias — moveToArea() rewrites it, so passing the current
+    // value keeps a move from clearing it.
+    final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
           id: plant.id,
           areaId: pick.areaId,
           personalAlias: plant.personalAlias,
         );
+    if (res == PlantMoveResult.duplicate && context.mounted) {
+      showTopToast(context, t.area_pick.duplicate, error: true);
+    }
   }
 
   @override

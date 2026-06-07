@@ -1041,6 +1041,9 @@ class Translations$area_pick$sl {
 
 	/// sl: 'Novo območje'
 	String get new_area => 'Novo območje';
+
+	/// sl: 'Ta rastlina je že v izbranem območju.'
+	String get duplicate => 'Ta rastlina je že v izbranem območju.';
 }
 
 // Path: areas
@@ -1700,6 +1703,7 @@ extension on Translations {
 			'area_pick.none' => 'Brez območja',
 			'area_pick.current' => 'trenutno',
 			'area_pick.new_area' => 'Novo območje',
+			'area_pick.duplicate' => 'Ta rastlina je že v izbranem območju.',
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
 			'areas.unassigned' => 'Brez območja',

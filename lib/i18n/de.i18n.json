@@ -305,7 +305,8 @@
     "note": "Eine Pflanze gehört zu einem Bereich (oder keinem). Der Aufgabenverlauf bleibt.",
     "none": "Kein Bereich",
     "current": "aktuell",
-    "new_area": "Neuer Bereich"
+    "new_area": "Neuer Bereich",
+    "duplicate": "Diese Pflanze ist bereits im gewählten Bereich."
   },
   "areas": {
     "title": "Garten",

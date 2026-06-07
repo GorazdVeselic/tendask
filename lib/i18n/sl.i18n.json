@@ -309,7 +309,8 @@
     "note": "Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.",
     "none": "Brez območja",
     "current": "trenutno",
-    "new_area": "Novo območje"
+    "new_area": "Novo območje",
+    "duplicate": "Ta rastlina je že v izbranem območju."
   },
   "areas": {
     "title": "Vrt",

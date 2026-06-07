@@ -512,6 +512,7 @@ class _Translations$area_pick$en extends Translations$area_pick$sl {
 	@override String get none => 'No area';
 	@override String get current => 'current';
 	@override String get new_area => 'New area';
+	@override String get duplicate => 'This plant is already in the selected area.';
 }
 
 // Path: areas
@@ -943,6 +944,7 @@ extension on TranslationsEn {
 			'area_pick.none' => 'No area',
 			'area_pick.current' => 'current',
 			'area_pick.new_area' => 'New area',
+			'area_pick.duplicate' => 'This plant is already in the selected area.',
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
 			'areas.unassigned' => 'No area',

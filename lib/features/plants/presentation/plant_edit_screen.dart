@@ -9,9 +9,11 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
 import '../../../core/widgets/section_label.dart';
+import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
+import '../data/user_plants_repository.dart';
 import 'widgets/area_pick_sheet.dart';
 
 /// Edit a personal plant instance: alias + its area (single — move) + delete.
@@ -76,12 +78,17 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
     setState(() => _isSaving = true);
     try {
       final alias = _aliasController.text.trim();
-      await ref.read(userPlantsRepositoryProvider).update(
+      final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
             id: widget.userPlantId,
             areaId: _areaId,
             personalAlias: alias.isEmpty ? null : alias,
           );
-      if (mounted) context.pop();
+      if (!mounted) return;
+      if (res == PlantMoveResult.duplicate) {
+        showTopToast(context, context.t.area_pick.duplicate, error: true);
+        return;
+      }
+      context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

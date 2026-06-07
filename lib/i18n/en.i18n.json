@@ -305,7 +305,8 @@
     "note": "A plant lives in one area (or none). Its task history stays.",
     "none": "No area",
     "current": "current",
-    "new_area": "New area"
+    "new_area": "New area",
+    "duplicate": "This plant is already in the selected area."
   },
   "areas": {
     "title": "Garden",

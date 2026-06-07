@@ -4,8 +4,10 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
+import '../../../../core/widgets/top_toast.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/plants_providers.dart';
+import '../../data/user_plants_repository.dart';
 import '../plant_display.dart';
 import 'area_pick_sheet.dart';
 
@@ -26,12 +28,15 @@ class PlantRow extends ConsumerWidget {
       currentAreaId: plant.areaId,
     );
     if (pick == null || !context.mounted) return;
-    // Preserve the alias — update() rewrites it.
-    await ref.read(userPlantsRepositoryProvider).update(
+    // Preserve the alias — moveToArea() rewrites it.
+    final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
           id: plant.id,
           areaId: pick.areaId,
           personalAlias: plant.personalAlias,
         );
+    if (res == PlantMoveResult.duplicate && context.mounted) {
+      showTopToast(context, t.area_pick.duplicate, error: true);
+    }
   }
 
   Future<void> _remove(BuildContext context, WidgetRef ref) async {

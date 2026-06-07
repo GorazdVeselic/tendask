@@ -101,6 +101,66 @@ void main() {
     });
   });
 
+  group('moveToArea', () {
+    const area2 = 'area-2';
+
+    Future<void> insertArea2() => db.into(db.areas).insert(AreasCompanion.insert(
+          id: area2,
+          userId: userId,
+          name: 'Greda',
+          type: const Value(AreaType.bed),
+          updatedAt: t0,
+        ));
+
+    test('moves into an area without that species', () async {
+      await insertArea2();
+      final id = await repo.create(
+          userId: userId, areaId: areaId, plantId: 'apple');
+
+      final res = await repo.moveToArea(id: id, areaId: area2);
+
+      expect(res, PlantMoveResult.moved);
+      expect((await repo.byId(id))!.areaId, area2);
+    });
+
+    test('blocks a move into an area that already has the species', () async {
+      await insertArea2();
+      await repo.create(userId: userId, areaId: area2, plantId: 'apple');
+      final movingId = await repo.create(
+          userId: userId, areaId: areaId, plantId: 'apple');
+
+      final res = await repo.moveToArea(id: movingId, areaId: area2);
+
+      expect(res, PlantMoveResult.duplicate);
+      expect((await repo.byId(movingId))!.areaId, areaId);
+    });
+
+    test('a deleted instance in the target does not block', () async {
+      await insertArea2();
+      final delId = await repo.create(
+          userId: userId, areaId: area2, plantId: 'apple');
+      await repo.softDelete(delId);
+      final id = await repo.create(
+          userId: userId, areaId: areaId, plantId: 'apple');
+
+      final res = await repo.moveToArea(id: id, areaId: area2);
+
+      expect(res, PlantMoveResult.moved);
+      expect((await repo.byId(id))!.areaId, area2);
+    });
+
+    test('custom plants (no plantId) never collide', () async {
+      await insertArea2();
+      await repo.create(userId: userId, areaId: area2, customName: 'Babica');
+      final id = await repo.create(
+          userId: userId, areaId: areaId, customName: 'Babica');
+
+      final res = await repo.moveToArea(id: id, areaId: area2);
+
+      expect(res, PlantMoveResult.moved);
+    });
+  });
+
   group('plantMatchesQuery', () {
     const tomato = Plant(
       id: 'tomato',

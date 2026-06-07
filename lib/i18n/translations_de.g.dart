@@ -512,6 +512,7 @@ class _Translations$area_pick$de extends Translations$area_pick$sl {
 	@override String get none => 'Kein Bereich';
 	@override String get current => 'aktuell';
 	@override String get new_area => 'Neuer Bereich';
+	@override String get duplicate => 'Diese Pflanze ist bereits im gewählten Bereich.';
 }
 
 // Path: areas
@@ -943,6 +944,7 @@ extension on TranslationsDe {
 			'area_pick.none' => 'Kein Bereich',
 			'area_pick.current' => 'aktuell',
 			'area_pick.new_area' => 'Neuer Bereich',
+			'area_pick.duplicate' => 'Diese Pflanze ist bereits im gewählten Bereich.',
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
 			'areas.unassigned' => 'Ohne Bereich',

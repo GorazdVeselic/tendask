@@ -12,6 +12,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
+import '../data/user_plants_repository.dart';
 import 'plant_display.dart';
 import 'widgets/area_pick_sheet.dart';
 import 'widgets/plant_select_row.dart';
@@ -93,21 +94,40 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     setState(() => _added.add(_Added(id, plantId, label)));
   }
 
-  /// Tap on a catalog/frequent plant: add it, or remove it if already added
-  /// this session (toggle). Custom entries have no plantId and never toggle.
+  /// Tap on a catalog/frequent plant: toggle its membership of the target. A
+  /// member (added this session OR already in the target area) is removed;
+  /// otherwise it is added. Custom entries (no plantId) never reach here.
   Future<void> _toggle(Plant plant) async {
-    final idx = _added.indexWhere((a) => a.plantId == plant.id);
-    if (idx >= 0) {
-      await _removeAdded(_added[idx]);
+    final member = _memberFor(plant.id);
+    if (member != null) {
+      await _removeMember(member);
     } else {
       await _create(plantId: plant.id, label: catalogLabel(plant.labels));
     }
   }
 
-  Future<void> _removeAdded(_Added added) async {
-    await ref.read(userPlantsRepositoryProvider).softDelete(added.id);
+  /// The instance representing [plantId] in the current target — a session add
+  /// or, when a real area is targeted, a plant already living there.
+  _Added? _memberFor(String plantId) {
+    for (final a in _added) {
+      if (a.plantId == plantId) return a;
+    }
+    if (!widget.args.subjectMode) {
+      final map = ref.read(userPlantsMapProvider).asData?.value ?? const {};
+      final catalog = ref.read(plantsMapProvider).asData?.value ?? const {};
+      for (final p in map.values) {
+        if (p.areaId == _targetAreaId && p.plantId == plantId) {
+          return _Added(p.id, p.plantId, userPlantLabel(p, catalog));
+        }
+      }
+    }
+    return null;
+  }
+
+  Future<void> _removeMember(_Added member) async {
+    await ref.read(userPlantsRepositoryProvider).softDelete(member.id);
     if (!mounted) return;
-    setState(() => _added.removeWhere((a) => a.id == added.id));
+    setState(() => _added.removeWhere((a) => a.id == member.id));
   }
 
   Future<void> _changeTarget() async {
@@ -120,10 +140,20 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     if (pick == null || !mounted) return;
     setState(() => _targetAreaId = pick.areaId);
     // Re-parent already-added rows so "I'm adding these to bed X" holds even
-    // when the area is chosen after some taps. Rows have no alias yet.
+    // when the area is chosen after some taps. Rows have no alias yet. If the
+    // new area already has the species, the fresh instance is redundant — drop
+    // it instead of leaving a duplicate behind.
     final repo = ref.read(userPlantsRepositoryProvider);
+    final dropped = <_Added>[];
     for (final a in _added) {
-      await repo.update(id: a.id, areaId: pick.areaId);
+      final res = await repo.moveToArea(id: a.id, areaId: pick.areaId);
+      if (res == PlantMoveResult.duplicate) {
+        await repo.softDelete(a.id);
+        dropped.add(a);
+      }
+    }
+    if (dropped.isNotEmpty && mounted) {
+      setState(() => _added.removeWhere(dropped.contains));
     }
   }
 
@@ -143,7 +173,20 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                 coarsePlantCategory(p.category) == _category)
             .where((p) => plantMatchesQuery(p, normQuery))
             .toList();
-    final addedPlantIds = {for (final a in _added) ?a.plantId};
+    // Members = added this session, plus (in garden mode) every plant already
+    // in the current target bucket — a real area OR "no area" (null) — so the
+    // footer, counter, ✓ and remove cover the bucket's whole contents.
+    final userPlantsMap =
+        ref.watch(userPlantsMapProvider).asData?.value ?? const {};
+    final managesArea = !widget.args.subjectMode;
+    final members = <_Added>[
+      ..._added,
+      if (managesArea)
+        for (final p in userPlantsMap.values)
+          if (p.areaId == _targetAreaId && _added.every((a) => a.id != p.id))
+            _Added(p.id, p.plantId, userPlantLabel(p, catalog)),
+    ];
+    final selectedIds = {for (final m in members) ?m.plantId};
 
     return Scaffold(
       appBar: AppBar(
@@ -202,7 +245,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                                               style:
                                                   const TextStyle(fontSize: 16)),
                                           label: Text(catalogLabel(p.labels)),
-                                          selected: addedPlantIds.contains(p.id),
+                                          selected: selectedIds.contains(p.id),
                                           onSelected: (_) => _toggle(p),
                                         ),
                                   ],
@@ -252,7 +295,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                             title: catalogLabel(results[i].labels),
                             subtitle: plantCategoryLabel(
                                 coarsePlantCategory(results[i].category), t),
-                            selected: addedPlantIds.contains(results[i].id),
+                            selected: selectedIds.contains(results[i].id),
                             onTap: () => _toggle(results[i]),
                           ),
                           separatorBuilder: (_, _) => Divider(
@@ -283,12 +326,12 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
               areaId: _targetAreaId,
               areas: ref.watch(areasMapProvider).asData?.value ?? const {},
               onTap: _changeTarget,
-              bottomSafe: _added.isEmpty,
+              bottomSafe: members.isEmpty,
             ),
-          if (_added.isNotEmpty)
+          if (members.isNotEmpty)
             _AddedBar(
-              added: _added,
-              onRemove: _removeAdded,
+              added: members,
+              onRemove: _removeMember,
               onDone: () => context.pop(_createdIds),
             ),
         ],

@@ -6,6 +6,11 @@ import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 
+/// Outcome of [UserPlantsRepository.moveToArea] — a move is refused when the
+/// destination area already holds that species (the (area, species) pair is
+/// kept unique).
+enum PlantMoveResult { moved, duplicate }
+
 class UserPlantsRepository {
   UserPlantsRepository(this._db, {this._clock = const SystemClock()});
 
@@ -92,6 +97,46 @@ class UserPlantsRepository {
         customName: customName,
         personalAlias: personalAlias,
       );
+
+  /// True when a non-deleted instance of [plantId] already lives in [areaId].
+  /// Custom plants (null [plantId]) never collide. [excludeId] skips a row
+  /// (the instance being moved).
+  Future<bool> areaHasSpecies({
+    required String? areaId,
+    required String? plantId,
+    String? excludeId,
+  }) async {
+    if (plantId == null) return false;
+    final rows = await (_db.select(_db.userPlants)
+          ..where((p) {
+            var w = p.deleted.equals(false) & p.plantId.equals(plantId);
+            w = w &
+                (areaId == null ? p.areaId.isNull() : p.areaId.equals(areaId));
+            if (excludeId != null) w = w & p.id.isNotValue(excludeId);
+            return w;
+          }))
+        .get();
+    return rows.isNotEmpty;
+  }
+
+  /// Moves a plant to [areaId] (optionally rewriting its alias). Refuses with
+  /// [PlantMoveResult.duplicate] when the target area already holds that
+  /// species, so an area never ends up with the same plant twice.
+  Future<PlantMoveResult> moveToArea({
+    required String id,
+    String? areaId,
+    String? personalAlias,
+  }) async {
+    final plant = await byId(id);
+    if (plant == null) return PlantMoveResult.moved;
+    if (areaId != plant.areaId &&
+        await areaHasSpecies(
+            areaId: areaId, plantId: plant.plantId, excludeId: id)) {
+      return PlantMoveResult.duplicate;
+    }
+    await update(id: id, areaId: areaId, personalAlias: personalAlias);
+    return PlantMoveResult.moved;
+  }
 
   /// Edits one plant instance (alias and/or its area).
   Future<void> update({
