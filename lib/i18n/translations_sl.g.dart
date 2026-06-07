@@ -964,20 +964,11 @@ class Translations$plant_edit$sl {
 
 	// Translations
 
-	/// sl: 'Dodaj rastlino'
-	String get title_new => 'Dodaj rastlino';
-
 	/// sl: 'Uredi rastlino'
 	String get title_edit => 'Uredi rastlino';
 
 	/// sl: 'Vrsta'
 	String get species => 'Vrsta';
-
-	/// sl: 'Izberi vrsto'
-	String get species_choose => 'Izberi vrsto';
-
-	/// sl: 'Spremeni'
-	String get species_change => 'Spremeni';
 
 	/// sl: 'Osebno ime (neobvezno)'
 	String get alias => 'Osebno ime (neobvezno)';
@@ -991,18 +982,6 @@ class Translations$plant_edit$sl {
 	/// sl: 'Območje'
 	String get location_label => 'Območje';
 
-	/// sl: 'Kje raste'
-	String get locations => 'Kje raste';
-
-	/// sl: 'izberi eno ali več območij'
-	String get locations_hint => 'izberi eno ali več območij';
-
-	/// sl: 'Brez območja je tudi v redu (npr. lončnica na terasi).'
-	String get locations_note => 'Brez območja je tudi v redu (npr. lončnica na terasi).';
-
-	/// sl: 'Novo območje'
-	String get new_area => 'Novo območje';
-
 	/// sl: 'Odstrani rastlino iz vrta'
 	String get delete => 'Odstrani rastlino iz vrta';
 
@@ -1011,9 +990,6 @@ class Translations$plant_edit$sl {
 
 	/// sl: 'Shrani'
 	String get save => 'Shrani';
-
-	/// sl: 'Najprej izberi vrsto rastline.'
-	String get err_species => 'Najprej izberi vrsto rastline.';
 }
 
 // Path: plant_detail
@@ -1080,9 +1056,6 @@ class Translations$areas$sl {
 
 	/// sl: 'rastline in trate'
 	String get subtitle => 'rastline in trate';
-
-	/// sl: 'Ni območij. Dodaj prvo z +.'
-	String get empty => 'Ni območij. Dodaj prvo z +.';
 
 	/// sl: 'Brez območja'
 	String get unassigned => 'Brez območja';
@@ -1171,26 +1144,11 @@ class Translations$areas$sl {
 	/// sl: 'Tip'
 	String get form_type => 'Tip';
 
-	/// sl: 'Rastline v območju'
-	String get form_plants => 'Rastline v območju';
-
-	/// sl: 'Dodaj rastlino'
-	String get form_plants_add => 'Dodaj rastlino';
-
-	/// sl: 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.'
-	String get form_plants_note => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.';
-
 	/// sl: 'Shrani območje'
 	String get form_save => 'Shrani območje';
 
 	/// sl: 'Vnesi ime območja.'
 	String get err_name => 'Vnesi ime območja.';
-
-	/// sl: 'Še ni rastlin.'
-	String get plants_empty => 'Še ni rastlin.';
-
-	/// sl: 'Odstrani'
-	String get plant_remove => 'Odstrani';
 }
 
 // Path: plants
@@ -1716,23 +1674,15 @@ extension on Translations {
 			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
 			'entry.rem_exact_open' => 'Odpri nastavitve',
 			'entry.rem_added' => 'že dodano',
-			'plant_edit.title_new' => 'Dodaj rastlino',
 			'plant_edit.title_edit' => 'Uredi rastlino',
 			'plant_edit.species' => 'Vrsta',
-			'plant_edit.species_choose' => 'Izberi vrsto',
-			'plant_edit.species_change' => 'Spremeni',
 			'plant_edit.alias' => 'Osebno ime (neobvezno)',
 			'plant_edit.alias_hint' => 'npr. »stara jablana ob ograji«',
 			'plant_edit.alias_note' => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.',
 			'plant_edit.location_label' => 'Območje',
-			'plant_edit.locations' => 'Kje raste',
-			'plant_edit.locations_hint' => 'izberi eno ali več območij',
-			'plant_edit.locations_note' => 'Brez območja je tudi v redu (npr. lončnica na terasi).',
-			'plant_edit.new_area' => 'Novo območje',
 			'plant_edit.delete' => 'Odstrani rastlino iz vrta',
 			'plant_edit.delete_note' => 'Zgodovina opravil ostane v Dnevniku.',
 			'plant_edit.save' => 'Shrani',
-			'plant_edit.err_species' => 'Najprej izberi vrsto rastline.',
 			'plant_detail.not_found' => 'Rastlina ni bila najdena.',
 			'plant_detail.history_title' => 'Zgodovina opravil',
 			'plant_detail.history_empty' => 'Za to rastlino še ni opravil.',
@@ -1746,7 +1696,6 @@ extension on Translations {
 			'area_pick.new_area' => 'Novo območje',
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
-			'areas.empty' => 'Ni območij. Dodaj prvo z +.',
 			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
 			'areas.type_lawn' => 'Trata',
@@ -1776,13 +1725,8 @@ extension on Translations {
 			'areas.form_name' => 'Ime',
 			'areas.form_name_hint' => 'npr. Visoka greda 1',
 			'areas.form_type' => 'Tip',
-			'areas.form_plants' => 'Rastline v območju',
-			'areas.form_plants_add' => 'Dodaj rastlino',
-			'areas.form_plants_note' => 'Opravila (obrez, tretiranje, pobiranje) se vežejo na izbrano rastlino.',
 			'areas.form_save' => 'Shrani območje',
 			'areas.err_name' => 'Vnesi ime območja.',
-			'areas.plants_empty' => 'Še ni rastlin.',
-			'areas.plant_remove' => 'Odstrani',
 			'plants.picker_title' => 'Izberi rastlino',
 			'plants.search_hint' => 'Išči rastlino…',
 			'plants.cat_all' => 'Vse',

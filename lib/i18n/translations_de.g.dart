@@ -474,23 +474,15 @@ class _Translations$plant_edit$de extends Translations$plant_edit$sl {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_new => 'Pflanze hinzufügen';
 	@override String get title_edit => 'Pflanze bearbeiten';
 	@override String get species => 'Art';
-	@override String get species_choose => 'Art wählen';
-	@override String get species_change => 'Ändern';
 	@override String get alias => 'Eigener Name (optional)';
 	@override String get alias_hint => 'z. B. „alter Apfel am Zaun“';
 	@override String get alias_note => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.';
 	@override String get location_label => 'Bereich';
-	@override String get locations => 'Wo sie wächst';
-	@override String get locations_hint => 'einen oder mehrere Bereiche wählen';
-	@override String get locations_note => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).';
-	@override String get new_area => 'Neuer Bereich';
 	@override String get delete => 'Pflanze aus dem Garten entfernen';
 	@override String get delete_note => 'Der Aufgabenverlauf bleibt im Tagebuch.';
 	@override String get save => 'Speichern';
-	@override String get err_species => 'Wähle zuerst eine Art.';
 }
 
 // Path: plant_detail
@@ -531,7 +523,6 @@ class _Translations$areas$de extends Translations$areas$sl {
 	// Translations
 	@override String get title => 'Garten';
 	@override String get subtitle => 'Pflanzen und Rasen';
-	@override String get empty => 'Noch keine Bereiche. Füge den ersten mit + hinzu.';
 	@override String get unassigned => 'Ohne Bereich';
 	@override String get last_prefix => 'zuletzt:';
 	@override String get type_lawn => 'Rasen';
@@ -561,13 +552,8 @@ class _Translations$areas$de extends Translations$areas$sl {
 	@override String get form_name => 'Name';
 	@override String get form_name_hint => 'z. B. Hochbeet 1';
 	@override String get form_type => 'Typ';
-	@override String get form_plants => 'Pflanzen im Bereich';
-	@override String get form_plants_add => 'Pflanze hinzufügen';
-	@override String get form_plants_note => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.';
 	@override String get form_save => 'Bereich speichern';
 	@override String get err_name => 'Bereichsnamen eingeben.';
-	@override String get plants_empty => 'Noch keine Pflanzen.';
-	@override String get plant_remove => 'Entfernen';
 }
 
 // Path: plants
@@ -935,23 +921,15 @@ extension on TranslationsDe {
 			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',
 			'entry.rem_exact_open' => 'Einstellungen öffnen',
 			'entry.rem_added' => 'bereits hinzugefügt',
-			'plant_edit.title_new' => 'Pflanze hinzufügen',
 			'plant_edit.title_edit' => 'Pflanze bearbeiten',
 			'plant_edit.species' => 'Art',
-			'plant_edit.species_choose' => 'Art wählen',
-			'plant_edit.species_change' => 'Ändern',
 			'plant_edit.alias' => 'Eigener Name (optional)',
 			'plant_edit.alias_hint' => 'z. B. „alter Apfel am Zaun“',
 			'plant_edit.alias_note' => 'Nur du siehst ihn; wird statt des Standardnamens angezeigt.',
 			'plant_edit.location_label' => 'Bereich',
-			'plant_edit.locations' => 'Wo sie wächst',
-			'plant_edit.locations_hint' => 'einen oder mehrere Bereiche wählen',
-			'plant_edit.locations_note' => 'Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).',
-			'plant_edit.new_area' => 'Neuer Bereich',
 			'plant_edit.delete' => 'Pflanze aus dem Garten entfernen',
 			'plant_edit.delete_note' => 'Der Aufgabenverlauf bleibt im Tagebuch.',
 			'plant_edit.save' => 'Speichern',
-			'plant_edit.err_species' => 'Wähle zuerst eine Art.',
 			'plant_detail.not_found' => 'Pflanze nicht gefunden.',
 			'plant_detail.history_title' => 'Aufgabenverlauf',
 			'plant_detail.history_empty' => 'Noch keine Aufgaben für diese Pflanze.',
@@ -965,7 +943,6 @@ extension on TranslationsDe {
 			'area_pick.new_area' => 'Neuer Bereich',
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
-			'areas.empty' => 'Noch keine Bereiche. Füge den ersten mit + hinzu.',
 			'areas.unassigned' => 'Ohne Bereich',
 			'areas.last_prefix' => 'zuletzt:',
 			'areas.type_lawn' => 'Rasen',
@@ -995,13 +972,8 @@ extension on TranslationsDe {
 			'areas.form_name' => 'Name',
 			'areas.form_name_hint' => 'z. B. Hochbeet 1',
 			'areas.form_type' => 'Typ',
-			'areas.form_plants' => 'Pflanzen im Bereich',
-			'areas.form_plants_add' => 'Pflanze hinzufügen',
-			'areas.form_plants_note' => 'Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.',
 			'areas.form_save' => 'Bereich speichern',
 			'areas.err_name' => 'Bereichsnamen eingeben.',
-			'areas.plants_empty' => 'Noch keine Pflanzen.',
-			'areas.plant_remove' => 'Entfernen',
 			'plants.picker_title' => 'Pflanze auswählen',
 			'plants.search_hint' => 'Pflanze suchen…',
 			'plants.cat_all' => 'Alle',

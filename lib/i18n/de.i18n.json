@@ -282,23 +282,15 @@
     "rem_added": "bereits hinzugefügt"
   },
   "plant_edit": {
-    "title_new": "Pflanze hinzufügen",
     "title_edit": "Pflanze bearbeiten",
     "species": "Art",
-    "species_choose": "Art wählen",
-    "species_change": "Ändern",
     "alias": "Eigener Name (optional)",
     "alias_hint": "z. B. „alter Apfel am Zaun“",
     "alias_note": "Nur du siehst ihn; wird statt des Standardnamens angezeigt.",
     "location_label": "Bereich",
-    "locations": "Wo sie wächst",
-    "locations_hint": "einen oder mehrere Bereiche wählen",
-    "locations_note": "Ohne Bereich ist auch ok (z. B. ein Topf auf der Terrasse).",
-    "new_area": "Neuer Bereich",
     "delete": "Pflanze aus dem Garten entfernen",
     "delete_note": "Der Aufgabenverlauf bleibt im Tagebuch.",
-    "save": "Speichern",
-    "err_species": "Wähle zuerst eine Art."
+    "save": "Speichern"
   },
   "plant_detail": {
     "not_found": "Pflanze nicht gefunden.",
@@ -318,7 +310,6 @@
   "areas": {
     "title": "Garten",
     "subtitle": "Pflanzen und Rasen",
-    "empty": "Noch keine Bereiche. Füge den ersten mit + hinzu.",
     "unassigned": "Ohne Bereich",
     "last_prefix": "zuletzt:",
     "type_lawn": "Rasen",
@@ -348,13 +339,8 @@
     "form_name": "Name",
     "form_name_hint": "z. B. Hochbeet 1",
     "form_type": "Typ",
-    "form_plants": "Pflanzen im Bereich",
-    "form_plants_add": "Pflanze hinzufügen",
-    "form_plants_note": "Aufgaben (Schnitt, Behandlung, Ernte) werden mit der gewählten Pflanze verknüpft.",
     "form_save": "Bereich speichern",
-    "err_name": "Bereichsnamen eingeben.",
-    "plants_empty": "Noch keine Pflanzen.",
-    "plant_remove": "Entfernen"
+    "err_name": "Bereichsnamen eingeben."
   },
   "plants": {
     "picker_title": "Pflanze auswählen",

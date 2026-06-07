@@ -282,23 +282,15 @@
     "rem_added": "already added"
   },
   "plant_edit": {
-    "title_new": "Add plant",
     "title_edit": "Edit plant",
     "species": "Species",
-    "species_choose": "Choose species",
-    "species_change": "Change",
     "alias": "Personal name (optional)",
     "alias_hint": "e.g. “old apple by the fence”",
     "alias_note": "Only you see it; shown instead of the default name.",
     "location_label": "Area",
-    "locations": "Where it grows",
-    "locations_hint": "pick one or more areas",
-    "locations_note": "No area is fine too (e.g. a pot on the terrace).",
-    "new_area": "New area",
     "delete": "Remove plant from garden",
     "delete_note": "Task history stays in the journal.",
-    "save": "Save",
-    "err_species": "Choose a species first."
+    "save": "Save"
   },
   "plant_detail": {
     "not_found": "Plant not found.",
@@ -318,7 +310,6 @@
   "areas": {
     "title": "Garden",
     "subtitle": "plants and lawns",
-    "empty": "No areas yet. Add your first with +.",
     "unassigned": "No area",
     "last_prefix": "last:",
     "type_lawn": "Lawn",
@@ -348,13 +339,8 @@
     "form_name": "Name",
     "form_name_hint": "e.g. Raised bed 1",
     "form_type": "Type",
-    "form_plants": "Plants in area",
-    "form_plants_add": "Add plant",
-    "form_plants_note": "Tasks (pruning, treatment, harvesting) link to the selected plant.",
     "form_save": "Save area",
-    "err_name": "Enter an area name.",
-    "plants_empty": "No plants yet.",
-    "plant_remove": "Remove"
+    "err_name": "Enter an area name."
   },
   "plants": {
     "picker_title": "Select plant",

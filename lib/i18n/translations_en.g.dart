@@ -474,23 +474,15 @@ class _Translations$plant_edit$en extends Translations$plant_edit$sl {
 	final TranslationsEn _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_new => 'Add plant';
 	@override String get title_edit => 'Edit plant';
 	@override String get species => 'Species';
-	@override String get species_choose => 'Choose species';
-	@override String get species_change => 'Change';
 	@override String get alias => 'Personal name (optional)';
 	@override String get alias_hint => 'e.g. “old apple by the fence”';
 	@override String get alias_note => 'Only you see it; shown instead of the default name.';
 	@override String get location_label => 'Area';
-	@override String get locations => 'Where it grows';
-	@override String get locations_hint => 'pick one or more areas';
-	@override String get locations_note => 'No area is fine too (e.g. a pot on the terrace).';
-	@override String get new_area => 'New area';
 	@override String get delete => 'Remove plant from garden';
 	@override String get delete_note => 'Task history stays in the journal.';
 	@override String get save => 'Save';
-	@override String get err_species => 'Choose a species first.';
 }
 
 // Path: plant_detail
@@ -531,7 +523,6 @@ class _Translations$areas$en extends Translations$areas$sl {
 	// Translations
 	@override String get title => 'Garden';
 	@override String get subtitle => 'plants and lawns';
-	@override String get empty => 'No areas yet. Add your first with +.';
 	@override String get unassigned => 'No area';
 	@override String get last_prefix => 'last:';
 	@override String get type_lawn => 'Lawn';
@@ -561,13 +552,8 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get form_name => 'Name';
 	@override String get form_name_hint => 'e.g. Raised bed 1';
 	@override String get form_type => 'Type';
-	@override String get form_plants => 'Plants in area';
-	@override String get form_plants_add => 'Add plant';
-	@override String get form_plants_note => 'Tasks (pruning, treatment, harvesting) link to the selected plant.';
 	@override String get form_save => 'Save area';
 	@override String get err_name => 'Enter an area name.';
-	@override String get plants_empty => 'No plants yet.';
-	@override String get plant_remove => 'Remove';
 }
 
 // Path: plants
@@ -935,23 +921,15 @@ extension on TranslationsEn {
 			'entry.rem_exact_body' => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.',
 			'entry.rem_exact_open' => 'Open settings',
 			'entry.rem_added' => 'already added',
-			'plant_edit.title_new' => 'Add plant',
 			'plant_edit.title_edit' => 'Edit plant',
 			'plant_edit.species' => 'Species',
-			'plant_edit.species_choose' => 'Choose species',
-			'plant_edit.species_change' => 'Change',
 			'plant_edit.alias' => 'Personal name (optional)',
 			'plant_edit.alias_hint' => 'e.g. “old apple by the fence”',
 			'plant_edit.alias_note' => 'Only you see it; shown instead of the default name.',
 			'plant_edit.location_label' => 'Area',
-			'plant_edit.locations' => 'Where it grows',
-			'plant_edit.locations_hint' => 'pick one or more areas',
-			'plant_edit.locations_note' => 'No area is fine too (e.g. a pot on the terrace).',
-			'plant_edit.new_area' => 'New area',
 			'plant_edit.delete' => 'Remove plant from garden',
 			'plant_edit.delete_note' => 'Task history stays in the journal.',
 			'plant_edit.save' => 'Save',
-			'plant_edit.err_species' => 'Choose a species first.',
 			'plant_detail.not_found' => 'Plant not found.',
 			'plant_detail.history_title' => 'Task history',
 			'plant_detail.history_empty' => 'No tasks for this plant yet.',
@@ -965,7 +943,6 @@ extension on TranslationsEn {
 			'area_pick.new_area' => 'New area',
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
-			'areas.empty' => 'No areas yet. Add your first with +.',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
 			'areas.type_lawn' => 'Lawn',
@@ -995,13 +972,8 @@ extension on TranslationsEn {
 			'areas.form_name' => 'Name',
 			'areas.form_name_hint' => 'e.g. Raised bed 1',
 			'areas.form_type' => 'Type',
-			'areas.form_plants' => 'Plants in area',
-			'areas.form_plants_add' => 'Add plant',
-			'areas.form_plants_note' => 'Tasks (pruning, treatment, harvesting) link to the selected plant.',
 			'areas.form_save' => 'Save area',
 			'areas.err_name' => 'Enter an area name.',
-			'areas.plants_empty' => 'No plants yet.',
-			'areas.plant_remove' => 'Remove',
 			'plants.picker_title' => 'Select plant',
 			'plants.search_hint' => 'Search plant…',
 			'plants.cat_all' => 'All',
