@@ -75,3 +75,8 @@ const kSupabasePublishableKey =
 /// M7.4). Arrives via --dart-define (see dart_defines.json). Empty → the Google
 /// button stays disabled (the rest of the app, incl. email sign-in, still works).
 const kGoogleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
+
+/// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
+/// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
+/// off and the app runs normally (same offline-first pattern as Supabase).
+const kSentryDsn = String.fromEnvironment('SENTRY_DSN');

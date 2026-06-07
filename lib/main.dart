@@ -1,5 +1,7 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
@@ -17,6 +19,25 @@ import 'i18n/translations.g.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Crash/error monitoring (M9.1). When no DSN is configured (dev without the
+  // key, or fully offline builds) Sentry stays off and the app boots normally —
+  // same offline-first pattern as Supabase. Running the whole bootstrap inside
+  // the appRunner zone means startup errors are captured too, not just runtime.
+  if (kSentryDsn.isEmpty) {
+    await _bootstrap();
+    return;
+  }
+  await SentryFlutter.init(
+    (options) {
+      options.dsn = kSentryDsn;
+      options.environment = kReleaseMode ? 'production' : 'development';
+    },
+    appRunner: _bootstrap,
+  );
+}
+
+Future<void> _bootstrap() async {
   await LocaleSettings.useDeviceLocale();
   configurePluralResolvers();
 

@@ -251,7 +251,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 **Cilj:** MVP pripravljen za interni Android test.
 
-- [ ] **9.1 — Sentry.** `sentry_flutter` init (dev DSN prek dart-define). *Commit:* `feat: Sentry monitoring`
+- [x] **9.1 — Sentry.** `sentry_flutter ^8.14.2` init v `main.dart`: bootstrap ekstrahiran v `_bootstrap()`, ovit v `SentryFlutter.init(appRunner:)` → zajame tudi napake ob zagonu. Gate na DSN (prazen → off, app teče normalno; isti offline-first vzorec kot Supabase). `environment` = `production`/`development` po `kReleaseMode`; brez tracinga/PII. DSN `kSentryDsn` prek `--dart-define` (`SENTRY_DSN` v gitignored `dart_defines.json`). DSN/pipeline preverjen (testni dogodek dostavljen v Sentry → Issues, projekt `tendask`). On-device crash-capture = ob naslednji priklopljeni napravi. *Commit:* `feat: Sentry monitoring`
 - [ ] **9.2 — Ikona + splash (00).** Iz `docs/brand/assets/`. *Commit:* `chore: app ikona + splash`
 - [ ] **9.3 — Pregled neskladij.** UI vs wireframi; i18n popolnost (sl/en/de); dostopnost; vsi nizi prevedeni. *Commit:* `fix: neskladja UI/wireframi + i18n`
 - [ ] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. *Commit:* `chore: Android release konfiguracija`
@@ -328,6 +328,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-07 — **9.1 — Sentry monitoring → M9 začet.** `sentry_flutter ^8.14.2` (potrjen sklad §1, free dev
+  tier). `main.dart`: bootstrap ekstrahiran v `_bootstrap()` + ovit v `SentryFlutter.init(appRunner:)` (zajame
+  tudi startup napake, ne le runtime). Gate na DSN (prazen → Sentry off, app boota normalno — isti offline-first
+  vzorec kot Supabase init; Sentry brez signala buffer-a). `options.environment` = `production` v release / `development`
+  sicer (loči dev šum); brez performance tracinga + brez PII (zasebnost, baterija). `kSentryDsn` prek `--dart-define`
+  (`SENTRY_DSN` v gitignored `dart_defines.json`; placeholder v `dart_defines.example.json`). DSN/pipeline preverjen
+  prek začasnega `tmp/sentry_smoke.dart` (čisti `package:sentry`, brez naprave) → testni dogodek dostavljen v Sentry →
+  Issues (projekt preimenovan v `tendask`). On-device crash-capture odložen na naslednjo priklopljeno napravo (app
+  integracija je trivialna + analyze-čista). analyze čist, 151/151. *Commit:* `feat: Sentry monitoring`
 - 2026-06-06 — **8.4 zaslon 20 + 8.5 čiščenje/testi → M8 ZAKLJUČEN.** **Zaslon 20** (`feat: predogled videza
   obvestil (zaslon 20)`): statičen mockup zaklenjenega zaslona (gradient `AppColors.green900/green`, ura, 3 kartice
   opomnik/vreme/okolica z barvnimi tagi), dosegljiv iz nastavitev 22; i18n `notif_preview.*`. **8.5** (`chore:

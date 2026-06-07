@@ -1,5 +1,6 @@
 {
   "SUPABASE_URL": "https://YOUR-PROJECT-REF.supabase.co",
   "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_...",
-  "GOOGLE_SERVER_CLIENT_ID": "YOUR_GOOGLE_SERVER_CLIENT_ID.apps.googleusercontent.com"
+  "GOOGLE_SERVER_CLIENT_ID": "YOUR_GOOGLE_SERVER_CLIENT_ID.apps.googleusercontent.com",
+  "SENTRY_DSN": "https://YOUR_KEY@oXXXXXX.ingest.de.sentry.io/XXXXXXX"
 }
