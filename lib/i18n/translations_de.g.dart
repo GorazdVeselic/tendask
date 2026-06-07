@@ -39,6 +39,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	TranslationsDe $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsDe(meta: meta ?? this.$meta);
 
 	// Translations
+	@override late final _Translations$splash$de splash = _Translations$splash$de._(_root);
 	@override late final _Translations$nav$de nav = _Translations$nav$de._(_root);
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
@@ -62,6 +63,16 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
+}
+
+// Path: splash
+class _Translations$splash$de extends Translations$splash$sl {
+	_Translations$splash$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get tagline => 'Dein Gartentagebuch 🌿';
 }
 
 // Path: nav
@@ -647,6 +658,7 @@ class _Translations$weather$de extends Translations$weather$sl {
 extension on TranslationsDe {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'splash.tagline' => 'Dein Gartentagebuch 🌿',
 			'nav.home' => 'Startseite',
 			'nav.journal' => 'Tagebuch',
 			'nav.areas' => 'Garten',

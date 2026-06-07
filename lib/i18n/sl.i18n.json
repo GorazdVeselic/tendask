@@ -1,4 +1,7 @@
 {
+  "splash": {
+    "tagline": "Tvoj vrtni dnevnik 🌿"
+  },
   "nav": {
     "home": "Domov",
     "journal": "Dnevnik",

@@ -40,6 +40,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
+	late final Translations$splash$sl splash = Translations$splash$sl.internal(_root);
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
@@ -63,6 +64,18 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
 	late final Translations$settings$sl settings = Translations$settings$sl.internal(_root);
 	late final Translations$weather$sl weather = Translations$weather$sl.internal(_root);
+}
+
+// Path: splash
+class Translations$splash$sl {
+	Translations$splash$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Tvoj vrtni dnevnik 🌿'
+	String get tagline => 'Tvoj vrtni dnevnik 🌿';
 }
 
 // Path: nav
@@ -1376,6 +1389,7 @@ class Translations$weather$sl {
 extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
+			'splash.tagline' => 'Tvoj vrtni dnevnik 🌿',
 			'nav.home' => 'Domov',
 			'nav.journal' => 'Dnevnik',
 			'nav.areas' => 'Vrt',

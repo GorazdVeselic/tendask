@@ -1,4 +1,7 @@
 {
+  "splash": {
+    "tagline": "Dein Gartentagebuch 🌿"
+  },
   "nav": {
     "home": "Startseite",
     "journal": "Tagebuch",

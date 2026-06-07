@@ -1,4 +1,7 @@
 {
+  "splash": {
+    "tagline": "Your garden journal 🌿"
+  },
   "nav": {
     "home": "Home",
     "journal": "Journal",
