@@ -58,12 +58,23 @@ class AreasRepository {
   }
 
   Future<void> softDelete(String id) async {
-    await (_db.update(_db.areas)..where((a) => a.id.equals(id))).write(
-      AreasCompanion(
-        deleted: const Value(true),
+    await _db.transaction(() async {
+      // Re-parent this area's plants to "no area" so they resurface under
+      // "Brez območja" instead of pointing at a deleted area (which would hide
+      // them from the garden entirely). Atomic with the area tombstone.
+      await (_db.update(_db.userPlants)..where((p) => p.areaId.equals(id)))
+          .write(UserPlantsCompanion(
+        areaId: const Value(null),
         updatedAt: Value(_clock.now()),
         syncStatus: const Value(kSyncPending),
-      ),
-    );
+      ));
+      await (_db.update(_db.areas)..where((a) => a.id.equals(id))).write(
+        AreasCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
+    });
   }
 }

@@ -2,6 +2,7 @@ import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
+import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 import 'plant_spec.dart';
@@ -16,8 +17,25 @@ class UserPlantsRepository {
   Stream<List<UserPlant>> watchByArea(String areaId) => (
         _db.select(_db.userPlants)
           ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
-          ..orderBy([(p) => OrderingTerm.asc(p.id)])
+          ..orderBy([(p) => OrderingTerm.desc(p.updatedAt)])
       ).watch();
+
+  /// Distinct catalog species the user has used, newest first — feeds the
+  /// "Frequent" row of the plant-add screen. Custom (plantId == null) entries
+  /// are excluded; one query, grouped + bounded (no full scan).
+  Future<List<String>> recentPlantIds({int limit = kRecentPlantsLimit}) async {
+    final pid = _db.userPlants.plantId;
+    final maxUpdated = _db.userPlants.updatedAt.max();
+    final rows = await (_db.selectOnly(_db.userPlants)
+          ..addColumns([pid, maxUpdated])
+          ..where(_db.userPlants.deleted.equals(false) & pid.isNotNull())
+          ..groupBy([pid])
+          ..orderBy([OrderingTerm.desc(maxUpdated)])
+          ..limit(limit))
+        .get();
+    // Non-null: rows are filtered by pid.isNotNull() above.
+    return [for (final r in rows) r.read(pid)!];
+  }
 
   /// Every non-deleted plant — for resolving plant labels across the app.
   Stream<List<UserPlant>> watchAll() => (

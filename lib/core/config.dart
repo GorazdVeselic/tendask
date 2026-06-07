@@ -31,6 +31,10 @@ const kWeatherStaleTtl = Duration(hours: 2);
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;
 
+/// Max species shown in the "Frequent" row of the plant-add screen — the
+/// most recently used catalog species, so common picks stay one tap away.
+const kRecentPlantsLimit = 8;
+
 /// Open-Meteo network timeouts. Receive is generous: the forecast payload
 /// (hourly bands for ~5 days) is sizable and decodes slower in debug (non-AOT),
 /// and 10 s proved too tight on slow mobile networks (gardens).
