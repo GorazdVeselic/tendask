@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/plant_category.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import 'plant_display.dart';
@@ -12,17 +13,6 @@ import 'plant_display.dart';
 /// Result of the plant picker: a catalog match ([plantId]) or a private
 /// custom entry ([customName]). Returned via `context.pop(pick)`.
 typedef PlantPick = ({String? plantId, String? customName});
-
-/// Fixed category order for the filter chips (`all` plus catalog categories).
-const _categories = [
-  'all',
-  'fruit_tree',
-  'berries',
-  'vegetable',
-  'herbs',
-  'ornamental',
-  'lawn',
-];
 
 class PlantPickerScreen extends ConsumerStatefulWidget {
   const PlantPickerScreen({super.key});
@@ -42,17 +32,6 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
     super.dispose();
   }
 
-  String _categoryLabel(String category, Translations t) => switch (category) {
-        'all' => t.plants.cat_all,
-        'fruit_tree' => t.plants.cat_fruit_tree,
-        'berries' => t.plants.cat_berries,
-        'vegetable' => t.plants.cat_vegetable,
-        'herbs' => t.plants.cat_herbs,
-        'ornamental' => t.plants.cat_ornamental,
-        'lawn' => t.plants.cat_lawn,
-        _ => category,
-      };
-
   @override
   Widget build(BuildContext context) {
     final t = context.t;
@@ -63,7 +42,9 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
     final results = plants == null
         ? <Plant>[]
         : plants
-            .where((p) => _category == 'all' || p.category == _category)
+            .where((p) =>
+                _category == 'all' ||
+                coarsePlantCategory(p.category) == _category)
             .where((p) => plantMatchesQuery(p, normQuery))
             .toList();
 
@@ -98,11 +79,11 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               children: [
-                for (final c in _categories)
+                for (final c in kPlantCategories)
                   Padding(
                     padding: const EdgeInsets.only(right: 8),
                     child: ChoiceChip(
-                      label: Text(_categoryLabel(c, t)),
+                      label: Text(plantCategoryLabel(c, t)),
                       selected: c == _category,
                       onSelected: (_) => setState(() => _category = c),
                     ),
@@ -166,14 +147,14 @@ class _CatalogRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
-    final sub = plant.scientificName != null
-        ? '${plant.scientificName} · ${plant.category}'
-        : plant.category;
     return ListTile(
       leading: Text(plant.icon ?? '🌿', style: const TextStyle(fontSize: 22)),
       title: Text(catalogLabel(plant.labels), style: theme.textTheme.bodyMedium),
-      subtitle: Text(sub, style: theme.textTheme.bodySmall),
+      subtitle: Text(
+          plantCategoryLabel(coarsePlantCategory(plant.category), t),
+          style: theme.textTheme.bodySmall),
       trailing: Icon(Icons.add, color: theme.colorScheme.primary),
       onTap: onTap,
     );

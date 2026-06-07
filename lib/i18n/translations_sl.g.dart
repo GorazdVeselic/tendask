@@ -1183,6 +1183,9 @@ class Translations$plants$sl {
 	/// sl: 'Okrasne'
 	String get cat_ornamental => 'Okrasne';
 
+	/// sl: 'Sobne'
+	String get cat_houseplant => 'Sobne';
+
 	/// sl: 'Trata'
 	String get cat_lawn => 'Trata';
 
@@ -1215,6 +1218,9 @@ class Translations$plants$sl {
 
 	/// sl: 'Kam dodajam'
 	String get add_to_label => 'Kam dodajam';
+
+	/// sl: 'izberi'
+	String get choose_area => 'izberi';
 
 	/// sl: 'Izberi rastlino'
 	String get field_add => 'Izberi rastlino';
@@ -1735,6 +1741,7 @@ extension on Translations {
 			'plants.cat_vegetable' => 'Zelenjava',
 			'plants.cat_herbs' => 'Zelišča',
 			'plants.cat_ornamental' => 'Okrasne',
+			'plants.cat_houseplant' => 'Sobne',
 			'plants.cat_lawn' => 'Trata',
 			'plants.from_catalog' => 'Iz baze',
 			'plants.not_found' => 'Ne najdeš?',
@@ -1746,6 +1753,7 @@ extension on Translations {
 			'plants.undo' => 'Razveljavi',
 			'plants.done' => 'Končano',
 			'plants.add_to_label' => 'Kam dodajam',
+			'plants.choose_area' => 'izberi',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
 			'supplies.title' => 'Zaloge',

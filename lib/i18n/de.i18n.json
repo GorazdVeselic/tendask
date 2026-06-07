@@ -351,6 +351,7 @@
     "cat_vegetable": "Gemüse",
     "cat_herbs": "Kräuter",
     "cat_ornamental": "Zierpflanzen",
+    "cat_houseplant": "Zimmerpflanzen",
     "cat_lawn": "Rasen",
     "from_catalog": "Aus dem Katalog",
     "not_found": "Nicht gefunden?",
@@ -362,6 +363,7 @@
     "undo": "Rückgängig",
     "done": "Fertig",
     "add_to_label": "Hinzufügen zu",
+    "choose_area": "wählen",
     "field_add": "Pflanze auswählen",
     "field_empty": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu."
   },

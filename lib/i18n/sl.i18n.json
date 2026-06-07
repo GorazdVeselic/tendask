@@ -355,6 +355,7 @@
     "cat_vegetable": "Zelenjava",
     "cat_herbs": "Zelišča",
     "cat_ornamental": "Okrasne",
+    "cat_houseplant": "Sobne",
     "cat_lawn": "Trata",
     "from_catalog": "Iz baze",
     "not_found": "Ne najdeš?",
@@ -366,6 +367,7 @@
     "undo": "Razveljavi",
     "done": "Končano",
     "add_to_label": "Kam dodajam",
+    "choose_area": "izberi",
     "field_add": "Izberi rastlino",
     "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."
   },

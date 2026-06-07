@@ -571,6 +571,7 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get cat_vegetable => 'Gemüse';
 	@override String get cat_herbs => 'Kräuter';
 	@override String get cat_ornamental => 'Zierpflanzen';
+	@override String get cat_houseplant => 'Zimmerpflanzen';
 	@override String get cat_lawn => 'Rasen';
 	@override String get from_catalog => 'Aus dem Katalog';
 	@override String get not_found => 'Nicht gefunden?';
@@ -582,6 +583,7 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get undo => 'Rückgängig';
 	@override String get done => 'Fertig';
 	@override String get add_to_label => 'Hinzufügen zu';
+	@override String get choose_area => 'wählen';
 	@override String get field_add => 'Pflanze auswählen';
 	@override String get field_empty => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.';
 }
@@ -982,6 +984,7 @@ extension on TranslationsDe {
 			'plants.cat_vegetable' => 'Gemüse',
 			'plants.cat_herbs' => 'Kräuter',
 			'plants.cat_ornamental' => 'Zierpflanzen',
+			'plants.cat_houseplant' => 'Zimmerpflanzen',
 			'plants.cat_lawn' => 'Rasen',
 			'plants.from_catalog' => 'Aus dem Katalog',
 			'plants.not_found' => 'Nicht gefunden?',
@@ -993,6 +996,7 @@ extension on TranslationsDe {
 			'plants.undo' => 'Rückgängig',
 			'plants.done' => 'Fertig',
 			'plants.add_to_label' => 'Hinzufügen zu',
+			'plants.choose_area' => 'wählen',
 			'plants.field_add' => 'Pflanze auswählen',
 			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
 			'supplies.title' => 'Vorräte',

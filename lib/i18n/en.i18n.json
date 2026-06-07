@@ -351,6 +351,7 @@
     "cat_vegetable": "Vegetables",
     "cat_herbs": "Herbs",
     "cat_ornamental": "Ornamental",
+    "cat_houseplant": "Houseplants",
     "cat_lawn": "Lawn",
     "from_catalog": "From catalog",
     "not_found": "Can't find it?",
@@ -362,6 +363,7 @@
     "undo": "Undo",
     "done": "Done",
     "add_to_label": "Add to",
+    "choose_area": "choose",
     "field_add": "Select plant",
     "field_empty": "This area has no plants yet. Add one with the button below."
   },
