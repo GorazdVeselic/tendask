@@ -530,24 +530,28 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
 
 ### Tabele (osnutek)
 - **Katalog (skupno, samo-branje):**
-  `task_type(id PK, labels jsonb{sl,en,de}, icon, category, requires_subject bool, weather_sensitive bool, default_cadence)` ·
+  `task_type(id PK, labels jsonb{sl,en,de}, icon, category, requires_subject bool, weather_sensitive bool, seasonal bool, default_cadence)` ·
   `plant(id PK, labels jsonb, scientific_name, category, icon)` ·
   `plant_synonym(id, plant_id FK, lang, text_norm)` · `category_task_type(category, task_type_id)`.
 - **Uporabnik (RLS `user_id = auth.uid()`):**
-  `profile(user_id PK, h3_r7, h3_r6, h3_r5, climate_bucket NULL, lang)` — celice + grob klimatski koš (višina×temp. pas), NE koordinat/višine ·
+  `profile(user_id PK, h3_r7, h3_r6, h3_r5, climate_bucket NULL, climate_profile jsonb NULL, timezone NULL, lang)` —
+  celice + **grob javni** `climate_bucket` (NE koordinat/višine); `climate_profile` = bogat **owner-only** klimatski nabor (frost-anchor ipd., nikoli v javni agregat); `timezone` (IANA) za strežniško lokalno-časovno logiko ·
   `area(id, user_id, name, type)` — brez lokacije ·
   `user_plant(id, user_id, area_id FK NULL, plant_id FK NULL, custom_name NULL, personal_alias NULL, is_custom)` ·
-  `task(id, user_id, task_type_id FK, date, status, note, weather jsonb, recurrence jsonb)` — OPRAVILO (subjekti v `task_subject`) ·
+  `task(id, user_id, task_type_id FK, date, status, note, weather jsonb, recurrence jsonb, agg_context jsonb NULL)` — OPRAVILO (subjekti v `task_subject`); `agg_context` = zamrznjen posnetek veder ob `done` (h3 r7/6/5 + climate_bucket) za skupnostni agregat ·
   `task_subject(id, task_id FK, user_plant_id FK NULL, area_id FK NULL, CHECK ≥1)` — M:N subjekti opravila (§7.15) ·
   `task_reminder(id, task_id FK, offset, time)` — plast A ·
   `note(id, user_id, area_id NULL, user_plant_id NULL, date, text, weather jsonb)` ·
   `supply` · `recipe` · `task_supply(task_id, supply_id, amount)` — zaloge/odpis ·
   `suggestion_log(user_id, rule_id, subject_key, last_suggested_at, dismissed_until)` — plast B.
-- **V2 agregat (cron → tabela, javno-bralna — samo cron piše):**
-  `activity_agg(bucket_key, resolution{7|6|5|climate}, task_type_id, plant_id NULL, year, week_of_year, distinct_users, refreshed_at)`.
-  `bucket_key` = H3 celica (res-7/6/5) **ali** `climate_bucket`. RLS: `grant select to anon, authenticated` +
-  `using (distinct_users ≥ K)` (K=5, server-nastavljiv). Anti-junk: štejemo `distinct_users` (ne opravil),
-  `is_custom` izločen, drseče okno, zrelostni filter. Glej §8 "Dorečen dizajn".
+- **V2 agregat (cron → tabele, javno-bralne — samo cron piše; podroben model v
+  [`skupnost-agregacija.md`](skupnost-agregacija.md)):** tri metrike, vse `bucket_key` = H3 celica
+  (res-7/6/5) **ali** `climate_bucket`:
+  - `activity_recent(resolution, bucket_key, task_type_id, plant_id NULL, distinct_users_7d, refreshed_at)` — feed (drseče 7-dnevno okno);
+  - `activity_season(resolution, bucket_key, task_type_id, plant_id NULL, year, iso_week, first_user_count, publishable)` — časovni percentil (CDF prvih izvedb);
+  - `activity_frequency(resolution, bucket_key, task_type_id, plant_id NULL, season_year, n_users, per_user_p25/p50/p75, unit)` — frekvenca (mediana+IQR).
+  RLS: `grant select to anon, authenticated` + k-anonimnost (`K_privacy=5`); prikaz številke ob `K_reliab=30`. Anti-junk:
+  `distinct_users` (ne opravil), `is_custom` izločen, zrelostni filter. Glej §8 + `skupnost-agregacija.md`.
 
 ### Posebnosti → rešitev (kompleksnost)
 | Posebnost | Rešitev | Kompl. |
@@ -662,6 +666,9 @@ tretiranje dobi vseh 5 vodeno. Implementacija: refaktor `quick_log` + `task_form
 Agregirani (anonimizirani, GDPR-skladni) signali sosedov po območjih + primerjave.
 Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
 
+> **Podroben statistični + podatkovni model:** [`skupnost-agregacija.md`](skupnost-agregacija.md)
+> (natančne definicije, agregacijski cevovod, princip prikaza, statistične pasti). Spodaj je povzetek.
+
 ### ⭐ Časovni percentili opravil v okolici (V2 ključni diferenciator)
 - **Ideja:** namesto da bi AI *svetoval* "gnoji 15. marca" (tvegano, agronomska
   odgovornost), pokažemo **dejstvo o množici**: histogram po **tednu v letu** za vsak
@@ -704,12 +711,14 @@ popravi mikroklimo (800 m n.v. vs dolina). Fallback hierarhija prikaza:
 `res-7 → res-6 → res-5 → climate_bucket → globalno` (dokler obseg ne doseže K); UI jasno
 pove obseg ("v tvoji okolici" / "v podobni klimi" / "med vsemi vrtnarji").
 
-**Kaj uporabnik vidi (dva pogleda).**
-1. **Časovni percentil / histogram** — "X % v tvoji okolici je ta teden opravilo Y" +
-   marker "kje si ti" (diferenciator zgoraj).
-2. **Feed "kaj se ta teden dogaja"** — seznam trenutno pogostih opravil v okolici/klimi.
+**Kaj uporabnik vidi (tri metrike — podroben model: [`skupnost-agregacija.md`](skupnost-agregacija.md)).**
+1. **Feed "kaj se ta teden dogaja"** — pogosta opravila v okolici/klimi (drseče 7-dnevno okno —
+   reši delni-teden problem; v ponedeljek ne kaže prazno).
+2. **Časovni percentil / histogram** — "do tvojega datuma je ~X % že opravilo Y" + marker "kje si ti";
+   krivulja iz **preteklih celih sezon** (tekoče leto je le marker — izognemo se cenzuri delne sezone).
+3. **Frekvenca** — "kosijo tipično 2–4× mesečno" (mediana + IQR med izvajalci).
 
-Oba opisna, nikoli predpisna.
+Vse opisno, nikoli predpisno.
 
 **Faznost: "kopiči zgodaj, odkleni pozno".** Temelj (`profile.climate_bucket` +
 on-device izpeljava + sync; `activity_agg` + `pg_cron` + javno-bralna RLS izjema) lahko
