@@ -9,6 +9,7 @@ import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
+import '../../../core/widgets/swipe_action_background.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
@@ -48,13 +49,15 @@ class TasksScreen extends ConsumerWidget {
           children: [
             Text(
               t.tasks_list.title,
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Text(
               t.tasks_list.subtitle,
               style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant),
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -104,8 +107,9 @@ class _TasksList extends StatelessWidget {
     if (tasks.isEmpty) return EmptyState(t.tasks_list.empty);
 
     final grouped = _groupTasks(tasks);
-    final sections =
-        _Group.values.where((g) => grouped[g]?.isNotEmpty == true).toList();
+    final sections = _Group.values
+        .where((g) => grouped[g]?.isNotEmpty == true)
+        .toList();
 
     // Flat list: _Group (section header) or Task (row)
     final items = <Object>[];
@@ -139,10 +143,8 @@ class _TasksList extends StatelessWidget {
           group: group,
           onComplete: () => onComplete(task.id),
           onPostpone: () => onPostpone(task.id),
-          onEdit: () => context.pushNamed(
-            'task-edit',
-            pathParameters: {'id': task.id},
-          ),
+          onEdit: () =>
+              context.pushNamed('task-edit', pathParameters: {'id': task.id}),
           onDuplicate: () => onDuplicate(task.id),
           onDelete: () => onDelete(task.id),
         );
@@ -155,9 +157,7 @@ class _TasksList extends StatelessWidget {
     final tomorrow = today.add(const Duration(days: 1));
     final nextWeek = today.add(const Duration(days: 7));
 
-    final result = <_Group, List<Task>>{
-      for (final g in _Group.values) g: [],
-    };
+    final result = <_Group, List<Task>>{for (final g in _Group.values) g: []};
 
     for (final task in tasks) {
       final day = startOfDay(task.date.toLocal());
@@ -165,12 +165,12 @@ class _TasksList extends StatelessWidget {
       final group = day.isBefore(today)
           ? _Group.overdue
           : day == today
-              ? _Group.today
-              : day == tomorrow
-                  ? _Group.tomorrow
-                  : day.isBefore(nextWeek)
-                      ? _Group.thisWeek
-                      : _Group.later;
+          ? _Group.today
+          : day == tomorrow
+          ? _Group.tomorrow
+          : day.isBefore(nextWeek)
+          ? _Group.thisWeek
+          : _Group.later;
       result[group]!.add(task);
     }
 
@@ -178,12 +178,12 @@ class _TasksList extends StatelessWidget {
   }
 
   static String _sectionLabel(_Group g, Translations t) => switch (g) {
-        _Group.overdue => t.tasks_list.section_overdue,
-        _Group.today => t.tasks_list.section_today,
-        _Group.tomorrow => t.tasks_list.section_tomorrow,
-        _Group.thisWeek => t.tasks_list.section_this_week,
-        _Group.later => t.tasks_list.section_later,
-      };
+    _Group.overdue => t.tasks_list.section_overdue,
+    _Group.today => t.tasks_list.section_today,
+    _Group.tomorrow => t.tasks_list.section_tomorrow,
+    _Group.thisWeek => t.tasks_list.section_this_week,
+    _Group.later => t.tasks_list.section_later,
+  };
 }
 
 // ─── Task row ────────────────────────────────────────────────────────────────
@@ -215,61 +215,101 @@ class _TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final t = context.t;
     final theme = Theme.of(context);
     final icon = taskType?.icon ?? '📋';
-    final label =
-        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
+    final label = taskType != null
+        ? catalogLabel(taskType!.labels)
+        : task.taskTypeId;
 
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => context.pushNamed(
-          'task-detail',
-          pathParameters: {'id': task.id},
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                child: Text(icon, style: const TextStyle(fontSize: 18)),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      label,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
-                    ),
-                    if (subjectLabel != null && subjectLabel!.isNotEmpty)
+    const swipeInset = EdgeInsets.symmetric(horizontal: 16, vertical: 3);
+    final swipeShape = BorderRadius.circular(12);
+
+    return Dismissible(
+      key: ValueKey(task.id),
+      // Swipe right = complete, swipe left = postpone one day. Delete stays in
+      // the ⋯ sheet. confirmDismiss returns false: the watching stream updates
+      // the list (complete drops the row, postpone re-dates it), which avoids
+      // the "dismissed widget still in tree" assert that true would risk.
+      background: SwipeActionBackground(
+        alignment: Alignment.centerLeft,
+        color: theme.colorScheme.primary,
+        foreground: theme.colorScheme.onPrimary,
+        icon: Icons.check,
+        label: t.tasks_list.action_complete,
+        margin: swipeInset,
+        borderRadius: swipeShape,
+      ),
+      secondaryBackground: SwipeActionBackground(
+        alignment: Alignment.centerRight,
+        color: theme.colorScheme.secondary,
+        foreground: theme.colorScheme.onSecondary,
+        icon: Icons.schedule,
+        label: t.tasks_list.action_postpone,
+        margin: swipeInset,
+        borderRadius: swipeShape,
+      ),
+      confirmDismiss: (dir) async {
+        if (dir == DismissDirection.startToEnd) {
+          onComplete();
+        } else {
+          onPostpone();
+        }
+        return false;
+      },
+      child: Card(
+        margin: swipeInset,
+        child: InkWell(
+          borderRadius: BorderRadius.circular(12),
+          onTap: () =>
+              context.pushNamed('task-detail', pathParameters: {'id': task.id}),
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  backgroundColor: theme.colorScheme.surfaceContainerHighest,
+                  child: Text(icon, style: const TextStyle(fontSize: 18)),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
                       Text(
-                        '🪴 $subjectLabel',
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
+                        label,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w500,
                         ),
                       ),
-                  ],
+                      if (subjectLabel != null && subjectLabel!.isNotEmpty)
+                        Text(
+                          '🪴 $subjectLabel',
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
-              ),
-              const SizedBox(width: 8),
-              if (hasReminder) ...[
-                Icon(Icons.notifications_outlined,
-                    size: 15, color: theme.colorScheme.onSurfaceVariant),
-                const SizedBox(width: 6),
+                const SizedBox(width: 8),
+                if (hasReminder) ...[
+                  Icon(
+                    Icons.notifications_outlined,
+                    size: 15,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                  const SizedBox(width: 6),
+                ],
+                _StatusBadge(task: task, group: group),
+                IconButton(
+                  icon: const Icon(Icons.more_horiz),
+                  iconSize: 20,
+                  visualDensity: VisualDensity.compact,
+                  onPressed: () => _openActionSheet(context),
+                ),
               ],
-              _StatusBadge(task: task, group: group),
-              IconButton(
-                icon: const Icon(Icons.more_horiz),
-                iconSize: 20,
-                visualDensity: VisualDensity.compact,
-                onPressed: () => _openActionSheet(context),
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -280,10 +320,22 @@ class _TaskRow extends StatelessWidget {
     showModalBottomSheet<void>(
       context: context,
       builder: (ctx) => _ActionSheet(
-        onComplete: () { Navigator.of(ctx).pop(); onComplete(); },
-        onPostpone: () { Navigator.of(ctx).pop(); onPostpone(); },
-        onEdit: () { Navigator.of(ctx).pop(); onEdit(); },
-        onDuplicate: () { Navigator.of(ctx).pop(); onDuplicate(); },
+        onComplete: () {
+          Navigator.of(ctx).pop();
+          onComplete();
+        },
+        onPostpone: () {
+          Navigator.of(ctx).pop();
+          onPostpone();
+        },
+        onEdit: () {
+          Navigator.of(ctx).pop();
+          onEdit();
+        },
+        onDuplicate: () {
+          Navigator.of(ctx).pop();
+          onDuplicate();
+        },
         onDelete: onDelete,
       ),
     );
@@ -293,10 +345,7 @@ class _TaskRow extends StatelessWidget {
 // ─── Status badge ────────────────────────────────────────────────────────────
 
 class _StatusBadge extends StatelessWidget {
-  const _StatusBadge({
-    required this.task,
-    required this.group,
-  });
+  const _StatusBadge({required this.task, required this.group});
 
   final Task task;
   final _Group group;
@@ -307,11 +356,13 @@ class _StatusBadge extends StatelessWidget {
     final theme = Theme.of(context);
     final (text, color) = switch (group) {
       _Group.overdue => (_overdueText(t), theme.colorScheme.error),
-      _Group.today =>
-        (t.tasks_list.status_today, theme.colorScheme.primary),
-      _Group.tomorrow =>
-        (t.tasks_list.status_tomorrow, theme.colorScheme.secondary),
-      _Group.thisWeek || _Group.later => (_shortDate(), theme.colorScheme.onSurfaceVariant),
+      _Group.today => (t.tasks_list.status_today, theme.colorScheme.primary),
+      _Group.tomorrow => (
+        t.tasks_list.status_tomorrow,
+        theme.colorScheme.secondary,
+      ),
+      _Group.thisWeek ||
+      _Group.later => (_shortDate(), theme.colorScheme.onSurfaceVariant),
     };
 
     return Text(
@@ -325,9 +376,9 @@ class _StatusBadge extends StatelessWidget {
   }
 
   String _overdueText(Translations t) {
-    final days = startOfDay(DateTime.now())
-        .difference(startOfDay(task.date.toLocal()))
-        .inDays;
+    final days = startOfDay(
+      DateTime.now(),
+    ).difference(startOfDay(task.date.toLocal())).inDays;
     return t.tasks_list.overdue_days(n: days);
   }
 
@@ -361,8 +412,10 @@ class _ActionSheet extends StatelessWidget {
         children: [
           const SheetHandle(),
           ListTile(
-            leading: Icon(Icons.check_circle_outline,
-                color: theme.colorScheme.primary),
+            leading: Icon(
+              Icons.check_circle_outline,
+              color: theme.colorScheme.primary,
+            ),
             title: Text(t.tasks_list.action_complete),
             onTap: onComplete,
           ),
@@ -402,4 +455,3 @@ class _ActionSheet extends StatelessWidget {
     );
   }
 }
-

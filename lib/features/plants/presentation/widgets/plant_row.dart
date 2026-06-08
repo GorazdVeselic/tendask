@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/widgets/confirm_dialog.dart';
+import '../../../../core/widgets/swipe_action_background.dart';
 import '../../../../core/widgets/top_toast.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/plants_providers.dart';
@@ -29,7 +30,9 @@ class PlantRow extends ConsumerWidget {
     );
     if (pick == null || !context.mounted) return;
     // Preserve the alias — moveToArea() rewrites it.
-    final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
+    final res = await ref
+        .read(userPlantsRepositoryProvider)
+        .moveToArea(
           id: plant.id,
           areaId: pick.areaId,
           personalAlias: plant.personalAlias,
@@ -60,14 +63,14 @@ class PlantRow extends ConsumerWidget {
     final theme = Theme.of(context);
     return Dismissible(
       key: ValueKey(plant.id),
-      background: _SwipeBg(
+      background: SwipeActionBackground(
         alignment: Alignment.centerLeft,
         color: theme.colorScheme.primaryContainer,
         foreground: theme.colorScheme.onPrimaryContainer,
         icon: Icons.swap_horiz,
         label: t.areas.swipe_move,
       ),
-      secondaryBackground: _SwipeBg(
+      secondaryBackground: SwipeActionBackground(
         alignment: Alignment.centerRight,
         color: theme.colorScheme.errorContainer,
         foreground: theme.colorScheme.onErrorContainer,
@@ -86,47 +89,17 @@ class PlantRow extends ConsumerWidget {
         return false;
       },
       child: ListTile(
-        leading: Text(userPlantIcon(plant, catalog),
-            style: const TextStyle(fontSize: 20)),
+        leading: Text(
+          userPlantIcon(plant, catalog),
+          style: const TextStyle(fontSize: 20),
+        ),
         title: Text(userPlantLabel(plant, catalog)),
-        trailing: Icon(Icons.chevron_right,
-            color: theme.colorScheme.onSurfaceVariant),
+        trailing: Icon(
+          Icons.chevron_right,
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
         onTap: () =>
             context.pushNamed('plant-detail', pathParameters: {'id': plant.id}),
-      ),
-    );
-  }
-}
-
-class _SwipeBg extends StatelessWidget {
-  const _SwipeBg({
-    required this.alignment,
-    required this.color,
-    required this.foreground,
-    required this.icon,
-    required this.label,
-  });
-
-  final Alignment alignment;
-  final Color color;
-  final Color foreground;
-  final IconData icon;
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: color,
-      alignment: alignment,
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: Row(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: foreground, size: 20),
-          const SizedBox(width: 6),
-          Text(label,
-              style: TextStyle(color: foreground, fontWeight: FontWeight.w600)),
-        ],
       ),
     );
   }
