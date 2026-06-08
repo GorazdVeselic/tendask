@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vrt — B (območje = naslov skupine)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .ahead { display:flex; align-items:center; gap:11px; margin:18px 2px 8px; }
+  .ahead .aico { width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:var(--accent-soft);display:grid;place-items:center;font-size:18px; }
+  .ahead .aname { font-size:16px; font-weight:700; }
+  .ahead .asub { font-size:12.5px; color:var(--muted); margin-top:1px; }
+  .ahead .aed { margin-left:auto; font-size:12px; font-weight:700; color:var(--accent); }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar"><div><h1>Vrt</h1><div class="sub">rastline in trate</div></div></div>
+
+  <div class="content">
+    <div class="section-title">Grede</div>
+
+    <!-- Območje = naslov skupine (vsebnik); rastline = kartice pod njim -->
+    <div class="ahead">
+      <div class="aico">🌱</div>
+      <div><div class="aname">Visoka greda 1</div><div class="asub">Nazadnje: Zalivanje · danes</div></div>
+      <span class="aed">uredi ›</span>
+    </div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item"><div class="avatar">🍅</div><div class="li-main"><div class="li-title">Paradižnik</div><div class="li-sub">dodano danes</div></div><div class="li-trail">›</div></div>
+      <div class="list-item"><div class="avatar">🥬</div><div class="li-main"><div class="li-title">Solata</div><div class="li-sub">dodano danes</div></div><div class="li-trail">›</div></div>
+    </div>
+
+    <div class="ahead">
+      <div class="aico">🪴</div>
+      <div><div class="aname">Visoka greda 2</div><div class="asub">Nazadnje: Pletje · 28. maj</div></div>
+      <span class="aed">uredi ›</span>
+    </div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item"><div class="avatar">🌿</div><div class="li-main"><div class="li-title">Bazilika</div><div class="li-sub">dodano danes</div></div><div class="li-trail">›</div></div>
+    </div>
+
+    <a href="area-edit_v4.html" style="text-decoration:none;color:inherit;">
+      <div class="card" style="display:flex;align-items:center;gap:10px;padding:14px 16px;margin-top:16px;border-style:dashed;">
+        <span style="font-size:18px;color:var(--accent);">＋</span>
+        <span style="font-size:14px;font-weight:600;color:var(--accent);">Novo območje</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="fab">＋</div>
+  <nav class="bottomnav">
+    <div class="nav-item"><span class="ico">🏠</span>Domov</div>
+    <div class="nav-item"><span class="ico">📋</span>Opravila</div>
+    <div class="nav-item"><span class="ico">📅</span>Dnevnik</div>
+    <div class="nav-item active"><span class="ico">🪴</span>Vrt</div>
+  </nav>
+</div>
+</body>
+</html>

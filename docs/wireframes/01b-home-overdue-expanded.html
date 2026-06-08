@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Domov — C+A razširjeno</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .alert { display:flex; align-items:center; gap:10px; background:#fce8e6;
+           border:1px solid #f3c0bb; border-radius:16px 16px 0 0; padding:13px 14px;
+           color:#b3261e; font-weight:600; font-size:14px; cursor:pointer; border-bottom:none; }
+  .alert .arr { margin-left:auto; font-size:13px; }
+  .late-panel { background:#fff; border:1px solid #f3c0bb; border-top:none;
+                border-radius:0 0 16px 16px; padding:2px 14px 6px; margin-bottom:12px; }
+  .badge-late { font-size:12px; font-weight:700; color:#b3261e; background:#fce8e6; border-radius:999px; padding:3px 9px; white-space:nowrap; }
+</style>
+</head>
+<body>
+<div class="phone">
+  <div class="phone__notch"></div>
+  <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+  <div class="appbar">
+    <div><h1>Dober dan 🌿</h1><div class="sub">torek, 1. junij</div></div>
+    <div class="icon-btn">⚙️</div>
+  </div>
+
+  <div class="content">
+    <div class="weather">
+      <span class="ico">🌧️</span>
+      <div><div class="temp">16°</div><div class="meta">Dež · nocoj 8 mm<br>veter 5 km/h</div></div>
+      <div class="days"><div class="day">sre<b>☀️</b>24°</div><div class="day">čet<b>🌦️</b>18°</div><div class="day">pet<b>🌧️</b>15°</div></div>
+    </div>
+
+    <!-- RAZŠIRJENO (po kliku): pas ostane glava, pod njim seznam (videz A) -->
+    <div class="alert">⚠️ 3 zamujena opravila <span class="arr">▴ skrij</span></div>
+    <div class="late-panel">
+      <div class="list-item">
+        <div class="avatar">💧</div>
+        <div class="li-main"><div class="li-title">Zaliti paradižnik</div><div class="li-sub">🪴 Visoka greda 1</div></div>
+        <div class="li-trail"><span class="badge-late">2 dni</span></div>
+      </div>
+      <div class="list-item">
+        <div class="avatar">✂️</div>
+        <div class="li-main"><div class="li-title">Pletje</div><div class="li-sub">🥬 Solata</div></div>
+        <div class="li-trail"><span class="badge-late">1 dan</span></div>
+      </div>
+      <div class="list-item">
+        <div class="avatar">🧴</div>
+        <div class="li-main"><div class="li-title">Škropljenje</div><div class="li-sub">🍎 Jablana</div></div>
+        <div class="li-trail"><span class="badge-late">4 dni</span></div>
+      </div>
+    </div>
+
+    <div class="section-title">Danes</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="avatar">🌱</div>
+        <div class="li-main"><div class="li-title">Pokositi trato</div><div class="li-sub">🌱 Trata zadaj</div></div>
+        <div class="li-trail">🔔 ⏱️ 7:00</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="fab">+</div>
+  <nav class="bottomnav">
+    <div class="nav-item active"><span class="ico">🏠</span>Domov</div>
+    <div class="nav-item"><span class="ico">📋</span>Opravila</div>
+    <div class="nav-item"><span class="ico">📅</span>Dnevnik</div>
+    <div class="nav-item"><span class="ico">🪴</span>Vrt</div>
+  </nav>
+</div>
+</body>
+</html>
