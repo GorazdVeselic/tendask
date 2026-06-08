@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Okolica / skupnost — koncepti prikaza (V2)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ---- galerija ---- */
+  body { background: #e7eae8; }
+  .page { padding: 40px 24px 80px; max-width: 1500px; margin: 0 auto; }
+  .hero { max-width: 900px; margin: 0 auto 8px; }
+  .hero h1 { font-size: 30px; letter-spacing: -0.6px; }
+  .hero p { color: var(--muted); margin-top: 10px; line-height: 1.65; font-size: 15px; }
+  .hero .meta { margin-top: 14px; font-size: 13px; color: var(--muted); }
+  .hero .meta b { color: var(--accent); }
+  .group-title {
+    max-width: 1500px; margin: 50px auto 4px; font-size: 21px; font-weight: 800;
+    color: var(--text); letter-spacing: -.3px; border-bottom: 2px solid var(--accent-soft); padding-bottom: 8px;
+  }
+  .group-title span { font-size: 13px; font-weight: 500; color: var(--muted); margin-left: 8px; }
+  .grid { display: flex; flex-wrap: wrap; gap: 44px; justify-content: center; margin-top: 22px; }
+  .frame-wrap { width: 390px; }
+  .frame-wrap .cap { margin-top: 14px; font-size: 14px; font-weight: 700; color: var(--text); }
+  .frame-wrap .cap small { display: block; color: var(--muted); font-weight: 500; margin-top: 3px; line-height: 1.5; }
+
+  /* ---- skupne nove komponente ---- */
+  .premium-badge {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--honey-soft); color: #9a7416; border: 1px solid #ecd9a6;
+    font-size: 11px; font-weight: 800; letter-spacing: .3px;
+    padding: 4px 9px; border-radius: 999px; text-transform: uppercase;
+  }
+  .scope-meta { font-size: 12.5px; color: var(--muted); margin: 10px 2px 2px; display: flex; align-items: center; gap: 6px; }
+  .scope-meta .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  .scope-chip {
+    display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 600;
+    color: var(--accent); background: var(--accent-soft); padding: 4px 10px; border-radius: 999px;
+  }
+
+  /* kvalitativni pill v feedu */
+  .qpill { font-size: 12px; font-weight: 700; padding: 5px 11px; border-radius: 999px; white-space: nowrap; }
+  .qpill.hi { background: var(--accent); color: #fff; }
+  .qpill.mid { background: var(--accent-soft); color: var(--accent); }
+  .qpill.lo { background: #eef1ef; color: var(--muted); }
+
+  /* veliki statistični povzetek */
+  .stat-hero {
+    background: linear-gradient(135deg, #eaf4ec, #f5faf6);
+    border: 1px solid #dcebe0; border-radius: var(--radius); padding: 18px 18px 16px;
+  }
+  .stat-hero .kicker { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: .5px; color: var(--accent); }
+  .stat-hero .big { font-size: 27px; font-weight: 800; letter-spacing: -.5px; margin: 6px 0 2px; line-height: 1.15; }
+  .stat-hero .big .em { color: var(--accent); }
+  .stat-hero .desc { font-size: 13.5px; color: var(--muted); line-height: 1.5; }
+
+  /* histogram */
+  .chart { margin: 6px 2px 2px; }
+  .bars { display: flex; align-items: flex-end; gap: 5px; height: 124px; padding-top: 18px; }
+  .bar { flex: 1; display: flex; flex-direction: column; justify-content: flex-end; position: relative; }
+  .bar .fill { width: 100%; background: #cfe3d4; border-radius: 4px 4px 0 0; }
+  .bar.me .fill { background: var(--honey); }
+  .bar.me::before {
+    content: "ti"; position: absolute; top: -16px; left: 50%; transform: translateX(-50%);
+    font-size: 10px; font-weight: 800; color: #9a7416; background: var(--honey-soft);
+    padding: 1px 6px; border-radius: 999px; border: 1px solid #ecd9a6;
+  }
+  .axis { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); margin-top: 7px; font-weight: 600; }
+  .legend { display: flex; gap: 14px; font-size: 11.5px; color: var(--muted); margin-top: 10px; }
+  .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; margin-right: 5px; vertical-align: -1px; }
+
+  /* 3-pasni opisni indikator (nizek n) */
+  .band { display: flex; border-radius: 12px; overflow: hidden; border: 1px solid var(--line); position: relative; margin-top: 6px; }
+  .band > div { flex: 1; text-align: center; padding: 12px 4px; font-size: 12.5px; font-weight: 700; }
+  .band .b1 { background: #eaf4ec; color: var(--accent); }
+  .band .b2 { background: #f6f8f6; color: var(--muted); }
+  .band .b3 { background: #f6f8f6; color: var(--muted); }
+  .band .marker {
+    position: absolute; top: -9px; left: 16%; transform: translateX(-50%);
+    width: 0; height: 0; border-left: 7px solid transparent; border-right: 7px solid transparent; border-top: 9px solid var(--honey);
+  }
+
+  /* frekvenca — porazdelitev */
+  .freq-big { font-size: 30px; font-weight: 800; letter-spacing: -.5px; }
+  .freq-big small { font-size: 14px; font-weight: 600; color: var(--muted); }
+  .dots { display: flex; gap: 5px; flex-wrap: wrap; margin-top: 12px; }
+  .dots span { width: 13px; height: 13px; border-radius: 50%; background: var(--accent-soft); }
+  .dots span.on { background: var(--accent); }
+  .dots span.me { background: var(--honey); box-shadow: 0 0 0 3px var(--honey-soft); }
+
+  /* zaklenjeno (premium teaser) */
+  .locked { position: relative; }
+  .locked .blur { filter: blur(6px); opacity: .55; pointer-events: none; user-select: none; }
+  .lock-cta {
+    position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 10px; text-align: center; padding: 16px;
+  }
+  .lock-cta .lk { width: 46px; height: 46px; border-radius: 50%; background: var(--honey-soft); color: #9a7416; display: grid; place-items: center; font-size: 22px; border: 1px solid #ecd9a6; }
+  .lock-cta .lt { font-size: 14px; font-weight: 700; }
+  .lock-cta .ls { font-size: 12px; color: var(--muted); }
+
+  /* benefits list */
+  .benefit { display: flex; gap: 12px; align-items: flex-start; padding: 11px 2px; border-bottom: 1px solid var(--line); }
+  .benefit:last-child { border-bottom: none; }
+  .benefit .bi { width: 36px; height: 36px; border-radius: 10px; background: var(--accent-soft); color: var(--accent); display: grid; place-items: center; font-size: 18px; flex: 0 0 36px; }
+  .benefit .bt { font-size: 14px; font-weight: 700; }
+  .benefit .bs { font-size: 12.5px; color: var(--muted); margin-top: 1px; line-height: 1.4; }
+
+  /* info / honest state */
+  .info-card { display: flex; gap: 12px; background: var(--info-soft); border: 1px solid #cfe0f0; border-radius: var(--radius); padding: 14px; }
+  .info-card .ico { font-size: 18px; color: var(--info); }
+  .info-card .it { font-size: 13.5px; line-height: 1.5; }
+  .info-card .it b { font-weight: 700; }
+
+  /* privacy note */
+  .privacy-note { display: flex; gap: 8px; align-items: flex-start; font-size: 11.5px; color: var(--muted); margin-top: 16px; line-height: 1.5; }
+  .privacy-note .ico { color: var(--accent); }
+
+  /* neighborhood notif card */
+  .gnotif { display: flex; gap: 12px; background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 14px; box-shadow: var(--shadow); }
+  .gnotif .gi { width: 40px; height: 40px; border-radius: 11px; background: var(--accent-soft); display: grid; place-items: center; font-size: 20px; flex: 0 0 40px; }
+  .gnotif .gt { font-size: 14px; font-weight: 700; line-height: 1.35; }
+  .gnotif .gs { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+  .mini-link { color: var(--accent); font-weight: 600; font-size: 13px; }
+  .card-h { display: flex; align-items: center; justify-content: space-between; margin-bottom: 4px; }
+  .card-h .t { font-size: 16px; font-weight: 700; }
+  .nav5 .nav-item .ico { font-size: 20px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="hero">
+    <h1>Okolica / skupnost — koncepti prikaza 🌍</h1>
+    <p>
+      Osnutki za <b>V2 skupnostne vpoglede</b> (»kaj počnejo drugi vrtnarji v okolici«), zgrajeni nad
+      statističnim modelom iz <code>skupnost-agregacija.md</code>. Tri metrike — <b>feed</b> (kaj se dogaja zdaj),
+      <b>časovni percentil</b> (kdaj se običajno dela + kje si ti) in <b>frekvenca</b> (kako pogosto) — vse
+      <b>anonimno, opisno (ne predpisno)</b> in k-anonimno (≥5 vrtnarjev).
+    </p>
+    <p>
+      Ker je to <b>premium</b> vrednost (vpogledi, ne beleženje — beleženje ostaja brezplačno), je vključenih
+      tudi nekaj osnutkov za <b>Tendask+</b> uokvirjanje in <b>poštene robne primere</b> (premalo gostote, zagon brez zgodovine).
+    </p>
+    <div class="meta">
+      Paleta: zelena <b>#2e7d32</b> + medena <b>#E0A82E</b> (le poudarek: »ti«, premium) · pisava Plus Jakarta Sans ·
+      Placement v navigaciji = predlog (5. zavihek »Okolica« ali vstop s kartice na Domov).
+    </div>
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="group-title">A · Glavni pogledi <span>vstopna točka + tri metrike</span></div>
+  <div class="grid">
+
+    <!-- FRAME 1 — HUB -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <div><h1>Okolica</h1><div class="sub">kaj počnejo vrtnarji blizu tebe</div></div>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content" style="padding-bottom:96px;">
+
+          <div class="segmented" style="margin-bottom:6px;">
+            <div class="seg active">Okolica</div>
+            <div class="seg">Podobna klima</div>
+            <div class="seg">Vsi</div>
+          </div>
+          <div class="scope-meta"><span class="dot"></span> ~40 vrtnarjev v tvoji okolici (≈5 km²)</div>
+
+          <!-- feed preview -->
+          <div class="card" style="margin-top:14px;">
+            <div class="card-h"><span class="t">Ta teden 🔥</span><span class="mini-link">Vse ›</span></div>
+            <div class="list-item">
+              <div class="avatar">🍅</div>
+              <div class="li-main"><div class="li-title">Sajenje paradižnika</div><div class="li-sub">na gredice</div></div>
+              <span class="qpill hi">pogosto</span>
+            </div>
+            <div class="list-item">
+              <div class="avatar">🌾</div>
+              <div class="li-main"><div class="li-title">Prvo gnojenje trate</div><div class="li-sub">spomladansko</div></div>
+              <span class="qpill mid">nekaj</span>
+            </div>
+            <div class="list-item" style="border-bottom:none;">
+              <div class="avatar">✂️</div>
+              <div class="li-main"><div class="li-title">Obrezovanje vrtnic</div><div class="li-sub"></div></div>
+              <span class="qpill lo">redko</span>
+            </div>
+          </div>
+
+          <!-- percentile teaser -->
+          <div class="card tinted">
+            <div class="card-h"><span class="t">Kje si ti?</span><span class="scope-chip">⏱ časovnica</span></div>
+            <div style="font-size:13.5px;color:var(--muted);line-height:1.5;margin-bottom:10px;">
+              Prvo gnojenje trate si opravil <b style="color:var(--text)">24. marca</b>.
+            </div>
+            <div class="stat-hero" style="background:#fff;border-color:var(--line);">
+              <div class="big" style="font-size:22px;">Med <span class="em">zgodnejšimi 30 %</span> 🌱</div>
+              <div class="desc">Do tvojega datuma je v okolici prvič pognojilo ~30 % vrtnarjev.</div>
+            </div>
+            <div class="mini-link" style="display:block;margin-top:12px;">Poglej celotno časovnico ›</div>
+          </div>
+
+          <!-- frequency teaser -->
+          <div class="card">
+            <div class="card-h"><span class="t">Kako pogosto</span></div>
+            <div class="list-item" style="border-bottom:none;padding:6px 0;">
+              <div class="avatar">🌾</div>
+              <div class="li-main"><div class="li-title">Košnja trate</div><div class="li-sub">v sezoni, v tvoji okolici</div></div>
+              <span class="qpill mid">2–4× / mes</span>
+            </div>
+          </div>
+
+          <div class="privacy-note"><span class="ico">🔒</span>
+            <span>Vse je anonimno in združeno (vsaj 5 vrtnarjev). Tvoja točna lokacija ni nikoli razkrita.</span>
+          </div>
+        </div>
+
+        <nav class="bottomnav nav5">
+          <div class="nav-item"><span class="ico">🏠</span>Domov</div>
+          <div class="nav-item"><span class="ico">📋</span>Opravila</div>
+          <div class="nav-item"><span class="ico">📅</span>Dnevnik</div>
+          <div class="nav-item"><span class="ico">🪴</span>Vrt</div>
+          <div class="nav-item active"><span class="ico">🌍</span>Okolica</div>
+        </nav>
+      </div>
+      <div class="cap">1 · Vstopni »hub«<small>Izbirnik obsega zgoraj (okolica / klima / vsi) + povzetek vseh treh metrik. Predlog 5. zavihka v navigaciji.</small></div>
+    </div>
+
+    <!-- FRAME 2 — FEED -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <a href="#" style="text-decoration:none;"><div class="back">‹ Okolica</div></a>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content">
+          <div class="appbar" style="padding:0 0 6px;"><div><h1 style="font-size:24px;">Ta teden 🔥</h1></div></div>
+          <div class="scope-meta"><span class="dot"></span> zadnjih 7 dni · ~40 vrtnarjev v okolici</div>
+
+          <div class="card" style="margin-top:12px;">
+            <div class="list-item">
+              <div class="avatar">🍅</div>
+              <div class="li-main"><div class="li-title">Sajenje paradižnika</div><div class="li-sub">na gredice</div></div>
+              <span class="qpill hi">pogosto</span>
+            </div>
+            <div class="list-item">
+              <div class="avatar">🌶️</div>
+              <div class="li-main"><div class="li-title">Sajenje paprike</div><div class="li-sub">na gredice</div></div>
+              <span class="qpill hi">pogosto</span>
+            </div>
+            <div class="list-item">
+              <div class="avatar">🌾</div>
+              <div class="li-main"><div class="li-title">Prvo gnojenje trate</div></div>
+              <span class="qpill mid">nekaj</span>
+            </div>
+            <div class="list-item">
+              <div class="avatar">💧</div>
+              <div class="li-main"><div class="li-title">Zalivanje gredic</div></div>
+              <span class="qpill mid">nekaj</span>
+            </div>
+            <div class="list-item" style="border-bottom:none;">
+              <div class="avatar">✂️</div>
+              <div class="li-main"><div class="li-title">Obrezovanje vrtnic</div></div>
+              <span class="qpill lo">redko</span>
+            </div>
+          </div>
+
+          <div class="info-card" style="margin-top:6px;">
+            <span class="ico">🌍</span>
+            <div class="it"><b>Sajenje jagod</b> kaže <b>podobna klima</b> — v ožji okolici je še premalo vrtnarjev za ta podatek.</div>
+          </div>
+
+          <div class="privacy-note"><span class="ico">🔒</span>
+            <span>»Pogosto / nekaj / redko« namesto točnih števil — da nihče ni prepoznaven.</span>
+          </div>
+        </div>
+      </div>
+      <div class="cap">2 · Feed »kaj se dogaja«<small>Drseče 7-dnevno okno (v ponedeljek ni prazno). Kvalitativni pill-i. Posamezne vrstice lahko padejo na »podobno klimo«.</small></div>
+    </div>
+
+    <!-- FRAME 3 — PERCENTILE / HISTOGRAM -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <a href="#" style="text-decoration:none;"><div class="back">‹ Okolica</div></a>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content">
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:22px;">Prvo gnojenje trate</h1><div class="sub">kdaj se običajno opravi</div></div></div>
+
+          <div class="stat-hero" style="margin-top:12px;">
+            <div class="kicker">Tvoj položaj</div>
+            <div class="big">Bil si <span class="em">med zgodnejšimi&nbsp;30 %</span> 🌱</div>
+            <div class="desc">Do tvojega datuma (24. mar) je v tvoji okolici prvič pognojilo trato ~30 % vrtnarjev. Večina začne v 14.–15. tednu.</div>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <div class="card-h"><span class="t">Časovnica okolice</span><span class="scope-chip">📍 okolica</span></div>
+            <div class="chart">
+              <div class="bars">
+                <div class="bar"><div class="fill" style="height:6%"></div></div>
+                <div class="bar"><div class="fill" style="height:11%"></div></div>
+                <div class="bar"><div class="fill" style="height:20%"></div></div>
+                <div class="bar me"><div class="fill" style="height:33%"></div></div>
+                <div class="bar"><div class="fill" style="height:55%"></div></div>
+                <div class="bar"><div class="fill" style="height:78%"></div></div>
+                <div class="bar"><div class="fill" style="height:100%"></div></div>
+                <div class="bar"><div class="fill" style="height:72%"></div></div>
+                <div class="bar"><div class="fill" style="height:48%"></div></div>
+                <div class="bar"><div class="fill" style="height:30%"></div></div>
+                <div class="bar"><div class="fill" style="height:18%"></div></div>
+                <div class="bar"><div class="fill" style="height:10%"></div></div>
+                <div class="bar"><div class="fill" style="height:6%"></div></div>
+              </div>
+              <div class="axis"><span>marec</span><span>april</span><span>maj</span></div>
+              <div class="legend">
+                <span><i style="background:#cfe3d4;"></i>vrtnarji v okolici</span>
+                <span><i style="background:var(--honey);"></i>ti (24. mar)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="ico">📊</span>
+            <div class="it">Krivulja temelji na <b>preteklih sezonah</b> (ne na tem letu) — zato je stabilna in se vsako leto izboljša. <span class="mini-link">Kako beremo to ›</span></div>
+          </div>
+
+          <div class="privacy-note"><span class="ico">🔒</span>
+            <span>Med ~40 vrtnarji v tvoji okolici. Opisno, ne nasvet — odločitev je tvoja.</span>
+          </div>
+        </div>
+      </div>
+      <div class="cap">3 · Časovni percentil (hero)<small>Histogram »kdaj prvič« + medena oznaka »ti« + naslovni položaj. Krivulja iz preteklih celih sezon.</small></div>
+    </div>
+
+    <!-- FRAME 5 — FREQUENCY -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <a href="#" style="text-decoration:none;"><div class="back">‹ Okolica</div></a>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content">
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:22px;">Košnja trate</h1><div class="sub">kako pogosto v sezoni</div></div></div>
+
+          <div class="stat-hero" style="margin-top:12px;">
+            <div class="kicker">Tipično v tvoji okolici</div>
+            <div class="freq-big">2–4× <small>na mesec</small></div>
+            <div class="desc" style="margin-top:4px;">Mediana 3× — polovica vrtnarjev kosi med 2 in 4-krat mesečno v rastni sezoni.</div>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <div class="card-h"><span class="t">Porazdelitev</span><span class="scope-chip">📍 okolica</span></div>
+            <div style="font-size:12.5px;color:var(--muted);margin-bottom:2px;">koliko vrtnarjev kosi N-krat na mesec</div>
+            <div class="chart">
+              <div class="bars" style="height:104px;">
+                <div class="bar"><div class="fill" style="height:25%"></div></div>
+                <div class="bar"><div class="fill" style="height:60%"></div></div>
+                <div class="bar me"><div class="fill" style="height:100%"></div></div>
+                <div class="bar"><div class="fill" style="height:55%"></div></div>
+                <div class="bar"><div class="fill" style="height:28%"></div></div>
+              </div>
+              <div class="axis"><span>1×</span><span>2×</span><span>3×</span><span>4×</span><span>5+×</span></div>
+              <div class="legend">
+                <span><i style="background:#cfe3d4;"></i>vrtnarji</span>
+                <span><i style="background:var(--honey);"></i>ti (3×)</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="ico">ℹ️</span>
+            <div class="it">Prikaz <b>mediane in razpona</b> (ne povprečja) — da posamezni »garač« s 10× ne popači slike.</div>
+          </div>
+
+          <div class="privacy-note"><span class="ico">🔒</span><span>Med ~32 vrtnarji, ki kosijo, v tvoji okolici.</span></div>
+        </div>
+      </div>
+      <div class="cap">4 · Frekvenca<small>»Kako pogosto« — mediana + razpon (IQR), ne povprečje. Pikice = vrtnarji; medena = ti.</small></div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="group-title">B · Premium uokvirjanje <span>brezplačno vidi vabilo, ne pa številk</span></div>
+  <div class="grid">
+
+    <!-- FRAME 6 — PAYWALL TEASER -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <div><h1>Okolica</h1><div class="sub">vpogledi tvoje skupnosti</div></div>
+        </div>
+        <div class="content">
+          <!-- locked percentile -->
+          <div class="card locked" style="padding:0;overflow:hidden;">
+            <div class="blur" style="padding:16px;">
+              <div class="stat-hero">
+                <div class="kicker">Tvoj položaj</div>
+                <div class="big">Med <span class="em">zgodnejšimi 30 %</span></div>
+                <div class="desc">Do tvojega datuma je pognojilo ~30 % vrtnarjev.</div>
+              </div>
+              <div class="bars" style="margin-top:14px;">
+                <div class="bar"><div class="fill" style="height:20%"></div></div>
+                <div class="bar"><div class="fill" style="height:55%"></div></div>
+                <div class="bar"><div class="fill" style="height:100%"></div></div>
+                <div class="bar"><div class="fill" style="height:48%"></div></div>
+                <div class="bar"><div class="fill" style="height:18%"></div></div>
+              </div>
+            </div>
+            <div class="lock-cta">
+              <div class="lk">🔒</div>
+              <div class="lt">Vpogledi okolice so del Tendask+</div>
+              <div class="ls">Beleženje ostaja vedno brezplačno.</div>
+            </div>
+          </div>
+
+          <div class="card" style="margin-top:2px;">
+            <div class="benefit"><div class="bi">⏱</div><div><div class="bt">Kdaj začeti</div><div class="bs">»Kje si ti« glede na sosede — za vsako opravilo.</div></div></div>
+            <div class="benefit"><div class="bi">🔥</div><div><div class="bt">Kaj se dogaja zdaj</div><div class="bs">Trenutno pogosta opravila v tvoji okolici/klimi.</div></div></div>
+            <div class="benefit"><div class="bi">📊</div><div><div class="bt">Kako pogosto</div><div class="bs">Tipična frekvenca opravil med vrtnarji.</div></div></div>
+            <div class="benefit"><div class="bi">🔔</div><div><div class="bt">Namigi okolice</div><div class="bs">Neobvezna obvestila »sosedje sadijo paradižnik«.</div></div></div>
+          </div>
+
+          <button class="btn" style="margin-top:8px;">Preizkusi Tendask+ · 14 dni brezplačno</button>
+          <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">nato 1,99 € / mes · kadarkoli prekličeš</div>
+        </div>
+      </div>
+      <div class="cap">5 · Premium vabilo (brezplačni uporabnik)<small>Zamegljen predogled + lock; jasen obljuba »beleženje je vedno brezplačno«. Korist-seznam + 14-dnevni preizkus.</small></div>
+    </div>
+
+    <!-- FRAME 8 — NEIGHBORHOOD NOTIF -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <a href="#" style="text-decoration:none;"><div class="back">‹ Nastavitve</div></a>
+        </div>
+        <div class="content">
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:22px;">Namigi okolice</h1><div class="sub">neobvezno · privzeto zmerno</div></div></div>
+
+          <div class="section-title">Predogled obvestila</div>
+          <div class="gnotif">
+            <div class="gi">🌍</div>
+            <div>
+              <div class="gt">Sosedje sadijo paradižnik 🍅</div>
+              <div class="gs">Večina v tvoji okolici je do zdaj že posadila paradižnik — primeren čas tudi pri tebi?</div>
+            </div>
+          </div>
+
+          <div class="section-title" style="margin-top:22px;">Kaj želiš prejemati</div>
+          <div class="card" style="padding:6px 16px;">
+            <div class="list-item"><div class="li-main"><div class="li-title">Sezonski začetki</div><div class="li-sub">»večina začenja gnojiti«</div></div><span class="qpill mid">vklop</span></div>
+            <div class="list-item"><div class="li-main"><div class="li-title">Pogosta opravila</div><div class="li-sub">»ta teden v okolici«</div></div><span class="qpill mid">vklop</span></div>
+            <div class="list-item" style="border-bottom:none;"><div class="li-main"><div class="li-title">Tedenski povzetek</div><div class="li-sub">en strnjen pregled</div></div><span class="qpill lo">izklop</span></div>
+          </div>
+
+          <div class="info-card" style="margin-top:8px;">
+            <span class="ico">🤫</span>
+            <div class="it">Spoštujemo <b>tihe ure</b> in <b>frekvenčno kapico</b> (največ 1 namig okolice na dan).</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">6 · Namigi okolice (opt-in)<small>Obvestila §7.12 vrsta 3. Granularni vklop po vrsti, tihe ure + kapica. Premium ali brezplačno — odprto.</small></div>
+    </div>
+
+  </div>
+
+  <!-- ============================================================ -->
+  <div class="group-title">C · Pošteni robni primeri <span>resnicoljubnost pred bogatostjo</span></div>
+  <div class="grid">
+
+    <!-- FRAME 4 — LOW N (descriptive band) -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <a href="#" style="text-decoration:none;"><div class="back">‹ Okolica</div></a>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content">
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:22px;">Sajenje borovnic</h1><div class="sub">kdaj se običajno opravi</div></div></div>
+
+          <div class="stat-hero" style="margin-top:12px;">
+            <div class="kicker">Tvoj položaj</div>
+            <div class="big" style="font-size:24px;">Začel si <span class="em">zgodaj</span></div>
+            <div class="desc">Glede na maloštevilno okolico ti kažemo le grob položaj, ne odstotka.</div>
+          </div>
+
+          <div class="card" style="margin-top:12px;">
+            <div class="card-h"><span class="t">Tvoj položaj</span><span class="scope-chip">🌍 podobna klima</span></div>
+            <div class="band">
+              <div class="marker"></div>
+              <div class="b1">zgodaj</div>
+              <div class="b2">običajno</div>
+              <div class="b3">pozno</div>
+            </div>
+            <div style="font-size:12.5px;color:var(--muted);margin-top:10px;line-height:1.5;">
+              V tvoji okolici je premalo vrtnarjev za to opravilo, zato gledamo <b>podobno klimo</b> (~14 vrtnarjev).
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="ico">⚖️</span>
+            <div class="it">Številko v % pokažemo šele pri <b>≥30 vrtnarjih</b> — sicer bi bila zavajajoče natančna.</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">7 · Nizka gostota → opisni pas<small>Pod pragom zanesljivosti (n&lt;30): »zgodaj / običajno / pozno« namesto lažnega odstotka. Honest fallback na klimo.</small></div>
+    </div>
+
+    <!-- FRAME 7 — COLD START / YEAR 1 -->
+    <div class="frame-wrap">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <div><h1>Okolica</h1><div class="sub">raste z vsakim vrtnarjem</div></div>
+          <div class="premium-badge">⭐ Tendask+</div>
+        </div>
+        <div class="content">
+
+          <div class="segmented" style="margin-bottom:6px;">
+            <div class="seg active">Okolica</div>
+            <div class="seg">Podobna klima</div>
+            <div class="seg">Vsi</div>
+          </div>
+          <div class="scope-meta"><span class="dot" style="background:var(--honey);"></span> v tvoji ožji okolici še premalo vrtnarjev</div>
+
+          <!-- feed works -->
+          <div class="card" style="margin-top:14px;">
+            <div class="card-h"><span class="t">Ta teden · podobna klima</span></div>
+            <div class="list-item">
+              <div class="avatar">🍅</div>
+              <div class="li-main"><div class="li-title">Sajenje paradižnika</div></div>
+              <span class="qpill hi">pogosto</span>
+            </div>
+            <div class="list-item" style="border-bottom:none;">
+              <div class="avatar">🌾</div>
+              <div class="li-main"><div class="li-title">Prvo gnojenje trate</div></div>
+              <span class="qpill mid">nekaj</span>
+            </div>
+          </div>
+
+          <!-- percentile not ready -->
+          <div class="card">
+            <div class="card-h"><span class="t">Časovnica »kje si ti«</span><span class="scope-chip">⏳ kmalu</span></div>
+            <div class="empty" style="padding:20px 8px;">
+              <div class="ico">📈</div>
+              <p>Časovnico pokažemo, ko zberemo <b>prvo polno sezono</b> podatkov. Tvoja opravila že štejejo!</p>
+            </div>
+          </div>
+
+          <div class="info-card">
+            <span class="ico">🌱</span>
+            <div class="it"><b>Ti pomagaš zgraditi to.</b> Vsako zabeleženo opravilo (anonimno) izboljša vpoglede za vse v tvoji okolici.</div>
+          </div>
+        </div>
+      </div>
+      <div class="cap">8 · Zagon / cold-start (leto 1)<small>Feed dela takoj (drseče okno + klima fallback); časovnica »kmalu«, dokler ni cele sezone. Pošteno + motivacijsko.</small></div>
+    </div>
+
+  </div>
+
+  <div class="hero" style="margin-top:50px;">
+    <p style="font-size:13px;color:var(--muted);">
+      <b>Opomba:</b> to so klikabilni HTML osnutki za odločitev o smeri, ne končni dizajn. Naslednji korak po izboru:
+      izčistiti enega/dva favorita, uskladiti z navigacijo (5. zavihek vs kartica na Domov) in monetizacijo (kaj je za
+      brezplačne / kaj za Tendask+), nato šele Flutter implementacija. Vse vrednosti so vzorčne.
+    </p>
+  </div>
+
+</div>
+</body>
+</html>
