@@ -479,6 +479,8 @@ class _Translations$entry$de extends Translations$entry$sl {
 	@override String get rem_unit_min => 'Min';
 	@override String get rem_unit_hour => 'Std';
 	@override String get rem_unit_day => 'Tage';
+	@override String get rem_custom_label => 'Wie lange vorher?';
+	@override String get rem_before => 'vorher';
 	@override String rem_at({required Object t}) => 'um ${t}';
 	@override String get rem_choose_time => 'Um Uhrzeit';
 	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
@@ -946,6 +948,8 @@ extension on TranslationsDe {
 			'entry.rem_unit_min' => 'Min',
 			'entry.rem_unit_hour' => 'Std',
 			'entry.rem_unit_day' => 'Tage',
+			'entry.rem_custom_label' => 'Wie lange vorher?',
+			'entry.rem_before' => 'vorher',
 			'entry.rem_at' => ({required Object t}) => 'um ${t}',
 			'entry.rem_choose_time' => 'Um Uhrzeit',
 			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',

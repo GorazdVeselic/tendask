@@ -479,6 +479,8 @@ class _Translations$entry$en extends Translations$entry$sl {
 	@override String get rem_unit_min => 'min';
 	@override String get rem_unit_hour => 'hrs';
 	@override String get rem_unit_day => 'days';
+	@override String get rem_custom_label => 'How long before?';
+	@override String get rem_before => 'before';
 	@override String rem_at({required Object t}) => 'at ${t}';
 	@override String get rem_choose_time => 'At time';
 	@override String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
@@ -946,6 +948,8 @@ extension on TranslationsEn {
 			'entry.rem_unit_min' => 'min',
 			'entry.rem_unit_hour' => 'hrs',
 			'entry.rem_unit_day' => 'days',
+			'entry.rem_custom_label' => 'How long before?',
+			'entry.rem_before' => 'before',
 			'entry.rem_at' => ({required Object t}) => 'at ${t}',
 			'entry.rem_choose_time' => 'At time',
 			'entry.rem_time_note' => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").',

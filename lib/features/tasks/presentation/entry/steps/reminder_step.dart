@@ -5,6 +5,7 @@ import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/config.dart';
 import '../../../../../core/notifications/notification_service.dart';
 import '../../../../../core/widgets/confirm_dialog.dart';
+import '../../../../../core/widgets/section_label.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../notifications/presentation/notification_priming_sheet.dart';
@@ -260,6 +261,20 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
       '${_time.hour.toString().padLeft(2, '0')}:'
       '${_time.minute.toString().padLeft(2, '0')}';
 
+  String _unitLabel(Translations t) => switch (_customUnit) {
+    _CustomUnit.minutes => t.entry.rem_unit_min,
+    _CustomUnit.hours => t.entry.rem_unit_hour,
+    _CustomUnit.days => t.entry.rem_unit_day,
+  };
+
+  /// Human preview of the reminder being built, e.g. "2 dni prej ob 18:00".
+  String _preview(Translations t) {
+    final base = _custom
+        ? '$_customValue ${_unitLabel(t)} ${t.entry.rem_before}'
+        : _label(_offset, t);
+    return _isDayBased ? '$base ${t.entry.rem_at(t: _timeText)}' : base;
+  }
+
   Future<void> _pickTime() async {
     final picked = await showTimePicker(context: context, initialTime: _time);
     if (picked != null && mounted) setState(() => _time = picked);
@@ -279,46 +294,59 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
     final t = context.t;
     final theme = Theme.of(context);
 
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const SheetHandle(),
-            Text(
-              t.entry.reminder_title,
-              style: theme.textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.w700,
+    return Padding(
+      // Lift the sheet above the keyboard so the number field stays visible.
+      padding: EdgeInsets.only(bottom: MediaQuery.viewInsetsOf(context).bottom),
+      child: SafeArea(
+        child: SingleChildScrollView(
+          padding: const EdgeInsets.fromLTRB(16, 16, 16, 16),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SheetHandle(),
+              Text(
+                t.entry.reminder_title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-            const SizedBox(height: 12),
-            RadioGroup<int>(
-              groupValue: _custom ? _kCustomOffset : _offset,
-              onChanged: (v) => setState(() {
-                if (v == _kCustomOffset) {
-                  _custom = true;
-                } else if (v != null) {
-                  _custom = false;
-                  _offset = v;
-                }
-              }),
-              child: Column(
-                children: [
-                  for (final offset in _offsets)
+              const SizedBox(height: 12),
+              RadioGroup<int>(
+                groupValue: _custom ? _kCustomOffset : _offset,
+                onChanged: (v) => setState(() {
+                  if (v == _kCustomOffset) {
+                    _custom = true;
+                  } else if (v != null) {
+                    _custom = false;
+                    _offset = v;
+                  }
+                }),
+                child: Column(
+                  children: [
+                    for (final offset in _offsets)
+                      RadioListTile<int>(
+                        value: offset,
+                        enabled: !_offsetTaken(offset),
+                        title: Text(_label(offset, t)),
+                        subtitle: _offsetTaken(offset)
+                            ? Text(
+                                t.entry.rem_added,
+                                style: theme.textTheme.bodySmall?.copyWith(
+                                  color: theme.colorScheme.onSurfaceVariant,
+                                ),
+                              )
+                            : null,
+                        secondary: const Text(
+                          '🔔',
+                          style: TextStyle(fontSize: 16),
+                        ),
+                        dense: true,
+                        contentPadding: EdgeInsets.zero,
+                      ),
                     RadioListTile<int>(
-                      value: offset,
-                      enabled: !_offsetTaken(offset),
-                      title: Text(_label(offset, t)),
-                      subtitle: _offsetTaken(offset)
-                          ? Text(
-                              t.entry.rem_added,
-                              style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant,
-                              ),
-                            )
-                          : null,
+                      value: _kCustomOffset,
+                      title: Text(t.entry.rem_custom),
                       secondary: const Text(
                         '🔔',
                         style: TextStyle(fontSize: 16),
@@ -326,97 +354,123 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                       dense: true,
                       contentPadding: EdgeInsets.zero,
                     ),
-                  RadioListTile<int>(
-                    value: _kCustomOffset,
-                    title: Text(t.entry.rem_custom),
-                    secondary: const Text('🔔', style: TextStyle(fontSize: 16)),
-                    dense: true,
-                    contentPadding: EdgeInsets.zero,
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            if (_custom) ...[
-              const Divider(),
-              Row(
-                children: [
-                  SizedBox(
-                    width: 72,
-                    child: TextField(
-                      controller: _customCtrl,
-                      keyboardType: TextInputType.number,
-                      textAlign: TextAlign.center,
-                      onChanged: (_) => setState(() {}),
-                      decoration: const InputDecoration(isDense: true),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: SegmentedButton<_CustomUnit>(
-                      segments: [
-                        ButtonSegment(
-                          value: _CustomUnit.minutes,
-                          label: Text(t.entry.rem_unit_min),
+              if (_custom) ...[
+                const Divider(),
+                FieldLabel(t.entry.rem_custom_label),
+                Row(
+                  children: [
+                    SizedBox(
+                      width: 72,
+                      child: TextField(
+                        controller: _customCtrl,
+                        keyboardType: TextInputType.number,
+                        textAlign: TextAlign.center,
+                        autofocus: true,
+                        onChanged: (_) => setState(() {}),
+                        decoration: const InputDecoration(
+                          isDense: true,
+                          border: OutlineInputBorder(),
                         ),
-                        ButtonSegment(
-                          value: _CustomUnit.hours,
-                          label: Text(t.entry.rem_unit_hour),
-                        ),
-                        ButtonSegment(
-                          value: _CustomUnit.days,
-                          label: Text(t.entry.rem_unit_day),
-                        ),
-                      ],
-                      selected: {_customUnit},
-                      onSelectionChanged: (s) =>
-                          setState(() => _customUnit = s.first),
-                      showSelectedIcon: false,
-                      style: const ButtonStyle(
-                        visualDensity: VisualDensity.compact,
                       ),
                     ),
+                    const SizedBox(width: 12),
+                    Expanded(
+                      child: SegmentedButton<_CustomUnit>(
+                        segments: [
+                          ButtonSegment(
+                            value: _CustomUnit.minutes,
+                            label: Text(t.entry.rem_unit_min),
+                          ),
+                          ButtonSegment(
+                            value: _CustomUnit.hours,
+                            label: Text(t.entry.rem_unit_hour),
+                          ),
+                          ButtonSegment(
+                            value: _CustomUnit.days,
+                            label: Text(t.entry.rem_unit_day),
+                          ),
+                        ],
+                        selected: {_customUnit},
+                        onSelectionChanged: (s) =>
+                            setState(() => _customUnit = s.first),
+                        showSelectedIcon: false,
+                        style: const ButtonStyle(
+                          visualDensity: VisualDensity.compact,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+              if (_isDayBased) ...[
+                const Divider(),
+                Row(
+                  children: [
+                    Expanded(child: Text(t.entry.rem_choose_time)),
+                    TextButton.icon(
+                      onPressed: _pickTime,
+                      icon: const Icon(Icons.access_time_outlined, size: 18),
+                      label: Text(_timeText),
+                    ),
+                  ],
+                ),
+                Text(
+                  t.entry.rem_time_note,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
                   ),
-                ],
+                ),
+              ],
+              const SizedBox(height: 16),
+              // Live preview of the reminder being built (presets and custom).
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 10,
+                ),
+                decoration: BoxDecoration(
+                  color: theme.colorScheme.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    const Text('🔔', style: TextStyle(fontSize: 16)),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        _preview(t),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ],
-            if (_isDayBased) ...[
-              const Divider(),
-              Row(
-                children: [
-                  Expanded(child: Text(t.entry.rem_choose_time)),
-                  TextButton.icon(
-                    onPressed: _pickTime,
-                    icon: const Icon(Icons.access_time_outlined, size: 18),
-                    label: Text(_timeText),
-                  ),
-                ],
-              ),
-              Text(
-                t.entry.rem_time_note,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+              const SizedBox(height: 12),
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: FilledButton(
+                  // Day-based offsets stay selectable but a same-time pick would
+                  // duplicate — block the add then. Custom needs a value >= 1.
+                  onPressed:
+                      (_custom && _customValue < 1) ||
+                          _isTaken(
+                            _effectiveOffset,
+                            _isDayBased ? _timeText : null,
+                          )
+                      ? null
+                      : _confirm,
+                  child: Text(t.entry.reminder_add),
                 ),
               ),
             ],
-            const SizedBox(height: 16),
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: FilledButton(
-                // Day-based offsets stay selectable but a same-time pick would
-                // duplicate — block the add then. Custom needs a value >= 1.
-                onPressed:
-                    (_custom && _customValue < 1) ||
-                        _isTaken(
-                          _effectiveOffset,
-                          _isDayBased ? _timeText : null,
-                        )
-                    ? null
-                    : _confirm,
-                child: Text(t.entry.reminder_add),
-              ),
-            ),
-          ],
+          ),
         ),
       ),
     );

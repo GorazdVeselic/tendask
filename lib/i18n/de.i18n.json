@@ -286,6 +286,8 @@
     "rem_unit_min": "Min",
     "rem_unit_hour": "Std",
     "rem_unit_day": "Tage",
+    "rem_custom_label": "Wie lange vorher?",
+    "rem_before": "vorher",
     "rem_at(t)": "um $t",
     "rem_choose_time": "Um Uhrzeit",
     "rem_time_note": "Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).",

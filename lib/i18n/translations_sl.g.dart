@@ -977,6 +977,12 @@ class Translations$entry$sl {
 	/// sl: 'dni'
 	String get rem_unit_day => 'dni';
 
+	/// sl: 'Koliko prej naj opozorim?'
+	String get rem_custom_label => 'Koliko prej naj opozorim?';
+
+	/// sl: 'prej'
+	String get rem_before => 'prej';
+
 	/// sl: 'ob $t'
 	String rem_at({required Object t}) => 'ob ${t}';
 
@@ -1721,6 +1727,8 @@ extension on Translations {
 			'entry.rem_unit_min' => 'min',
 			'entry.rem_unit_hour' => 'ure',
 			'entry.rem_unit_day' => 'dni',
+			'entry.rem_custom_label' => 'Koliko prej naj opozorim?',
+			'entry.rem_before' => 'prej',
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',

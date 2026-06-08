@@ -290,6 +290,8 @@
     "rem_unit_min": "min",
     "rem_unit_hour": "ure",
     "rem_unit_day": "dni",
+    "rem_custom_label": "Koliko prej naj opozorim?",
+    "rem_before": "prej",
     "rem_at(t)": "ob $t",
     "rem_choose_time": "Ob uri",
     "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).",

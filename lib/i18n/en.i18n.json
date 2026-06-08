@@ -286,6 +286,8 @@
     "rem_unit_min": "min",
     "rem_unit_hour": "hrs",
     "rem_unit_day": "days",
+    "rem_custom_label": "How long before?",
+    "rem_before": "before",
     "rem_at(t)": "at $t",
     "rem_choose_time": "At time",
     "rem_time_note": "The time applies to day-based offsets (e.g. \"1 day before at 18:00\").",
