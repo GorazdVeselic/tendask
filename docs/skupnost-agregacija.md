@@ -39,6 +39,15 @@
 | 7 | Frekvenčna metrika | **V2** (tri metrike skupaj) |
 | 8 | Zrelost `X/N/M` | Konservativni server-nastavljivi privzetki (X=14 dni, N=10 opravil, M=5 dni); kalibriraj po podatkih |
 
+### 0.2 Naknadne uskladitve iz wireframe verifikacije (2026-06-08)
+Preverba `wireframes/community-concepts_v1.html` je razkrila tri vrzeli; zapolnjene additivno:
+- **`bucket_population`** (§5.5) — štetje vrtnarjev v vedru za »~40 v okolici« + cold-start (pod
+  `K_privacy` kaži »še premalo«, ne točne številke).
+- **`activity_frequency.hist`** (§5.3) — shranjena porazdelitev za stolpčni prikaz (konsistenten s
+  časovnim percentilom), ne le kvartili.
+- **Obvestila/odstotki čez kratko okno** (§7.8) — ubeseditev iz CDF; neobvezna »participacija 7 dni«;
+  feed ostane kvalitativen.
+
 ---
 
 ## 1. Namen, obseg, načela
@@ -181,10 +190,12 @@ v aktivni sezoni. Cron shrani **le povzetek** (mediana + kvartila + `n`), **brez
 activity_frequency(
   resolution text, bucket_key text, task_type_id text, plant_id text NULL,
   season_year int, n_users int,
-  per_user_p25 real, per_user_p50 real, per_user_p75 real, unit text  -- npr. 'per_month'
+  per_user_p25 real, per_user_p50 real, per_user_p75 real, unit text,  -- npr. 'per_month'; kvartili za naslov "2–4×"
+  hist jsonb  -- porazdelitev za prikaz: št. uporabnikov po pasovih, npr. {"1":4,"2":9,"3":12,"4":7,"5+":3}
 )
 ```
-RLS: `using (n_users >= K_privacy)`.
+RLS: `using (n_users >= K_privacy)`. `hist` omogoča stolpčni prikaz porazdelitve (vizualno konsistenten s
+časovnim percentilom) — pasovi so dovolj grobi (k-anonimnost ohranjena prek `n_users` gate-a).
 
 ### 5.4 `activity_season` — časovni percentil (porazdelitev prvih izvedb)
 Za vsak nivo, vedro, `task_type_id`, (neobvezno) `plant_id`, **leto** `year`, **ISO teden** `w`:
@@ -210,10 +221,20 @@ RLS (odločitev 6): gate na **skupnem naboru**, ne tedenski celici (tedenski bar
 anonimnostni set je cela sezona). Cron izračuna `pooled_total = Σ` čez uporabljena pretekla leta in
 postavi **`publishable`** na vse vrstice vedra+tipa; RLS `using (publishable)`.
 
-### 5.5 Pretok in vrstni red
+### 5.5 `bucket_population` — koliko vrtnarjev je v vedru (vrzel iz wireframe verifikacije)
+Za prikaz »~40 vrtnarjev v tvoji okolici« in cold-start gating (»še premalo«) rabimo **populacijo
+vedra** — različne upravičene uporabnike *ne glede na opravilo* (tri agregatne tabele so per-`task_type`).
+```
+bucket_population(resolution text, bucket_key text, distinct_users int, refreshed_at timestamptz)
+```
+- `distinct_users` = upravičeni uporabniki z **vsaj enim** dogodkom (oz. profilom) v vedru.
+- **Prikaz:** ≥ `K_privacy` → pokaži približek (»~40«); < `K_privacy` → pokaži **»še premalo«**, NIKOLI
+  točne majhne številke (npr. ne »3«).
+
+### 5.6 Pretok in vrstni red
 `eligible_user` → (`activity_recent` nad 7-dnevnim oknom) + (`activity_frequency` + `activity_season`
-za **tekoče** leto, running; pretekla leta zamrznjena). Ko se leto zaključi, postane del "preteklih
-celih sezon".
+za **tekoče** leto, running; pretekla leta zamrznjena) + `bucket_population`. Ko se leto zaključi,
+postane del "preteklih celih sezon".
 
 ---
 
@@ -248,8 +269,9 @@ ali "med ~N vrtnarji". Deluje **takoj**, brez zgodovine.
 Številko `P`/`F` le, če imenovalec ≥ `K_reliab`; sicer opisni 3-pasni način (tercili).
 
 ### 7.3 Frekvenca — "kako pogosto" (odločitev 7)
-Beri `activity_frequency` za uporabnikovo vedro: *"V tvoji okolici kosijo tipično **2–4× mesečno**
-(med ~30 vrtnarji)"* (mediana + IQR). Številčni razpon le ob `n ≥ K_reliab`; sicer opisno/skrito.
+Beri `activity_frequency` za uporabnikovo vedro: naslov *"V tvoji okolici kosijo tipično **2–4×
+mesečno**"* (IQR p25–p75) + **stolpčni prikaz porazdelitve** iz `hist` z oznako »ti« (vizualno
+konsistenten s časovnim percentilom). Številčni razpon le ob `n ≥ K_reliab`; sicer opisno/skrito.
 
 ### 7.4 Fallback hierarhija (en nivo, brez mešanja)
 Za poizvedbo `(T, neobvezno P)` z uporabnikovimi vedri vzemi **prvi** nivo, ki prestane potrebni
@@ -277,6 +299,16 @@ Ni dokončane pretekle sezone → krivulja (§7.2) ni na voljo. Takrat:
 - % zaokroži na 10; po želji prikaži `n` ("med ~40 vrtnarji"). Pri `n ∈ [K_privacy, K_reliab)` le
   opisni način.
 - Brez algoritemskih "insightov"; pogled **uporabniško sprožen** (past §8.10).
+
+### 7.8 Obvestila okolice in odstotki čez kratko okno (vrzel iz wireframe verifikacije)
+Odstotek »X % ta teden« je **prepovedan** kot samostojna trditev (imenovalec čez 7-dnevno okno ni
+definiran). Dovoljeni sta dve podatkovno podprti ubeseditvi:
+- **CDF (privzeto za obvestila):** *"Večina v tvoji okolici je do zdaj že posadila paradižnik —
+  primeren čas tudi pri tebi?"* / *"~68 % je do zdaj že začelo gnojiti trato."* (iz `activity_season`).
+- **Participacija zadnjih 7 dni (neobvezno):** `participation = distinct_7d / season_total` =
+  *"približno X od Y vrtnarjev, ki to delajo, je bilo aktivnih ta teden"* — mehka angažiranost, NE
+  sezonska trditev; isti `K_privacy`/`K_reliab` gate-i. Feed sam ostane **kvalitativen**
+  (pogosto/nekaj/redko), ne odstoten.
 
 ---
 

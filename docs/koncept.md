@@ -549,7 +549,8 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
   (res-7/6/5) **ali** `climate_bucket`:
   - `activity_recent(resolution, bucket_key, task_type_id, plant_id NULL, distinct_users_7d, refreshed_at)` — feed (drseče 7-dnevno okno);
   - `activity_season(resolution, bucket_key, task_type_id, plant_id NULL, year, iso_week, first_user_count, publishable)` — časovni percentil (CDF prvih izvedb);
-  - `activity_frequency(resolution, bucket_key, task_type_id, plant_id NULL, season_year, n_users, per_user_p25/p50/p75, unit)` — frekvenca (mediana+IQR).
+  - `activity_frequency(resolution, bucket_key, task_type_id, plant_id NULL, season_year, n_users, per_user_p25/p50/p75, unit, hist jsonb)` — frekvenca (IQR naslov + stolpčna porazdelitev);
+  - `bucket_population(resolution, bucket_key, distinct_users, refreshed_at)` — koliko vrtnarjev je v vedru (»~40 v okolici« + cold-start gating).
   RLS: `grant select to anon, authenticated` + k-anonimnost (`K_privacy=5`); prikaz številke ob `K_reliab=30`. Anti-junk:
   `distinct_users` (ne opravil), `is_custom` izločen, zrelostni filter. Glej §8 + `skupnost-agregacija.md`.
 
