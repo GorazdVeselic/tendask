@@ -6,6 +6,9 @@ DateTime startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
 /// `1. 6. 2026`
 String formatDmy(DateTime d) => '${d.day}. ${d.month}. ${d.year}';
 
+/// `1. 6.` — day and month, no year (for current-year lists).
+String formatDm(DateTime d) => '${d.day}. ${d.month}.';
+
 /// `08:05`
 String formatHm(DateTime d) =>
     '${d.hour.toString().padLeft(2, '0')}:${d.minute.toString().padLeft(2, '0')}';

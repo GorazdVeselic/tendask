@@ -17,7 +17,8 @@
   },
   "common": {
     "today": "Today",
-    "yesterday": "yesterday"
+    "yesterday": "yesterday",
+    "load_error": "Couldn't load data."
   },
   "notifications": {
     "today": "Today",
@@ -115,7 +116,6 @@
     "search": "Search",
     "privacy": "We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.",
     "continue": "Continue",
-    "detecting": "Detecting location…",
     "set_gps": "Location set.",
     "set_place(name)": "Location: $name",
     "err_denied": "Location access denied. Enter a place or grant permission in system settings.",
@@ -360,7 +360,6 @@
     "custom_private": "A custom entry is private and not shared with the community.",
     "add_title": "Add plants",
     "frequent": "Frequent",
-    "added_count(n)": "Added ($n)",
     "undo": "Undo",
     "done": "Done",
     "add_to_label": "Add to",

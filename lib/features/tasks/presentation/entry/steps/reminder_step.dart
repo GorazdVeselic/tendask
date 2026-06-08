@@ -5,6 +5,7 @@ import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/config.dart';
 import '../../../../../core/notifications/notification_service.dart';
 import '../../../../../core/widgets/confirm_dialog.dart';
+import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../data/tasks_repository.dart';
@@ -223,6 +224,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SheetHandle(),
             Text(t.entry.reminder_title,
                 style: theme.textTheme.titleMedium
                     ?.copyWith(fontWeight: FontWeight.w700)),

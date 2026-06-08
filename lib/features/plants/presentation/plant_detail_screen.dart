@@ -7,6 +7,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
@@ -25,7 +26,6 @@ class PlantDetailScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
-    final theme = Theme.of(context);
 
     final plant = ref.watch(userPlantByIdProvider(id)).asData?.value;
     final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
@@ -54,15 +54,7 @@ class PlantDetailScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               children: [
                 _Hero(plant: plant, catalog: catalog, areas: areas),
-                const SizedBox(height: 16),
-                Text(
-                  t.plant_detail.history_title,
-                  style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-                const SizedBox(height: 8),
+                SectionLabel(t.plant_detail.history_title),
                 _History(
                   history: history,
                   catalog: taskTypes,

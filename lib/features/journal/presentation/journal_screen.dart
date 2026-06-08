@@ -62,12 +62,6 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                     color: theme.colorScheme.onSurfaceVariant)),
           ],
         ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.search_outlined),
-            onPressed: () {},
-          ),
-        ],
       ),
       body: Column(
         children: [

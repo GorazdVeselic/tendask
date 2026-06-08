@@ -7,6 +7,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/widgets/plant_row.dart';
@@ -118,9 +119,12 @@ class _AreasList extends StatelessWidget {
       itemBuilder: (context, i) {
         if (i == items.length) return const _NewAreaButton();
         final item = items[i];
-        if (item is String) return _SectionHeader(label: item);
+        if (item is String) {
+          return SectionLabel(item, padding: _kSectionPad);
+        }
         if (item is AreaType) {
-          return _SectionHeader(label: areaTypeLabel(item, context.t));
+          return SectionLabel(areaTypeLabel(item, context.t),
+              padding: _kSectionPad);
         }
         if (item is UserPlant) {
           return PlantRow(plant: item, catalog: plantCatalog);
@@ -204,28 +208,8 @@ class _NewAreaButton extends StatelessWidget {
   }
 }
 
-// ─── Section header ───────────────────────────────────────────────────────────
-
-class _SectionHeader extends StatelessWidget {
-  const _SectionHeader({required this.label});
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
+// Section headers in the garden list keep the list's 16px horizontal indent.
+const _kSectionPad = EdgeInsets.fromLTRB(16, 16, 16, 4);
 
 // ─── Area row ────────────────────────────────────────────────────────────────
 

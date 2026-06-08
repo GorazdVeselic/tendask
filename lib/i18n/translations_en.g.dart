@@ -112,6 +112,7 @@ class _Translations$common$en extends Translations$common$sl {
 	// Translations
 	@override String get today => 'Today';
 	@override String get yesterday => 'yesterday';
+	@override String get load_error => 'Couldn\'t load data.';
 }
 
 // Path: notifications
@@ -258,7 +259,6 @@ class _Translations$location$en extends Translations$location$sl {
 	@override String get search => 'Search';
 	@override String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
 	@override String get kContinue => 'Continue';
-	@override String get detecting => 'Detecting location…';
 	@override String get set_gps => 'Location set.';
 	@override String set_place({required Object name}) => 'Location: ${name}';
 	@override String get err_denied => 'Location access denied. Enter a place or grant permission in system settings.';
@@ -580,7 +580,6 @@ class _Translations$plants$en extends Translations$plants$sl {
 	@override String get custom_private => 'A custom entry is private and not shared with the community.';
 	@override String get add_title => 'Add plants';
 	@override String get frequent => 'Frequent';
-	@override String added_count({required Object n}) => 'Added (${n})';
 	@override String get undo => 'Undo';
 	@override String get done => 'Done';
 	@override String get add_to_label => 'Add to';
@@ -691,6 +690,7 @@ extension on TranslationsEn {
 			'home.no_recent' => 'No completed tasks yet.',
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
+			'common.load_error' => 'Couldn\'t load data.',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
 			'notif_settings.title' => 'Notifications',
@@ -774,7 +774,6 @@ extension on TranslationsEn {
 			'location.search' => 'Search',
 			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.',
 			'location.kContinue' => 'Continue',
-			'location.detecting' => 'Detecting location…',
 			'location.set_gps' => 'Location set.',
 			'location.set_place' => ({required Object name}) => 'Location: ${name}',
 			'location.err_denied' => 'Location access denied. Enter a place or grant permission in system settings.',
@@ -991,7 +990,6 @@ extension on TranslationsEn {
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
 			'plants.add_title' => 'Add plants',
 			'plants.frequent' => 'Frequent',
-			'plants.added_count' => ({required Object n}) => 'Added (${n})',
 			'plants.undo' => 'Undo',
 			'plants.done' => 'Done',
 			'plants.add_to_label' => 'Add to',

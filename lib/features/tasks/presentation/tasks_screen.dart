@@ -331,10 +331,7 @@ class _StatusBadge extends StatelessWidget {
     return t.tasks_list.overdue_days(n: days);
   }
 
-  String _shortDate() {
-    final local = task.date.toLocal();
-    return '${local.day}. ${local.month}.';
-  }
+  String _shortDate() => formatDm(task.date.toLocal());
 }
 
 // ─── Action sheet ─────────────────────────────────────────────────────────────

@@ -137,6 +137,9 @@ class Translations$common$sl {
 
 	/// sl: 'včeraj'
 	String get yesterday => 'včeraj';
+
+	/// sl: 'Podatkov ni bilo mogoče naložiti.'
+	String get load_error => 'Podatkov ni bilo mogoče naložiti.';
 }
 
 // Path: notifications
@@ -449,9 +452,6 @@ class Translations$location$sl {
 
 	/// sl: 'Nadaljuj'
 	String get kContinue => 'Nadaljuj';
-
-	/// sl: 'Določam lokacijo…'
-	String get detecting => 'Določam lokacijo…';
 
 	/// sl: 'Lokacija je nastavljena.'
 	String get set_gps => 'Lokacija je nastavljena.';
@@ -1210,9 +1210,6 @@ class Translations$plants$sl {
 	/// sl: 'Pogosto'
 	String get frequent => 'Pogosto';
 
-	/// sl: 'Dodano ($n)'
-	String added_count({required Object n}) => 'Dodano (${n})';
-
 	/// sl: 'Razveljavi'
 	String get undo => 'Razveljavi';
 
@@ -1444,6 +1441,7 @@ extension on Translations {
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
+			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
 			'notif_settings.title' => 'Obvestila',
@@ -1527,7 +1525,6 @@ extension on Translations {
 			'location.search' => 'Poišči',
 			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
-			'location.detecting' => 'Določam lokacijo…',
 			'location.set_gps' => 'Lokacija je nastavljena.',
 			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',
 			'location.err_denied' => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.',
@@ -1744,7 +1741,6 @@ extension on Translations {
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
 			'plants.add_title' => 'Dodaj rastline',
 			'plants.frequent' => 'Pogosto',
-			'plants.added_count' => ({required Object n}) => 'Dodano (${n})',
 			'plants.undo' => 'Razveljavi',
 			'plants.done' => 'Končano',
 			'plants.add_to_label' => 'Kam dodajam',

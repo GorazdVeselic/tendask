@@ -55,7 +55,7 @@ class HomeScreen extends ConsumerWidget {
       body: catalogAsync.when(
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
-        error: (err, stack) => const SizedBox.shrink(),
+        error: (_, _) => Center(child: Text(t.common.load_error)),
         data: (catalog) => _HomeBody(
           pending: pending,
           completed: completed,

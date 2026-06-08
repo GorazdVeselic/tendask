@@ -112,6 +112,7 @@ class _Translations$common$de extends Translations$common$sl {
 	// Translations
 	@override String get today => 'Heute';
 	@override String get yesterday => 'gestern';
+	@override String get load_error => 'Daten konnten nicht geladen werden.';
 }
 
 // Path: notifications
@@ -258,7 +259,6 @@ class _Translations$location$de extends Translations$location$sl {
 	@override String get search => 'Suchen';
 	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.';
 	@override String get kContinue => 'Weiter';
-	@override String get detecting => 'Standort wird ermittelt…';
 	@override String get set_gps => 'Standort festgelegt.';
 	@override String set_place({required Object name}) => 'Standort: ${name}';
 	@override String get err_denied => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.';
@@ -580,7 +580,6 @@ class _Translations$plants$de extends Translations$plants$sl {
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
 	@override String get add_title => 'Pflanzen hinzufügen';
 	@override String get frequent => 'Häufig';
-	@override String added_count({required Object n}) => 'Hinzugefügt (${n})';
 	@override String get undo => 'Rückgängig';
 	@override String get done => 'Fertig';
 	@override String get add_to_label => 'Hinzufügen zu';
@@ -691,6 +690,7 @@ extension on TranslationsDe {
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
+			'common.load_error' => 'Daten konnten nicht geladen werden.',
 			'notifications.today' => 'Heute',
 			'notifications.tomorrow' => 'Morgen',
 			'notif_settings.title' => 'Benachrichtigungen',
@@ -774,7 +774,6 @@ extension on TranslationsDe {
 			'location.search' => 'Suchen',
 			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.',
 			'location.kContinue' => 'Weiter',
-			'location.detecting' => 'Standort wird ermittelt…',
 			'location.set_gps' => 'Standort festgelegt.',
 			'location.set_place' => ({required Object name}) => 'Standort: ${name}',
 			'location.err_denied' => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.',
@@ -991,7 +990,6 @@ extension on TranslationsDe {
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
 			'plants.add_title' => 'Pflanzen hinzufügen',
 			'plants.frequent' => 'Häufig',
-			'plants.added_count' => ({required Object n}) => 'Hinzugefügt (${n})',
 			'plants.undo' => 'Rückgängig',
 			'plants.done' => 'Fertig',
 			'plants.add_to_label' => 'Hinzufügen zu',

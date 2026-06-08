@@ -9,6 +9,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
@@ -33,8 +34,10 @@ class TaskDetailScreen extends ConsumerWidget {
     final router = GoRouter.of(context);
 
     final taskAsync = ref.watch(taskByIdProvider(id));
-    final catalog = ref.watch(taskTypesMapProvider).asData?.value;
-    final areas = ref.watch(areasMapProvider).asData?.value;
+    final catalogAsync = ref.watch(taskTypesMapProvider);
+    final areasAsync = ref.watch(areasMapProvider);
+    final catalog = catalogAsync.asData?.value;
+    final areas = areasAsync.asData?.value;
     final repo = ref.read(tasksRepositoryProvider);
 
     return Scaffold(
@@ -62,6 +65,9 @@ class TaskDetailScreen extends ConsumerWidget {
         data: (task) {
           if (task == null) {
             return Center(child: Text(t.task_detail.not_found));
+          }
+          if (catalogAsync.hasError || areasAsync.hasError) {
+            return Center(child: Text(t.common.load_error));
           }
           if (catalog == null || areas == null) {
             return const Center(child: CircularProgressIndicator.adaptive());
@@ -130,8 +136,7 @@ class TaskDetailScreen extends ConsumerWidget {
                         taskType: taskType,
                         subjectLabel: subjectsLabel,
                       ),
-                      const SizedBox(height: 20),
-                      _SectionTitle(
+                      SectionLabel(
                           '${t.subject_picker.title} (${subjects.length})'),
                       _SubjectsCard(
                         subjects: subjects,
@@ -139,11 +144,9 @@ class TaskDetailScreen extends ConsumerWidget {
                         userPlants: userPlants,
                         plants: plantsCatalog,
                       ),
-                      const SizedBox(height: 20),
-                      _SectionTitle(t.task_detail.section_weather),
+                      SectionLabel(t.task_detail.section_weather),
                       _WeatherSection(task: task),
-                      const SizedBox(height: 20),
-                      _SectionTitle(t.task_detail.section_details),
+                      SectionLabel(t.task_detail.section_details),
                       _DetailsCard(
                         task: task,
                         suppliesLabel: suppliesLabel,
@@ -374,29 +377,6 @@ class _StatusPill extends StatelessWidget {
   }
 }
 
-// ─── Section title ────────────────────────────────────────────────────────────
-
-class _SectionTitle extends StatelessWidget {
-  const _SectionTitle(this.label);
-
-  final String label;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Text(
-        label,
-        style: theme.textTheme.labelMedium?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
-
 // ─── Subjects card ────────────────────────────────────────────────────────────
 
 class _SubjectsCard extends StatelessWidget {
@@ -532,14 +512,8 @@ class _DetailsCard extends StatelessWidget {
       _ => t.task_detail.recurrence_once,
     };
 
-    final local = task.date.toLocal();
-    // Explicit date row, labelled by status (e.g. "Opravljeno: 3. jun · 22:00").
-    final whenLabel = task.status == TaskStatus.done
-        ? t.task_detail.badge_done
-        : t.task_detail.badge_waiting;
-
+    // Date is already shown in the status pill (hero) — not repeated here.
     final rows = [
-      (whenLabel, '${formatDmy(local)} · ${formatHm(local)}'),
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, remindersLabel ?? t.task_detail.none),
       (t.task_detail.label_recurrence, recurrenceLabel),
@@ -634,7 +608,7 @@ class _ActionBar extends StatelessWidget {
         color: theme.colorScheme.surface,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withAlpha(15),
+            color: theme.colorScheme.shadow.withAlpha(15),
             blurRadius: 8,
             offset: const Offset(0, -2),
           ),

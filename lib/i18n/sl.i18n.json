@@ -17,7 +17,8 @@
   },
   "common": {
     "today": "Danes",
-    "yesterday": "včeraj"
+    "yesterday": "včeraj",
+    "load_error": "Podatkov ni bilo mogoče naložiti."
   },
   "notifications": {
     "today": "Danes",
@@ -115,7 +116,6 @@
     "search": "Poišči",
     "privacy": "Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.",
     "continue": "Nadaljuj",
-    "detecting": "Določam lokacijo…",
     "set_gps": "Lokacija je nastavljena.",
     "set_place(name)": "Lokacija: $name",
     "err_denied": "Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.",
@@ -364,7 +364,6 @@
     "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo.",
     "add_title": "Dodaj rastline",
     "frequent": "Pogosto",
-    "added_count(n)": "Dodano ($n)",
     "undo": "Razveljavi",
     "done": "Končano",
     "add_to_label": "Kam dodajam",

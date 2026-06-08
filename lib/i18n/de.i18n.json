@@ -17,7 +17,8 @@
   },
   "common": {
     "today": "Heute",
-    "yesterday": "gestern"
+    "yesterday": "gestern",
+    "load_error": "Daten konnten nicht geladen werden."
   },
   "notifications": {
     "today": "Heute",
@@ -115,7 +116,6 @@
     "search": "Suchen",
     "privacy": "Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.",
     "continue": "Weiter",
-    "detecting": "Standort wird ermittelt…",
     "set_gps": "Standort festgelegt.",
     "set_place(name)": "Standort: $name",
     "err_denied": "Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.",
@@ -360,7 +360,6 @@
     "custom_private": "Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.",
     "add_title": "Pflanzen hinzufügen",
     "frequent": "Häufig",
-    "added_count(n)": "Hinzugefügt ($n)",
     "undo": "Rückgängig",
     "done": "Fertig",
     "add_to_label": "Hinzufügen zu",

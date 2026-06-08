@@ -104,7 +104,7 @@ class SettingsScreen extends ConsumerWidget {
                     subtitle: Text(t.settings.signed_in),
                   )
                 : ListTile(
-                    leading: const CircleAvatar(child: Text('👤')),
+                    leading: const CircleAvatar(child: Icon(Icons.person)),
                     title: Text(t.settings.profile_guest),
                     subtitle: Text(t.settings.sign_in_prompt),
                     trailing: const Icon(Icons.chevron_right),
