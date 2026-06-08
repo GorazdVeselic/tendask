@@ -103,6 +103,10 @@ class _Translations$home$en extends Translations$home$sl {
 	@override String get recent => 'Recent';
 	@override String get no_tasks_today => 'No tasks planned for today.';
 	@override String get no_recent => 'No completed tasks yet.';
+	@override String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '1 overdue task',
+		other: '${n} overdue tasks',
+	);
 }
 
 // Path: common
@@ -300,6 +304,15 @@ class _Translations$location$en extends Translations$location$sl {
 	@override String get err_unavailable => 'Couldn\'t determine your location. Try again or enter a place.';
 	@override String get err_search => 'Search failed. Check your connection and try again.';
 	@override String get no_results => 'No matches for that place.';
+	@override String get screen_title => 'Garden location';
+	@override String get status_set => 'Location is set';
+	@override String get status_unset => 'Location not set yet';
+	@override String get clear => 'Remove location';
+	@override String get clear_confirm_title => 'Remove location?';
+	@override String get clear_confirm_body => 'Weather will use the default region until you set a new location.';
+	@override String get clear_confirm_yes => 'Remove';
+	@override String get clear_confirm_cancel => 'Cancel';
+	@override String get cleared => 'Location removed';
 }
 
 // Path: journal
@@ -726,6 +739,7 @@ extension on TranslationsEn {
 			'home.recent' => 'Recent',
 			'home.no_tasks_today' => 'No tasks planned for today.',
 			'home.no_recent' => 'No completed tasks yet.',
+			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 overdue task', other: '${n} overdue tasks', ), 
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
 			'common.load_error' => 'Couldn\'t load data.',
@@ -833,6 +847,15 @@ extension on TranslationsEn {
 			'location.err_unavailable' => 'Couldn\'t determine your location. Try again or enter a place.',
 			'location.err_search' => 'Search failed. Check your connection and try again.',
 			'location.no_results' => 'No matches for that place.',
+			'location.screen_title' => 'Garden location',
+			'location.status_set' => 'Location is set',
+			'location.status_unset' => 'Location not set yet',
+			'location.clear' => 'Remove location',
+			'location.clear_confirm_title' => 'Remove location?',
+			'location.clear_confirm_body' => 'Weather will use the default region until you set a new location.',
+			'location.clear_confirm_yes' => 'Remove',
+			'location.clear_confirm_cancel' => 'Cancel',
+			'location.cleared' => 'Location removed',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',

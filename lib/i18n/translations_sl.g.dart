@@ -124,6 +124,14 @@ class Translations$home$sl {
 
 	/// sl: 'Še ni opravljenih opravil.'
 	String get no_recent => 'Še ni opravljenih opravil.';
+
+	/// sl: '(one) {1 zamujeno opravilo} (two) {$n zamujeni opravili} (few) {$n zamujena opravila} (other) {$n zamujenih opravil}'
+	String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '1 zamujeno opravilo',
+		two: '${n} zamujeni opravili',
+		few: '${n} zamujena opravila',
+		other: '${n} zamujenih opravil',
+	);
 }
 
 // Path: common
@@ -535,6 +543,33 @@ class Translations$location$sl {
 
 	/// sl: 'Za ta kraj ni zadetkov.'
 	String get no_results => 'Za ta kraj ni zadetkov.';
+
+	/// sl: 'Lokacija vrta'
+	String get screen_title => 'Lokacija vrta';
+
+	/// sl: 'Lokacija je nastavljena'
+	String get status_set => 'Lokacija je nastavljena';
+
+	/// sl: 'Lokacija še ni nastavljena'
+	String get status_unset => 'Lokacija še ni nastavljena';
+
+	/// sl: 'Odstrani lokacijo'
+	String get clear => 'Odstrani lokacijo';
+
+	/// sl: 'Odstranim lokacijo?'
+	String get clear_confirm_title => 'Odstranim lokacijo?';
+
+	/// sl: 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.'
+	String get clear_confirm_body => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.';
+
+	/// sl: 'Odstrani'
+	String get clear_confirm_yes => 'Odstrani';
+
+	/// sl: 'Prekliči'
+	String get clear_confirm_cancel => 'Prekliči';
+
+	/// sl: 'Lokacija odstranjena'
+	String get cleared => 'Lokacija odstranjena';
 }
 
 // Path: journal
@@ -1513,6 +1548,7 @@ extension on Translations {
 			'home.recent' => 'Nazadnje',
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
+			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 zamujeno opravilo', two: '${n} zamujeni opravili', few: '${n} zamujena opravila', other: '${n} zamujenih opravil', ), 
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
@@ -1620,6 +1656,15 @@ extension on Translations {
 			'location.err_unavailable' => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.',
 			'location.err_search' => 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.',
 			'location.no_results' => 'Za ta kraj ni zadetkov.',
+			'location.screen_title' => 'Lokacija vrta',
+			'location.status_set' => 'Lokacija je nastavljena',
+			'location.status_unset' => 'Lokacija še ni nastavljena',
+			'location.clear' => 'Odstrani lokacijo',
+			'location.clear_confirm_title' => 'Odstranim lokacijo?',
+			'location.clear_confirm_body' => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.',
+			'location.clear_confirm_yes' => 'Odstrani',
+			'location.clear_confirm_cancel' => 'Prekliči',
+			'location.cleared' => 'Lokacija odstranjena',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',

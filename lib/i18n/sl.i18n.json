@@ -13,7 +13,13 @@
     "today": "Danes",
     "recent": "Nazadnje",
     "no_tasks_today": "Danes ni načrtovanih opravil.",
-    "no_recent": "Še ni opravljenih opravil."
+    "no_recent": "Še ni opravljenih opravil.",
+    "overdue_banner(n)": {
+      "one": "1 zamujeno opravilo",
+      "two": "$n zamujeni opravili",
+      "few": "$n zamujena opravila",
+      "other": "$n zamujenih opravil"
+    }
   },
   "common": {
     "today": "Danes",
@@ -140,7 +146,16 @@
     "err_disabled": "Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.",
     "err_unavailable": "Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.",
     "err_search": "Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.",
-    "no_results": "Za ta kraj ni zadetkov."
+    "no_results": "Za ta kraj ni zadetkov.",
+    "screen_title": "Lokacija vrta",
+    "status_set": "Lokacija je nastavljena",
+    "status_unset": "Lokacija še ni nastavljena",
+    "clear": "Odstrani lokacijo",
+    "clear_confirm_title": "Odstranim lokacijo?",
+    "clear_confirm_body": "Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.",
+    "clear_confirm_yes": "Odstrani",
+    "clear_confirm_cancel": "Prekliči",
+    "cleared": "Lokacija odstranjena"
   },
   "journal": {
     "title": "Dnevnik",

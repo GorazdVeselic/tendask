@@ -103,6 +103,10 @@ class _Translations$home$de extends Translations$home$sl {
 	@override String get recent => 'Zuletzt';
 	@override String get no_tasks_today => 'Heute keine geplanten Aufgaben.';
 	@override String get no_recent => 'Noch keine erledigten Aufgaben.';
+	@override String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '1 überfällige Aufgabe',
+		other: '${n} überfällige Aufgaben',
+	);
 }
 
 // Path: common
@@ -300,6 +304,15 @@ class _Translations$location$de extends Translations$location$sl {
 	@override String get err_unavailable => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.';
 	@override String get err_search => 'Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get no_results => 'Keine Treffer für diesen Ort.';
+	@override String get screen_title => 'Gartenstandort';
+	@override String get status_set => 'Standort ist festgelegt';
+	@override String get status_unset => 'Standort noch nicht festgelegt';
+	@override String get clear => 'Standort entfernen';
+	@override String get clear_confirm_title => 'Standort entfernen?';
+	@override String get clear_confirm_body => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.';
+	@override String get clear_confirm_yes => 'Entfernen';
+	@override String get clear_confirm_cancel => 'Abbrechen';
+	@override String get cleared => 'Standort entfernt';
 }
 
 // Path: journal
@@ -726,6 +739,7 @@ extension on TranslationsDe {
 			'home.recent' => 'Zuletzt',
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
+			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 überfällige Aufgabe', other: '${n} überfällige Aufgaben', ), 
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
 			'common.load_error' => 'Daten konnten nicht geladen werden.',
@@ -833,6 +847,15 @@ extension on TranslationsDe {
 			'location.err_unavailable' => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.',
 			'location.err_search' => 'Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.',
 			'location.no_results' => 'Keine Treffer für diesen Ort.',
+			'location.screen_title' => 'Gartenstandort',
+			'location.status_set' => 'Standort ist festgelegt',
+			'location.status_unset' => 'Standort noch nicht festgelegt',
+			'location.clear' => 'Standort entfernen',
+			'location.clear_confirm_title' => 'Standort entfernen?',
+			'location.clear_confirm_body' => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.',
+			'location.clear_confirm_yes' => 'Entfernen',
+			'location.clear_confirm_cancel' => 'Abbrechen',
+			'location.cleared' => 'Standort entfernt',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
 			'journal.filter_all' => 'Alle',

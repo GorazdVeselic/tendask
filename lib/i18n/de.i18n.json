@@ -13,7 +13,11 @@
     "today": "Heute",
     "recent": "Zuletzt",
     "no_tasks_today": "Heute keine geplanten Aufgaben.",
-    "no_recent": "Noch keine erledigten Aufgaben."
+    "no_recent": "Noch keine erledigten Aufgaben.",
+    "overdue_banner(n)": {
+      "one": "1 überfällige Aufgabe",
+      "other": "$n überfällige Aufgaben"
+    }
   },
   "common": {
     "today": "Heute",
@@ -140,7 +144,16 @@
     "err_disabled": "Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.",
     "err_unavailable": "Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.",
     "err_search": "Suche fehlgeschlagen. Prüfe deine Verbindung und versuche es erneut.",
-    "no_results": "Keine Treffer für diesen Ort."
+    "no_results": "Keine Treffer für diesen Ort.",
+    "screen_title": "Gartenstandort",
+    "status_set": "Standort ist festgelegt",
+    "status_unset": "Standort noch nicht festgelegt",
+    "clear": "Standort entfernen",
+    "clear_confirm_title": "Standort entfernen?",
+    "clear_confirm_body": "Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.",
+    "clear_confirm_yes": "Entfernen",
+    "clear_confirm_cancel": "Abbrechen",
+    "cleared": "Standort entfernt"
   },
   "journal": {
     "title": "Tagebuch",

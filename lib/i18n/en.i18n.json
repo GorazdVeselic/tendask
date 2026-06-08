@@ -13,7 +13,11 @@
     "today": "Today",
     "recent": "Recent",
     "no_tasks_today": "No tasks planned for today.",
-    "no_recent": "No completed tasks yet."
+    "no_recent": "No completed tasks yet.",
+    "overdue_banner(n)": {
+      "one": "1 overdue task",
+      "other": "$n overdue tasks"
+    }
   },
   "common": {
     "today": "Today",
@@ -140,7 +144,16 @@
     "err_disabled": "Location services are off. Turn them on or enter a place.",
     "err_unavailable": "Couldn't determine your location. Try again or enter a place.",
     "err_search": "Search failed. Check your connection and try again.",
-    "no_results": "No matches for that place."
+    "no_results": "No matches for that place.",
+    "screen_title": "Garden location",
+    "status_set": "Location is set",
+    "status_unset": "Location not set yet",
+    "clear": "Remove location",
+    "clear_confirm_title": "Remove location?",
+    "clear_confirm_body": "Weather will use the default region until you set a new location.",
+    "clear_confirm_yes": "Remove",
+    "clear_confirm_cancel": "Cancel",
+    "cleared": "Location removed"
   },
   "journal": {
     "title": "Journal",
