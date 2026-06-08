@@ -195,8 +195,8 @@ Med implementacijo je UX revizija (rastlino-prvi tok) presegla _v2 osnutek:
 
 - **Dodajanje rastline = EN zaslon z instant-add** (`garden_plant_add_screen`): tap = takoj
   shranjeno, dodajaš več naenkrat; iskanje skrito za 🔍; »Pogosto« = nazadnje uporabljene
-  vrste (`recentPlantIds`); »Kam dodajam« (območje) je **postransko**, a **sticky-pripeto**
-  nad footerjem (vedno dosegljivo ne glede na dolžino kataloga — glej §10.1).
+  vrste (`recentPlantIds`); »Kam dodajam« (območje) je **pripeto na vrh** (vedno vidno,
+  ne glede na dolžino kataloga — glej §10.1).
   Trije koraki iz _v2 (stepper) **opuščeni** — rastlina ima eno obvezno polje (vrsta).
 - **Subjekt = instanca z enim `area_id`** (nullable). Multi-select območij ob ustvarjanju
   (»več instanc hkrati«) **opuščen**; »premik med območji« je **single-select** prek
@@ -223,7 +223,7 @@ Po pregledu novega toka na napravi (dark tema) odpravljeno:
   vsak dodatek sprožil reload providerja (`AsyncLoading` → sekcija je za hip izginila in
   seznam je poskočil). `recentPlantsProvider` odstranjen; snapshot prek repo v `initState`.
 - **Dodane vrstice poudarjene** (ozadje `primaryContainer` + poln krog z ✓) — po wireframu.
-- **Območje sticky-pripeto** nad footerjem (prej na dnu scrolla, pri dolgem katalogu nevidno);
+- **Območje pripeto na vrh** (vedno vidno; prej na dnu scrolla, pri dolgem katalogu nevidno);
   akcija preimenovana v »izberi« (ne »premakni«, ker se območje šele določa).
 - **Chipi zeleni, ne M3 vijolični**: `ColorScheme` (light+dark) ni definiral
   `primaryContainer`; dodan + `ChipThemeData(selectedColor)` v `app_theme` → poenoteno app-wide.

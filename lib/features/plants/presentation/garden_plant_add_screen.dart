@@ -199,6 +199,14 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
       ),
       body: Column(
         children: [
+          // Add target — pinned at the top so it's always visible (the catalog
+          // list below can grow long).
+          if (!widget.args.subjectMode)
+            _AreaBar(
+              areaId: _targetAreaId,
+              areas: ref.watch(areasMapProvider).asData?.value ?? const {},
+              onTap: _changeTarget,
+            ),
           Expanded(
             child: plants == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
@@ -319,15 +327,6 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                     ],
                   ),
           ),
-          // Add target — pinned (secondary, but always reachable above the
-          // footer no matter how long the catalog list grows).
-          if (!widget.args.subjectMode)
-            _AreaBar(
-              areaId: _targetAreaId,
-              areas: ref.watch(areasMapProvider).asData?.value ?? const {},
-              onTap: _changeTarget,
-              bottomSafe: members.isEmpty,
-            ),
           if (members.isNotEmpty)
             _AddedBar(
               added: members,
@@ -406,15 +405,11 @@ class _AreaBar extends StatelessWidget {
     required this.areaId,
     required this.areas,
     required this.onTap,
-    required this.bottomSafe,
   });
 
   final String? areaId;
   final Map<String, Area> areas;
   final VoidCallback onTap;
-
-  /// Honour the bottom inset only when no added-bar sits below us.
-  final bool bottomSafe;
 
   @override
   Widget build(BuildContext context) {
@@ -427,41 +422,37 @@ class _AreaBar extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Divider(height: 1, color: cs.outlineVariant),
           InkWell(
             onTap: onTap,
-            child: SafeArea(
-              top: false,
-              bottom: bottomSafe,
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-                child: Row(
-                  children: [
-                    Icon(Icons.place_outlined,
-                        size: 18, color: cs.onSurfaceVariant),
-                    const SizedBox(width: 8),
-                    Text(t.plants.add_to_label,
-                        style: theme.textTheme.bodySmall
-                            ?.copyWith(color: cs.onSurfaceVariant)),
-                    const SizedBox(width: 6),
-                    Expanded(
-                      child: Text(
-                        name ?? t.area_pick.none,
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(fontWeight: FontWeight.w600),
-                        overflow: TextOverflow.ellipsis,
-                      ),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
+              child: Row(
+                children: [
+                  Icon(Icons.place_outlined,
+                      size: 18, color: cs.onSurfaceVariant),
+                  const SizedBox(width: 8),
+                  Text(t.plants.add_to_label,
+                      style: theme.textTheme.bodySmall
+                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  const SizedBox(width: 6),
+                  Expanded(
+                    child: Text(
+                      name ?? t.area_pick.none,
+                      style: theme.textTheme.bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.w600),
+                      overflow: TextOverflow.ellipsis,
                     ),
-                    Text(
-                      t.plants.choose_area,
-                      style: TextStyle(
-                          color: cs.primary, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
+                  ),
+                  Text(
+                    t.plants.choose_area,
+                    style: TextStyle(
+                        color: cs.primary, fontWeight: FontWeight.w600),
+                  ),
+                ],
               ),
             ),
           ),
+          Divider(height: 1, color: cs.outlineVariant),
         ],
       ),
     );
