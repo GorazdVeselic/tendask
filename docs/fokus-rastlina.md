@@ -237,3 +237,10 @@ Po pregledu novega toka na napravi (dark tema) odpravljeno:
   zmrznitve). Caching ni potreben: `plantsListProvider`/`plantsMapProvider` sta že keepAlive.
 - **Footer z drsnimi chipi**: dodane rastline so zdaj vodoravno drsljivi chipi z ✕ (vsak
   posamično odstranljiv) — prej ena skrajšana vrstica + »razveljavi« (pri >3 nevidno).
+
+## 10.2 Vrt — obrnjena hierarhija prikaza (2026-06-08) — implementirano
+
+Na zavihku **Vrt** je bilo območje kartica z **večjim** zamikom ikone+teksta kot njegove rastline,
+čeprav rastline spadajo **pod** območje — hierarhija je brala obrnjeno. Popravek: **območje je zdaj
+naslov skupine** (ikona + ime + zadnje opravilo, tap → detajl), **rastline pa kartice pod njim**.
+Le presentation (`areas_screen.dart`), brez spremembe sheme/logike. Wireframe `docs/wireframes/vrt_v5.html`.

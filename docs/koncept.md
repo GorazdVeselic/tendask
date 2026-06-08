@@ -211,6 +211,9 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 - **Shranjene mešanice (recepti)** vezane na opremo (npr. "100g urea + 50ml alge / 16l").
 - Ob shranjevanju → **odpis iz zaloge** + opozorilo "malo".
 - v1 = ročna izbira / recept + preprost odpis. Avtomatski preračun volumna → v2.
+- **Status (2026-06-08):** Sredstva/zaloge so **začasno skrite** pred MVP releasom prek konstante
+  `kSuppliesEnabled=false` (`core/config.dart`) — preskočen korak »Sredstva« v čarovniku (§7.16) in
+  skrita sekcija v Nastavitvah; koda ostane za kasnejšo vključitev (flip na `true`).
 
 ### Večjezičnost — ⭐ KANONIČNI ID + i18n (od dne 1)
 - Opravila in rastline shranjeni kot **kanonični ID-ji** z oznakami {sl, de, en, ...},
@@ -331,6 +334,11 @@ SUBJEKT  = rastlina ALI območje   (M:N — POPRAVEK 2026-06-03, glej §7.15)
   točna lokacija ni nikoli razkrita."
 - Ob dovoljenju **dve poti**: GPS **ali** ročni vnos kraja (vas/mesto/naslov,
   neobvezno) → geokodiramo v okolico. Wireframe: `16-location.html`.
+- **Prenova (2026-06-08, wireframe `16b-location.html`):** zaslon ima **dva vstopa** — iz Nastavitev
+  (back gumb, izbira se **samodejno shrani** + toast, brez spodnjega gumba) in iz onboarding/prijave
+  (brez back, gumb »Nadaljuj« → Domov). Zgoraj **statusni pas** pokaže, ali je lokacija že nastavljena.
+  Gumb **»Odstrani lokacijo«** (le ko je nastavljena) s potrditvijo počisti koordinate (device-local) +
+  H3 celice v profilu → vreme pade na privzeto območje (`clearGardenLocation`).
 
 ### Onboarding
 - 3–4 drsniki (Dobrodošel · Hitro beleženje · Opomniki+vreme · (V2) Okolica) z
@@ -366,6 +374,11 @@ OPRAVILO = { tip · SUBJEKTI[] (rastlina ALI območje, M:N — §7.15) · DATUM 
 
 **Mesečni koledar (2026-06-04):** tap na dan **izbere dan** in spodaj izlista njegova
 opravila + ponudi »Dodaj na ta dan« (prej tap = takoj nov vnos).
+
+**Domov (2026-06-08):** opravila na Domov kažejo **rastlino-subjekt** (🪴, enako kot zaslon
+Opravila). **Zamujena** (pretečena, nedokončana) opravila so v **strnjenem rdečem pasu**, ki se ob
+kliku razširi v seznam na mestu (prej se zamujena na Domov sploh niso prikazala). Wireframa
+`01b-home-overdue-collapsed.html` + `01b-home-overdue-expanded.html`.
 
 ---
 
@@ -606,6 +619,11 @@ opuščen. Vrt FAB→rastline (brez routerja), tih »Novo območje«; swipe Prem
 Brisanje območja **reparenta rastline v »Brez območja«** (ne osiroti). Brez spremembe
 sheme. Wireframi `docs/wireframes/*_v4.html`; plan `docs/vrt-v4-implementacijski-plan.md`.
 
+**Popravek v5 (2026-06-08, implementiran):** **obrnjena hierarhija prikaza** — območje je zdaj
+**naslov skupine** (ikona + ime + zadnje opravilo, tap → detajl), rastline pa **kartice pod njim**.
+Prej je bilo območje kartica z **večjim** zamikom kot njegove rastline (hierarhija je brala obrnjeno).
+Brez spremembe sheme/logike — le presentation. Wireframe `docs/wireframes/vrt_v5.html`.
+
 ---
 
 ## 7.16 Vnos = en horizontalni stepper (2026-06-03)
@@ -627,7 +645,8 @@ stepper** — en korak na zaslon, »Nadaljuj«, na koncu **pregled** s »Shrani�
 4. **Opomnik** — *pogojno: le ko Čaka* (prihodnost); Google-stil zamik (ob dogodku · X prej · po meri)
    + ura, več na opravilo. **Terminologija:** na opravilu je »**opomnik**«, ne »obvestilo«
    (obvestilo = sistemski kanal dostave, §7.12). Wireframe urejanja: `reminder-add_v3.html`.
-5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje)
+5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje). **⚠️ Začasno skrito
+   (2026-06-08)** prek `kSuppliesEnabled=false` — korak se preskoči in ne šteje med korake; koda ostane.
 6. **Pregled** — vse izbire + opomba; Shrani / tap = Popravi
 
 **Posledice:** košnja danes = koraki 1–3 + pregled (4–5 odpadeta) → hitrost ohranjena;

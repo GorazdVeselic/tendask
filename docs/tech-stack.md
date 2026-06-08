@@ -125,6 +125,9 @@ lib/
     notifications/      # opomniki (19–22)
     auth/               # prijava/onboarding (13, 15, 16)
     home/               # domov (01), hiter vnos (02)
+    weather/            # vreme (Open-Meteo) — posnetek + dashboard kartica
+    splash/             # branded splash (00)
+    onboarding/         # intro drsniki (15–15d)
   data/
     seed/               # seed iz opravila-in-rastline.md
 ```

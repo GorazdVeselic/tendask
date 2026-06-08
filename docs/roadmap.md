@@ -50,9 +50,9 @@
 | **M4** | Vreme (Open-Meteo) | Vremenski posnetek na opravilo | `[x]` |
 | **M5** | Supabase zaledje | Projekt + shema + RLS | `[x]` |
 | **M6** | Sync servis | Ročni push/pull, LWW, povezljivost | `[x]` |
-| **M7** | Auth + H3 | Anonimno + linkanje + lokacija/H3 na napravi | `[ ]` |
-| **M8** | Lokalna obvestila (plast A) | Opomniki + deep-link + zasloni 19–22 | `[ ]` |
-| **M9** | Polish + monitoring + Android release | Sentry, ikona/splash, neskladja, Play test | `[ ]` |
+| **M7** | Auth + H3 | Anonimno + linkanje + lokacija/H3 na napravi | `[x]` |
+| **M8** | Lokalna obvestila (plast A) | Opomniki + deep-link + zasloni 19–22 | `[x]` |
+| **M9** | Polish + monitoring + Android release | Sentry, ikona/splash, neskladja, Play test | `[~]` |
 | **M10** | *(po MVP)* iOS mejnik | macOS/oblačni build + iOS specifike | `[ ]` |
 | **M11** | *(po MVP / V2)* Pametni motor + FCM + percentili | glej `pametni-motor.md` | `[ ]` |
 
@@ -258,6 +258,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~34 → **128 vrst** čez **12 kategorij** (lawn, fruit_tree, berries, vegetable, herbs, perennial, shrub, climber, bulb, conifer, hedge, houseplant). Metoda (z uporabnikom): **kuracija (SL/EN/DE ljudska imena, pogovorna) + GBIF preverba znanstvenih imen** (match API — vsa veljavna) + **Wikidata navzkrižna preverba SL imen** (batch SPARQL — potrdila imena; popravljen `hibiscus`→`sirski oslez`). Povezava rastlina→opravila prek **kategorije** (razširjena `categoryMatrix`, 93 vrstic). Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **Reseed (pre-release okno):** oblak posodobljen prek `apply_catalog.py` (128 plant, 93 matrika; počiščene osirotele `ornamental`/`container` matrika vrstice); naprava pull-a ob zagonu + bundlan seed (offline prvi zagon) = 128. Brez podvojenih id-jev, 151/151 testov, analyze čist. On-device pull verifikacija = ob naslednji priklopljeni napravi (USB se je odklopil). *Commit:* `feat: razširjen katalog rastlin (128 vrst, GBIF/Wikidata preverba)`
 - [ ] **9.7 — GDPR: izvoz podatkov + izbris računa.** Dva placeholderja v Nastavitvah (`export_data`, `delete_account`) sta zdaj »coming soon«; pred internim testom naredi dejansko. **Izvoz:** zberi vse uporabnikove drift vrstice (profile, area, user_plant, task + task_subject/reminder/note/task_supply) → JSON datoteka → `share`/shrani; brez koordinat (samo H3 celice). **Izbris računa:** potrditveni dialog (`showConfirmDialog destructive`) → Supabase brisanje računa (`ON DELETE CASCADE` počisti oblak) → lokalni `clearUserData` → nazaj na onboarding. Anon gost: lokalni izvoz + lokalni clear (ni oblačnega računa). *Commit:* `feat: GDPR izvoz + izbris računa`. **Opomba:** enote (°C/°F) namerno opuščene — MVP je metričen (SL/EU trg); »Območja« povezava odstranjena iz Nastavitev (podvojena z Vrt zavihkom).
 - [ ] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).**
+- [x] **9.8 — UI polish + začasni izklop sredstev.** Manjši UX popravki pred releasom (z uporabnikom, wireframe-driven): izklop debug pasu; jezikovni `SegmentedButton` brez kljukice (popravek preloma dolgih endonimov); **Domov** — opravila kažejo rastlino-subjekt (🪴, kot zaslon Opravila) + zamujena opravila v **strnjenem rdečem pasu**, ki se ob kliku razširi v seznam na mestu (prej zamujena na Domov niso bila prikazana); **prenova zaslona Lokacija** — iz Nastavitev (push) back + samodejno shranjevanje + toast brez spodnjega gumba, iz onboardinga (go) gumb »Nadaljuj«; statusni pas (nastavljeno/ni) + gumb **»Odstrani lokacijo«** s potrditvijo (`clearGardenLocation` počisti koordinate + H3 celice → vreme pade na privzeto območje); **Vrt** — obrnjena hierarhija (območje = naslov skupine, rastline = kartice pod njim, prej je bilo območje bolj zamaknjeno kot rastline). **Sredstva (supplies) začasno skrita** prek nove konstante `kSuppliesEnabled=false` (`core/config.dart`): preskočen korak »Sredstva« v čarovniku + skrita sekcija »Vrt/zaloge« v Nastavitvah; koda ostane za kasnejšo vključitev. Novi wireframi `16b-location`, `01b-home-overdue-{collapsed,expanded}`, `vrt_v5`. analyze čist, 157/157. *Commiti:* `chore(i18n): ključi za lokacijo in zamujena opravila`, `feat(location): status, brisanje in kontekstni gumb`, `feat(home): rastlina ob opravilu + pas zamujenih`, `refactor(garden): hierarhija območje kot naslov, rastline kartice`, `chore(ui): debug pas, jezikovni gumb, skrij sredstva (kSuppliesEnabled)`, `docs(wireframes): lokacija, zamujena, vrt (v5)`
 
 ---
 
@@ -333,6 +334,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-08 — **9.8 — UI polish + začasni izklop sredstev.** Z uporabnikom prek HTML wireframov:
+  debug pas off; jezikovni gumb brez kljukice (popravek preloma); Domov — rastlina-subjekt ob opravilih
+  + razširljiv rdeč pas zamujenih (prej se zamujena na Domov niso prikazala); prenova **Lokacije**
+  (Nastavitve = back + auto-save + toast brez gumba, onboarding = »Nadaljuj«, statusni pas nastavljeno/ni,
+  gumb »Odstrani lokacijo« → `clearGardenLocation` počisti koordinate + H3 → privzeto vreme); **Vrt**
+  obrnjena hierarhija (območje = naslov skupine, rastline = kartice pod njim). **Sredstva začasno skrita**
+  prek `kSuppliesEnabled=false` (korak v čarovniku + sekcija v Nastavitvah; koda ostane). Novi wireframi
+  `16b-location`, `01b-home-overdue-{collapsed,expanded}`, `vrt_v5` (stare predloge pobrisane). Dokumentacija
+  usklajena (koncept §7.7/§7.8/§7.10/§7.15, fokus-rastlina §10.2, tech-stack §6, NEXT-SESSION, galerija
+  index.html). analyze čist, 157/157. *Commiti:* `chore(i18n): ključi za lokacijo in zamujena opravila`,
+  `feat(location): status, brisanje in kontekstni gumb`, `feat(home): rastlina ob opravilu + pas zamujenih`,
+  `refactor(garden): hierarhija območje kot naslov, rastline kartice`, `chore(ui): debug pas, jezikovni gumb,
+  skrij sredstva (kSuppliesEnabled)`, `docs(wireframes): lokacija, zamujena, vrt (v5)`, `docs: uskladi dokumentacijo`
 - 2026-06-08 — **9.3 — Pregled neskladij UI/wireframi + i18n.** 5 vzporednih agentskih pregledov ~22
   zaslonov + programski i18n pregled (pariteta sl/en/de čista, brez hardcoded nizov, 2 mrtva ključa).
   Bucket A popravljen (tiho požiranje napake, komponentni katalog, hardcoded barve, SheetHandle, datum
