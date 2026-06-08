@@ -21,10 +21,13 @@
   </div>
 
   <div class="content">
-    <div class="chips" style="margin:2px 0 6px;">
+    <!-- PO-MVP: filter Vse/Rastline/Trate — pri majhnem vrtu nizka vrednost
+         (seznam je že grupiran po območjih); v kodi ni implementiran. -->
+    <div class="chips" style="margin:2px 0 6px;opacity:.55;">
       <div class="chip active">Vse</div>
       <div class="chip">Rastline</div>
       <div class="chip">Trate</div>
+      <span style="font-size:11px;color:var(--muted);font-weight:600;align-self:center;">· po-MVP</span>
     </div>
 
     <!-- BREZ OBMOČJA = privzeti dom novih rastlin (area_id = null) -->
