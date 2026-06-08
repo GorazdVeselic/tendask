@@ -931,6 +931,18 @@ class Translations$entry$sl {
 	/// sl: '2 dni prej'
 	String get rem_2day => '2 dni prej';
 
+	/// sl: 'Po meri…'
+	String get rem_custom => 'Po meri…';
+
+	/// sl: 'min'
+	String get rem_unit_min => 'min';
+
+	/// sl: 'ure'
+	String get rem_unit_hour => 'ure';
+
+	/// sl: 'dni'
+	String get rem_unit_day => 'dni';
+
 	/// sl: 'ob $t'
 	String rem_at({required Object t}) => 'ob ${t}';
 
@@ -1663,6 +1675,10 @@ extension on Translations {
 			'entry.rem_1hour' => '1 uro prej',
 			'entry.rem_1day' => '1 dan prej',
 			'entry.rem_2day' => '2 dni prej',
+			'entry.rem_custom' => 'Po meri…',
+			'entry.rem_unit_min' => 'min',
+			'entry.rem_unit_hour' => 'ure',
+			'entry.rem_unit_day' => 'dni',
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
