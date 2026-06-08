@@ -44,6 +44,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
 	@override late final _Translations$notifications$en notifications = _Translations$notifications$en._(_root);
+	@override late final _Translations$notif_priming$en notif_priming = _Translations$notif_priming$en._(_root);
 	@override late final _Translations$notif_settings$en notif_settings = _Translations$notif_settings$en._(_root);
 	@override late final _Translations$notif_preview$en notif_preview = _Translations$notif_preview$en._(_root);
 	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
@@ -124,6 +125,23 @@ class _Translations$notifications$en extends Translations$notifications$sl {
 	// Translations
 	@override String get today => 'Today';
 	@override String get tomorrow => 'Tomorrow';
+}
+
+// Path: notif_priming
+class _Translations$notif_priming$en extends Translations$notif_priming$sl {
+	_Translations$notif_priming$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Let me remind you in time?';
+	@override String get why => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.';
+	@override String get benefit_reminders => 'Task reminders — e.g. "1 day before at 18:00".';
+	@override String get benefit_weather => 'Smart weather hint — "dry tomorrow, a good time". (optional)';
+	@override String get benefit_nearby => 'Neighbourhood hints — what others nearby are doing. (V2, optional)';
+	@override String get privacy => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.';
+	@override String get enable => 'Turn on notifications';
+	@override String get later => 'Maybe later';
 }
 
 // Path: notif_settings
@@ -697,6 +715,14 @@ extension on TranslationsEn {
 			'common.load_error' => 'Couldn\'t load data.',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
+			'notif_priming.title' => 'Let me remind you in time?',
+			'notif_priming.why' => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.',
+			'notif_priming.benefit_reminders' => 'Task reminders — e.g. "1 day before at 18:00".',
+			'notif_priming.benefit_weather' => 'Smart weather hint — "dry tomorrow, a good time". (optional)',
+			'notif_priming.benefit_nearby' => 'Neighbourhood hints — what others nearby are doing. (V2, optional)',
+			'notif_priming.privacy' => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.',
+			'notif_priming.enable' => 'Turn on notifications',
+			'notif_priming.later' => 'Maybe later',
 			'notif_settings.title' => 'Notifications',
 			'notif_settings.load_error' => 'Couldn\'t load settings.',
 			'notif_settings.section_types' => 'Notification types',

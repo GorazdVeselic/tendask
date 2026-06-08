@@ -24,6 +24,16 @@
     "today": "Danes",
     "tomorrow": "Jutri"
   },
+  "notif_priming": {
+    "title": "Naj te pravočasno opozorim?",
+    "why": "Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.",
+    "benefit_reminders": "Opomniki opravil — npr. »1 dan prej ob 18:00«.",
+    "benefit_weather": "Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)",
+    "benefit_nearby": "Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)",
+    "privacy": "Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.",
+    "enable": "Vklopi obvestila",
+    "later": "Mogoče kasneje"
+  },
   "notif_settings": {
     "title": "Obvestila",
     "load_error": "Nastavitev ni bilo mogoče naložiti.",

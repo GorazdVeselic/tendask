@@ -27,7 +27,7 @@ const _reminderDetails = NotificationDetails(
 /// to the task detail (17): live taps via [taps], cold-start via [initialPayload].
 class NotificationService {
   NotificationService({FlutterLocalNotificationsPlugin? plugin})
-      : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
+    : _plugin = plugin ?? FlutterLocalNotificationsPlugin();
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _ready = false;
@@ -58,9 +58,15 @@ class NotificationService {
     _ready = true;
   }
 
-  AndroidFlutterLocalNotificationsPlugin? get _android =>
-      _plugin.resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>();
+  AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >();
+
+  /// Whether the OS currently allows posting notifications. Used to skip the
+  /// priming screen (21) once the user has already granted the permission.
+  Future<bool> areNotificationsEnabled() async =>
+      await _android?.areNotificationsEnabled() ?? false;
 
   /// Requests POST_NOTIFICATIONS (Android 13+). Asked in context when the user
   /// adds a reminder (not at startup). Returns whether granted.

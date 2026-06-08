@@ -44,6 +44,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$home$de home = _Translations$home$de._(_root);
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
+	@override late final _Translations$notif_priming$de notif_priming = _Translations$notif_priming$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
 	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
@@ -124,6 +125,23 @@ class _Translations$notifications$de extends Translations$notifications$sl {
 	// Translations
 	@override String get today => 'Heute';
 	@override String get tomorrow => 'Morgen';
+}
+
+// Path: notif_priming
+class _Translations$notif_priming$de extends Translations$notif_priming$sl {
+	_Translations$notif_priming$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Soll ich dich rechtzeitig erinnern?';
+	@override String get why => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.';
+	@override String get benefit_reminders => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00".';
+	@override String get benefit_weather => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt". (optional)';
+	@override String get benefit_nearby => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)';
+	@override String get privacy => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.';
+	@override String get enable => 'Benachrichtigungen aktivieren';
+	@override String get later => 'Vielleicht später';
 }
 
 // Path: notif_settings
@@ -697,6 +715,14 @@ extension on TranslationsDe {
 			'common.load_error' => 'Daten konnten nicht geladen werden.',
 			'notifications.today' => 'Heute',
 			'notifications.tomorrow' => 'Morgen',
+			'notif_priming.title' => 'Soll ich dich rechtzeitig erinnern?',
+			'notif_priming.why' => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.',
+			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00".',
+			'notif_priming.benefit_weather' => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt". (optional)',
+			'notif_priming.benefit_nearby' => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)',
+			'notif_priming.privacy' => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.',
+			'notif_priming.enable' => 'Benachrichtigungen aktivieren',
+			'notif_priming.later' => 'Vielleicht später',
 			'notif_settings.title' => 'Benachrichtigungen',
 			'notif_settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
 			'notif_settings.section_types' => 'Benachrichtigungsarten',

@@ -24,6 +24,16 @@
     "today": "Heute",
     "tomorrow": "Morgen"
   },
+  "notif_priming": {
+    "title": "Soll ich dich rechtzeitig erinnern?",
+    "why": "Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.",
+    "benefit_reminders": "Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00\".",
+    "benefit_weather": "Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt\". (optional)",
+    "benefit_nearby": "Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)",
+    "privacy": "Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.",
+    "enable": "Benachrichtigungen aktivieren",
+    "later": "Vielleicht später"
+  },
   "notif_settings": {
     "title": "Benachrichtigungen",
     "load_error": "Einstellungen konnten nicht geladen werden.",

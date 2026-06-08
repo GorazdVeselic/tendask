@@ -45,6 +45,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
 	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
+	late final Translations$notif_priming$sl notif_priming = Translations$notif_priming$sl.internal(_root);
 	late final Translations$notif_settings$sl notif_settings = Translations$notif_settings$sl.internal(_root);
 	late final Translations$notif_preview$sl notif_preview = Translations$notif_preview$sl.internal(_root);
 	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
@@ -155,6 +156,39 @@ class Translations$notifications$sl {
 
 	/// sl: 'Jutri'
 	String get tomorrow => 'Jutri';
+}
+
+// Path: notif_priming
+class Translations$notif_priming$sl {
+	Translations$notif_priming$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Naj te pravočasno opozorim?'
+	String get title => 'Naj te pravočasno opozorim?';
+
+	/// sl: 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.'
+	String get why => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.';
+
+	/// sl: 'Opomniki opravil — npr. »1 dan prej ob 18:00«.'
+	String get benefit_reminders => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.';
+
+	/// sl: 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)'
+	String get benefit_weather => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)';
+
+	/// sl: 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)'
+	String get benefit_nearby => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)';
+
+	/// sl: 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.'
+	String get privacy => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.';
+
+	/// sl: 'Vklopi obvestila'
+	String get enable => 'Vklopi obvestila';
+
+	/// sl: 'Mogoče kasneje'
+	String get later => 'Mogoče kasneje';
 }
 
 // Path: notif_settings
@@ -1456,6 +1490,14 @@ extension on Translations {
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
+			'notif_priming.title' => 'Naj te pravočasno opozorim?',
+			'notif_priming.why' => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.',
+			'notif_priming.benefit_reminders' => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.',
+			'notif_priming.benefit_weather' => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)',
+			'notif_priming.benefit_nearby' => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)',
+			'notif_priming.privacy' => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.',
+			'notif_priming.enable' => 'Vklopi obvestila',
+			'notif_priming.later' => 'Mogoče kasneje',
 			'notif_settings.title' => 'Obvestila',
 			'notif_settings.load_error' => 'Nastavitev ni bilo mogoče naložiti.',
 			'notif_settings.section_types' => 'Vrste obvestil',

@@ -24,6 +24,16 @@
     "today": "Today",
     "tomorrow": "Tomorrow"
   },
+  "notif_priming": {
+    "title": "Let me remind you in time?",
+    "why": "So a task doesn't slip by — the reminder arrives exactly when you set it.",
+    "benefit_reminders": "Task reminders — e.g. \"1 day before at 18:00\".",
+    "benefit_weather": "Smart weather hint — \"dry tomorrow, a good time\". (optional)",
+    "benefit_nearby": "Neighbourhood hints — what others nearby are doing. (V2, optional)",
+    "privacy": "You can turn each type on or off separately, set quiet hours and cap frequency. No spam.",
+    "enable": "Turn on notifications",
+    "later": "Maybe later"
+  },
   "notif_settings": {
     "title": "Notifications",
     "load_error": "Couldn't load settings.",

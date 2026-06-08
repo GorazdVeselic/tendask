@@ -7,6 +7,7 @@ import '../../../../../core/notifications/notification_service.dart';
 import '../../../../../core/widgets/confirm_dialog.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
+import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../data/tasks_repository.dart';
 
@@ -48,6 +49,12 @@ class ReminderStepBody extends ConsumerWidget {
     final notif = ref.read(notificationServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
 
+    // Priming screen (21) before the OS dialog, the first time around — skip it
+    // once notifications are already granted.
+    if (!await notif.areNotificationsEnabled()) {
+      if (!context.mounted) return;
+      if (await showNotificationPriming(context) != true) return;
+    }
     // Notifications permission (Android 13+), requested in context on intent.
     if (!await notif.requestPermission()) {
       messenger.showSnackBar(SnackBar(content: Text(t.entry.rem_perm_denied)));
