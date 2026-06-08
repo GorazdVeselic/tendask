@@ -534,7 +534,7 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
   `plant(id PK, labels jsonb, scientific_name, category, icon)` ·
   `plant_synonym(id, plant_id FK, lang, text_norm)` · `category_task_type(category, task_type_id)`.
 - **Uporabnik (RLS `user_id = auth.uid()`):**
-  `profile(user_id PK, h3_r7, h3_r6, h3_r5, lang)` — celice, NE koordinat ·
+  `profile(user_id PK, h3_r7, h3_r6, h3_r5, climate_bucket NULL, lang)` — celice + grob klimatski koš (višina×temp. pas), NE koordinat/višine ·
   `area(id, user_id, name, type)` — brez lokacije ·
   `user_plant(id, user_id, area_id FK NULL, plant_id FK NULL, custom_name NULL, personal_alias NULL, is_custom)` ·
   `task(id, user_id, task_type_id FK, date, status, note, weather jsonb, recurrence jsonb)` — OPRAVILO (subjekti v `task_subject`) ·
@@ -543,8 +543,11 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
   `note(id, user_id, area_id NULL, user_plant_id NULL, date, text, weather jsonb)` ·
   `supply` · `recipe` · `task_supply(task_id, supply_id, amount)` — zaloge/odpis ·
   `suggestion_log(user_id, rule_id, subject_key, last_suggested_at, dismissed_until)` — plast B.
-- **V2 agregat (cron → tabela):**
-  `activity_agg(h3_cell, resolution, task_type_id, week_of_year, climate_bucket, distinct_users)`.
+- **V2 agregat (cron → tabela, javno-bralna — samo cron piše):**
+  `activity_agg(bucket_key, resolution{7|6|5|climate}, task_type_id, plant_id NULL, year, week_of_year, distinct_users, refreshed_at)`.
+  `bucket_key` = H3 celica (res-7/6/5) **ali** `climate_bucket`. RLS: `grant select to anon, authenticated` +
+  `using (distinct_users ≥ K)` (K=5, server-nastavljiv). Anti-junk: štejemo `distinct_users` (ne opravil),
+  `is_custom` izločen, drseče okno, zrelostni filter. Glej §8 "Dorečen dizajn".
 
 ### Posebnosti → rešitev (kompleksnost)
 | Posebnost | Rešitev | Kompl. |
@@ -672,13 +675,71 @@ Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
   okolici → razširi krog). Marker "kje si ti" glede na množico.
 - Velja za vse tipe (setev korenja, gnojenje trate, aeriranje…), ne le trato.
 
-### Odprta tehnična vprašanja (kasneje)
+### Dorečen dizajn (2026-06-08) — agregacija, anti-junk, cold-start, faznost
+
+**Kdo šteje v agregat.** Anonimni gostje so v oblaku **že izključeni po arhitekturi**
+(delajo lokalno kot `user_id='local'`, nikoli ne sinhronizirajo) → agregat bere **samo
+registrirane** uporabnike. Proti testnemu/smetnemu vnosu velja **zrelostni filter**:
+opravilo šteje le, če uporabnik izpolnjuje minimalne pogoje zrelosti (račun ≥ X dni IN
+≥ N opravil IN aktivnost razpršena čez ≥ M dni). Parametri (X/N/M) server-side, nastavljivi.
+
+**Anti-junk paket (poceni, server-side v cronu).**
+- Agregiramo **`distinct_users`, ne število opravil** → en hrupen uporabnik (npr. 100
+  lažnih vnosov ene vrste) ostane 1 in ne premakne percentila.
+- **k-anonimnost:** celica/koš se prikaže šele ob `distinct_users ≥ K` (**K=5** začetno,
+  server-nastavljiv) — hkrati zasebnostna in anti-junk varovalka.
+- **Drseče okno:** agregiramo le tekočo sezono / zadnje tedne → stari testni podatki naravno odpadejo.
+- **Soft-delete spoštovan** (`deleted=true` ne šteje); **lastni vnos izločen**
+  (`is_custom=true` user_plant ne gre v skupnost, §7.9) — agregira se le kanonični
+  `plant_id`/`task_type_id`.
+
+**Klimatski koš = primarni fallback za cold-start + mikroklima.** Geografski roll-up
+(res-7→6→5) sam ne reši praznih pogledov pri redki gostoti. Zato dodamo
+**`profile.climate_bucket`**: grob koš **višinski pas × temperaturni/Köppen pas**,
+izračunan **na napravi** (višina iz Open-Meteo `elevation`, ki ga vremenski klic že vrača;
+temp. pas iz klimatskih normalov) — shranimo **le grob pas, nikoli višine/koordinat**.
+Daje smiselno primerjavo "ljudje v podobni klimi kot ti" tudi ko je celica prazna, in
+popravi mikroklimo (800 m n.v. vs dolina). Fallback hierarhija prikaza:
+
+`res-7 → res-6 → res-5 → climate_bucket → globalno` (dokler obseg ne doseže K); UI jasno
+pove obseg ("v tvoji okolici" / "v podobni klimi" / "med vsemi vrtnarji").
+
+**Kaj uporabnik vidi (dva pogleda).**
+1. **Časovni percentil / histogram** — "X % v tvoji okolici je ta teden opravilo Y" +
+   marker "kje si ti" (diferenciator zgoraj).
+2. **Feed "kaj se ta teden dogaja"** — seznam trenutno pogostih opravil v okolici/klimi.
+
+Oba opisna, nikoli predpisna.
+
+**Faznost: "kopiči zgodaj, odkleni pozno".** Temelj (`profile.climate_bucket` +
+on-device izpeljava + sync; `activity_agg` + `pg_cron` + javno-bralna RLS izjema) lahko
+teče **tiho od začetka** in kopiči zgodovino, **pogled** pa se uporabniku odklene šele ob
+zadostni gostoti. Podatkov, ki jih danes ne zbiramo, kasneje ni mogoče rekonstruirati.
+
+**Free plan ni ogrožen.** `activity_agg` je drobcen (tisoči majhnih vrstic), `pg_cron`
+teče znotraj baze (nočno, inkrementalno), branje = majhne filtrirane rezine. Pravi
+dolgoročni porabnik 500 MB so surove vrstice opravil (sync tako ali tako, neodvisno od te funkcije).
+
+**RLS — nova kategorija dostopa.** `activity_agg` je **prva javno-bralna agregatna tabela**
+(vse ostale user-tabele so owner-only). Piše jo **samo cron** (service-role / SECURITY
+DEFINER); `grant select to anon, authenticated` z RLS `using (distinct_users ≥ K)`, da
+neanonimne vrstice sploh niso berljive.
+
+**Ocena primernosti opravila (uporabnikov "vote")** — odložena na V2.5+ in odsvetovana kot
+eksplicitne zvezdice (manipulabilno, oslabi "opisno ne predpisno"); raje implicitni signal
+(ali je uporabnik opravilo ponovil naslednje leto).
+
+### Odprta tehnična vprašanja
 - **H3 resolucija (določeno, 8. krog):** **res-7 najfinejša prikazana**; pri redki
   gostoti **adaptivno NAVZGOR** (res-6/res-5), **ne** navzdol na res-8. Pretanka =
   identificira posameznika; preširoka = ni "lokalno" → rešitev je roll-up po potrebi.
-- **Mikroklima:** H3 celica ≠ enaka mikroklima (nadmorska višina, osončenost).
-- **Zasebnost / GDPR:** vedno **agregirano**, nikoli "Janez na hiši 5".
-- **Cold-start:** strategija za začetno gostoto (fokus na eno regijo/mesto?).
+- **Mikroklima (rešeno 2026-06-08):** rešeno s `climate_bucket` (višina × temp. pas) kot
+  fallback — glej "Dorečen dizajn" zgoraj.
+- **Zasebnost / GDPR:** vedno **agregirano** (k-anonimnost K≥5), nikoli "Janez na hiši 5".
+- **Cold-start (rešeno 2026-06-08):** roll-up res-7→6→5→climate_bucket→globalno +
+  zrelostni filter; temelj kopiči zgodaj, pogled odklene ob gostoti — glej "Dorečen dizajn" zgoraj.
+- **Odprto:** točen vir temperaturnega pasa za `climate_bucket` (Open-Meteo
+  historical/normals vs statičen Köppen lookup) — potrdi ob izvedbi.
 
 ---
 

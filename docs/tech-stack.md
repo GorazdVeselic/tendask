@@ -104,7 +104,12 @@ Vsaka uporabniška vrstica (`area`, `user_plant`, `task`, `task_reminder`, `note
 
 - `h3_flutter`: iz GPS koordinat izračunaj **celico res-7**, izpelji res-6 in res-5.
 - Shrani **samo celice** (`profile.h3_r7/r6/r5`), **nikoli surovih koordinat**.
+- **Grob klimatski koš** (`profile.climate_bucket`, višina×temp. pas) prav tako izračunan na
+  napravi (višina iz Open-Meteo `elevation`); shrani le pas, ne višine — fallback za V2 cold-start.
 - V2 roll-up = navaden `GROUP BY` v Postgres (brez `h3-pg` razširitve). Glej §7.14.
+- **V2 agregat** (`activity_agg`, koncept.md §8): **prva javno-bralna tabela** — piše jo samo
+  `pg_cron` (service-role/SECURITY DEFINER), RLS `using (distinct_users ≥ K)`. Nova RLS kategorija
+  poleg owner-only user-tabel in javno-bralnega kataloga.
 
 ---
 

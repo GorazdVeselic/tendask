@@ -275,6 +275,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 > vodenje proti gnjavljenju (cooldown, vremenske straže, dedup, frekvenčna kapica). Glej
 > [`pametni-motor.md`](pametni-motor.md) + `koncept.md` §7.13. V2: percentili okolice (`activity_agg`, §8).
 > Razširitev kataloga rastlin 35 → 100–200 (Wikidata/GBIF) je **premaknjena na PRED-RELEASE → glej 9.6** (mora biti pred internim testom; ne čaka na M11).
+>
+> **Agregacija okolice (dizajn dorečen 2026-06-08, koncept.md §8 "Dorečen dizajn"):**
+> - **Zgodnji temelj (poceni, kandidat za PRED-V2, da kopiči zgodovino):** `profile.climate_bucket`
+>   (on-device izpeljava + sync), tabela `activity_agg` + `pg_cron` (nočno, inkrementalno) +
+>   javno-bralna RLS izjema (`distinct_users ≥ K`, K=5). Teče tiho, brez UI.
+> - **V2 pogled (odkleni ob gostoti):** histogram percentilov + feed "kaj se ta teden dogaja",
+>   fallback hierarhija res-7→6→5→climate_bucket→globalno; opt-in obvestila okolice (§7.12 vrsta 3).
+>   Anti-junk: zrelostni filter + `distinct_users` + drseče okno + izločen `is_custom`.
+> - **V2.5+:** ocena primernosti opravila (raje implicitni signal kot zvezdice).
 
 ---
 
