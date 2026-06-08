@@ -98,7 +98,7 @@ LocationRepository locationRepository(Ref ref) => LocationRepository(
 /// The garden location for the weather lookup: the stored device-local
 /// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
 /// one. Reactive — weather re-fetches when the user picks a location.
-@riverpod
+@Riverpod(keepAlive: true)
 Stream<GardenCoords> gardenLocation(Ref ref) => ref
     .watch(locationRepositoryProvider)
     .watchGardenCoordinates()

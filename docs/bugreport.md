@@ -6,7 +6,7 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ## BUG-001 — `gardenLocationProvider` disposed during loading (StateError)
 
-- **Status:** odprt
+- **Status:** razrešen (2026-06-08) — `gardenLocation` → `@Riverpod(keepAlive: true)`; čaka on-device verifikacijo
 - **Najden:** 2026-06-07 (Sentry, development, Samsung A53 / SM-A536B)
 - **Resnost:** nizka — ni viden crash, app teče naprej; Sentry pa ujame kot unhandled error (šum v monitoringu). 1× dogodek.
 - **Sentry issue:** `125841585` / event `8e5f5eaace074d20b374064c069963e0`

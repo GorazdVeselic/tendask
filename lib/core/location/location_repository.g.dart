@@ -129,7 +129,7 @@ final class GardenLocationProvider
         argument: null,
         retry: null,
         name: r'gardenLocationProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -149,4 +149,4 @@ final class GardenLocationProvider
   }
 }
 
-String _$gardenLocationHash() => r'85f01ea5ca0fef23f9815510aa9103266a4c9e0d';
+String _$gardenLocationHash() => r'207ed7babddad27361e25e83c80fe72ce5d797a4';
