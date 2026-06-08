@@ -16,19 +16,25 @@ abstract final class AppColors {
   static const Color warnSoft = Color(0xFFFFF4E0);
   static const Color info = Color(0xFF2266AA);
   static const Color infoSoft = Color(0xFFE6F0FA);
-  // Destructive / error — used for delete actions and validation.
-  static const Color danger = Color(0xFFBA1A1A);
-  static const Color dangerSoft = Color(0xFFFCEDEC);
-  // Lighter destructive tone for dark theme.
-  static const Color danger300 = Color(0xFFFFB4AB);
-  // Green container tones for the dark theme (selected chips, swipe-move bg) —
-  // the light theme reuses [soft]/[green900].
+  // Green container tones for the dark theme (selected chips) — the light theme
+  // reuses [soft]/[green900].
   static const Color greenContainerDark = Color(0xFF24432A);
   static const Color onGreenContainerDark = Color(0xFFBCEAC2);
 
-  // Swipe-action palette (brand-aligned; no off-brand blue/red). Terracotta is
-  // the warm, garden-friendly destructive tone — not the M3 neon/pink error.
+  // Dark-theme surface/neutral tones.
+  static const Color surfaceDark = Color(0xFF1A2E1C);
+  static const Color onSurfaceVariantDark = Color(0xFFA8B5AC);
+  static const Color outlineDark = Color(0xFF3A4E3C);
+  static const Color hintDark = Color(0xFF8A988E);
+  // Neutral row-action tone (revert/edit/move) on the dark theme.
+  static const Color neutralActionDark = Color(0xFF8A948C);
+
+  // Destructive / error — terracotta (warm, garden-friendly): the single
+  // destructive + error tone app-wide. No M3 neon/pink red.
   static const Color terracotta = Color(0xFFB0473B);
   static const Color terracottaDark = Color(0xFFC25A4D);
-  static const Color neutralActionDark = Color(0xFF8A948C);
+  static const Color terracottaSoft = Color(0xFFF1DAD3);
+  static const Color onTerracottaSoft = Color(0xFF9A3B2E);
+  static const Color terracottaContainerDark = Color(0xFF4A2A24);
+  static const Color onTerracottaContainerDark = Color(0xFFF2B5A8);
 }
