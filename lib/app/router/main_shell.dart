@@ -18,8 +18,7 @@ class MainShell extends StatelessWidget {
     // entry in the list); elsewhere it opens the task quick-log.
     final location = GoRouterState.of(context).uri.path;
     final onGarden = location == '/areas';
-    final showFab =
-        location == '/home' || location == '/tasks' || onGarden;
+    final showFab = location == '/home' || location == '/tasks' || onGarden;
     return Scaffold(
       body: shell,
       floatingActionButton: showFab

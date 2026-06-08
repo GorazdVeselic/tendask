@@ -14,10 +14,10 @@ import '../application/profile_providers.dart';
 
 /// Native language names (endonyms) — not translated; shown the same in every locale.
 String _langLabel(AppLocale loc) => switch (loc) {
-      AppLocale.sl => 'Slovenščina',
-      AppLocale.en => 'English',
-      AppLocale.de => 'Deutsch',
-    };
+  AppLocale.sl => 'Slovenščina',
+  AppLocale.en => 'English',
+  AppLocale.de => 'Deutsch',
+};
 
 class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
@@ -26,7 +26,8 @@ class SettingsScreen extends ConsumerWidget {
     final userId = ref.read(authServiceProvider).userId;
     unawaited(LocaleSettings.setLocale(loc));
     unawaited(
-        ref.read(profileRepositoryProvider).setLang(userId, loc.languageCode));
+      ref.read(profileRepositoryProvider).setLang(userId, loc.languageCode),
+    );
   }
 
   /// Sign out + wipe local data, then return to onboarding — back to a clean
@@ -165,11 +166,14 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               children: [
                 _PlaceholderTile(
-                    label: t.settings.export_data, onTap: comingSoon),
+                  label: t.settings.export_data,
+                  onTap: comingSoon,
+                ),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
-                    label: t.settings.logout,
-                    onTap: () => unawaited(_logout(context, ref))),
+                  label: t.settings.logout,
+                  onTap: () => unawaited(_logout(context, ref)),
+                ),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
                   label: t.settings.delete_account,
@@ -184,8 +188,9 @@ class SettingsScreen extends ConsumerWidget {
           Center(
             child: Text(
               t.settings.version,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ),
         ],
@@ -211,9 +216,7 @@ class _PlaceholderTile extends StatelessWidget {
     return ListTile(
       title: Text(
         label,
-        style: destructive
-            ? TextStyle(color: theme.colorScheme.error)
-            : null,
+        style: destructive ? TextStyle(color: theme.colorScheme.error) : null,
       ),
       trailing: const Icon(Icons.chevron_right),
       onTap: onTap,

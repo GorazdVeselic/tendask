@@ -18,11 +18,11 @@ class UserPlantsRepository {
   final Clock _clock;
   final _uuid = const Uuid();
 
-  Stream<List<UserPlant>> watchByArea(String areaId) => (
-        _db.select(_db.userPlants)
-          ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
-          ..orderBy([(p) => OrderingTerm.desc(p.updatedAt)])
-      ).watch();
+  Stream<List<UserPlant>> watchByArea(String areaId) =>
+      (_db.select(_db.userPlants)
+            ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
+            ..orderBy([(p) => OrderingTerm.desc(p.updatedAt)]))
+          .watch();
 
   /// Distinct catalog species the user has used, newest first — feeds the
   /// "Frequent" row of the plant-add screen. Custom (plantId == null) entries
@@ -30,34 +30,34 @@ class UserPlantsRepository {
   Future<List<String>> recentPlantIds({int limit = kRecentPlantsLimit}) async {
     final pid = _db.userPlants.plantId;
     final maxUpdated = _db.userPlants.updatedAt.max();
-    final rows = await (_db.selectOnly(_db.userPlants)
-          ..addColumns([pid, maxUpdated])
-          ..where(_db.userPlants.deleted.equals(false) & pid.isNotNull())
-          ..groupBy([pid])
-          ..orderBy([OrderingTerm.desc(maxUpdated)])
-          ..limit(limit))
-        .get();
+    final rows =
+        await (_db.selectOnly(_db.userPlants)
+              ..addColumns([pid, maxUpdated])
+              ..where(_db.userPlants.deleted.equals(false) & pid.isNotNull())
+              ..groupBy([pid])
+              ..orderBy([OrderingTerm.desc(maxUpdated)])
+              ..limit(limit))
+            .get();
     // Non-null: rows are filtered by pid.isNotNull() above.
     return [for (final r in rows) r.read(pid)!];
   }
 
   /// Every non-deleted plant — for resolving plant labels across the app.
-  Stream<List<UserPlant>> watchAll() => (
-        _db.select(_db.userPlants)..where((p) => p.deleted.equals(false))
-      ).watch();
+  Stream<List<UserPlant>> watchAll() => (_db.select(
+    _db.userPlants,
+  )..where((p) => p.deleted.equals(false))).watch();
 
-  Future<List<UserPlant>> byArea(String areaId) => (
-        _db.select(_db.userPlants)
-          ..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))
-      ).get();
+  Future<List<UserPlant>> byArea(String areaId) => (_db.select(
+    _db.userPlants,
+  )..where((p) => p.deleted.equals(false) & p.areaId.equals(areaId))).get();
 
-  Future<UserPlant?> byId(String id) => (
-        _db.select(_db.userPlants)..where((p) => p.id.equals(id))
-      ).getSingleOrNull();
+  Future<UserPlant?> byId(String id) => (_db.select(
+    _db.userPlants,
+  )..where((p) => p.id.equals(id))).getSingleOrNull();
 
-  Stream<UserPlant?> watchById(String id) => (
-        _db.select(_db.userPlants)..where((p) => p.id.equals(id))
-      ).watchSingleOrNull();
+  Stream<UserPlant?> watchById(String id) => (_db.select(
+    _db.userPlants,
+  )..where((p) => p.id.equals(id))).watchSingleOrNull();
 
   /// Creates one plant and returns its id. Area is optional (e.g. a plant added
   /// inline from the subject picker, location assigned later).
@@ -69,16 +69,20 @@ class UserPlantsRepository {
     String? personalAlias,
   }) async {
     final id = _uuid.v4();
-    await _db.into(_db.userPlants).insert(UserPlantsCompanion.insert(
-          id: id,
-          userId: userId,
-          areaId: Value(areaId),
-          plantId: Value(plantId),
-          customName: Value(customName),
-          personalAlias: Value(personalAlias),
-          isCustom: Value(plantId == null),
-          updatedAt: _clock.now(),
-        ));
+    await _db
+        .into(_db.userPlants)
+        .insert(
+          UserPlantsCompanion.insert(
+            id: id,
+            userId: userId,
+            areaId: Value(areaId),
+            plantId: Value(plantId),
+            customName: Value(customName),
+            personalAlias: Value(personalAlias),
+            isCustom: Value(plantId == null),
+            updatedAt: _clock.now(),
+          ),
+        );
     return id;
   }
 
@@ -89,14 +93,13 @@ class UserPlantsRepository {
     String? plantId,
     String? customName,
     String? personalAlias,
-  }) =>
-      create(
-        userId: userId,
-        areaId: areaId,
-        plantId: plantId,
-        customName: customName,
-        personalAlias: personalAlias,
-      );
+  }) => create(
+    userId: userId,
+    areaId: areaId,
+    plantId: plantId,
+    customName: customName,
+    personalAlias: personalAlias,
+  );
 
   /// True when a non-deleted instance of [plantId] already lives in [areaId].
   /// Custom plants (null [plantId]) never collide. [excludeId] skips a row
@@ -107,15 +110,18 @@ class UserPlantsRepository {
     String? excludeId,
   }) async {
     if (plantId == null) return false;
-    final rows = await (_db.select(_db.userPlants)
-          ..where((p) {
-            var w = p.deleted.equals(false) & p.plantId.equals(plantId);
-            w = w &
-                (areaId == null ? p.areaId.isNull() : p.areaId.equals(areaId));
-            if (excludeId != null) w = w & p.id.isNotValue(excludeId);
-            return w;
-          }))
-        .get();
+    final rows =
+        await (_db.select(_db.userPlants)..where((p) {
+              var w = p.deleted.equals(false) & p.plantId.equals(plantId);
+              w =
+                  w &
+                  (areaId == null
+                      ? p.areaId.isNull()
+                      : p.areaId.equals(areaId));
+              if (excludeId != null) w = w & p.id.isNotValue(excludeId);
+              return w;
+            }))
+            .get();
     return rows.isNotEmpty;
   }
 
@@ -131,7 +137,10 @@ class UserPlantsRepository {
     if (plant == null) return PlantMoveResult.moved;
     if (areaId != plant.areaId &&
         await areaHasSpecies(
-            areaId: areaId, plantId: plant.plantId, excludeId: id)) {
+          areaId: areaId,
+          plantId: plant.plantId,
+          excludeId: id,
+        )) {
       return PlantMoveResult.duplicate;
     }
     await update(id: id, areaId: areaId, personalAlias: personalAlias);

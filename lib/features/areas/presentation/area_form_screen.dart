@@ -82,7 +82,11 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
         if (mounted) context.pop();
       } else {
         final userId = ref.read(authServiceProvider).userId;
-        final areaId = await repo.create(userId: userId, name: name, type: _type);
+        final areaId = await repo.create(
+          userId: userId,
+          name: name,
+          type: _type,
+        );
         // Return the new id so callers can auto-select it (area-pick sheet,
         // entry subject step).
         if (mounted) context.pop(areaId);
@@ -165,7 +169,8 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
                             t.areas.delete_reparent_note,
                             textAlign: TextAlign.center,
                             style: theme.textTheme.bodySmall?.copyWith(
-                                color: theme.colorScheme.onSurfaceVariant),
+                              color: theme.colorScheme.onSurfaceVariant,
+                            ),
                           ),
                         ),
                       ],

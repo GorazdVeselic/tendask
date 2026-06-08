@@ -49,8 +49,9 @@ class WhenStepBody extends StatelessWidget {
       initialTime: TimeOfDay(hour: date.hour, minute: date.minute),
     );
     if (picked != null) {
-      onSetDate(DateTime(
-          date.year, date.month, date.day, picked.hour, picked.minute));
+      onSetDate(
+        DateTime(date.year, date.month, date.day, picked.hour, picked.minute),
+      );
     }
   }
 
@@ -64,11 +65,18 @@ class WhenStepBody extends StatelessWidget {
       children: [
         SegmentedButton<_Preset>(
           segments: [
-            ButtonSegment(value: _Preset.today, label: Text(t.entry.when_today)),
             ButtonSegment(
-                value: _Preset.tomorrow, label: Text(t.entry.when_tomorrow)),
+              value: _Preset.today,
+              label: Text(t.entry.when_today),
+            ),
             ButtonSegment(
-                value: _Preset.custom, label: Text(t.entry.when_pick_date)),
+              value: _Preset.tomorrow,
+              label: Text(t.entry.when_tomorrow),
+            ),
+            ButtonSegment(
+              value: _Preset.custom,
+              label: Text(t.entry.when_pick_date),
+            ),
           ],
           selected: {_preset},
           onSelectionChanged: (s) {
@@ -113,20 +121,25 @@ class WhenStepBody extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Text(t.entry.when_default_note,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(
+          t.entry.when_default_note,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 20),
         _Labelled(
           label: t.entry.when_status,
           child: SegmentedButton<TaskStatus>(
             segments: [
               ButtonSegment(
-                  value: TaskStatus.waiting,
-                  label: Text(t.entry.when_status_waiting)),
+                value: TaskStatus.waiting,
+                label: Text(t.entry.when_status_waiting),
+              ),
               ButtonSegment(
-                  value: TaskStatus.done,
-                  label: Text(t.entry.when_status_done)),
+                value: TaskStatus.done,
+                label: Text(t.entry.when_status_done),
+              ),
             ],
             selected: {status},
             onSelectionChanged: (s) => onSetStatus(s.first),
@@ -134,9 +147,12 @@ class WhenStepBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        Text(t.entry.when_status_note,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(
+          t.entry.when_status_note,
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
       ],
     );
   }
@@ -155,9 +171,12 @@ class _Labelled extends StatelessWidget {
       children: [
         Padding(
           padding: const EdgeInsets.only(bottom: 7),
-          child: Text(label,
-              style: theme.textTheme.labelMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+          child: Text(
+            label,
+            style: theme.textTheme.labelMedium?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
         ),
         child,
       ],
@@ -166,8 +185,11 @@ class _Labelled extends StatelessWidget {
 }
 
 class _TappableField extends StatelessWidget {
-  const _TappableField(
-      {required this.text, required this.icon, required this.onTap});
+  const _TappableField({
+    required this.text,
+    required this.icon,
+    required this.onTap,
+  });
   final String text;
   final IconData icon;
   final VoidCallback onTap;
@@ -189,9 +211,12 @@ class _TappableField extends StatelessWidget {
             Icon(icon, size: 16, color: theme.colorScheme.onSurfaceVariant),
             const SizedBox(width: 8),
             Flexible(
-                child: Text(text,
-                    style: theme.textTheme.bodyMedium,
-                    overflow: TextOverflow.ellipsis)),
+              child: Text(
+                text,
+                style: theme.textTheme.bodyMedium,
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
           ],
         ),
       ),

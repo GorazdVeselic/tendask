@@ -42,7 +42,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   // Edit opens on the review step; the controller must start there too, since
   // the PageView is first built only after loading finishes.
   late final _pageController = PageController(
-      initialPage: widget.taskId != null ? EntryStep.review.index : 0);
+    initialPage: widget.taskId != null ? EntryStep.review.index : 0,
+  );
   String? _taskTypeId;
   final Set<String> _plantIds = {};
   final Set<String> _areaIds = {};
@@ -87,9 +88,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   }
 
   List<TaskSubjectSpec> get _subjects => [
-        for (final id in _plantIds) TaskSubjectSpec.plant(id),
-        for (final id in _areaIds) TaskSubjectSpec.area(id),
-      ];
+    for (final id in _plantIds) TaskSubjectSpec.plant(id),
+    for (final id in _areaIds) TaskSubjectSpec.area(id),
+  ];
 
   /// Ordered fixed steps that are currently part of the flow.
   List<EntryStep> get _activeSteps {
@@ -139,12 +140,18 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         ..addAll(subjects.map((s) => s.areaId).whereType<String>());
       _reminders
         ..clear()
-        ..addAll(reminders
-            .map((r) => ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime)));
+        ..addAll(
+          reminders.map(
+            (r) => ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
+          ),
+        );
       _supplies
         ..clear()
-        ..addAll(supplies
-            .map((ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount)));
+        ..addAll(
+          supplies.map(
+            (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
+          ),
+        );
       _isLoading = false;
     });
   }
@@ -159,8 +166,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     final task = await repo.byId(taskId);
     if (task == null) return;
     final subjects = await repo.subjectsForTask(taskId);
-    final supplies =
-        await ref.read(suppliesRepositoryProvider).suppliesForTask(taskId);
+    final supplies = await ref
+        .read(suppliesRepositoryProvider)
+        .suppliesForTask(taskId);
     if (!mounted) return;
     setState(() {
       _taskTypeId = task.taskTypeId;
@@ -173,8 +181,11 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         ..addAll(subjects.map((s) => s.areaId).whereType<String>());
       _supplies
         ..clear()
-        ..addAll(supplies
-            .map((ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount)));
+        ..addAll(
+          supplies.map(
+            (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
+          ),
+        );
     });
     _goTo(EntryStep.review);
   }
@@ -234,8 +245,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     if (_subjects.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-            content: Text(t.entry.err_subject),
-            behavior: SnackBarBehavior.floating),
+          content: Text(t.entry.err_subject),
+          behavior: SnackBarBehavior.floating,
+        ),
       );
       _goTo(EntryStep.subject);
       return;
@@ -245,8 +257,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     try {
       final note = _noteController.text.trim();
       // Reminders only make sense for a planned (waiting) task.
-      final reminders =
-          _status == TaskStatus.waiting ? _reminders : const <ReminderSpec>[];
+      final reminders = _status == TaskStatus.waiting
+          ? _reminders
+          : const <ReminderSpec>[];
       final repo = ref.read(tasksRepositoryProvider);
       final String taskId;
       if (_isEdit) {
@@ -271,7 +284,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           reminders: reminders,
         );
       }
-      await ref.read(suppliesRepositoryProvider).syncForTask(
+      await ref
+          .read(suppliesRepositoryProvider)
+          .syncForTask(
             taskId: taskId,
             specs: _supplies,
             isDone: _status == TaskStatus.done,
@@ -291,8 +306,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     if (_isLoading) {
       return Scaffold(
         appBar: AppBar(
-          leading:
-              IconButton(icon: const Icon(Icons.close), onPressed: context.pop),
+          leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: context.pop,
+          ),
         ),
         body: const Center(child: CircularProgressIndicator.adaptive()),
       );
@@ -314,8 +331,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           isReview
               ? t.entry.title_review
               : type != null
-                  ? '${type.icon}  ${catalogLabel(type.labels)}'
-                  : t.entry.title_new,
+              ? '${type.icon}  ${catalogLabel(type.labels)}'
+              : t.entry.title_new,
         ),
         centerTitle: true,
         actions: [
@@ -342,9 +359,11 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   plantIds: _plantIds,
                   areaIds: _areaIds,
                   onTogglePlant: (id, sel) => setState(
-                      () => sel ? _plantIds.add(id) : _plantIds.remove(id)),
+                    () => sel ? _plantIds.add(id) : _plantIds.remove(id),
+                  ),
                   onToggleArea: (id, sel) => setState(
-                      () => sel ? _areaIds.add(id) : _areaIds.remove(id)),
+                    () => sel ? _areaIds.add(id) : _areaIds.remove(id),
+                  ),
                 ),
                 WhenStepBody(
                   date: _date,
@@ -379,8 +398,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           ),
           _BottomBar(
             isReview: isReview,
-            isOptional: _step == EntryStep.reminder ||
-                _step == EntryStep.supplies,
+            isOptional:
+                _step == EntryStep.reminder || _step == EntryStep.supplies,
             canContinue: switch (_step) {
               EntryStep.type => _taskTypeId != null,
               EntryStep.subject => _plantIds.isNotEmpty || _areaIds.isNotEmpty,
@@ -440,10 +459,12 @@ class _StepTitle extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     final text = switch (step) {
-      EntryStep.type => '${t.entry.step} ${position + 1} · ${t.entry.type_title}',
+      EntryStep.type =>
+        '${t.entry.step} ${position + 1} · ${t.entry.type_title}',
       EntryStep.subject =>
         '${t.entry.step} ${position + 1} · ${t.entry.subject_title}',
-      EntryStep.when => '${t.entry.step} ${position + 1} · ${t.entry.when_title}',
+      EntryStep.when =>
+        '${t.entry.step} ${position + 1} · ${t.entry.when_title}',
       EntryStep.reminder =>
         '${t.entry.step} ${position + 1} · ${t.entry.reminder_title} ${t.entry.optional}',
       EntryStep.supplies =>
@@ -503,16 +524,15 @@ class _BottomBar extends StatelessWidget {
                     ? const SizedBox(
                         width: 20,
                         height: 20,
-                        child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+                        child: CircularProgressIndicator.adaptive(
+                          strokeWidth: 2,
+                        ),
                       )
                     : Text(isReview ? t.entry.save : t.entry.kContinue),
               ),
             ),
             if (isOptional)
-              TextButton(
-                onPressed: onContinue,
-                child: Text(t.entry.skip),
-              ),
+              TextButton(onPressed: onContinue, child: Text(t.entry.skip)),
           ],
         ),
       ),

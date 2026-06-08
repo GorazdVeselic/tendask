@@ -31,16 +31,24 @@ void main() {
   setUp(() async {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     clock = _FakeClock(t0);
-    repo = TasksRepository(db, SuppliesRepository(db, clock: clock), clock: clock);
+    repo = TasksRepository(
+      db,
+      SuppliesRepository(db, clock: clock),
+      clock: clock,
+    );
 
     await SeedService(db).runIfNeeded();
-    await db.into(db.areas).insert(AreasCompanion.insert(
-      id: areaId,
-      userId: userId,
-      name: 'Vrt',
-      type: const Value(AreaType.bed),
-      updatedAt: t0,
-    ));
+    await db
+        .into(db.areas)
+        .insert(
+          AreasCompanion.insert(
+            id: areaId,
+            userId: userId,
+            name: 'Vrt',
+            type: const Value(AreaType.bed),
+            updatedAt: t0,
+          ),
+        );
   });
 
   tearDown(() async => db.close());
@@ -87,14 +95,27 @@ void main() {
   group('TasksRepository.watchPending', () {
     test('only returns non-deleted waiting tasks', () async {
       final id1 = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
       final id2 = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+      );
 
       await repo.complete(id2);
       await repo.softDelete(
-          await repo.create(
-              userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0));
+        await repo.create(
+          userId: userId,
+          subjects: const [TaskSubjectSpec.area(areaId)],
+          taskTypeId: 'mow',
+          date: t0,
+        ),
+      );
 
       final pending = await repo.watchPending().first;
       expect(pending.length, 1);
@@ -105,7 +126,11 @@ void main() {
   group('TasksRepository.complete', () {
     test('sets status=done, updates updatedAt and syncStatus', () async {
       final id = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
 
       clock.advance(const Duration(minutes: 5));
       await repo.complete(id);
@@ -120,7 +145,11 @@ void main() {
   group('TasksRepository.softDelete', () {
     test('sets deleted=true and task disappears from watchPending', () async {
       final id = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
 
       await repo.softDelete(id);
 
@@ -147,8 +176,7 @@ void main() {
       expect(await repo.remindersForTask(id), isEmpty);
 
       // ...but the rows persist as deleted=true + pending, so the delete pushes.
-      final reminder =
-          (await db.select(db.taskReminders).get()).single;
+      final reminder = (await db.select(db.taskReminders).get()).single;
       expect(reminder.deleted, true);
       expect(reminder.syncStatus, 'pending');
       final subject = (await db.select(db.taskSubjects).get()).single;
@@ -160,7 +188,11 @@ void main() {
   group('TasksRepository.postponeOneDay', () {
     test('advances date by exactly 1 day', () async {
       final id = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
 
       await repo.postponeOneDay(id);
 
@@ -172,17 +204,29 @@ void main() {
   group('TasksRepository.watchLast', () {
     test('returns the most recently touched non-deleted task', () async {
       await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
       clock.advance(const Duration(minutes: 5));
       final id2 = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+      );
 
       expect((await repo.watchLast().first)?.id, id2);
     });
 
     test('skips deleted tasks and returns null when none remain', () async {
       final id = await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
 
       await repo.softDelete(id);
 
@@ -193,13 +237,31 @@ void main() {
   group('TasksRepository.watchTaskTypeUsage', () {
     test('counts non-deleted tasks per type, excluding deleted', () async {
       await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+      );
       await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'water', date: t0);
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+      );
       await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0);
-      await repo.softDelete(await repo.create(
-          userId: userId, subjects: const [TaskSubjectSpec.area(areaId)], taskTypeId: 'mow', date: t0));
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
+      await repo.softDelete(
+        await repo.create(
+          userId: userId,
+          subjects: const [TaskSubjectSpec.area(areaId)],
+          taskTypeId: 'mow',
+          date: t0,
+        ),
+      );
 
       final usage = await repo.watchTaskTypeUsage().first;
       expect(usage['water'], 2);

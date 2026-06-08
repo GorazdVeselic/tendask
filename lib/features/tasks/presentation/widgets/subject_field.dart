@@ -39,12 +39,22 @@ class SubjectField extends StatelessWidget {
             for (var i = 0; i < subjects.length; i++)
               InputChip(
                 avatar: Text(
-                  specIcon(subjects[i],
-                      areas: areas, userPlants: userPlants, plants: plants),
+                  specIcon(
+                    subjects[i],
+                    areas: areas,
+                    userPlants: userPlants,
+                    plants: plants,
+                  ),
                   style: const TextStyle(fontSize: 14),
                 ),
-                label: Text(specLabel(subjects[i],
-                    areas: areas, userPlants: userPlants, plants: plants)),
+                label: Text(
+                  specLabel(
+                    subjects[i],
+                    areas: areas,
+                    userPlants: userPlants,
+                    plants: plants,
+                  ),
+                ),
                 onDeleted: () => onRemove(i),
               ),
             ActionChip(

@@ -38,8 +38,7 @@ class Areas extends Table {
   TextColumn get type =>
       textEnum<AreaType>().withDefault(const Constant('other'))();
   // True for greenhouse/indoor — excluded from weather guards (§7.7)
-  BoolColumn get protected =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get protected => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
@@ -58,12 +57,10 @@ class UserPlants extends Table {
   // Nullable: a plant may have no named area (e.g. a pot on the terrace).
   TextColumn get areaId => text().nullable().references(Areas, #id)();
   // Null when is_custom = true (no catalog match)
-  TextColumn get plantId =>
-      text().nullable().references(Plants, #id)();
+  TextColumn get plantId => text().nullable().references(Plants, #id)();
   TextColumn get customName => text().nullable()();
   TextColumn get personalAlias => text().nullable()();
-  BoolColumn get isCustom =>
-      boolean().withDefault(const Constant(false))();
+  BoolColumn get isCustom => boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
@@ -107,8 +104,7 @@ class TaskSubjects extends Table {
   TextColumn get id => text()();
   TextColumn get taskId => text().references(Tasks, #id)();
   // Subject = plant (user_plant_id) OR area-as-subject (area_id); never neither.
-  TextColumn get userPlantId =>
-      text().nullable().references(UserPlants, #id)();
+  TextColumn get userPlantId => text().nullable().references(UserPlants, #id)();
   TextColumn get areaId => text().nullable().references(Areas, #id)();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
@@ -120,8 +116,8 @@ class TaskSubjects extends Table {
 
   @override
   List<String> get customConstraints => [
-        'CHECK (user_plant_id IS NOT NULL OR area_id IS NOT NULL)',
-      ];
+    'CHECK (user_plant_id IS NOT NULL OR area_id IS NOT NULL)',
+  ];
 }
 
 class TaskReminders extends Table {
@@ -150,8 +146,7 @@ class Notes extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
   TextColumn get areaId => text().nullable().references(Areas, #id)();
-  TextColumn get userPlantId =>
-      text().nullable().references(UserPlants, #id)();
+  TextColumn get userPlantId => text().nullable().references(UserPlants, #id)();
   DateTimeColumn get date => dateTime()();
   // 'text' is a drift builder method — use named() to keep the SQL column name
   TextColumn get content => text().named('text')();
@@ -175,8 +170,7 @@ class Supplies extends Table {
   TextColumn get name => text()();
   // kg, l, piece, etc.
   TextColumn get unit => text().nullable()();
-  RealColumn get quantity =>
-      real().withDefault(const Constant(0.0))();
+  RealColumn get quantity => real().withDefault(const Constant(0.0))();
   // Warn when quantity drops below this; null = no threshold
   RealColumn get lowThreshold => real().nullable()();
   DateTimeColumn get updatedAt => dateTime()();

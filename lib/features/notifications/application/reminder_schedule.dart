@@ -12,8 +12,9 @@ DateTime reminderFireTime({
   String? reminderTime,
 }) {
   if (offsetMinutes >= 1440 && reminderTime != null) {
-    final base =
-        startOfDay(taskDateLocal).subtract(Duration(days: offsetMinutes ~/ 1440));
+    final base = startOfDay(
+      taskDateLocal,
+    ).subtract(Duration(days: offsetMinutes ~/ 1440));
     final (h, m) = _parseHm(reminderTime);
     return DateTime(base.year, base.month, base.day, h, m);
   }
@@ -22,7 +23,8 @@ DateTime reminderFireTime({
 
 /// Stable positive 31-bit OS notification id from a reminder's UUID, so a
 /// reminder can be scheduled and later cancelled without a schema change.
-int reminderNotificationId(String reminderId) => reminderId.hashCode & 0x7fffffff;
+int reminderNotificationId(String reminderId) =>
+    reminderId.hashCode & 0x7fffffff;
 
 (int, int) _parseHm(String hm) {
   final parts = hm.split(':');

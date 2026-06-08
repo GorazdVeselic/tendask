@@ -49,8 +49,9 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
   }
 
   Future<void> _load() async {
-    final plant =
-        await ref.read(userPlantsRepositoryProvider).byId(widget.userPlantId);
+    final plant = await ref
+        .read(userPlantsRepositoryProvider)
+        .byId(widget.userPlantId);
     if (!mounted) return;
     if (plant != null) {
       setState(() {
@@ -78,7 +79,9 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
     setState(() => _isSaving = true);
     try {
       final alias = _aliasController.text.trim();
-      final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
+      final res = await ref
+          .read(userPlantsRepositoryProvider)
+          .moveToArea(
             id: widget.userPlantId,
             areaId: _areaId,
             personalAlias: alias.isEmpty ? null : alias,
@@ -125,8 +128,10 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        leading:
-            IconButton(icon: const Icon(Icons.close), onPressed: context.pop),
+        leading: IconButton(
+          icon: const Icon(Icons.close),
+          onPressed: context.pop,
+        ),
         title: Text(t.plant_edit.title_edit),
         centerTitle: true,
       ),
@@ -155,20 +160,30 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                 ),
                 Padding(
                   padding: const EdgeInsets.only(top: 6),
-                  child: Text(t.plant_edit.alias_note,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant)),
+                  child: Text(
+                    t.plant_edit.alias_note,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
                 ),
                 const SizedBox(height: 16),
                 FieldLabel(t.plant_edit.location_label),
                 Card(
                   child: ListTile(
-                    leading: Icon(Icons.place_outlined,
-                        color: theme.colorScheme.onSurfaceVariant),
+                    leading: Icon(
+                      Icons.place_outlined,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     title: Text(
-                        _areaId != null ? areas[_areaId]?.name ?? t.area_pick.none : t.area_pick.none),
-                    trailing: Icon(Icons.chevron_right,
-                        color: theme.colorScheme.onSurfaceVariant),
+                      _areaId != null
+                          ? areas[_areaId]?.name ?? t.area_pick.none
+                          : t.area_pick.none,
+                    ),
+                    trailing: Icon(
+                      Icons.chevron_right,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     onTap: _changeArea,
                   ),
                 ),
@@ -202,7 +217,9 @@ class _SpeciesCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final plant = plantId != null ? catalog[plantId] : null;
     final icon = plant?.icon ?? '🌿';
-    final label = plant != null ? catalogLabel(plant.labels) : (customName ?? '🌿');
+    final label = plant != null
+        ? catalogLabel(plant.labels)
+        : (customName ?? '🌿');
 
     return Card(
       child: ListTile(

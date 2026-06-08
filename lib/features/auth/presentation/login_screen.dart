@@ -79,7 +79,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         color: cs.surfaceContainerHighest,
                         borderRadius: BorderRadius.circular(22),
                       ),
-                      child: Icon(Icons.eco_outlined, size: 40, color: cs.primary),
+                      child: Icon(
+                        Icons.eco_outlined,
+                        size: 40,
+                        color: cs.primary,
+                      ),
                     ),
                     const SizedBox(height: 18),
                     Text(
@@ -92,8 +96,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       padding: const EdgeInsets.symmetric(horizontal: 8),
                       child: Text(
                         t.auth.value_prop,
-                        style: theme.textTheme.bodyMedium
-                            ?.copyWith(color: cs.onSurfaceVariant),
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -147,7 +152,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               const SizedBox(height: 10),
               Text(
                 t.auth.legal,
-                style: theme.textTheme.bodySmall?.copyWith(color: cs.onSurfaceVariant),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
             ],

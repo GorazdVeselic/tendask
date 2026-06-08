@@ -63,11 +63,11 @@ class OpenMeteoException implements Exception {
 
 @riverpod
 Dio weatherDio(Ref ref) => Dio(
-      BaseOptions(
-        connectTimeout: kWeatherConnectTimeout,
-        receiveTimeout: kWeatherReceiveTimeout,
-      ),
-    );
+  BaseOptions(
+    connectTimeout: kWeatherConnectTimeout,
+    receiveTimeout: kWeatherReceiveTimeout,
+  ),
+);
 
 @riverpod
 OpenMeteoClient openMeteoClient(Ref ref) =>

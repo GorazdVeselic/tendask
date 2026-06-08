@@ -75,8 +75,9 @@ Future<void> _bootstrap() async {
 
   // Restore the user's chosen language (offline-first: drift is the source).
   final userId = container.read(authServiceProvider).userId;
-  final savedLang =
-      await container.read(profileRepositoryProvider).getLang(userId);
+  final savedLang = await container
+      .read(profileRepositoryProvider)
+      .getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
   // Start the background sync coordinator: a first cycle now (claim + push +
@@ -89,15 +90,18 @@ Future<void> _bootstrap() async {
   // resolve a cold-start deep-link below. The permission prompt stays deferred to
   // the priming screen (21), never at startup. If a tapped reminder launched the
   // app (M8.3), open its task detail instead of home.
-  final launchTaskId =
-      await container.read(notificationServiceProvider).initialPayload();
+  final launchTaskId = await container
+      .read(notificationServiceProvider)
+      .initialPayload();
 
   // Reconcile OS reminders with the task_reminder rows now, then reactively on
   // every task/reminder change (M8.2). Fire-and-forget.
   container.read(reminderCoordinatorProvider.notifier).start();
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
-  final onboardingSeen = await container.read(localPrefsProvider).onboardingSeen();
+  final onboardingSeen = await container
+      .read(localPrefsProvider)
+      .onboardingSeen();
 
   final String target;
   if (!onboardingSeen) {

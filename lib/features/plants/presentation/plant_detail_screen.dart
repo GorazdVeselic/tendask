@@ -55,10 +55,7 @@ class PlantDetailScreen extends ConsumerWidget {
               children: [
                 _Hero(plant: plant, catalog: catalog, areas: areas),
                 SectionLabel(t.plant_detail.history_title),
-                _History(
-                  history: history,
-                  catalog: taskTypes,
-                ),
+                _History(history: history, catalog: taskTypes),
               ],
             ),
     );
@@ -86,7 +83,9 @@ class _Hero extends ConsumerWidget {
     if (pick == null || !context.mounted) return;
     // Preserve the alias — moveToArea() rewrites it, so passing the current
     // value keeps a move from clearing it.
-    final res = await ref.read(userPlantsRepositoryProvider).moveToArea(
+    final res = await ref
+        .read(userPlantsRepositoryProvider)
+        .moveToArea(
           id: plant.id,
           areaId: pick.areaId,
           personalAlias: plant.personalAlias,
@@ -113,8 +112,10 @@ class _Hero extends ConsumerWidget {
         CircleAvatar(
           radius: 28,
           backgroundColor: theme.colorScheme.surfaceContainerHighest,
-          child: Text(userPlantIcon(plant, catalog),
-              style: const TextStyle(fontSize: 26)),
+          child: Text(
+            userPlantIcon(plant, catalog),
+            style: const TextStyle(fontSize: 26),
+          ),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -123,19 +124,24 @@ class _Hero extends ConsumerWidget {
             children: [
               Text(
                 userPlantLabel(plant, catalog),
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               if (scientific != null)
                 Text(
                   scientific,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               const SizedBox(height: 8),
               ActionChip(
-                avatar: Icon(Icons.place_outlined,
-                    size: 18, color: theme.colorScheme.primary),
+                avatar: Icon(
+                  Icons.place_outlined,
+                  size: 18,
+                  color: theme.colorScheme.primary,
+                ),
                 label: Text(pillLabel),
                 onPressed: () => _move(context, ref),
                 visualDensity: VisualDensity.compact,
@@ -149,10 +155,7 @@ class _Hero extends ConsumerWidget {
 }
 
 class _History extends StatelessWidget {
-  const _History({
-    required this.history,
-    required this.catalog,
-  });
+  const _History({required this.history, required this.catalog});
 
   final List<Task>? history;
   final Map<String, TaskType>? catalog;
@@ -188,10 +191,7 @@ class _History extends StatelessWidget {
 }
 
 class _HistoryRow extends StatelessWidget {
-  const _HistoryRow({
-    required this.task,
-    required this.catalog,
-  });
+  const _HistoryRow({required this.task, required this.catalog});
 
   final Task task;
   final Map<String, TaskType>? catalog;
@@ -208,8 +208,9 @@ class _HistoryRow extends StatelessWidget {
       title: Text(label, style: theme.textTheme.bodyMedium),
       trailing: Text(
         formatDmy(task.date.toLocal()),
-        style: theme.textTheme.bodySmall
-            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       onTap: () =>

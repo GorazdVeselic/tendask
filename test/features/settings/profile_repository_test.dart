@@ -60,21 +60,28 @@ void main() {
     expect(s.defaultReminderOffset, isNot(0));
   });
 
-  test('setNotificationSettings inserts the row and marks it pending', () async {
-    await repo.setNotificationSettings(
-        userId, const NotificationSettings(taskRemindersEnabled: false));
+  test(
+    'setNotificationSettings inserts the row and marks it pending',
+    () async {
+      await repo.setNotificationSettings(
+        userId,
+        const NotificationSettings(taskRemindersEnabled: false),
+      );
 
-    final s = await repo.notificationSettings(userId);
-    expect(s.taskRemindersEnabled, false);
-    final rows = await db.select(db.profiles).get();
-    expect(rows.length, 1);
-    expect(rows.single.syncStatus, 'pending');
-  });
+      final s = await repo.notificationSettings(userId);
+      expect(s.taskRemindersEnabled, false);
+      final rows = await db.select(db.profiles).get();
+      expect(rows.length, 1);
+      expect(rows.single.syncStatus, 'pending');
+    },
+  );
 
   test('settings and lang do not clobber each other', () async {
     await repo.setLang(userId, 'de');
     await repo.setNotificationSettings(
-        userId, const NotificationSettings(quietHoursEnabled: true));
+      userId,
+      const NotificationSettings(quietHoursEnabled: true),
+    );
 
     // Writing settings must not wipe lang …
     expect(await repo.getLang(userId), 'de');

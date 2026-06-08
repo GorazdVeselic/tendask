@@ -26,11 +26,11 @@ class SyncService {
     Future<void> Function()? push,
     Future<void> Function()? pull,
     Future<void> Function()? catalog,
-  })  : _hasSession = hasSession,
-        _ensureSession = ensureSession,
-        _push = push,
-        _pull = pull,
-        _catalog = catalog;
+  }) : _hasSession = hasSession,
+       _ensureSession = ensureSession,
+       _push = push,
+       _pull = pull,
+       _catalog = catalog;
 
   final bool Function() _hasSession;
   final Future<void> Function() _ensureSession;

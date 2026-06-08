@@ -14,21 +14,21 @@ final _canonicalV4 = RegExp(
 );
 
 void main() {
-  test('Uuid().v4() is canonical (lowercase v4) — matches Postgres uuid output',
-      () {
-    for (var i = 0; i < 50; i++) {
-      expect(const Uuid().v4(), matches(_canonicalV4));
-    }
-  });
+  test(
+    'Uuid().v4() is canonical (lowercase v4) — matches Postgres uuid output',
+    () {
+      for (var i = 0; i < 50; i++) {
+        expect(const Uuid().v4(), matches(_canonicalV4));
+      }
+    },
+  );
 
   test('a repository create() yields a canonical id', () async {
     final db = AppDatabase.forTesting(NativeDatabase.memory());
     addTearDown(db.close);
-    final id = await AreasRepository(db).create(
-      userId: 'u1',
-      name: 'Bed',
-      type: AreaType.bed,
-    );
+    final id = await AreasRepository(
+      db,
+    ).create(userId: 'u1', name: 'Bed', type: AreaType.bed);
     expect(id, matches(_canonicalV4));
   });
 }

@@ -48,41 +48,47 @@ final lastTaskProvider = StreamProvider.autoDispose<Task?>((ref) {
 });
 
 /// Per-type task counts — for the frequency sort of the entry type grid.
-final taskTypeUsageProvider = StreamProvider.autoDispose<Map<String, int>>((ref) {
+final taskTypeUsageProvider = StreamProvider.autoDispose<Map<String, int>>((
+  ref,
+) {
   return ref.watch(tasksRepositoryProvider).watchTaskTypeUsage();
 });
 
-final taskByIdProvider =
-    StreamProvider.autoDispose.family<Task?, String>((ref, id) {
+final taskByIdProvider = StreamProvider.autoDispose.family<Task?, String>((
+  ref,
+  id,
+) {
   return ref.watch(tasksRepositoryProvider).watchById(id);
 });
 
 /// Ids of tasks that have an active reminder — drives the bell marker in lists.
-final taskIdsWithRemindersProvider =
-    StreamProvider.autoDispose<Set<String>>((ref) {
+final taskIdsWithRemindersProvider = StreamProvider.autoDispose<Set<String>>((
+  ref,
+) {
   return ref.watch(tasksRepositoryProvider).watchTaskIdsWithReminders();
 });
 
 /// All subject links — used to resolve "for what" labels in task lists.
-final allTaskSubjectsProvider =
-    StreamProvider.autoDispose<List<TaskSubject>>((ref) {
+final allTaskSubjectsProvider = StreamProvider.autoDispose<List<TaskSubject>>((
+  ref,
+) {
   return ref.watch(tasksRepositoryProvider).watchAllSubjects();
 });
 
 /// Subjects of a single task — for the task detail screen.
-final taskSubjectsForTaskProvider =
-    StreamProvider.autoDispose.family<List<TaskSubject>, String>((ref, id) {
-  return ref.watch(tasksRepositoryProvider).watchSubjectsForTask(id);
-});
+final taskSubjectsForTaskProvider = StreamProvider.autoDispose
+    .family<List<TaskSubject>, String>((ref, id) {
+      return ref.watch(tasksRepositoryProvider).watchSubjectsForTask(id);
+    });
 
 /// Active reminders of a single task — for the task detail screen.
-final remindersForTaskProvider =
-    StreamProvider.autoDispose.family<List<TaskReminder>, String>((ref, id) {
-  return ref.watch(tasksRepositoryProvider).watchRemindersForTask(id);
-});
+final remindersForTaskProvider = StreamProvider.autoDispose
+    .family<List<TaskReminder>, String>((ref, id) {
+      return ref.watch(tasksRepositoryProvider).watchRemindersForTask(id);
+    });
 
 /// Task history for one plant instance — for the plant detail screen.
-final tasksByPlantProvider =
-    StreamProvider.autoDispose.family<List<Task>, String>((ref, userPlantId) {
-  return ref.watch(tasksRepositoryProvider).watchByPlant(userPlantId);
-});
+final tasksByPlantProvider = StreamProvider.autoDispose
+    .family<List<Task>, String>((ref, userPlantId) {
+      return ref.watch(tasksRepositoryProvider).watchByPlant(userPlantId);
+    });

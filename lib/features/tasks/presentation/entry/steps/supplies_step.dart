@@ -54,8 +54,10 @@ class SuppliesStepBody extends ConsumerWidget {
                 const Text('🧪', style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(t.entry.supplies_why,
-                      style: theme.textTheme.bodySmall),
+                  child: Text(
+                    t.entry.supplies_why,
+                    style: theme.textTheme.bodySmall,
+                  ),
                 ),
               ],
             ),
@@ -69,11 +71,16 @@ class SuppliesStepBody extends ConsumerWidget {
                 ListTile(
                   dense: true,
                   leading: const Text('🧪', style: TextStyle(fontSize: 18)),
-                  title:
-                      Text(label(supplies[i]), style: theme.textTheme.bodyMedium),
+                  title: Text(
+                    label(supplies[i]),
+                    style: theme.textTheme.bodyMedium,
+                  ),
                   trailing: IconButton(
-                    icon: Icon(Icons.close,
-                        size: 18, color: theme.colorScheme.onSurfaceVariant),
+                    icon: Icon(
+                      Icons.close,
+                      size: 18,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                     onPressed: () => onRemove(i),
                   ),
                 ),
@@ -84,8 +91,9 @@ class SuppliesStepBody extends ConsumerWidget {
                   icon: const Icon(Icons.add, size: 18),
                   label: Text(t.entry.supplies_add),
                   style: TextButton.styleFrom(
-                      padding: const EdgeInsets.symmetric(horizontal: 16),
-                      visualDensity: VisualDensity.compact),
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                    visualDensity: VisualDensity.compact,
+                  ),
                 ),
               ),
             ],
@@ -94,8 +102,9 @@ class SuppliesStepBody extends ConsumerWidget {
         const SizedBox(height: 10),
         Text(
           t.entry.supplies_note,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );

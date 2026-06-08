@@ -3,7 +3,11 @@ import 'package:flutter/material.dart';
 /// Inline destructive action for edit forms — error-tinted text button at the
 /// bottom of the form content. The single delete-in-form style across the app.
 class DestructiveButton extends StatelessWidget {
-  const DestructiveButton({super.key, required this.label, required this.onPressed});
+  const DestructiveButton({
+    super.key,
+    required this.label,
+    required this.onPressed,
+  });
 
   final String label;
   final VoidCallback onPressed;

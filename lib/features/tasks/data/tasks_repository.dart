@@ -18,10 +18,12 @@ typedef WeatherCapture = Future<String?> Function();
 /// Keeps drift types out of the UI (see CLAUDE.md — no Companion in signatures).
 class TaskSubjectSpec {
   const TaskSubjectSpec({this.userPlantId, this.areaId})
-      : assert(userPlantId != null || areaId != null,
-            'A subject must reference a plant or an area');
+    : assert(
+        userPlantId != null || areaId != null,
+        'A subject must reference a plant or an area',
+      );
   const TaskSubjectSpec.plant(String userPlantId)
-      : this(userPlantId: userPlantId);
+    : this(userPlantId: userPlantId);
   const TaskSubjectSpec.area(String areaId) : this(areaId: areaId);
 
   final String? userPlantId;
@@ -54,49 +56,54 @@ class TasksRepository {
   final WeatherCapture? _weatherCapture;
   final _uuid = const Uuid();
 
-  Stream<Task?> watchById(String id) =>
-      (_db.select(_db.tasks)..where((t) => t.id.equals(id)))
-          .watchSingleOrNull();
+  Stream<Task?> watchById(String id) => (_db.select(
+    _db.tasks,
+  )..where((t) => t.id.equals(id))).watchSingleOrNull();
 
-  Stream<List<Task>> watchPending() => (
-        _db.select(_db.tasks)
-          ..where((t) =>
-              t.deleted.equals(false) &
-              t.status.equalsValue(TaskStatus.waiting))
-          ..orderBy([(t) => OrderingTerm.asc(t.date)])
-      ).watch();
+  Stream<List<Task>> watchPending() =>
+      (_db.select(_db.tasks)
+            ..where(
+              (t) =>
+                  t.deleted.equals(false) &
+                  t.status.equalsValue(TaskStatus.waiting),
+            )
+            ..orderBy([(t) => OrderingTerm.asc(t.date)]))
+          .watch();
 
-  Stream<List<Task>> watchCompleted() => (
-        _db.select(_db.tasks)
-          ..where((t) =>
-              t.deleted.equals(false) &
-              t.status.equalsValue(TaskStatus.done))
-          ..orderBy([(t) => OrderingTerm.desc(t.date)])
-      ).watch();
+  Stream<List<Task>> watchCompleted() =>
+      (_db.select(_db.tasks)
+            ..where(
+              (t) =>
+                  t.deleted.equals(false) &
+                  t.status.equalsValue(TaskStatus.done),
+            )
+            ..orderBy([(t) => OrderingTerm.desc(t.date)]))
+          .watch();
 
   /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
-  Future<List<Task>> pendingTasks() => (
-        _db.select(_db.tasks)
-          ..where((t) =>
-              t.deleted.equals(false) &
-              t.status.equalsValue(TaskStatus.waiting))
-      ).get();
+  Future<List<Task>> pendingTasks() =>
+      (_db.select(_db.tasks)..where(
+            (t) =>
+                t.deleted.equals(false) &
+                t.status.equalsValue(TaskStatus.waiting),
+          ))
+          .get();
 
   /// Every non-deleted task (any status), oldest first — for the month calendar.
-  Stream<List<Task>> watchAll() => (
-        _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false))
-          ..orderBy([(t) => OrderingTerm.asc(t.date)])
-      ).watch();
+  Stream<List<Task>> watchAll() =>
+      (_db.select(_db.tasks)
+            ..where((t) => t.deleted.equals(false))
+            ..orderBy([(t) => OrderingTerm.asc(t.date)]))
+          .watch();
 
   /// The most recently touched task — drives the "repeat last" shortcut. We sort
   /// by `updated_at` (no `created_at` column) so the newest entry surfaces first.
-  Stream<Task?> watchLast() => (
-        _db.select(_db.tasks)
-          ..where((t) => t.deleted.equals(false))
-          ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
-          ..limit(1)
-      ).watchSingleOrNull();
+  Stream<Task?> watchLast() =>
+      (_db.select(_db.tasks)
+            ..where((t) => t.deleted.equals(false))
+            ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+            ..limit(1))
+          .watchSingleOrNull();
 
   /// How many (non-deleted) tasks exist per task type — drives the per-user
   /// frequency sort of the type grid (most used first).
@@ -106,29 +113,29 @@ class TasksRepository {
       ..addColumns([_db.tasks.taskTypeId, count])
       ..where(_db.tasks.deleted.equals(false))
       ..groupBy([_db.tasks.taskTypeId]);
-    return query.watch().map((rows) => {
-          for (final row in rows)
-            row.read(_db.tasks.taskTypeId)!: row.read(count) ?? 0,
-        });
+    return query.watch().map(
+      (rows) => {
+        for (final row in rows)
+          row.read(_db.tasks.taskTypeId)!: row.read(count) ?? 0,
+      },
+    );
   }
 
   // ── Subjects ────────────────────────────────────────────────────────────
 
   /// All non-deleted subject links — for resolving subject labels in lists.
-  Stream<List<TaskSubject>> watchAllSubjects() =>
-      (_db.select(_db.taskSubjects)..where((s) => s.deleted.equals(false)))
-          .watch();
+  Stream<List<TaskSubject>> watchAllSubjects() => (_db.select(
+    _db.taskSubjects,
+  )..where((s) => s.deleted.equals(false))).watch();
 
   /// Subjects of one task (newest-relevant for the detail screen).
-  Stream<List<TaskSubject>> watchSubjectsForTask(String taskId) =>
-      (_db.select(_db.taskSubjects)
-            ..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false)))
-          .watch();
+  Stream<List<TaskSubject>> watchSubjectsForTask(String taskId) => (_db.select(
+    _db.taskSubjects,
+  )..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false))).watch();
 
-  Future<List<TaskSubject>> subjectsForTask(String taskId) =>
-      (_db.select(_db.taskSubjects)
-            ..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false)))
-          .get();
+  Future<List<TaskSubject>> subjectsForTask(String taskId) => (_db.select(
+    _db.taskSubjects,
+  )..where((s) => s.taskId.equals(taskId) & s.deleted.equals(false))).get();
 
   // ── Reminders ─────────────────────────────────────────────────────────────
 
@@ -140,10 +147,10 @@ class TasksRepository {
       _remindersQuery(taskId).watch();
 
   SimpleSelectStatement<$TaskRemindersTable, TaskReminder> _remindersQuery(
-          String taskId) =>
-      _db.select(_db.taskReminders)
-        ..where((r) => r.taskId.equals(taskId) & r.deleted.equals(false))
-        ..orderBy([(r) => OrderingTerm.asc(r.offset)]);
+    String taskId,
+  ) => _db.select(_db.taskReminders)
+    ..where((r) => r.taskId.equals(taskId) & r.deleted.equals(false))
+    ..orderBy([(r) => OrderingTerm.asc(r.offset)]);
 
   /// Task ids that have at least one active reminder — drives the bell marker in
   /// task lists. Reactive (drift stream).
@@ -152,63 +159,68 @@ class TasksRepository {
     final query = _db.selectOnly(_db.taskReminders, distinct: true)
       ..addColumns([taskId])
       ..where(_db.taskReminders.deleted.equals(false));
-    return query.watch().map((rows) => {
-          for (final row in rows) ?row.read(taskId),
-        });
+    return query.watch().map(
+      (rows) => {for (final row in rows) ?row.read(taskId)},
+    );
   }
 
   /// Task history for one area (newest first): tasks whose subject is the area
   /// itself OR a plant located in that area. Deduped by task id.
   Stream<List<Task>> watchByArea(String areaId) {
-    final query = _db.select(_db.tasks).join([
-      innerJoin(
-        _db.taskSubjects,
-        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
-            _db.taskSubjects.deleted.equals(false),
-      ),
-      leftOuterJoin(
-        _db.userPlants,
-        _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
-      ),
-    ])
-      ..where(_db.tasks.deleted.equals(false) &
-          (_db.taskSubjects.areaId.equals(areaId) |
-              _db.userPlants.areaId.equals(areaId)))
-      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    final query =
+        _db.select(_db.tasks).join([
+            innerJoin(
+              _db.taskSubjects,
+              _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+                  _db.taskSubjects.deleted.equals(false),
+            ),
+            leftOuterJoin(
+              _db.userPlants,
+              _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
+            ),
+          ])
+          ..where(
+            _db.tasks.deleted.equals(false) &
+                (_db.taskSubjects.areaId.equals(areaId) |
+                    _db.userPlants.areaId.equals(areaId)),
+          )
+          ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
     return query.watch().map(_dedupTasks);
   }
 
   /// Task history for one plant instance (newest first).
   Stream<List<Task>> watchByPlant(String userPlantId) {
-    final query = _db.select(_db.tasks).join([
-      innerJoin(
-        _db.taskSubjects,
-        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
-            _db.taskSubjects.deleted.equals(false) &
-            _db.taskSubjects.userPlantId.equals(userPlantId),
-      ),
-    ])
-      ..where(_db.tasks.deleted.equals(false))
-      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    final query =
+        _db.select(_db.tasks).join([
+            innerJoin(
+              _db.taskSubjects,
+              _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+                  _db.taskSubjects.deleted.equals(false) &
+                  _db.taskSubjects.userPlantId.equals(userPlantId),
+            ),
+          ])
+          ..where(_db.tasks.deleted.equals(false))
+          ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
     return query.watch().map(_dedupTasks);
   }
 
   /// Newest task per area (direct subject or via a plant in that area) — for the
   /// "last: …" subtitle in the garden list.
   Stream<Map<String, Task>> watchLatestPerArea() {
-    final query = _db.select(_db.tasks).join([
-      innerJoin(
-        _db.taskSubjects,
-        _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
-            _db.taskSubjects.deleted.equals(false),
-      ),
-      leftOuterJoin(
-        _db.userPlants,
-        _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
-      ),
-    ])
-      ..where(_db.tasks.deleted.equals(false))
-      ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
+    final query =
+        _db.select(_db.tasks).join([
+            innerJoin(
+              _db.taskSubjects,
+              _db.taskSubjects.taskId.equalsExp(_db.tasks.id) &
+                  _db.taskSubjects.deleted.equals(false),
+            ),
+            leftOuterJoin(
+              _db.userPlants,
+              _db.userPlants.id.equalsExp(_db.taskSubjects.userPlantId),
+            ),
+          ])
+          ..where(_db.tasks.deleted.equals(false))
+          ..orderBy([OrderingTerm.desc(_db.tasks.date)]);
     return query.watch().map((rows) {
       final latest = <String, Task>{};
       for (final row in rows) {
@@ -250,16 +262,20 @@ class TasksRepository {
     final id = _uuid.v4();
     final now = _clock.now();
     await _db.transaction(() async {
-      await _db.into(_db.tasks).insert(TasksCompanion.insert(
-            id: id,
-            userId: userId,
-            taskTypeId: taskTypeId,
-            date: date.toUtc(),
-            status: Value(status),
-            note: Value(note),
-            recurrence: Value(recurrence),
-            updatedAt: now,
-          ));
+      await _db
+          .into(_db.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: id,
+              userId: userId,
+              taskTypeId: taskTypeId,
+              date: date.toUtc(),
+              status: Value(status),
+              note: Value(note),
+              recurrence: Value(recurrence),
+              updatedAt: now,
+            ),
+          );
       await _insertSubjects(id, subjects, now);
       await _insertReminders(id, reminders, now);
     });
@@ -291,22 +307,26 @@ class TasksRepository {
         ),
       );
       // Soft-delete current subjects (so the change syncs) then insert fresh.
-      await (_db.update(_db.taskSubjects)
-            ..where((s) => s.taskId.equals(id) & s.deleted.equals(false)))
-          .write(TaskSubjectsCompanion(
-        deleted: const Value(true),
-        updatedAt: Value(now),
-        syncStatus: const Value(kSyncPending),
-      ));
+      await (_db.update(
+        _db.taskSubjects,
+      )..where((s) => s.taskId.equals(id) & s.deleted.equals(false))).write(
+        TaskSubjectsCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(now),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
       await _insertSubjects(id, subjects, now);
       // Same soft-delete-then-reinsert for reminders.
-      await (_db.update(_db.taskReminders)
-            ..where((r) => r.taskId.equals(id) & r.deleted.equals(false)))
-          .write(TaskRemindersCompanion(
-        deleted: const Value(true),
-        updatedAt: Value(now),
-        syncStatus: const Value(kSyncPending),
-      ));
+      await (_db.update(
+        _db.taskReminders,
+      )..where((r) => r.taskId.equals(id) & r.deleted.equals(false))).write(
+        TaskRemindersCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(now),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
       await _insertReminders(id, reminders, now);
     });
   }
@@ -317,13 +337,17 @@ class TasksRepository {
     DateTime now,
   ) async {
     for (final s in subjects) {
-      await _db.into(_db.taskSubjects).insert(TaskSubjectsCompanion.insert(
-            id: _uuid.v4(),
-            taskId: taskId,
-            userPlantId: Value(s.userPlantId),
-            areaId: Value(s.areaId),
-            updatedAt: now,
-          ));
+      await _db
+          .into(_db.taskSubjects)
+          .insert(
+            TaskSubjectsCompanion.insert(
+              id: _uuid.v4(),
+              taskId: taskId,
+              userPlantId: Value(s.userPlantId),
+              areaId: Value(s.areaId),
+              updatedAt: now,
+            ),
+          );
     }
   }
 
@@ -333,13 +357,17 @@ class TasksRepository {
     DateTime now,
   ) async {
     for (final r in reminders) {
-      await _db.into(_db.taskReminders).insert(TaskRemindersCompanion.insert(
-            id: _uuid.v4(),
-            taskId: taskId,
-            offset: r.offsetMinutes,
-            reminderTime: Value(r.time),
-            updatedAt: now,
-          ));
+      await _db
+          .into(_db.taskReminders)
+          .insert(
+            TaskRemindersCompanion.insert(
+              id: _uuid.v4(),
+              taskId: taskId,
+              offset: r.offsetMinutes,
+              reminderTime: Value(r.time),
+              updatedAt: now,
+            ),
+          );
     }
   }
 
@@ -367,16 +395,16 @@ class TasksRepository {
     if (capture == null) return;
     final json = await capture();
     if (json == null) return;
-    await (_db.update(_db.tasks)
-          ..where((t) =>
-              t.id.equals(id) &
-              t.weather.isNull() &
-              t.deleted.equals(false)))
-        .write(TasksCompanion(
-      weather: Value(json),
-      updatedAt: Value(_clock.now()),
-      syncStatus: const Value(kSyncPending),
-    ));
+    await (_db.update(_db.tasks)..where(
+          (t) => t.id.equals(id) & t.weather.isNull() & t.deleted.equals(false),
+        ))
+        .write(
+          TasksCompanion(
+            weather: Value(json),
+            updatedAt: Value(_clock.now()),
+            syncStatus: const Value(kSyncPending),
+          ),
+        );
   }
 
   Future<void> softDelete(String id) async {
@@ -391,20 +419,24 @@ class TasksRepository {
       );
       // Cascade the soft-delete to children so the deletion syncs (mirrors
       // updateTask) — otherwise child rows stay deleted=false in the cloud.
-      await (_db.update(_db.taskSubjects)
-            ..where((s) => s.taskId.equals(id) & s.deleted.equals(false)))
-          .write(TaskSubjectsCompanion(
-        deleted: const Value(true),
-        updatedAt: Value(now),
-        syncStatus: const Value(kSyncPending),
-      ));
-      await (_db.update(_db.taskReminders)
-            ..where((r) => r.taskId.equals(id) & r.deleted.equals(false)))
-          .write(TaskRemindersCompanion(
-        deleted: const Value(true),
-        updatedAt: Value(now),
-        syncStatus: const Value(kSyncPending),
-      ));
+      await (_db.update(
+        _db.taskSubjects,
+      )..where((s) => s.taskId.equals(id) & s.deleted.equals(false))).write(
+        TaskSubjectsCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(now),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
+      await (_db.update(
+        _db.taskReminders,
+      )..where((r) => r.taskId.equals(id) & r.deleted.equals(false))).write(
+        TaskRemindersCompanion(
+          deleted: const Value(true),
+          updatedAt: Value(now),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
       // Return any booked consumption to stock, then soft-delete the links.
       await _supplies.revertForTask(id);
       await _supplies.softDeleteForTask(id);
@@ -456,34 +488,30 @@ class TasksRepository {
     final newId = _uuid.v4();
     final now = _clock.now();
     await _db.transaction(() async {
-      await _db.into(_db.tasks).insert(TasksCompanion.insert(
-            id: newId,
-            userId: task.userId,
-            taskTypeId: task.taskTypeId,
-            date: task.date,
-            status: const Value(TaskStatus.waiting),
-            note: Value(task.note),
-            recurrence: Value(task.recurrence),
-            updatedAt: now,
-          ));
+      await _db
+          .into(_db.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: newId,
+              userId: task.userId,
+              taskTypeId: task.taskTypeId,
+              date: task.date,
+              status: const Value(TaskStatus.waiting),
+              note: Value(task.note),
+              recurrence: Value(task.recurrence),
+              updatedAt: now,
+            ),
+          );
       final subs = await subjectsForTask(id);
-      await _insertSubjects(
-        newId,
-        [
-          for (final s in subs)
-            TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
-        ],
-        now,
-      );
+      await _insertSubjects(newId, [
+        for (final s in subs)
+          TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
+      ], now);
       final reminders = await remindersForTask(id);
-      await _insertReminders(
-        newId,
-        [
-          for (final r in reminders)
-            ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
-        ],
-        now,
-      );
+      await _insertReminders(newId, [
+        for (final r in reminders)
+          ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
+      ], now);
     });
     return newId;
   }

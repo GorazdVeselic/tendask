@@ -33,31 +33,40 @@ void main() {
   });
   tearDown(() async => db.close());
 
-  Future<void> insertProfile(String userId, {DateTime? at, String? sync}) =>
-      db.into(db.profiles).insert(ProfilesCompanion.insert(
-            userId: userId,
-            updatedAt: at ?? t0,
-            syncStatus: sync == null ? const Value.absent() : Value(sync),
-          ));
+  Future<void> insertProfile(String userId, {DateTime? at, String? sync}) => db
+      .into(db.profiles)
+      .insert(
+        ProfilesCompanion.insert(
+          userId: userId,
+          updatedAt: at ?? t0,
+          syncStatus: sync == null ? const Value.absent() : Value(sync),
+        ),
+      );
 
-  Future<void> insertArea(String id, {DateTime? at, String? sync}) =>
-      db.into(db.areas).insert(AreasCompanion.insert(
-            id: id,
-            userId: 'u1',
-            name: id,
-            updatedAt: at ?? t0,
-            syncStatus: sync == null ? const Value.absent() : Value(sync),
-          ));
+  Future<void> insertArea(String id, {DateTime? at, String? sync}) => db
+      .into(db.areas)
+      .insert(
+        AreasCompanion.insert(
+          id: id,
+          userId: 'u1',
+          name: id,
+          updatedAt: at ?? t0,
+          syncStatus: sync == null ? const Value.absent() : Value(sync),
+        ),
+      );
 
-  Future<void> insertTask(String id, {String? sync}) =>
-      db.into(db.tasks).insert(TasksCompanion.insert(
-            id: id,
-            userId: 'u1',
-            taskTypeId: 'water',
-            date: t0,
-            updatedAt: t0,
-            syncStatus: sync == null ? const Value.absent() : Value(sync),
-          ));
+  Future<void> insertTask(String id, {String? sync}) => db
+      .into(db.tasks)
+      .insert(
+        TasksCompanion.insert(
+          id: id,
+          userId: 'u1',
+          taskTypeId: 'water',
+          date: t0,
+          updatedAt: t0,
+          syncStatus: sync == null ? const Value.absent() : Value(sync),
+        ),
+      );
 
   Future<Area> area(String id) =>
       (db.select(db.areas)..where((a) => a.id.equals(id))).getSingle();
@@ -77,15 +86,18 @@ void main() {
     expect(upsert.calls, ['profile', 'area', 'task']);
   });
 
-  test('flips pushed rows to synced; untouched rows keep their status', () async {
-    await insertArea('a1');
-    await insertArea('a2', sync: kSyncSynced);
+  test(
+    'flips pushed rows to synced; untouched rows keep their status',
+    () async {
+      await insertArea('a1');
+      await insertArea('a2', sync: kSyncSynced);
 
-    await service.push();
+      await service.push();
 
-    expect((await area('a1')).syncStatus, kSyncSynced);
-    expect((await area('a2')).syncStatus, kSyncSynced);
-  });
+      expect((await area('a1')).syncStatus, kSyncSynced);
+      expect((await area('a2')).syncStatus, kSyncSynced);
+    },
+  );
 
   test('skips upsert entirely when nothing is pending', () async {
     await insertArea('a1', sync: kSyncSynced);
@@ -101,7 +113,9 @@ void main() {
       if (table == 'area') {
         await (db.update(db.areas)..where((a) => a.id.equals('a1'))).write(
           AreasCompanion(
-              updatedAt: Value(t1), syncStatus: const Value(kSyncPending)),
+            updatedAt: Value(t1),
+            syncStatus: const Value(kSyncPending),
+          ),
         );
       }
     };
@@ -113,30 +127,41 @@ void main() {
     expect(a1.syncStatus, kSyncPending); // newer change must still flush later
   });
 
-  test('never pushes device_location — raw coordinates stay on the device',
-      () async {
-    // Privacy by design (CLAUDE.md §2): only derived H3 cells (in profile) sync;
-    // the raw lat/lon in device_location must never reach the cloud.
-    await db.into(db.deviceLocations).insert(DeviceLocationsCompanion.insert(
-        latitude: 46.05, longitude: 14.5, updatedAt: t0));
-    await insertArea('a1'); // a pending owned row so the push actually runs
+  test(
+    'never pushes device_location — raw coordinates stay on the device',
+    () async {
+      // Privacy by design (CLAUDE.md §2): only derived H3 cells (in profile) sync;
+      // the raw lat/lon in device_location must never reach the cloud.
+      await db
+          .into(db.deviceLocations)
+          .insert(
+            DeviceLocationsCompanion.insert(
+              latitude: 46.05,
+              longitude: 14.5,
+              updatedAt: t0,
+            ),
+          );
+      await insertArea('a1'); // a pending owned row so the push actually runs
 
-    await service.push();
+      await service.push();
 
-    expect(upsert.calls, isNot(contains('device_location')));
-    expect(upsert.calls, ['area']); // only the owned table, never coordinates
-  });
+      expect(upsert.calls, isNot(contains('device_location')));
+      expect(upsert.calls, ['area']); // only the owned table, never coordinates
+    },
+  );
 
-  test('fail-fast: a failing table aborts the rest, leaving them pending',
-      () async {
-    await insertArea('a1');
-    await insertTask('t1');
-    upsert.failOn = 'task';
+  test(
+    'fail-fast: a failing table aborts the rest, leaving them pending',
+    () async {
+      await insertArea('a1');
+      await insertTask('t1');
+      upsert.failOn = 'task';
 
-    await expectLater(service.push(), throwsException);
+      await expectLater(service.push(), throwsException);
 
-    // area pushed before the failure → synced; task never marked.
-    expect((await area('a1')).syncStatus, kSyncSynced);
-    expect((await task('t1')).syncStatus, kSyncPending);
-  });
+      // area pushed before the failure → synced; task never marked.
+      expect((await area('a1')).syncStatus, kSyncSynced);
+      expect((await task('t1')).syncStatus, kSyncPending);
+    },
+  );
 }

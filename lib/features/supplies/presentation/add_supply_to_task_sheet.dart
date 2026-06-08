@@ -15,7 +15,9 @@ Future<SupplySpec?> showAddSupplyToTaskSheet(BuildContext context) {
     context: context,
     isScrollControlled: true,
     builder: (_) => Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding: EdgeInsets.only(
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: const _AddSupplySheet(),
     ),
   );
@@ -41,7 +43,9 @@ class _AddSupplySheetState extends ConsumerState<_AddSupplySheet> {
   void _confirm() {
     final amount = double.tryParse(_amount.text.trim().replaceAll(',', '.'));
     if (_selectedId == null || amount == null || amount <= 0) return;
-    Navigator.of(context).pop(SupplySpec(supplyId: _selectedId!, amount: amount));
+    Navigator.of(
+      context,
+    ).pop(SupplySpec(supplyId: _selectedId!, amount: amount));
   }
 
   @override
@@ -58,15 +62,17 @@ class _AddSupplySheetState extends ConsumerState<_AddSupplySheet> {
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
             const SheetHandle(),
-            Text(t.supplies.add_to_task,
-                style: theme.textTheme.titleMedium),
+            Text(t.supplies.add_to_task, style: theme.textTheme.titleMedium),
             const SizedBox(height: 12),
             if (supplies.isEmpty)
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 8),
-                child: Text(t.supplies.empty,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant)),
+                child: Text(
+                  t.supplies.empty,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               )
             else
               Wrap(
@@ -97,8 +103,9 @@ class _AddSupplySheetState extends ConsumerState<_AddSupplySheet> {
             const SizedBox(height: 8),
             TextField(
               controller: _amount,
-              keyboardType:
-                  const TextInputType.numberWithOptions(decimal: true),
+              keyboardType: const TextInputType.numberWithOptions(
+                decimal: true,
+              ),
               inputFormatters: [
                 FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
               ],

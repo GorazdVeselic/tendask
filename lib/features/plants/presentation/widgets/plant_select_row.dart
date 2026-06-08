@@ -41,8 +41,11 @@ class PlantSelectRow extends StatelessWidget {
           shape: BoxShape.circle,
           color: selected ? cs.primary : cs.primaryContainer,
         ),
-        child: Icon(selected ? Icons.check : Icons.add,
-            size: 18, color: selected ? cs.onPrimary : cs.primary),
+        child: Icon(
+          selected ? Icons.check : Icons.add,
+          size: 18,
+          color: selected ? cs.onPrimary : cs.primary,
+        ),
       ),
       onTap: onTap,
     );

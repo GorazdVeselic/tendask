@@ -35,34 +35,43 @@ class LocationRepository {
     final cells = deriveH3Cells(_h3, latitude, longitude);
     final now = _clock.now();
     await _db.transaction(() async {
-      await _db.into(_db.deviceLocations).insertOnConflictUpdate(
+      await _db
+          .into(_db.deviceLocations)
+          .insertOnConflictUpdate(
             DeviceLocationsCompanion.insert(
               latitude: latitude,
               longitude: longitude,
               updatedAt: now,
             ),
           );
-      final exists = await (_db.select(_db.profiles)
-            ..where((p) => p.userId.equals(userId)))
-          .getSingleOrNull();
+      final exists = await (_db.select(
+        _db.profiles,
+      )..where((p) => p.userId.equals(userId))).getSingleOrNull();
       if (exists == null) {
-        await _db.into(_db.profiles).insert(ProfilesCompanion.insert(
-              userId: userId,
-              h3R7: Value(cells.r7),
-              h3R6: Value(cells.r6),
-              h3R5: Value(cells.r5),
-              updatedAt: now,
-              syncStatus: const Value(kSyncPending),
-            ));
+        await _db
+            .into(_db.profiles)
+            .insert(
+              ProfilesCompanion.insert(
+                userId: userId,
+                h3R7: Value(cells.r7),
+                h3R6: Value(cells.r6),
+                h3R5: Value(cells.r5),
+                updatedAt: now,
+                syncStatus: const Value(kSyncPending),
+              ),
+            );
       } else {
-        await (_db.update(_db.profiles)..where((p) => p.userId.equals(userId)))
-            .write(ProfilesCompanion(
-          h3R7: Value(cells.r7),
-          h3R6: Value(cells.r6),
-          h3R5: Value(cells.r5),
-          updatedAt: Value(now),
-          syncStatus: const Value(kSyncPending),
-        ));
+        await (_db.update(
+          _db.profiles,
+        )..where((p) => p.userId.equals(userId))).write(
+          ProfilesCompanion(
+            h3R7: Value(cells.r7),
+            h3R6: Value(cells.r6),
+            h3R5: Value(cells.r5),
+            updatedAt: Value(now),
+            syncStatus: const Value(kSyncPending),
+          ),
+        );
       }
     });
   }
@@ -77,7 +86,10 @@ class LocationRepository {
   /// Reactive coordinates: emits whenever the stored location changes, so the
   /// weather provider re-fetches after onboarding/settings set it.
   Stream<GardenCoords?> watchGardenCoordinates() {
-    return _db.select(_db.deviceLocations).watchSingleOrNull().map(
+    return _db
+        .select(_db.deviceLocations)
+        .watchSingleOrNull()
+        .map(
           (row) => row == null
               ? null
               : (latitude: row.latitude, longitude: row.longitude),
@@ -90,10 +102,8 @@ class LocationRepository {
 H3 h3(Ref ref) => const H3Factory().load();
 
 @riverpod
-LocationRepository locationRepository(Ref ref) => LocationRepository(
-      ref.watch(databaseProvider),
-      ref.watch(h3Provider),
-    );
+LocationRepository locationRepository(Ref ref) =>
+    LocationRepository(ref.watch(databaseProvider), ref.watch(h3Provider));
 
 /// The garden location for the weather lookup: the stored device-local
 /// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
@@ -102,4 +112,6 @@ LocationRepository locationRepository(Ref ref) => LocationRepository(
 Stream<GardenCoords> gardenLocation(Ref ref) => ref
     .watch(locationRepositoryProvider)
     .watchGardenCoordinates()
-    .map((c) => c ?? (latitude: kDefaultLatitude, longitude: kDefaultLongitude));
+    .map(
+      (c) => c ?? (latitude: kDefaultLatitude, longitude: kDefaultLongitude),
+    );

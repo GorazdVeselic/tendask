@@ -25,17 +25,20 @@ final areasMapProvider = StreamProvider<Map<String, Area>>((ref) {
       .map((list) => {for (final a in list) a.id: a});
 });
 
-final areaByIdProvider =
-    StreamProvider.autoDispose.family<Area?, String>((ref, id) {
+final areaByIdProvider = StreamProvider.autoDispose.family<Area?, String>((
+  ref,
+  id,
+) {
   return ref.watch(areasRepositoryProvider).watchById(id);
 });
 
-final latestTaskPerAreaProvider =
-    StreamProvider.autoDispose<Map<String, Task>>((ref) {
-  return ref.watch(tasksRepositoryProvider).watchLatestPerArea();
-});
+final latestTaskPerAreaProvider = StreamProvider.autoDispose<Map<String, Task>>(
+  (ref) {
+    return ref.watch(tasksRepositoryProvider).watchLatestPerArea();
+  },
+);
 
-final areaHistoryProvider =
-    StreamProvider.autoDispose.family<List<Task>, String>((ref, areaId) {
-  return ref.watch(tasksRepositoryProvider).watchByArea(areaId);
-});
+final areaHistoryProvider = StreamProvider.autoDispose
+    .family<List<Task>, String>((ref, areaId) {
+      return ref.watch(tasksRepositoryProvider).watchByArea(areaId);
+    });

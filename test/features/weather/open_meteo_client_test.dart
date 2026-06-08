@@ -16,10 +16,13 @@ class _FakeAdapter implements HttpClientAdapter {
     RequestOptions options,
     Stream<Uint8List>? requestStream,
     Future<void>? cancelFuture,
-  ) async =>
-      ResponseBody.fromString(body, status, headers: {
-        Headers.contentTypeHeader: [Headers.jsonContentType],
-      });
+  ) async => ResponseBody.fromString(
+    body,
+    status,
+    headers: {
+      Headers.contentTypeHeader: [Headers.jsonContentType],
+    },
+  );
 
   @override
   void close({bool force = false}) {}
@@ -53,8 +56,9 @@ void main() {
 
     test('ignores unknown fields and defaults missing optionals', () async {
       final client = _clientWith(
-          '{"latitude": 46.0, "longitude": 14.5, "surprise": 123, '
-          '"current": {"temperature_2m": 18.0, "unknown_metric": 5}}');
+        '{"latitude": 46.0, "longitude": 14.5, "surprise": 123, '
+        '"current": {"temperature_2m": 18.0, "unknown_metric": 5}}',
+      );
 
       final res = await client.fetch(latitude: 46, longitude: 14.5);
       expect(res.current?.temperature2m, 18.0);

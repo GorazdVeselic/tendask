@@ -11,8 +11,8 @@ part 'catalog_sync_service.g.dart';
 
 /// Reads every row of a public catalog table. No incremental cursor: the catalog
 /// is tiny and has no updated_at, so it is full-pulled.
-typedef RemoteSelectAll = Future<List<Map<String, dynamic>>> Function(
-    String table);
+typedef RemoteSelectAll =
+    Future<List<Map<String, dynamic>>> Function(String table);
 
 /// Pulls the read-only catalog (task_type, plant, category_task_type) from the
 /// cloud into drift. Public-read, so no session is required. Ids are stable
@@ -69,11 +69,8 @@ class CatalogSyncService {
 CatalogSyncService? catalogSyncService(Ref ref) {
   if (kSupabaseUrl.isEmpty) return null;
   final client = Supabase.instance.client;
-  return CatalogSyncService(
-    ref.watch(databaseProvider),
-    (table) async {
-      final data = await client.from(table).select();
-      return data.cast<Map<String, dynamic>>();
-    },
-  );
+  return CatalogSyncService(ref.watch(databaseProvider), (table) async {
+    final data = await client.from(table).select();
+    return data.cast<Map<String, dynamic>>();
+  });
 }

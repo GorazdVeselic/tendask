@@ -34,7 +34,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
 
   Future<void> _save(double latitude, double longitude) async {
     final userId = ref.read(authServiceProvider).userId;
-    await ref.read(locationRepositoryProvider).saveGardenLocation(
+    await ref
+        .read(locationRepositoryProvider)
+        .saveGardenLocation(
           userId: userId,
           latitude: latitude,
           longitude: longitude,
@@ -129,8 +131,11 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                           color: cs.surfaceContainerHighest,
                           borderRadius: BorderRadius.circular(26),
                         ),
-                        child: Icon(Icons.location_on_outlined,
-                            size: 46, color: cs.primary),
+                        child: Icon(
+                          Icons.location_on_outlined,
+                          size: 46,
+                          color: cs.primary,
+                        ),
                       ),
                     ),
                     Text(
@@ -141,8 +146,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     const SizedBox(height: 12),
                     Text(
                       t.location.why,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(color: cs.onSurfaceVariant),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
@@ -162,8 +168,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 12),
                           child: Text(
                             t.location.or_enter,
-                            style: theme.textTheme.bodySmall
-                                ?.copyWith(color: cs.onSurfaceVariant),
+                            style: theme.textTheme.bodySmall?.copyWith(
+                              color: cs.onSurfaceVariant,
+                            ),
                           ),
                         ),
                         const Expanded(child: Divider()),
@@ -185,8 +192,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     const SizedBox(height: 6),
                     Text(
                       t.location.place_note,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: cs.onSurfaceVariant),
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
                     ),
                     if (_loading) ...[
                       const SizedBox(height: 16),
@@ -196,9 +204,12 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       ListTile(
                         leading: const Icon(Icons.place_outlined),
                         title: Text(place.name),
-                        subtitle: Text([place.admin1, place.country]
-                            .whereType<String>()
-                            .join(', ')),
+                        subtitle: Text(
+                          [
+                            place.admin1,
+                            place.country,
+                          ].whereType<String>().join(', '),
+                        ),
                         onTap: () => _selectPlace(place),
                       ),
                     if (_status != null) ...[
@@ -208,8 +219,10 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                           Icon(Icons.check_circle, color: cs.primary, size: 20),
                           const SizedBox(width: 8),
                           Expanded(
-                            child: Text(_status!,
-                                style: theme.textTheme.bodyMedium),
+                            child: Text(
+                              _status!,
+                              style: theme.textTheme.bodyMedium,
+                            ),
                           ),
                         ],
                       ),
@@ -218,8 +231,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       const SizedBox(height: 12),
                       Text(
                         _error!,
-                        style:
-                            theme.textTheme.bodySmall?.copyWith(color: cs.error),
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.error,
+                        ),
                       ),
                     ],
                     const SizedBox(height: 20),

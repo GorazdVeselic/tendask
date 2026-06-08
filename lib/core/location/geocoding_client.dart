@@ -60,20 +60,20 @@ class GeocodingClient {
   }
 
   GeoPlace _fromJson(Map<String, dynamic> j) => GeoPlace(
-        name: j['name'] as String? ?? '',
-        latitude: (j['latitude'] as num).toDouble(),
-        longitude: (j['longitude'] as num).toDouble(),
-        admin1: j['admin1'] as String?,
-        country: j['country'] as String?,
-      );
+    name: j['name'] as String? ?? '',
+    latitude: (j['latitude'] as num).toDouble(),
+    longitude: (j['longitude'] as num).toDouble(),
+    admin1: j['admin1'] as String?,
+    country: j['country'] as String?,
+  );
 }
 
 @riverpod
 GeocodingClient geocodingClient(Ref ref) => GeocodingClient(
-      Dio(
-        BaseOptions(
-          connectTimeout: kWeatherConnectTimeout,
-          receiveTimeout: kWeatherReceiveTimeout,
-        ),
-      ),
-    );
+  Dio(
+    BaseOptions(
+      connectTimeout: kWeatherConnectTimeout,
+      receiveTimeout: kWeatherReceiveTimeout,
+    ),
+  ),
+);

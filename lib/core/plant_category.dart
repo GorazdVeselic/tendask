@@ -17,24 +17,23 @@ const kPlantCategories = [
 /// Folds a seed category onto its coarse filter bucket (e.g. shrub → ornamental);
 /// categories that are already coarse map to themselves.
 String coarsePlantCategory(String category) => switch (category) {
-      'perennial' ||
-      'shrub' ||
-      'climber' ||
-      'bulb' ||
-      'conifer' ||
-      'hedge' =>
-        'ornamental',
-      _ => category,
-    };
+  'perennial' ||
+  'shrub' ||
+  'climber' ||
+  'bulb' ||
+  'conifer' ||
+  'hedge' => 'ornamental',
+  _ => category,
+};
 
 String plantCategoryLabel(String coarse, Translations t) => switch (coarse) {
-      'all' => t.plants.cat_all,
-      'vegetable' => t.plants.cat_vegetable,
-      'herbs' => t.plants.cat_herbs,
-      'fruit_tree' => t.plants.cat_fruit_tree,
-      'berries' => t.plants.cat_berries,
-      'ornamental' => t.plants.cat_ornamental,
-      'houseplant' => t.plants.cat_houseplant,
-      'lawn' => t.plants.cat_lawn,
-      _ => coarse,
-    };
+  'all' => t.plants.cat_all,
+  'vegetable' => t.plants.cat_vegetable,
+  'herbs' => t.plants.cat_herbs,
+  'fruit_tree' => t.plants.cat_fruit_tree,
+  'berries' => t.plants.cat_berries,
+  'ornamental' => t.plants.cat_ornamental,
+  'houseplant' => t.plants.cat_houseplant,
+  'lawn' => t.plants.cat_lawn,
+  _ => coarse,
+};

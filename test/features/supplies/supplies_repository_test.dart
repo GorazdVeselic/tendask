@@ -32,20 +32,29 @@ void main() {
     supplies = SuppliesRepository(db, clock: clock);
     tasks = TasksRepository(db, supplies, clock: clock);
 
-    await db.into(db.areas).insert(AreasCompanion.insert(
-          id: areaId,
-          userId: userId,
-          name: 'Vrt',
-          type: const Value(AreaType.bed),
-          updatedAt: t0,
-        ));
+    await db
+        .into(db.areas)
+        .insert(
+          AreasCompanion.insert(
+            id: areaId,
+            userId: userId,
+            name: 'Vrt',
+            type: const Value(AreaType.bed),
+            updatedAt: t0,
+          ),
+        );
     ureaId = await supplies.create(
-        userId: userId, name: 'Urea', unit: 'kg', quantity: 5);
+      userId: userId,
+      name: 'Urea',
+      unit: 'kg',
+      quantity: 5,
+    );
     taskId = await tasks.create(
-        userId: userId,
-        taskTypeId: 'mow',
-        date: t0,
-        subjects: const [TaskSubjectSpec.area(areaId)]);
+      userId: userId,
+      taskTypeId: 'mow',
+      date: t0,
+      subjects: const [TaskSubjectSpec.area(areaId)],
+    );
   });
 
   tearDown(() async => db.close());
@@ -61,9 +70,10 @@ void main() {
 
   test('syncForTask isDone=false records but does not deduct', () async {
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: false);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: false,
+    );
     expect(await qty(ureaId), 5);
     final rows = await supplies.suppliesForTask(taskId);
     expect(rows.single.applied, false);
@@ -71,18 +81,20 @@ void main() {
 
   test('syncForTask isDone=true deducts and marks applied', () async {
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: true);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: true,
+    );
     expect(await qty(ureaId), 3);
     expect((await supplies.suppliesForTask(taskId)).single.applied, true);
   });
 
   test('applyForTask is idempotent (no double deduction)', () async {
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: false);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: false,
+    );
     await supplies.applyForTask(taskId);
     await supplies.applyForTask(taskId);
     expect(await qty(ureaId), 3);
@@ -90,9 +102,10 @@ void main() {
 
   test('complete deducts, revertToWaiting returns stock', () async {
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: false);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: false,
+    );
     expect(await qty(ureaId), 5);
 
     await tasks.complete(taskId);
@@ -104,9 +117,10 @@ void main() {
 
   test('softDelete returns booked stock', () async {
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: true);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: true,
+    );
     expect(await qty(ureaId), 3);
 
     await tasks.softDelete(taskId);
@@ -115,19 +129,25 @@ void main() {
 
   test('diff on a done task returns old and deducts new', () async {
     final npkId = await supplies.create(
-        userId: userId, name: 'NPK', unit: 'kg', quantity: 10);
+      userId: userId,
+      name: 'NPK',
+      unit: 'kg',
+      quantity: 10,
+    );
 
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: ureaId, amount: 2)],
-        isDone: true);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: true,
+    );
     expect(await qty(ureaId), 3);
 
     // Replace urea with NPK while the task stays done.
     await supplies.syncForTask(
-        taskId: taskId,
-        specs: [SupplySpec(supplyId: npkId, amount: 1)],
-        isDone: true);
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: npkId, amount: 1)],
+      isDone: true,
+    );
     expect(await qty(ureaId), 5); // returned
     expect(await qty(npkId), 9); // deducted
   });

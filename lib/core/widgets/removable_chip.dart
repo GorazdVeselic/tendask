@@ -23,10 +23,13 @@ class RemovableChip extends StatelessWidget {
           child: Row(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(label,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.onPrimaryContainer,
-                      fontWeight: FontWeight.w600)),
+              Text(
+                label,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.onPrimaryContainer,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               const SizedBox(width: 4),
               Icon(Icons.close, size: 16, color: cs.onPrimaryContainer),
             ],

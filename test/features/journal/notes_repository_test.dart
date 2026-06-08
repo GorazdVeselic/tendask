@@ -30,13 +30,17 @@ void main() {
     clock = _FakeClock(t0);
     repo = NotesRepository(db, clock: clock);
 
-    await db.into(db.areas).insert(AreasCompanion.insert(
-          id: areaId,
-          userId: userId,
-          name: 'Vrt',
-          type: const Value(AreaType.bed),
-          updatedAt: t0,
-        ));
+    await db
+        .into(db.areas)
+        .insert(
+          AreasCompanion.insert(
+            id: areaId,
+            userId: userId,
+            name: 'Vrt',
+            type: const Value(AreaType.bed),
+            updatedAt: t0,
+          ),
+        );
   });
 
   tearDown(() async => db.close());
@@ -63,8 +67,7 @@ void main() {
 
     test('normalizes a local date to UTC', () async {
       final local = DateTime(2026, 6, 2, 10);
-      final id = await repo.create(
-          userId: userId, date: local, content: 'x');
+      final id = await repo.create(userId: userId, date: local, content: 'x');
 
       final note = await repo.byId(id);
       expect(note!.date.toUtc(), local.toUtc());
@@ -81,11 +84,11 @@ void main() {
     test('returns non-deleted notes, newest first', () async {
       await repo.create(userId: userId, date: t0, content: 'older');
       final newer = await repo.create(
-          userId: userId,
-          date: t0.add(const Duration(days: 1)),
-          content: 'newer');
-      final gone =
-          await repo.create(userId: userId, date: t0, content: 'gone');
+        userId: userId,
+        date: t0.add(const Duration(days: 1)),
+        content: 'newer',
+      );
+      final gone = await repo.create(userId: userId, date: t0, content: 'gone');
       await repo.softDelete(gone);
 
       final notes = await repo.watchAll().first;

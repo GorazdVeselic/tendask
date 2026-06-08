@@ -17,7 +17,7 @@ final suppliesListProvider = StreamProvider.autoDispose<List<Supply>>((ref) {
   return ref.watch(suppliesRepositoryProvider).watchAll();
 });
 
-final taskSuppliesProvider =
-    StreamProvider.autoDispose.family<List<TaskSupply>, String>((ref, taskId) {
-  return ref.watch(suppliesRepositoryProvider).watchByTask(taskId);
-});
+final taskSuppliesProvider = StreamProvider.autoDispose
+    .family<List<TaskSupply>, String>((ref, taskId) {
+      return ref.watch(suppliesRepositoryProvider).watchByTask(taskId);
+    });

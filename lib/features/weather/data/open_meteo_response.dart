@@ -42,9 +42,12 @@ abstract class OpenMeteoCurrent with _$OpenMeteoCurrent {
 abstract class OpenMeteoHourly with _$OpenMeteoHourly {
   const factory OpenMeteoHourly({
     @Default(<String>[]) List<String> time,
-    @JsonKey(name: 'precipitation') @Default(<double?>[]) List<double?> precipitation,
+    @JsonKey(name: 'precipitation')
+    @Default(<double?>[])
+    List<double?> precipitation,
     @JsonKey(name: 'soil_temperature_6cm')
-    @Default(<double?>[]) List<double?> soilTemperature6cm,
+    @Default(<double?>[])
+    List<double?> soilTemperature6cm,
   }) = _OpenMeteoHourly;
 
   factory OpenMeteoHourly.fromJson(Map<String, dynamic> json) =>
@@ -59,13 +62,17 @@ abstract class OpenMeteoDaily with _$OpenMeteoDaily {
     @Default(<String>[]) List<String> time,
     @JsonKey(name: 'weather_code') @Default(<int?>[]) List<int?> weatherCode,
     @JsonKey(name: 'temperature_2m_max')
-    @Default(<double?>[]) List<double?> temperature2mMax,
+    @Default(<double?>[])
+    List<double?> temperature2mMax,
     @JsonKey(name: 'temperature_2m_min')
-    @Default(<double?>[]) List<double?> temperature2mMin,
+    @Default(<double?>[])
+    List<double?> temperature2mMin,
     @JsonKey(name: 'precipitation_sum')
-    @Default(<double?>[]) List<double?> precipitationSum,
+    @Default(<double?>[])
+    List<double?> precipitationSum,
     @JsonKey(name: 'et0_fao_evapotranspiration')
-    @Default(<double?>[]) List<double?> et0FaoEvapotranspiration,
+    @Default(<double?>[])
+    List<double?> et0FaoEvapotranspiration,
   }) = _OpenMeteoDaily;
 
   factory OpenMeteoDaily.fromJson(Map<String, dynamic> json) =>

@@ -17,14 +17,18 @@ void main() {
         child: ProviderScope(
           overrides: [
             areasListProvider.overrideWith((ref) => Stream.value(<Area>[])),
-            latestTaskPerAreaProvider
-                .overrideWith((ref) => Stream.value(<String, Task>{})),
-            taskTypesMapProvider
-                .overrideWith((ref) => Stream.value(<String, TaskType>{})),
-            userPlantsMapProvider
-                .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-            plantsMapProvider
-                .overrideWith((ref) => Stream.value(<String, Plant>{})),
+            latestTaskPerAreaProvider.overrideWith(
+              (ref) => Stream.value(<String, Task>{}),
+            ),
+            taskTypesMapProvider.overrideWith(
+              (ref) => Stream.value(<String, TaskType>{}),
+            ),
+            userPlantsMapProvider.overrideWith(
+              (ref) => Stream.value(<String, UserPlant>{}),
+            ),
+            plantsMapProvider.overrideWith(
+              (ref) => Stream.value(<String, Plant>{}),
+            ),
           ],
           child: const MaterialApp(home: AreasScreen()),
         ),

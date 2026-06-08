@@ -41,26 +41,23 @@ class NotificationSettings {
     int? defaultReminderOffset,
     bool? quietHoursEnabled,
     bool? frequencyCapEnabled,
-  }) =>
-      NotificationSettings(
-        taskRemindersEnabled: taskRemindersEnabled ?? this.taskRemindersEnabled,
-        weatherHintsEnabled: weatherHintsEnabled ?? this.weatherHintsEnabled,
-        communityHintsEnabled:
-            communityHintsEnabled ?? this.communityHintsEnabled,
-        defaultReminderOffset:
-            defaultReminderOffset ?? this.defaultReminderOffset,
-        quietHoursEnabled: quietHoursEnabled ?? this.quietHoursEnabled,
-        frequencyCapEnabled: frequencyCapEnabled ?? this.frequencyCapEnabled,
-      );
+  }) => NotificationSettings(
+    taskRemindersEnabled: taskRemindersEnabled ?? this.taskRemindersEnabled,
+    weatherHintsEnabled: weatherHintsEnabled ?? this.weatherHintsEnabled,
+    communityHintsEnabled: communityHintsEnabled ?? this.communityHintsEnabled,
+    defaultReminderOffset: defaultReminderOffset ?? this.defaultReminderOffset,
+    quietHoursEnabled: quietHoursEnabled ?? this.quietHoursEnabled,
+    frequencyCapEnabled: frequencyCapEnabled ?? this.frequencyCapEnabled,
+  );
 
   Map<String, dynamic> toJson() => {
-        'task_reminders': taskRemindersEnabled,
-        'weather_hints': weatherHintsEnabled,
-        'community_hints': communityHintsEnabled,
-        'default_offset': defaultReminderOffset,
-        'quiet_hours': quietHoursEnabled,
-        'frequency_cap': frequencyCapEnabled,
-      };
+    'task_reminders': taskRemindersEnabled,
+    'weather_hints': weatherHintsEnabled,
+    'community_hints': communityHintsEnabled,
+    'default_offset': defaultReminderOffset,
+    'quiet_hours': quietHoursEnabled,
+    'frequency_cap': frequencyCapEnabled,
+  };
 
   /// Tolerant: unknown fields ignored, missing fields fall back to defaults.
   factory NotificationSettings.fromJson(Map<String, dynamic> j) =>

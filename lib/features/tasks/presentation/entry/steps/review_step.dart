@@ -62,9 +62,15 @@ class ReviewStepBody extends ConsumerWidget {
     final subjectText = subjects.isEmpty
         ? t.entry.review_none
         : subjects
-            .map((s) => specLabel(s,
-                areas: areas, userPlants: userPlants, plants: plants))
-            .join(' · ');
+              .map(
+                (s) => specLabel(
+                  s,
+                  areas: areas,
+                  userPlants: userPlants,
+                  plants: plants,
+                ),
+              )
+              .join(' · ');
 
     final statusLabel = status == TaskStatus.waiting
         ? t.entry.when_status_waiting
@@ -126,9 +132,12 @@ class ReviewStepBody extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 16),
-        Text('${t.entry.note_label} ${t.entry.optional}',
-            style: theme.textTheme.labelMedium
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+        Text(
+          '${t.entry.note_label} ${t.entry.optional}',
+          style: theme.textTheme.labelMedium?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
+        ),
         const SizedBox(height: 8),
         TextField(
           controller: noteController,
@@ -144,8 +153,9 @@ class ReviewStepBody extends ConsumerWidget {
         Text(
           t.entry.weather_note,
           textAlign: TextAlign.center,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       ],
     );
@@ -178,7 +188,9 @@ class _ReviewRow extends StatelessWidget {
             ? null
             : BoxDecoration(
                 border: Border(
-                    bottom: BorderSide(color: theme.colorScheme.outlineVariant))),
+                  bottom: BorderSide(color: theme.colorScheme.outlineVariant),
+                ),
+              ),
         padding: const EdgeInsets.symmetric(vertical: 13),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,8 +200,9 @@ class _ReviewRow extends StatelessWidget {
               child: Text(
                 label.toUpperCase(),
                 style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    letterSpacing: 0.4),
+                  color: theme.colorScheme.onSurfaceVariant,
+                  letterSpacing: 0.4,
+                ),
               ),
             ),
             Expanded(
@@ -198,9 +211,12 @@ class _ReviewRow extends StatelessWidget {
                 children: [
                   Text(value, style: theme.textTheme.bodyMedium),
                   if (sub != null)
-                    Text(sub!,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                            color: theme.colorScheme.onSurfaceVariant)),
+                    Text(
+                      sub!,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -208,8 +224,9 @@ class _ReviewRow extends StatelessWidget {
             Text(
               '${t.entry.review_fix} ›',
               style: theme.textTheme.labelMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600),
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
             ),
           ],
         ),

@@ -15,7 +15,8 @@ Future<String?> showSupplyEditSheet(BuildContext context, {String? supplyId}) {
     isScrollControlled: true,
     builder: (_) => Padding(
       padding: EdgeInsets.only(
-          bottom: MediaQuery.of(context).viewInsets.bottom),
+        bottom: MediaQuery.of(context).viewInsets.bottom,
+      ),
       child: _SupplyEditSheet(supplyId: supplyId),
     ),
   );
@@ -92,19 +93,21 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
     final String id;
     if (_isEdit) {
       await repo.update(
-          id: widget.supplyId!,
-          name: name,
-          unit: unit,
-          quantity: quantity,
-          lowThreshold: threshold);
+        id: widget.supplyId!,
+        name: name,
+        unit: unit,
+        quantity: quantity,
+        lowThreshold: threshold,
+      );
       id = widget.supplyId!;
     } else {
       id = await repo.create(
-          userId: ref.read(authServiceProvider).userId,
-          name: name,
-          unit: unit,
-          quantity: quantity,
-          lowThreshold: threshold);
+        userId: ref.read(authServiceProvider).userId,
+        name: name,
+        unit: unit,
+        quantity: quantity,
+        lowThreshold: threshold,
+      );
     }
     if (mounted) Navigator.of(context).pop(id);
   }
@@ -154,10 +157,12 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
                         child: TextField(
                           controller: _quantity,
                           keyboardType: const TextInputType.numberWithOptions(
-                              decimal: true),
+                            decimal: true,
+                          ),
                           inputFormatters: [
                             FilteringTextInputFormatter.allow(
-                                RegExp(r'[0-9.,]')),
+                              RegExp(r'[0-9.,]'),
+                            ),
                           ],
                           decoration: InputDecoration(
                             labelText: t.supplies.form_quantity,
@@ -182,8 +187,9 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
                   const SizedBox(height: 12),
                   TextField(
                     controller: _threshold,
-                    keyboardType:
-                        const TextInputType.numberWithOptions(decimal: true),
+                    keyboardType: const TextInputType.numberWithOptions(
+                      decimal: true,
+                    ),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp(r'[0-9.,]')),
                     ],
@@ -203,7 +209,8 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
                               width: 20,
                               height: 20,
                               child: CircularProgressIndicator.adaptive(
-                                  strokeWidth: 2),
+                                strokeWidth: 2,
+                              ),
                             )
                           : Text(t.supplies.form_save),
                     ),

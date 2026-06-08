@@ -15,16 +15,17 @@ class LocalPrefsRepository {
   final AppDatabase _db;
 
   Future<bool> _getFlag(String key) async {
-    final row = await (_db.select(_db.localFlags)
-          ..where((f) => f.key.equals(key)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.localFlags,
+    )..where((f) => f.key.equals(key))).getSingleOrNull();
     return row?.value == 'true';
   }
 
-  Future<void> _setFlag(String key, bool value) =>
-      _db.into(_db.localFlags).insertOnConflictUpdate(
-            LocalFlagsCompanion.insert(key: key, value: '$value'),
-          );
+  Future<void> _setFlag(String key, bool value) => _db
+      .into(_db.localFlags)
+      .insertOnConflictUpdate(
+        LocalFlagsCompanion.insert(key: key, value: '$value'),
+      );
 
   /// Whether the user has already passed the onboarding intro (M7.2).
   Future<bool> onboardingSeen() => _getFlag(_kOnboardingSeen);

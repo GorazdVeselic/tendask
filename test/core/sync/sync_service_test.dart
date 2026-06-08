@@ -20,21 +20,23 @@ void main() {
       expect(calls, ['session', 'push', 'pull', 'catalog']);
     });
 
-    test('without a session, push/pull are skipped but catalog still runs',
-        () async {
-      final calls = <String>[];
-      final svc = SyncService(
-        hasSession: () => false,
-        ensureSession: () async => calls.add('session'),
-        push: () async => calls.add('push'),
-        pull: () async => calls.add('pull'),
-        catalog: () async => calls.add('catalog'),
-      );
+    test(
+      'without a session, push/pull are skipped but catalog still runs',
+      () async {
+        final calls = <String>[];
+        final svc = SyncService(
+          hasSession: () => false,
+          ensureSession: () async => calls.add('session'),
+          push: () async => calls.add('push'),
+          pull: () async => calls.add('pull'),
+          catalog: () async => calls.add('catalog'),
+        );
 
-      await svc.sync(includeCatalog: true);
+        await svc.sync(includeCatalog: true);
 
-      expect(calls, ['session', 'catalog']);
-    });
+        expect(calls, ['session', 'catalog']);
+      },
+    );
 
     test('catalog runs only when includeCatalog is set', () async {
       var catalogs = 0;

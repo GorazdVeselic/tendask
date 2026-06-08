@@ -77,84 +77,100 @@ void main() {
     bool protected = true,
     bool deleted = false,
     String sync = kSyncPending,
-  }) =>
-      db.into(db.areas).insertOnConflictUpdate(AreasCompanion.insert(
-            id: id,
-            userId: uid,
-            name: name,
-            updatedAt: at,
-            type: Value(type),
-            protected: Value(protected),
-            deleted: Value(deleted),
-            syncStatus: Value(sync),
-          ));
+  }) => db
+      .into(db.areas)
+      .insertOnConflictUpdate(
+        AreasCompanion.insert(
+          id: id,
+          userId: uid,
+          name: name,
+          updatedAt: at,
+          type: Value(type),
+          protected: Value(protected),
+          deleted: Value(deleted),
+          syncStatus: Value(sync),
+        ),
+      );
 
   Future<Area?> area(AppDatabase db, String id) =>
       (db.select(db.areas)..where((a) => a.id.equals(id))).getSingleOrNull();
   Future<Task?> task(AppDatabase db, String id) =>
       (db.select(db.tasks)..where((t) => t.id.equals(id))).getSingleOrNull();
 
-  test('an area pushed by one device pulls into another, fields intact',
-      () async {
-    await putArea(dbA, 'a1', name: 'Sadovnjak', at: t1, type: AreaType.tree);
+  test(
+    'an area pushed by one device pulls into another, fields intact',
+    () async {
+      await putArea(dbA, 'a1', name: 'Sadovnjak', at: t1, type: AreaType.tree);
 
-    await pushA.push();
-    final pulled = await pullB.pull();
+      await pushA.push();
+      final pulled = await pullB.pull();
 
-    expect(pulled, 1);
-    final b = await area(dbB, 'a1');
-    expect(b, isNotNull);
-    expect(b!.name, 'Sadovnjak');
-    expect(b.type, AreaType.tree); // enum round-tripped via name
-    expect(b.protected, isTrue);
-    expect(b.syncStatus, kSyncSynced);
-    // The source device's row is flipped to synced by the push.
-    expect((await area(dbA, 'a1'))!.syncStatus, kSyncSynced);
-  });
+      expect(pulled, 1);
+      final b = await area(dbB, 'a1');
+      expect(b, isNotNull);
+      expect(b!.name, 'Sadovnjak');
+      expect(b.type, AreaType.tree); // enum round-tripped via name
+      expect(b.protected, isTrue);
+      expect(b.syncStatus, kSyncSynced);
+      // The source device's row is flipped to synced by the push.
+      expect((await area(dbA, 'a1'))!.syncStatus, kSyncSynced);
+    },
+  );
 
-  test('owned tables round-trip together: task enum status + jsonb weather',
-      () async {
-    await putArea(dbA, 'a1', name: 'Greda', at: t1);
-    await dbA.into(dbA.tasks).insert(TasksCompanion.insert(
-          id: 't1',
-          userId: uid,
-          taskTypeId: 'water',
-          date: t1,
-          updatedAt: t1,
-          status: const Value(TaskStatus.done),
-          weather: const Value('{"temp":18.5,"wind":3}'),
-          syncStatus: const Value(kSyncPending),
-        ));
+  test(
+    'owned tables round-trip together: task enum status + jsonb weather',
+    () async {
+      await putArea(dbA, 'a1', name: 'Greda', at: t1);
+      await dbA
+          .into(dbA.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: 't1',
+              userId: uid,
+              taskTypeId: 'water',
+              date: t1,
+              updatedAt: t1,
+              status: const Value(TaskStatus.done),
+              weather: const Value('{"temp":18.5,"wind":3}'),
+              syncStatus: const Value(kSyncPending),
+            ),
+          );
 
-    await pushA.push();
-    await pullB.pull();
+      await pushA.push();
+      await pullB.pull();
 
-    final t = await task(dbB, 't1');
-    expect(t, isNotNull);
-    expect(t!.status, TaskStatus.done); // textEnum round-tripped via name
-    expect(jsonDecode(t.weather!), {'temp': 18.5, 'wind': 3}); // jsonb round-tripped
-    expect(t.syncStatus, kSyncSynced);
-    // The area (a separate owned table) pulled in the same cycle.
-    expect(await area(dbB, 'a1'), isNotNull);
-  });
+      final t = await task(dbB, 't1');
+      expect(t, isNotNull);
+      expect(t!.status, TaskStatus.done); // textEnum round-tripped via name
+      expect(jsonDecode(t.weather!), {
+        'temp': 18.5,
+        'wind': 3,
+      }); // jsonb round-tripped
+      expect(t.syncStatus, kSyncSynced);
+      // The area (a separate owned table) pulled in the same cycle.
+      expect(await area(dbB, 'a1'), isNotNull);
+    },
+  );
 
-  test('LWW across two devices: a newer remote edit overwrites the older local',
-      () async {
-    await putArea(dbA, 'a1', name: 'Orig', at: t1);
-    await pushA.push();
-    await pullB.pull(); // B now has a1@t1, synced
+  test(
+    'LWW across two devices: a newer remote edit overwrites the older local',
+    () async {
+      await putArea(dbA, 'a1', name: 'Orig', at: t1);
+      await pushA.push();
+      await pullB.pull(); // B now has a1@t1, synced
 
-    // B edits and pushes a newer version.
-    await putArea(dbB, 'a1', name: 'Edited', at: t2);
-    await pushB.push();
+      // B edits and pushes a newer version.
+      await putArea(dbB, 'a1', name: 'Edited', at: t2);
+      await pushB.push();
 
-    // A still holds the older synced a1; pulling resolves LWW in B's favour.
-    final n = await pullA.pull();
-    expect(n, 1);
-    final a = await area(dbA, 'a1');
-    expect(a!.name, 'Edited');
-    expect(a.syncStatus, kSyncSynced);
-  });
+      // A still holds the older synced a1; pulling resolves LWW in B's favour.
+      final n = await pullA.pull();
+      expect(n, 1);
+      final a = await area(dbA, 'a1');
+      expect(a!.name, 'Edited');
+      expect(a.syncStatus, kSyncSynced);
+    },
+  );
 
   test('a soft delete propagates as a tombstone to the other device', () async {
     await putArea(dbA, 'a1', name: 'Doomed', at: t1);

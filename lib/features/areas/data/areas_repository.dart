@@ -13,15 +13,15 @@ class AreasRepository {
   final Clock _clock;
   final _uuid = const Uuid();
 
-  Stream<List<Area>> watchAll() => (
-        _db.select(_db.areas)
-          ..where((a) => a.deleted.equals(false))
-          ..orderBy([(a) => OrderingTerm.asc(a.name)])
-      ).watch();
+  Stream<List<Area>> watchAll() =>
+      (_db.select(_db.areas)
+            ..where((a) => a.deleted.equals(false))
+            ..orderBy([(a) => OrderingTerm.asc(a.name)]))
+          .watch();
 
-  Stream<Area?> watchById(String id) =>
-      (_db.select(_db.areas)..where((a) => a.id.equals(id)))
-          .watchSingleOrNull();
+  Stream<Area?> watchById(String id) => (_db.select(
+    _db.areas,
+  )..where((a) => a.id.equals(id))).watchSingleOrNull();
 
   Future<Area?> byId(String id) =>
       (_db.select(_db.areas)..where((a) => a.id.equals(id))).getSingleOrNull();
@@ -32,13 +32,17 @@ class AreasRepository {
     required AreaType type,
   }) async {
     final id = _uuid.v4();
-    await _db.into(_db.areas).insert(AreasCompanion.insert(
-          id: id,
-          userId: userId,
-          name: name,
-          type: Value(type),
-          updatedAt: _clock.now(),
-        ));
+    await _db
+        .into(_db.areas)
+        .insert(
+          AreasCompanion.insert(
+            id: id,
+            userId: userId,
+            name: name,
+            type: Value(type),
+            updatedAt: _clock.now(),
+          ),
+        );
     return id;
   }
 
@@ -62,12 +66,15 @@ class AreasRepository {
       // Re-parent this area's plants to "no area" so they resurface under
       // "Brez območja" instead of pointing at a deleted area (which would hide
       // them from the garden entirely). Atomic with the area tombstone.
-      await (_db.update(_db.userPlants)..where((p) => p.areaId.equals(id)))
-          .write(UserPlantsCompanion(
-        areaId: const Value(null),
-        updatedAt: Value(_clock.now()),
-        syncStatus: const Value(kSyncPending),
-      ));
+      await (_db.update(
+        _db.userPlants,
+      )..where((p) => p.areaId.equals(id))).write(
+        UserPlantsCompanion(
+          areaId: const Value(null),
+          updatedAt: Value(_clock.now()),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
       await (_db.update(_db.areas)..where((a) => a.id.equals(id))).write(
         AreasCompanion(
           deleted: const Value(true),

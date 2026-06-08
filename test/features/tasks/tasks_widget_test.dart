@@ -30,26 +30,30 @@ final _past = DateTime.utc(2026, 1, 1, 8);
 /// A single type keeps the grid small so area chips stay in the test viewport.
 Future<AppDatabase> _buildDb() async {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
-  await db.into(db.taskTypes).insert(
-    TaskTypesCompanion.insert(
-      id: 'mow',
-      labels: jsonEncode({'sl': 'Košnja', 'en': 'Mowing', 'de': 'Mähen'}),
-      icon: '🌱',
-      category: 'lawn_care',
-      requiresSubject: const Value(false),
-      weatherSensitive: const Value(true),
-      defaultCadence: const Value(null),
-    ),
-  );
-  await db.into(db.areas).insert(
-    AreasCompanion.insert(
-      id: _areaId,
-      userId: 'local',
-      name: 'Moj vrt',
-      type: const Value(AreaType.bed),
-      updatedAt: _past,
-    ),
-  );
+  await db
+      .into(db.taskTypes)
+      .insert(
+        TaskTypesCompanion.insert(
+          id: 'mow',
+          labels: jsonEncode({'sl': 'Košnja', 'en': 'Mowing', 'de': 'Mähen'}),
+          icon: '🌱',
+          category: 'lawn_care',
+          requiresSubject: const Value(false),
+          weatherSensitive: const Value(true),
+          defaultCadence: const Value(null),
+        ),
+      );
+  await db
+      .into(db.areas)
+      .insert(
+        AreasCompanion.insert(
+          id: _areaId,
+          userId: 'local',
+          name: 'Moj vrt',
+          type: const Value(AreaType.bed),
+          updatedAt: _past,
+        ),
+      );
   return db;
 }
 
@@ -61,8 +65,9 @@ void main() {
   // ── 1: QuickLogScreen saves task ────────────────────────────────────────────
 
   group('EntryScreen', () {
-    testWidgets('type + subject + continue + save creates task in DB',
-        (tester) async {
+    testWidgets('type + subject + continue + save creates task in DB', (
+      tester,
+    ) async {
       // Taller viewport so area chips are not obscured by the fixed save bar.
       tester.view.physicalSize = const Size(800, 1200);
       tester.view.devicePixelRatio = 1.0;
@@ -79,10 +84,10 @@ void main() {
       // flutter test scheduler never sees drift's NativeDatabase isolate traffic,
       // which would prevent pumpAndSettle from settling.
       final taskTypeMap = {
-        for (final t in await db.select(db.taskTypes).get()) t.id: t
+        for (final t in await db.select(db.taskTypes).get()) t.id: t,
       };
       final areasMap = {
-        for (final a in await db.select(db.areas).get()) a.id: a
+        for (final a in await db.select(db.areas).get()) a.id: a,
       };
 
       final router = GoRouter(
@@ -91,10 +96,7 @@ void main() {
             path: '/',
             builder: (_, _) => const Scaffold(body: Text('home')),
           ),
-          GoRoute(
-            path: '/entry',
-            builder: (_, _) => const EntryScreen(),
-          ),
+          GoRoute(path: '/entry', builder: (_, _) => const EntryScreen()),
           GoRoute(
             path: '/note-new',
             name: 'note-new',
@@ -108,16 +110,20 @@ void main() {
           child: ProviderScope(
             overrides: [
               tasksRepositoryProvider.overrideWith((ref) => repo),
-              taskTypesMapProvider
-                  .overrideWith((ref) => Stream.value(taskTypeMap)),
+              taskTypesMapProvider.overrideWith(
+                (ref) => Stream.value(taskTypeMap),
+              ),
               areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
-              userPlantsMapProvider
-                  .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-              plantsMapProvider
-                  .overrideWith((ref) => Stream.value(<String, Plant>{})),
+              userPlantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, UserPlant>{}),
+              ),
+              plantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, Plant>{}),
+              ),
               plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
-              suppliesListProvider
-                  .overrideWith((ref) => Stream.value(<Supply>[])),
+              suppliesListProvider.overrideWith(
+                (ref) => Stream.value(<Supply>[]),
+              ),
             ],
             child: MaterialApp.router(routerConfig: router),
           ),
@@ -184,10 +190,10 @@ void main() {
 
       // Query once for static provider overrides.
       final taskTypeMap = {
-        for (final t in await db.select(db.taskTypes).get()) t.id: t
+        for (final t in await db.select(db.taskTypes).get()) t.id: t,
       };
       final areasMap = {
-        for (final a in await db.select(db.areas).get()) a.id: a
+        for (final a in await db.select(db.areas).get()) a.id: a,
       };
       final pendingTask = await repo.byId(taskId);
 
@@ -219,8 +225,9 @@ void main() {
           child: ProviderScope(
             overrides: [
               tasksRepositoryProvider.overrideWith((ref) => repo),
-              taskTypesMapProvider
-                  .overrideWith((ref) => Stream.value(taskTypeMap)),
+              taskTypesMapProvider.overrideWith(
+                (ref) => Stream.value(taskTypeMap),
+              ),
               areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
               pendingTasksProvider.overrideWith(
                 (ref) => Stream.value([pendingTask!]),

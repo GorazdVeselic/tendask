@@ -11,16 +11,18 @@ void main() {
   final t0 = DateTime.utc(2026, 6, 5, 10);
 
   test('areaToRemote: snake_case keys, enum.name, no sync_status', () {
-    final map = areaToRemote(Area(
-      id: 'a1',
-      userId: 'u1',
-      name: 'Bed',
-      type: AreaType.bed,
-      protected: true,
-      updatedAt: t0,
-      deleted: false,
-      syncStatus: kSyncPending,
-    ));
+    final map = areaToRemote(
+      Area(
+        id: 'a1',
+        userId: 'u1',
+        name: 'Bed',
+        type: AreaType.bed,
+        protected: true,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map, {
       'id': 'a1',
       'user_id': 'u1',
@@ -34,19 +36,21 @@ void main() {
   });
 
   test('taskToRemote: jsonb decoded, status.name, UTC timestamps', () {
-    final map = taskToRemote(Task(
-      id: 't1',
-      userId: 'u1',
-      taskTypeId: 'water',
-      date: t0,
-      status: TaskStatus.done,
-      note: 'hi',
-      weather: '{"tempC":5,"code":61}',
-      recurrence: null,
-      updatedAt: t0,
-      deleted: false,
-      syncStatus: kSyncSynced,
-    ));
+    final map = taskToRemote(
+      Task(
+        id: 't1',
+        userId: 'u1',
+        taskTypeId: 'water',
+        date: t0,
+        status: TaskStatus.done,
+        note: 'hi',
+        weather: '{"tempC":5,"code":61}',
+        recurrence: null,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncSynced,
+      ),
+    );
     expect(map['status'], 'done');
     expect(map['date'], '2026-06-05T10:00:00.000Z');
     // jsonb column stored as a JSON string locally → decoded object for Postgres.
@@ -58,29 +62,33 @@ void main() {
   test('taskToRemote: local DateTime is normalized to UTC', () {
     // A non-UTC instant must still serialize as the same absolute time in Z.
     final local = DateTime.utc(2026, 6, 5, 8).toLocal();
-    final map = taskToRemote(Task(
-      id: 't1',
-      userId: 'u1',
-      taskTypeId: 'water',
-      date: local,
-      status: TaskStatus.waiting,
-      updatedAt: local,
-      deleted: false,
-      syncStatus: kSyncPending,
-    ));
+    final map = taskToRemote(
+      Task(
+        id: 't1',
+        userId: 'u1',
+        taskTypeId: 'water',
+        date: local,
+        status: TaskStatus.waiting,
+        updatedAt: local,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map['date'], '2026-06-05T08:00:00.000Z');
   });
 
   test('profileToRemote: no deleted column, nullable cells pass through', () {
-    final map = profileToRemote(Profile(
-      userId: 'u1',
-      h3R7: 'abc',
-      h3R6: null,
-      h3R5: null,
-      lang: 'sl',
-      updatedAt: t0,
-      syncStatus: kSyncPending,
-    ));
+    final map = profileToRemote(
+      Profile(
+        userId: 'u1',
+        h3R7: 'abc',
+        h3R6: null,
+        h3R5: null,
+        lang: 'sl',
+        updatedAt: t0,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map, {
       'user_id': 'u1',
       'h3_r7': 'abc',
@@ -95,19 +103,23 @@ void main() {
 
   test('profile notification_settings: jsonb round-trips through text', () {
     const json = '{"task_reminders":false,"default_offset":60}';
-    final map = profileToRemote(Profile(
-      userId: 'u1',
-      h3R7: null,
-      h3R6: null,
-      h3R5: null,
-      lang: null,
-      notificationSettings: json,
-      updatedAt: t0,
-      syncStatus: kSyncPending,
-    ));
+    final map = profileToRemote(
+      Profile(
+        userId: 'u1',
+        h3R7: null,
+        h3R6: null,
+        h3R5: null,
+        lang: null,
+        notificationSettings: json,
+        updatedAt: t0,
+        syncStatus: kSyncPending,
+      ),
+    );
     // Local JSON text → decoded object for Postgres jsonb.
-    expect(map['notification_settings'],
-        {'task_reminders': false, 'default_offset': 60});
+    expect(map['notification_settings'], {
+      'task_reminders': false,
+      'default_offset': 60,
+    });
 
     // Postgres returns a Map → stored back as JSON text in drift.
     final c = profileFromRemote({
@@ -115,54 +127,62 @@ void main() {
       'notification_settings': {'task_reminders': false, 'default_offset': 60},
       'updated_at': '2026-06-05T10:00:00.000Z',
     });
-    expect(c.notificationSettings.value,
-        jsonEncode({'task_reminders': false, 'default_offset': 60}));
+    expect(
+      c.notificationSettings.value,
+      jsonEncode({'task_reminders': false, 'default_offset': 60}),
+    );
   });
 
   test('noteToRemote: content maps to the "text" column', () {
-    final map = noteToRemote(Note(
-      id: 'n1',
-      userId: 'u1',
-      areaId: null,
-      userPlantId: null,
-      date: t0,
-      content: 'first frost',
-      weather: null,
-      updatedAt: t0,
-      deleted: false,
-      syncStatus: kSyncPending,
-    ));
+    final map = noteToRemote(
+      Note(
+        id: 'n1',
+        userId: 'u1',
+        areaId: null,
+        userPlantId: null,
+        date: t0,
+        content: 'first frost',
+        weather: null,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map['text'], 'first frost');
     expect(map.containsKey('content'), isFalse);
   });
 
   test('taskReminderToRemote: offset key, nullable reminder_time', () {
-    final map = taskReminderToRemote(TaskReminder(
-      id: 'r1',
-      taskId: 't1',
-      offset: 120,
-      reminderTime: null,
-      updatedAt: t0,
-      deleted: false,
-      syncStatus: kSyncPending,
-    ));
+    final map = taskReminderToRemote(
+      TaskReminder(
+        id: 'r1',
+        taskId: 't1',
+        offset: 120,
+        reminderTime: null,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map['offset'], 120);
     expect(map['reminder_time'], isNull);
     expect(map['task_id'], 't1');
   });
 
   test('supplyToRemote: nullable low_threshold and double quantity', () {
-    final map = supplyToRemote(Supply(
-      id: 's1',
-      userId: 'u1',
-      name: 'Compost',
-      unit: 'kg',
-      quantity: 12.5,
-      lowThreshold: null,
-      updatedAt: t0,
-      deleted: false,
-      syncStatus: kSyncPending,
-    ));
+    final map = supplyToRemote(
+      Supply(
+        id: 's1',
+        userId: 'u1',
+        name: 'Compost',
+        unit: 'kg',
+        quantity: 12.5,
+        lowThreshold: null,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
     expect(map['quantity'], 12.5);
     expect(map['low_threshold'], isNull);
   });
@@ -267,7 +287,10 @@ void main() {
       'default_cadence': null,
     });
     expect(c.id.value, 'water');
-    expect(c.labels.value, jsonEncode({'sl': 'Zalivanje', 'en': 'Watering', 'de': 'Gießen'}));
+    expect(
+      c.labels.value,
+      jsonEncode({'sl': 'Zalivanje', 'en': 'Watering', 'de': 'Gießen'}),
+    );
     expect(c.requiresSubject.value, isTrue);
     expect(c.defaultCadence.value, isNull);
   });
@@ -286,8 +309,10 @@ void main() {
   });
 
   test('categoryTaskTypeFromRemote: category + task_type_id', () {
-    final c = categoryTaskTypeFromRemote(
-        {'category': 'vegetable', 'task_type_id': 'water'});
+    final c = categoryTaskTypeFromRemote({
+      'category': 'vegetable',
+      'task_type_id': 'water',
+    });
     expect(c.category.value, 'vegetable');
     expect(c.taskTypeId.value, 'water');
   });

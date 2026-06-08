@@ -30,7 +30,10 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
     super.initState();
     // Deep-link reminders tapped while the app is alive (M8.3); cold-start taps
     // are handled via the initial location resolved in main().
-    _tapSub = ref.read(notificationServiceProvider).taps.listen(
+    _tapSub = ref
+        .read(notificationServiceProvider)
+        .taps
+        .listen(
           (taskId) =>
               _router.goNamed('task-detail', pathParameters: {'id': taskId}),
         );

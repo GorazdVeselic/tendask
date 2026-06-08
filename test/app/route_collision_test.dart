@@ -10,32 +10,30 @@ import 'package:go_router/go_router.dart';
 /// Create routes therefore use a distinct prefix (`/area-new`, `/task-new`).
 void main() {
   GoRouter buildRouter(String createPath) => GoRouter(
-        initialLocation: '/areas',
-        routes: [
-          StatefulShellRoute.indexedStack(
-            builder: (_, _, shell) => shell,
-            branches: [
-              StatefulShellBranch(routes: [
-                GoRoute(
-                  path: '/areas',
-                  builder: (_, _) => const Text('LIST'),
-                  routes: [
-                    GoRoute(
-                      path: ':id',
-                      builder: (_, s) =>
-                          Text('DETAIL ${s.pathParameters['id']}'),
-                    ),
-                  ],
-                ),
-              ]),
+    initialLocation: '/areas',
+    routes: [
+      StatefulShellRoute.indexedStack(
+        builder: (_, _, shell) => shell,
+        branches: [
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/areas',
+                builder: (_, _) => const Text('LIST'),
+                routes: [
+                  GoRoute(
+                    path: ':id',
+                    builder: (_, s) => Text('DETAIL ${s.pathParameters['id']}'),
+                  ),
+                ],
+              ),
             ],
           ),
-          GoRoute(
-            path: createPath,
-            builder: (_, _) => const Text('NEW FORM'),
-          ),
         ],
-      );
+      ),
+      GoRoute(path: createPath, builder: (_, _) => const Text('NEW FORM')),
+    ],
+  );
 
   testWidgets('distinct-prefix create route resolves to the form', (
     tester,
@@ -51,16 +49,18 @@ void main() {
     expect(find.textContaining('DETAIL'), findsNothing);
   });
 
-  testWidgets('colliding /areas/new would resolve to detail (the bug we avoid)',
-      (tester) async {
-    final router = buildRouter('/areas/new');
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
-    await tester.pumpAndSettle();
+  testWidgets(
+    'colliding /areas/new would resolve to detail (the bug we avoid)',
+    (tester) async {
+      final router = buildRouter('/areas/new');
+      await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+      await tester.pumpAndSettle();
 
-    unawaited(router.push('/areas/new'));
-    await tester.pumpAndSettle();
+      unawaited(router.push('/areas/new'));
+      await tester.pumpAndSettle();
 
-    // Demonstrates the collision: ':id' captures "new" → detail, not the form.
-    expect(find.text('DETAIL new'), findsOneWidget);
-  });
+      // Demonstrates the collision: ':id' captures "new" → detail, not the form.
+      expect(find.text('DETAIL new'), findsOneWidget);
+    },
+  );
 }

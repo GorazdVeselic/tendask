@@ -20,19 +20,20 @@ class WeatherCacheRepository {
 
   /// The last persisted snapshot, or null when none/unparseable.
   Future<WeatherSnapshot?> load() async {
-    final row = await (_db.select(_db.localFlags)
-          ..where((f) => f.key.equals(_kWeatherSnapshot)))
-        .getSingleOrNull();
+    final row = await (_db.select(
+      _db.localFlags,
+    )..where((f) => f.key.equals(_kWeatherSnapshot))).getSingleOrNull();
     return decodeWeatherSnapshot(row?.value);
   }
 
-  Future<void> save(WeatherSnapshot snapshot) =>
-      _db.into(_db.localFlags).insertOnConflictUpdate(
-            LocalFlagsCompanion.insert(
-              key: _kWeatherSnapshot,
-              value: jsonEncode(snapshot.toJson()),
-            ),
-          );
+  Future<void> save(WeatherSnapshot snapshot) => _db
+      .into(_db.localFlags)
+      .insertOnConflictUpdate(
+        LocalFlagsCompanion.insert(
+          key: _kWeatherSnapshot,
+          value: jsonEncode(snapshot.toJson()),
+        ),
+      );
 }
 
 @riverpod

@@ -41,8 +41,7 @@ class SaveBar extends StatelessWidget {
                   ? const SizedBox(
                       width: 20,
                       height: 20,
-                      child:
-                          CircularProgressIndicator.adaptive(strokeWidth: 2),
+                      child: CircularProgressIndicator.adaptive(strokeWidth: 2),
                     )
                   : Text(label),
             ),

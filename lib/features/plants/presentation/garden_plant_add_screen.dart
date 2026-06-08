@@ -84,7 +84,9 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     String? customName,
     required String label,
   }) async {
-    final id = await ref.read(userPlantsRepositoryProvider).create(
+    final id = await ref
+        .read(userPlantsRepositoryProvider)
+        .create(
           userId: ref.read(authServiceProvider).userId,
           areaId: _targetAreaId,
           plantId: plantId,
@@ -168,11 +170,13 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     final results = plants == null
         ? const <Plant>[]
         : plants
-            .where((p) =>
-                _category == 'all' ||
-                coarsePlantCategory(p.category) == _category)
-            .where((p) => plantMatchesQuery(p, normQuery))
-            .toList();
+              .where(
+                (p) =>
+                    _category == 'all' ||
+                    coarsePlantCategory(p.category) == _category,
+              )
+              .where((p) => plantMatchesQuery(p, normQuery))
+              .toList();
     // Members = added this session, plus (in garden mode) every plant already
     // in the current target bucket — a real area OR "no area" (null) — so the
     // footer, counter, ✓ and remove cover the bucket's whole contents.
@@ -228,10 +232,11 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                                   children: [
                                     for (final c in kPlantCategories)
                                       Padding(
-                                        padding: const EdgeInsets.only(right: 8),
+                                        padding: const EdgeInsets.only(
+                                          right: 8,
+                                        ),
                                         child: ChoiceChip(
-                                          label:
-                                              Text(plantCategoryLabel(c, t)),
+                                          label: Text(plantCategoryLabel(c, t)),
                                           selected: c == _category,
                                           onSelected: (_) =>
                                               setState(() => _category = c),
@@ -240,7 +245,8 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                                   ],
                                 ),
                               ),
-                              if (_recentIds.isNotEmpty && normQuery.isEmpty) ...[
+                              if (_recentIds.isNotEmpty &&
+                                  normQuery.isEmpty) ...[
                                 SectionLabel(t.plants.frequent),
                                 Wrap(
                                   spacing: 8,
@@ -249,9 +255,12 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                                     for (final id in _recentIds)
                                       if (catalog[id] case final p?)
                                         FilterChip(
-                                          avatar: Text(p.icon ?? '🌿',
-                                              style:
-                                                  const TextStyle(fontSize: 16)),
+                                          avatar: Text(
+                                            p.icon ?? '🌿',
+                                            style: const TextStyle(
+                                              fontSize: 16,
+                                            ),
+                                          ),
                                           label: Text(catalogLabel(p.labels)),
                                           selected: selectedIds.contains(p.id),
                                           onSelected: (_) => _toggle(p),
@@ -263,12 +272,14 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                               Row(
                                 children: [
                                   Expanded(
-                                      child:
-                                          SectionLabel(t.plants.from_catalog)),
+                                    child: SectionLabel(t.plants.from_catalog),
+                                  ),
                                   IconButton(
-                                    icon: Icon(_searchExpanded
-                                        ? Icons.search_off
-                                        : Icons.search),
+                                    icon: Icon(
+                                      _searchExpanded
+                                          ? Icons.search_off
+                                          : Icons.search,
+                                    ),
                                     color: theme.colorScheme.primary,
                                     onPressed: _toggleSearch,
                                   ),
@@ -302,7 +313,9 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                             icon: results[i].icon ?? '🌿',
                             title: catalogLabel(results[i].labels),
                             subtitle: plantCategoryLabel(
-                                coarsePlantCategory(results[i].category), t),
+                              coarsePlantCategory(results[i].category),
+                              t,
+                            ),
                             selected: selectedIds.contains(results[i].id),
                             onTap: () => _toggle(results[i]),
                           ),
@@ -371,8 +384,10 @@ class _CustomEntry extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SectionLabel(t.plants.not_found,
-                padding: const EdgeInsets.only(bottom: 6)),
+            SectionLabel(
+              t.plants.not_found,
+              padding: const EdgeInsets.only(bottom: 6),
+            ),
             InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () => onAdd(query),
@@ -380,16 +395,18 @@ class _CustomEntry extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
                   t.plants.custom_add(q: query),
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               t.plants.custom_private,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -428,25 +445,34 @@ class _AreaBar extends StatelessWidget {
               padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
               child: Row(
                 children: [
-                  Icon(Icons.place_outlined,
-                      size: 18, color: cs.onSurfaceVariant),
+                  Icon(
+                    Icons.place_outlined,
+                    size: 18,
+                    color: cs.onSurfaceVariant,
+                  ),
                   const SizedBox(width: 8),
-                  Text(t.plants.add_to_label,
-                      style: theme.textTheme.bodySmall
-                          ?.copyWith(color: cs.onSurfaceVariant)),
+                  Text(
+                    t.plants.add_to_label,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: cs.onSurfaceVariant,
+                    ),
+                  ),
                   const SizedBox(width: 6),
                   Expanded(
                     child: Text(
                       name ?? t.area_pick.none,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                       overflow: TextOverflow.ellipsis,
                     ),
                   ),
                   Text(
                     t.plants.choose_area,
                     style: TextStyle(
-                        color: cs.primary, fontWeight: FontWeight.w600),
+                      color: cs.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ],
               ),
@@ -489,15 +515,21 @@ class _AddedBar extends StatelessWidget {
             Row(
               children: [
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 9, vertical: 3),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 9,
+                    vertical: 3,
+                  ),
                   decoration: BoxDecoration(
                     color: cs.primary,
                     borderRadius: BorderRadius.circular(999),
                   ),
-                  child: Text('${added.length}',
-                      style: theme.textTheme.labelMedium?.copyWith(
-                          color: cs.onPrimary, fontWeight: FontWeight.w700)),
+                  child: Text(
+                    '${added.length}',
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: cs.onPrimary,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
                 ),
                 const SizedBox(width: 8),
                 Expanded(
@@ -519,7 +551,10 @@ class _AddedBar extends StatelessWidget {
             const SizedBox(height: 8),
             SizedBox(
               width: double.infinity,
-              child: FilledButton(onPressed: onDone, child: Text(t.plants.done)),
+              child: FilledButton(
+                onPressed: onDone,
+                child: Text(t.plants.done),
+              ),
             ),
           ],
         ),
@@ -527,4 +562,3 @@ class _AddedBar extends StatelessWidget {
     );
   }
 }
-

@@ -75,20 +75,24 @@ WeatherSnapshot buildSnapshot(OpenMeteoResponse res, {required DateTime at}) {
       continue;
     }
     if (day.isAfter(today) && forecast.length < 3) {
-      forecast.add(WeatherDay(
-        date: parsed,
-        weatherCode: i < daily.weatherCode.length ? daily.weatherCode[i] : null,
-        tempMax: i < daily.temperature2mMax.length
-            ? daily.temperature2mMax[i]
-            : null,
-        tempMin: i < daily.temperature2mMin.length
-            ? daily.temperature2mMin[i]
-            : null,
-        precipitationSum: i < daily.precipitationSum.length
-            ? daily.precipitationSum[i]
-            : null,
-        et0: et0,
-      ));
+      forecast.add(
+        WeatherDay(
+          date: parsed,
+          weatherCode: i < daily.weatherCode.length
+              ? daily.weatherCode[i]
+              : null,
+          tempMax: i < daily.temperature2mMax.length
+              ? daily.temperature2mMax[i]
+              : null,
+          tempMin: i < daily.temperature2mMin.length
+              ? daily.temperature2mMin[i]
+              : null,
+          precipitationSum: i < daily.precipitationSum.length
+              ? daily.precipitationSum[i]
+              : null,
+          et0: et0,
+        ),
+      );
     }
   }
   return (forecast, todayEt0);

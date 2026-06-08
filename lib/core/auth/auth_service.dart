@@ -73,19 +73,23 @@ class AuthService {
       throw const AuthException('Google sign-in is not configured');
     }
     if (!_googleInitialized) {
-      await GoogleSignIn.instance
-          .initialize(serverClientId: kGoogleServerClientId);
+      await GoogleSignIn.instance.initialize(
+        serverClientId: kGoogleServerClientId,
+      );
       _googleInitialized = true;
     }
     try {
-      final account = await GoogleSignIn.instance
-          .authenticate(scopeHint: const ['email', 'profile']);
+      final account = await GoogleSignIn.instance.authenticate(
+        scopeHint: const ['email', 'profile'],
+      );
       final idToken = account.authentication.idToken;
       if (idToken == null) {
         throw const AuthException('Google sign-in returned no ID token');
       }
-      await client.auth
-          .signInWithIdToken(provider: OAuthProvider.google, idToken: idToken);
+      await client.auth.signInWithIdToken(
+        provider: OAuthProvider.google,
+        idToken: idToken,
+      );
       return true;
     } on GoogleSignInException catch (e) {
       // User dismissed the picker — a normal outcome, not an error to surface.

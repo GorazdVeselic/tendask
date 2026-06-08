@@ -109,8 +109,9 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               if (_step == _Step.email) ...[
                 Text(
                   t.email_login.intro,
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: cs.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -127,8 +128,9 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               ] else ...[
                 Text(
                   t.email_login.code_sent(email: _emailController.text.trim()),
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(color: cs.onSurfaceVariant),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: cs.onSurfaceVariant,
+                  ),
                 ),
                 const SizedBox(height: 20),
                 TextField(
@@ -165,9 +167,11 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                           height: 22,
                           child: CircularProgressIndicator(strokeWidth: 2.5),
                         )
-                      : Text(_step == _Step.email
-                          ? t.email_login.send_code
-                          : t.email_login.verify),
+                      : Text(
+                          _step == _Step.email
+                              ? t.email_login.send_code
+                              : t.email_login.verify,
+                        ),
                 ),
               ),
               if (_step == _Step.code) ...[

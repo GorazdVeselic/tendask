@@ -31,39 +31,62 @@ void main() {
 
   tearDown(() async => db.close());
 
-  test('softDelete re-parents the area plants to "no area" and tombstones it',
-      () async {
-    final areaId =
-        await areas.create(userId: userId, name: 'Sadovnjak', type: AreaType.tree);
-    final plantId =
-        await plants.create(userId: userId, areaId: areaId, plantId: 'apple');
-    // Mark the plant synced so we can prove softDelete flips it back to pending.
-    await (db.update(db.userPlants)..where((p) => p.id.equals(plantId)))
-        .write(const UserPlantsCompanion(syncStatus: Value(kSyncSynced)));
+  test(
+    'softDelete re-parents the area plants to "no area" and tombstones it',
+    () async {
+      final areaId = await areas.create(
+        userId: userId,
+        name: 'Sadovnjak',
+        type: AreaType.tree,
+      );
+      final plantId = await plants.create(
+        userId: userId,
+        areaId: areaId,
+        plantId: 'apple',
+      );
+      // Mark the plant synced so we can prove softDelete flips it back to pending.
+      await (db.update(db.userPlants)..where((p) => p.id.equals(plantId)))
+          .write(const UserPlantsCompanion(syncStatus: Value(kSyncSynced)));
 
-    await areas.softDelete(areaId);
+      await areas.softDelete(areaId);
 
-    final area = await areas.byId(areaId);
-    expect(area!.deleted, isTrue);
+      final area = await areas.byId(areaId);
+      expect(area!.deleted, isTrue);
 
-    final plant = await plants.byId(plantId);
-    expect(plant!.areaId, isNull, reason: 'plant must not point at a deleted area');
-    expect(plant.deleted, isFalse, reason: 'the plant itself is not deleted');
-    expect(plant.syncStatus, kSyncPending, reason: 're-parent must sync');
+      final plant = await plants.byId(plantId);
+      expect(
+        plant!.areaId,
+        isNull,
+        reason: 'plant must not point at a deleted area',
+      );
+      expect(plant.deleted, isFalse, reason: 'the plant itself is not deleted');
+      expect(plant.syncStatus, kSyncPending, reason: 're-parent must sync');
 
-    // The area drops out of the list; the plant resurfaces as unassigned.
-    expect(await areas.watchAll().first, isEmpty);
-    final unassigned = (await plants.watchAll().first)
-        .where((p) => p.areaId == null)
-        .toList();
-    expect(unassigned.map((p) => p.id), contains(plantId));
-  });
+      // The area drops out of the list; the plant resurfaces as unassigned.
+      expect(await areas.watchAll().first, isEmpty);
+      final unassigned = (await plants.watchAll().first)
+          .where((p) => p.areaId == null)
+          .toList();
+      expect(unassigned.map((p) => p.id), contains(plantId));
+    },
+  );
 
   test('softDelete leaves plants in OTHER areas untouched', () async {
-    final a1 = await areas.create(userId: userId, name: 'A1', type: AreaType.bed);
-    final a2 = await areas.create(userId: userId, name: 'A2', type: AreaType.bed);
-    final keep =
-        await plants.create(userId: userId, areaId: a2, plantId: 'pear');
+    final a1 = await areas.create(
+      userId: userId,
+      name: 'A1',
+      type: AreaType.bed,
+    );
+    final a2 = await areas.create(
+      userId: userId,
+      name: 'A2',
+      type: AreaType.bed,
+    );
+    final keep = await plants.create(
+      userId: userId,
+      areaId: a2,
+      plantId: 'pear',
+    );
 
     await areas.softDelete(a1);
 

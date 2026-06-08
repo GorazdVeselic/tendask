@@ -23,7 +23,8 @@ String _quietHoursRange() {
 
 /// Whether the OS currently allows exact alarms — drives the permission row.
 final _exactAlarmsAllowedProvider = FutureProvider.autoDispose<bool>(
-    (ref) => ref.watch(notificationServiceProvider).canScheduleExactAlarms());
+  (ref) => ref.watch(notificationServiceProvider).canScheduleExactAlarms(),
+);
 
 /// Screen 22 — notification settings. Task reminders are local and live; weather
 /// and community hints are server-side (FCM, deferred), so their toggles and the
@@ -39,7 +40,9 @@ class NotificationSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: context.pop),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: context.pop,
+        ),
         title: Text(t.notif_settings.title),
         centerTitle: true,
       ),
@@ -61,7 +64,8 @@ class _Body extends ConsumerWidget {
   void _save(WidgetRef ref, NotificationSettings next) {
     final userId = ref.read(authServiceProvider).userId;
     unawaited(
-        ref.read(profileRepositoryProvider).setNotificationSettings(userId, next));
+      ref.read(profileRepositoryProvider).setNotificationSettings(userId, next),
+    );
   }
 
   @override
@@ -107,7 +111,10 @@ class _Body extends ConsumerWidget {
         SegmentedButton<int>(
           segments: [
             for (final offset in _offsetChoices)
-              ButtonSegment(value: offset, label: Text(_offsetLabel(offset, t))),
+              ButtonSegment(
+                value: offset,
+                label: Text(_offsetLabel(offset, t)),
+              ),
           ],
           selected: {settings.defaultReminderOffset},
           onSelectionChanged: (sel) =>
@@ -119,7 +126,8 @@ class _Body extends ConsumerWidget {
           child: Text(
             t.notif_settings.default_offset_hint,
             style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Theme.of(context).colorScheme.onSurfaceVariant),
+              color: Theme.of(context).colorScheme.onSurfaceVariant,
+            ),
           ),
         ),
 
@@ -131,8 +139,9 @@ class _Body extends ConsumerWidget {
             children: [
               SwitchListTile(
                 title: Text(t.notif_settings.quiet_hours),
-                subtitle:
-                    Text(t.notif_settings.quiet_hours_sub(range: _quietHoursRange())),
+                subtitle: Text(
+                  t.notif_settings.quiet_hours_sub(range: _quietHoursRange()),
+                ),
                 value: settings.quietHoursEnabled,
                 onChanged: (v) =>
                     _save(ref, settings.copyWith(quietHoursEnabled: v)),
@@ -169,10 +178,10 @@ class _Body extends ConsumerWidget {
   }
 
   String _offsetLabel(int offset, Translations t) => switch (offset) {
-        0 => t.entry.rem_event,
-        60 => t.entry.rem_1hour,
-        _ => t.entry.rem_1day,
-      };
+    0 => t.entry.rem_event,
+    60 => t.entry.rem_1hour,
+    _ => t.entry.rem_1day,
+  };
 }
 
 class _PermissionTile extends ConsumerWidget {
@@ -186,9 +195,11 @@ class _PermissionTile extends ConsumerWidget {
 
     return ListTile(
       title: Text(t.notif_settings.system_permission),
-      subtitle: Text(allowed == false
-          ? t.notif_settings.system_permission_off
-          : t.notif_settings.system_permission_on),
+      subtitle: Text(
+        allowed == false
+            ? t.notif_settings.system_permission_off
+            : t.notif_settings.system_permission_on,
+      ),
       trailing: allowed == false
           ? Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error)
           : Icon(Icons.check, color: theme.colorScheme.primary),

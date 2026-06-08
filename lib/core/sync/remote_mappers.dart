@@ -22,110 +22,110 @@ String _ts(DateTime d) => d.toUtc().toIso8601String();
 Object? _jsonb(String? s) => s == null ? null : jsonDecode(s);
 
 Map<String, dynamic> profileToRemote(Profile r) => {
-      'user_id': r.userId,
-      'h3_r7': r.h3R7,
-      'h3_r6': r.h3R6,
-      'h3_r5': r.h3R5,
-      'lang': r.lang,
-      'notification_settings': _jsonb(r.notificationSettings),
-      'updated_at': _ts(r.updatedAt),
-    };
+  'user_id': r.userId,
+  'h3_r7': r.h3R7,
+  'h3_r6': r.h3R6,
+  'h3_r5': r.h3R5,
+  'lang': r.lang,
+  'notification_settings': _jsonb(r.notificationSettings),
+  'updated_at': _ts(r.updatedAt),
+};
 
 Map<String, dynamic> areaToRemote(Area r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'name': r.name,
-      'type': r.type.name,
-      'protected': r.protected,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'name': r.name,
+  'type': r.type.name,
+  'protected': r.protected,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> userPlantToRemote(UserPlant r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'area_id': r.areaId,
-      'plant_id': r.plantId,
-      'custom_name': r.customName,
-      'personal_alias': r.personalAlias,
-      'is_custom': r.isCustom,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'area_id': r.areaId,
+  'plant_id': r.plantId,
+  'custom_name': r.customName,
+  'personal_alias': r.personalAlias,
+  'is_custom': r.isCustom,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> taskToRemote(Task r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'task_type_id': r.taskTypeId,
-      'date': _ts(r.date),
-      'status': r.status.name,
-      'note': r.note,
-      'weather': _jsonb(r.weather),
-      'recurrence': _jsonb(r.recurrence),
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'task_type_id': r.taskTypeId,
+  'date': _ts(r.date),
+  'status': r.status.name,
+  'note': r.note,
+  'weather': _jsonb(r.weather),
+  'recurrence': _jsonb(r.recurrence),
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> taskSubjectToRemote(TaskSubject r) => {
-      'id': r.id,
-      'task_id': r.taskId,
-      'user_plant_id': r.userPlantId,
-      'area_id': r.areaId,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'task_id': r.taskId,
+  'user_plant_id': r.userPlantId,
+  'area_id': r.areaId,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> taskReminderToRemote(TaskReminder r) => {
-      'id': r.id,
-      'task_id': r.taskId,
-      'offset': r.offset,
-      'reminder_time': r.reminderTime,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'task_id': r.taskId,
+  'offset': r.offset,
+  'reminder_time': r.reminderTime,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> noteToRemote(Note r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'area_id': r.areaId,
-      'user_plant_id': r.userPlantId,
-      'date': _ts(r.date),
-      'text': r.content,
-      'weather': _jsonb(r.weather),
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'area_id': r.areaId,
+  'user_plant_id': r.userPlantId,
+  'date': _ts(r.date),
+  'text': r.content,
+  'weather': _jsonb(r.weather),
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> supplyToRemote(Supply r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'name': r.name,
-      'unit': r.unit,
-      'quantity': r.quantity,
-      'low_threshold': r.lowThreshold,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'name': r.name,
+  'unit': r.unit,
+  'quantity': r.quantity,
+  'low_threshold': r.lowThreshold,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> recipeToRemote(Recipe r) => {
-      'id': r.id,
-      'user_id': r.userId,
-      'name': r.name,
-      'equipment': r.equipment,
-      'items': _jsonb(r.items),
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'user_id': r.userId,
+  'name': r.name,
+  'equipment': r.equipment,
+  'items': _jsonb(r.items),
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
-      'id': r.id,
-      'task_id': r.taskId,
-      'supply_id': r.supplyId,
-      'amount': r.amount,
-      'applied': r.applied,
-      'updated_at': _ts(r.updatedAt),
-      'deleted': r.deleted,
-    };
+  'id': r.id,
+  'task_id': r.taskId,
+  'supply_id': r.supplyId,
+  'amount': r.amount,
+  'applied': r.applied,
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
 
 // ── Remote → drift (pull) ───────────────────────────────────────────────────
 //
@@ -148,16 +148,17 @@ String? _text(Object? v) {
 double? _double(Object? v) => (v as num?)?.toDouble();
 
 AreaType _areaType(Object? v) => AreaType.values.firstWhere(
-      (e) => e.name == v,
-      orElse: () => AreaType.other,
-    );
+  (e) => e.name == v,
+  orElse: () => AreaType.other,
+);
 
 TaskStatus _taskStatus(Object? v) => TaskStatus.values.firstWhere(
-      (e) => e.name == v,
-      orElse: () => TaskStatus.waiting,
-    );
+  (e) => e.name == v,
+  orElse: () => TaskStatus.waiting,
+);
 
-ProfilesCompanion profileFromRemote(Map<String, dynamic> r) => ProfilesCompanion(
+ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
+    ProfilesCompanion(
       userId: Value(r['user_id'] as String),
       h3R7: Value(r['h3_r7'] as String?),
       h3R6: Value(r['h3_r6'] as String?),
@@ -169,15 +170,15 @@ ProfilesCompanion profileFromRemote(Map<String, dynamic> r) => ProfilesCompanion
     );
 
 AreasCompanion areaFromRemote(Map<String, dynamic> r) => AreasCompanion(
-      id: Value(r['id'] as String),
-      userId: Value(r['user_id'] as String),
-      name: Value(r['name'] as String),
-      type: Value(_areaType(r['type'])),
-      protected: Value(r['protected'] as bool? ?? false),
-      updatedAt: Value(_dt(r['updated_at'])),
-      deleted: Value(r['deleted'] as bool? ?? false),
-      syncStatus: const Value(kSyncSynced),
-    );
+  id: Value(r['id'] as String),
+  userId: Value(r['user_id'] as String),
+  name: Value(r['name'] as String),
+  type: Value(_areaType(r['type'])),
+  protected: Value(r['protected'] as bool? ?? false),
+  updatedAt: Value(_dt(r['updated_at'])),
+  deleted: Value(r['deleted'] as bool? ?? false),
+  syncStatus: const Value(kSyncSynced),
+);
 
 UserPlantsCompanion userPlantFromRemote(Map<String, dynamic> r) =>
     UserPlantsCompanion(
@@ -194,18 +195,18 @@ UserPlantsCompanion userPlantFromRemote(Map<String, dynamic> r) =>
     );
 
 TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
-      id: Value(r['id'] as String),
-      userId: Value(r['user_id'] as String),
-      taskTypeId: Value(r['task_type_id'] as String),
-      date: Value(_dt(r['date'])),
-      status: Value(_taskStatus(r['status'])),
-      note: Value(r['note'] as String?),
-      weather: Value(_text(r['weather'])),
-      recurrence: Value(_text(r['recurrence'])),
-      updatedAt: Value(_dt(r['updated_at'])),
-      deleted: Value(r['deleted'] as bool? ?? false),
-      syncStatus: const Value(kSyncSynced),
-    );
+  id: Value(r['id'] as String),
+  userId: Value(r['user_id'] as String),
+  taskTypeId: Value(r['task_type_id'] as String),
+  date: Value(_dt(r['date'])),
+  status: Value(_taskStatus(r['status'])),
+  note: Value(r['note'] as String?),
+  weather: Value(_text(r['weather'])),
+  recurrence: Value(_text(r['recurrence'])),
+  updatedAt: Value(_dt(r['updated_at'])),
+  deleted: Value(r['deleted'] as bool? ?? false),
+  syncStatus: const Value(kSyncSynced),
+);
 
 TaskSubjectsCompanion taskSubjectFromRemote(Map<String, dynamic> r) =>
     TaskSubjectsCompanion(
@@ -230,40 +231,40 @@ TaskRemindersCompanion taskReminderFromRemote(Map<String, dynamic> r) =>
     );
 
 NotesCompanion noteFromRemote(Map<String, dynamic> r) => NotesCompanion(
-      id: Value(r['id'] as String),
-      userId: Value(r['user_id'] as String),
-      areaId: Value(r['area_id'] as String?),
-      userPlantId: Value(r['user_plant_id'] as String?),
-      date: Value(_dt(r['date'])),
-      content: Value(r['text'] as String),
-      weather: Value(_text(r['weather'])),
-      updatedAt: Value(_dt(r['updated_at'])),
-      deleted: Value(r['deleted'] as bool? ?? false),
-      syncStatus: const Value(kSyncSynced),
-    );
+  id: Value(r['id'] as String),
+  userId: Value(r['user_id'] as String),
+  areaId: Value(r['area_id'] as String?),
+  userPlantId: Value(r['user_plant_id'] as String?),
+  date: Value(_dt(r['date'])),
+  content: Value(r['text'] as String),
+  weather: Value(_text(r['weather'])),
+  updatedAt: Value(_dt(r['updated_at'])),
+  deleted: Value(r['deleted'] as bool? ?? false),
+  syncStatus: const Value(kSyncSynced),
+);
 
 SuppliesCompanion supplyFromRemote(Map<String, dynamic> r) => SuppliesCompanion(
-      id: Value(r['id'] as String),
-      userId: Value(r['user_id'] as String),
-      name: Value(r['name'] as String),
-      unit: Value(r['unit'] as String?),
-      quantity: Value(_double(r['quantity']) ?? 0),
-      lowThreshold: Value(_double(r['low_threshold'])),
-      updatedAt: Value(_dt(r['updated_at'])),
-      deleted: Value(r['deleted'] as bool? ?? false),
-      syncStatus: const Value(kSyncSynced),
-    );
+  id: Value(r['id'] as String),
+  userId: Value(r['user_id'] as String),
+  name: Value(r['name'] as String),
+  unit: Value(r['unit'] as String?),
+  quantity: Value(_double(r['quantity']) ?? 0),
+  lowThreshold: Value(_double(r['low_threshold'])),
+  updatedAt: Value(_dt(r['updated_at'])),
+  deleted: Value(r['deleted'] as bool? ?? false),
+  syncStatus: const Value(kSyncSynced),
+);
 
 RecipesCompanion recipeFromRemote(Map<String, dynamic> r) => RecipesCompanion(
-      id: Value(r['id'] as String),
-      userId: Value(r['user_id'] as String),
-      name: Value(r['name'] as String),
-      equipment: Value(r['equipment'] as String?),
-      items: Value(_text(r['items'])),
-      updatedAt: Value(_dt(r['updated_at'])),
-      deleted: Value(r['deleted'] as bool? ?? false),
-      syncStatus: const Value(kSyncSynced),
-    );
+  id: Value(r['id'] as String),
+  userId: Value(r['user_id'] as String),
+  name: Value(r['name'] as String),
+  equipment: Value(r['equipment'] as String?),
+  items: Value(_text(r['items'])),
+  updatedAt: Value(_dt(r['updated_at'])),
+  deleted: Value(r['deleted'] as bool? ?? false),
+  syncStatus: const Value(kSyncSynced),
+);
 
 TaskSuppliesCompanion taskSupplyFromRemote(Map<String, dynamic> r) =>
     TaskSuppliesCompanion(
@@ -297,15 +298,14 @@ TaskTypesCompanion taskTypeFromRemote(Map<String, dynamic> r) =>
     );
 
 PlantsCompanion plantFromRemote(Map<String, dynamic> r) => PlantsCompanion(
-      id: Value(r['id'] as String),
-      labels: Value(_text(r['labels']) ?? '{}'),
-      scientificName: Value(r['scientific_name'] as String?),
-      category: Value(r['category'] as String),
-      icon: Value(r['icon'] as String?),
-    );
+  id: Value(r['id'] as String),
+  labels: Value(_text(r['labels']) ?? '{}'),
+  scientificName: Value(r['scientific_name'] as String?),
+  category: Value(r['category'] as String),
+  icon: Value(r['icon'] as String?),
+);
 
-CategoryTaskTypesCompanion categoryTaskTypeFromRemote(
-        Map<String, dynamic> r) =>
+CategoryTaskTypesCompanion categoryTaskTypeFromRemote(Map<String, dynamic> r) =>
     CategoryTaskTypesCompanion(
       category: Value(r['category'] as String),
       taskTypeId: Value(r['task_type_id'] as String),

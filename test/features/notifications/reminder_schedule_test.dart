@@ -9,12 +9,18 @@ void main() {
     test('day-based offset with time fires N days before at that time', () {
       expect(
         reminderFireTime(
-            taskDateLocal: taskDate, offsetMinutes: 1440, reminderTime: '18:00'),
+          taskDateLocal: taskDate,
+          offsetMinutes: 1440,
+          reminderTime: '18:00',
+        ),
         DateTime(2026, 6, 9, 18, 0),
       );
       expect(
         reminderFireTime(
-            taskDateLocal: taskDate, offsetMinutes: 2880, reminderTime: '07:30'),
+          taskDateLocal: taskDate,
+          offsetMinutes: 2880,
+          reminderTime: '07:30',
+        ),
         DateTime(2026, 6, 8, 7, 30),
       );
     });
@@ -44,9 +50,10 @@ void main() {
     test('crosses a month boundary correctly', () {
       expect(
         reminderFireTime(
-            taskDateLocal: DateTime(2026, 7, 1, 8, 0),
-            offsetMinutes: 1440,
-            reminderTime: '20:00'),
+          taskDateLocal: DateTime(2026, 7, 1, 8, 0),
+          offsetMinutes: 1440,
+          reminderTime: '20:00',
+        ),
         DateTime(2026, 6, 30, 20, 0),
       );
     });

@@ -106,7 +106,9 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     if (_areaId == null) return;
     final pick = await context.pushNamed<PlantPick>('plant-picker');
     if (pick == null || !mounted) return;
-    final id = await ref.read(userPlantsRepositoryProvider).createForArea(
+    final id = await ref
+        .read(userPlantsRepositoryProvider)
+        .createForArea(
           userId: ref.read(authServiceProvider).userId,
           areaId: _areaId!,
           plantId: pick.plantId,
@@ -225,8 +227,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                         PlantField(
                           areaId: _areaId!,
                           selectedId: _userPlantId,
-                          onChanged: (id) =>
-                              setState(() => _userPlantId = id),
+                          onChanged: (id) => setState(() => _userPlantId = id),
                           onAdd: _addPlant,
                         ),
                       ],
@@ -281,7 +282,9 @@ class _DateSegment extends StatelessWidget {
       segments: [
         ButtonSegment(value: _DateOption.today, label: Text(t.notes.today)),
         ButtonSegment(
-            value: _DateOption.yesterday, label: Text(t.notes.yesterday)),
+          value: _DateOption.yesterday,
+          label: Text(t.notes.yesterday),
+        ),
         ButtonSegment(
           value: _DateOption.custom,
           label: Text(customLabel, overflow: TextOverflow.ellipsis),
@@ -319,8 +322,9 @@ class _AreaField extends ConsumerWidget {
     if (areas.isEmpty) {
       return Text(
         t.notes.no_areas,
-        style: theme.textTheme.bodySmall
-            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       );
     }
     return Wrap(
@@ -349,8 +353,9 @@ class _InfoHint extends StatelessWidget {
     return Text(
       text,
       textAlign: TextAlign.center,
-      style: theme.textTheme.bodySmall
-          ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+      style: theme.textTheme.bodySmall?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
     );
   }
 }

@@ -13,14 +13,17 @@ void main() {
   setUp(() => db = AppDatabase.forTesting(NativeDatabase.memory()));
   tearDown(() async => db.close());
 
-  Future<void> insertArea(String id, String userId, {String? sync}) =>
-      db.into(db.areas).insert(AreasCompanion.insert(
-            id: id,
-            userId: userId,
-            name: 'A',
-            updatedAt: t0,
-            syncStatus: sync == null ? const Value.absent() : Value(sync),
-          ));
+  Future<void> insertArea(String id, String userId, {String? sync}) => db
+      .into(db.areas)
+      .insert(
+        AreasCompanion.insert(
+          id: id,
+          userId: userId,
+          name: 'A',
+          updatedAt: t0,
+          syncStatus: sync == null ? const Value.absent() : Value(sync),
+        ),
+      );
 
   Future<Area> area(String id) =>
       (db.select(db.areas)..where((a) => a.id.equals(id))).getSingle();
@@ -45,23 +48,38 @@ void main() {
 
   test('claims across every owned table at once', () async {
     await insertArea('a1', kLocalUserId);
-    await db.into(db.supplies).insert(SuppliesCompanion.insert(
-        id: 's1', userId: kLocalUserId, name: 'S', updatedAt: t0));
-    await db.into(db.tasks).insert(TasksCompanion.insert(
-        id: 't1',
-        userId: kLocalUserId,
-        taskTypeId: 'water',
-        date: t0,
-        updatedAt: t0));
+    await db
+        .into(db.supplies)
+        .insert(
+          SuppliesCompanion.insert(
+            id: 's1',
+            userId: kLocalUserId,
+            name: 'S',
+            updatedAt: t0,
+          ),
+        );
+    await db
+        .into(db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: 't1',
+            userId: kLocalUserId,
+            taskTypeId: 'water',
+            date: t0,
+            updatedAt: t0,
+          ),
+        );
 
     await claimLocalRows(db, 'uid-1');
 
     expect((await area('a1')).userId, 'uid-1');
-    final s1 = await (db.select(db.supplies)..where((s) => s.id.equals('s1')))
-        .getSingle();
+    final s1 = await (db.select(
+      db.supplies,
+    )..where((s) => s.id.equals('s1'))).getSingle();
     expect(s1.userId, 'uid-1');
-    final t1 =
-        await (db.select(db.tasks)..where((t) => t.id.equals('t1'))).getSingle();
+    final t1 = await (db.select(
+      db.tasks,
+    )..where((t) => t.id.equals('t1'))).getSingle();
     expect(t1.userId, 'uid-1');
   });
 

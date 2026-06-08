@@ -45,14 +45,27 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   Widget build(BuildContext context) {
     final t = context.t;
     final slides = <_Slide>[
-      _Slide(Icons.eco_outlined, t.onboarding.welcome_title,
-          t.onboarding.welcome_body),
-      _Slide(Icons.fact_check_outlined, t.onboarding.log_title,
-          t.onboarding.log_body),
-      _Slide(Icons.wb_cloudy_outlined, t.onboarding.remind_title,
-          t.onboarding.remind_body),
-      _Slide(Icons.public, t.onboarding.nearby_title, t.onboarding.nearby_body,
-          badge: t.onboarding.soon_badge),
+      _Slide(
+        Icons.eco_outlined,
+        t.onboarding.welcome_title,
+        t.onboarding.welcome_body,
+      ),
+      _Slide(
+        Icons.fact_check_outlined,
+        t.onboarding.log_title,
+        t.onboarding.log_body,
+      ),
+      _Slide(
+        Icons.wb_cloudy_outlined,
+        t.onboarding.remind_title,
+        t.onboarding.remind_body,
+      ),
+      _Slide(
+        Icons.public,
+        t.onboarding.nearby_title,
+        t.onboarding.nearby_body,
+        badge: t.onboarding.soon_badge,
+      ),
     ];
     final last = slides.length - 1;
     final isLast = _page == last;
@@ -80,7 +93,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   controller: _controller,
                   itemCount: slides.length,
                   onPageChanged: (i) => setState(() => _page = i),
-                  itemBuilder: (context, i) => _OnboardingPage(slide: slides[i]),
+                  itemBuilder: (context, i) =>
+                      _OnboardingPage(slide: slides[i]),
                 ),
               ),
               _Dots(count: slides.length, active: _page),
@@ -131,7 +145,9 @@ class _OnboardingPage extends StatelessWidget {
         const SizedBox(height: 12),
         Text(
           slide.body,
-          style: theme.textTheme.bodyLarge?.copyWith(color: cs.onSurfaceVariant),
+          style: theme.textTheme.bodyLarge?.copyWith(
+            color: cs.onSurfaceVariant,
+          ),
           textAlign: TextAlign.center,
         ),
         if (slide.badge != null) ...[
@@ -159,8 +175,9 @@ class _Badge extends StatelessWidget {
       ),
       child: Text(
         label,
-        style: theme.textTheme.labelMedium
-            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.labelMedium?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
     );
   }

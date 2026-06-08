@@ -32,8 +32,12 @@ Map<String, String> subjectLabelsByTask(
 }) {
   final byTask = <String, List<String>>{};
   for (final s in subjects) {
-    final label = subjectLabel(s,
-        areas: areas, userPlants: userPlants, plants: plants);
+    final label = subjectLabel(
+      s,
+      areas: areas,
+      userPlants: userPlants,
+      plants: plants,
+    );
     if (label.isEmpty) continue;
     (byTask[s.taskId] ??= <String>[]).add(label);
   }

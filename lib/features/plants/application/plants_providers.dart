@@ -13,22 +13,22 @@ UserPlantsRepository userPlantsRepository(Ref ref) {
 }
 
 // Manual StreamProvider — riverpod_generator can't resolve drift part-file types.
-final userPlantsByAreaProvider =
-    StreamProvider.autoDispose.family<List<UserPlant>, String>((ref, areaId) {
-  return ref.watch(userPlantsRepositoryProvider).watchByArea(areaId);
-});
+final userPlantsByAreaProvider = StreamProvider.autoDispose
+    .family<List<UserPlant>, String>((ref, areaId) {
+      return ref.watch(userPlantsRepositoryProvider).watchByArea(areaId);
+    });
 
 /// One user plant by id — for the plant detail screen.
-final userPlantByIdProvider =
-    StreamProvider.autoDispose.family<UserPlant?, String>((ref, id) {
-  return ref.watch(userPlantsRepositoryProvider).watchById(id);
-});
+final userPlantByIdProvider = StreamProvider.autoDispose
+    .family<UserPlant?, String>((ref, id) {
+      return ref.watch(userPlantsRepositoryProvider).watchById(id);
+    });
 
 /// All user plants keyed by id — for resolving plant subject labels.
 final userPlantsMapProvider =
     StreamProvider.autoDispose<Map<String, UserPlant>>((ref) {
-  return ref
-      .watch(userPlantsRepositoryProvider)
-      .watchAll()
-      .map((list) => {for (final p in list) p.id: p});
-});
+      return ref
+          .watch(userPlantsRepositoryProvider)
+          .watchAll()
+          .map((list) => {for (final p in list) p.id: p});
+    });

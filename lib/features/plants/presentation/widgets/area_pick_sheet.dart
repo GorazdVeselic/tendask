@@ -48,18 +48,24 @@ class _AreaPickSheet extends ConsumerWidget {
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 2),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(title,
-                  style: theme.textTheme.titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700)),
+              child: Text(
+                title,
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
             ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
             child: Align(
               alignment: Alignment.centerLeft,
-              child: Text(t.area_pick.note,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              child: Text(
+                t.area_pick.note,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             ),
           ),
           Flexible(
@@ -68,8 +74,10 @@ class _AreaPickSheet extends ConsumerWidget {
               padding: EdgeInsets.zero,
               children: [
                 _OptionTile(
-                  leading: Icon(Icons.inbox_outlined,
-                      color: theme.colorScheme.onSurfaceVariant),
+                  leading: Icon(
+                    Icons.inbox_outlined,
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                   label: t.area_pick.none,
                   selected: currentAreaId == null,
                   onTap: () =>
@@ -77,10 +85,14 @@ class _AreaPickSheet extends ConsumerWidget {
                 ),
                 for (final a in areas)
                   _OptionTile(
-                    leading: Text(areaTypeIcon(a.type),
-                        style: const TextStyle(fontSize: 20)),
+                    leading: Text(
+                      areaTypeIcon(a.type),
+                      style: const TextStyle(fontSize: 20),
+                    ),
                     label: a.name,
-                    subtitle: a.id == currentAreaId ? t.area_pick.current : null,
+                    subtitle: a.id == currentAreaId
+                        ? t.area_pick.current
+                        : null,
                     selected: a.id == currentAreaId,
                     onTap: () =>
                         Navigator.of(context).pop<AreaPick>((areaId: a.id)),
@@ -91,10 +103,13 @@ class _AreaPickSheet extends ConsumerWidget {
           Divider(height: 1, color: theme.colorScheme.outlineVariant),
           ListTile(
             leading: Icon(Icons.add, color: theme.colorScheme.primary),
-            title: Text(t.area_pick.new_area,
-                style: TextStyle(
-                    color: theme.colorScheme.primary,
-                    fontWeight: FontWeight.w600)),
+            title: Text(
+              t.area_pick.new_area,
+              style: TextStyle(
+                color: theme.colorScheme.primary,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
             onTap: () async {
               final newId = await context.pushNamed<String>('area-new');
               if (newId != null && context.mounted) {
@@ -131,9 +146,12 @@ class _OptionTile extends StatelessWidget {
       leading: SizedBox(width: 26, child: Center(child: leading)),
       title: Text(label),
       subtitle: subtitle != null
-          ? Text(subtitle!,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
+          ? Text(
+              subtitle!,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
           : null,
       trailing: selected
           ? Icon(Icons.check, color: theme.colorScheme.primary)

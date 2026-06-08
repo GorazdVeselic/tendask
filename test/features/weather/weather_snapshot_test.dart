@@ -93,11 +93,12 @@ void main() {
         rainPast48h: 2,
         forecast: [
           WeatherDay(
-              date: DateTime.utc(2026, 6, 5),
-              weatherCode: 1,
-              tempMax: 25,
-              tempMin: 13,
-              et0: 2.5),
+            date: DateTime.utc(2026, 6, 5),
+            weatherCode: 1,
+            tempMax: 25,
+            tempMin: 13,
+            et0: 2.5,
+          ),
         ],
       );
 

@@ -26,18 +26,31 @@ void main() {
               selectedIndex: shell.currentIndex,
               onDestinationSelected: shell.goBranch,
               destinations: const [
-                NavigationDestination(icon: Icon(Icons.today), label: 'Journal'),
-                NavigationDestination(icon: Icon(Icons.check_box), label: 'Tasks'),
+                NavigationDestination(
+                  icon: Icon(Icons.today),
+                  label: 'Journal',
+                ),
+                NavigationDestination(
+                  icon: Icon(Icons.check_box),
+                  label: 'Tasks',
+                ),
               ],
             ),
           ),
           branches: [
-            StatefulShellBranch(routes: [
-              GoRoute(path: '/journal', builder: (_, _) => const JournalScreen()),
-            ]),
-            StatefulShellBranch(routes: [
-              GoRoute(path: '/tasks', builder: (_, _) => const TasksScreen()),
-            ]),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(
+                  path: '/journal',
+                  builder: (_, _) => const JournalScreen(),
+                ),
+              ],
+            ),
+            StatefulShellBranch(
+              routes: [
+                GoRoute(path: '/tasks', builder: (_, _) => const TasksScreen()),
+              ],
+            ),
           ],
         ),
       ],
@@ -48,23 +61,29 @@ void main() {
         child: ProviderScope(
           overrides: [
             // Provide empty data so JournalScreen and TasksScreen resolve immediately
-            pendingTasksProvider
-                .overrideWith((ref) => Stream.value(<Task>[])),
-            completedTasksProvider
-                .overrideWith((ref) => Stream.value(<Task>[])),
-            taskIdsWithRemindersProvider
-                .overrideWith((ref) => Stream.value(<String>{})),
+            pendingTasksProvider.overrideWith((ref) => Stream.value(<Task>[])),
+            completedTasksProvider.overrideWith(
+              (ref) => Stream.value(<Task>[]),
+            ),
+            taskIdsWithRemindersProvider.overrideWith(
+              (ref) => Stream.value(<String>{}),
+            ),
             notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
-            taskTypesMapProvider
-                .overrideWith((ref) => Stream.value(<String, TaskType>{})),
-            areasMapProvider
-                .overrideWith((ref) => Stream.value(<String, Area>{})),
-            allTaskSubjectsProvider
-                .overrideWith((ref) => Stream.value(<TaskSubject>[])),
-            userPlantsMapProvider
-                .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-            plantsMapProvider
-                .overrideWith((ref) => Stream.value(<String, Plant>{})),
+            taskTypesMapProvider.overrideWith(
+              (ref) => Stream.value(<String, TaskType>{}),
+            ),
+            areasMapProvider.overrideWith(
+              (ref) => Stream.value(<String, Area>{}),
+            ),
+            allTaskSubjectsProvider.overrideWith(
+              (ref) => Stream.value(<TaskSubject>[]),
+            ),
+            userPlantsMapProvider.overrideWith(
+              (ref) => Stream.value(<String, UserPlant>{}),
+            ),
+            plantsMapProvider.overrideWith(
+              (ref) => Stream.value(<String, Plant>{}),
+            ),
           ],
           child: MaterialApp.router(routerConfig: router),
         ),

@@ -72,8 +72,9 @@ const kQuietHoursEndHour = 7;
 /// empty the app stays fully offline (drift is the source of truth), so the
 /// bootstrap skips Supabase init instead of crashing.
 const kSupabaseUrl = String.fromEnvironment('SUPABASE_URL');
-const kSupabasePublishableKey =
-    String.fromEnvironment('SUPABASE_PUBLISHABLE_KEY');
+const kSupabasePublishableKey = String.fromEnvironment(
+  'SUPABASE_PUBLISHABLE_KEY',
+);
 
 /// Google OAuth **Web** client id (serverClientId for native Google sign-in,
 /// M7.4). Arrives via --dart-define (see dart_defines.json). Empty → the Google

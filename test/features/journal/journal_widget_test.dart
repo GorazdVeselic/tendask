@@ -35,7 +35,9 @@ void main() {
       final router = GoRouter(
         routes: [
           GoRoute(
-              path: '/', builder: (_, _) => const Scaffold(body: Text('home'))),
+            path: '/',
+            builder: (_, _) => const Scaffold(body: Text('home')),
+          ),
           GoRoute(path: '/note', builder: (_, _) => const NoteFormScreen()),
         ],
       );
@@ -57,7 +59,9 @@ void main() {
       await tester.pumpAndSettle();
 
       await tester.enterText(
-          find.byType(TextField), 'Rjave pege na paradižniku');
+        find.byType(TextField),
+        'Rjave pege na paradižniku',
+      );
       await tester.pumpAndSettle();
 
       await tester.tap(find.text('Shrani opombo'));
@@ -79,28 +83,31 @@ void main() {
       addTearDown(tester.view.resetDevicePixelRatio);
 
       final router = GoRouter(
-        routes: [
-          GoRoute(path: '/', builder: (_, _) => const JournalScreen()),
-        ],
+        routes: [GoRoute(path: '/', builder: (_, _) => const JournalScreen())],
       );
 
       await tester.pumpWidget(
         TranslationProvider(
           child: ProviderScope(
             overrides: [
-              completedTasksProvider
-                  .overrideWith((ref) => Stream.value(<Task>[])),
+              completedTasksProvider.overrideWith(
+                (ref) => Stream.value(<Task>[]),
+              ),
               notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
               allTasksProvider.overrideWith((ref) => Stream.value(<Task>[])),
-              taskTypesMapProvider
-                  .overrideWith((ref) => Stream.value(<String, TaskType>{})),
+              taskTypesMapProvider.overrideWith(
+                (ref) => Stream.value(<String, TaskType>{}),
+              ),
               areasMapProvider.overrideWith((ref) => Stream.value({})),
-              allTaskSubjectsProvider
-                  .overrideWith((ref) => Stream.value(<TaskSubject>[])),
-              userPlantsMapProvider
-                  .overrideWith((ref) => Stream.value(<String, UserPlant>{})),
-              plantsMapProvider
-                  .overrideWith((ref) => Stream.value(<String, Plant>{})),
+              allTaskSubjectsProvider.overrideWith(
+                (ref) => Stream.value(<TaskSubject>[]),
+              ),
+              userPlantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, UserPlant>{}),
+              ),
+              plantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, Plant>{}),
+              ),
             ],
             child: MaterialApp.router(routerConfig: router),
           ),

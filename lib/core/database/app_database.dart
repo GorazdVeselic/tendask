@@ -14,28 +14,30 @@ import 'tables/user_tables.dart';
 
 part 'app_database.g.dart';
 
-@DriftDatabase(tables: [
-  // catalog (read-only, seeded on first launch)
-  TaskTypes,
-  Plants,
-  PlantSynonyms,
-  CategoryTaskTypes,
-  // user data (sync-ready: uuid / updated_at / deleted / sync_status)
-  Profiles,
-  Areas,
-  UserPlants,
-  Tasks,
-  TaskSubjects,
-  TaskReminders,
-  Notes,
-  Supplies,
-  Recipes,
-  TaskSupplies,
-  // local-only (never synced)
-  SyncCursors,
-  DeviceLocations,
-  LocalFlags,
-])
+@DriftDatabase(
+  tables: [
+    // catalog (read-only, seeded on first launch)
+    TaskTypes,
+    Plants,
+    PlantSynonyms,
+    CategoryTaskTypes,
+    // user data (sync-ready: uuid / updated_at / deleted / sync_status)
+    Profiles,
+    Areas,
+    UserPlants,
+    Tasks,
+    TaskSubjects,
+    TaskReminders,
+    Notes,
+    Supplies,
+    Recipes,
+    TaskSupplies,
+    // local-only (never synced)
+    SyncCursors,
+    DeviceLocations,
+    LocalFlags,
+  ],
+)
 class AppDatabase extends _$AppDatabase {
   AppDatabase() : super(_openConnection());
 
@@ -74,47 +76,47 @@ class AppDatabase extends _$AppDatabase {
 
   @override
   MigrationStrategy get migration => MigrationStrategy(
-        onCreate: (m) => m.createAll(),
-        onUpgrade: (m, from, to) async {
-          // v2: track whether a task_supply consumption was booked into stock.
-          if (from < 2) {
-            await m.addColumn(taskSupplies, taskSupplies.applied);
-          }
-          // v3: subjects move to task_subject (M:N). Create the table, copy each
-          // task's old area/plant into it, then drop the old columns from task.
-          if (from < 3) {
-            await m.createTable(taskSubjects);
-            await customStatement(
-              "INSERT INTO task_subject (id, task_id, user_plant_id, area_id, "
-              "updated_at, deleted, sync_status) "
-              "SELECT lower(hex(randomblob(16))), id, user_plant_id, area_id, "
-              "updated_at, 0, 'pending' FROM task",
-            );
-            await m.alterTable(TableMigration(tasks));
-          }
-          // v4 adds task_type.consumes_supplies. Pre-release: no devices hold
-          // data yet, so we rely on fresh install (onCreate + re-seed) rather
-          // than a data-backfill migration. Add real migration steps here once
-          // the app ships and existing DBs must survive upgrades.
-          // v5: sync_cursor tracks the incremental-pull high-watermark (M6.3).
-          if (from < 5) {
-            await m.createTable(syncCursors);
-          }
-          // v6: device_location holds the garden's raw coordinates device-local
-          // for weather (M7.1b); only the derived H3 cells sync to profile.
-          if (from < 6) {
-            await m.createTable(deviceLocations);
-          }
-          // v7: local_flag holds device-local UI flags (onboarding seen, M7.2).
-          if (from < 7) {
-            await m.createTable(localFlags);
-          }
-          // v8: notification settings (screen 22, M8.4) live in profile and sync.
-          if (from < 8) {
-            await m.addColumn(profiles, profiles.notificationSettings);
-          }
-        },
-      );
+    onCreate: (m) => m.createAll(),
+    onUpgrade: (m, from, to) async {
+      // v2: track whether a task_supply consumption was booked into stock.
+      if (from < 2) {
+        await m.addColumn(taskSupplies, taskSupplies.applied);
+      }
+      // v3: subjects move to task_subject (M:N). Create the table, copy each
+      // task's old area/plant into it, then drop the old columns from task.
+      if (from < 3) {
+        await m.createTable(taskSubjects);
+        await customStatement(
+          "INSERT INTO task_subject (id, task_id, user_plant_id, area_id, "
+          "updated_at, deleted, sync_status) "
+          "SELECT lower(hex(randomblob(16))), id, user_plant_id, area_id, "
+          "updated_at, 0, 'pending' FROM task",
+        );
+        await m.alterTable(TableMigration(tasks));
+      }
+      // v4 adds task_type.consumes_supplies. Pre-release: no devices hold
+      // data yet, so we rely on fresh install (onCreate + re-seed) rather
+      // than a data-backfill migration. Add real migration steps here once
+      // the app ships and existing DBs must survive upgrades.
+      // v5: sync_cursor tracks the incremental-pull high-watermark (M6.3).
+      if (from < 5) {
+        await m.createTable(syncCursors);
+      }
+      // v6: device_location holds the garden's raw coordinates device-local
+      // for weather (M7.1b); only the derived H3 cells sync to profile.
+      if (from < 6) {
+        await m.createTable(deviceLocations);
+      }
+      // v7: local_flag holds device-local UI flags (onboarding seen, M7.2).
+      if (from < 7) {
+        await m.createTable(localFlags);
+      }
+      // v8: notification settings (screen 22, M8.4) live in profile and sync.
+      if (from < 8) {
+        await m.addColumn(profiles, profiles.notificationSettings);
+      }
+    },
+  );
 }
 
 LazyDatabase _openConnection() {

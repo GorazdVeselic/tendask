@@ -13,8 +13,9 @@ void main() {
   setUpAll(() => LocaleSettings.setLocale(AppLocale.sl));
 
   group('SettingsScreen', () {
-    testWidgets('tapping English switches locale and persists profile.lang',
-        (tester) async {
+    testWidgets('tapping English switches locale and persists profile.lang', (
+      tester,
+    ) async {
       // Always restore Slovenian so this global change doesn't leak to others.
       addTearDown(() => LocaleSettings.setLocale(AppLocale.sl));
 
@@ -25,9 +26,7 @@ void main() {
       await tester.pumpWidget(
         TranslationProvider(
           child: ProviderScope(
-            overrides: [
-              profileRepositoryProvider.overrideWith((ref) => repo),
-            ],
+            overrides: [profileRepositoryProvider.overrideWith((ref) => repo)],
             child: const MaterialApp(home: SettingsScreen()),
           ),
         ),

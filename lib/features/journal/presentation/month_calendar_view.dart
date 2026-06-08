@@ -51,12 +51,14 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
 
   void _shift(int months) {
     setState(() {
-      _visibleMonth =
-          DateTime(_visibleMonth.year, _visibleMonth.month + months);
+      _visibleMonth = DateTime(
+        _visibleMonth.year,
+        _visibleMonth.month + months,
+      );
       final now = DateTime.now();
       // Preselect today when landing on the current month, else clear.
-      _selectedDay = _visibleMonth.year == now.year &&
-              _visibleMonth.month == now.month
+      _selectedDay =
+          _visibleMonth.year == now.year && _visibleMonth.month == now.month
           ? DateTime(now.year, now.month, now.day)
           : null;
     });
@@ -65,8 +67,10 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
   void _addTask(DateTime day) {
     final now = DateTime.now();
     final dt = DateTime(day.year, day.month, day.day, now.hour, now.minute);
-    context.pushNamed('task-new',
-        queryParameters: {'date': dt.toIso8601String()});
+    context.pushNamed(
+      'task-new',
+      queryParameters: {'date': dt.toIso8601String()},
+    );
   }
 
   @override
@@ -87,10 +91,12 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     final dayTasks = _selectedDay == null
         ? const <Task>[]
         : (tasks
-            .where((t) =>
-                startOfDay(t.date.toLocal()) == startOfDay(_selectedDay!))
-            .toList()
-          ..sort((a, b) => a.date.compareTo(b.date)));
+              .where(
+                (t) =>
+                    startOfDay(t.date.toLocal()) == startOfDay(_selectedDay!),
+              )
+              .toList()
+            ..sort((a, b) => a.date.compareTo(b.date)));
 
     // Tasks per day-of-month within the visible month.
     final counts = <int, int>{};
@@ -117,14 +123,17 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
         const SizedBox(height: 4),
         Text(
           t.journal.month_count(n: monthTotal),
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 8),
         Text(
           t.journal.month_hint,
           style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.primary, fontWeight: FontWeight.w600),
+            color: theme.colorScheme.primary,
+            fontWeight: FontWeight.w600,
+          ),
         ),
         const SizedBox(height: 12),
         _WeekdayHeader(ml: ml),
@@ -145,7 +154,8 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
               day: day,
               count: counts[day.day] ?? 0,
               isToday: startOfDay(day) == today,
-              selected: _selectedDay != null &&
+              selected:
+                  _selectedDay != null &&
                   startOfDay(day) == startOfDay(_selectedDay!),
               onTap: () => setState(() => _selectedDay = day),
             );
@@ -153,14 +163,19 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
         ),
         if (_selectedDay != null) ...[
           const SizedBox(height: 20),
-          SectionLabel(formatDmy(_selectedDay!),
-              padding: const EdgeInsets.fromLTRB(4, 0, 4, 4)),
+          SectionLabel(
+            formatDmy(_selectedDay!),
+            padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
+          ),
           if (dayTasks.isEmpty)
             Padding(
               padding: const EdgeInsets.symmetric(vertical: 8, horizontal: 4),
-              child: Text(t.journal.day_empty,
-                  style: theme.textTheme.bodySmall
-                      ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+              child: Text(
+                t.journal.day_empty,
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
             )
           else
             for (final task in dayTasks)
@@ -208,8 +223,9 @@ class _MonthNav extends StatelessWidget {
         ),
         Text(
           label,
-          style: theme.textTheme.titleMedium
-              ?.copyWith(fontWeight: FontWeight.w700),
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w700,
+          ),
         ),
         IconButton(
           icon: const Icon(Icons.chevron_right),
@@ -237,8 +253,9 @@ class _WeekdayHeader extends StatelessWidget {
               child: Text(
                 ml.narrowWeekdays[(ml.firstDayOfWeekIndex + i) % 7],
                 style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    fontWeight: FontWeight.w700),
+                  color: theme.colorScheme.onSurfaceVariant,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
             ),
           ),
@@ -279,8 +296,8 @@ class _DayCell extends StatelessWidget {
           border: selected
               ? Border.all(color: theme.colorScheme.secondary, width: 2.5)
               : isToday
-                  ? Border.all(color: theme.colorScheme.primary, width: 1.5)
-                  : null,
+              ? Border.all(color: theme.colorScheme.primary, width: 1.5)
+              : null,
         ),
         padding: const EdgeInsets.only(top: 5),
         child: Column(
@@ -288,8 +305,9 @@ class _DayCell extends StatelessWidget {
             Text(
               '${day.day}',
               style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight:
-                    (isToday || selected) ? FontWeight.w700 : FontWeight.w500,
+                fontWeight: (isToday || selected)
+                    ? FontWeight.w700
+                    : FontWeight.w500,
                 // Today's number stays green even when the day is selected.
                 color: isToday ? theme.colorScheme.primary : null,
               ),

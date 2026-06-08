@@ -13,18 +13,52 @@ void main() {
   // Seeds one row in each relevant table: user data, device-local data, the
   // pull cursor, the catalog (public), and a local flag (onboarding).
   Future<void> seed() async {
-    await db.into(db.areas).insert(AreasCompanion.insert(
-        id: 'a1', userId: 'u1', name: 'Greda', updatedAt: t0));
-    await db.into(db.tasks).insert(TasksCompanion.insert(
-        id: 't1', userId: 'u1', taskTypeId: 'water', date: t0, updatedAt: t0));
-    await db.into(db.deviceLocations).insert(DeviceLocationsCompanion.insert(
-        latitude: 46.0, longitude: 14.5, updatedAt: t0));
-    await db.into(db.syncCursors).insert(
-        SyncCursorsCompanion.insert(name: 'pull', lastPulledAt: t0));
-    await db.into(db.taskTypes).insert(TaskTypesCompanion.insert(
-        id: 'water', labels: '{}', icon: '💧', category: 'care'));
-    await db.into(db.localFlags).insert(
-        LocalFlagsCompanion.insert(key: 'onboardingSeen', value: '1'));
+    await db
+        .into(db.areas)
+        .insert(
+          AreasCompanion.insert(
+            id: 'a1',
+            userId: 'u1',
+            name: 'Greda',
+            updatedAt: t0,
+          ),
+        );
+    await db
+        .into(db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: 't1',
+            userId: 'u1',
+            taskTypeId: 'water',
+            date: t0,
+            updatedAt: t0,
+          ),
+        );
+    await db
+        .into(db.deviceLocations)
+        .insert(
+          DeviceLocationsCompanion.insert(
+            latitude: 46.0,
+            longitude: 14.5,
+            updatedAt: t0,
+          ),
+        );
+    await db
+        .into(db.syncCursors)
+        .insert(SyncCursorsCompanion.insert(name: 'pull', lastPulledAt: t0));
+    await db
+        .into(db.taskTypes)
+        .insert(
+          TaskTypesCompanion.insert(
+            id: 'water',
+            labels: '{}',
+            icon: '💧',
+            category: 'care',
+          ),
+        );
+    await db
+        .into(db.localFlags)
+        .insert(LocalFlagsCompanion.insert(key: 'onboardingSeen', value: '1'));
   }
 
   Future<int> count(TableInfo<Table, dynamic> t) async =>
@@ -48,12 +82,14 @@ void main() {
       expect(await count(db.localFlags), 1);
     });
 
-    test('keepFlags: false also clears local flags (full sign-out reset)',
-        () async {
-      await seed();
-      await db.clearUserData(keepFlags: false);
-      expect(await count(db.localFlags), 0);
-      expect(await count(db.taskTypes), 1); // catalog still kept
-    });
+    test(
+      'keepFlags: false also clears local flags (full sign-out reset)',
+      () async {
+        await seed();
+        await db.clearUserData(keepFlags: false);
+        expect(await count(db.localFlags), 0);
+        expect(await count(db.taskTypes), 1); // catalog still kept
+      },
+    );
   });
 }

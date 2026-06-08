@@ -51,13 +51,12 @@ WeatherService _service(
   _StubClient client,
   _FakeClock clock, {
   WeatherCacheRepository? cache,
-}) =>
-    WeatherService(
-      client,
-      cache ?? _FakeCache(),
-      clock: clock,
-      retryDelays: const [], // no waiting in tests
-    );
+}) => WeatherService(
+  client,
+  cache ?? _FakeCache(),
+  clock: clock,
+  retryDelays: const [], // no waiting in tests
+);
 
 OpenMeteoResponse _respWithTemp(double temp) =>
     OpenMeteoResponse(current: OpenMeteoCurrent(temperature2m: temp));
@@ -67,8 +66,10 @@ void main() {
     test('returns null (no throw) when the client fails', () async {
       final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
       final client = _StubClient(); // next == null → throws
-      final result =
-          await _service(client, clock).capture(latitude: 46, longitude: 14.5);
+      final result = await _service(
+        client,
+        clock,
+      ).capture(latitude: 46, longitude: 14.5);
       expect(result, isNull);
     });
   });
@@ -79,29 +80,25 @@ void main() {
       final client = _StubClient()..next = _respWithTemp(20);
       final service = _service(client, clock);
 
-      final first =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final first = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(first?.temperature, 20);
       expect(client.calls, 1);
 
       // Within TTL → cached, no new fetch even though the source changed.
       clock.advance(const Duration(minutes: 10));
       client.next = _respWithTemp(25);
-      final cached =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final cached = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(cached?.temperature, 20);
       expect(client.calls, 1);
 
       // Past TTL (35 min total) → re-fetch.
       clock.advance(const Duration(minutes: 25));
-      final fresh =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final fresh = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(fresh?.temperature, 25);
       expect(client.calls, 2);
     });
 
-    test('falls back to the last known snapshot when a re-fetch fails',
-        () async {
+    test('falls back to the last known snapshot when a re-fetch fails', () async {
       final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
       final client = _StubClient()..next = _respWithTemp(20);
       final service = _service(client, clock);
@@ -111,8 +108,10 @@ void main() {
       // TTL expired and now offline — keep showing the last snapshot, not null.
       clock.advance(const Duration(minutes: 40));
       client.next = null;
-      final degraded =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final degraded = await service.captureCached(
+        latitude: 46,
+        longitude: 14.5,
+      );
       expect(degraded?.temperature, 20);
       expect(client.calls, 2);
     });
@@ -127,37 +126,42 @@ void main() {
       // 3 h later and offline: beyond the 2 h stale window → unavailable.
       clock.advance(const Duration(hours: 3));
       client.next = null;
-      final result =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final result = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(result, isNull);
     });
 
-    test('reuses the persisted snapshot across a new service (restart)',
-        () async {
-      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
-      final cache = _FakeCache();
-      final client = _StubClient()..next = _respWithTemp(20);
+    test(
+      'reuses the persisted snapshot across a new service (restart)',
+      () async {
+        final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+        final cache = _FakeCache();
+        final client = _StubClient()..next = _respWithTemp(20);
 
-      await _service(client, clock, cache: cache)
-          .captureCached(latitude: 46, longitude: 14.5);
+        await _service(
+          client,
+          clock,
+          cache: cache,
+        ).captureCached(latitude: 46, longitude: 14.5);
 
-      // New service instance (app restart), offline within the fresh TTL →
-      // serves the persisted snapshot without any network call.
-      final offline = _StubClient(); // always throws
-      final restarted = _service(offline, clock, cache: cache);
-      final result =
-          await restarted.captureCached(latitude: 46, longitude: 14.5);
-      expect(result?.temperature, 20);
-      expect(offline.calls, 0);
-    });
+        // New service instance (app restart), offline within the fresh TTL →
+        // serves the persisted snapshot without any network call.
+        final offline = _StubClient(); // always throws
+        final restarted = _service(offline, clock, cache: cache);
+        final result = await restarted.captureCached(
+          latitude: 46,
+          longitude: 14.5,
+        );
+        expect(result?.temperature, 20);
+        expect(offline.calls, 0);
+      },
+    );
 
     test('returns null when offline with no prior snapshot', () async {
       final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
       final client = _StubClient(); // always throws
       final service = _service(client, clock);
 
-      final result =
-          await service.captureCached(latitude: 46, longitude: 14.5);
+      final result = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(result, isNull);
     });
   });

@@ -45,24 +45,26 @@ class SyncCoordinator extends _$SyncCoordinator {
     // safe no-op offline; startup/reconnect/periodic sync claims+pushes those.
     if (push != null) {
       final sub = db
-          .tableUpdates(TableUpdateQuery.onAllTables([
-            db.profiles,
-            db.areas,
-            db.supplies,
-            db.recipes,
-            db.userPlants,
-            db.tasks,
-            db.notes,
-            db.taskSubjects,
-            db.taskReminders,
-            db.taskSupplies,
-          ]))
+          .tableUpdates(
+            TableUpdateQuery.onAllTables([
+              db.profiles,
+              db.areas,
+              db.supplies,
+              db.recipes,
+              db.userPlants,
+              db.tasks,
+              db.notes,
+              db.taskSubjects,
+              db.taskReminders,
+              db.taskSupplies,
+            ]),
+          )
           .listen((_) {
-        _pushDebounce?.cancel();
-        _pushDebounce = Timer(kPushDebounce, () {
-          if (auth.hasSession) unawaited(_safePush(push));
-        });
-      });
+            _pushDebounce?.cancel();
+            _pushDebounce = Timer(kPushDebounce, () {
+              if (auth.hasSession) unawaited(_safePush(push));
+            });
+          });
       ref.onDispose(sub.cancel);
     }
 

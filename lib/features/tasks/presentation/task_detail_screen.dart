@@ -60,7 +60,8 @@ class TaskDetailScreen extends ConsumerWidget {
         ],
       ),
       body: taskAsync.when(
-        loading: () => const Center(child: CircularProgressIndicator.adaptive()),
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
         error: (_, _) => Center(child: Text(t.task_detail.not_found)),
         data: (task) {
           if (task == null) {
@@ -79,7 +80,7 @@ class TaskDetailScreen extends ConsumerWidget {
           // Resolve the task's subjects (plants and/or areas) into one label.
           final subjects =
               ref.watch(taskSubjectsForTaskProvider(task.id)).asData?.value ??
-                  const [];
+              const [];
           final userPlants =
               ref.watch(userPlantsMapProvider).asData?.value ?? const {};
           final plantsCatalog =
@@ -94,34 +95,42 @@ class TaskDetailScreen extends ConsumerWidget {
           // Consumed supplies, e.g. "Urea 1kg, NPK 0.5kg".
           final taskSupplies =
               ref.watch(taskSuppliesProvider(task.id)).asData?.value ??
-                  const [];
+              const [];
           final supplyById = {
             for (final s
                 in ref.watch(suppliesListProvider).asData?.value ?? const [])
-              s.id: s
+              s.id: s,
           };
           final suppliesLabel = taskSupplies.isEmpty
               ? null
-              : taskSupplies.map((ts) {
-                  final s = supplyById[ts.supplyId];
-                  final unit = s?.unit ?? '';
-                  final amt = ts.amount == ts.amount.roundToDouble()
-                      ? ts.amount.toInt().toString()
-                      : ts.amount.toString();
-                  return '${s?.name ?? ts.supplyId} $amt$unit';
-                }).join(', ');
+              : taskSupplies
+                    .map((ts) {
+                      final s = supplyById[ts.supplyId];
+                      final unit = s?.unit ?? '';
+                      final amt = ts.amount == ts.amount.roundToDouble()
+                          ? ts.amount.toInt().toString()
+                          : ts.amount.toString();
+                      return '${s?.name ?? ts.supplyId} $amt$unit';
+                    })
+                    .join(', ');
 
           // Active reminders, e.g. "1 dan prej ob 18:00, 1 ura prej".
           final reminders =
               ref.watch(remindersForTaskProvider(task.id)).asData?.value ??
-                  const [];
+              const [];
           final remindersLabel = reminders.isEmpty
               ? null
               : reminders
-                  .map((r) => reminderLabel(
-                      ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
-                      t))
-                  .join(', ');
+                    .map(
+                      (r) => reminderLabel(
+                        ReminderSpec(
+                          offsetMinutes: r.offset,
+                          time: r.reminderTime,
+                        ),
+                        t,
+                      ),
+                    )
+                    .join(', ');
 
           return Column(
             children: [
@@ -137,7 +146,8 @@ class TaskDetailScreen extends ConsumerWidget {
                         subjectLabel: subjectsLabel,
                       ),
                       SectionLabel(
-                          '${t.subject_picker.title} (${subjects.length})'),
+                        '${t.subject_picker.title} (${subjects.length})',
+                      ),
                       _SubjectsCard(
                         subjects: subjects,
                         areas: areas,
@@ -181,11 +191,18 @@ class TaskDetailScreen extends ConsumerWidget {
                   );
                   // context not used after await — only the repo (lint-safe).
                   if (picked != null) {
-                    unawaited(repo.reschedule(
-                      id,
-                      DateTime(picked.year, picked.month, picked.day,
-                          current.hour, current.minute),
-                    ));
+                    unawaited(
+                      repo.reschedule(
+                        id,
+                        DateTime(
+                          picked.year,
+                          picked.month,
+                          picked.day,
+                          current.hour,
+                          current.minute,
+                        ),
+                      ),
+                    );
                   }
                 },
               ),
@@ -215,8 +232,10 @@ class TaskDetailScreen extends ConsumerWidget {
               const SheetHandle(),
               if (isWaiting) ...[
                 ListTile(
-                  leading: Icon(Icons.check_circle_outline,
-                      color: theme.colorScheme.primary),
+                  leading: Icon(
+                    Icons.check_circle_outline,
+                    color: theme.colorScheme.primary,
+                  ),
                   title: Text(t.task_detail.action_complete),
                   onTap: () {
                     Navigator.of(ctx).pop();
@@ -245,8 +264,10 @@ class TaskDetailScreen extends ConsumerWidget {
                 title: Text(t.task_detail.action_edit),
                 onTap: () {
                   Navigator.of(ctx).pop();
-                  router
-                      .pushNamed('task-edit', pathParameters: {'id': task.id});
+                  router.pushNamed(
+                    'task-edit',
+                    pathParameters: {'id': task.id},
+                  );
                 },
               ),
               ListTile(
@@ -259,8 +280,10 @@ class TaskDetailScreen extends ConsumerWidget {
               ),
               Divider(height: 1, color: theme.colorScheme.outlineVariant),
               ListTile(
-                leading:
-                    Icon(Icons.delete_outline, color: theme.colorScheme.error),
+                leading: Icon(
+                  Icons.delete_outline,
+                  color: theme.colorScheme.error,
+                ),
                 title: Text(
                   t.task_detail.action_delete,
                   style: TextStyle(color: theme.colorScheme.error),
@@ -270,7 +293,8 @@ class TaskDetailScreen extends ConsumerWidget {
                   if (await showConfirmDeleteDialog(ctx)) {
                     sheetNav.pop();
                     unawaited(
-                        repo.softDelete(task.id).then((_) => router.pop()));
+                      repo.softDelete(task.id).then((_) => router.pop()),
+                    );
                   }
                 },
               ),
@@ -300,8 +324,9 @@ class _HeroBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final icon = taskType?.icon ?? '📋';
-    final label =
-        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
+    final label = taskType != null
+        ? catalogLabel(taskType!.labels)
+        : task.taskTypeId;
     final isWaiting = task.status == TaskStatus.waiting;
 
     return Row(
@@ -325,14 +350,16 @@ class _HeroBlock extends StatelessWidget {
             children: [
               Text(
                 label,
-                style: theme.textTheme.titleMedium
-                    ?.copyWith(fontWeight: FontWeight.w800),
+                style: theme.textTheme.titleMedium?.copyWith(
+                  fontWeight: FontWeight.w800,
+                ),
               ),
               if (subjectLabel != null && subjectLabel!.isNotEmpty)
                 Text(
                   '🪴 $subjectLabel',
                   style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant),
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               const SizedBox(height: 6),
               _StatusPill(isWaiting: isWaiting, task: task),
@@ -401,9 +428,10 @@ class _SubjectsCard extends StatelessWidget {
           for (var i = 0; i < subjects.length; i++) ...[
             if (i > 0)
               Divider(
-                  height: 1,
-                  indent: 56,
-                  color: theme.colorScheme.outlineVariant),
+                height: 1,
+                indent: 56,
+                color: theme.colorScheme.outlineVariant,
+              ),
             _row(context, subjects[i]),
           ],
         ],
@@ -413,12 +441,19 @@ class _SubjectsCard extends StatelessWidget {
 
   Widget _row(BuildContext context, TaskSubject s) {
     final theme = Theme.of(context);
-    final spec =
-        TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId);
-    final label =
-        specLabel(spec, areas: areas, userPlants: userPlants, plants: plants);
-    final icon =
-        specIcon(spec, areas: areas, userPlants: userPlants, plants: plants);
+    final spec = TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId);
+    final label = specLabel(
+      spec,
+      areas: areas,
+      userPlants: userPlants,
+      plants: plants,
+    );
+    final icon = specIcon(
+      spec,
+      areas: areas,
+      userPlants: userPlants,
+      plants: plants,
+    );
     // For a plant subject, show its area as a subtitle (derived from instance).
     final plantArea = s.userPlantId != null
         ? userPlants[s.userPlantId]?.areaId
@@ -429,17 +464,25 @@ class _SubjectsCard extends StatelessWidget {
       leading: Text(icon, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
       subtitle: areaName != null
-          ? Text('🪴 $areaName',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
+          ? Text(
+              '🪴 $areaName',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
           : null,
-      trailing: Icon(Icons.chevron_right,
-          color: theme.colorScheme.onSurfaceVariant, size: 20),
+      trailing: Icon(
+        Icons.chevron_right,
+        color: theme.colorScheme.onSurfaceVariant,
+        size: 20,
+      ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       onTap: () {
         if (s.userPlantId != null) {
-          context
-              .pushNamed('plant-detail', pathParameters: {'id': s.userPlantId!});
+          context.pushNamed(
+            'plant-detail',
+            pathParameters: {'id': s.userPlantId!},
+          );
         } else if (s.areaId != null) {
           context.pushNamed('area-detail', pathParameters: {'id': s.areaId!});
         }
@@ -472,14 +515,17 @@ class _WeatherSection extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Row(
           children: [
-            Icon(Icons.cloud_outlined,
-                color: theme.colorScheme.onSurfaceVariant),
+            Icon(
+              Icons.cloud_outlined,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
             const SizedBox(width: 12),
             Expanded(
               child: Text(
                 hint,
                 style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant),
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],
@@ -528,10 +574,7 @@ class _DetailsCard extends StatelessWidget {
           children: [
             for (var i = 0; i < rows.length; i++) ...[
               if (i > 0)
-                Divider(
-                  height: 1,
-                  color: theme.colorScheme.outlineVariant,
-                ),
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
               _InfoRow(label: rows[i].$1, value: rows[i].$2),
             ],
           ],
@@ -566,9 +609,7 @@ class _InfoRow extends StatelessWidget {
             ),
           ),
           const SizedBox(width: 12),
-          Expanded(
-            child: Text(value, style: theme.textTheme.bodyMedium),
-          ),
+          Expanded(child: Text(value, style: theme.textTheme.bodyMedium)),
         ],
       ),
     );

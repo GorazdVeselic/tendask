@@ -35,14 +35,18 @@ class WeatherService {
     required double latitude,
     required double longitude,
   }) async {
-    for (var attempt = 0;; attempt++) {
+    for (var attempt = 0; ; attempt++) {
       try {
-        final res =
-            await _client.fetch(latitude: latitude, longitude: longitude);
+        final res = await _client.fetch(
+          latitude: latitude,
+          longitude: longitude,
+        );
         return buildSnapshot(res, at: _clock.now());
       } on Exception catch (e) {
         if (attempt >= _retryDelays.length) {
-          debugPrint('Weather capture failed after ${attempt + 1} attempts: $e');
+          debugPrint(
+            'Weather capture failed after ${attempt + 1} attempts: $e',
+          );
           return null;
         }
         await Future<void>.delayed(_retryDelays[attempt]);
@@ -80,9 +84,9 @@ class WeatherService {
 // keepAlive so the service (and its cache reads) survive between visits to Home.
 @Riverpod(keepAlive: true)
 WeatherService weatherService(Ref ref) => WeatherService(
-      ref.watch(openMeteoClientProvider),
-      ref.watch(weatherCacheRepositoryProvider),
-    );
+  ref.watch(openMeteoClientProvider),
+  ref.watch(weatherCacheRepositoryProvider),
+);
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
 /// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
@@ -90,8 +94,7 @@ WeatherService weatherService(Ref ref) => WeatherService(
 @riverpod
 Future<WeatherSnapshot?> currentWeather(Ref ref) async {
   final loc = await ref.watch(gardenLocationProvider.future);
-  return ref.watch(weatherServiceProvider).captureCached(
-        latitude: loc.latitude,
-        longitude: loc.longitude,
-      );
+  return ref
+      .watch(weatherServiceProvider)
+      .captureCached(latitude: loc.latitude, longitude: loc.longitude);
 }

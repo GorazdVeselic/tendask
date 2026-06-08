@@ -18,7 +18,9 @@ class NotificationPreviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-            icon: const Icon(Icons.arrow_back), onPressed: context.pop),
+          icon: const Icon(Icons.arrow_back),
+          onPressed: context.pop,
+        ),
         title: Text(p.title),
         centerTitle: true,
       ),
@@ -68,9 +70,10 @@ class NotificationPreviewScreen extends StatelessWidget {
                 p.footer,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                    color: Colors.white.withValues(alpha: 0.85),
-                    fontSize: 12,
-                    height: 1.5),
+                  color: Colors.white.withValues(alpha: 0.85),
+                  fontSize: 12,
+                  height: 1.5,
+                ),
               ),
             ],
           ),
@@ -87,16 +90,23 @@ class _LockClock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        const Text('9:41',
-            style: TextStyle(
-                color: Colors.white,
-                fontSize: 64,
-                fontWeight: FontWeight.w300,
-                height: 1)),
+        const Text(
+          '9:41',
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 64,
+            fontWeight: FontWeight.w300,
+            height: 1,
+          ),
+        ),
         const SizedBox(height: 6),
-        Text(context.t.notif_preview.date,
-            style: TextStyle(
-                color: Colors.white.withValues(alpha: 0.9), fontSize: 15)),
+        Text(
+          context.t.notif_preview.date,
+          style: TextStyle(
+            color: Colors.white.withValues(alpha: 0.9),
+            fontSize: 15,
+          ),
+        ),
       ],
     );
   }
@@ -137,10 +147,12 @@ class _NotifCard extends StatelessWidget {
             width: 34,
             height: 34,
             decoration: BoxDecoration(
-                color: AppColors.green,
-                borderRadius: BorderRadius.circular(9)),
+              color: AppColors.green,
+              borderRadius: BorderRadius.circular(9),
+            ),
             child: Center(
-                child: Text(icon, style: const TextStyle(fontSize: 18))),
+              child: Text(icon, style: const TextStyle(fontSize: 18)),
+            ),
           ),
           const SizedBox(width: 11),
           Expanded(
@@ -150,40 +162,61 @@ class _NotifCard extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    const Text('Tendask',
-                        style: TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.muted,
-                            letterSpacing: 0.4)),
-                    Text(time,
-                        style: const TextStyle(
-                            fontSize: 11,
-                            fontWeight: FontWeight.w600,
-                            color: AppColors.muted)),
+                    const Text(
+                      'Tendask',
+                      style: TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.muted,
+                        letterSpacing: 0.4,
+                      ),
+                    ),
+                    Text(
+                      time,
+                      style: const TextStyle(
+                        fontSize: 11,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.muted,
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 2),
-                Text(title,
-                    style: const TextStyle(
-                        fontSize: 14.5,
-                        fontWeight: FontWeight.w700,
-                        color: AppColors.ink)),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 14.5,
+                    fontWeight: FontWeight.w700,
+                    color: AppColors.ink,
+                  ),
+                ),
                 const SizedBox(height: 2),
-                Text(body,
-                    style: const TextStyle(
-                        fontSize: 13, color: AppColors.ink, height: 1.4)),
+                Text(
+                  body,
+                  style: const TextStyle(
+                    fontSize: 13,
+                    color: AppColors.ink,
+                    height: 1.4,
+                  ),
+                ),
                 const SizedBox(height: 7),
                 Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 7, vertical: 2),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 7,
+                    vertical: 2,
+                  ),
                   decoration: BoxDecoration(
-                      color: tagBg, borderRadius: BorderRadius.circular(999)),
-                  child: Text(tag,
-                      style: TextStyle(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: tagFg)),
+                    color: tagBg,
+                    borderRadius: BorderRadius.circular(999),
+                  ),
+                  child: Text(
+                    tag,
+                    style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w700,
+                      color: tagFg,
+                    ),
+                  ),
                 ),
               ],
             ),

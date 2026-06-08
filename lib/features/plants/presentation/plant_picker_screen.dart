@@ -42,11 +42,13 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
     final results = plants == null
         ? <Plant>[]
         : plants
-            .where((p) =>
-                _category == 'all' ||
-                coarsePlantCategory(p.category) == _category)
-            .where((p) => plantMatchesQuery(p, normQuery))
-            .toList();
+              .where(
+                (p) =>
+                    _category == 'all' ||
+                    coarsePlantCategory(p.category) == _category,
+              )
+              .where((p) => plantMatchesQuery(p, normQuery))
+              .toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -98,8 +100,10 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                     padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
                     children: [
                       if (results.isNotEmpty) ...[
-                        SectionLabel(t.plants.from_catalog,
-                            padding: const EdgeInsets.only(bottom: 6)),
+                        SectionLabel(
+                          t.plants.from_catalog,
+                          padding: const EdgeInsets.only(bottom: 6),
+                        ),
                         Card(
                           child: Column(
                             children: [
@@ -112,9 +116,10 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
                                   ),
                                 _CatalogRow(
                                   plant: results[i],
-                                  onTap: () => context.pop(
-                                    (plantId: results[i].id, customName: null),
-                                  ),
+                                  onTap: () => context.pop((
+                                    plantId: results[i].id,
+                                    customName: null,
+                                  )),
                                 ),
                               ],
                             ],
@@ -137,10 +142,7 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
 }
 
 class _CatalogRow extends StatelessWidget {
-  const _CatalogRow({
-    required this.plant,
-    required this.onTap,
-  });
+  const _CatalogRow({required this.plant, required this.onTap});
 
   final Plant plant;
   final VoidCallback onTap;
@@ -151,10 +153,14 @@ class _CatalogRow extends StatelessWidget {
     final theme = Theme.of(context);
     return ListTile(
       leading: Text(plant.icon ?? '🌿', style: const TextStyle(fontSize: 22)),
-      title: Text(catalogLabel(plant.labels), style: theme.textTheme.bodyMedium),
+      title: Text(
+        catalogLabel(plant.labels),
+        style: theme.textTheme.bodyMedium,
+      ),
       subtitle: Text(
-          plantCategoryLabel(coarsePlantCategory(plant.category), t),
-          style: theme.textTheme.bodySmall),
+        plantCategoryLabel(coarsePlantCategory(plant.category), t),
+        style: theme.textTheme.bodySmall,
+      ),
       trailing: Icon(Icons.add, color: theme.colorScheme.primary),
       onTap: onTap,
     );
@@ -162,10 +168,7 @@ class _CatalogRow extends StatelessWidget {
 }
 
 class _CustomEntry extends StatelessWidget {
-  const _CustomEntry({
-    required this.query,
-    required this.onAdd,
-  });
+  const _CustomEntry({required this.query, required this.onAdd});
 
   final String query;
   final ValueChanged<String> onAdd;
@@ -188,8 +191,10 @@ class _CustomEntry extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SectionLabel(t.plants.not_found,
-                padding: const EdgeInsets.only(bottom: 6)),
+            SectionLabel(
+              t.plants.not_found,
+              padding: const EdgeInsets.only(bottom: 6),
+            ),
             InkWell(
               borderRadius: BorderRadius.circular(8),
               onTap: () => onAdd(query),
@@ -197,16 +202,18 @@ class _CustomEntry extends StatelessWidget {
                 padding: const EdgeInsets.symmetric(vertical: 6),
                 child: Text(
                   t.plants.custom_add(q: query),
-                  style: theme.textTheme.bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ),
             const SizedBox(height: 4),
             Text(
               t.plants.custom_private,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),

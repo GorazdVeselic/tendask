@@ -18,9 +18,13 @@ class _FakeAdapter implements HttpClientAdapter {
     Future<void>? cancelFuture,
   ) async {
     calls++;
-    return ResponseBody.fromString(body, 200, headers: {
-      Headers.contentTypeHeader: [Headers.jsonContentType],
-    });
+    return ResponseBody.fromString(
+      body,
+      200,
+      headers: {
+        Headers.contentTypeHeader: [Headers.jsonContentType],
+      },
+    );
   }
 
   @override
@@ -52,21 +56,23 @@ void main() {
       expect(places.first.country, 'Slovenija');
     });
 
-    test('is tolerant: missing optionals default, int coords become double',
-        () async {
-      // No admin1/country, no name, integer latitude/longitude.
-      final (client, _) = _clientWith('''
+    test(
+      'is tolerant: missing optionals default, int coords become double',
+      () async {
+        // No admin1/country, no name, integer latitude/longitude.
+        final (client, _) = _clientWith('''
         {"results": [{"latitude": 46, "longitude": 15}]}
       ''');
 
-      final places = await client.search('x');
-      expect(places, hasLength(1));
-      expect(places.first.name, ''); // missing name → empty, not a crash
-      expect(places.first.admin1, isNull);
-      expect(places.first.country, isNull);
-      expect(places.first.latitude, 46.0);
-      expect(places.first.longitude, 15.0);
-    });
+        final places = await client.search('x');
+        expect(places, hasLength(1));
+        expect(places.first.name, ''); // missing name → empty, not a crash
+        expect(places.first.admin1, isNull);
+        expect(places.first.country, isNull);
+        expect(places.first.latitude, 46.0);
+        expect(places.first.longitude, 15.0);
+      },
+    );
 
     test('returns [] when the API omits results', () async {
       final (client, _) = _clientWith('{}');

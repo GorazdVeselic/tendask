@@ -62,10 +62,9 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
   }
 
   Future<void> _addFromCatalog(String plantId) async {
-    final id = await ref.read(userPlantsRepositoryProvider).create(
-          userId: ref.read(authServiceProvider).userId,
-          plantId: plantId,
-        );
+    final id = await ref
+        .read(userPlantsRepositoryProvider)
+        .create(userId: ref.read(authServiceProvider).userId, plantId: plantId);
     widget.onTogglePlant(id, true);
   }
 
@@ -108,9 +107,11 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
 
     final plants = userPlants.values
         .where((p) => inCategory(p.plantId))
-        .where((p) =>
-            normQuery.isEmpty ||
-            userPlantLabel(p, catalog).toLowerCase().contains(normQuery))
+        .where(
+          (p) =>
+              normQuery.isEmpty ||
+              userPlantLabel(p, catalog).toLowerCase().contains(normQuery),
+        )
         .toList();
     final areaList = areas.values.toList();
     final ownedPlantIds = {
@@ -120,22 +121,23 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
     final catalogMatches = normQuery.isEmpty
         ? <Plant>[]
         : catalogList
-            .where((p) =>
-                !ownedPlantIds.contains(p.id) &&
-                inCategory(p.id) &&
-                plantMatchesQuery(p, normQuery))
-            .toList();
+              .where(
+                (p) =>
+                    !ownedPlantIds.contains(p.id) &&
+                    inCategory(p.id) &&
+                    plantMatchesQuery(p, normQuery),
+              )
+              .toList();
 
     // Areas of the selected plants — shown as context, not a co-equal subject.
     final selectedAreaNames = <String>{
-      for (final id in widget.plantIds)
-        ?areas[userPlants[id]?.areaId]?.name,
+      for (final id in widget.plantIds) ?areas[userPlants[id]?.areaId]?.name,
     };
 
     String? areaSubtitle(UserPlant p) =>
         p.areaId != null && areas[p.areaId] != null
-            ? '🪴 ${areas[p.areaId]!.name}'
-            : null;
+        ? '🪴 ${areas[p.areaId]!.name}'
+        : null;
 
     // Only offer category chips the user actually has plants in — an empty
     // category would just return nothing.
@@ -157,7 +159,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
         if (userPlants[id] case final p?)
           (
             label: userPlantLabel(p, catalog),
-            onRemove: () => widget.onTogglePlant(id, false)
+            onRemove: () => widget.onTogglePlant(id, false),
           ),
       for (final id in widget.areaIds)
         if (areas[id] case final a?)
@@ -192,12 +194,15 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
               Row(
                 children: [
                   Expanded(
-                    child: SectionLabel(t.entry.subject_plants,
-                        padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
+                    child: SectionLabel(
+                      t.entry.subject_plants,
+                      padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
+                    ),
                   ),
                   IconButton(
                     icon: Icon(
-                        _searchExpanded ? Icons.search_off : Icons.search),
+                      _searchExpanded ? Icons.search_off : Icons.search,
+                    ),
                     color: theme.colorScheme.primary,
                     onPressed: _toggleSearch,
                   ),
@@ -225,7 +230,9 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                   subtitle: areaSubtitle(p),
                   selected: widget.plantIds.contains(p.id),
                   onTap: () => widget.onTogglePlant(
-                      p.id, !widget.plantIds.contains(p.id)),
+                    p.id,
+                    !widget.plantIds.contains(p.id),
+                  ),
                 ),
               if (selectedAreaNames.isNotEmpty)
                 Padding(
@@ -233,27 +240,34 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                   child: Text(
                     '🪴 ${t.entry.subject_areas_context} '
                     '${selectedAreaNames.join(', ')}',
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
                 ),
               _AddAction(label: t.entry.subject_add_plant, onTap: _addPlant),
               if (catalogMatches.isNotEmpty) ...[
-                SectionLabel(t.entry.subject_from_catalog,
-                    padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
+                SectionLabel(
+                  t.entry.subject_from_catalog,
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
+                ),
                 for (final p in catalogMatches)
                   PlantSelectRow(
                     icon: p.icon ?? '🌿',
                     title: catalogLabel(p.labels),
                     subtitle: plantCategoryLabel(
-                        coarsePlantCategory(p.category), t),
+                      coarsePlantCategory(p.category),
+                      t,
+                    ),
                     selected: false,
                     onTap: () => _addFromCatalog(p.id),
                   ),
               ],
               const SizedBox(height: 8),
-              SectionLabel(t.entry.subject_area_section,
-                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4)),
+              SectionLabel(
+                t.entry.subject_area_section,
+                padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
+              ),
               if (areaList.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
@@ -263,8 +277,10 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                     children: [
                       for (final a in areaList)
                         FilterChip(
-                          avatar: Text(areaTypeIcon(a.type),
-                              style: const TextStyle(fontSize: 14)),
+                          avatar: Text(
+                            areaTypeIcon(a.type),
+                            style: const TextStyle(fontSize: 14),
+                          ),
                           label: Text(a.name),
                           selected: widget.areaIds.contains(a.id),
                           onSelected: (sel) => widget.onToggleArea(a.id, sel),
@@ -275,9 +291,12 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
               _AddAction(label: t.entry.subject_add_area, onTap: _addArea),
               Padding(
                 padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                child: Text(t.entry.subject_area_note,
-                    style: theme.textTheme.bodySmall
-                        ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+                child: Text(
+                  t.entry.subject_area_note,
+                  style: theme.textTheme.bodySmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
+                ),
               ),
             ],
           ),
@@ -309,9 +328,13 @@ class _SelectedBar extends StatelessWidget {
               color: cs.primary,
               borderRadius: BorderRadius.circular(999),
             ),
-            child: Text('${chips.length}',
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(color: cs.onPrimary, fontWeight: FontWeight.w700)),
+            child: Text(
+              '${chips.length}',
+              style: theme.textTheme.labelMedium?.copyWith(
+                color: cs.onPrimary,
+                fontWeight: FontWeight.w700,
+              ),
+            ),
           ),
           const SizedBox(width: 8),
           Expanded(
@@ -322,7 +345,9 @@ class _SelectedBar extends StatelessWidget {
                 itemCount: chips.length,
                 separatorBuilder: (_, _) => const SizedBox(width: 6),
                 itemBuilder: (_, i) => RemovableChip(
-                    label: chips[i].label, onRemove: chips[i].onRemove),
+                  label: chips[i].label,
+                  onRemove: chips[i].onRemove,
+                ),
               ),
             ),
           ),
@@ -346,8 +371,9 @@ class _AddAction extends StatelessWidget {
         icon: const Icon(Icons.add, size: 18),
         label: Text(label),
         style: TextButton.styleFrom(
-            padding: const EdgeInsets.symmetric(horizontal: 16),
-            visualDensity: VisualDensity.compact),
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          visualDensity: VisualDensity.compact,
+        ),
       ),
     );
   }

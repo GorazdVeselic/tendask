@@ -37,30 +37,40 @@ void main() {
   });
   tearDown(() async => db.close());
 
-  Map<String, dynamic> areaRow(String id,
-          {String name = 'Cloud', DateTime? at, bool deleted = false}) =>
-      {
-        'id': id,
-        'user_id': 'u1',
-        'name': name,
-        'type': 'bed',
-        'protected': false,
-        'updated_at': (at ?? t1).toIso8601String(),
-        'deleted': deleted,
-      };
+  Map<String, dynamic> areaRow(
+    String id, {
+    String name = 'Cloud',
+    DateTime? at,
+    bool deleted = false,
+  }) => {
+    'id': id,
+    'user_id': 'u1',
+    'name': name,
+    'type': 'bed',
+    'protected': false,
+    'updated_at': (at ?? t1).toIso8601String(),
+    'deleted': deleted,
+  };
 
   Future<Area?> area(String id) =>
       (db.select(db.areas)..where((a) => a.id.equals(id))).getSingleOrNull();
 
-  Future<void> insertLocalArea(String id,
-          {required String name, required DateTime at, required String sync}) =>
-      db.into(db.areas).insert(AreasCompanion.insert(
-            id: id,
-            userId: 'u1',
-            name: name,
-            updatedAt: at,
-            syncStatus: Value(sync),
-          ));
+  Future<void> insertLocalArea(
+    String id, {
+    required String name,
+    required DateTime at,
+    required String sync,
+  }) => db
+      .into(db.areas)
+      .insert(
+        AreasCompanion.insert(
+          id: id,
+          userId: 'u1',
+          name: name,
+          updatedAt: at,
+          syncStatus: Value(sync),
+        ),
+      );
 
   test('inserts new cloud rows, stamps synced, advances the cursor', () async {
     fetch.byTable['area'] = [areaRow('a1', at: t1)];
@@ -117,8 +127,9 @@ void main() {
     await service.pull();
 
     final areaCall = fetch.calls.firstWhere((c) => c.table == 'area');
-    final subjectCall =
-        fetch.calls.firstWhere((c) => c.table == 'task_subject');
+    final subjectCall = fetch.calls.firstWhere(
+      (c) => c.table == 'task_subject',
+    );
     expect(areaCall.userId, 'u1');
     expect(subjectCall.userId, isNull);
   });

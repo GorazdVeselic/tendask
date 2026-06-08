@@ -15,8 +15,12 @@ void main() {
   test('email OTP methods throw with no client (offline build)', () async {
     final auth = AuthService(null);
     await expectLater(
-        auth.sendEmailOtp('a@b.si'), throwsA(isA<AuthException>()));
+      auth.sendEmailOtp('a@b.si'),
+      throwsA(isA<AuthException>()),
+    );
     await expectLater(
-        auth.verifyEmailOtp('a@b.si', '123456'), throwsA(isA<AuthException>()));
+      auth.verifyEmailOtp('a@b.si', '123456'),
+      throwsA(isA<AuthException>()),
+    );
   });
 }

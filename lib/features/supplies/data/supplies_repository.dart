@@ -13,27 +13,27 @@ class SuppliesRepository {
   final Clock _clock;
   final _uuid = const Uuid();
 
-  Stream<List<Supply>> watchAll() => (
-        _db.select(_db.supplies)
-          ..where((s) => s.deleted.equals(false))
-          ..orderBy([(s) => OrderingTerm.asc(s.name)])
-      ).watch();
+  Stream<List<Supply>> watchAll() =>
+      (_db.select(_db.supplies)
+            ..where((s) => s.deleted.equals(false))
+            ..orderBy([(s) => OrderingTerm.asc(s.name)]))
+          .watch();
 
-  Future<Supply?> byId(String id) =>
-      (_db.select(_db.supplies)..where((s) => s.id.equals(id)))
-          .getSingleOrNull();
+  Future<Supply?> byId(String id) => (_db.select(
+    _db.supplies,
+  )..where((s) => s.id.equals(id))).getSingleOrNull();
 
-  Stream<List<TaskSupply>> watchByTask(String taskId) => (
-        _db.select(_db.taskSupplies)
-          ..where((ts) => ts.deleted.equals(false) & ts.taskId.equals(taskId))
-      ).watch();
+  Stream<List<TaskSupply>> watchByTask(String taskId) =>
+      (_db.select(
+            _db.taskSupplies,
+          )..where((ts) => ts.deleted.equals(false) & ts.taskId.equals(taskId)))
+          .watch();
 
   Future<List<TaskSupply>> suppliesForTask(String taskId) => _byTask(taskId);
 
-  Future<List<TaskSupply>> _byTask(String taskId) => (
-        _db.select(_db.taskSupplies)
-          ..where((ts) => ts.deleted.equals(false) & ts.taskId.equals(taskId))
-      ).get();
+  Future<List<TaskSupply>> _byTask(String taskId) => (_db.select(
+    _db.taskSupplies,
+  )..where((ts) => ts.deleted.equals(false) & ts.taskId.equals(taskId))).get();
 
   Future<String> create({
     required String userId,
@@ -43,15 +43,19 @@ class SuppliesRepository {
     double? lowThreshold,
   }) async {
     final id = _uuid.v4();
-    await _db.into(_db.supplies).insert(SuppliesCompanion.insert(
-          id: id,
-          userId: userId,
-          name: name,
-          unit: Value(unit),
-          quantity: Value(quantity),
-          lowThreshold: Value(lowThreshold),
-          updatedAt: _clock.now(),
-        ));
+    await _db
+        .into(_db.supplies)
+        .insert(
+          SuppliesCompanion.insert(
+            id: id,
+            userId: userId,
+            name: name,
+            unit: Value(unit),
+            quantity: Value(quantity),
+            lowThreshold: Value(lowThreshold),
+            updatedAt: _clock.now(),
+          ),
+        );
     return id;
   }
 
@@ -100,13 +104,17 @@ class SuppliesRepository {
         await _softDeleteTaskSupply(ts.id);
       }
       for (final spec in specs) {
-        await _db.into(_db.taskSupplies).insert(TaskSuppliesCompanion.insert(
-              id: _uuid.v4(),
-              taskId: taskId,
-              supplyId: spec.supplyId,
-              amount: spec.amount,
-              updatedAt: _clock.now(),
-            ));
+        await _db
+            .into(_db.taskSupplies)
+            .insert(
+              TaskSuppliesCompanion.insert(
+                id: _uuid.v4(),
+                taskId: taskId,
+                supplyId: spec.supplyId,
+                amount: spec.amount,
+                updatedAt: _clock.now(),
+              ),
+            );
       }
       if (isDone) await applyForTask(taskId);
     });
@@ -153,13 +161,15 @@ class SuppliesRepository {
   }
 
   Future<void> _markApplied(String taskSupplyId, bool applied) async {
-    await (_db.update(_db.taskSupplies)
-          ..where((ts) => ts.id.equals(taskSupplyId)))
-        .write(TaskSuppliesCompanion(
-      applied: Value(applied),
-      updatedAt: Value(_clock.now()),
-      syncStatus: const Value(kSyncPending),
-    ));
+    await (_db.update(
+      _db.taskSupplies,
+    )..where((ts) => ts.id.equals(taskSupplyId))).write(
+      TaskSuppliesCompanion(
+        applied: Value(applied),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
   }
 
   Future<void> _softDeleteTaskSupply(String id) async {

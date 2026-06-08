@@ -44,9 +44,9 @@ void main() {
     test('mow task type has correct fields', () async {
       await SeedService(db).runIfNeeded();
 
-      final mow = await (db.select(db.taskTypes)
-            ..where((t) => t.id.equals('mow')))
-          .getSingle();
+      final mow = await (db.select(
+        db.taskTypes,
+      )..where((t) => t.id.equals('mow'))).getSingle();
 
       expect(mow.requiresSubject, false);
       expect(mow.weatherSensitive, true);
@@ -63,17 +63,21 @@ void main() {
     final now = DateTime.utc(2026, 6, 2);
 
     test('insert and read back', () async {
-      await db.into(db.areas).insert(AreasCompanion.insert(
-        id: areaId,
-        userId: 'user-1',
-        name: 'Trata',
-        type: const Value(AreaType.lawn),
-        updatedAt: now,
-      ));
+      await db
+          .into(db.areas)
+          .insert(
+            AreasCompanion.insert(
+              id: areaId,
+              userId: 'user-1',
+              name: 'Trata',
+              type: const Value(AreaType.lawn),
+              updatedAt: now,
+            ),
+          );
 
-      final area = await (db.select(db.areas)
-            ..where((a) => a.id.equals(areaId)))
-          .getSingle();
+      final area = await (db.select(
+        db.areas,
+      )..where((a) => a.id.equals(areaId))).getSingle();
 
       expect(area.name, 'Trata');
       expect(area.type, AreaType.lawn);
@@ -82,41 +86,52 @@ void main() {
     });
 
     test('update name', () async {
-      await db.into(db.areas).insert(AreasCompanion.insert(
-        id: areaId,
-        userId: 'user-1',
-        name: 'Trata',
-        type: const Value(AreaType.lawn),
-        updatedAt: now,
-      ));
+      await db
+          .into(db.areas)
+          .insert(
+            AreasCompanion.insert(
+              id: areaId,
+              userId: 'user-1',
+              name: 'Trata',
+              type: const Value(AreaType.lawn),
+              updatedAt: now,
+            ),
+          );
 
       await (db.update(db.areas)..where((a) => a.id.equals(areaId))).write(
-        AreasCompanion(name: const Value('Sprednja trata'), updatedAt: Value(now)),
+        AreasCompanion(
+          name: const Value('Sprednja trata'),
+          updatedAt: Value(now),
+        ),
       );
 
-      final area = await (db.select(db.areas)
-            ..where((a) => a.id.equals(areaId)))
-          .getSingle();
+      final area = await (db.select(
+        db.areas,
+      )..where((a) => a.id.equals(areaId))).getSingle();
 
       expect(area.name, 'Sprednja trata');
     });
 
     test('soft delete sets deleted=true', () async {
-      await db.into(db.areas).insert(AreasCompanion.insert(
-        id: areaId,
-        userId: 'user-1',
-        name: 'Trata',
-        type: const Value(AreaType.lawn),
-        updatedAt: now,
-      ));
+      await db
+          .into(db.areas)
+          .insert(
+            AreasCompanion.insert(
+              id: areaId,
+              userId: 'user-1',
+              name: 'Trata',
+              type: const Value(AreaType.lawn),
+              updatedAt: now,
+            ),
+          );
 
       await (db.update(db.areas)..where((a) => a.id.equals(areaId))).write(
         AreasCompanion(deleted: const Value(true), updatedAt: Value(now)),
       );
 
-      final area = await (db.select(db.areas)
-            ..where((a) => a.id.equals(areaId)))
-          .getSingle();
+      final area = await (db.select(
+        db.areas,
+      )..where((a) => a.id.equals(areaId))).getSingle();
 
       expect(area.deleted, true);
     });
@@ -132,27 +147,35 @@ void main() {
 
     setUp(() async {
       await SeedService(db).runIfNeeded();
-      await db.into(db.areas).insert(AreasCompanion.insert(
-        id: areaId,
-        userId: 'user-1',
-        name: 'Vrt',
-        type: const Value(AreaType.bed),
-        updatedAt: now,
-      ));
+      await db
+          .into(db.areas)
+          .insert(
+            AreasCompanion.insert(
+              id: areaId,
+              userId: 'user-1',
+              name: 'Vrt',
+              type: const Value(AreaType.bed),
+              updatedAt: now,
+            ),
+          );
     });
 
     test('insert and read back', () async {
-      await db.into(db.tasks).insert(TasksCompanion.insert(
-        id: taskId,
-        userId: 'user-1',
-        taskTypeId: 'mow',
-        date: now,
-        updatedAt: now,
-      ));
+      await db
+          .into(db.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: taskId,
+              userId: 'user-1',
+              taskTypeId: 'mow',
+              date: now,
+              updatedAt: now,
+            ),
+          );
 
-      final task = await (db.select(db.tasks)
-            ..where((t) => t.id.equals(taskId)))
-          .getSingle();
+      final task = await (db.select(
+        db.tasks,
+      )..where((t) => t.id.equals(taskId))).getSingle();
 
       expect(task.status, TaskStatus.waiting);
       expect(task.deleted, false);
@@ -160,42 +183,52 @@ void main() {
     });
 
     test('update status to done', () async {
-      await db.into(db.tasks).insert(TasksCompanion.insert(
-        id: taskId,
-        userId: 'user-1',
-        taskTypeId: 'mow',
-        date: now,
-        updatedAt: now,
-      ));
+      await db
+          .into(db.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: taskId,
+              userId: 'user-1',
+              taskTypeId: 'mow',
+              date: now,
+              updatedAt: now,
+            ),
+          );
 
       await (db.update(db.tasks)..where((t) => t.id.equals(taskId))).write(
         TasksCompanion(
-            status: const Value(TaskStatus.done), updatedAt: Value(now)),
+          status: const Value(TaskStatus.done),
+          updatedAt: Value(now),
+        ),
       );
 
-      final task = await (db.select(db.tasks)
-            ..where((t) => t.id.equals(taskId)))
-          .getSingle();
+      final task = await (db.select(
+        db.tasks,
+      )..where((t) => t.id.equals(taskId))).getSingle();
 
       expect(task.status, TaskStatus.done);
     });
 
     test('soft delete sets deleted=true', () async {
-      await db.into(db.tasks).insert(TasksCompanion.insert(
-        id: taskId,
-        userId: 'user-1',
-        taskTypeId: 'mow',
-        date: now,
-        updatedAt: now,
-      ));
+      await db
+          .into(db.tasks)
+          .insert(
+            TasksCompanion.insert(
+              id: taskId,
+              userId: 'user-1',
+              taskTypeId: 'mow',
+              date: now,
+              updatedAt: now,
+            ),
+          );
 
       await (db.update(db.tasks)..where((t) => t.id.equals(taskId))).write(
         TasksCompanion(deleted: const Value(true), updatedAt: Value(now)),
       );
 
-      final task = await (db.select(db.tasks)
-            ..where((t) => t.id.equals(taskId)))
-          .getSingle();
+      final task = await (db.select(
+        db.tasks,
+      )..where((t) => t.id.equals(taskId))).getSingle();
 
       expect(task.deleted, true);
     });

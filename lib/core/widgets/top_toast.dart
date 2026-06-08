@@ -48,7 +48,9 @@ class _TopToast extends StatefulWidget {
 class _TopToastState extends State<_TopToast>
     with SingleTickerProviderStateMixin {
   late final AnimationController _c = AnimationController(
-      vsync: this, duration: const Duration(milliseconds: 220));
+    vsync: this,
+    duration: const Duration(milliseconds: 220),
+  );
 
   @override
   void initState() {
@@ -76,8 +78,10 @@ class _TopToastState extends State<_TopToast>
     return FadeTransition(
       opacity: fade,
       child: SlideTransition(
-        position: Tween(begin: const Offset(0, -0.3), end: Offset.zero)
-            .animate(fade),
+        position: Tween(
+          begin: const Offset(0, -0.3),
+          end: Offset.zero,
+        ).animate(fade),
         child: Material(
           elevation: 4,
           borderRadius: BorderRadius.circular(12),
@@ -89,10 +93,13 @@ class _TopToastState extends State<_TopToast>
                 Icon(Icons.info_outline, size: 20, color: widget.foreground),
                 const SizedBox(width: 10),
                 Expanded(
-                  child: Text(widget.message,
-                      style: TextStyle(
-                          color: widget.foreground,
-                          fontWeight: FontWeight.w600)),
+                  child: Text(
+                    widget.message,
+                    style: TextStyle(
+                      color: widget.foreground,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
                 ),
               ],
             ),

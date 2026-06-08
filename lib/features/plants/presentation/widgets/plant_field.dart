@@ -43,7 +43,8 @@ class PlantField extends ConsumerWidget {
                 child: Text(
                   t.plants.field_empty,
                   style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant),
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               )
             else
@@ -53,8 +54,10 @@ class PlantField extends ConsumerWidget {
                 children: [
                   for (final p in plants)
                     ChoiceChip(
-                      avatar: Text(userPlantIcon(p, catalog),
-                          style: const TextStyle(fontSize: 14)),
+                      avatar: Text(
+                        userPlantIcon(p, catalog),
+                        style: const TextStyle(fontSize: 14),
+                      ),
                       label: Text(userPlantLabel(p, catalog)),
                       selected: p.id == selectedId,
                       onSelected: (sel) => onChanged(sel ? p.id : null),
@@ -68,8 +71,9 @@ class PlantField extends ConsumerWidget {
                 icon: const Icon(Icons.add, size: 18),
                 label: Text(t.plants.field_add),
                 style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 8),
-                    visualDensity: VisualDensity.compact),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
+                  visualDensity: VisualDensity.compact,
+                ),
               ),
             ),
           ],

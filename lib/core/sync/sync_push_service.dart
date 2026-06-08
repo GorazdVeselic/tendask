@@ -13,10 +13,8 @@ part 'sync_push_service.g.dart';
 
 /// Upserts a batch of rows into one remote table. The seam that isolates the
 /// service from Supabase: the real impl hits Postgres, tests record the calls.
-typedef RemoteUpsert = Future<void> Function(
-  String table,
-  List<Map<String, dynamic>> rows,
-);
+typedef RemoteUpsert =
+    Future<void> Function(String table, List<Map<String, dynamic>> rows);
 
 /// Pushes locally-changed (`sync_status = pending`) rows to the cloud.
 ///
@@ -37,8 +35,8 @@ class SyncPushService {
     var n = 0;
     n += await _pushTable(
       _db.profiles,
-      () => _pending(_db.profiles, (t) => t.syncStatus,
-          ownerId: (t) => t.userId),
+      () =>
+          _pending(_db.profiles, (t) => t.syncStatus, ownerId: (t) => t.userId),
       profileToRemote,
       keyColumn: 'user_id',
       keyOf: (r) => r.userId,
@@ -53,24 +51,27 @@ class SyncPushService {
     );
     n += await _pushTable(
       _db.supplies,
-      () => _pending(_db.supplies, (t) => t.syncStatus,
-          ownerId: (t) => t.userId),
+      () =>
+          _pending(_db.supplies, (t) => t.syncStatus, ownerId: (t) => t.userId),
       supplyToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.recipes,
-      () => _pending(_db.recipes, (t) => t.syncStatus,
-          ownerId: (t) => t.userId),
+      () =>
+          _pending(_db.recipes, (t) => t.syncStatus, ownerId: (t) => t.userId),
       recipeToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
     n += await _pushTable(
       _db.userPlants,
-      () => _pending(_db.userPlants, (t) => t.syncStatus,
-          ownerId: (t) => t.userId),
+      () => _pending(
+        _db.userPlants,
+        (t) => t.syncStatus,
+        ownerId: (t) => t.userId,
+      ),
       userPlantToRemote,
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
@@ -118,15 +119,14 @@ class SyncPushService {
     GeneratedColumn<String> Function(T) syncStatus, {
     GeneratedColumn<String> Function(T)? ownerId,
   }) =>
-      (_db.select(table)
-            ..where((t) {
-              final pending = syncStatus(t).equals(kSyncPending);
-              // Never push rows still owned by 'local' — it is not a valid uuid
-              // (Postgres would reject it) and claimLocalRows re-owns them once
-              // a session exists. Child tables (no user_id) rely on that claim.
-              if (ownerId == null) return pending;
-              return pending & ownerId(t).equals(kLocalUserId).not();
-            }))
+      (_db.select(table)..where((t) {
+            final pending = syncStatus(t).equals(kSyncPending);
+            // Never push rows still owned by 'local' — it is not a valid uuid
+            // (Postgres would reject it) and claimLocalRows re-owns them once
+            // a session exists. Child tables (no user_id) rely on that claim.
+            if (ownerId == null) return pending;
+            return pending & ownerId(t).equals(kLocalUserId).not();
+          }))
           .get();
 
   Future<int> _pushTable<D>(

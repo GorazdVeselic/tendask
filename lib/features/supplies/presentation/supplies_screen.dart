@@ -27,12 +27,18 @@ class SuppliesScreen extends ConsumerWidget {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(t.supplies.title,
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700)),
-            Text(t.supplies.subtitle,
-                style: theme.textTheme.bodySmall
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              t.supplies.title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              t.supplies.subtitle,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
         actions: [
@@ -45,12 +51,12 @@ class SuppliesScreen extends ConsumerWidget {
       body: supplies == null
           ? const Center(child: CircularProgressIndicator.adaptive())
           : supplies.isEmpty
-              ? EmptyState(t.supplies.empty)
-              : ListView.builder(
-                  padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                  itemCount: supplies.length,
-                  itemBuilder: (_, i) => _SupplyRow(supply: supplies[i]),
-                ),
+          ? EmptyState(t.supplies.empty)
+          : ListView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+              itemCount: supplies.length,
+              itemBuilder: (_, i) => _SupplyRow(supply: supplies[i]),
+            ),
     );
   }
 }
@@ -79,12 +85,18 @@ class _SupplyRow extends StatelessWidget {
             ? Text(supply.unit!, style: theme.textTheme.bodySmall)
             : null,
         trailing: _isLow
-            ? Text('⚠️ ${t.supplies.low}',
-                style: theme.textTheme.labelMedium
-                    ?.copyWith(color: theme.colorScheme.error))
-            : Text(qtyText,
+            ? Text(
+                '⚠️ ${t.supplies.low}',
                 style: theme.textTheme.labelMedium?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant)),
+                  color: theme.colorScheme.error,
+                ),
+              )
+            : Text(
+                qtyText,
+                style: theme.textTheme.labelMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
         onTap: () => showSupplyEditSheet(context, supplyId: supply.id),
       ),
     );

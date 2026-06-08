@@ -17,7 +17,9 @@ ProfileRepository profileRepository(Ref ref) {
 /// Re-resolves the user id on sign-in/out so settings follow the account.
 final notificationSettingsProvider =
     StreamProvider.autoDispose<NotificationSettings>((ref) {
-  ref.watch(authStateChangesProvider);
-  final userId = ref.read(authServiceProvider).userId;
-  return ref.watch(profileRepositoryProvider).watchNotificationSettings(userId);
-});
+      ref.watch(authStateChangesProvider);
+      final userId = ref.read(authServiceProvider).userId;
+      return ref
+          .watch(profileRepositoryProvider)
+          .watchNotificationSettings(userId);
+    });

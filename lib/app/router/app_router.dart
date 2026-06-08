@@ -51,9 +51,8 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
                 GoRoute(
                   path: ':id',
                   name: 'task-detail',
-                  builder: (context, state) => TaskDetailScreen(
-                    id: state.pathParameters['id']!,
-                  ),
+                  builder: (context, state) =>
+                      TaskDetailScreen(id: state.pathParameters['id']!),
                 ),
               ],
             ),
@@ -78,9 +77,8 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
                 GoRoute(
                   path: ':id',
                   name: 'area-detail',
-                  builder: (context, state) => AreaDetailScreen(
-                    id: state.pathParameters['id']!,
-                  ),
+                  builder: (context, state) =>
+                      AreaDetailScreen(id: state.pathParameters['id']!),
                 ),
               ],
             ),
@@ -124,8 +122,9 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/plant-add',
       name: 'plant-add',
       builder: (context, state) {
-        final args =
-            state.extra is PlantAddArgs ? state.extra! as PlantAddArgs : const PlantAddArgs();
+        final args = state.extra is PlantAddArgs
+            ? state.extra! as PlantAddArgs
+            : const PlantAddArgs();
         return GardenPlantAddScreen(args: args);
       },
     ),

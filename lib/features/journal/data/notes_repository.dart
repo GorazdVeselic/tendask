@@ -13,11 +13,11 @@ class NotesRepository {
   final _uuid = const Uuid();
 
   /// All notes newest first — for the garden journal (03).
-  Stream<List<Note>> watchAll() => (
-        _db.select(_db.notes)
-          ..where((n) => n.deleted.equals(false))
-          ..orderBy([(n) => OrderingTerm.desc(n.date)])
-      ).watch();
+  Stream<List<Note>> watchAll() =>
+      (_db.select(_db.notes)
+            ..where((n) => n.deleted.equals(false))
+            ..orderBy([(n) => OrderingTerm.desc(n.date)]))
+          .watch();
 
   Future<Note?> byId(String id) =>
       (_db.select(_db.notes)..where((n) => n.id.equals(id))).getSingleOrNull();
@@ -30,15 +30,19 @@ class NotesRepository {
     String? userPlantId,
   }) async {
     final id = _uuid.v4();
-    await _db.into(_db.notes).insert(NotesCompanion.insert(
-          id: id,
-          userId: userId,
-          date: date.toUtc(),
-          content: content,
-          areaId: Value(areaId),
-          userPlantId: Value(userPlantId),
-          updatedAt: _clock.now(),
-        ));
+    await _db
+        .into(_db.notes)
+        .insert(
+          NotesCompanion.insert(
+            id: id,
+            userId: userId,
+            date: date.toUtc(),
+            content: content,
+            areaId: Value(areaId),
+            userPlantId: Value(userPlantId),
+            updatedAt: _clock.now(),
+          ),
+        );
     return id;
   }
 

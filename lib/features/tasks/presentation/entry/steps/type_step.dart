@@ -39,7 +39,9 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
 
   /// Catalog ordered by usage (most used first); ties keep the seed order.
   List<TaskType> _sortedByUsage(
-      Map<String, TaskType> catalog, Map<String, int> usage) {
+    Map<String, TaskType> catalog,
+    Map<String, int> usage,
+  ) {
     final list = catalog.values.toList();
     final seedOrder = {for (var i = 0; i < list.length; i++) list[i].id: i};
     list.sort((a, b) {
@@ -87,14 +89,15 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
             final visible = _expanded || !showToggle
                 ? sorted
                 : _ensureSelected(
-                    sorted.take(kTaskTypeGridCollapsed).toList(), sorted);
+                    sorted.take(kTaskTypeGridCollapsed).toList(),
+                    sorted,
+                  );
             return Column(
               children: [
                 GridView.builder(
                   shrinkWrap: true,
                   physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate:
-                      const SliverGridDelegateWithFixedCrossAxisCount(
+                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                     crossAxisCount: 3,
                     mainAxisSpacing: 8,
                     crossAxisSpacing: 8,
@@ -115,10 +118,13 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
                   TextButton.icon(
                     onPressed: () => setState(() => _expanded = !_expanded),
                     icon: Icon(
-                        _expanded ? Icons.expand_less : Icons.expand_more),
-                    label: Text(_expanded
-                        ? t.entry.type_show_less
-                        : t.entry.type_show_all(n: sorted.length)),
+                      _expanded ? Icons.expand_less : Icons.expand_more,
+                    ),
+                    label: Text(
+                      _expanded
+                          ? t.entry.type_show_less
+                          : t.entry.type_show_all(n: sorted.length),
+                    ),
                   ),
               ],
             );
@@ -128,8 +134,9 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
         Text(
           '💡 ${t.entry.type_hint}',
           textAlign: TextAlign.center,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
         const SizedBox(height: 12),
         Card(
@@ -138,22 +145,24 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
             borderRadius: BorderRadius.circular(12),
             onTap: widget.onNoteTap,
             child: Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [
                   const Text('✍️', style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 10),
                   Expanded(
-                    child: Text(t.entry.note_card_title,
-                        style: theme.textTheme.bodyMedium),
+                    child: Text(
+                      t.entry.note_card_title,
+                      style: theme.textTheme.bodyMedium,
+                    ),
                   ),
                   Text(
                     t.entry.note_card_action,
                     style: TextStyle(
-                        color: theme.colorScheme.primary,
-                        fontWeight: FontWeight.w600,
-                        fontSize: 13),
+                      color: theme.colorScheme.primary,
+                      fontWeight: FontWeight.w600,
+                      fontSize: 13,
+                    ),
                   ),
                 ],
               ),
@@ -187,9 +196,9 @@ class _RepeatLastCard extends ConsumerWidget {
         ref.watch(userPlantsMapProvider).asData?.value ?? const {};
     final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
     final labels = [
-      for (final s in (ref.watch(allTaskSubjectsProvider).asData?.value ??
-              const [])
-          .where((s) => s.taskId == last.id))
+      for (final s
+          in (ref.watch(allTaskSubjectsProvider).asData?.value ?? const [])
+              .where((s) => s.taskId == last.id))
         subjectLabel(s, areas: areas, userPlants: userPlants, plants: plants),
     ].where((l) => l.isNotEmpty);
     final summary = [
@@ -208,8 +217,11 @@ class _RepeatLastCard extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
             child: Row(
               children: [
-                Icon(Icons.replay,
-                    size: 20, color: theme.colorScheme.onPrimaryContainer),
+                Icon(
+                  Icons.replay,
+                  size: 20,
+                  color: theme.colorScheme.onPrimaryContainer,
+                ),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Column(
@@ -218,15 +230,17 @@ class _RepeatLastCard extends ConsumerWidget {
                       Text(
                         t.entry.repeat_last,
                         style: theme.textTheme.labelMedium?.copyWith(
-                            color: theme.colorScheme.onPrimaryContainer,
-                            fontWeight: FontWeight.w600),
+                          color: theme.colorScheme.onPrimaryContainer,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                       Text(
                         summary,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium?.copyWith(
-                            color: theme.colorScheme.onPrimaryContainer),
+                          color: theme.colorScheme.onPrimaryContainer,
+                        ),
                       ),
                     ],
                   ),
