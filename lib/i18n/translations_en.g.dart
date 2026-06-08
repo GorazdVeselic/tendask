@@ -43,6 +43,7 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
 	@override late final _Translations$home$en home = _Translations$home$en._(_root);
 	@override late final _Translations$common$en common = _Translations$common$en._(_root);
+	@override late final _Translations$swipe$en swipe = _Translations$swipe$en._(_root);
 	@override late final _Translations$notifications$en notifications = _Translations$notifications$en._(_root);
 	@override late final _Translations$notif_priming$en notif_priming = _Translations$notif_priming$en._(_root);
 	@override late final _Translations$notif_settings$en notif_settings = _Translations$notif_settings$en._(_root);
@@ -114,6 +115,21 @@ class _Translations$common$en extends Translations$common$sl {
 	@override String get today => 'Today';
 	@override String get yesterday => 'yesterday';
 	@override String get load_error => 'Couldn\'t load data.';
+}
+
+// Path: swipe
+class _Translations$swipe$en extends Translations$swipe$sl {
+	_Translations$swipe$en._(TranslationsEn root) : this._root = root, super.internal(root);
+
+	final TranslationsEn _root; // ignore: unused_field
+
+	// Translations
+	@override String get complete => 'Done';
+	@override String get postpone => '+1 day';
+	@override String get revert => 'Reopen';
+	@override String get edit => 'Edit';
+	@override String get move => 'Move';
+	@override String get delete => 'Delete';
 }
 
 // Path: notifications
@@ -560,8 +576,6 @@ class _Translations$areas$en extends Translations$areas$sl {
 	@override String get history_empty => 'No tasks in this area yet.';
 	@override String get plants_section => 'Plants';
 	@override String add_plant_here({required Object area}) => 'Add plant to ${area}';
-	@override String get swipe_move => 'Move';
-	@override String get swipe_remove => 'Remove';
 	@override String get delete_reparent_note => 'Plants in this area move to “No area” (they are not deleted).';
 	@override String get new_area_inline => 'New area';
 	@override String get empty_title => 'Your garden is empty';
@@ -715,6 +729,12 @@ extension on TranslationsEn {
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
 			'common.load_error' => 'Couldn\'t load data.',
+			'swipe.complete' => 'Done',
+			'swipe.postpone' => '+1 day',
+			'swipe.revert' => 'Reopen',
+			'swipe.edit' => 'Edit',
+			'swipe.move' => 'Move',
+			'swipe.delete' => 'Delete',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
 			'notif_priming.title' => 'Let me remind you in time?',
@@ -993,8 +1013,6 @@ extension on TranslationsEn {
 			'areas.history_empty' => 'No tasks in this area yet.',
 			'areas.plants_section' => 'Plants',
 			'areas.add_plant_here' => ({required Object area}) => 'Add plant to ${area}',
-			'areas.swipe_move' => 'Move',
-			'areas.swipe_remove' => 'Remove',
 			'areas.delete_reparent_note' => 'Plants in this area move to “No area” (they are not deleted).',
 			'areas.new_area_inline' => 'New area',
 			'areas.empty_title' => 'Your garden is empty',

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/catalog_labels.dart';
@@ -49,35 +50,33 @@ class AreaDetailScreen extends ConsumerWidget {
       ),
       body: area == null
           ? const Center(child: CircularProgressIndicator.adaptive())
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
-              children: [
-                _Hero(area: area),
-                const SizedBox(height: 8),
-                SectionLabel(t.areas.plants_section),
-                if (plants != null)
-                  for (final p in plants)
-                    PlantRow(plant: p, catalog: plantCatalog),
-                ListTile(
-                  leading:
-                      Icon(Icons.add, color: theme.colorScheme.primary),
-                  title: Text(
-                    t.areas.add_plant_here(area: area.name),
-                    style: TextStyle(color: theme.colorScheme.primary),
+          : SlidableAutoCloseBehavior(
+              child: ListView(
+                padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
+                children: [
+                  _Hero(area: area),
+                  const SizedBox(height: 8),
+                  SectionLabel(t.areas.plants_section),
+                  if (plants != null)
+                    for (final p in plants)
+                      PlantRow(plant: p, catalog: plantCatalog),
+                  ListTile(
+                    leading: Icon(Icons.add, color: theme.colorScheme.primary),
+                    title: Text(
+                      t.areas.add_plant_here(area: area.name),
+                      style: TextStyle(color: theme.colorScheme.primary),
+                    ),
+                    onTap: () => context.pushNamed(
+                      'plant-add',
+                      extra: PlantAddArgs(areaId: id),
+                    ),
                   ),
-                  onTap: () => context.pushNamed(
-                    'plant-add',
-                    extra: PlantAddArgs(areaId: id),
-                  ),
-                ),
-                const SizedBox(height: 8),
-                SectionLabel(t.areas.history_title),
-                const SizedBox(height: 4),
-                _History(
-                  history: history,
-                  catalog: catalog,
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  SectionLabel(t.areas.history_title),
+                  const SizedBox(height: 4),
+                  _History(history: history, catalog: catalog),
+                ],
+              ),
             ),
     );
   }
@@ -102,8 +101,10 @@ class AreaDetailScreen extends ConsumerWidget {
             ),
             Divider(height: 1, color: theme.colorScheme.outlineVariant),
             ListTile(
-              leading:
-                  Icon(Icons.delete_outline, color: theme.colorScheme.error),
+              leading: Icon(
+                Icons.delete_outline,
+                color: theme.colorScheme.error,
+              ),
               title: Text(
                 t.areas.action_delete,
                 style: TextStyle(color: theme.colorScheme.error),
@@ -147,8 +148,10 @@ class _Hero extends StatelessWidget {
         CircleAvatar(
           radius: 28,
           backgroundColor: theme.colorScheme.surfaceContainerHighest,
-          child: Text(areaTypeIcon(area.type),
-              style: const TextStyle(fontSize: 26)),
+          child: Text(
+            areaTypeIcon(area.type),
+            style: const TextStyle(fontSize: 26),
+          ),
         ),
         const SizedBox(width: 14),
         Expanded(
@@ -157,13 +160,15 @@ class _Hero extends StatelessWidget {
             children: [
               Text(
                 area.name,
-                style: theme.textTheme.headlineSmall
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               Text(
                 areaTypeLabel(area.type, t),
-                style: theme.textTheme.bodyMedium
-                    ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ],
           ),
@@ -176,10 +181,7 @@ class _Hero extends StatelessWidget {
 // ─── History ──────────────────────────────────────────────────────────────────
 
 class _History extends StatelessWidget {
-  const _History({
-    required this.history,
-    required this.catalog,
-  });
+  const _History({required this.history, required this.catalog});
 
   final List<Task>? history;
   final Map<String, TaskType>? catalog;
@@ -215,10 +217,7 @@ class _History extends StatelessWidget {
 }
 
 class _HistoryRow extends StatelessWidget {
-  const _HistoryRow({
-    required this.task,
-    required this.catalog,
-  });
+  const _HistoryRow({required this.task, required this.catalog});
 
   final Task task;
   final Map<String, TaskType>? catalog;
@@ -235,8 +234,9 @@ class _HistoryRow extends StatelessWidget {
       title: Text(label, style: theme.textTheme.bodyMedium),
       trailing: Text(
         formatDmy(task.date.toLocal()),
-        style: theme.textTheme.bodySmall
-            ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
     );

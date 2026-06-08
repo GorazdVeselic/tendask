@@ -20,6 +20,14 @@
     "yesterday": "včeraj",
     "load_error": "Podatkov ni bilo mogoče naložiti."
   },
+  "swipe": {
+    "complete": "Opravljeno",
+    "postpone": "+1 dan",
+    "revert": "Povrni",
+    "edit": "Uredi",
+    "move": "Premakni",
+    "delete": "Izbriši"
+  },
   "notifications": {
     "today": "Danes",
     "tomorrow": "Jutri"
@@ -343,8 +351,6 @@
     "history_empty": "Na tem območju še ni opravil.",
     "plants_section": "Rastline",
     "add_plant_here(area)": "Dodaj rastlino v $area",
-    "swipe_move": "Premakni",
-    "swipe_remove": "Odstrani",
     "delete_reparent_note": "Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).",
     "new_area_inline": "Novo območje",
     "empty_title": "Tvoj vrt je še prazen",

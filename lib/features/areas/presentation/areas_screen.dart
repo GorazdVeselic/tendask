@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/area_type.dart';
@@ -46,13 +47,15 @@ class AreasScreen extends ConsumerWidget {
           children: [
             Text(
               t.areas.title,
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Text(
               t.areas.subtitle,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -112,30 +115,34 @@ class _AreasList extends StatelessWidget {
       }
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 100),
-      // +1 for the trailing "new area" entry.
-      itemCount: items.length + 1,
-      itemBuilder: (context, i) {
-        if (i == items.length) return const _NewAreaButton();
-        final item = items[i];
-        if (item is String) {
-          return SectionLabel(item, padding: _kSectionPad);
-        }
-        if (item is AreaType) {
-          return SectionLabel(areaTypeLabel(item, context.t),
-              padding: _kSectionPad);
-        }
-        if (item is UserPlant) {
-          return PlantRow(plant: item, catalog: plantCatalog);
-        }
-        final area = item as Area;
-        return _AreaRow(
-          area: area,
-          lastTask: latest[area.id],
-          catalog: catalog,
-        );
-      },
+    return SlidableAutoCloseBehavior(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
+        // +1 for the trailing "new area" entry.
+        itemCount: items.length + 1,
+        itemBuilder: (context, i) {
+          if (i == items.length) return const _NewAreaButton();
+          final item = items[i];
+          if (item is String) {
+            return SectionLabel(item, padding: _kSectionPad);
+          }
+          if (item is AreaType) {
+            return SectionLabel(
+              areaTypeLabel(item, context.t),
+              padding: _kSectionPad,
+            );
+          }
+          if (item is UserPlant) {
+            return PlantRow(plant: item, catalog: plantCatalog);
+          }
+          final area = item as Area;
+          return _AreaRow(
+            area: area,
+            lastTask: latest[area.id],
+            catalog: catalog,
+          );
+        },
+      ),
     );
   }
 }
@@ -155,20 +162,25 @@ class _GardenEmpty extends StatelessWidget {
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text('🌱', style: TextStyle(fontSize: 44, color: theme.colorScheme.primary)),
+            Text(
+              '🌱',
+              style: TextStyle(fontSize: 44, color: theme.colorScheme.primary),
+            ),
             const SizedBox(height: 14),
             Text(
               t.areas.empty_title,
               textAlign: TextAlign.center,
-              style: theme.textTheme.titleMedium
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleMedium?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             const SizedBox(height: 8),
             Text(
               t.areas.empty_body,
               textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
             const SizedBox(height: 20),
             FilledButton.icon(
@@ -231,18 +243,18 @@ class _AreaRow extends StatelessWidget {
       margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
       child: InkWell(
         borderRadius: BorderRadius.circular(12),
-        onTap: () => context.pushNamed(
-          'area-detail',
-          pathParameters: {'id': area.id},
-        ),
+        onTap: () =>
+            context.pushNamed('area-detail', pathParameters: {'id': area.id}),
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
           child: Row(
             children: [
               CircleAvatar(
                 backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                child: Text(areaTypeIcon(area.type),
-                    style: const TextStyle(fontSize: 18)),
+                child: Text(
+                  areaTypeIcon(area.type),
+                  style: const TextStyle(fontSize: 18),
+                ),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -251,8 +263,9 @@ class _AreaRow extends StatelessWidget {
                   children: [
                     Text(
                       area.name,
-                      style: theme.textTheme.bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w500),
+                      style: theme.textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w500,
+                      ),
                     ),
                     Text(
                       _subtitle(context.t),
@@ -263,8 +276,10 @@ class _AreaRow extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right,
-                  color: theme.colorScheme.onSurfaceVariant),
+              Icon(
+                Icons.chevron_right,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ],
           ),
         ),

@@ -16,6 +16,7 @@ import '../application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 import 'subject_labels.dart';
 import 'widgets/confirm_delete_dialog.dart';
+import 'widgets/task_swipe.dart';
 
 enum _Group { overdue, today, tomorrow, thisWeek, later }
 
@@ -218,38 +219,16 @@ class _TaskRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     final theme = Theme.of(context);
     final icon = taskType?.icon ?? '📋';
     final label = taskType != null
         ? catalogLabel(taskType!.labels)
         : task.taskTypeId;
 
-    return Slidable(
-      key: ValueKey(task.id),
-      // Swipe left reveals tap-to-confirm actions (iOS-mail style): the buttons
-      // stay open until tapped, so a quick swipe never fires the action by
-      // itself. Delete stays in the ⋯ sheet.
-      endActionPane: ActionPane(
-        motion: const DrawerMotion(),
-        extentRatio: 0.52,
-        children: [
-          SlidableAction(
-            onPressed: (_) => onComplete(),
-            backgroundColor: theme.colorScheme.primary,
-            foregroundColor: theme.colorScheme.onPrimary,
-            icon: Icons.check,
-            label: t.tasks_list.action_complete,
-          ),
-          SlidableAction(
-            onPressed: (_) => onPostpone(),
-            backgroundColor: theme.colorScheme.secondary,
-            foregroundColor: theme.colorScheme.onSecondary,
-            icon: Icons.schedule,
-            label: t.tasks_list.action_postpone,
-          ),
-        ],
-      ),
+    // Swipe reveals status-based actions (waiting → complete/+1 day); the ⋯
+    // sheet keeps the full menu including delete.
+    return TaskSwipe(
+      task: task,
       child: Card(
         margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
         child: InkWell(

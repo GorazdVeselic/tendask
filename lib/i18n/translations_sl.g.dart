@@ -44,6 +44,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
 	late final Translations$home$sl home = Translations$home$sl.internal(_root);
 	late final Translations$common$sl common = Translations$common$sl.internal(_root);
+	late final Translations$swipe$sl swipe = Translations$swipe$sl.internal(_root);
 	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
 	late final Translations$notif_priming$sl notif_priming = Translations$notif_priming$sl.internal(_root);
 	late final Translations$notif_settings$sl notif_settings = Translations$notif_settings$sl.internal(_root);
@@ -141,6 +142,33 @@ class Translations$common$sl {
 
 	/// sl: 'Podatkov ni bilo mogoče naložiti.'
 	String get load_error => 'Podatkov ni bilo mogoče naložiti.';
+}
+
+// Path: swipe
+class Translations$swipe$sl {
+	Translations$swipe$sl.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// sl: 'Opravljeno'
+	String get complete => 'Opravljeno';
+
+	/// sl: '+1 dan'
+	String get postpone => '+1 dan';
+
+	/// sl: 'Povrni'
+	String get revert => 'Povrni';
+
+	/// sl: 'Uredi'
+	String get edit => 'Uredi';
+
+	/// sl: 'Premakni'
+	String get move => 'Premakni';
+
+	/// sl: 'Izbriši'
+	String get delete => 'Izbriši';
 }
 
 // Path: notifications
@@ -1148,12 +1176,6 @@ class Translations$areas$sl {
 	/// sl: 'Dodaj rastlino v $area'
 	String add_plant_here({required Object area}) => 'Dodaj rastlino v ${area}';
 
-	/// sl: 'Premakni'
-	String get swipe_move => 'Premakni';
-
-	/// sl: 'Odstrani'
-	String get swipe_remove => 'Odstrani';
-
 	/// sl: 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).'
 	String get delete_reparent_note => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).';
 
@@ -1494,6 +1516,12 @@ extension on Translations {
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
+			'swipe.complete' => 'Opravljeno',
+			'swipe.postpone' => '+1 dan',
+			'swipe.revert' => 'Povrni',
+			'swipe.edit' => 'Uredi',
+			'swipe.move' => 'Premakni',
+			'swipe.delete' => 'Izbriši',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
 			'notif_priming.title' => 'Naj te pravočasno opozorim?',
@@ -1772,8 +1800,6 @@ extension on Translations {
 			'areas.history_empty' => 'Na tem območju še ni opravil.',
 			'areas.plants_section' => 'Rastline',
 			'areas.add_plant_here' => ({required Object area}) => 'Dodaj rastlino v ${area}',
-			'areas.swipe_move' => 'Premakni',
-			'areas.swipe_remove' => 'Odstrani',
 			'areas.delete_reparent_note' => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).',
 			'areas.new_area_inline' => 'Novo območje',
 			'areas.empty_title' => 'Tvoj vrt je še prazen',

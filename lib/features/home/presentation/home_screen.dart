@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/catalog_labels.dart';
@@ -9,6 +10,7 @@ import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
+import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
 import '../../../i18n/translations.g.dart';
@@ -35,13 +37,15 @@ class HomeScreen extends ConsumerWidget {
           children: [
             Text(
               t.home.greeting,
-              style: theme.textTheme.titleLarge
-                  ?.copyWith(fontWeight: FontWeight.w700),
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
             ),
             Text(
               todayLabel,
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
             ),
           ],
         ),
@@ -88,11 +92,9 @@ class _HomeBody extends ConsumerWidget {
 
     final todayTasks = switch (pending) {
       AsyncData(:final value) => value.where((task) {
-          final d = task.date.toLocal();
-          return d.year == now.year &&
-              d.month == now.month &&
-              d.day == now.day;
-        }).toList(),
+        final d = task.date.toLocal();
+        return d.year == now.year && d.month == now.month && d.day == now.day;
+      }).toList(),
       _ => <Task>[],
     };
 
@@ -106,28 +108,37 @@ class _HomeBody extends ConsumerWidget {
         ref.invalidate(currentWeatherProvider);
         await ref.read(currentWeatherProvider.future);
       },
-      child: ListView(
-        physics: const AlwaysScrollableScrollPhysics(),
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
-        children: [
-          const _WeatherSection(),
-        const SizedBox(height: 16),
-        SectionLabel(t.home.today, padding: const EdgeInsets.only(bottom: 8)),
-        if (todayTasks.isEmpty)
-          _DashboardHint(t.home.no_tasks_today)
-        else
-          _TaskList(
-              tasks: todayTasks,
-              catalog: catalog,
-              now: now,
-              reminderTaskIds: reminderTaskIds),
-        const SizedBox(height: 16),
-        SectionLabel(t.home.recent, padding: const EdgeInsets.only(bottom: 8)),
-        if (recentTasks.isEmpty)
-          _DashboardHint(t.home.no_recent)
-        else
-          _TaskList(tasks: recentTasks, catalog: catalog, now: now),
-        ],
+      child: SlidableAutoCloseBehavior(
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+          children: [
+            const _WeatherSection(),
+            const SizedBox(height: 16),
+            SectionLabel(
+              t.home.today,
+              padding: const EdgeInsets.only(bottom: 8),
+            ),
+            if (todayTasks.isEmpty)
+              _DashboardHint(t.home.no_tasks_today)
+            else
+              _TaskList(
+                tasks: todayTasks,
+                catalog: catalog,
+                now: now,
+                reminderTaskIds: reminderTaskIds,
+              ),
+            const SizedBox(height: 16),
+            SectionLabel(
+              t.home.recent,
+              padding: const EdgeInsets.only(bottom: 8),
+            ),
+            if (recentTasks.isEmpty)
+              _DashboardHint(t.home.no_recent)
+            else
+              _TaskList(tasks: recentTasks, catalog: catalog, now: now),
+          ],
+        ),
       ),
     );
   }
@@ -186,8 +197,9 @@ class _DashboardHint extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
         child: Text(
           text,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+          style: theme.textTheme.bodySmall?.copyWith(
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
         ),
       ),
     );
@@ -210,6 +222,7 @@ class _TaskList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
           for (var i = 0; i < tasks.length; i++) ...[
@@ -219,11 +232,14 @@ class _TaskList extends StatelessWidget {
                 indent: 56,
                 color: Theme.of(context).colorScheme.outlineVariant,
               ),
-            _TaskTile(
+            TaskSwipe(
               task: tasks[i],
-              taskType: catalog[tasks[i].taskTypeId],
-              now: now,
-              hasReminder: reminderTaskIds.contains(tasks[i].id),
+              child: _TaskTile(
+                task: tasks[i],
+                taskType: catalog[tasks[i].taskTypeId],
+                now: now,
+                hasReminder: reminderTaskIds.contains(tasks[i].id),
+              ),
             ),
           ],
         ],
@@ -249,8 +265,9 @@ class _TaskTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final t = context.t;
-    final label =
-        taskType != null ? catalogLabel(taskType!.labels) : task.taskTypeId;
+    final label = taskType != null
+        ? catalogLabel(taskType!.labels)
+        : task.taskTypeId;
     final icon = taskType?.icon ?? '📋';
     final isDone = task.status == TaskStatus.done;
     // Done tasks show their (calendar-correct) date; waiting tasks show the time.
@@ -265,8 +282,11 @@ class _TaskTile extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (hasReminder && !isDone) ...[
-            Icon(Icons.notifications_outlined,
-                size: 15, color: theme.colorScheme.onSurfaceVariant),
+            Icon(
+              Icons.notifications_outlined,
+              size: 15,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
             const SizedBox(width: 6),
           ],
           Icon(
@@ -279,8 +299,9 @@ class _TaskTile extends StatelessWidget {
           const SizedBox(width: 4),
           Text(
             trailingText,
-            style: theme.textTheme.bodySmall
-                ?.copyWith(color: theme.colorScheme.onSurfaceVariant),
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
           ),
         ],
       ),

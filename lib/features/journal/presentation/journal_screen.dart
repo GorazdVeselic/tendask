@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/database/app_database.dart';
@@ -10,10 +11,12 @@ import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../features/tasks/presentation/subject_labels.dart';
+import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/notes_providers.dart';
 import 'journal_entry.dart';
 import 'month_calendar_view.dart';
+import 'widgets/note_swipe.dart';
 import 'widgets/task_entry_tile.dart';
 
 enum _Filter { all, tasks, notes }
@@ -54,12 +57,18 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
         title: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(t.journal.title,
-                style: theme.textTheme.titleLarge
-                    ?.copyWith(fontWeight: FontWeight.w700)),
-            Text(t.journal.subtitle,
-                style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant)),
+            Text(
+              t.journal.title,
+              style: theme.textTheme.titleLarge?.copyWith(
+                fontWeight: FontWeight.w700,
+              ),
+            ),
+            Text(
+              t.journal.subtitle,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
         ),
       ),
@@ -70,9 +79,13 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             child: SegmentedButton<_View>(
               segments: [
                 ButtonSegment(
-                    value: _View.timeline, label: Text(t.journal.timeline)),
+                  value: _View.timeline,
+                  label: Text(t.journal.timeline),
+                ),
                 ButtonSegment(
-                    value: _View.month, label: Text(t.journal.month_view)),
+                  value: _View.month,
+                  label: Text(t.journal.month_view),
+                ),
               ],
               selected: {_view},
               onSelectionChanged: (s) => setState(() => _view = s.first),
@@ -88,18 +101,18 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             child: _view == _View.month
                 ? const MonthCalendarView()
                 : completed == null ||
-                        notes == null ||
-                        catalog == null ||
-                        areas == null
-                    ? const Center(child: CircularProgressIndicator.adaptive())
-                    : _JournalList(
-                        tasks: completed,
-                        notes: notes,
-                        catalog: catalog,
-                        areas: areas,
-                        subjectLabels: subjectLabels,
-                        filter: _filter,
-                      ),
+                      notes == null ||
+                      catalog == null ||
+                      areas == null
+                ? const Center(child: CircularProgressIndicator.adaptive())
+                : _JournalList(
+                    tasks: completed,
+                    notes: notes,
+                    catalog: catalog,
+                    areas: areas,
+                    subjectLabels: subjectLabels,
+                    filter: _filter,
+                  ),
           ),
         ],
       ),
@@ -112,10 +125,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
 // ---------------------------------------------------------------------------
 
 class _FilterBar extends StatelessWidget {
-  const _FilterBar({
-    required this.filter,
-    required this.onChanged,
-  });
+  const _FilterBar({required this.filter, required this.onChanged});
 
   final _Filter filter;
   final ValueChanged<_Filter> onChanged;
@@ -215,22 +225,24 @@ class _JournalList extends StatelessWidget {
       final msg = filter == _Filter.notes
           ? t.journal.empty_notes
           : filter == _Filter.tasks
-              ? t.journal.empty_tasks
-              : t.journal.empty;
+          ? t.journal.empty_tasks
+          : t.journal.empty;
       return EmptyState(msg);
     }
 
     final groups = _groupByDate(entries);
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 100),
-      itemCount: groups.length,
-      itemBuilder: (context, i) => _DayGroup(
-        date: groups[i].date,
-        entries: groups[i].entries,
-        catalog: catalog,
-        areas: areas,
-        subjectLabels: subjectLabels,
+    return SlidableAutoCloseBehavior(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
+        itemCount: groups.length,
+        itemBuilder: (context, i) => _DayGroup(
+          date: groups[i].date,
+          entries: groups[i].entries,
+          catalog: catalog,
+          areas: areas,
+          subjectLabels: subjectLabels,
+        ),
       ),
     );
   }
@@ -283,6 +295,7 @@ class _DayGroup extends StatelessWidget {
           _DayHeader(date: date),
           const SizedBox(height: 6),
           Card(
+            clipBehavior: Clip.antiAlias,
             child: Column(
               children: [
                 for (var i = 0; i < entries.length; i++) ...[
@@ -293,17 +306,21 @@ class _DayGroup extends StatelessWidget {
                       color: theme.colorScheme.outlineVariant,
                     ),
                   switch (entries[i]) {
-                    TaskJournalEntry(:final task) => TaskEntryTile(
+                    TaskJournalEntry(:final task) => TaskSwipe(
+                      task: task,
+                      child: TaskEntryTile(
                         task: task,
                         taskType: catalog[task.taskTypeId],
                         subjectLabel: subjectLabels[task.id],
                       ),
-                    NoteJournalEntry(:final note) => _NoteEntry(
+                    ),
+                    NoteJournalEntry(:final note) => NoteSwipe(
+                      note: note,
+                      child: _NoteEntry(
                         note: note,
-                        area: note.areaId != null
-                            ? areas[note.areaId]
-                            : null,
+                        area: note.areaId != null ? areas[note.areaId] : null,
                       ),
+                    ),
                   },
                 ],
               ],
@@ -347,10 +364,7 @@ class _DayHeader extends StatelessWidget {
 }
 
 class _NoteEntry extends StatelessWidget {
-  const _NoteEntry({
-    required this.note,
-    required this.area,
-  });
+  const _NoteEntry({required this.note, required this.area});
 
   final Note note;
   final Area? area;
@@ -372,15 +386,20 @@ class _NoteEntry extends StatelessWidget {
         overflow: TextOverflow.ellipsis,
       ),
       subtitle: area != null
-          ? Text('🪴 ${area!.name}',
-              style: theme.textTheme.bodySmall
-                  ?.copyWith(color: theme.colorScheme.onSurfaceVariant))
+          ? Text(
+              '🪴 ${area!.name}',
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
           : null,
-      trailing: Text(timeStr,
-          style: theme.textTheme.bodySmall
-              ?.copyWith(color: theme.colorScheme.onSurfaceVariant)),
-      contentPadding:
-          const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      trailing: Text(
+        timeStr,
+        style: theme.textTheme.bodySmall?.copyWith(
+          color: theme.colorScheme.onSurfaceVariant,
+        ),
+      ),
+      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
       onTap: () =>
           context.pushNamed('note-edit', pathParameters: {'id': note.id}),
     );

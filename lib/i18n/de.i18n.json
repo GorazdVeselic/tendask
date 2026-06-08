@@ -20,6 +20,14 @@
     "yesterday": "gestern",
     "load_error": "Daten konnten nicht geladen werden."
   },
+  "swipe": {
+    "complete": "Erledigt",
+    "postpone": "+1 Tag",
+    "revert": "Zurück",
+    "edit": "Bearbeiten",
+    "move": "Verschieben",
+    "delete": "Löschen"
+  },
   "notifications": {
     "today": "Heute",
     "tomorrow": "Morgen"
@@ -339,8 +347,6 @@
     "history_empty": "Noch keine Aufgaben in diesem Bereich.",
     "plants_section": "Pflanzen",
     "add_plant_here(area)": "Pflanze zu $area hinzufügen",
-    "swipe_move": "Verschieben",
-    "swipe_remove": "Entfernen",
     "delete_reparent_note": "Pflanzen in diesem Bereich wechseln zu „Ohne Bereich“ (sie werden nicht gelöscht).",
     "new_area_inline": "Neuer Bereich",
     "empty_title": "Dein Garten ist leer",

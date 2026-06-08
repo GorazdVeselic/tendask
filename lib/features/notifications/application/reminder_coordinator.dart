@@ -48,12 +48,17 @@ class ReminderCoordinator extends _$ReminderCoordinator {
     ref.listen(plantsMapProvider, (_, _) {});
 
     final sub = db
-        .tableUpdates(TableUpdateQuery.onAllTables(
-            [db.tasks, db.taskReminders, db.profiles]))
+        .tableUpdates(
+          TableUpdateQuery.onAllTables([
+            db.tasks,
+            db.taskReminders,
+            db.profiles,
+          ]),
+        )
         .listen((_) {
-      _debounce?.cancel();
-      _debounce = Timer(kReminderDebounce, () => unawaited(_reconcile()));
-    });
+          _debounce?.cancel();
+          _debounce = Timer(kReminderDebounce, () => unawaited(_reconcile()));
+        });
 
     ref.onDispose(() {
       _debounce?.cancel();
@@ -78,8 +83,9 @@ class ReminderCoordinator extends _$ReminderCoordinator {
 
       // Master switch off: cancel everything we scheduled, schedule nothing.
       final userId = ref.read(authServiceProvider).userId;
-      final settings =
-          await ref.read(profileRepositoryProvider).notificationSettings(userId);
+      final settings = await ref
+          .read(profileRepositoryProvider)
+          .notificationSettings(userId);
       if (!settings.taskRemindersEnabled) {
         for (final id in await notif.pendingIds()) {
           await notif.cancel(id);
@@ -99,9 +105,14 @@ class ReminderCoordinator extends _$ReminderCoordinator {
         if (reminders.isEmpty) continue;
         final taskDateLocal = task.date.toLocal();
         final title = _title(task, types);
-        final body = _body(task, await repo.subjectsForTask(task.id),
-            areas: areas, userPlants: userPlants, plants: plants,
-            nowLocal: nowLocal);
+        final body = _body(
+          task,
+          await repo.subjectsForTask(task.id),
+          areas: areas,
+          userPlants: userPlants,
+          plants: plants,
+          nowLocal: nowLocal,
+        );
         for (final r in reminders) {
           final fire = reminderFireTime(
             taskDateLocal: taskDateLocal,
@@ -164,7 +175,9 @@ class ReminderCoordinator extends _$ReminderCoordinator {
     final day = startOfDay(dateLocal);
     final today = startOfDay(nowLocal);
     if (day == today) return t.notifications.today;
-    if (day == today.add(const Duration(days: 1))) return t.notifications.tomorrow;
+    if (day == today.add(const Duration(days: 1))) {
+      return t.notifications.tomorrow;
+    }
     return formatDmy(dateLocal);
   }
 }

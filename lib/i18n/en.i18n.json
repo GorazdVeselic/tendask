@@ -20,6 +20,14 @@
     "yesterday": "yesterday",
     "load_error": "Couldn't load data."
   },
+  "swipe": {
+    "complete": "Done",
+    "postpone": "+1 day",
+    "revert": "Reopen",
+    "edit": "Edit",
+    "move": "Move",
+    "delete": "Delete"
+  },
   "notifications": {
     "today": "Today",
     "tomorrow": "Tomorrow"
@@ -339,8 +347,6 @@
     "history_empty": "No tasks in this area yet.",
     "plants_section": "Plants",
     "add_plant_here(area)": "Add plant to $area",
-    "swipe_move": "Move",
-    "swipe_remove": "Remove",
     "delete_reparent_note": "Plants in this area move to “No area” (they are not deleted).",
     "new_area_inline": "New area",
     "empty_title": "Your garden is empty",

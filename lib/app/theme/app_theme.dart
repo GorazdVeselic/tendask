@@ -16,6 +16,9 @@ abstract final class AppTheme {
         onPrimaryContainer: AppColors.green900,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
+        // Blue accent for neutral row actions (revert/edit/move swipe buttons).
+        tertiary: AppColors.info,
+        onTertiary: Colors.white,
         surface: AppColors.surface,
         onSurface: AppColors.ink,
         surfaceContainerHighest: AppColors.soft,
@@ -43,6 +46,8 @@ abstract final class AppTheme {
         onPrimaryContainer: AppColors.onGreenContainerDark,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
+        tertiary: AppColors.info,
+        onTertiary: Colors.white,
         surface: Color(0xFF1A2E1C),
         onSurface: Colors.white,
         onSurfaceVariant: Color(0xFFA8B5AC),
@@ -52,20 +57,19 @@ abstract final class AppTheme {
       ),
       inputDecorationTheme: _inputTheme(const Color(0xFF8A988E)),
       chipTheme: _chipTheme(
-          AppColors.greenContainerDark, AppColors.onGreenContainerDark),
+        AppColors.greenContainerDark,
+        AppColors.onGreenContainerDark,
+      ),
     );
   }
 
   /// Hints must read as placeholders, not entered text — keep them muted.
   static InputDecorationTheme _inputTheme(Color hint) => InputDecorationTheme(
-        hintStyle: TextStyle(color: hint, fontWeight: FontWeight.w400),
-      );
+    hintStyle: TextStyle(color: hint, fontWeight: FontWeight.w400),
+  );
 
   /// Selected chips read green (brand), not the M3 baseline purple that an
   /// under-specified ColorScheme would otherwise leak.
   static ChipThemeData _chipTheme(Color selected, Color onSelected) =>
-      ChipThemeData(
-        selectedColor: selected,
-        checkmarkColor: onSelected,
-      );
+      ChipThemeData(selectedColor: selected, checkmarkColor: onSelected);
 }
