@@ -76,6 +76,27 @@ class LocationRepository {
     });
   }
 
+  /// Removes the garden location: deletes the device-local coordinates and
+  /// clears the profile H3 cells (pending → push). Weather falls back to the
+  /// default region (gardenLocation emits the default when coordinates are null).
+  Future<void> clearGardenLocation(String userId) async {
+    final now = _clock.now();
+    await _db.transaction(() async {
+      await _db.delete(_db.deviceLocations).go();
+      await (_db.update(
+        _db.profiles,
+      )..where((p) => p.userId.equals(userId))).write(
+        ProfilesCompanion(
+          h3R7: const Value(null),
+          h3R6: const Value(null),
+          h3R5: const Value(null),
+          updatedAt: Value(now),
+          syncStatus: const Value(kSyncPending),
+        ),
+      );
+    });
+  }
+
   /// The stored garden coordinates for the weather lookup, or null if unset.
   Future<GardenCoords?> gardenCoordinates() async {
     final row = await _db.select(_db.deviceLocations).getSingleOrNull();

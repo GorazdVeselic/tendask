@@ -7,6 +7,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Onboarding location step (wireframe 16). GPS via geolocator, or type a place
@@ -22,14 +23,34 @@ class LocationScreen extends ConsumerStatefulWidget {
 class _LocationScreenState extends ConsumerState<LocationScreen> {
   final _searchController = TextEditingController();
   bool _loading = false;
-  String? _status;
+  bool _isSet = false;
   String? _error;
   List<GeoPlace> _results = const [];
+
+  @override
+  void initState() {
+    super.initState();
+    Future.microtask(_loadSetState);
+  }
 
   @override
   void dispose() {
     _searchController.dispose();
     super.dispose();
+  }
+
+  Future<void> _loadSetState() async {
+    final coords = await ref
+        .read(locationRepositoryProvider)
+        .gardenCoordinates();
+    if (!mounted) return;
+    setState(() => _isSet = coords != null);
+  }
+
+  void _toast(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
+    );
   }
 
   Future<void> _save(double latitude, double longitude) async {
@@ -48,7 +69,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     setState(() {
       _loading = true;
       _error = null;
-      _status = null;
       _results = const [];
     });
     final result = await ref.read(locationServiceProvider).currentCoordinates();
@@ -57,7 +77,8 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
       case LocationCoords(:final latitude, :final longitude):
         await _save(latitude, longitude);
         if (!mounted) return;
-        setState(() => _status = t.location.set_gps);
+        setState(() => _isSet = true);
+        _toast(t.location.set_gps);
       case LocationDenied():
         setState(() => _error = t.location.err_denied);
       case LocationServiceDisabled():
@@ -75,7 +96,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     setState(() {
       _loading = true;
       _error = null;
-      _status = null;
     });
     try {
       final lang = LocaleSettings.currentLocale.languageCode;
@@ -100,11 +120,33 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     await _save(place.latitude, place.longitude);
     if (!mounted) return;
     setState(() {
-      _status = t.location.set_place(name: place.name);
+      _isSet = true;
       _results = const [];
       _error = null;
     });
+    _toast(t.location.set_place(name: place.name));
     FocusScope.of(context).unfocus();
+  }
+
+  Future<void> _clear() async {
+    final t = context.t;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: t.location.clear_confirm_title,
+      body: t.location.clear_confirm_body,
+      confirmLabel: t.location.clear_confirm_yes,
+      cancelLabel: t.location.clear_confirm_cancel,
+    );
+    if (!confirmed || !mounted) return;
+    final userId = ref.read(authServiceProvider).userId;
+    await ref.read(locationRepositoryProvider).clearGardenLocation(userId);
+    if (!mounted) return;
+    setState(() {
+      _isSet = false;
+      _results = const [];
+      _error = null;
+    });
+    _toast(t.location.cleared);
   }
 
   @override
@@ -112,9 +154,24 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     final t = context.t;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    // From settings (push): a back arrow and no continue button — picks save on
+    // tap. From the onboarding/login flow (go): no back, a "Continue" button
+    // advances to home.
+    final fromSettings = context.canPop();
 
     return Scaffold(
+      appBar: fromSettings
+          ? AppBar(
+              leading: IconButton(
+                icon: const Icon(Icons.arrow_back),
+                onPressed: context.pop,
+              ),
+              title: Text(t.location.screen_title),
+              centerTitle: true,
+            )
+          : null,
       body: SafeArea(
+        top: !fromSettings,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(26, 10, 26, 24),
           child: Column(
@@ -122,6 +179,11 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
               Expanded(
                 child: ListView(
                   children: [
+                    _StatusBanner(
+                      isSet: _isSet,
+                      onClear: _isSet ? _clear : null,
+                    ),
+                    const SizedBox(height: 4),
                     Center(
                       child: Container(
                         width: 92,
@@ -212,21 +274,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                         ),
                         onTap: () => _selectPlace(place),
                       ),
-                    if (_status != null) ...[
-                      const SizedBox(height: 16),
-                      Row(
-                        children: [
-                          Icon(Icons.check_circle, color: cs.primary, size: 20),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Text(
-                              _status!,
-                              style: theme.textTheme.bodyMedium,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
                     if (_error != null) ...[
                       const SizedBox(height: 12),
                       Text(
@@ -241,21 +288,72 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                   ],
                 ),
               ),
-              const SizedBox(height: 12),
-              SizedBox(
-                width: double.infinity,
-                height: 52,
-                child: FilledButton(
-                  // From the login flow (go) there's nothing to pop → home;
-                  // from settings (push) pop back to settings.
-                  onPressed: () =>
-                      context.canPop() ? context.pop() : context.go('/home'),
-                  child: Text(t.location.kContinue),
+              if (!fromSettings) ...[
+                const SizedBox(height: 12),
+                SizedBox(
+                  width: double.infinity,
+                  height: 52,
+                  child: FilledButton(
+                    onPressed: () => context.go('/home'),
+                    child: Text(t.location.kContinue),
+                  ),
                 ),
-              ),
+              ],
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+/// Shows whether a garden location is already set, with an inline remove action
+/// when it is. Calm by design: set = green, unset = amber (attention, not error).
+class _StatusBanner extends StatelessWidget {
+  const _StatusBanner({required this.isSet, this.onClear});
+
+  final bool isSet;
+  final VoidCallback? onClear;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final bg = isSet ? AppColors.soft : AppColors.warnSoft;
+    final fg = isSet ? AppColors.green900 : AppColors.warn;
+    return Container(
+      padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
+      decoration: BoxDecoration(
+        color: bg,
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        children: [
+          Icon(
+            isSet ? Icons.check_circle : Icons.error_outline,
+            size: 18,
+            color: fg,
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Text(
+              isSet ? t.location.status_set : t.location.status_unset,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: fg,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          if (onClear != null)
+            TextButton(
+              onPressed: onClear,
+              style: TextButton.styleFrom(
+                foregroundColor: theme.colorScheme.error,
+                visualDensity: VisualDensity.compact,
+              ),
+              child: Text(t.location.clear),
+            ),
+        ],
       ),
     );
   }
