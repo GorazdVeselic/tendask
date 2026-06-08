@@ -634,10 +634,7 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get section_garden => 'Garten';
 	@override String get supplies => '📦 Vorräte & Mittel';
 	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
-	@override String get areas => '🪴 Bereiche';
-	@override String get areas_sub => 'Rasen, Hecken, Beete';
 	@override String get section_account => 'Konto & Daten';
-	@override String get units => 'Einheiten';
 	@override String get export_data => 'Daten exportieren (DSGVO)';
 	@override String get logout => 'Abmelden';
 	@override String get logout_confirm_title => 'Abmelden?';
@@ -1030,10 +1027,7 @@ extension on TranslationsDe {
 			'settings.section_garden' => 'Garten',
 			'settings.supplies' => '📦 Vorräte & Mittel',
 			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
-			'settings.areas' => '🪴 Bereiche',
-			'settings.areas_sub' => 'Rasen, Hecken, Beete',
 			'settings.section_account' => 'Konto & Daten',
-			'settings.units' => 'Einheiten',
 			'settings.export_data' => 'Daten exportieren (DSGVO)',
 			'settings.logout' => 'Abmelden',
 			'settings.logout_confirm_title' => 'Abmelden?',

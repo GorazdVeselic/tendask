@@ -1336,17 +1336,8 @@ class Translations$settings$sl {
 	/// sl: 'urea, alge, gnojila, oprema'
 	String get supplies_sub => 'urea, alge, gnojila, oprema';
 
-	/// sl: '🪴 Območja'
-	String get areas => '🪴 Območja';
-
-	/// sl: 'trate, meje, gredice'
-	String get areas_sub => 'trate, meje, gredice';
-
 	/// sl: 'Račun & podatki'
 	String get section_account => 'Račun & podatki';
-
-	/// sl: 'Enote'
-	String get units => 'Enote';
 
 	/// sl: 'Izvozi podatke (GDPR)'
 	String get export_data => 'Izvozi podatke (GDPR)';
@@ -1789,10 +1780,7 @@ extension on Translations {
 			'settings.section_garden' => 'Vrt',
 			'settings.supplies' => '📦 Zaloge & sredstva',
 			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
-			'settings.areas' => '🪴 Območja',
-			'settings.areas_sub' => 'trate, meje, gredice',
 			'settings.section_account' => 'Račun & podatki',
-			'settings.units' => 'Enote',
 			'settings.export_data' => 'Izvozi podatke (GDPR)',
 			'settings.logout' => 'Odjava',
 			'settings.logout_confirm_title' => 'Odjava?',

@@ -634,10 +634,7 @@ class _Translations$settings$en extends Translations$settings$sl {
 	@override String get section_garden => 'Garden';
 	@override String get supplies => '📦 Supplies';
 	@override String get supplies_sub => 'urea, algae, fertilizers, gear';
-	@override String get areas => '🪴 Areas';
-	@override String get areas_sub => 'lawns, hedges, beds';
 	@override String get section_account => 'Account & data';
-	@override String get units => 'Units';
 	@override String get export_data => 'Export data (GDPR)';
 	@override String get logout => 'Sign out';
 	@override String get logout_confirm_title => 'Sign out?';
@@ -1030,10 +1027,7 @@ extension on TranslationsEn {
 			'settings.section_garden' => 'Garden',
 			'settings.supplies' => '📦 Supplies',
 			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
-			'settings.areas' => '🪴 Areas',
-			'settings.areas_sub' => 'lawns, hedges, beds',
 			'settings.section_account' => 'Account & data',
-			'settings.units' => 'Units',
 			'settings.export_data' => 'Export data (GDPR)',
 			'settings.logout' => 'Sign out',
 			'settings.logout_confirm_title' => 'Sign out?',

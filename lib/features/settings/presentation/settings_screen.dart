@@ -147,29 +147,15 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
 
-          // Garden (ACTIVE)
+          // Garden (ACTIVE) — areas live in the Vrt tab, not duplicated here.
           SectionLabel(t.settings.section_garden),
           Card(
-            child: Column(
-              children: [
-                ListTile(
-                  leading: const Text('📦', style: TextStyle(fontSize: 22)),
-                  title: Text(t.settings.supplies),
-                  subtitle: Text(t.settings.supplies_sub),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.pushNamed('supplies'),
-                ),
-                Divider(height: 1, color: theme.colorScheme.outlineVariant),
-                ListTile(
-                  leading: const Text('🪴', style: TextStyle(fontSize: 22)),
-                  title: Text(t.settings.areas),
-                  subtitle: Text(t.settings.areas_sub),
-                  trailing: const Icon(Icons.chevron_right),
-                  // 'areas' is a shell-branch tab → switch to it (goNamed),
-                  // never pushNamed a shell route from a full-screen page.
-                  onTap: () => context.goNamed('areas'),
-                ),
-              ],
+            child: ListTile(
+              leading: const Text('📦', style: TextStyle(fontSize: 22)),
+              title: Text(t.settings.supplies),
+              subtitle: Text(t.settings.supplies_sub),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () => context.pushNamed('supplies'),
             ),
           ),
 
@@ -178,8 +164,6 @@ class SettingsScreen extends ConsumerWidget {
           Card(
             child: Column(
               children: [
-                _PlaceholderTile(label: t.settings.units, onTap: comingSoon),
-                Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
                     label: t.settings.export_data, onTap: comingSoon),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
