@@ -256,6 +256,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [ ] **9.3 — Pregled neskladij.** UI vs wireframi; i18n popolnost (sl/en/de); dostopnost; vsi nizi prevedeni. *Commit:* `fix: neskladja UI/wireframi + i18n`
 - [ ] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. *Commit:* `chore: Android release konfiguracija`
 - [x] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~34 → **128 vrst** čez **12 kategorij** (lawn, fruit_tree, berries, vegetable, herbs, perennial, shrub, climber, bulb, conifer, hedge, houseplant). Metoda (z uporabnikom): **kuracija (SL/EN/DE ljudska imena, pogovorna) + GBIF preverba znanstvenih imen** (match API — vsa veljavna) + **Wikidata navzkrižna preverba SL imen** (batch SPARQL — potrdila imena; popravljen `hibiscus`→`sirski oslez`). Povezava rastlina→opravila prek **kategorije** (razširjena `categoryMatrix`, 93 vrstic). Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **Reseed (pre-release okno):** oblak posodobljen prek `apply_catalog.py` (128 plant, 93 matrika; počiščene osirotele `ornamental`/`container` matrika vrstice); naprava pull-a ob zagonu + bundlan seed (offline prvi zagon) = 128. Brez podvojenih id-jev, 151/151 testov, analyze čist. On-device pull verifikacija = ob naslednji priklopljeni napravi (USB se je odklopil). *Commit:* `feat: razširjen katalog rastlin (128 vrst, GBIF/Wikidata preverba)`
+- [ ] **9.7 — GDPR: izvoz podatkov + izbris računa.** Dva placeholderja v Nastavitvah (`export_data`, `delete_account`) sta zdaj »coming soon«; pred internim testom naredi dejansko. **Izvoz:** zberi vse uporabnikove drift vrstice (profile, area, user_plant, task + task_subject/reminder/note/task_supply) → JSON datoteka → `share`/shrani; brez koordinat (samo H3 celice). **Izbris računa:** potrditveni dialog (`showConfirmDialog destructive`) → Supabase brisanje računa (`ON DELETE CASCADE` počisti oblak) → lokalni `clearUserData` → nazaj na onboarding. Anon gost: lokalni izvoz + lokalni clear (ni oblačnega računa). *Commit:* `feat: GDPR izvoz + izbris računa`. **Opomba:** enote (°C/°F) namerno opuščene — MVP je metričen (SL/EU trg); »Območja« povezava odstranjena iz Nastavitev (podvojena z Vrt zavihkom).
 - [ ] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).**
 
 ---
@@ -287,9 +288,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   **Skrij** (nazaj na 6). Bonus: sortiranje po pogostosti uporabe **per user** — izvedljivo brez nove
   sheme prek `SELECT task_type_id, COUNT(*) FROM task WHERE deleted=0 GROUP BY task_type_id ORDER BY 2 DESC`
   (najpogostejši v zgornjih 6). Najprej ekstrahiraj skupni `TaskTypeGrid` widget (zdaj podvojen v 02/07).
-- **FR-3 — Zatikanja (performance).** Med ročno preverbo M3.7 opažena rahla zatikanja pri
-  navigaciji/scrollu. Kasneje: profiliraj (DevTools timeline), poišči nepotrebne rebuilde
-  (`const`, ozki `watch`/`select`), preveri drift stream rebuilde. Najprej izmeri, šele nato optimiziraj.
+- **FR-3 — Zatikanja (performance).** 🔄 **Glavni opaženi izvor odpravljen (2026-06-07), ostalo opazovano.**
+  Med ročno preverbo M3.7 opažena rahla zatikanja pri navigaciji/scrollu. Najbolj opazen izvor —
+  »občutek zmrznitve« na plant-add (katalog ~128 vrst grajen kot `Column` naenkrat + rebuild ob vsakem
+  toggle; `recentPlantsProvider` `AsyncLoading` flicker) — odpravljen v `8c1cd05` (lazy `SliverList` +
+  snapshot pogostih v `initState`); na napravi zatikanja ni več zaznati. **Namenski profiling pass se ni
+  zgodil** — širša zatikanja niso izmerjena. Pusti odprto: če se spet pojavi, profiliraj (DevTools timeline),
+  poišči nepotrebne rebuilde (`const`, ozki `watch`/`select`), preveri drift stream rebuilde. Najprej izmeri.
 - **FR-2 — Dodaj območje iz obrazca opravila.** ✅ **Implementirano (potrjeno 2026-06-04).** Vsi trije
   »ustvari sproti« vzorci so v stepperju: subject_step »+ Dodaj območje« (`area-new` → `area_form` vrne nov
   `areaId` prek `pop` → auto-select) in »+ Dodaj rastlino« (`plant-new`), supplies_step »pick_new«
