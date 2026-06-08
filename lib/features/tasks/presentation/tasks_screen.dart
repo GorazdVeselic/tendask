@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/catalog_labels.dart';
@@ -9,7 +10,6 @@ import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
-import '../../../core/widgets/swipe_action_background.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
@@ -122,33 +122,36 @@ class _TasksList extends StatelessWidget {
       }
     }
 
-    return ListView.builder(
-      padding: const EdgeInsets.only(bottom: 100),
-      itemCount: items.length,
-      itemBuilder: (context, i) {
-        final item = items[i];
-        if (item is _Group) {
-          return SectionLabel(
-            _sectionLabel(item, t),
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+    // Opening one row's actions auto-closes any other open row.
+    return SlidableAutoCloseBehavior(
+      child: ListView.builder(
+        padding: const EdgeInsets.only(bottom: 100),
+        itemCount: items.length,
+        itemBuilder: (context, i) {
+          final item = items[i];
+          if (item is _Group) {
+            return SectionLabel(
+              _sectionLabel(item, t),
+              padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+            );
+          }
+          final task = item as Task;
+          final group = taskGroupMap[task.id]!;
+          return _TaskRow(
+            task: task,
+            taskType: catalog[task.taskTypeId],
+            subjectLabel: subjectLabels[task.id],
+            hasReminder: reminderTaskIds.contains(task.id),
+            group: group,
+            onComplete: () => onComplete(task.id),
+            onPostpone: () => onPostpone(task.id),
+            onEdit: () =>
+                context.pushNamed('task-edit', pathParameters: {'id': task.id}),
+            onDuplicate: () => onDuplicate(task.id),
+            onDelete: () => onDelete(task.id),
           );
-        }
-        final task = item as Task;
-        final group = taskGroupMap[task.id]!;
-        return _TaskRow(
-          task: task,
-          taskType: catalog[task.taskTypeId],
-          subjectLabel: subjectLabels[task.id],
-          hasReminder: reminderTaskIds.contains(task.id),
-          group: group,
-          onComplete: () => onComplete(task.id),
-          onPostpone: () => onPostpone(task.id),
-          onEdit: () =>
-              context.pushNamed('task-edit', pathParameters: {'id': task.id}),
-          onDuplicate: () => onDuplicate(task.id),
-          onDelete: () => onDelete(task.id),
-        );
-      },
+        },
+      ),
     );
   }
 
@@ -222,43 +225,33 @@ class _TaskRow extends StatelessWidget {
         ? catalogLabel(taskType!.labels)
         : task.taskTypeId;
 
-    const swipeInset = EdgeInsets.symmetric(horizontal: 16, vertical: 3);
-    final swipeShape = BorderRadius.circular(12);
-
-    return Dismissible(
+    return Slidable(
       key: ValueKey(task.id),
-      // Swipe right = complete, swipe left = postpone one day. Delete stays in
-      // the ⋯ sheet. confirmDismiss returns false: the watching stream updates
-      // the list (complete drops the row, postpone re-dates it), which avoids
-      // the "dismissed widget still in tree" assert that true would risk.
-      background: SwipeActionBackground(
-        alignment: Alignment.centerLeft,
-        color: theme.colorScheme.primary,
-        foreground: theme.colorScheme.onPrimary,
-        icon: Icons.check,
-        label: t.tasks_list.action_complete,
-        margin: swipeInset,
-        borderRadius: swipeShape,
+      // Swipe left reveals tap-to-confirm actions (iOS-mail style): the buttons
+      // stay open until tapped, so a quick swipe never fires the action by
+      // itself. Delete stays in the ⋯ sheet.
+      endActionPane: ActionPane(
+        motion: const DrawerMotion(),
+        extentRatio: 0.52,
+        children: [
+          SlidableAction(
+            onPressed: (_) => onComplete(),
+            backgroundColor: theme.colorScheme.primary,
+            foregroundColor: theme.colorScheme.onPrimary,
+            icon: Icons.check,
+            label: t.tasks_list.action_complete,
+          ),
+          SlidableAction(
+            onPressed: (_) => onPostpone(),
+            backgroundColor: theme.colorScheme.secondary,
+            foregroundColor: theme.colorScheme.onSecondary,
+            icon: Icons.schedule,
+            label: t.tasks_list.action_postpone,
+          ),
+        ],
       ),
-      secondaryBackground: SwipeActionBackground(
-        alignment: Alignment.centerRight,
-        color: theme.colorScheme.secondary,
-        foreground: theme.colorScheme.onSecondary,
-        icon: Icons.schedule,
-        label: t.tasks_list.action_postpone,
-        margin: swipeInset,
-        borderRadius: swipeShape,
-      ),
-      confirmDismiss: (dir) async {
-        if (dir == DismissDirection.startToEnd) {
-          onComplete();
-        } else {
-          onPostpone();
-        }
-        return false;
-      },
       child: Card(
-        margin: swipeInset,
+        margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
           onTap: () =>
