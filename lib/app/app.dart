@@ -49,6 +49,7 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
   Widget build(BuildContext context) {
     return MaterialApp.router(
       title: 'Tendask',
+      debugShowCheckedModeBanner: false,
       locale: TranslationProvider.of(context).flutterLocale,
       supportedLocales: AppLocaleUtils.supportedLocales,
       localizationsDelegates: const [

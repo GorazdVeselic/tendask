@@ -85,6 +85,11 @@ const kGoogleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 /// so the logo + wordmark + version are readable on a fast cold start.
 const kSplashMinDuration = Duration(milliseconds: 1200);
 
+/// Supplies feature gate (temporarily off): hides the supplies wizard step and
+/// the settings garden/supplies section without removing the code. Flip to true
+/// to re-enable. See entry_screen (step list) and settings_screen.
+const kSuppliesEnabled = false;
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

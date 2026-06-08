@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -134,6 +135,9 @@ class SettingsScreen extends ConsumerWidget {
             ],
             selected: {current},
             onSelectionChanged: (s) => _setLang(ref, s.first),
+            // Endonyms ("Slovenščina") are long; the selected-check would push
+            // the row past the screen width, so drop it.
+            showSelectedIcon: false,
             style: const ButtonStyle(visualDensity: VisualDensity.compact),
           ),
 
@@ -148,17 +152,20 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
 
-          // Garden (ACTIVE) — areas live in the Vrt tab, not duplicated here.
-          SectionLabel(t.settings.section_garden),
-          Card(
-            child: ListTile(
-              leading: const Text('📦', style: TextStyle(fontSize: 22)),
-              title: Text(t.settings.supplies),
-              subtitle: Text(t.settings.supplies_sub),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.pushNamed('supplies'),
+          // Garden / supplies — gated off for now (kSuppliesEnabled). The title
+          // string already carries the 📦, so it provides the leading glyph here
+          // (avoids the double-icon when re-enabled).
+          if (kSuppliesEnabled) ...[
+            SectionLabel(t.settings.section_garden),
+            Card(
+              child: ListTile(
+                title: Text(t.settings.supplies),
+                subtitle: Text(t.settings.supplies_sub),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('supplies'),
+              ),
             ),
-          ),
+          ],
 
           // Account & data (placeholder — M7 / GDPR)
           SectionLabel(t.settings.section_account),

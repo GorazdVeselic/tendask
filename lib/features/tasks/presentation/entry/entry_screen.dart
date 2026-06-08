@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/catalog_labels.dart';
+import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
 import '../../../../core/task_status.dart';
@@ -100,7 +101,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       EntryStep.subject,
       EntryStep.when,
       if (_status == TaskStatus.waiting) EntryStep.reminder,
-      if (consumes) EntryStep.supplies,
+      // Supplies step gated off for now (kSuppliesEnabled).
+      if (consumes && kSuppliesEnabled) EntryStep.supplies,
       EntryStep.review,
     ];
   }
@@ -390,7 +392,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   reminders: _reminders,
                   supplies: _supplies,
                   noteController: _noteController,
-                  consumesSupplies: type?.consumesSupplies ?? false,
+                  consumesSupplies:
+                      kSuppliesEnabled && (type?.consumesSupplies ?? false),
                   onFix: _goTo,
                 ),
               ],
