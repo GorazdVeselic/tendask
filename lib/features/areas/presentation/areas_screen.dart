@@ -98,12 +98,13 @@ class _AreasList extends StatelessWidget {
     final t = context.t;
     if (areas.isEmpty && unassigned.isEmpty) return const _GardenEmpty();
 
-    // Flat list: section header (String or AreaType), Area row, then UserPlant rows.
+    // Flat list. Hierarchy reads top-down: area-type section label → area header
+    // → a card holding that area's plants. Plants without an area come first,
+    // under their own label, in a card with no header.
     final items = <Object>[];
-    // Plants added without an area (e.g. from quick-add task step 2) go first.
     if (unassigned.isNotEmpty) {
       items.add(t.areas.unassigned);
-      items.addAll(unassigned);
+      items.add(_PlantGroup(unassigned));
     }
     for (final type in AreaType.values) {
       final inType = areas.where((a) => a.type == type).toList();
@@ -111,7 +112,8 @@ class _AreasList extends StatelessWidget {
       items.add(type);
       for (final area in inType) {
         items.add(area);
-        items.addAll(plantsByArea[area.id] ?? const []);
+        final plants = plantsByArea[area.id] ?? const <UserPlant>[];
+        if (plants.isNotEmpty) items.add(_PlantGroup(plants));
       }
     }
 
@@ -132,11 +134,11 @@ class _AreasList extends StatelessWidget {
               padding: _kSectionPad,
             );
           }
-          if (item is UserPlant) {
-            return PlantRow(plant: item, catalog: plantCatalog);
+          if (item is _PlantGroup) {
+            return _PlantGroupCard(plants: item.plants, catalog: plantCatalog);
           }
           final area = item as Area;
-          return _AreaRow(
+          return _AreaHeader(
             area: area,
             lastTask: latest[area.id],
             catalog: catalog,
@@ -223,10 +225,10 @@ class _NewAreaButton extends StatelessWidget {
 // Section headers in the garden list keep the list's 16px horizontal indent.
 const _kSectionPad = EdgeInsets.fromLTRB(16, 16, 16, 4);
 
-// ─── Area row ────────────────────────────────────────────────────────────────
+// ─── Area header (the group's parent line; plants render in a card beneath) ────
 
-class _AreaRow extends StatelessWidget {
-  const _AreaRow({
+class _AreaHeader extends StatelessWidget {
+  const _AreaHeader({
     required this.area,
     required this.lastTask,
     required this.catalog,
@@ -239,49 +241,51 @@ class _AreaRow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 3),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () =>
-            context.pushNamed('area-detail', pathParameters: {'id': area.id}),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-          child: Row(
-            children: [
-              CircleAvatar(
-                backgroundColor: theme.colorScheme.surfaceContainerHighest,
-                child: Text(
-                  areaTypeIcon(area.type),
-                  style: const TextStyle(fontSize: 18),
-                ),
+    return InkWell(
+      onTap: () =>
+          context.pushNamed('area-detail', pathParameters: {'id': area.id}),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 6),
+        child: Row(
+          children: [
+            Container(
+              width: 36,
+              height: 36,
+              alignment: Alignment.center,
+              decoration: BoxDecoration(
+                color: theme.colorScheme.surfaceContainerHighest,
+                borderRadius: BorderRadius.circular(11),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      area.name,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+              child: Text(
+                areaTypeIcon(area.type),
+                style: const TextStyle(fontSize: 18),
+              ),
+            ),
+            const SizedBox(width: 11),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    area.name,
+                    style: theme.textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
-                    Text(
-                      _subtitle(context.t),
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                  ),
+                  Text(
+                    _subtitle(context.t),
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-              Icon(
-                Icons.chevron_right,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ],
-          ),
+            ),
+            Icon(
+              Icons.chevron_right,
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ],
         ),
       ),
     );
@@ -293,5 +297,42 @@ class _AreaRow extends StatelessWidget {
     final type = catalog[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
     return '${t.areas.last_prefix} $label · ${formatDmy(task.date.toLocal())}';
+  }
+}
+
+// ─── Plant group (an area's plants, or the unassigned ones, in one card) ───────
+
+/// Marker item in the flat list carrying the plants to render together.
+class _PlantGroup {
+  const _PlantGroup(this.plants);
+  final List<UserPlant> plants;
+}
+
+class _PlantGroupCard extends StatelessWidget {
+  const _PlantGroupCard({required this.plants, required this.catalog});
+
+  final List<UserPlant> plants;
+  final Map<String, Plant> catalog;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Card(
+      margin: const EdgeInsets.fromLTRB(16, 0, 16, 10),
+      clipBehavior: Clip.antiAlias,
+      child: Column(
+        children: [
+          for (var i = 0; i < plants.length; i++) ...[
+            if (i > 0)
+              Divider(
+                height: 1,
+                indent: 56,
+                color: theme.colorScheme.outlineVariant,
+              ),
+            PlantRow(plant: plants[i], catalog: catalog),
+          ],
+        ],
+      ),
+    );
   }
 }
