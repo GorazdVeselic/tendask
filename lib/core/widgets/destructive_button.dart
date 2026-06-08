@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 
-/// Inline destructive action for edit forms — error-tinted text button at the
+import 'swipe_actions.dart';
+
+/// Inline destructive action for edit forms — terracotta text button at the
 /// bottom of the form content. The single delete-in-form style across the app.
 class DestructiveButton extends StatelessWidget {
   const DestructiveButton({
@@ -14,12 +16,12 @@ class DestructiveButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final error = Theme.of(context).colorScheme.error;
+    final danger = destructiveColors(context).color;
     return Center(
       child: TextButton.icon(
         onPressed: onPressed,
-        icon: Icon(Icons.delete_outline, color: error),
-        label: Text(label, style: TextStyle(color: error)),
+        icon: Icon(Icons.delete_outline, color: danger),
+        label: Text(label, style: TextStyle(color: danger)),
       ),
     );
   }

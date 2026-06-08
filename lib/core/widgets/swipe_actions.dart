@@ -113,6 +113,14 @@ SwipeColors _colors(BuildContext context) {
   );
 }
 
+/// The app's destructive-action colour (terracotta) + its on-colour, shared by
+/// the swipe delete, the confirm dialog and the inline delete button so all
+/// destructive UI matches. (Validation/error text keeps `colorScheme.error`.)
+({Color color, Color onColor}) destructiveColors(BuildContext context) {
+  final c = _colors(context);
+  return (color: c.delete, onColor: c.onDelete);
+}
+
 SlidableAction _action({
   required Color background,
   required Color foreground,

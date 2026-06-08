@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'swipe_actions.dart';
+
 /// Generic confirmation dialog; resolves to `true` if confirmed.
-/// [destructive] tints the confirm button with the error color.
+/// [destructive] tints the confirm button with the destructive (terracotta) color.
 Future<bool> showConfirmDialog(
   BuildContext context, {
   required String title,
@@ -23,7 +25,8 @@ Future<bool> showConfirmDialog(
         FilledButton(
           style: destructive
               ? FilledButton.styleFrom(
-                  backgroundColor: Theme.of(ctx).colorScheme.error,
+                  backgroundColor: destructiveColors(ctx).color,
+                  foregroundColor: destructiveColors(ctx).onColor,
                 )
               : null,
           onPressed: () => Navigator.of(ctx).pop(true),
