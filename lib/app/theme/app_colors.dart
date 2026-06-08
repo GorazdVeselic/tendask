@@ -25,4 +25,10 @@ abstract final class AppColors {
   // the light theme reuses [soft]/[green900].
   static const Color greenContainerDark = Color(0xFF24432A);
   static const Color onGreenContainerDark = Color(0xFFBCEAC2);
+
+  // Swipe-action palette (brand-aligned; no off-brand blue/red). Terracotta is
+  // the warm, garden-friendly destructive tone — not the M3 neon/pink error.
+  static const Color terracotta = Color(0xFFB0473B);
+  static const Color terracottaDark = Color(0xFFC25A4D);
+  static const Color neutralActionDark = Color(0xFF8A948C);
 }

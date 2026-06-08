@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../../core/widgets/swipe_actions.dart';
 import 'app_colors.dart';
 
 abstract final class AppTheme {
@@ -16,9 +18,6 @@ abstract final class AppTheme {
         onPrimaryContainer: AppColors.green900,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
-        // Blue accent for neutral row actions (revert/edit/move swipe buttons).
-        tertiary: AppColors.info,
-        onTertiary: Colors.white,
         surface: AppColors.surface,
         onSurface: AppColors.ink,
         surfaceContainerHighest: AppColors.soft,
@@ -29,6 +28,7 @@ abstract final class AppTheme {
       ),
       inputDecorationTheme: _inputTheme(AppColors.muted),
       chipTheme: _chipTheme(AppColors.soft, AppColors.green900),
+      extensions: const [_swipeLight],
     );
   }
 
@@ -46,8 +46,6 @@ abstract final class AppTheme {
         onPrimaryContainer: AppColors.onGreenContainerDark,
         secondary: AppColors.honey,
         onSecondary: AppColors.ink,
-        tertiary: AppColors.info,
-        onTertiary: Colors.white,
         surface: Color(0xFF1A2E1C),
         onSurface: Colors.white,
         onSurfaceVariant: Color(0xFFA8B5AC),
@@ -60,8 +58,33 @@ abstract final class AppTheme {
         AppColors.greenContainerDark,
         AppColors.onGreenContainerDark,
       ),
+      extensions: const [_swipeDark],
     );
   }
+
+  // Scheme A (full brand tones): green = done, honey = +1 day, muted grey =
+  // neutral (revert/edit/move), terracotta = delete. No off-brand blue/red.
+  static const _swipeLight = SwipeColors(
+    complete: AppColors.green,
+    onComplete: Colors.white,
+    postpone: AppColors.honey,
+    onPostpone: AppColors.ink,
+    neutral: AppColors.muted,
+    onNeutral: Colors.white,
+    delete: AppColors.terracotta,
+    onDelete: Colors.white,
+  );
+
+  static const _swipeDark = SwipeColors(
+    complete: AppColors.green400,
+    onComplete: AppColors.ink,
+    postpone: AppColors.honey,
+    onPostpone: AppColors.ink,
+    neutral: AppColors.neutralActionDark,
+    onNeutral: AppColors.ink,
+    delete: AppColors.terracottaDark,
+    onDelete: AppColors.ink,
+  );
 
   /// Hints must read as placeholders, not entered text — keep them muted.
   static InputDecorationTheme _inputTheme(Color hint) => InputDecorationTheme(

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tendask — swipe barve (primerjava)</title>
+<style>
+  :root{
+    --green-900:#205A28; --green:#2e7d32; --green-400:#3a9a57;
+    --honey:#E0A82E; --soft:#e8f3ea; --softer:#f2f8f3;
+    --ink:#1d2823; --muted:#6b7770; --line:#e4e8e5; --bg:#eceef0;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Plus Jakarta Sans',system-ui,sans-serif;background:var(--bg);color:var(--ink);padding:32px 20px 80px;}
+  .wrap{max-width:1000px;margin:0 auto;}
+  h1{font-size:26px;font-weight:800;letter-spacing:-.5px;}
+  .lead{color:#5c6660;margin-top:8px;font-size:14px;max-width:760px;line-height:1.5;}
+  h2{font-size:13px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:#8a938d;margin:30px 0 6px;}
+  .desc{font-size:13px;color:var(--muted);margin-bottom:12px;max-width:760px;line-height:1.5;}
+
+  .scheme{background:#fff;border:1px solid var(--line);border-radius:18px;padding:20px;margin-bottom:8px;box-shadow:0 8px 24px rgba(20,40,30,.06);}
+  .scheme h3{font-size:18px;font-weight:800;letter-spacing:-.3px;}
+  .scheme .sub{font-size:13px;color:var(--muted);margin:4px 0 16px;line-height:1.5;}
+
+  .stage{border-radius:14px;padding:16px;margin-bottom:12px;}
+  .stage.light{background:#eceef0;}
+  .stage.dark{background:#15261a;}
+  .stage .lbl{font-size:11px;font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:10px;opacity:.7;}
+  .stage.light .lbl{color:#5c6660;}
+  .stage.dark  .lbl{color:#9fb0a4;}
+
+  /* a faux list row with revealed actions on the right */
+  .swrow{display:flex;align-items:stretch;border-radius:12px;overflow:hidden;margin-bottom:10px;box-shadow:0 1px 3px rgba(0,0,0,.12);}
+  .swrow .face{flex:1;display:flex;align-items:center;gap:12px;padding:12px 14px;font-size:14px;}
+  .light .swrow .face{background:#fff;color:#1d2823;}
+  .dark  .swrow .face{background:#1d3322;color:#eaf2ec;}
+  .swrow .face .ic{width:30px;height:30px;border-radius:50%;display:grid;place-items:center;font-size:15px;}
+  .light .swrow .face .ic{background:#e8f3ea;}
+  .dark  .swrow .face .ic{background:#26452e;}
+  .swrow .acts{display:flex;}
+  .act{width:78px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;font-weight:700;}
+  .act .g{font-size:17px;line-height:1;}
+  .rowcap{font-size:11px;color:var(--muted);margin:-4px 2px 12px;}
+  .dark + .rowcap{}
+
+  .palette{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px;}
+  .pchip{font-size:11px;font-family:ui-monospace,monospace;color:var(--muted);}
+  .pchip b{display:inline-block;width:13px;height:13px;border-radius:3px;vertical-align:-2px;margin-right:4px;border:1px solid rgba(0,0,0,.1);}
+  .note{font-size:12.5px;color:#5c6660;background:var(--softer);border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin-top:6px;line-height:1.55;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Swipe barve — primerjava shem</h1>
+  <p class="lead">Brand (final.html) ima <b>zeleno družino + medeno + nevtralne tone</b>, brez rdeče in brez modre.
+  Spodaj so 4 sheme za barve swipe-gumbov, vsaka prikazana na <b>svetli</b> in <b>temni</b> temi. Akcije:
+  <b>Opravljeno</b>, <b>+1 dan</b>, nevtralne (<b>Povrni / Uredi / Premakni</b> — ista barva), <b>Izbriši</b>.
+  Izberi shemo (ali kombinacijo), pa jo prenesem v kodo.</p>
+
+  <!-- ============ SCHEME A ============ -->
+  <h2>Shema A — ✅ IZBRANA (implementirana)</h2>
+  <div class="scheme" style="outline:3px solid #2e7d32;outline-offset:2px;">
+    <h3>Polni brand toni</h3>
+    <div class="sub">Zelena = pozitivno, medena = odlog, pridušeno zeleno-siva = nevtralno, terakota = izbris.
+      Vse polne barve (kot zdaj), a brez modre/rdeče — terakota je topel »lončarski« odtenek, ki paše k vrtu in medeni.</div>
+
+    <div class="stage light">
+      <div class="lbl">Svetla tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#2e7d32;color:#fff;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#E0A82E;color:#1d2823;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✂️</span>Obrez · Jablana</div>
+        <div class="acts">
+          <div class="act" style="background:#6b7770;color:#fff;"><span class="g">↩</span>Povrni</div>
+          <div class="act" style="background:#B0473B;color:#fff;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage dark">
+      <div class="lbl">Temna tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#3a9a57;color:#08210d;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#E0A82E;color:#1d2823;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✂️</span>Obrez · Jablana</div>
+        <div class="acts">
+          <div class="act" style="background:#8a948c;color:#0d1a11;"><span class="g">↩</span>Povrni</div>
+          <div class="act" style="background:#C25A4D;color:#1c0c09;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+    <div class="palette">
+      <span class="pchip"><b style="background:#2e7d32"></b>#2e7d32</span>
+      <span class="pchip"><b style="background:#E0A82E"></b>#E0A82E</span>
+      <span class="pchip"><b style="background:#6b7770"></b>#6b7770</span>
+      <span class="pchip"><b style="background:#B0473B"></b>#B0473B terakota</span>
+    </div>
+  </div>
+
+  <!-- ============ SCHEME B ============ -->
+  <h2>Shema B</h2>
+  <div class="scheme">
+    <h3>Mehki toni (umirjeno)</h3>
+    <div class="sub">Pridušene podlage + temen tekst/ikona. Najtišje, najbolj skladno z mehkim brand občutkom
+      (soft zelena). Izbris = mehka glinena rdeča — opazen, a ne »tolče ven«.</div>
+
+    <div class="stage light">
+      <div class="lbl">Svetla tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#cfe6d4;color:#205A28;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#F6E7C4;color:#8a6210;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✂️</span>Obrez · Jablana</div>
+        <div class="acts">
+          <div class="act" style="background:#e2e7e4;color:#3f4a44;"><span class="g">↩</span>Povrni</div>
+          <div class="act" style="background:#F1DAD3;color:#9A3B2E;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage dark">
+      <div class="lbl">Temna tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#24432a;color:#bceac2;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#4a3a1a;color:#f2d79a;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✂️</span>Obrez · Jablana</div>
+        <div class="acts">
+          <div class="act" style="background:#333d37;color:#c3cdc6;"><span class="g">↩</span>Povrni</div>
+          <div class="act" style="background:#4a2a24;color:#f2b5a8;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+    <div class="palette">
+      <span class="pchip"><b style="background:#cfe6d4"></b>soft zelena</span>
+      <span class="pchip"><b style="background:#F6E7C4"></b>soft medena</span>
+      <span class="pchip"><b style="background:#e2e7e4"></b>soft siva</span>
+      <span class="pchip"><b style="background:#F1DAD3"></b>soft glina</span>
+    </div>
+  </div>
+
+  <!-- ============ SCHEME C ============ -->
+  <h2>Shema C</h2>
+  <div class="scheme">
+    <h3>Hibrid — polno pozitivno/izbris, mehko nevtralno</h3>
+    <div class="sub">Opravljeno (zelena) in Izbriši (terakota) sta polna in opazna (pomembni odločitvi),
+      odlog in nevtralne akcije so mehke. Dobro vodi oko k pomembnemu.</div>
+
+    <div class="stage light">
+      <div class="lbl">Svetla tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#2e7d32;color:#fff;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#F6E7C4;color:#8a6210;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✍️</span>Opomba</div>
+        <div class="acts">
+          <div class="act" style="background:#e2e7e4;color:#3f4a44;"><span class="g">✏️</span>Uredi</div>
+          <div class="act" style="background:#B0473B;color:#fff;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage dark">
+      <div class="lbl">Temna tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#3a9a57;color:#08210d;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#4a3a1a;color:#f2d79a;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">✍️</span>Opomba</div>
+        <div class="acts">
+          <div class="act" style="background:#333d37;color:#c3cdc6;"><span class="g">✏️</span>Uredi</div>
+          <div class="act" style="background:#C25A4D;color:#1c0c09;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+    <div class="palette">
+      <span class="pchip"><b style="background:#2e7d32"></b>zelena (polna)</span>
+      <span class="pchip"><b style="background:#F6E7C4"></b>soft medena</span>
+      <span class="pchip"><b style="background:#e2e7e4"></b>soft siva</span>
+      <span class="pchip"><b style="background:#B0473B"></b>terakota (polna)</span>
+    </div>
+  </div>
+
+  <!-- ============ SCHEME D ============ -->
+  <h2>Shema D</h2>
+  <div class="scheme">
+    <h3>Zeleno-medena, brez sive — izbris terakota</h3>
+    <div class="sub">Nevtralne akcije dobijo <b>globoko zeleno</b> (namesto sive), da paleta ostane strogo
+      brand (zelena + medena + ena topla rdeča). Manj nevtralnih odtenkov, bolj »zelena« znamka.</div>
+
+    <div class="stage light">
+      <div class="lbl">Svetla tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#2e7d32;color:#fff;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#E0A82E;color:#1d2823;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">🪴</span>Bazilika · Greda 1</div>
+        <div class="acts">
+          <div class="act" style="background:#205A28;color:#cfe6d4;"><span class="g">↔</span>Premakni</div>
+          <div class="act" style="background:#B0473B;color:#fff;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="stage dark">
+      <div class="lbl">Temna tema</div>
+      <div class="swrow">
+        <div class="face"><span class="ic">💧</span>Zalivanje · Paradižnik</div>
+        <div class="acts">
+          <div class="act" style="background:#3a9a57;color:#08210d;"><span class="g">✓</span>Opravljeno</div>
+          <div class="act" style="background:#E0A82E;color:#1d2823;"><span class="g">⏰</span>+1 dan</div>
+        </div>
+      </div>
+      <div class="swrow">
+        <div class="face"><span class="ic">🪴</span>Bazilika · Greda 1</div>
+        <div class="acts">
+          <div class="act" style="background:#2b5733;color:#bfe6c6;"><span class="g">↔</span>Premakni</div>
+          <div class="act" style="background:#C25A4D;color:#1c0c09;"><span class="g">🗑</span>Izbriši</div>
+        </div>
+      </div>
+    </div>
+    <div class="palette">
+      <span class="pchip"><b style="background:#2e7d32"></b>zelena</span>
+      <span class="pchip"><b style="background:#E0A82E"></b>medena</span>
+      <span class="pchip"><b style="background:#205A28"></b>globoka zelena (nevtr.)</span>
+      <span class="pchip"><b style="background:#B0473B"></b>terakota</span>
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Glede izbrisa:</b> brand nima rdeče, zato je za destruktivno akcijo predlagana <b>terakota</b>
+    (#B0473B / temna #C25A4D) — topel, »lončarski« rdeč odtenek, ki sodi k vrtnemu, medenemu značaju in ni neonsko roza.
+    Če želiš popolnoma brez rdeče, lahko izbris naredim <b>nevtralno temno</b> (ogljeno/ink) z ikono koša — povej.
+    <br><br>
+    <b>Moj predlog:</b> Shema C (hibrid) — pomembni akciji (Opravljeno, Izbriši) opazni, ostalo umirjeno; ali
+    Shema B, če želiš čim bolj tiho. Reci številko (A/B/C/D) ali mešanico.
+  </div>
+</div>
+</body>
+</html>
