@@ -74,6 +74,36 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
+  /// Collects all of the user's rows into a JSON-serializable map for GDPR
+  /// export. Excludes device-local-only tables: device_location holds the raw
+  /// garden coordinates, which must never leave the device (only the derived H3
+  /// cells in profile are exported); local_flag/sync_cursor are internal. The
+  /// public catalog is omitted (not user data). sync_status is stripped — an
+  /// internal sync detail, not user content.
+  Future<Map<String, dynamic>> exportUserData() async {
+    List<Map<String, dynamic>> rows<D extends DataClass>(
+      List<D> data,
+    ) => data.map((r) {
+      final json = r.toJson();
+      json.remove('syncStatus');
+      return json;
+    }).toList();
+
+    return {
+      'schema_version': schemaVersion,
+      'profile': rows(await select(profiles).get()),
+      'area': rows(await select(areas).get()),
+      'user_plant': rows(await select(userPlants).get()),
+      'task': rows(await select(tasks).get()),
+      'task_subject': rows(await select(taskSubjects).get()),
+      'task_reminder': rows(await select(taskReminders).get()),
+      'note': rows(await select(notes).get()),
+      'supply': rows(await select(supplies).get()),
+      'recipe': rows(await select(recipes).get()),
+      'task_supply': rows(await select(taskSupplies).get()),
+    };
+  }
+
   @override
   MigrationStrategy get migration => MigrationStrategy(
     onCreate: (m) => m.createAll(),

@@ -254,8 +254,8 @@ class _Translations$auth$de extends Translations$auth$sl {
 	@override String get guest => 'Ohne Konto ausprobieren';
 	@override String get legal => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.';
 	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
-	@override String get coming_soon => 'Demnächst verfügbar.';
 	@override String get google_error => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
+	@override String get coming_soon => 'Demnächst verfügbar.';
 }
 
 // Path: email_login
@@ -691,8 +691,13 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get logout_confirm_body => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.';
 	@override String get logout_cancel => 'Abbrechen';
 	@override String get logout_offline => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.';
+	@override String get export_share_text => 'Tendask Datenexport';
+	@override String get export_error => 'Export fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get delete_account => 'Konto und alle Daten löschen';
-	@override String get coming_soon => 'Demnächst';
+	@override String get delete_account_confirm_title => 'Konto löschen?';
+	@override String get delete_account_confirm_body => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.';
+	@override String get delete_account_confirm => 'Konto löschen';
+	@override String get delete_account_error => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.';
 	@override String get version => 'Tendask · v1 (MVP)';
 }
 
@@ -815,8 +820,8 @@ extension on TranslationsDe {
 			'auth.guest' => 'Ohne Konto ausprobieren',
 			'auth.legal' => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.',
 			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
-			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
+			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'email_login.title' => 'Mit E-Mail anmelden',
 			'email_login.email_label' => 'E-Mail-Adresse',
 			'email_login.email_hint' => 'du@beispiel.de',
@@ -1111,8 +1116,13 @@ extension on TranslationsDe {
 			'settings.logout_confirm_body' => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.',
 			'settings.logout_cancel' => 'Abbrechen',
 			'settings.logout_offline' => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.',
+			'settings.export_share_text' => 'Tendask Datenexport',
+			'settings.export_error' => 'Export fehlgeschlagen. Bitte versuche es erneut.',
 			'settings.delete_account' => 'Konto und alle Daten löschen',
-			'settings.coming_soon' => 'Demnächst',
+			'settings.delete_account_confirm_title' => 'Konto löschen?',
+			'settings.delete_account_confirm_body' => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.',
+			'settings.delete_account_confirm' => 'Konto löschen',
+			'settings.delete_account_error' => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.',
 			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Klar',
 			'weather.cond_mainly_clear' => 'Überwiegend klar',

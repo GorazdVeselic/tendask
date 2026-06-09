@@ -109,8 +109,8 @@
     "guest": "Try without an account",
     "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
     "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
-    "coming_soon": "Coming soon.",
-    "google_error": "Google sign-in failed. Please try again."
+    "google_error": "Google sign-in failed. Please try again.",
+    "coming_soon": "Coming soon."
   },
   "email_login": {
     "title": "Sign in with email",
@@ -441,8 +441,13 @@
     "logout_confirm_body": "Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.",
     "logout_cancel": "Cancel",
     "logout_offline": "Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.",
+    "export_share_text": "Tendask data export",
+    "export_error": "Export failed. Please try again.",
     "delete_account": "Delete account and all data",
-    "coming_soon": "Coming soon",
+    "delete_account_confirm_title": "Delete account?",
+    "delete_account_confirm_body": "Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.",
+    "delete_account_confirm": "Delete account",
+    "delete_account_error": "Deletion failed. Try again when you're connected.",
     "version": "Tendask · v1 (MVP)"
   },
   "weather": {

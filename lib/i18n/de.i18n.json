@@ -109,8 +109,8 @@
     "guest": "Ohne Konto ausprobieren",
     "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
     "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
-    "coming_soon": "Demnächst verfügbar.",
-    "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut."
+    "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
+    "coming_soon": "Demnächst verfügbar."
   },
   "email_login": {
     "title": "Mit E-Mail anmelden",
@@ -441,8 +441,13 @@
     "logout_confirm_body": "Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.",
     "logout_cancel": "Abbrechen",
     "logout_offline": "Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.",
+    "export_share_text": "Tendask Datenexport",
+    "export_error": "Export fehlgeschlagen. Bitte versuche es erneut.",
     "delete_account": "Konto und alle Daten löschen",
-    "coming_soon": "Demnächst",
+    "delete_account_confirm_title": "Konto löschen?",
+    "delete_account_confirm_body": "Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.",
+    "delete_account_confirm": "Konto löschen",
+    "delete_account_error": "Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.",
     "version": "Tendask · v1 (MVP)"
   },
   "weather": {

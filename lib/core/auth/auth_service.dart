@@ -41,6 +41,17 @@ class AuthService {
   /// pending push first, then clears local data (sign-out + reset).
   Future<void> signOut() async => _client?.auth.signOut();
 
+  /// GDPR account deletion: permanently removes the cloud account via the
+  /// delete_account RPC (SECURITY DEFINER → deletes auth.users for this uid,
+  /// cascading to every user table), then ends the session. No-op for a guest
+  /// or offline build (no cloud account); the caller still wipes local data.
+  Future<void> deleteAccount() async {
+    final client = _client;
+    if (client == null || client.auth.currentUser == null) return;
+    await client.rpc('delete_account');
+    await client.auth.signOut();
+  }
+
   /// Sends an OTP to [email] — creates the account if new, else signs into the
   /// existing one. After verifying, the caller claims the guest's local rows to
   /// this account and syncs, so the device's data is kept (merged), not lost.

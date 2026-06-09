@@ -111,8 +111,8 @@
     "guest": "Preizkusi brez računa",
     "legal": "Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.",
     "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
-    "coming_soon": "Na voljo kmalu.",
-    "google_error": "Prijava z Google ni uspela. Poskusi znova."
+    "google_error": "Prijava z Google ni uspela. Poskusi znova.",
+    "coming_soon": "Na voljo kmalu."
   },
   "email_login": {
     "title": "Prijava z e-pošto",
@@ -447,8 +447,13 @@
     "logout_confirm_body": "Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.",
     "logout_cancel": "Prekliči",
     "logout_offline": "Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.",
+    "export_share_text": "Tendask izvoz podatkov",
+    "export_error": "Izvoz ni uspel. Poskusi znova.",
     "delete_account": "Izbriši račun in vse podatke",
-    "coming_soon": "Na voljo kmalu",
+    "delete_account_confirm_title": "Izbriši račun?",
+    "delete_account_confirm_body": "Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.",
+    "delete_account_confirm": "Izbriši račun",
+    "delete_account_error": "Izbris ni uspel. Poskusi znova, ko boš povezan.",
     "version": "Tendask · v1 (MVP)"
   },
   "weather": {

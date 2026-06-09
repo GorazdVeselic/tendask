@@ -430,11 +430,11 @@ class Translations$auth$sl {
 	/// sl: 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.'
 	String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
 
-	/// sl: 'Na voljo kmalu.'
-	String get coming_soon => 'Na voljo kmalu.';
-
 	/// sl: 'Prijava z Google ni uspela. Poskusi znova.'
 	String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
+
+	/// sl: 'Na voljo kmalu.'
+	String get coming_soon => 'Na voljo kmalu.';
 }
 
 // Path: email_login
@@ -1463,11 +1463,26 @@ class Translations$settings$sl {
 	/// sl: 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.'
 	String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
 
+	/// sl: 'Tendask izvoz podatkov'
+	String get export_share_text => 'Tendask izvoz podatkov';
+
+	/// sl: 'Izvoz ni uspel. Poskusi znova.'
+	String get export_error => 'Izvoz ni uspel. Poskusi znova.';
+
 	/// sl: 'Izbriši račun in vse podatke'
 	String get delete_account => 'Izbriši račun in vse podatke';
 
-	/// sl: 'Na voljo kmalu'
-	String get coming_soon => 'Na voljo kmalu';
+	/// sl: 'Izbriši račun?'
+	String get delete_account_confirm_title => 'Izbriši račun?';
+
+	/// sl: 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.'
+	String get delete_account_confirm_body => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.';
+
+	/// sl: 'Izbriši račun'
+	String get delete_account_confirm => 'Izbriši račun';
+
+	/// sl: 'Izbris ni uspel. Poskusi znova, ko boš povezan.'
+	String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
 
 	/// sl: 'Tendask · v1 (MVP)'
 	String get version => 'Tendask · v1 (MVP)';
@@ -1624,8 +1639,8 @@ extension on Translations {
 			'auth.guest' => 'Preizkusi brez računa',
 			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
 			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
-			'auth.coming_soon' => 'Na voljo kmalu.',
 			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
+			'auth.coming_soon' => 'Na voljo kmalu.',
 			'email_login.title' => 'Prijava z e-pošto',
 			'email_login.email_label' => 'E-poštni naslov',
 			'email_login.email_hint' => 'ti@primer.si',
@@ -1920,8 +1935,13 @@ extension on Translations {
 			'settings.logout_confirm_body' => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.',
 			'settings.logout_cancel' => 'Prekliči',
 			'settings.logout_offline' => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.',
+			'settings.export_share_text' => 'Tendask izvoz podatkov',
+			'settings.export_error' => 'Izvoz ni uspel. Poskusi znova.',
 			'settings.delete_account' => 'Izbriši račun in vse podatke',
-			'settings.coming_soon' => 'Na voljo kmalu',
+			'settings.delete_account_confirm_title' => 'Izbriši račun?',
+			'settings.delete_account_confirm_body' => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.',
+			'settings.delete_account_confirm' => 'Izbriši račun',
+			'settings.delete_account_error' => 'Izbris ni uspel. Poskusi znova, ko boš povezan.',
 			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Jasno',
 			'weather.cond_mainly_clear' => 'Pretežno jasno',

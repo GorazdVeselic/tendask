@@ -254,8 +254,8 @@ class _Translations$auth$en extends Translations$auth$sl {
 	@override String get guest => 'Try without an account';
 	@override String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
 	@override String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
-	@override String get coming_soon => 'Coming soon.';
 	@override String get google_error => 'Google sign-in failed. Please try again.';
+	@override String get coming_soon => 'Coming soon.';
 }
 
 // Path: email_login
@@ -691,8 +691,13 @@ class _Translations$settings$en extends Translations$settings$sl {
 	@override String get logout_confirm_body => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.';
 	@override String get logout_cancel => 'Cancel';
 	@override String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
+	@override String get export_share_text => 'Tendask data export';
+	@override String get export_error => 'Export failed. Please try again.';
 	@override String get delete_account => 'Delete account and all data';
-	@override String get coming_soon => 'Coming soon';
+	@override String get delete_account_confirm_title => 'Delete account?';
+	@override String get delete_account_confirm_body => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.';
+	@override String get delete_account_confirm => 'Delete account';
+	@override String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
 	@override String get version => 'Tendask · v1 (MVP)';
 }
 
@@ -815,8 +820,8 @@ extension on TranslationsEn {
 			'auth.guest' => 'Try without an account',
 			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
 			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
-			'auth.coming_soon' => 'Coming soon.',
 			'auth.google_error' => 'Google sign-in failed. Please try again.',
+			'auth.coming_soon' => 'Coming soon.',
 			'email_login.title' => 'Sign in with email',
 			'email_login.email_label' => 'Email address',
 			'email_login.email_hint' => 'you@example.com',
@@ -1111,8 +1116,13 @@ extension on TranslationsEn {
 			'settings.logout_confirm_body' => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.',
 			'settings.logout_cancel' => 'Cancel',
 			'settings.logout_offline' => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.',
+			'settings.export_share_text' => 'Tendask data export',
+			'settings.export_error' => 'Export failed. Please try again.',
 			'settings.delete_account' => 'Delete account and all data',
-			'settings.coming_soon' => 'Coming soon',
+			'settings.delete_account_confirm_title' => 'Delete account?',
+			'settings.delete_account_confirm_body' => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.',
+			'settings.delete_account_confirm' => 'Delete account',
+			'settings.delete_account_error' => 'Deletion failed. Try again when you\'re connected.',
 			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Clear',
 			'weather.cond_mainly_clear' => 'Mostly clear',

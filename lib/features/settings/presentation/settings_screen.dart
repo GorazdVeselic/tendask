@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:share_plus/share_plus.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
@@ -12,6 +13,7 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/profile_providers.dart';
+import '../data/account_repository.dart';
 
 /// Native language names (endonyms) — not translated; shown the same in every locale.
 String _langLabel(AppLocale loc) => switch (loc) {
@@ -66,6 +68,55 @@ class SettingsScreen extends ConsumerWidget {
     context.go('/onboarding');
   }
 
+  /// GDPR export — writes all user data to a JSON file and opens the share sheet
+  /// (save to Files/Drive, send, …). Works the same for guest and signed-in.
+  Future<void> _export(BuildContext context, WidgetRef ref) async {
+    final t = context.t;
+    try {
+      final path = await ref.read(accountRepositoryProvider).writeExportFile();
+      await SharePlus.instance.share(
+        ShareParams(files: [XFile(path)], text: t.settings.export_share_text),
+      );
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(t.settings.export_error),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+    }
+  }
+
+  /// GDPR account deletion — confirm, then delete the cloud account (cascades)
+  /// and wipe local data, returning to onboarding. A guest only wipes locally.
+  Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
+    final t = context.t;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: t.settings.delete_account_confirm_title,
+      body: t.settings.delete_account_confirm_body,
+      confirmLabel: t.settings.delete_account_confirm,
+      cancelLabel: t.settings.logout_cancel,
+      destructive: true,
+    );
+    if (!confirmed || !context.mounted) return;
+    try {
+      await ref.read(accountRepositoryProvider).deleteAccount();
+    } catch (_) {
+      if (!context.mounted) return;
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(t.settings.delete_account_error),
+          behavior: SnackBarBehavior.floating,
+        ),
+      );
+      return;
+    }
+    if (!context.mounted) return;
+    context.go('/onboarding');
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
@@ -74,15 +125,6 @@ class SettingsScreen extends ConsumerWidget {
     // Rebuild on sign-in/out so the profile tile reflects the current account.
     ref.watch(authStateChangesProvider);
     final email = ref.read(authServiceProvider).email;
-
-    void comingSoon() {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(t.settings.coming_soon),
-          behavior: SnackBarBehavior.floating,
-        ),
-      );
-    }
 
     return Scaffold(
       appBar: AppBar(
@@ -174,7 +216,7 @@ class SettingsScreen extends ConsumerWidget {
               children: [
                 _PlaceholderTile(
                   label: t.settings.export_data,
-                  onTap: comingSoon,
+                  onTap: () => unawaited(_export(context, ref)),
                 ),
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
@@ -185,7 +227,7 @@ class SettingsScreen extends ConsumerWidget {
                 _PlaceholderTile(
                   label: t.settings.delete_account,
                   destructive: true,
-                  onTap: comingSoon,
+                  onTap: () => unawaited(_deleteAccount(context, ref)),
                 ),
               ],
             ),
