@@ -35,9 +35,12 @@ class LocationRepository {
     final cells = deriveH3Cells(_h3, latitude, longitude);
     final now = _clock.now();
     await _db.transaction(() async {
+      // Singleton table: wipe first so a stray duplicate left by an older
+      // schema can't survive and crash the single-row read below.
+      await _db.delete(_db.deviceLocations).go();
       await _db
           .into(_db.deviceLocations)
-          .insertOnConflictUpdate(
+          .insert(
             DeviceLocationsCompanion.insert(
               latitude: latitude,
               longitude: longitude,
@@ -99,7 +102,7 @@ class LocationRepository {
 
   /// The stored garden coordinates for the weather lookup, or null if unset.
   Future<GardenCoords?> gardenCoordinates() async {
-    final row = await _db.select(_db.deviceLocations).getSingleOrNull();
+    final row = await _latestLocationQuery().getSingleOrNull();
     if (row == null) return null;
     return (latitude: row.latitude, longitude: row.longitude);
   }
@@ -107,15 +110,20 @@ class LocationRepository {
   /// Reactive coordinates: emits whenever the stored location changes, so the
   /// weather provider re-fetches after onboarding/settings set it.
   Stream<GardenCoords?> watchGardenCoordinates() {
-    return _db
-        .select(_db.deviceLocations)
-        .watchSingleOrNull()
-        .map(
-          (row) => row == null
-              ? null
-              : (latitude: row.latitude, longitude: row.longitude),
-        );
+    return _latestLocationQuery().watchSingleOrNull().map(
+      (row) => row == null
+          ? null
+          : (latitude: row.latitude, longitude: row.longitude),
+    );
   }
+
+  /// Reads at most the newest row: tolerant of a stray duplicate left by an
+  /// older schema, so the single-row consumers never throw.
+  SimpleSelectStatement<$DeviceLocationsTable, DeviceLocation>
+  _latestLocationQuery() =>
+      _db.select(_db.deviceLocations)
+        ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+        ..limit(1);
 }
 
 /// Loads the native H3 library once per session (FFI load is not free).
