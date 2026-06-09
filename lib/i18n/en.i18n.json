@@ -110,7 +110,8 @@
     "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
     "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
     "google_error": "Google sign-in failed. Please try again.",
-    "coming_soon": "Coming soon."
+    "coming_soon": "Coming soon.",
+    "privacy_link": "Privacy policy"
   },
   "email_login": {
     "title": "Sign in with email",
@@ -447,7 +448,9 @@
     "delete_account_confirm_title": "Delete account?",
     "delete_account_confirm_body": "Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.",
     "delete_account_confirm": "Delete account",
-    "delete_account_error": "Deletion failed. Try again when you're connected."
+    "delete_account_error": "Deletion failed. Try again when you're connected.",
+    "section_about": "About",
+    "privacy_policy": "Privacy policy"
   },
   "weather": {
     "cond_clear": "Clear",

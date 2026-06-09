@@ -258,6 +258,7 @@ class _Translations$auth$sl extends Translations$auth$en {
 	@override String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
 	@override String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
 	@override String get coming_soon => 'Na voljo kmalu.';
+	@override String get privacy_link => 'Politika zasebnosti';
 }
 
 // Path: email_login
@@ -704,6 +705,8 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get delete_account_confirm_body => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.';
 	@override String get delete_account_confirm => 'Izbriši račun';
 	@override String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
+	@override String get section_about => 'O aplikaciji';
+	@override String get privacy_policy => 'Politika zasebnosti';
 }
 
 // Path: weather
@@ -827,6 +830,7 @@ extension on TranslationsSl {
 			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
 			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
+			'auth.privacy_link' => 'Politika zasebnosti',
 			'email_login.title' => 'Prijava z e-pošto',
 			'email_login.email_label' => 'E-poštni naslov',
 			'email_login.email_hint' => 'ti@primer.si',
@@ -1128,6 +1132,8 @@ extension on TranslationsSl {
 			'settings.delete_account_confirm_body' => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.',
 			'settings.delete_account_confirm' => 'Izbriši račun',
 			'settings.delete_account_error' => 'Izbris ni uspel. Poskusi znova, ko boš povezan.',
+			'settings.section_about' => 'O aplikaciji',
+			'settings.privacy_policy' => 'Politika zasebnosti',
 			'weather.cond_clear' => 'Jasno',
 			'weather.cond_mainly_clear' => 'Pretežno jasno',
 			'weather.cond_cloudy' => 'Oblačno',

@@ -156,8 +156,8 @@ class _Translations$notif_priming$de extends Translations$notif_priming$en {
 	// Translations
 	@override String get title => 'Soll ich dich rechtzeitig erinnern?';
 	@override String get why => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.';
-	@override String get benefit_reminders => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00".';
-	@override String get benefit_weather => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt". (optional)';
+	@override String get benefit_reminders => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.';
+	@override String get benefit_weather => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)';
 	@override String get benefit_nearby => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)';
 	@override String get privacy => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.';
 	@override String get enable => 'Benachrichtigungen aktivieren';
@@ -256,6 +256,7 @@ class _Translations$auth$de extends Translations$auth$en {
 	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
 	@override String get google_error => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get coming_soon => 'Demnächst verfügbar.';
+	@override String get privacy_link => 'Datenschutzerklärung';
 }
 
 // Path: email_login
@@ -698,6 +699,8 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get delete_account_confirm_body => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.';
 	@override String get delete_account_confirm => 'Konto löschen';
 	@override String get delete_account_error => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.';
+	@override String get section_about => 'Über';
+	@override String get privacy_policy => 'Datenschutzerklärung';
 }
 
 // Path: weather
@@ -720,7 +723,7 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get band_forecast => 'Vorhersage';
 	@override String get rain_past48h => 'Regen letzte 48 h:';
 	@override String get detail_waiting => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.';
-	@override String get detail_none => 'Keine Wetteraufnahme (offline erfasst).';
+	@override String get detail_none => 'Keine Wetteraufnahme (zum Zeitpunkt offline).';
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
 	@override String get home_retry => 'Zum Wiederholen tippen';
 }
@@ -757,8 +760,8 @@ extension on TranslationsDe {
 			'notifications.tomorrow' => 'Morgen',
 			'notif_priming.title' => 'Soll ich dich rechtzeitig erinnern?',
 			'notif_priming.why' => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.',
-			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00".',
-			'notif_priming.benefit_weather' => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt". (optional)',
+			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.',
+			'notif_priming.benefit_weather' => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)',
 			'notif_priming.benefit_nearby' => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)',
 			'notif_priming.privacy' => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.',
 			'notif_priming.enable' => 'Benachrichtigungen aktivieren',
@@ -821,6 +824,7 @@ extension on TranslationsDe {
 			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
 			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
 			'auth.coming_soon' => 'Demnächst verfügbar.',
+			'auth.privacy_link' => 'Datenschutzerklärung',
 			'email_login.title' => 'Mit E-Mail anmelden',
 			'email_login.email_label' => 'E-Mail-Adresse',
 			'email_login.email_hint' => 'du@beispiel.de',
@@ -1122,6 +1126,8 @@ extension on TranslationsDe {
 			'settings.delete_account_confirm_body' => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.',
 			'settings.delete_account_confirm' => 'Konto löschen',
 			'settings.delete_account_error' => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.',
+			'settings.section_about' => 'Über',
+			'settings.privacy_policy' => 'Datenschutzerklärung',
 			'weather.cond_clear' => 'Klar',
 			'weather.cond_mainly_clear' => 'Überwiegend klar',
 			'weather.cond_cloudy' => 'Bewölkt',
@@ -1135,7 +1141,7 @@ extension on TranslationsDe {
 			'weather.band_forecast' => 'Vorhersage',
 			'weather.rain_past48h' => 'Regen letzte 48 h:',
 			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
-			'weather.detail_none' => 'Keine Wetteraufnahme (offline erfasst).',
+			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
 			_ => null,

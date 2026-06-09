@@ -39,8 +39,8 @@
   "notif_priming": {
     "title": "Soll ich dich rechtzeitig erinnern?",
     "why": "Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.",
-    "benefit_reminders": "Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00\".",
-    "benefit_weather": "Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt\". (optional)",
+    "benefit_reminders": "Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.",
+    "benefit_weather": "Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)",
     "benefit_nearby": "Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)",
     "privacy": "Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.",
     "enable": "Benachrichtigungen aktivieren",
@@ -110,7 +110,8 @@
     "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
     "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
     "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
-    "coming_soon": "Demnächst verfügbar."
+    "coming_soon": "Demnächst verfügbar.",
+    "privacy_link": "Datenschutzerklärung"
   },
   "email_login": {
     "title": "Mit E-Mail anmelden",
@@ -447,7 +448,9 @@
     "delete_account_confirm_title": "Konto löschen?",
     "delete_account_confirm_body": "Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.",
     "delete_account_confirm": "Konto löschen",
-    "delete_account_error": "Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist."
+    "delete_account_error": "Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.",
+    "section_about": "Über",
+    "privacy_policy": "Datenschutzerklärung"
   },
   "weather": {
     "cond_clear": "Klar",
@@ -463,7 +466,7 @@
     "band_forecast": "Vorhersage",
     "rain_past48h": "Regen letzte 48 h:",
     "detail_waiting": "Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.",
-    "detail_none": "Keine Wetteraufnahme (offline erfasst).",
+    "detail_none": "Keine Wetteraufnahme (zum Zeitpunkt offline).",
     "home_unavailable": "Wetter derzeit nicht verfügbar.",
     "home_retry": "Zum Wiederholen tippen"
   }

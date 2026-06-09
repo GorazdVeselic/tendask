@@ -112,7 +112,8 @@
     "legal": "Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.",
     "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
     "google_error": "Prijava z Google ni uspela. Poskusi znova.",
-    "coming_soon": "Na voljo kmalu."
+    "coming_soon": "Na voljo kmalu.",
+    "privacy_link": "Politika zasebnosti"
   },
   "email_login": {
     "title": "Prijava z e-pošto",
@@ -453,7 +454,9 @@
     "delete_account_confirm_title": "Izbriši račun?",
     "delete_account_confirm_body": "Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.",
     "delete_account_confirm": "Izbriši račun",
-    "delete_account_error": "Izbris ni uspel. Poskusi znova, ko boš povezan."
+    "delete_account_error": "Izbris ni uspel. Poskusi znova, ko boš povezan.",
+    "section_about": "O aplikaciji",
+    "privacy_policy": "Politika zasebnosti"
   },
   "weather": {
     "cond_clear": "Jasno",

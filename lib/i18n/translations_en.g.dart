@@ -433,6 +433,9 @@ class Translations$auth$en {
 
 	/// en: 'Coming soon.'
 	String get coming_soon => 'Coming soon.';
+
+	/// en: 'Privacy policy'
+	String get privacy_link => 'Privacy policy';
 }
 
 // Path: email_login
@@ -1477,6 +1480,12 @@ class Translations$settings$en {
 
 	/// en: 'Deletion failed. Try again when you're connected.'
 	String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
+
+	/// en: 'About'
+	String get section_about => 'About';
+
+	/// en: 'Privacy policy'
+	String get privacy_policy => 'Privacy policy';
 }
 
 // Path: weather
@@ -1632,6 +1641,7 @@ extension on Translations {
 			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
 			'auth.google_error' => 'Google sign-in failed. Please try again.',
 			'auth.coming_soon' => 'Coming soon.',
+			'auth.privacy_link' => 'Privacy policy',
 			'email_login.title' => 'Sign in with email',
 			'email_login.email_label' => 'Email address',
 			'email_login.email_hint' => 'you@example.com',
@@ -1933,6 +1943,8 @@ extension on Translations {
 			'settings.delete_account_confirm_body' => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.',
 			'settings.delete_account_confirm' => 'Delete account',
 			'settings.delete_account_error' => 'Deletion failed. Try again when you\'re connected.',
+			'settings.section_about' => 'About',
+			'settings.privacy_policy' => 'Privacy policy',
 			'weather.cond_clear' => 'Clear',
 			'weather.cond_mainly_clear' => 'Mostly clear',
 			'weather.cond_cloudy' => 'Cloudy',
