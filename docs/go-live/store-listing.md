@@ -1,48 +1,13 @@
-# Tendask — Store listing besedila (SL / EN / DE)
+# Tendask — Store listing besedila (EN default · SL · DE)
 
-> Pripravljeno za prepis v Play Console → Main store listing. **SL = primarni jezik**, EN+DE prek
-> »Manage translations«. Omejitve: **ime ≤ 30 znakov**, **kratek opis ≤ 80**, **polni opis ≤ 4000**.
+> Pripravljeno za prepis v Play Console → Main store listing. **EN = privzeti (default) jezik**
+> (fallback za vse brskalce, ki nimajo SL/DE), **SL in DE = prevoda** prek »Manage translations«.
+> Omejitve: **ime ≤ 30 znakov**, **kratek opis ≤ 80**, **polni opis ≤ 4000**.
 > Opomba: skupnostna funkcija (V2) namenoma NI omenjena — ni del MVP.
 
 ---
 
-## 🇸🇮 Slovenščina (primarni)
-
-**Ime aplikacije** (≤30)
-```
-Tendask – vrtni dnevnik
-```
-
-**Kratek opis** (≤80)
-```
-Beleži vrtna opravila – vreme, opomniki, rastline. Deluje tudi brez signala.
-```
-
-**Polni opis** (≤4000)
-```
-Tendask je preprost vrtnarski dnevnik za vrt, trato, sadovnjak in živo mejo. Zabeleži, kaj si naredil, kdaj in kje – z nekaj dotiki – in imej vsa opravila na enem mestu.
-
-Zakaj Tendask:
-• Hitro beleženje – pokosil, zalil, pognojil? Zabeleži v sekundi.
-• Vremenski posnetek – ob vsakem opravilu se samodejno shrani vreme.
-• Opomniki – načrtuj opravila in prejmi opomnik na telefon.
-• Tvoj vrt – uredi območja in rastline ter sledi njihovi zgodovini.
-• Katalog rastlin – več kot 120 vrst: zelenjava, sadno drevje, jagodičevje, zelišča, trajnice, grmovnice in več.
-• Dnevnik in opombe – kronološka časovnica tvojega vrta.
-
-Deluje brez signala:
-Tendask je zasnovan »offline-first« – deluje tudi sredi vrta brez povezave. Podatki so najprej na tvoji napravi; če se prijaviš, se varno sinhronizirajo v oblak, da jih ne izgubiš ob menjavi telefona.
-
-Zasebnost po zasnovi:
-Tvoje natančne koordinate nikoli ne zapustijo naprave za shranjevanje – za vreme uporabljamo le približno območje. Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
-Politika zasebnosti: https://tendask.netlify.app/
-
-Brezplačno in brez oglasov.
-```
-
----
-
-## 🇬🇧 English
+## 🇬🇧 English (default / privzeti)
 
 **App name** (≤30)
 ```
@@ -78,7 +43,43 @@ Free, with no ads.
 
 ---
 
-## 🇩🇪 Deutsch
+## 🇸🇮 Slovenščina (prevod)
+
+**Ime aplikacije** (≤30)
+```
+Tendask – vrtni dnevnik
+```
+
+**Kratek opis** (≤80)
+```
+Beleži vrtna opravila – vreme, opomniki, rastline. Deluje tudi brez signala.
+```
+
+**Polni opis** (≤4000)
+```
+Tendask je preprost vrtnarski dnevnik za vrt, trato, sadovnjak in živo mejo. Zabeleži, kaj si naredil, kdaj in kje – z nekaj dotiki – in imej vsa opravila na enem mestu.
+
+Zakaj Tendask:
+• Hitro beleženje – pokosil, zalil, pognojil? Zabeleži v sekundi.
+• Vremenski posnetek – ob vsakem opravilu se samodejno shrani vreme.
+• Opomniki – načrtuj opravila in prejmi opomnik na telefon.
+• Tvoj vrt – uredi območja in rastline ter sledi njihovi zgodovini.
+• Katalog rastlin – več kot 120 vrst: zelenjava, sadno drevje, jagodičevje, zelišča, trajnice, grmovnice in več.
+• Dnevnik in opombe – kronološka časovnica tvojega vrta.
+
+Deluje brez signala:
+Tendask je zasnovan »offline-first« – deluje tudi sredi vrta brez povezave. Podatki so najprej na tvoji napravi; če se prijaviš, se varno sinhronizirajo v oblak, da jih ne izgubiš ob menjavi telefona.
+
+Zasebnost po zasnovi:
+Tvoje natančne koordinate nikoli ne zapustijo naprave za shranjevanje – za vreme uporabljamo le približno območje. Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
+Politika zasebnosti: https://tendask.netlify.app/
+
+Brezplačno in brez oglasov.
+```
+
+---
+
+## 🇩🇪 Deutsch (prevod)
 
 **App-Name** (≤30)
 ```

@@ -17,7 +17,8 @@ Play zahteva **vsaj 2** telefonska posnetka (max 8). Priporočam **4–6**.
 - **Format:** PNG ali JPEG, razmerje 9:16 (portret), min stranica ≥ 320 px, max ≤ 3840 px.
   Posnetek z naprave (npr. 1080×2400) je idealen — naloži ga kar takega.
 - **Build:** uporabi **release** build (čist videz, brez debug pasu).
-- **Jezik:** zajemi v slovenščini (primarni listing). Po želji še EN/DE set za prevode (neobvezno).
+- **Jezik:** default listing je **angleščina** → zajemi **EN** set (preklopi jezik aplikacije na
+  English v Nastavitvah). Po želji še SL/DE set za prevoda (neobvezno; za SI trg je SL set lep dodatek).
 
 ### Katere zaslone zajeti (predlog)
 

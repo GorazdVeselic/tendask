@@ -47,8 +47,8 @@
 
 ## Faza 2 — Ustvari aplikacijo + interni testni track (po odobritvi identitete)
 
-- [ ] ⏳ 👤 Play Console → **Create app**: ime »Tendask«, jezik privzeto SL, tip **App**, **Free**,
-  potrdi deklaracije.
+- [ ] ⏳ 👤 Play Console → **Create app**: ime »Tendask«, **privzeti jezik = English (United States)**
+  (default/fallback; SL+DE dodaš kot prevoda), tip **App**, **Free**, potrdi deklaracije.
 - [ ] ⏳ 👤 **Testing → Internal testing → Create new release**.
 - [ ] ⏳ 👤 Upload `app-release.aab` (drag-drop). Release name = `1.0.0 (1)`.
 - [ ] ⏳ 👤 Release notes (kratko, npr. »Prva interna različica.«).
@@ -57,8 +57,8 @@
 
 ## Faza 3 — Store listing (Main store listing)
 
-- [ ] ⏳ 👤 App name, kratek + polni opis iz [`store-listing.md`](store-listing.md) (SL primarni;
-  dodaj EN, DE prek »Manage translations«).
+- [ ] ⏳ 👤 App name, kratek + polni opis iz [`store-listing.md`](store-listing.md) (**EN = default**;
+  dodaj SL, DE prek »Manage translations«).
 - [ ] ⏳ 👤 Naloži **icon-512.png** + **feature-graphic-1024x500.png** + **posnetke zaslona**.
 - [ ] ⏳ 👤 **App category** = `House & Home` (alt: `Lifestyle`); tags = gardening/journal.
 - [ ] ⏳ 👤 Kontaktni email (javno) = isti kot v politiki (`gorazd@spletnakoda.si`).

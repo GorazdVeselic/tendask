@@ -5,27 +5,25 @@
 // ignore_for_file: type=lint, unused_import
 // dart format off
 
-part of 'translations.g.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:slang/generated.dart';
+import 'translations.g.dart';
 
 // Path: <root>
-typedef TranslationsSl = Translations; // ignore: unused_element
-class Translations with BaseTranslations<AppLocale, Translations> {
-	/// Returns the current translations of the given [context].
-	///
-	/// Usage:
-	/// final t = Translations.of(context);
-	static Translations of(BuildContext context) => InheritedLocaleData.of<AppLocale, Translations>(context).translations;
-
+class TranslationsSl extends Translations with BaseTranslations<AppLocale, Translations> {
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
-	Translations({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
+	TranslationsSl({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
 		: assert(overrides == null, 'Set "translation_overrides: true" in order to enable this feature.'),
 		  $meta = meta ?? TranslationMetadata(
 		    locale: AppLocale.sl,
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		  ) {
+		  ),
+		  super(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
+		super.$meta.setFlatMapFunction($meta.getTranslation); // copy base translations to super.$meta
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
 
@@ -33,100 +31,79 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	@override final TranslationMetadata<AppLocale, Translations> $meta;
 
 	/// Access flat map
-	dynamic operator[](String key) => $meta.getTranslation(key);
+	@override dynamic operator[](String key) => $meta.getTranslation(key) ?? super.$meta.getTranslation(key);
 
-	late final Translations _root = this; // ignore: unused_field
+	late final TranslationsSl _root = this; // ignore: unused_field
 
-	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
+	@override 
+	TranslationsSl $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsSl(meta: meta ?? this.$meta);
 
 	// Translations
-	late final Translations$splash$sl splash = Translations$splash$sl.internal(_root);
-	late final Translations$nav$sl nav = Translations$nav$sl.internal(_root);
-	late final Translations$home$sl home = Translations$home$sl.internal(_root);
-	late final Translations$common$sl common = Translations$common$sl.internal(_root);
-	late final Translations$swipe$sl swipe = Translations$swipe$sl.internal(_root);
-	late final Translations$notifications$sl notifications = Translations$notifications$sl.internal(_root);
-	late final Translations$notif_priming$sl notif_priming = Translations$notif_priming$sl.internal(_root);
-	late final Translations$notif_settings$sl notif_settings = Translations$notif_settings$sl.internal(_root);
-	late final Translations$notif_preview$sl notif_preview = Translations$notif_preview$sl.internal(_root);
-	late final Translations$onboarding$sl onboarding = Translations$onboarding$sl.internal(_root);
-	late final Translations$auth$sl auth = Translations$auth$sl.internal(_root);
-	late final Translations$email_login$sl email_login = Translations$email_login$sl.internal(_root);
-	late final Translations$location$sl location = Translations$location$sl.internal(_root);
-	late final Translations$journal$sl journal = Translations$journal$sl.internal(_root);
-	late final Translations$notes$sl notes = Translations$notes$sl.internal(_root);
-	late final Translations$task_detail$sl task_detail = Translations$task_detail$sl.internal(_root);
-	late final Translations$tasks_list$sl tasks_list = Translations$tasks_list$sl.internal(_root);
-	late final Translations$subject_picker$sl subject_picker = Translations$subject_picker$sl.internal(_root);
-	late final Translations$entry$sl entry = Translations$entry$sl.internal(_root);
-	late final Translations$plant_edit$sl plant_edit = Translations$plant_edit$sl.internal(_root);
-	late final Translations$plant_detail$sl plant_detail = Translations$plant_detail$sl.internal(_root);
-	late final Translations$area_pick$sl area_pick = Translations$area_pick$sl.internal(_root);
-	late final Translations$areas$sl areas = Translations$areas$sl.internal(_root);
-	late final Translations$plants$sl plants = Translations$plants$sl.internal(_root);
-	late final Translations$supplies$sl supplies = Translations$supplies$sl.internal(_root);
-	late final Translations$settings$sl settings = Translations$settings$sl.internal(_root);
-	late final Translations$weather$sl weather = Translations$weather$sl.internal(_root);
+	@override late final _Translations$splash$sl splash = _Translations$splash$sl._(_root);
+	@override late final _Translations$nav$sl nav = _Translations$nav$sl._(_root);
+	@override late final _Translations$home$sl home = _Translations$home$sl._(_root);
+	@override late final _Translations$common$sl common = _Translations$common$sl._(_root);
+	@override late final _Translations$swipe$sl swipe = _Translations$swipe$sl._(_root);
+	@override late final _Translations$notifications$sl notifications = _Translations$notifications$sl._(_root);
+	@override late final _Translations$notif_priming$sl notif_priming = _Translations$notif_priming$sl._(_root);
+	@override late final _Translations$notif_settings$sl notif_settings = _Translations$notif_settings$sl._(_root);
+	@override late final _Translations$notif_preview$sl notif_preview = _Translations$notif_preview$sl._(_root);
+	@override late final _Translations$onboarding$sl onboarding = _Translations$onboarding$sl._(_root);
+	@override late final _Translations$auth$sl auth = _Translations$auth$sl._(_root);
+	@override late final _Translations$email_login$sl email_login = _Translations$email_login$sl._(_root);
+	@override late final _Translations$location$sl location = _Translations$location$sl._(_root);
+	@override late final _Translations$journal$sl journal = _Translations$journal$sl._(_root);
+	@override late final _Translations$notes$sl notes = _Translations$notes$sl._(_root);
+	@override late final _Translations$task_detail$sl task_detail = _Translations$task_detail$sl._(_root);
+	@override late final _Translations$tasks_list$sl tasks_list = _Translations$tasks_list$sl._(_root);
+	@override late final _Translations$subject_picker$sl subject_picker = _Translations$subject_picker$sl._(_root);
+	@override late final _Translations$entry$sl entry = _Translations$entry$sl._(_root);
+	@override late final _Translations$plant_edit$sl plant_edit = _Translations$plant_edit$sl._(_root);
+	@override late final _Translations$plant_detail$sl plant_detail = _Translations$plant_detail$sl._(_root);
+	@override late final _Translations$area_pick$sl area_pick = _Translations$area_pick$sl._(_root);
+	@override late final _Translations$areas$sl areas = _Translations$areas$sl._(_root);
+	@override late final _Translations$plants$sl plants = _Translations$plants$sl._(_root);
+	@override late final _Translations$supplies$sl supplies = _Translations$supplies$sl._(_root);
+	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
+	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
 }
 
 // Path: splash
-class Translations$splash$sl {
-	Translations$splash$sl.internal(this._root);
+class _Translations$splash$sl extends Translations$splash$en {
+	_Translations$splash$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Tvoj vrtni dnevnik 🌿'
-	String get tagline => 'Tvoj vrtni dnevnik 🌿';
+	@override String get tagline => 'Tvoj vrtni dnevnik 🌿';
 }
 
 // Path: nav
-class Translations$nav$sl {
-	Translations$nav$sl.internal(this._root);
+class _Translations$nav$sl extends Translations$nav$en {
+	_Translations$nav$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Domov'
-	String get home => 'Domov';
-
-	/// sl: 'Dnevnik'
-	String get journal => 'Dnevnik';
-
-	/// sl: 'Vrt'
-	String get areas => 'Vrt';
-
-	/// sl: 'Opravila'
-	String get tasks => 'Opravila';
+	@override String get home => 'Domov';
+	@override String get journal => 'Dnevnik';
+	@override String get areas => 'Vrt';
+	@override String get tasks => 'Opravila';
 }
 
 // Path: home
-class Translations$home$sl {
-	Translations$home$sl.internal(this._root);
+class _Translations$home$sl extends Translations$home$en {
+	_Translations$home$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Dober dan 🌿'
-	String get greeting => 'Dober dan 🌿';
-
-	/// sl: 'Danes'
-	String get today => 'Danes';
-
-	/// sl: 'Nazadnje'
-	String get recent => 'Nazadnje';
-
-	/// sl: 'Danes ni načrtovanih opravil.'
-	String get no_tasks_today => 'Danes ni načrtovanih opravil.';
-
-	/// sl: 'Še ni opravljenih opravil.'
-	String get no_recent => 'Še ni opravljenih opravil.';
-
-	/// sl: '(one) {1 zamujeno opravilo} (two) {$n zamujeni opravili} (few) {$n zamujena opravila} (other) {$n zamujenih opravil}'
-	String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+	@override String get greeting => 'Dober dan 🌿';
+	@override String get today => 'Danes';
+	@override String get recent => 'Nazadnje';
+	@override String get no_tasks_today => 'Danes ni načrtovanih opravil.';
+	@override String get no_recent => 'Še ni opravljenih opravil.';
+	@override String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: '1 zamujeno opravilo',
 		two: '${n} zamujeni opravili',
 		few: '${n} zamujena opravila',
@@ -135,1411 +112,623 @@ class Translations$home$sl {
 }
 
 // Path: common
-class Translations$common$sl {
-	Translations$common$sl.internal(this._root);
+class _Translations$common$sl extends Translations$common$en {
+	_Translations$common$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Danes'
-	String get today => 'Danes';
-
-	/// sl: 'včeraj'
-	String get yesterday => 'včeraj';
-
-	/// sl: 'Podatkov ni bilo mogoče naložiti.'
-	String get load_error => 'Podatkov ni bilo mogoče naložiti.';
+	@override String get today => 'Danes';
+	@override String get yesterday => 'včeraj';
+	@override String get load_error => 'Podatkov ni bilo mogoče naložiti.';
 }
 
 // Path: swipe
-class Translations$swipe$sl {
-	Translations$swipe$sl.internal(this._root);
+class _Translations$swipe$sl extends Translations$swipe$en {
+	_Translations$swipe$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Opravljeno'
-	String get complete => 'Opravljeno';
-
-	/// sl: '+1 dan'
-	String get postpone => '+1 dan';
-
-	/// sl: 'Povrni'
-	String get revert => 'Povrni';
-
-	/// sl: 'Uredi'
-	String get edit => 'Uredi';
-
-	/// sl: 'Premakni'
-	String get move => 'Premakni';
-
-	/// sl: 'Izbriši'
-	String get delete => 'Izbriši';
+	@override String get complete => 'Opravljeno';
+	@override String get postpone => '+1 dan';
+	@override String get revert => 'Povrni';
+	@override String get edit => 'Uredi';
+	@override String get move => 'Premakni';
+	@override String get delete => 'Izbriši';
 }
 
 // Path: notifications
-class Translations$notifications$sl {
-	Translations$notifications$sl.internal(this._root);
+class _Translations$notifications$sl extends Translations$notifications$en {
+	_Translations$notifications$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Danes'
-	String get today => 'Danes';
-
-	/// sl: 'Jutri'
-	String get tomorrow => 'Jutri';
+	@override String get today => 'Danes';
+	@override String get tomorrow => 'Jutri';
 }
 
 // Path: notif_priming
-class Translations$notif_priming$sl {
-	Translations$notif_priming$sl.internal(this._root);
+class _Translations$notif_priming$sl extends Translations$notif_priming$en {
+	_Translations$notif_priming$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Naj te pravočasno opozorim?'
-	String get title => 'Naj te pravočasno opozorim?';
-
-	/// sl: 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.'
-	String get why => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.';
-
-	/// sl: 'Opomniki opravil — npr. »1 dan prej ob 18:00«.'
-	String get benefit_reminders => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.';
-
-	/// sl: 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)'
-	String get benefit_weather => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)';
-
-	/// sl: 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)'
-	String get benefit_nearby => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)';
-
-	/// sl: 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.'
-	String get privacy => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.';
-
-	/// sl: 'Vklopi obvestila'
-	String get enable => 'Vklopi obvestila';
-
-	/// sl: 'Mogoče kasneje'
-	String get later => 'Mogoče kasneje';
+	@override String get title => 'Naj te pravočasno opozorim?';
+	@override String get why => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.';
+	@override String get benefit_reminders => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.';
+	@override String get benefit_weather => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)';
+	@override String get benefit_nearby => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)';
+	@override String get privacy => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.';
+	@override String get enable => 'Vklopi obvestila';
+	@override String get later => 'Mogoče kasneje';
 }
 
 // Path: notif_settings
-class Translations$notif_settings$sl {
-	Translations$notif_settings$sl.internal(this._root);
+class _Translations$notif_settings$sl extends Translations$notif_settings$en {
+	_Translations$notif_settings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Obvestila'
-	String get title => 'Obvestila';
-
-	/// sl: 'Nastavitev ni bilo mogoče naložiti.'
-	String get load_error => 'Nastavitev ni bilo mogoče naložiti.';
-
-	/// sl: 'Vrste obvestil'
-	String get section_types => 'Vrste obvestil';
-
-	/// sl: 'Opomniki opravil'
-	String get type_reminders => 'Opomniki opravil';
-
-	/// sl: 'lokalno · delujejo brez interneta'
-	String get type_reminders_sub => 'lokalno · delujejo brez interneta';
-
-	/// sl: 'Pametni namigi (vreme)'
-	String get type_weather => 'Pametni namigi (vreme)';
-
-	/// sl: 'kmalu · prek strežnika'
-	String get type_weather_sub => 'kmalu · prek strežnika';
-
-	/// sl: 'Namigi okolice'
-	String get type_community => 'Namigi okolice';
-
-	/// sl: 'kmalu (V2)'
-	String get type_community_sub => 'kmalu (V2)';
-
-	/// sl: 'Privzeti zamik opomnika'
-	String get section_default_offset => 'Privzeti zamik opomnika';
-
-	/// sl: 'Predizpolni nova opravila; vedno lahko spremeniš.'
-	String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
-
-	/// sl: 'Da te ne zasipa'
-	String get section_quiet => 'Da te ne zasipa';
-
-	/// sl: 'Tihe ure'
-	String get quiet_hours => 'Tihe ure';
-
-	/// sl: '$range brez obvestil'
-	String quiet_hours_sub({required Object range}) => '${range} brez obvestil';
-
-	/// sl: 'Največ 1 namig na dan'
-	String get frequency_cap => 'Največ 1 namig na dan';
-
-	/// sl: 'vreme in okolico združimo v en povzetek'
-	String get frequency_cap_sub => 'vreme in okolico združimo v en povzetek';
-
-	/// sl: 'Več'
-	String get section_more => 'Več';
-
-	/// sl: 'Predogled obvestil'
-	String get preview => 'Predogled obvestil';
-
-	/// sl: 'kako izgledajo na zaklenjenem zaslonu'
-	String get preview_sub => 'kako izgledajo na zaklenjenem zaslonu';
-
-	/// sl: 'Sistemsko dovoljenje'
-	String get system_permission => 'Sistemsko dovoljenje';
-
-	/// sl: 'naprava: dovoljeno'
-	String get system_permission_on => 'naprava: dovoljeno';
-
-	/// sl: 'točni opomniki niso dovoljeni — tapni za nastavitve'
-	String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
+	@override String get title => 'Obvestila';
+	@override String get load_error => 'Nastavitev ni bilo mogoče naložiti.';
+	@override String get section_types => 'Vrste obvestil';
+	@override String get type_reminders => 'Opomniki opravil';
+	@override String get type_reminders_sub => 'lokalno · delujejo brez interneta';
+	@override String get type_weather => 'Pametni namigi (vreme)';
+	@override String get type_weather_sub => 'kmalu · prek strežnika';
+	@override String get type_community => 'Namigi okolice';
+	@override String get type_community_sub => 'kmalu (V2)';
+	@override String get section_default_offset => 'Privzeti zamik opomnika';
+	@override String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
+	@override String get section_quiet => 'Da te ne zasipa';
+	@override String get quiet_hours => 'Tihe ure';
+	@override String quiet_hours_sub({required Object range}) => '${range} brez obvestil';
+	@override String get frequency_cap => 'Največ 1 namig na dan';
+	@override String get frequency_cap_sub => 'vreme in okolico združimo v en povzetek';
+	@override String get section_more => 'Več';
+	@override String get preview => 'Predogled obvestil';
+	@override String get preview_sub => 'kako izgledajo na zaklenjenem zaslonu';
+	@override String get system_permission => 'Sistemsko dovoljenje';
+	@override String get system_permission_on => 'naprava: dovoljeno';
+	@override String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
 }
 
 // Path: notif_preview
-class Translations$notif_preview$sl {
-	Translations$notif_preview$sl.internal(this._root);
+class _Translations$notif_preview$sl extends Translations$notif_preview$en {
+	_Translations$notif_preview$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Videz obvestil'
-	String get title => 'Videz obvestil';
-
-	/// sl: 'torek, 1. junij'
-	String get date => 'torek, 1. junij';
-
-	/// sl: 'zdaj'
-	String get rem_now => 'zdaj';
-
-	/// sl: '⏰ Foliarno škropljenje · 07:00'
-	String get rem_title => '⏰ Foliarno škropljenje · 07:00';
-
-	/// sl: 'Živa meja + trata · jutro je suho — primeren čas.'
-	String get rem_body => 'Živa meja + trata · jutro je suho — primeren čas.';
-
-	/// sl: 'opomnik opravila'
-	String get rem_tag => 'opomnik opravila';
-
-	/// sl: 'Jutri zjutraj bo suho ☀️'
-	String get wx_title => 'Jutri zjutraj bo suho ☀️';
-
-	/// sl: 'Primeren čas za foliarno škropljenje lovorikovcev.'
-	String get wx_body => 'Primeren čas za foliarno škropljenje lovorikovcev.';
-
-	/// sl: 'pametni namig · vreme'
-	String get wx_tag => 'pametni namig · vreme';
-
-	/// sl: 'včeraj'
-	String get com_yesterday => 'včeraj';
-
-	/// sl: 'Tvoja okolica'
-	String get com_title => 'Tvoja okolica';
-
-	/// sl: '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.'
-	String get com_body => '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.';
-
-	/// sl: 'namig okolice · V2'
-	String get com_tag => 'namig okolice · V2';
-
-	/// sl: 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).'
-	String get footer => 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).';
+	@override String get title => 'Videz obvestil';
+	@override String get date => 'torek, 1. junij';
+	@override String get rem_now => 'zdaj';
+	@override String get rem_title => '⏰ Foliarno škropljenje · 07:00';
+	@override String get rem_body => 'Živa meja + trata · jutro je suho — primeren čas.';
+	@override String get rem_tag => 'opomnik opravila';
+	@override String get wx_title => 'Jutri zjutraj bo suho ☀️';
+	@override String get wx_body => 'Primeren čas za foliarno škropljenje lovorikovcev.';
+	@override String get wx_tag => 'pametni namig · vreme';
+	@override String get com_yesterday => 'včeraj';
+	@override String get com_title => 'Tvoja okolica';
+	@override String get com_body => '68 % vrtnarjev v tvoji okolici je ta teden prvič pognojilo trato.';
+	@override String get com_tag => 'namig okolice · V2';
+	@override String get footer => 'Tap na obvestilo odpre ustrezni zaslon (opravilo · namig · okolica).';
 }
 
 // Path: onboarding
-class Translations$onboarding$sl {
-	Translations$onboarding$sl.internal(this._root);
+class _Translations$onboarding$sl extends Translations$onboarding$en {
+	_Translations$onboarding$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Preskoči ›'
-	String get skip => 'Preskoči ›';
-
-	/// sl: 'Naprej'
-	String get next => 'Naprej';
-
-	/// sl: 'Začni 🌿'
-	String get start => 'Začni 🌿';
-
-	/// sl: 'kmalu (V2)'
-	String get soon_badge => 'kmalu (V2)';
-
-	/// sl: 'Dobrodošel v Tendask'
-	String get welcome_title => 'Dobrodošel v Tendask';
-
-	/// sl: 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.'
-	String get welcome_body => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.';
-
-	/// sl: 'Beleži v sekundi'
-	String get log_title => 'Beleži v sekundi';
-
-	/// sl: 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.'
-	String get log_body => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.';
-
-	/// sl: 'Opomniki + vreme'
-	String get remind_title => 'Opomniki + vreme';
-
-	/// sl: 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.'
-	String get remind_body => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.';
-
-	/// sl: 'Tvoja okolica'
-	String get nearby_title => 'Tvoja okolica';
-
-	/// sl: 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.'
-	String get nearby_body => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
+	@override String get skip => 'Preskoči ›';
+	@override String get next => 'Naprej';
+	@override String get start => 'Začni 🌿';
+	@override String get soon_badge => 'kmalu (V2)';
+	@override String get welcome_title => 'Dobrodošel v Tendask';
+	@override String get welcome_body => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.';
+	@override String get log_title => 'Beleži v sekundi';
+	@override String get log_body => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.';
+	@override String get remind_title => 'Opomniki + vreme';
+	@override String get remind_body => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.';
+	@override String get nearby_title => 'Tvoja okolica';
+	@override String get nearby_body => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
 }
 
 // Path: auth
-class Translations$auth$sl {
-	Translations$auth$sl.internal(this._root);
+class _Translations$auth$sl extends Translations$auth$en {
+	_Translations$auth$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Dobrodošel v Tendask'
-	String get title => 'Dobrodošel v Tendask';
-
-	/// sl: 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.'
-	String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
-
-	/// sl: 'Nadaljuj z Apple'
-	String get continue_apple => 'Nadaljuj z Apple';
-
-	/// sl: 'Nadaljuj z Google'
-	String get continue_google => 'Nadaljuj z Google';
-
-	/// sl: 'Nadaljuj z e-pošto'
-	String get continue_email => 'Nadaljuj z e-pošto';
-
-	/// sl: 'Preizkusi brez računa'
-	String get guest => 'Preizkusi brez računa';
-
-	/// sl: 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.'
-	String get legal => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.';
-
-	/// sl: 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.'
-	String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
-
-	/// sl: 'Prijava z Google ni uspela. Poskusi znova.'
-	String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
-
-	/// sl: 'Na voljo kmalu.'
-	String get coming_soon => 'Na voljo kmalu.';
+	@override String get title => 'Dobrodošel v Tendask';
+	@override String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
+	@override String get continue_apple => 'Nadaljuj z Apple';
+	@override String get continue_google => 'Nadaljuj z Google';
+	@override String get continue_email => 'Nadaljuj z e-pošto';
+	@override String get guest => 'Preizkusi brez računa';
+	@override String get legal => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.';
+	@override String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
+	@override String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
+	@override String get coming_soon => 'Na voljo kmalu.';
 }
 
 // Path: email_login
-class Translations$email_login$sl {
-	Translations$email_login$sl.internal(this._root);
+class _Translations$email_login$sl extends Translations$email_login$en {
+	_Translations$email_login$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Prijava z e-pošto'
-	String get title => 'Prijava z e-pošto';
-
-	/// sl: 'E-poštni naslov'
-	String get email_label => 'E-poštni naslov';
-
-	/// sl: 'ti@primer.si'
-	String get email_hint => 'ti@primer.si';
-
-	/// sl: 'Pošlji kodo'
-	String get send_code => 'Pošlji kodo';
-
-	/// sl: 'Poslali ti bomo enkratno kodo — brez gesla.'
-	String get intro => 'Poslali ti bomo enkratno kodo — brez gesla.';
-
-	/// sl: 'Koda iz e-pošte'
-	String get code_label => 'Koda iz e-pošte';
-
-	/// sl: 'Vnesi prejeto kodo'
-	String get code_hint => 'Vnesi prejeto kodo';
-
-	/// sl: 'Kodo smo poslali na $email. Vpiši jo spodaj.'
-	String code_sent({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.';
-
-	/// sl: 'Potrdi in se prijavi'
-	String get verify => 'Potrdi in se prijavi';
-
-	/// sl: 'Pošlji novo kodo'
-	String get resend => 'Pošlji novo kodo';
-
-	/// sl: 'Vpiši veljaven e-poštni naslov.'
-	String get err_email => 'Vpiši veljaven e-poštni naslov.';
-
-	/// sl: 'Vpiši kodo iz e-pošte.'
-	String get err_code => 'Vpiši kodo iz e-pošte.';
-
-	/// sl: 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.'
-	String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
-
-	/// sl: 'Koda ni pravilna ali je potekla. Poskusi znova.'
-	String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
+	@override String get title => 'Prijava z e-pošto';
+	@override String get email_label => 'E-poštni naslov';
+	@override String get email_hint => 'ti@primer.si';
+	@override String get send_code => 'Pošlji kodo';
+	@override String get intro => 'Poslali ti bomo enkratno kodo — brez gesla.';
+	@override String get code_label => 'Koda iz e-pošte';
+	@override String get code_hint => 'Vnesi prejeto kodo';
+	@override String code_sent({required Object email}) => 'Kodo smo poslali na ${email}. Vpiši jo spodaj.';
+	@override String get verify => 'Potrdi in se prijavi';
+	@override String get resend => 'Pošlji novo kodo';
+	@override String get err_email => 'Vpiši veljaven e-poštni naslov.';
+	@override String get err_code => 'Vpiši kodo iz e-pošte.';
+	@override String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
+	@override String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
 }
 
 // Path: location
-class Translations$location$sl {
-	Translations$location$sl.internal(this._root);
+class _Translations$location$sl extends Translations$location$en {
+	_Translations$location$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Kje vrtnariš?'
-	String get title => 'Kje vrtnariš?';
-
-	/// sl: 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.'
-	String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
-
-	/// sl: 'Uporabi mojo lokacijo'
-	String get use_gps => 'Uporabi mojo lokacijo';
-
-	/// sl: 'ali vpiši kraj'
-	String get or_enter => 'ali vpiši kraj';
-
-	/// sl: 'Vas, mesto ali naslov (npr. Šentjur)'
-	String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
-
-	/// sl: 'Dovolj je vas ali mesto — natančen naslov ni potreben.'
-	String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
-
-	/// sl: 'Poišči'
-	String get search => 'Poišči';
-
-	/// sl: 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.'
-	String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.';
-
-	/// sl: 'Nadaljuj'
-	String get kContinue => 'Nadaljuj';
-
-	/// sl: 'Lokacija je nastavljena.'
-	String get set_gps => 'Lokacija je nastavljena.';
-
-	/// sl: 'Lokacija: $name'
-	String set_place({required Object name}) => 'Lokacija: ${name}';
-
-	/// sl: 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.'
-	String get err_denied => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.';
-
-	/// sl: 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.'
-	String get err_disabled => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.';
-
-	/// sl: 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.'
-	String get err_unavailable => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.';
-
-	/// sl: 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.'
-	String get err_search => 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.';
-
-	/// sl: 'Za ta kraj ni zadetkov.'
-	String get no_results => 'Za ta kraj ni zadetkov.';
-
-	/// sl: 'Lokacija vrta'
-	String get screen_title => 'Lokacija vrta';
-
-	/// sl: 'Lokacija je nastavljena'
-	String get status_set => 'Lokacija je nastavljena';
-
-	/// sl: 'Lokacija še ni nastavljena'
-	String get status_unset => 'Lokacija še ni nastavljena';
-
-	/// sl: 'Odstrani lokacijo'
-	String get clear => 'Odstrani lokacijo';
-
-	/// sl: 'Odstranim lokacijo?'
-	String get clear_confirm_title => 'Odstranim lokacijo?';
-
-	/// sl: 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.'
-	String get clear_confirm_body => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.';
-
-	/// sl: 'Odstrani'
-	String get clear_confirm_yes => 'Odstrani';
-
-	/// sl: 'Prekliči'
-	String get clear_confirm_cancel => 'Prekliči';
-
-	/// sl: 'Lokacija odstranjena'
-	String get cleared => 'Lokacija odstranjena';
+	@override String get title => 'Kje vrtnariš?';
+	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
+	@override String get use_gps => 'Uporabi mojo lokacijo';
+	@override String get or_enter => 'ali vpiši kraj';
+	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
+	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
+	@override String get search => 'Poišči';
+	@override String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.';
+	@override String get kContinue => 'Nadaljuj';
+	@override String get set_gps => 'Lokacija je nastavljena.';
+	@override String set_place({required Object name}) => 'Lokacija: ${name}';
+	@override String get err_denied => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.';
+	@override String get err_disabled => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.';
+	@override String get err_unavailable => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.';
+	@override String get err_search => 'Iskanja ni bilo mogoče izvesti. Preveri povezavo in poskusi znova.';
+	@override String get no_results => 'Za ta kraj ni zadetkov.';
+	@override String get screen_title => 'Lokacija vrta';
+	@override String get status_set => 'Lokacija je nastavljena';
+	@override String get status_unset => 'Lokacija še ni nastavljena';
+	@override String get clear => 'Odstrani lokacijo';
+	@override String get clear_confirm_title => 'Odstranim lokacijo?';
+	@override String get clear_confirm_body => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.';
+	@override String get clear_confirm_yes => 'Odstrani';
+	@override String get clear_confirm_cancel => 'Prekliči';
+	@override String get cleared => 'Lokacija odstranjena';
 }
 
 // Path: journal
-class Translations$journal$sl {
-	Translations$journal$sl.internal(this._root);
+class _Translations$journal$sl extends Translations$journal$en {
+	_Translations$journal$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Dnevnik'
-	String get title => 'Dnevnik';
-
-	/// sl: 'vrtni dnevnik'
-	String get subtitle => 'vrtni dnevnik';
-
-	/// sl: 'Vse'
-	String get filter_all => 'Vse';
-
-	/// sl: '✓ Opravila'
-	String get filter_tasks => '✓ Opravila';
-
-	/// sl: '✍️ Opombe'
-	String get filter_notes => '✍️ Opombe';
-
-	/// sl: 'Ni vnosov v dnevniku.'
-	String get empty => 'Ni vnosov v dnevniku.';
-
-	/// sl: 'Ni opravljenih opravil.'
-	String get empty_tasks => 'Ni opravljenih opravil.';
-
-	/// sl: 'Ni opomb.'
-	String get empty_notes => 'Ni opomb.';
-
-	/// sl: 'Časovnica'
-	String get timeline => 'Časovnica';
-
-	/// sl: 'Mesec'
-	String get month_view => 'Mesec';
-
-	/// sl: '💡 Tapni na dan za pregled in dodajanje opravil.'
-	String get month_hint => '💡 Tapni na dan za pregled in dodajanje opravil.';
-
-	/// sl: '(one) {$n opravilo ta mesec} (two) {$n opravili ta mesec} (few) {$n opravila ta mesec} (other) {$n opravil ta mesec}'
-	String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+	@override String get title => 'Dnevnik';
+	@override String get subtitle => 'vrtni dnevnik';
+	@override String get filter_all => 'Vse';
+	@override String get filter_tasks => '✓ Opravila';
+	@override String get filter_notes => '✍️ Opombe';
+	@override String get empty => 'Ni vnosov v dnevniku.';
+	@override String get empty_tasks => 'Ni opravljenih opravil.';
+	@override String get empty_notes => 'Ni opomb.';
+	@override String get timeline => 'Časovnica';
+	@override String get month_view => 'Mesec';
+	@override String get month_hint => '💡 Tapni na dan za pregled in dodajanje opravil.';
+	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: '${n} opravilo ta mesec',
 		two: '${n} opravili ta mesec',
 		few: '${n} opravila ta mesec',
 		other: '${n} opravil ta mesec',
 	);
-
-	/// sl: 'Ni opravil ta dan.'
-	String get day_empty => 'Ni opravil ta dan.';
-
-	/// sl: 'Dodaj opravilo na ta dan'
-	String get day_add => 'Dodaj opravilo na ta dan';
+	@override String get day_empty => 'Ni opravil ta dan.';
+	@override String get day_add => 'Dodaj opravilo na ta dan';
 }
 
 // Path: notes
-class Translations$notes$sl {
-	Translations$notes$sl.internal(this._root);
+class _Translations$notes$sl extends Translations$notes$en {
+	_Translations$notes$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Nova opomba'
-	String get title_new => 'Nova opomba';
-
-	/// sl: 'Uredi opombo'
-	String get title_edit => 'Uredi opombo';
-
-	/// sl: 'Zapis'
-	String get content_label => 'Zapis';
-
-	/// sl: 'Prosto besedilo — opažanje, ideja, misel…'
-	String get content_hint => 'Prosto besedilo — opažanje, ideja, misel…';
-
-	/// sl: 'Kdaj'
-	String get when => 'Kdaj';
-
-	/// sl: 'Danes'
-	String get today => 'Danes';
-
-	/// sl: 'Včeraj'
-	String get yesterday => 'Včeraj';
-
-	/// sl: 'Datum…'
-	String get pick_date => 'Datum…';
-
-	/// sl: 'Območje (neobvezno)'
-	String get area => 'Območje (neobvezno)';
-
-	/// sl: 'Ni območij — dodaj jih v razdelku Območja.'
-	String get no_areas => 'Ni območij — dodaj jih v razdelku Območja.';
-
-	/// sl: 'Rastlina (neobvezno)'
-	String get plant => 'Rastlina (neobvezno)';
-
-	/// sl: 'Shrani opombo'
-	String get save => 'Shrani opombo';
-
-	/// sl: 'Vpiši besedilo opombe.'
-	String get err_content => 'Vpiši besedilo opombe.';
-
-	/// sl: 'Izbriši opombo'
-	String get delete => 'Izbriši opombo';
-
-	/// sl: 'To dejanje je nepopravljivo.'
-	String get delete_confirm => 'To dejanje je nepopravljivo.';
-
-	/// sl: '🌧️ Vreme se shrani samodejno.'
-	String get info => '🌧️ Vreme se shrani samodejno.';
+	@override String get title_new => 'Nova opomba';
+	@override String get title_edit => 'Uredi opombo';
+	@override String get content_label => 'Zapis';
+	@override String get content_hint => 'Prosto besedilo — opažanje, ideja, misel…';
+	@override String get when => 'Kdaj';
+	@override String get today => 'Danes';
+	@override String get yesterday => 'Včeraj';
+	@override String get pick_date => 'Datum…';
+	@override String get area => 'Območje (neobvezno)';
+	@override String get no_areas => 'Ni območij — dodaj jih v razdelku Območja.';
+	@override String get plant => 'Rastlina (neobvezno)';
+	@override String get save => 'Shrani opombo';
+	@override String get err_content => 'Vpiši besedilo opombe.';
+	@override String get delete => 'Izbriši opombo';
+	@override String get delete_confirm => 'To dejanje je nepopravljivo.';
+	@override String get info => '🌧️ Vreme se shrani samodejno.';
 }
 
 // Path: task_detail
-class Translations$task_detail$sl {
-	Translations$task_detail$sl.internal(this._root);
+class _Translations$task_detail$sl extends Translations$task_detail$en {
+	_Translations$task_detail$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Vremenski posnetek'
-	String get section_weather => 'Vremenski posnetek';
-
-	/// sl: 'Podrobnosti'
-	String get section_details => 'Podrobnosti';
-
-	/// sl: 'Sredstva'
-	String get label_supplies => 'Sredstva';
-
-	/// sl: 'Opomnik'
-	String get label_reminder => 'Opomnik';
-
-	/// sl: 'Ponavljanje'
-	String get label_recurrence => 'Ponavljanje';
-
-	/// sl: 'Opomba'
-	String get label_note => 'Opomba';
-
-	/// sl: 'Načrtovano'
-	String get badge_waiting => 'Načrtovano';
-
-	/// sl: 'Opravljeno'
-	String get badge_done => 'Opravljeno';
-
-	/// sl: '✓ Označi kot opravljeno'
-	String get action_complete => '✓  Označi kot opravljeno';
-
-	/// sl: '+1 dan'
-	String get action_postpone => '+1 dan';
-
-	/// sl: 'Uredi'
-	String get action_edit => 'Uredi';
-
-	/// sl: 'Podvoji'
-	String get action_duplicate => 'Podvoji';
-
-	/// sl: 'Izbriši'
-	String get action_delete => 'Izbriši';
-
-	/// sl: 'Na čaka'
-	String get action_revert => 'Na čaka';
-
-	/// sl: 'Premakni'
-	String get action_move => 'Premakni';
-
-	/// sl: 'Enkratno'
-	String get recurrence_once => 'Enkratno';
-
-	/// sl: 'Tedensko'
-	String get recurrence_weekly => 'Tedensko';
-
-	/// sl: 'Sezonsko'
-	String get recurrence_seasonal => 'Sezonsko';
-
-	/// sl: '—'
-	String get none => '—';
-
-	/// sl: 'Opravilo ni bilo najdeno.'
-	String get not_found => 'Opravilo ni bilo najdeno.';
+	@override String get section_weather => 'Vremenski posnetek';
+	@override String get section_details => 'Podrobnosti';
+	@override String get label_supplies => 'Sredstva';
+	@override String get label_reminder => 'Opomnik';
+	@override String get label_recurrence => 'Ponavljanje';
+	@override String get label_note => 'Opomba';
+	@override String get badge_waiting => 'Načrtovano';
+	@override String get badge_done => 'Opravljeno';
+	@override String get action_complete => '✓  Označi kot opravljeno';
+	@override String get action_postpone => '+1 dan';
+	@override String get action_edit => 'Uredi';
+	@override String get action_duplicate => 'Podvoji';
+	@override String get action_delete => 'Izbriši';
+	@override String get action_revert => 'Na čaka';
+	@override String get action_move => 'Premakni';
+	@override String get recurrence_once => 'Enkratno';
+	@override String get recurrence_weekly => 'Tedensko';
+	@override String get recurrence_seasonal => 'Sezonsko';
+	@override String get none => '—';
+	@override String get not_found => 'Opravilo ni bilo najdeno.';
 }
 
 // Path: tasks_list
-class Translations$tasks_list$sl {
-	Translations$tasks_list$sl.internal(this._root);
+class _Translations$tasks_list$sl extends Translations$tasks_list$en {
+	_Translations$tasks_list$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Opravila'
-	String get title => 'Opravila';
-
-	/// sl: 'prihajajoča in zapadla'
-	String get subtitle => 'prihajajoča in zapadla';
-
-	/// sl: 'Zamuda'
-	String get section_overdue => 'Zamuda';
-
-	/// sl: 'Danes'
-	String get section_today => 'Danes';
-
-	/// sl: 'Jutri'
-	String get section_tomorrow => 'Jutri';
-
-	/// sl: 'Ta teden'
-	String get section_this_week => 'Ta teden';
-
-	/// sl: 'Pozneje'
-	String get section_later => 'Pozneje';
-
-	/// sl: 'Ni čakajočih opravil. Dodaj novo z +.'
-	String get empty => 'Ni čakajočih opravil. Dodaj novo z +.';
-
-	/// sl: '(one) {zamuja 1 dan} (two) {zamuja $n dni} (few) {zamuja $n dni} (other) {zamuja $n dni}'
-	String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+	@override String get title => 'Opravila';
+	@override String get subtitle => 'prihajajoča in zapadla';
+	@override String get section_overdue => 'Zamuda';
+	@override String get section_today => 'Danes';
+	@override String get section_tomorrow => 'Jutri';
+	@override String get section_this_week => 'Ta teden';
+	@override String get section_later => 'Pozneje';
+	@override String get empty => 'Ni čakajočih opravil. Dodaj novo z +.';
+	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: 'zamuja 1 dan',
 		two: 'zamuja ${n} dni',
 		few: 'zamuja ${n} dni',
 		other: 'zamuja ${n} dni',
 	);
-
-	/// sl: 'danes'
-	String get status_today => 'danes';
-
-	/// sl: 'jutri'
-	String get status_tomorrow => 'jutri';
-
-	/// sl: 'Opravljeno'
-	String get action_complete => 'Opravljeno';
-
-	/// sl: '+1 dan'
-	String get action_postpone => '+1 dan';
-
-	/// sl: 'Uredi'
-	String get action_edit => 'Uredi';
-
-	/// sl: 'Podvoji'
-	String get action_duplicate => 'Podvoji';
-
-	/// sl: 'Izbriši'
-	String get action_delete => 'Izbriši';
-
-	/// sl: 'Izbriši opravilo?'
-	String get delete_confirm_title => 'Izbriši opravilo?';
-
-	/// sl: 'To dejanje je nepopravljivo.'
-	String get delete_confirm_body => 'To dejanje je nepopravljivo.';
-
-	/// sl: 'Izbriši'
-	String get delete_yes => 'Izbriši';
-
-	/// sl: 'Prekliči'
-	String get delete_cancel => 'Prekliči';
+	@override String get status_today => 'danes';
+	@override String get status_tomorrow => 'jutri';
+	@override String get action_complete => 'Opravljeno';
+	@override String get action_postpone => '+1 dan';
+	@override String get action_edit => 'Uredi';
+	@override String get action_duplicate => 'Podvoji';
+	@override String get action_delete => 'Izbriši';
+	@override String get delete_confirm_title => 'Izbriši opravilo?';
+	@override String get delete_confirm_body => 'To dejanje je nepopravljivo.';
+	@override String get delete_yes => 'Izbriši';
+	@override String get delete_cancel => 'Prekliči';
 }
 
 // Path: subject_picker
-class Translations$subject_picker$sl {
-	Translations$subject_picker$sl.internal(this._root);
+class _Translations$subject_picker$sl extends Translations$subject_picker$en {
+	_Translations$subject_picker$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Rastlina ali območje'
-	String get title => 'Rastlina ali območje';
-
-	/// sl: 'Izberi'
-	String get choose => 'Izberi';
+	@override String get title => 'Rastlina ali območje';
+	@override String get choose => 'Izberi';
 }
 
 // Path: entry
-class Translations$entry$sl {
-	Translations$entry$sl.internal(this._root);
+class _Translations$entry$sl extends Translations$entry$en {
+	_Translations$entry$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Novo opravilo'
-	String get title_new => 'Novo opravilo';
-
-	/// sl: 'Pregled'
-	String get title_review => 'Pregled';
-
-	/// sl: 'Nadaljuj'
-	String get kContinue => 'Nadaljuj';
-
-	/// sl: 'Preskoči'
-	String get skip => 'Preskoči';
-
-	/// sl: 'Shrani opravilo'
-	String get save => 'Shrani opravilo';
-
-	/// sl: 'Korak'
-	String get step => 'Korak';
-
-	/// sl: 'Le zapis brez opravila?'
-	String get note_card_title => 'Le zapis brez opravila?';
-
-	/// sl: 'Opomba ›'
-	String get note_card_action => 'Opomba ›';
-
-	/// sl: 'Ponovi zadnje'
-	String get repeat_last => 'Ponovi zadnje';
-
-	/// sl: 'Katero opravilo?'
-	String get type_title => 'Katero opravilo?';
-
-	/// sl: 'Tap na opravilo te samodejno pelje naprej.'
-	String get type_hint => 'Tap na opravilo te samodejno pelje naprej.';
-
-	/// sl: 'Pokaži vse ($n)'
-	String type_show_all({required Object n}) => 'Pokaži vse (${n})';
-
-	/// sl: 'Pokaži manj'
-	String get type_show_less => 'Pokaži manj';
-
-	/// sl: 'Za kaj?'
-	String get subject_title => 'Za kaj?';
-
-	/// sl: 'Išči rastlino…'
-	String get subject_search_hint => 'Išči rastlino…';
-
-	/// sl: 'Rastline'
-	String get subject_plants => 'Rastline';
-
-	/// sl: 'Dodaj rastlino'
-	String get subject_add_plant => 'Dodaj rastlino';
-
-	/// sl: 'Dodaj območje'
-	String get subject_add_area => 'Dodaj območje';
-
-	/// sl: 'Dodaj iz kataloga'
-	String get subject_from_catalog => 'Dodaj iz kataloga';
-
-	/// sl: 'Območja:'
-	String get subject_areas_context => 'Območja:';
-
-	/// sl: 'Ali celotno območje'
-	String get subject_area_section => 'Ali celotno območje';
-
-	/// sl: 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).'
-	String get subject_area_note => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).';
-
-	/// sl: 'Kdaj'
-	String get when_title => 'Kdaj';
-
-	/// sl: 'Danes'
-	String get when_today => 'Danes';
-
-	/// sl: 'Jutri'
-	String get when_tomorrow => 'Jutri';
-
-	/// sl: 'Datum…'
-	String get when_pick_date => 'Datum…';
-
-	/// sl: 'Datum'
-	String get when_date => 'Datum';
-
-	/// sl: 'Ura'
-	String get when_time => 'Ura';
-
-	/// sl: 'Privzeto: danes ob naslednji polni uri.'
-	String get when_default_note => 'Privzeto: danes ob naslednji polni uri.';
-
-	/// sl: 'Status'
-	String get when_status => 'Status';
-
-	/// sl: 'Čaka'
-	String get when_status_waiting => 'Čaka';
-
-	/// sl: 'Opravljeno'
-	String get when_status_done => 'Opravljeno';
-
-	/// sl: 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.'
-	String get when_status_note => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.';
-
-	/// sl: 'Opomnik'
-	String get reminder_title => 'Opomnik';
-
-	/// sl: '(neobvezno)'
-	String get optional => '(neobvezno)';
-
-	/// sl: 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.'
-	String get reminder_why => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.';
-
-	/// sl: 'Dodaj opomnik'
-	String get reminder_add => 'Dodaj opomnik';
-
-	/// sl: 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.'
-	String get reminder_note => 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.';
-
-	/// sl: 'Sredstva'
-	String get supplies_title => 'Sredstva';
-
-	/// sl: 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.'
-	String get supplies_why => 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.';
-
-	/// sl: 'Dodaj sredstvo iz zalog'
-	String get supplies_add => 'Dodaj sredstvo iz zalog';
-
-	/// sl: 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.'
-	String get supplies_note => 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.';
-
-	/// sl: 'Še preveri — tap na vrstico za popravek'
-	String get review_title => 'Še preveri — tap na vrstico za popravek';
-
-	/// sl: 'Opravilo'
-	String get review_type => 'Opravilo';
-
-	/// sl: 'Za kaj'
-	String get review_subject => 'Za kaj';
-
-	/// sl: 'Kdaj'
-	String get review_when => 'Kdaj';
-
-	/// sl: 'Opomnik'
-	String get review_reminder => 'Opomnik';
-
-	/// sl: 'Sredstva'
-	String get review_supplies => 'Sredstva';
-
-	/// sl: 'Popravi'
-	String get review_fix => 'Popravi';
-
-	/// sl: '—'
-	String get review_none => '—';
-
-	/// sl: 'Opomba'
-	String get note_label => 'Opomba';
-
-	/// sl: 'npr. zjutraj pred napovedanim dežjem'
-	String get note_hint => 'npr. zjutraj pred napovedanim dežjem';
-
-	/// sl: '🌧️ Vreme se shrani samodejno ob izvedbi.'
-	String get weather_note => '🌧️ Vreme se shrani samodejno ob izvedbi.';
-
-	/// sl: 'Izberi vsaj eno rastlino ali območje.'
-	String get err_subject => 'Izberi vsaj eno rastlino ali območje.';
-
-	/// sl: 'Ob dogodku'
-	String get rem_event => 'Ob dogodku';
-
-	/// sl: '10 minut prej'
-	String get rem_10min => '10 minut prej';
-
-	/// sl: '1 uro prej'
-	String get rem_1hour => '1 uro prej';
-
-	/// sl: '1 dan prej'
-	String get rem_1day => '1 dan prej';
-
-	/// sl: '2 dni prej'
-	String get rem_2day => '2 dni prej';
-
-	/// sl: 'Po meri…'
-	String get rem_custom => 'Po meri…';
-
-	/// sl: 'min'
-	String get rem_unit_min => 'min';
-
-	/// sl: 'ure'
-	String get rem_unit_hour => 'ure';
-
-	/// sl: 'dni'
-	String get rem_unit_day => 'dni';
-
-	/// sl: 'Koliko prej naj opozorim?'
-	String get rem_custom_label => 'Koliko prej naj opozorim?';
-
-	/// sl: 'prej'
-	String get rem_before => 'prej';
-
-	/// sl: 'ob $t'
-	String rem_at({required Object t}) => 'ob ${t}';
-
-	/// sl: 'Ob uri'
-	String get rem_choose_time => 'Ob uri';
-
-	/// sl: 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).'
-	String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
-
-	/// sl: 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.'
-	String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
-
-	/// sl: 'Dovoli točne opomnike'
-	String get rem_exact_title => 'Dovoli točne opomnike';
-
-	/// sl: 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.'
-	String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
-
-	/// sl: 'Odpri nastavitve'
-	String get rem_exact_open => 'Odpri nastavitve';
-
-	/// sl: 'že dodano'
-	String get rem_added => 'že dodano';
+	@override String get title_new => 'Novo opravilo';
+	@override String get title_review => 'Pregled';
+	@override String get kContinue => 'Nadaljuj';
+	@override String get skip => 'Preskoči';
+	@override String get save => 'Shrani opravilo';
+	@override String get step => 'Korak';
+	@override String get note_card_title => 'Le zapis brez opravila?';
+	@override String get note_card_action => 'Opomba ›';
+	@override String get repeat_last => 'Ponovi zadnje';
+	@override String get type_title => 'Katero opravilo?';
+	@override String get type_hint => 'Tap na opravilo te samodejno pelje naprej.';
+	@override String type_show_all({required Object n}) => 'Pokaži vse (${n})';
+	@override String get type_show_less => 'Pokaži manj';
+	@override String get subject_title => 'Za kaj?';
+	@override String get subject_search_hint => 'Išči rastlino…';
+	@override String get subject_plants => 'Rastline';
+	@override String get subject_add_plant => 'Dodaj rastlino';
+	@override String get subject_add_area => 'Dodaj območje';
+	@override String get subject_from_catalog => 'Dodaj iz kataloga';
+	@override String get subject_areas_context => 'Območja:';
+	@override String get subject_area_section => 'Ali celotno območje';
+	@override String get subject_area_note => 'Izberi območje le, kadar opravilo velja za celoto brez posamezne rastline (košnja, mulčenje cele grede).';
+	@override String get when_title => 'Kdaj';
+	@override String get when_today => 'Danes';
+	@override String get when_tomorrow => 'Jutri';
+	@override String get when_pick_date => 'Datum…';
+	@override String get when_date => 'Datum';
+	@override String get when_time => 'Ura';
+	@override String get when_default_note => 'Privzeto: danes ob naslednji polni uri.';
+	@override String get when_status => 'Status';
+	@override String get when_status_waiting => 'Čaka';
+	@override String get when_status_done => 'Opravljeno';
+	@override String get when_status_note => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.';
+	@override String get reminder_title => 'Opomnik';
+	@override String get optional => '(neobvezno)';
+	@override String get reminder_why => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.';
+	@override String get reminder_add => 'Dodaj opomnik';
+	@override String get reminder_note => 'Nastavljiv zamik in ura. Več opomnikov na eno opravilo.';
+	@override String get supplies_title => 'Sredstva';
+	@override String get supplies_why => 'Ta korak je tu, ker opravilo običajno porabi sredstva. Odšteje se iz zaloge.';
+	@override String get supplies_add => 'Dodaj sredstvo iz zalog';
+	@override String get supplies_note => 'Ena mešanica za vse izbrane rastline — odšteje se enkrat.';
+	@override String get review_title => 'Še preveri — tap na vrstico za popravek';
+	@override String get review_type => 'Opravilo';
+	@override String get review_subject => 'Za kaj';
+	@override String get review_when => 'Kdaj';
+	@override String get review_reminder => 'Opomnik';
+	@override String get review_supplies => 'Sredstva';
+	@override String get review_fix => 'Popravi';
+	@override String get review_none => '—';
+	@override String get note_label => 'Opomba';
+	@override String get note_hint => 'npr. zjutraj pred napovedanim dežjem';
+	@override String get weather_note => '🌧️ Vreme se shrani samodejno ob izvedbi.';
+	@override String get err_subject => 'Izberi vsaj eno rastlino ali območje.';
+	@override String get rem_event => 'Ob dogodku';
+	@override String get rem_10min => '10 minut prej';
+	@override String get rem_1hour => '1 uro prej';
+	@override String get rem_1day => '1 dan prej';
+	@override String get rem_2day => '2 dni prej';
+	@override String get rem_custom => 'Po meri…';
+	@override String get rem_unit_min => 'min';
+	@override String get rem_unit_hour => 'ure';
+	@override String get rem_unit_day => 'dni';
+	@override String get rem_custom_label => 'Koliko prej naj opozorim?';
+	@override String get rem_before => 'prej';
+	@override String rem_at({required Object t}) => 'ob ${t}';
+	@override String get rem_choose_time => 'Ob uri';
+	@override String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+	@override String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
+	@override String get rem_exact_title => 'Dovoli točne opomnike';
+	@override String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
+	@override String get rem_exact_open => 'Odpri nastavitve';
+	@override String get rem_added => 'že dodano';
 }
 
 // Path: plant_edit
-class Translations$plant_edit$sl {
-	Translations$plant_edit$sl.internal(this._root);
+class _Translations$plant_edit$sl extends Translations$plant_edit$en {
+	_Translations$plant_edit$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Uredi rastlino'
-	String get title_edit => 'Uredi rastlino';
-
-	/// sl: 'Vrsta'
-	String get species => 'Vrsta';
-
-	/// sl: 'Osebno ime (neobvezno)'
-	String get alias => 'Osebno ime (neobvezno)';
-
-	/// sl: 'npr. »stara jablana ob ograji«'
-	String get alias_hint => 'npr. »stara jablana ob ograji«';
-
-	/// sl: 'Vidiš ga samo ti; prikaže se namesto privzetega imena.'
-	String get alias_note => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.';
-
-	/// sl: 'Območje'
-	String get location_label => 'Območje';
-
-	/// sl: 'Odstrani rastlino iz vrta'
-	String get delete => 'Odstrani rastlino iz vrta';
-
-	/// sl: 'Zgodovina opravil ostane v Dnevniku.'
-	String get delete_note => 'Zgodovina opravil ostane v Dnevniku.';
-
-	/// sl: 'Shrani'
-	String get save => 'Shrani';
+	@override String get title_edit => 'Uredi rastlino';
+	@override String get species => 'Vrsta';
+	@override String get alias => 'Osebno ime (neobvezno)';
+	@override String get alias_hint => 'npr. »stara jablana ob ograji«';
+	@override String get alias_note => 'Vidiš ga samo ti; prikaže se namesto privzetega imena.';
+	@override String get location_label => 'Območje';
+	@override String get delete => 'Odstrani rastlino iz vrta';
+	@override String get delete_note => 'Zgodovina opravil ostane v Dnevniku.';
+	@override String get save => 'Shrani';
 }
 
 // Path: plant_detail
-class Translations$plant_detail$sl {
-	Translations$plant_detail$sl.internal(this._root);
+class _Translations$plant_detail$sl extends Translations$plant_detail$en {
+	_Translations$plant_detail$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Rastlina ni bila najdena.'
-	String get not_found => 'Rastlina ni bila najdena.';
-
-	/// sl: 'Zgodovina opravil'
-	String get history_title => 'Zgodovina opravil';
-
-	/// sl: 'Za to rastlino še ni opravil.'
-	String get history_empty => 'Za to rastlino še ni opravil.';
-
-	/// sl: 'premakni'
-	String get move => 'premakni';
-
-	/// sl: 'Dodeli območje'
-	String get assign_area => 'Dodeli območje';
+	@override String get not_found => 'Rastlina ni bila najdena.';
+	@override String get history_title => 'Zgodovina opravil';
+	@override String get history_empty => 'Za to rastlino še ni opravil.';
+	@override String get move => 'premakni';
+	@override String get assign_area => 'Dodeli območje';
 }
 
 // Path: area_pick
-class Translations$area_pick$sl {
-	Translations$area_pick$sl.internal(this._root);
+class _Translations$area_pick$sl extends Translations$area_pick$en {
+	_Translations$area_pick$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Premakni „${name}“'
-	String move_title({required Object name}) => 'Premakni „${name}“';
-
-	/// sl: 'Izberi območje'
-	String get choose_title => 'Izberi območje';
-
-	/// sl: 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.'
-	String get note => 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.';
-
-	/// sl: 'Brez območja'
-	String get none => 'Brez območja';
-
-	/// sl: 'trenutno'
-	String get current => 'trenutno';
-
-	/// sl: 'Novo območje'
-	String get new_area => 'Novo območje';
-
-	/// sl: 'Ta rastlina je že v izbranem območju.'
-	String get duplicate => 'Ta rastlina je že v izbranem območju.';
+	@override String move_title({required Object name}) => 'Premakni „${name}“';
+	@override String get choose_title => 'Izberi območje';
+	@override String get note => 'Rastlina je lahko v enem območju (ali brez). Zgodovina opravil ostane.';
+	@override String get none => 'Brez območja';
+	@override String get current => 'trenutno';
+	@override String get new_area => 'Novo območje';
+	@override String get duplicate => 'Ta rastlina je že v izbranem območju.';
 }
 
 // Path: areas
-class Translations$areas$sl {
-	Translations$areas$sl.internal(this._root);
+class _Translations$areas$sl extends Translations$areas$en {
+	_Translations$areas$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Vrt'
-	String get title => 'Vrt';
-
-	/// sl: 'rastline in trate'
-	String get subtitle => 'rastline in trate';
-
-	/// sl: 'Brez območja'
-	String get unassigned => 'Brez območja';
-
-	/// sl: 'zadnje:'
-	String get last_prefix => 'zadnje:';
-
-	/// sl: 'Trata'
-	String get type_lawn => 'Trata';
-
-	/// sl: 'Živa meja'
-	String get type_hedge => 'Živa meja';
-
-	/// sl: 'Gredica'
-	String get type_bed => 'Gredica';
-
-	/// sl: 'Sadno drevje'
-	String get type_tree => 'Sadno drevje';
-
-	/// sl: 'Okrasno'
-	String get type_ornamental => 'Okrasno';
-
-	/// sl: 'Drugo'
-	String get type_other => 'Drugo';
-
-	/// sl: 'Zgodovina opravil'
-	String get history_title => 'Zgodovina opravil';
-
-	/// sl: 'Na tem območju še ni opravil.'
-	String get history_empty => 'Na tem območju še ni opravil.';
-
-	/// sl: 'Rastline'
-	String get plants_section => 'Rastline';
-
-	/// sl: 'Dodaj rastlino v $area'
-	String add_plant_here({required Object area}) => 'Dodaj rastlino v ${area}';
-
-	/// sl: 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).'
-	String get delete_reparent_note => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).';
-
-	/// sl: 'Novo območje'
-	String get new_area_inline => 'Novo območje';
-
-	/// sl: 'Tvoj vrt je še prazen'
-	String get empty_title => 'Tvoj vrt je še prazen';
-
-	/// sl: 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.'
-	String get empty_body => 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.';
-
-	/// sl: 'Dodaj rastline'
-	String get empty_cta_plant => 'Dodaj rastline';
-
-	/// sl: 'Dodaj območje'
-	String get empty_cta_area => 'Dodaj območje';
-
-	/// sl: 'Uredi'
-	String get action_edit => 'Uredi';
-
-	/// sl: 'Izbriši'
-	String get action_delete => 'Izbriši';
-
-	/// sl: 'Izbriši območje?'
-	String get delete_confirm_title => 'Izbriši območje?';
-
-	/// sl: 'Opravila ostanejo, a izgubijo povezavo z območjem.'
-	String get delete_confirm_body => 'Opravila ostanejo, a izgubijo povezavo z območjem.';
-
-	/// sl: 'Novo območje'
-	String get form_title_new => 'Novo območje';
-
-	/// sl: 'Uredi območje'
-	String get form_title_edit => 'Uredi območje';
-
-	/// sl: 'Ime'
-	String get form_name => 'Ime';
-
-	/// sl: 'npr. Visoka greda 1'
-	String get form_name_hint => 'npr. Visoka greda 1';
-
-	/// sl: 'Tip'
-	String get form_type => 'Tip';
-
-	/// sl: 'Shrani območje'
-	String get form_save => 'Shrani območje';
-
-	/// sl: 'Vnesi ime območja.'
-	String get err_name => 'Vnesi ime območja.';
+	@override String get title => 'Vrt';
+	@override String get subtitle => 'rastline in trate';
+	@override String get unassigned => 'Brez območja';
+	@override String get last_prefix => 'zadnje:';
+	@override String get type_lawn => 'Trata';
+	@override String get type_hedge => 'Živa meja';
+	@override String get type_bed => 'Gredica';
+	@override String get type_tree => 'Sadno drevje';
+	@override String get type_ornamental => 'Okrasno';
+	@override String get type_other => 'Drugo';
+	@override String get history_title => 'Zgodovina opravil';
+	@override String get history_empty => 'Na tem območju še ni opravil.';
+	@override String get plants_section => 'Rastline';
+	@override String add_plant_here({required Object area}) => 'Dodaj rastlino v ${area}';
+	@override String get delete_reparent_note => 'Rastline iz tega območja se premaknejo v »Brez območja« (ne izbrišejo se).';
+	@override String get new_area_inline => 'Novo območje';
+	@override String get empty_title => 'Tvoj vrt je še prazen';
+	@override String get empty_body => 'Dodaj rastline, ki jih imaš. Območja (grede, trate) so neobvezna.';
+	@override String get empty_cta_plant => 'Dodaj rastline';
+	@override String get empty_cta_area => 'Dodaj območje';
+	@override String get action_edit => 'Uredi';
+	@override String get action_delete => 'Izbriši';
+	@override String get delete_confirm_title => 'Izbriši območje?';
+	@override String get delete_confirm_body => 'Opravila ostanejo, a izgubijo povezavo z območjem.';
+	@override String get form_title_new => 'Novo območje';
+	@override String get form_title_edit => 'Uredi območje';
+	@override String get form_name => 'Ime';
+	@override String get form_name_hint => 'npr. Visoka greda 1';
+	@override String get form_type => 'Tip';
+	@override String get form_save => 'Shrani območje';
+	@override String get err_name => 'Vnesi ime območja.';
 }
 
 // Path: plants
-class Translations$plants$sl {
-	Translations$plants$sl.internal(this._root);
+class _Translations$plants$sl extends Translations$plants$en {
+	_Translations$plants$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Izberi rastlino'
-	String get picker_title => 'Izberi rastlino';
-
-	/// sl: 'Išči rastlino…'
-	String get search_hint => 'Išči rastlino…';
-
-	/// sl: 'Vse'
-	String get cat_all => 'Vse';
-
-	/// sl: 'Sadno drevje'
-	String get cat_fruit_tree => 'Sadno drevje';
-
-	/// sl: 'Jagodičevje'
-	String get cat_berries => 'Jagodičevje';
-
-	/// sl: 'Zelenjava'
-	String get cat_vegetable => 'Zelenjava';
-
-	/// sl: 'Zelišča'
-	String get cat_herbs => 'Zelišča';
-
-	/// sl: 'Okrasne'
-	String get cat_ornamental => 'Okrasne';
-
-	/// sl: 'Sobne'
-	String get cat_houseplant => 'Sobne';
-
-	/// sl: 'Trata'
-	String get cat_lawn => 'Trata';
-
-	/// sl: 'Iz baze'
-	String get from_catalog => 'Iz baze';
-
-	/// sl: 'Ne najdeš?'
-	String get not_found => 'Ne najdeš?';
-
-	/// sl: '+ Dodaj po meri: »$q«'
-	String custom_add({required Object q}) => '+ Dodaj po meri: »${q}«';
-
-	/// sl: 'Lasten vnos je zaseben in se ne deli s skupnostjo.'
-	String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
-
-	/// sl: 'Dodaj rastline'
-	String get add_title => 'Dodaj rastline';
-
-	/// sl: 'Pogosto'
-	String get frequent => 'Pogosto';
-
-	/// sl: 'Razveljavi'
-	String get undo => 'Razveljavi';
-
-	/// sl: 'Končano'
-	String get done => 'Končano';
-
-	/// sl: 'Kam dodajam'
-	String get add_to_label => 'Kam dodajam';
-
-	/// sl: 'izberi'
-	String get choose_area => 'izberi';
-
-	/// sl: 'Izberi rastlino'
-	String get field_add => 'Izberi rastlino';
-
-	/// sl: 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.'
-	String get field_empty => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.';
+	@override String get picker_title => 'Izberi rastlino';
+	@override String get search_hint => 'Išči rastlino…';
+	@override String get cat_all => 'Vse';
+	@override String get cat_fruit_tree => 'Sadno drevje';
+	@override String get cat_berries => 'Jagodičevje';
+	@override String get cat_vegetable => 'Zelenjava';
+	@override String get cat_herbs => 'Zelišča';
+	@override String get cat_ornamental => 'Okrasne';
+	@override String get cat_houseplant => 'Sobne';
+	@override String get cat_lawn => 'Trata';
+	@override String get from_catalog => 'Iz baze';
+	@override String get not_found => 'Ne najdeš?';
+	@override String custom_add({required Object q}) => '+ Dodaj po meri: »${q}«';
+	@override String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
+	@override String get add_title => 'Dodaj rastline';
+	@override String get frequent => 'Pogosto';
+	@override String get undo => 'Razveljavi';
+	@override String get done => 'Končano';
+	@override String get add_to_label => 'Kam dodajam';
+	@override String get choose_area => 'izberi';
+	@override String get field_add => 'Izberi rastlino';
+	@override String get field_empty => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.';
 }
 
 // Path: supplies
-class Translations$supplies$sl {
-	Translations$supplies$sl.internal(this._root);
+class _Translations$supplies$sl extends Translations$supplies$en {
+	_Translations$supplies$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Zaloge'
-	String get title => 'Zaloge';
-
-	/// sl: 'kaj imam doma'
-	String get subtitle => 'kaj imam doma';
-
-	/// sl: 'Ni zalog. Dodaj jih z +.'
-	String get empty => 'Ni zalog. Dodaj jih z +.';
-
-	/// sl: 'malo'
-	String get low => 'malo';
-
-	/// sl: '~$q$unit'
-	String qty({required Object q, required Object unit}) => '~${q}${unit}';
-
-	/// sl: 'Novo sredstvo'
-	String get form_new => 'Novo sredstvo';
-
-	/// sl: 'Uredi sredstvo'
-	String get form_edit => 'Uredi sredstvo';
-
-	/// sl: 'Ime'
-	String get form_name => 'Ime';
-
-	/// sl: 'Količina'
-	String get form_quantity => 'Količina';
-
-	/// sl: 'Enota'
-	String get form_unit => 'Enota';
-
-	/// sl: 'Opozori pri (prag)'
-	String get form_threshold => 'Opozori pri (prag)';
-
-	/// sl: 'Shrani'
-	String get form_save => 'Shrani';
-
-	/// sl: 'Vnesi ime sredstva.'
-	String get err_name => 'Vnesi ime sredstva.';
-
-	/// sl: 'Dodaj sredstvo'
-	String get add_to_task => 'Dodaj sredstvo';
-
-	/// sl: 'Novo sredstvo'
-	String get pick_new => 'Novo sredstvo';
-
-	/// sl: 'Porabljena količina'
-	String get amount => 'Porabljena količina';
-
-	/// sl: 'Dodaj'
-	String get add_confirm => 'Dodaj';
+	@override String get title => 'Zaloge';
+	@override String get subtitle => 'kaj imam doma';
+	@override String get empty => 'Ni zalog. Dodaj jih z +.';
+	@override String get low => 'malo';
+	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
+	@override String get form_new => 'Novo sredstvo';
+	@override String get form_edit => 'Uredi sredstvo';
+	@override String get form_name => 'Ime';
+	@override String get form_quantity => 'Količina';
+	@override String get form_unit => 'Enota';
+	@override String get form_threshold => 'Opozori pri (prag)';
+	@override String get form_save => 'Shrani';
+	@override String get err_name => 'Vnesi ime sredstva.';
+	@override String get add_to_task => 'Dodaj sredstvo';
+	@override String get pick_new => 'Novo sredstvo';
+	@override String get amount => 'Porabljena količina';
+	@override String get add_confirm => 'Dodaj';
 }
 
 // Path: settings
-class Translations$settings$sl {
-	Translations$settings$sl.internal(this._root);
+class _Translations$settings$sl extends Translations$settings$en {
+	_Translations$settings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Nastavitve'
-	String get title => 'Nastavitve';
-
-	/// sl: 'Gost (brez prijave)'
-	String get profile_guest => 'Gost (brez prijave)';
-
-	/// sl: 'Prijavi se in shrani podatke v oblak'
-	String get sign_in_prompt => 'Prijavi se in shrani podatke v oblak';
-
-	/// sl: 'Prijavljen — podatki v oblaku'
-	String get signed_in => 'Prijavljen — podatki v oblaku';
-
-	/// sl: 'Lokacija'
-	String get section_location => 'Lokacija';
-
-	/// sl: 'Lokacija za vreme'
-	String get location_placeholder => 'Lokacija za vreme';
-
-	/// sl: 'Jezik'
-	String get section_language => 'Jezik';
-
-	/// sl: 'Obvestila'
-	String get section_notifications => 'Obvestila';
-
-	/// sl: 'Obvestila in opomniki'
-	String get notifications_placeholder => 'Obvestila in opomniki';
-
-	/// sl: 'Vrt'
-	String get section_garden => 'Vrt';
-
-	/// sl: '📦 Zaloge & sredstva'
-	String get supplies => '📦 Zaloge & sredstva';
-
-	/// sl: 'urea, alge, gnojila, oprema'
-	String get supplies_sub => 'urea, alge, gnojila, oprema';
-
-	/// sl: 'Račun & podatki'
-	String get section_account => 'Račun & podatki';
-
-	/// sl: 'Izvozi podatke (GDPR)'
-	String get export_data => 'Izvozi podatke (GDPR)';
-
-	/// sl: 'Odjava'
-	String get logout => 'Odjava';
-
-	/// sl: 'Odjava?'
-	String get logout_confirm_title => 'Odjava?';
-
-	/// sl: 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.'
-	String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
-
-	/// sl: 'Prekliči'
-	String get logout_cancel => 'Prekliči';
-
-	/// sl: 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.'
-	String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
-
-	/// sl: 'Tendask izvoz podatkov'
-	String get export_share_text => 'Tendask izvoz podatkov';
-
-	/// sl: 'Izvoz ni uspel. Poskusi znova.'
-	String get export_error => 'Izvoz ni uspel. Poskusi znova.';
-
-	/// sl: 'Izbriši račun in vse podatke'
-	String get delete_account => 'Izbriši račun in vse podatke';
-
-	/// sl: 'Izbriši račun?'
-	String get delete_account_confirm_title => 'Izbriši račun?';
-
-	/// sl: 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.'
-	String get delete_account_confirm_body => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.';
-
-	/// sl: 'Izbriši račun'
-	String get delete_account_confirm => 'Izbriši račun';
-
-	/// sl: 'Izbris ni uspel. Poskusi znova, ko boš povezan.'
-	String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
+	@override String get title => 'Nastavitve';
+	@override String get profile_guest => 'Gost (brez prijave)';
+	@override String get sign_in_prompt => 'Prijavi se in shrani podatke v oblak';
+	@override String get signed_in => 'Prijavljen — podatki v oblaku';
+	@override String get section_location => 'Lokacija';
+	@override String get location_placeholder => 'Lokacija za vreme';
+	@override String get section_language => 'Jezik';
+	@override String get section_notifications => 'Obvestila';
+	@override String get notifications_placeholder => 'Obvestila in opomniki';
+	@override String get section_garden => 'Vrt';
+	@override String get supplies => '📦 Zaloge & sredstva';
+	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
+	@override String get section_account => 'Račun & podatki';
+	@override String get export_data => 'Izvozi podatke (GDPR)';
+	@override String get logout => 'Odjava';
+	@override String get logout_confirm_title => 'Odjava?';
+	@override String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
+	@override String get logout_cancel => 'Prekliči';
+	@override String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
+	@override String get export_share_text => 'Tendask izvoz podatkov';
+	@override String get export_error => 'Izvoz ni uspel. Poskusi znova.';
+	@override String get delete_account => 'Izbriši račun in vse podatke';
+	@override String get delete_account_confirm_title => 'Izbriši račun?';
+	@override String get delete_account_confirm_body => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.';
+	@override String get delete_account_confirm => 'Izbriši račun';
+	@override String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
 }
 
 // Path: weather
-class Translations$weather$sl {
-	Translations$weather$sl.internal(this._root);
+class _Translations$weather$sl extends Translations$weather$en {
+	_Translations$weather$sl._(TranslationsSl root) : this._root = root, super.internal(root);
 
-	final Translations _root; // ignore: unused_field
+	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-
-	/// sl: 'Jasno'
-	String get cond_clear => 'Jasno';
-
-	/// sl: 'Pretežno jasno'
-	String get cond_mainly_clear => 'Pretežno jasno';
-
-	/// sl: 'Oblačno'
-	String get cond_cloudy => 'Oblačno';
-
-	/// sl: 'Megla'
-	String get cond_fog => 'Megla';
-
-	/// sl: 'Rosenje'
-	String get cond_drizzle => 'Rosenje';
-
-	/// sl: 'Dež'
-	String get cond_rain => 'Dež';
-
-	/// sl: 'Sneg'
-	String get cond_snow => 'Sneg';
-
-	/// sl: 'Plohe'
-	String get cond_showers => 'Plohe';
-
-	/// sl: 'Nevihta'
-	String get cond_thunderstorm => 'Nevihta';
-
-	/// sl: '—'
-	String get cond_unknown => '—';
-
-	/// sl: 'Napoved'
-	String get band_forecast => 'Napoved';
-
-	/// sl: 'Dež zadnjih 48 h:'
-	String get rain_past48h => 'Dež zadnjih 48 h:';
-
-	/// sl: 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.'
-	String get detail_waiting => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.';
-
-	/// sl: 'Vremenski posnetek ni na voljo (zajet brez povezave).'
-	String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
-
-	/// sl: 'Vreme trenutno ni na voljo.'
-	String get home_unavailable => 'Vreme trenutno ni na voljo.';
-
-	/// sl: 'Tapni za ponovni poskus'
-	String get home_retry => 'Tapni za ponovni poskus';
+	@override String get cond_clear => 'Jasno';
+	@override String get cond_mainly_clear => 'Pretežno jasno';
+	@override String get cond_cloudy => 'Oblačno';
+	@override String get cond_fog => 'Megla';
+	@override String get cond_drizzle => 'Rosenje';
+	@override String get cond_rain => 'Dež';
+	@override String get cond_snow => 'Sneg';
+	@override String get cond_showers => 'Plohe';
+	@override String get cond_thunderstorm => 'Nevihta';
+	@override String get cond_unknown => '—';
+	@override String get band_forecast => 'Napoved';
+	@override String get rain_past48h => 'Dež zadnjih 48 h:';
+	@override String get detail_waiting => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.';
+	@override String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
+	@override String get home_unavailable => 'Vreme trenutno ni na voljo.';
+	@override String get home_retry => 'Tapni za ponovni poskus';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1547,7 +736,7 @@ class Translations$weather$sl {
 ///
 /// The Dart AOT compiler has issues with very large switch statements,
 /// so the map is split into smaller functions (512 entries each).
-extension on Translations {
+extension on TranslationsSl {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'splash.tagline' => 'Tvoj vrtni dnevnik 🌿',

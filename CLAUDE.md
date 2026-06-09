@@ -65,7 +65,7 @@ Pravila:
 - Imenovanje: `kSyncIntervalSeconds`, `kWeatherCacheTtl`, `kDefaultReminderOffset`, `kH3ResFine`. `k`-prefix loči konstante od spremenljivk.
 - **Brand barve in tipografija živijo v `theme/`**, nikoli hardcode hex (`#2e7d32`, `#E0A82E`) v widgetih.
 - **Uporabniške vrednosti = typed model (freezed), nikoli `Map<String, dynamic>` po kodi.** Eno mesto za branje/pisanje (repozitorij), nikoli direkten dostop iz widgeta.
-- **i18n: slang (sl/en/de) od M0.** Vsi uporabniško vidni nizi prek `t.*` (npr. `t.tasks.title`), **nikoli hardcoded niz v widgetu**. Jeziki: sl (primarni, ciljni trg + wireframi), en, de. Prevodi v slang `i18n/*.i18n.json` (ali `.yaml`); po spremembi ključev poženi build_runner.
+- **i18n: slang (en/sl/de) od M0.** Vsi uporabniško vidni nizi prek `t.*` (npr. `t.tasks.title`), **nikoli hardcoded niz v widgetu**. **`base_locale: en`** (`slang.yaml`) = tehnični privzeti + fallback za nepodprte jezike (in default jezik Play listinga); app sicer sledi jeziku telefona prek `useDeviceLocale()`. **sl ostaja jezik ciljnega trga + vir wireframov** (vsebinsko izhodišče, ne tehnični base). Prevodi v `i18n/*.i18n.json`; po spremembi ključev poženi **`dart run slang`** (slang je ločen CLI, build_runner ga NE ujame).
 
 ## Dart/Flutter specifika
 

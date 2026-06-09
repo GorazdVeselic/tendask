@@ -5,25 +5,27 @@
 // ignore_for_file: type=lint, unused_import
 // dart format off
 
-import 'package:flutter/widgets.dart';
-import 'package:intl/intl.dart';
-import 'package:slang/generated.dart';
-import 'translations.g.dart';
+part of 'translations.g.dart';
 
 // Path: <root>
-class TranslationsEn extends Translations with BaseTranslations<AppLocale, Translations> {
+typedef TranslationsEn = Translations; // ignore: unused_element
+class Translations with BaseTranslations<AppLocale, Translations> {
+	/// Returns the current translations of the given [context].
+	///
+	/// Usage:
+	/// final t = Translations.of(context);
+	static Translations of(BuildContext context) => InheritedLocaleData.of<AppLocale, Translations>(context).translations;
+
 	/// You can call this constructor and build your own translation instance of this locale.
 	/// Constructing via the enum [AppLocale.build] is preferred.
-	TranslationsEn({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
+	Translations({Map<String, Node>? overrides, PluralResolver? cardinalResolver, PluralResolver? ordinalResolver, TranslationMetadata<AppLocale, Translations>? meta})
 		: assert(overrides == null, 'Set "translation_overrides: true" in order to enable this feature.'),
 		  $meta = meta ?? TranslationMetadata(
 		    locale: AppLocale.en,
 		    overrides: overrides ?? {},
 		    cardinalResolver: cardinalResolver,
 		    ordinalResolver: ordinalResolver,
-		  ),
-		  super(cardinalResolver: cardinalResolver, ordinalResolver: ordinalResolver) {
-		super.$meta.setFlatMapFunction($meta.getTranslation); // copy base translations to super.$meta
+		  ) {
 		$meta.setFlatMapFunction(_flatMapFunction);
 	}
 
@@ -31,698 +33,1507 @@ class TranslationsEn extends Translations with BaseTranslations<AppLocale, Trans
 	@override final TranslationMetadata<AppLocale, Translations> $meta;
 
 	/// Access flat map
-	@override dynamic operator[](String key) => $meta.getTranslation(key) ?? super.$meta.getTranslation(key);
+	dynamic operator[](String key) => $meta.getTranslation(key);
 
-	late final TranslationsEn _root = this; // ignore: unused_field
+	late final Translations _root = this; // ignore: unused_field
 
-	@override 
-	TranslationsEn $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => TranslationsEn(meta: meta ?? this.$meta);
+	Translations $copyWith({TranslationMetadata<AppLocale, Translations>? meta}) => Translations(meta: meta ?? this.$meta);
 
 	// Translations
-	@override late final _Translations$splash$en splash = _Translations$splash$en._(_root);
-	@override late final _Translations$nav$en nav = _Translations$nav$en._(_root);
-	@override late final _Translations$home$en home = _Translations$home$en._(_root);
-	@override late final _Translations$common$en common = _Translations$common$en._(_root);
-	@override late final _Translations$swipe$en swipe = _Translations$swipe$en._(_root);
-	@override late final _Translations$notifications$en notifications = _Translations$notifications$en._(_root);
-	@override late final _Translations$notif_priming$en notif_priming = _Translations$notif_priming$en._(_root);
-	@override late final _Translations$notif_settings$en notif_settings = _Translations$notif_settings$en._(_root);
-	@override late final _Translations$notif_preview$en notif_preview = _Translations$notif_preview$en._(_root);
-	@override late final _Translations$onboarding$en onboarding = _Translations$onboarding$en._(_root);
-	@override late final _Translations$auth$en auth = _Translations$auth$en._(_root);
-	@override late final _Translations$email_login$en email_login = _Translations$email_login$en._(_root);
-	@override late final _Translations$location$en location = _Translations$location$en._(_root);
-	@override late final _Translations$journal$en journal = _Translations$journal$en._(_root);
-	@override late final _Translations$notes$en notes = _Translations$notes$en._(_root);
-	@override late final _Translations$task_detail$en task_detail = _Translations$task_detail$en._(_root);
-	@override late final _Translations$tasks_list$en tasks_list = _Translations$tasks_list$en._(_root);
-	@override late final _Translations$subject_picker$en subject_picker = _Translations$subject_picker$en._(_root);
-	@override late final _Translations$entry$en entry = _Translations$entry$en._(_root);
-	@override late final _Translations$plant_edit$en plant_edit = _Translations$plant_edit$en._(_root);
-	@override late final _Translations$plant_detail$en plant_detail = _Translations$plant_detail$en._(_root);
-	@override late final _Translations$area_pick$en area_pick = _Translations$area_pick$en._(_root);
-	@override late final _Translations$areas$en areas = _Translations$areas$en._(_root);
-	@override late final _Translations$plants$en plants = _Translations$plants$en._(_root);
-	@override late final _Translations$supplies$en supplies = _Translations$supplies$en._(_root);
-	@override late final _Translations$settings$en settings = _Translations$settings$en._(_root);
-	@override late final _Translations$weather$en weather = _Translations$weather$en._(_root);
+	late final Translations$splash$en splash = Translations$splash$en.internal(_root);
+	late final Translations$nav$en nav = Translations$nav$en.internal(_root);
+	late final Translations$home$en home = Translations$home$en.internal(_root);
+	late final Translations$common$en common = Translations$common$en.internal(_root);
+	late final Translations$swipe$en swipe = Translations$swipe$en.internal(_root);
+	late final Translations$notifications$en notifications = Translations$notifications$en.internal(_root);
+	late final Translations$notif_priming$en notif_priming = Translations$notif_priming$en.internal(_root);
+	late final Translations$notif_settings$en notif_settings = Translations$notif_settings$en.internal(_root);
+	late final Translations$notif_preview$en notif_preview = Translations$notif_preview$en.internal(_root);
+	late final Translations$onboarding$en onboarding = Translations$onboarding$en.internal(_root);
+	late final Translations$auth$en auth = Translations$auth$en.internal(_root);
+	late final Translations$email_login$en email_login = Translations$email_login$en.internal(_root);
+	late final Translations$location$en location = Translations$location$en.internal(_root);
+	late final Translations$journal$en journal = Translations$journal$en.internal(_root);
+	late final Translations$notes$en notes = Translations$notes$en.internal(_root);
+	late final Translations$task_detail$en task_detail = Translations$task_detail$en.internal(_root);
+	late final Translations$tasks_list$en tasks_list = Translations$tasks_list$en.internal(_root);
+	late final Translations$subject_picker$en subject_picker = Translations$subject_picker$en.internal(_root);
+	late final Translations$entry$en entry = Translations$entry$en.internal(_root);
+	late final Translations$plant_edit$en plant_edit = Translations$plant_edit$en.internal(_root);
+	late final Translations$plant_detail$en plant_detail = Translations$plant_detail$en.internal(_root);
+	late final Translations$area_pick$en area_pick = Translations$area_pick$en.internal(_root);
+	late final Translations$areas$en areas = Translations$areas$en.internal(_root);
+	late final Translations$plants$en plants = Translations$plants$en.internal(_root);
+	late final Translations$supplies$en supplies = Translations$supplies$en.internal(_root);
+	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
+	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
 }
 
 // Path: splash
-class _Translations$splash$en extends Translations$splash$sl {
-	_Translations$splash$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$splash$en {
+	Translations$splash$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get tagline => 'Your garden journal 🌿';
+
+	/// en: 'Your garden journal 🌿'
+	String get tagline => 'Your garden journal 🌿';
 }
 
 // Path: nav
-class _Translations$nav$en extends Translations$nav$sl {
-	_Translations$nav$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$nav$en {
+	Translations$nav$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get home => 'Home';
-	@override String get journal => 'Journal';
-	@override String get areas => 'Garden';
-	@override String get tasks => 'Tasks';
+
+	/// en: 'Home'
+	String get home => 'Home';
+
+	/// en: 'Journal'
+	String get journal => 'Journal';
+
+	/// en: 'Garden'
+	String get areas => 'Garden';
+
+	/// en: 'Tasks'
+	String get tasks => 'Tasks';
 }
 
 // Path: home
-class _Translations$home$en extends Translations$home$sl {
-	_Translations$home$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$home$en {
+	Translations$home$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get greeting => 'Good day 🌿';
-	@override String get today => 'Today';
-	@override String get recent => 'Recent';
-	@override String get no_tasks_today => 'No tasks planned for today.';
-	@override String get no_recent => 'No completed tasks yet.';
-	@override String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+
+	/// en: 'Good day 🌿'
+	String get greeting => 'Good day 🌿';
+
+	/// en: 'Today'
+	String get today => 'Today';
+
+	/// en: 'Recent'
+	String get recent => 'Recent';
+
+	/// en: 'No tasks planned for today.'
+	String get no_tasks_today => 'No tasks planned for today.';
+
+	/// en: 'No completed tasks yet.'
+	String get no_recent => 'No completed tasks yet.';
+
+	/// en: '(one) {1 overdue task} (other) {$n overdue tasks}'
+	String overdue_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: '1 overdue task',
 		other: '${n} overdue tasks',
 	);
 }
 
 // Path: common
-class _Translations$common$en extends Translations$common$sl {
-	_Translations$common$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$common$en {
+	Translations$common$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get today => 'Today';
-	@override String get yesterday => 'yesterday';
-	@override String get load_error => 'Couldn\'t load data.';
+
+	/// en: 'Today'
+	String get today => 'Today';
+
+	/// en: 'yesterday'
+	String get yesterday => 'yesterday';
+
+	/// en: 'Couldn't load data.'
+	String get load_error => 'Couldn\'t load data.';
 }
 
 // Path: swipe
-class _Translations$swipe$en extends Translations$swipe$sl {
-	_Translations$swipe$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$swipe$en {
+	Translations$swipe$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get complete => 'Done';
-	@override String get postpone => '+1 day';
-	@override String get revert => 'Reopen';
-	@override String get edit => 'Edit';
-	@override String get move => 'Move';
-	@override String get delete => 'Delete';
+
+	/// en: 'Done'
+	String get complete => 'Done';
+
+	/// en: '+1 day'
+	String get postpone => '+1 day';
+
+	/// en: 'Reopen'
+	String get revert => 'Reopen';
+
+	/// en: 'Edit'
+	String get edit => 'Edit';
+
+	/// en: 'Move'
+	String get move => 'Move';
+
+	/// en: 'Delete'
+	String get delete => 'Delete';
 }
 
 // Path: notifications
-class _Translations$notifications$en extends Translations$notifications$sl {
-	_Translations$notifications$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$notifications$en {
+	Translations$notifications$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get today => 'Today';
-	@override String get tomorrow => 'Tomorrow';
+
+	/// en: 'Today'
+	String get today => 'Today';
+
+	/// en: 'Tomorrow'
+	String get tomorrow => 'Tomorrow';
 }
 
 // Path: notif_priming
-class _Translations$notif_priming$en extends Translations$notif_priming$sl {
-	_Translations$notif_priming$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$notif_priming$en {
+	Translations$notif_priming$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Let me remind you in time?';
-	@override String get why => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.';
-	@override String get benefit_reminders => 'Task reminders — e.g. "1 day before at 18:00".';
-	@override String get benefit_weather => 'Smart weather hint — "dry tomorrow, a good time". (optional)';
-	@override String get benefit_nearby => 'Neighbourhood hints — what others nearby are doing. (V2, optional)';
-	@override String get privacy => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.';
-	@override String get enable => 'Turn on notifications';
-	@override String get later => 'Maybe later';
+
+	/// en: 'Let me remind you in time?'
+	String get title => 'Let me remind you in time?';
+
+	/// en: 'So a task doesn't slip by — the reminder arrives exactly when you set it.'
+	String get why => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.';
+
+	/// en: 'Task reminders — e.g. "1 day before at 18:00".'
+	String get benefit_reminders => 'Task reminders — e.g. "1 day before at 18:00".';
+
+	/// en: 'Smart weather hint — "dry tomorrow, a good time". (optional)'
+	String get benefit_weather => 'Smart weather hint — "dry tomorrow, a good time". (optional)';
+
+	/// en: 'Neighbourhood hints — what others nearby are doing. (V2, optional)'
+	String get benefit_nearby => 'Neighbourhood hints — what others nearby are doing. (V2, optional)';
+
+	/// en: 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.'
+	String get privacy => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.';
+
+	/// en: 'Turn on notifications'
+	String get enable => 'Turn on notifications';
+
+	/// en: 'Maybe later'
+	String get later => 'Maybe later';
 }
 
 // Path: notif_settings
-class _Translations$notif_settings$en extends Translations$notif_settings$sl {
-	_Translations$notif_settings$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$notif_settings$en {
+	Translations$notif_settings$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Notifications';
-	@override String get load_error => 'Couldn\'t load settings.';
-	@override String get section_types => 'Notification types';
-	@override String get type_reminders => 'Task reminders';
-	@override String get type_reminders_sub => 'local · work without internet';
-	@override String get type_weather => 'Smart hints (weather)';
-	@override String get type_weather_sub => 'soon · via server';
-	@override String get type_community => 'Nearby hints';
-	@override String get type_community_sub => 'soon (V2)';
-	@override String get section_default_offset => 'Default reminder offset';
-	@override String get default_offset_hint => 'Prefills new tasks; you can always change it.';
-	@override String get section_quiet => 'So you\'re not overwhelmed';
-	@override String get quiet_hours => 'Quiet hours';
-	@override String quiet_hours_sub({required Object range}) => '${range}, no notifications';
-	@override String get frequency_cap => 'At most 1 hint per day';
-	@override String get frequency_cap_sub => 'weather and nearby combined into one summary';
-	@override String get section_more => 'More';
-	@override String get preview => 'Notification preview';
-	@override String get preview_sub => 'how they look on the lock screen';
-	@override String get system_permission => 'System permission';
-	@override String get system_permission_on => 'device: allowed';
-	@override String get system_permission_off => 'exact reminders not allowed — tap for settings';
+
+	/// en: 'Notifications'
+	String get title => 'Notifications';
+
+	/// en: 'Couldn't load settings.'
+	String get load_error => 'Couldn\'t load settings.';
+
+	/// en: 'Notification types'
+	String get section_types => 'Notification types';
+
+	/// en: 'Task reminders'
+	String get type_reminders => 'Task reminders';
+
+	/// en: 'local · work without internet'
+	String get type_reminders_sub => 'local · work without internet';
+
+	/// en: 'Smart hints (weather)'
+	String get type_weather => 'Smart hints (weather)';
+
+	/// en: 'soon · via server'
+	String get type_weather_sub => 'soon · via server';
+
+	/// en: 'Nearby hints'
+	String get type_community => 'Nearby hints';
+
+	/// en: 'soon (V2)'
+	String get type_community_sub => 'soon (V2)';
+
+	/// en: 'Default reminder offset'
+	String get section_default_offset => 'Default reminder offset';
+
+	/// en: 'Prefills new tasks; you can always change it.'
+	String get default_offset_hint => 'Prefills new tasks; you can always change it.';
+
+	/// en: 'So you're not overwhelmed'
+	String get section_quiet => 'So you\'re not overwhelmed';
+
+	/// en: 'Quiet hours'
+	String get quiet_hours => 'Quiet hours';
+
+	/// en: '$range, no notifications'
+	String quiet_hours_sub({required Object range}) => '${range}, no notifications';
+
+	/// en: 'At most 1 hint per day'
+	String get frequency_cap => 'At most 1 hint per day';
+
+	/// en: 'weather and nearby combined into one summary'
+	String get frequency_cap_sub => 'weather and nearby combined into one summary';
+
+	/// en: 'More'
+	String get section_more => 'More';
+
+	/// en: 'Notification preview'
+	String get preview => 'Notification preview';
+
+	/// en: 'how they look on the lock screen'
+	String get preview_sub => 'how they look on the lock screen';
+
+	/// en: 'System permission'
+	String get system_permission => 'System permission';
+
+	/// en: 'device: allowed'
+	String get system_permission_on => 'device: allowed';
+
+	/// en: 'exact reminders not allowed — tap for settings'
+	String get system_permission_off => 'exact reminders not allowed — tap for settings';
 }
 
 // Path: notif_preview
-class _Translations$notif_preview$en extends Translations$notif_preview$sl {
-	_Translations$notif_preview$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$notif_preview$en {
+	Translations$notif_preview$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Notification appearance';
-	@override String get date => 'Tuesday, 1 June';
-	@override String get rem_now => 'now';
-	@override String get rem_title => '⏰ Foliar spraying · 07:00';
-	@override String get rem_body => 'Hedge + lawn · the morning is dry — a good time.';
-	@override String get rem_tag => 'task reminder';
-	@override String get wx_title => 'Tomorrow morning will be dry ☀️';
-	@override String get wx_body => 'A good time for foliar spraying of cherry laurels.';
-	@override String get wx_tag => 'smart hint · weather';
-	@override String get com_yesterday => 'yesterday';
-	@override String get com_title => 'Your area';
-	@override String get com_body => '68% of gardeners near you fertilised their lawn for the first time this week.';
-	@override String get com_tag => 'nearby hint · V2';
-	@override String get footer => 'Tapping a notification opens the right screen (task · hint · nearby).';
+
+	/// en: 'Notification appearance'
+	String get title => 'Notification appearance';
+
+	/// en: 'Tuesday, 1 June'
+	String get date => 'Tuesday, 1 June';
+
+	/// en: 'now'
+	String get rem_now => 'now';
+
+	/// en: '⏰ Foliar spraying · 07:00'
+	String get rem_title => '⏰ Foliar spraying · 07:00';
+
+	/// en: 'Hedge + lawn · the morning is dry — a good time.'
+	String get rem_body => 'Hedge + lawn · the morning is dry — a good time.';
+
+	/// en: 'task reminder'
+	String get rem_tag => 'task reminder';
+
+	/// en: 'Tomorrow morning will be dry ☀️'
+	String get wx_title => 'Tomorrow morning will be dry ☀️';
+
+	/// en: 'A good time for foliar spraying of cherry laurels.'
+	String get wx_body => 'A good time for foliar spraying of cherry laurels.';
+
+	/// en: 'smart hint · weather'
+	String get wx_tag => 'smart hint · weather';
+
+	/// en: 'yesterday'
+	String get com_yesterday => 'yesterday';
+
+	/// en: 'Your area'
+	String get com_title => 'Your area';
+
+	/// en: '68% of gardeners near you fertilised their lawn for the first time this week.'
+	String get com_body => '68% of gardeners near you fertilised their lawn for the first time this week.';
+
+	/// en: 'nearby hint · V2'
+	String get com_tag => 'nearby hint · V2';
+
+	/// en: 'Tapping a notification opens the right screen (task · hint · nearby).'
+	String get footer => 'Tapping a notification opens the right screen (task · hint · nearby).';
 }
 
 // Path: onboarding
-class _Translations$onboarding$en extends Translations$onboarding$sl {
-	_Translations$onboarding$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$onboarding$en {
+	Translations$onboarding$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get skip => 'Skip ›';
-	@override String get next => 'Next';
-	@override String get start => 'Get started 🌿';
-	@override String get soon_badge => 'soon (V2)';
-	@override String get welcome_title => 'Welcome to Tendask';
-	@override String get welcome_body => 'Your simple diary for the garden, lawn and hedge — every task in one place.';
-	@override String get log_title => 'Log it in seconds';
-	@override String get log_body => 'Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.';
-	@override String get remind_title => 'Reminders + weather';
-	@override String get remind_body => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".';
-	@override String get nearby_title => 'Your area';
-	@override String get nearby_body => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.';
+
+	/// en: 'Skip ›'
+	String get skip => 'Skip ›';
+
+	/// en: 'Next'
+	String get next => 'Next';
+
+	/// en: 'Get started 🌿'
+	String get start => 'Get started 🌿';
+
+	/// en: 'soon (V2)'
+	String get soon_badge => 'soon (V2)';
+
+	/// en: 'Welcome to Tendask'
+	String get welcome_title => 'Welcome to Tendask';
+
+	/// en: 'Your simple diary for the garden, lawn and hedge — every task in one place.'
+	String get welcome_body => 'Your simple diary for the garden, lawn and hedge — every task in one place.';
+
+	/// en: 'Log it in seconds'
+	String get log_title => 'Log it in seconds';
+
+	/// en: 'Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.'
+	String get log_body => 'Mowed, watered, fertilised? Note what, when and where — in a couple of taps. Weather is saved automatically.';
+
+	/// en: 'Reminders + weather'
+	String get remind_title => 'Reminders + weather';
+
+	/// en: 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".'
+	String get remind_body => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".';
+
+	/// en: 'Your area'
+	String get nearby_title => 'Your area';
+
+	/// en: 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.'
+	String get nearby_body => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.';
 }
 
 // Path: auth
-class _Translations$auth$en extends Translations$auth$sl {
-	_Translations$auth$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$auth$en {
+	Translations$auth$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Welcome to Tendask';
-	@override String get value_prop => 'Save your garden journal and don\'t lose your history when you change phones.';
-	@override String get continue_apple => 'Continue with Apple';
-	@override String get continue_google => 'Continue with Google';
-	@override String get continue_email => 'Continue with email';
-	@override String get guest => 'Try without an account';
-	@override String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
-	@override String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
-	@override String get google_error => 'Google sign-in failed. Please try again.';
-	@override String get coming_soon => 'Coming soon.';
+
+	/// en: 'Welcome to Tendask'
+	String get title => 'Welcome to Tendask';
+
+	/// en: 'Save your garden journal and don't lose your history when you change phones.'
+	String get value_prop => 'Save your garden journal and don\'t lose your history when you change phones.';
+
+	/// en: 'Continue with Apple'
+	String get continue_apple => 'Continue with Apple';
+
+	/// en: 'Continue with Google'
+	String get continue_google => 'Continue with Google';
+
+	/// en: 'Continue with email'
+	String get continue_email => 'Continue with email';
+
+	/// en: 'Try without an account'
+	String get guest => 'Try without an account';
+
+	/// en: 'We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.'
+	String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
+
+	/// en: 'Without an account, all your data is lost if you remove the app or change device.'
+	String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
+
+	/// en: 'Google sign-in failed. Please try again.'
+	String get google_error => 'Google sign-in failed. Please try again.';
+
+	/// en: 'Coming soon.'
+	String get coming_soon => 'Coming soon.';
 }
 
 // Path: email_login
-class _Translations$email_login$en extends Translations$email_login$sl {
-	_Translations$email_login$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$email_login$en {
+	Translations$email_login$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Sign in with email';
-	@override String get email_label => 'Email address';
-	@override String get email_hint => 'you@example.com';
-	@override String get send_code => 'Send code';
-	@override String get intro => 'We\'ll send you a one-time code — no password.';
-	@override String get code_label => 'Code from email';
-	@override String get code_hint => 'Enter the code you received';
-	@override String code_sent({required Object email}) => 'We sent a code to ${email}. Enter it below.';
-	@override String get verify => 'Confirm and sign in';
-	@override String get resend => 'Send a new code';
-	@override String get err_email => 'Enter a valid email address.';
-	@override String get err_code => 'Enter the code from the email.';
-	@override String get err_send => 'Couldn\'t send the code. Check your connection and try again.';
-	@override String get err_verify => 'The code is wrong or has expired. Try again.';
+
+	/// en: 'Sign in with email'
+	String get title => 'Sign in with email';
+
+	/// en: 'Email address'
+	String get email_label => 'Email address';
+
+	/// en: 'you@example.com'
+	String get email_hint => 'you@example.com';
+
+	/// en: 'Send code'
+	String get send_code => 'Send code';
+
+	/// en: 'We'll send you a one-time code — no password.'
+	String get intro => 'We\'ll send you a one-time code — no password.';
+
+	/// en: 'Code from email'
+	String get code_label => 'Code from email';
+
+	/// en: 'Enter the code you received'
+	String get code_hint => 'Enter the code you received';
+
+	/// en: 'We sent a code to $email. Enter it below.'
+	String code_sent({required Object email}) => 'We sent a code to ${email}. Enter it below.';
+
+	/// en: 'Confirm and sign in'
+	String get verify => 'Confirm and sign in';
+
+	/// en: 'Send a new code'
+	String get resend => 'Send a new code';
+
+	/// en: 'Enter a valid email address.'
+	String get err_email => 'Enter a valid email address.';
+
+	/// en: 'Enter the code from the email.'
+	String get err_code => 'Enter the code from the email.';
+
+	/// en: 'Couldn't send the code. Check your connection and try again.'
+	String get err_send => 'Couldn\'t send the code. Check your connection and try again.';
+
+	/// en: 'The code is wrong or has expired. Try again.'
+	String get err_verify => 'The code is wrong or has expired. Try again.';
 }
 
 // Path: location
-class _Translations$location$en extends Translations$location$sl {
-	_Translations$location$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$location$en {
+	Translations$location$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Where do you garden?';
-	@override String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
-	@override String get use_gps => 'Use my location';
-	@override String get or_enter => 'or enter a place';
-	@override String get place_hint => 'Village, town or address (e.g. Šentjur)';
-	@override String get place_note => 'A village or town is enough — no exact address needed.';
-	@override String get search => 'Search';
-	@override String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
-	@override String get kContinue => 'Continue';
-	@override String get set_gps => 'Location set.';
-	@override String set_place({required Object name}) => 'Location: ${name}';
-	@override String get err_denied => 'Location access denied. Enter a place or grant permission in system settings.';
-	@override String get err_disabled => 'Location services are off. Turn them on or enter a place.';
-	@override String get err_unavailable => 'Couldn\'t determine your location. Try again or enter a place.';
-	@override String get err_search => 'Search failed. Check your connection and try again.';
-	@override String get no_results => 'No matches for that place.';
-	@override String get screen_title => 'Garden location';
-	@override String get status_set => 'Location is set';
-	@override String get status_unset => 'Location not set yet';
-	@override String get clear => 'Remove location';
-	@override String get clear_confirm_title => 'Remove location?';
-	@override String get clear_confirm_body => 'Weather will use the default region until you set a new location.';
-	@override String get clear_confirm_yes => 'Remove';
-	@override String get clear_confirm_cancel => 'Cancel';
-	@override String get cleared => 'Location removed';
+
+	/// en: 'Where do you garden?'
+	String get title => 'Where do you garden?';
+
+	/// en: 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.'
+	String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
+
+	/// en: 'Use my location'
+	String get use_gps => 'Use my location';
+
+	/// en: 'or enter a place'
+	String get or_enter => 'or enter a place';
+
+	/// en: 'Village, town or address (e.g. Šentjur)'
+	String get place_hint => 'Village, town or address (e.g. Šentjur)';
+
+	/// en: 'A village or town is enough — no exact address needed.'
+	String get place_note => 'A village or town is enough — no exact address needed.';
+
+	/// en: 'Search'
+	String get search => 'Search';
+
+	/// en: 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.'
+	String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
+
+	/// en: 'Continue'
+	String get kContinue => 'Continue';
+
+	/// en: 'Location set.'
+	String get set_gps => 'Location set.';
+
+	/// en: 'Location: $name'
+	String set_place({required Object name}) => 'Location: ${name}';
+
+	/// en: 'Location access denied. Enter a place or grant permission in system settings.'
+	String get err_denied => 'Location access denied. Enter a place or grant permission in system settings.';
+
+	/// en: 'Location services are off. Turn them on or enter a place.'
+	String get err_disabled => 'Location services are off. Turn them on or enter a place.';
+
+	/// en: 'Couldn't determine your location. Try again or enter a place.'
+	String get err_unavailable => 'Couldn\'t determine your location. Try again or enter a place.';
+
+	/// en: 'Search failed. Check your connection and try again.'
+	String get err_search => 'Search failed. Check your connection and try again.';
+
+	/// en: 'No matches for that place.'
+	String get no_results => 'No matches for that place.';
+
+	/// en: 'Garden location'
+	String get screen_title => 'Garden location';
+
+	/// en: 'Location is set'
+	String get status_set => 'Location is set';
+
+	/// en: 'Location not set yet'
+	String get status_unset => 'Location not set yet';
+
+	/// en: 'Remove location'
+	String get clear => 'Remove location';
+
+	/// en: 'Remove location?'
+	String get clear_confirm_title => 'Remove location?';
+
+	/// en: 'Weather will use the default region until you set a new location.'
+	String get clear_confirm_body => 'Weather will use the default region until you set a new location.';
+
+	/// en: 'Remove'
+	String get clear_confirm_yes => 'Remove';
+
+	/// en: 'Cancel'
+	String get clear_confirm_cancel => 'Cancel';
+
+	/// en: 'Location removed'
+	String get cleared => 'Location removed';
 }
 
 // Path: journal
-class _Translations$journal$en extends Translations$journal$sl {
-	_Translations$journal$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$journal$en {
+	Translations$journal$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Journal';
-	@override String get subtitle => 'garden journal';
-	@override String get filter_all => 'All';
-	@override String get filter_tasks => '✓ Tasks';
-	@override String get filter_notes => '✍️ Notes';
-	@override String get empty => 'No journal entries yet.';
-	@override String get empty_tasks => 'No completed tasks.';
-	@override String get empty_notes => 'No notes yet.';
-	@override String get timeline => 'Timeline';
-	@override String get month_view => 'Month';
-	@override String get month_hint => '💡 Tap a day to view and add tasks.';
-	@override String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+
+	/// en: 'Journal'
+	String get title => 'Journal';
+
+	/// en: 'garden journal'
+	String get subtitle => 'garden journal';
+
+	/// en: 'All'
+	String get filter_all => 'All';
+
+	/// en: '✓ Tasks'
+	String get filter_tasks => '✓ Tasks';
+
+	/// en: '✍️ Notes'
+	String get filter_notes => '✍️ Notes';
+
+	/// en: 'No journal entries yet.'
+	String get empty => 'No journal entries yet.';
+
+	/// en: 'No completed tasks.'
+	String get empty_tasks => 'No completed tasks.';
+
+	/// en: 'No notes yet.'
+	String get empty_notes => 'No notes yet.';
+
+	/// en: 'Timeline'
+	String get timeline => 'Timeline';
+
+	/// en: 'Month'
+	String get month_view => 'Month';
+
+	/// en: '💡 Tap a day to view and add tasks.'
+	String get month_hint => '💡 Tap a day to view and add tasks.';
+
+	/// en: '(one) {$n task this month} (other) {$n tasks this month}'
+	String month_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: '${n} task this month',
 		other: '${n} tasks this month',
 	);
-	@override String get day_empty => 'No tasks on this day.';
-	@override String get day_add => 'Add task on this day';
+
+	/// en: 'No tasks on this day.'
+	String get day_empty => 'No tasks on this day.';
+
+	/// en: 'Add task on this day'
+	String get day_add => 'Add task on this day';
 }
 
 // Path: notes
-class _Translations$notes$en extends Translations$notes$sl {
-	_Translations$notes$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$notes$en {
+	Translations$notes$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_new => 'New note';
-	@override String get title_edit => 'Edit note';
-	@override String get content_label => 'Note';
-	@override String get content_hint => 'Free text — observation, idea, thought…';
-	@override String get when => 'When';
-	@override String get today => 'Today';
-	@override String get yesterday => 'Yesterday';
-	@override String get pick_date => 'Date…';
-	@override String get area => 'Area (optional)';
-	@override String get no_areas => 'No areas yet — add them in the Areas section.';
-	@override String get plant => 'Plant (optional)';
-	@override String get save => 'Save note';
-	@override String get err_content => 'Enter the note text.';
-	@override String get delete => 'Delete note';
-	@override String get delete_confirm => 'This action cannot be undone.';
-	@override String get info => '🌧️ Weather is saved automatically.';
+
+	/// en: 'New note'
+	String get title_new => 'New note';
+
+	/// en: 'Edit note'
+	String get title_edit => 'Edit note';
+
+	/// en: 'Note'
+	String get content_label => 'Note';
+
+	/// en: 'Free text — observation, idea, thought…'
+	String get content_hint => 'Free text — observation, idea, thought…';
+
+	/// en: 'When'
+	String get when => 'When';
+
+	/// en: 'Today'
+	String get today => 'Today';
+
+	/// en: 'Yesterday'
+	String get yesterday => 'Yesterday';
+
+	/// en: 'Date…'
+	String get pick_date => 'Date…';
+
+	/// en: 'Area (optional)'
+	String get area => 'Area (optional)';
+
+	/// en: 'No areas yet — add them in the Areas section.'
+	String get no_areas => 'No areas yet — add them in the Areas section.';
+
+	/// en: 'Plant (optional)'
+	String get plant => 'Plant (optional)';
+
+	/// en: 'Save note'
+	String get save => 'Save note';
+
+	/// en: 'Enter the note text.'
+	String get err_content => 'Enter the note text.';
+
+	/// en: 'Delete note'
+	String get delete => 'Delete note';
+
+	/// en: 'This action cannot be undone.'
+	String get delete_confirm => 'This action cannot be undone.';
+
+	/// en: '🌧️ Weather is saved automatically.'
+	String get info => '🌧️ Weather is saved automatically.';
 }
 
 // Path: task_detail
-class _Translations$task_detail$en extends Translations$task_detail$sl {
-	_Translations$task_detail$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$task_detail$en {
+	Translations$task_detail$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get section_weather => 'Weather snapshot';
-	@override String get section_details => 'Details';
-	@override String get label_supplies => 'Supplies';
-	@override String get label_reminder => 'Reminder';
-	@override String get label_recurrence => 'Recurrence';
-	@override String get label_note => 'Note';
-	@override String get badge_waiting => 'Planned';
-	@override String get badge_done => 'Done';
-	@override String get action_complete => '✓  Mark as done';
-	@override String get action_postpone => '+1 day';
-	@override String get action_edit => 'Edit';
-	@override String get action_duplicate => 'Duplicate';
-	@override String get action_delete => 'Delete';
-	@override String get action_revert => 'Back to waiting';
-	@override String get action_move => 'Reschedule';
-	@override String get recurrence_once => 'Once';
-	@override String get recurrence_weekly => 'Weekly';
-	@override String get recurrence_seasonal => 'Seasonal';
-	@override String get none => '—';
-	@override String get not_found => 'Task not found.';
+
+	/// en: 'Weather snapshot'
+	String get section_weather => 'Weather snapshot';
+
+	/// en: 'Details'
+	String get section_details => 'Details';
+
+	/// en: 'Supplies'
+	String get label_supplies => 'Supplies';
+
+	/// en: 'Reminder'
+	String get label_reminder => 'Reminder';
+
+	/// en: 'Recurrence'
+	String get label_recurrence => 'Recurrence';
+
+	/// en: 'Note'
+	String get label_note => 'Note';
+
+	/// en: 'Planned'
+	String get badge_waiting => 'Planned';
+
+	/// en: 'Done'
+	String get badge_done => 'Done';
+
+	/// en: '✓ Mark as done'
+	String get action_complete => '✓  Mark as done';
+
+	/// en: '+1 day'
+	String get action_postpone => '+1 day';
+
+	/// en: 'Edit'
+	String get action_edit => 'Edit';
+
+	/// en: 'Duplicate'
+	String get action_duplicate => 'Duplicate';
+
+	/// en: 'Delete'
+	String get action_delete => 'Delete';
+
+	/// en: 'Back to waiting'
+	String get action_revert => 'Back to waiting';
+
+	/// en: 'Reschedule'
+	String get action_move => 'Reschedule';
+
+	/// en: 'Once'
+	String get recurrence_once => 'Once';
+
+	/// en: 'Weekly'
+	String get recurrence_weekly => 'Weekly';
+
+	/// en: 'Seasonal'
+	String get recurrence_seasonal => 'Seasonal';
+
+	/// en: '—'
+	String get none => '—';
+
+	/// en: 'Task not found.'
+	String get not_found => 'Task not found.';
 }
 
 // Path: tasks_list
-class _Translations$tasks_list$en extends Translations$tasks_list$sl {
-	_Translations$tasks_list$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$tasks_list$en {
+	Translations$tasks_list$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Tasks';
-	@override String get subtitle => 'upcoming and overdue';
-	@override String get section_overdue => 'Overdue';
-	@override String get section_today => 'Today';
-	@override String get section_tomorrow => 'Tomorrow';
-	@override String get section_this_week => 'This week';
-	@override String get section_later => 'Later';
-	@override String get empty => 'No pending tasks. Add one with +.';
-	@override String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+
+	/// en: 'Tasks'
+	String get title => 'Tasks';
+
+	/// en: 'upcoming and overdue'
+	String get subtitle => 'upcoming and overdue';
+
+	/// en: 'Overdue'
+	String get section_overdue => 'Overdue';
+
+	/// en: 'Today'
+	String get section_today => 'Today';
+
+	/// en: 'Tomorrow'
+	String get section_tomorrow => 'Tomorrow';
+
+	/// en: 'This week'
+	String get section_this_week => 'This week';
+
+	/// en: 'Later'
+	String get section_later => 'Later';
+
+	/// en: 'No pending tasks. Add one with +.'
+	String get empty => 'No pending tasks. Add one with +.';
+
+	/// en: '(one) {overdue 1 day} (other) {overdue $n days}'
+	String overdue_days({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
 		one: 'overdue 1 day',
 		other: 'overdue ${n} days',
 	);
-	@override String get status_today => 'today';
-	@override String get status_tomorrow => 'tomorrow';
-	@override String get action_complete => 'Complete';
-	@override String get action_postpone => '+1 day';
-	@override String get action_edit => 'Edit';
-	@override String get action_duplicate => 'Duplicate';
-	@override String get action_delete => 'Delete';
-	@override String get delete_confirm_title => 'Delete task?';
-	@override String get delete_confirm_body => 'This action cannot be undone.';
-	@override String get delete_yes => 'Delete';
-	@override String get delete_cancel => 'Cancel';
+
+	/// en: 'today'
+	String get status_today => 'today';
+
+	/// en: 'tomorrow'
+	String get status_tomorrow => 'tomorrow';
+
+	/// en: 'Complete'
+	String get action_complete => 'Complete';
+
+	/// en: '+1 day'
+	String get action_postpone => '+1 day';
+
+	/// en: 'Edit'
+	String get action_edit => 'Edit';
+
+	/// en: 'Duplicate'
+	String get action_duplicate => 'Duplicate';
+
+	/// en: 'Delete'
+	String get action_delete => 'Delete';
+
+	/// en: 'Delete task?'
+	String get delete_confirm_title => 'Delete task?';
+
+	/// en: 'This action cannot be undone.'
+	String get delete_confirm_body => 'This action cannot be undone.';
+
+	/// en: 'Delete'
+	String get delete_yes => 'Delete';
+
+	/// en: 'Cancel'
+	String get delete_cancel => 'Cancel';
 }
 
 // Path: subject_picker
-class _Translations$subject_picker$en extends Translations$subject_picker$sl {
-	_Translations$subject_picker$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$subject_picker$en {
+	Translations$subject_picker$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Plant or area';
-	@override String get choose => 'Choose';
+
+	/// en: 'Plant or area'
+	String get title => 'Plant or area';
+
+	/// en: 'Choose'
+	String get choose => 'Choose';
 }
 
 // Path: entry
-class _Translations$entry$en extends Translations$entry$sl {
-	_Translations$entry$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$entry$en {
+	Translations$entry$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_new => 'New task';
-	@override String get title_review => 'Review';
-	@override String get kContinue => 'Continue';
-	@override String get skip => 'Skip';
-	@override String get save => 'Save task';
-	@override String get step => 'Step';
-	@override String get note_card_title => 'Just a note, no task?';
-	@override String get note_card_action => 'Note ›';
-	@override String get repeat_last => 'Repeat last';
-	@override String get type_title => 'Which task?';
-	@override String get type_hint => 'Tapping a task takes you forward automatically.';
-	@override String type_show_all({required Object n}) => 'Show all (${n})';
-	@override String get type_show_less => 'Show less';
-	@override String get subject_title => 'For what?';
-	@override String get subject_search_hint => 'Search plant…';
-	@override String get subject_plants => 'Plants';
-	@override String get subject_add_plant => 'Add plant';
-	@override String get subject_add_area => 'Add area';
-	@override String get subject_from_catalog => 'Add from catalog';
-	@override String get subject_areas_context => 'Areas:';
-	@override String get subject_area_section => 'Or the whole area';
-	@override String get subject_area_note => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).';
-	@override String get when_title => 'When';
-	@override String get when_today => 'Today';
-	@override String get when_tomorrow => 'Tomorrow';
-	@override String get when_pick_date => 'Date…';
-	@override String get when_date => 'Date';
-	@override String get when_time => 'Time';
-	@override String get when_default_note => 'Default: today at the next full hour.';
-	@override String get when_status => 'Status';
-	@override String get when_status_waiting => 'Waiting';
-	@override String get when_status_done => 'Done';
-	@override String get when_status_note => 'Default derived from the date and time: future = waiting, otherwise = done.';
-	@override String get reminder_title => 'Reminder';
-	@override String get optional => '(optional)';
-	@override String get reminder_why => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.';
-	@override String get reminder_add => 'Add reminder';
-	@override String get reminder_note => 'Adjustable offset and time. Several reminders per task.';
-	@override String get supplies_title => 'Supplies';
-	@override String get supplies_why => 'This step is here because the task usually consumes supplies. They are deducted from stock.';
-	@override String get supplies_add => 'Add supply from stock';
-	@override String get supplies_note => 'One mix for all selected plants — deducted once.';
-	@override String get review_title => 'Check it over — tap a row to edit';
-	@override String get review_type => 'Task';
-	@override String get review_subject => 'For what';
-	@override String get review_when => 'When';
-	@override String get review_reminder => 'Reminder';
-	@override String get review_supplies => 'Supplies';
-	@override String get review_fix => 'Edit';
-	@override String get review_none => '—';
-	@override String get note_label => 'Note';
-	@override String get note_hint => 'e.g. in the morning before forecast rain';
-	@override String get weather_note => '🌧️ Weather is saved automatically on completion.';
-	@override String get err_subject => 'Pick at least one plant or area.';
-	@override String get rem_event => 'At event time';
-	@override String get rem_10min => '10 minutes before';
-	@override String get rem_1hour => '1 hour before';
-	@override String get rem_1day => '1 day before';
-	@override String get rem_2day => '2 days before';
-	@override String get rem_custom => 'Custom…';
-	@override String get rem_unit_min => 'min';
-	@override String get rem_unit_hour => 'hrs';
-	@override String get rem_unit_day => 'days';
-	@override String get rem_custom_label => 'How long before?';
-	@override String get rem_before => 'before';
-	@override String rem_at({required Object t}) => 'at ${t}';
-	@override String get rem_choose_time => 'At time';
-	@override String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
-	@override String get rem_perm_denied => 'Notifications are disabled, so a reminder can\'t be added.';
-	@override String get rem_exact_title => 'Allow exact reminders';
-	@override String get rem_exact_body => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.';
-	@override String get rem_exact_open => 'Open settings';
-	@override String get rem_added => 'already added';
+
+	/// en: 'New task'
+	String get title_new => 'New task';
+
+	/// en: 'Review'
+	String get title_review => 'Review';
+
+	/// en: 'Continue'
+	String get kContinue => 'Continue';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Save task'
+	String get save => 'Save task';
+
+	/// en: 'Step'
+	String get step => 'Step';
+
+	/// en: 'Just a note, no task?'
+	String get note_card_title => 'Just a note, no task?';
+
+	/// en: 'Note ›'
+	String get note_card_action => 'Note ›';
+
+	/// en: 'Repeat last'
+	String get repeat_last => 'Repeat last';
+
+	/// en: 'Which task?'
+	String get type_title => 'Which task?';
+
+	/// en: 'Tapping a task takes you forward automatically.'
+	String get type_hint => 'Tapping a task takes you forward automatically.';
+
+	/// en: 'Show all ($n)'
+	String type_show_all({required Object n}) => 'Show all (${n})';
+
+	/// en: 'Show less'
+	String get type_show_less => 'Show less';
+
+	/// en: 'For what?'
+	String get subject_title => 'For what?';
+
+	/// en: 'Search plant…'
+	String get subject_search_hint => 'Search plant…';
+
+	/// en: 'Plants'
+	String get subject_plants => 'Plants';
+
+	/// en: 'Add plant'
+	String get subject_add_plant => 'Add plant';
+
+	/// en: 'Add area'
+	String get subject_add_area => 'Add area';
+
+	/// en: 'Add from catalog'
+	String get subject_from_catalog => 'Add from catalog';
+
+	/// en: 'Areas:'
+	String get subject_areas_context => 'Areas:';
+
+	/// en: 'Or the whole area'
+	String get subject_area_section => 'Or the whole area';
+
+	/// en: 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).'
+	String get subject_area_note => 'Pick an area only when the task applies to the whole thing without a single plant (mowing, mulching a whole bed).';
+
+	/// en: 'When'
+	String get when_title => 'When';
+
+	/// en: 'Today'
+	String get when_today => 'Today';
+
+	/// en: 'Tomorrow'
+	String get when_tomorrow => 'Tomorrow';
+
+	/// en: 'Date…'
+	String get when_pick_date => 'Date…';
+
+	/// en: 'Date'
+	String get when_date => 'Date';
+
+	/// en: 'Time'
+	String get when_time => 'Time';
+
+	/// en: 'Default: today at the next full hour.'
+	String get when_default_note => 'Default: today at the next full hour.';
+
+	/// en: 'Status'
+	String get when_status => 'Status';
+
+	/// en: 'Waiting'
+	String get when_status_waiting => 'Waiting';
+
+	/// en: 'Done'
+	String get when_status_done => 'Done';
+
+	/// en: 'Default derived from the date and time: future = waiting, otherwise = done.'
+	String get when_status_note => 'Default derived from the date and time: future = waiting, otherwise = done.';
+
+	/// en: 'Reminder'
+	String get reminder_title => 'Reminder';
+
+	/// en: '(optional)'
+	String get optional => '(optional)';
+
+	/// en: 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.'
+	String get reminder_why => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.';
+
+	/// en: 'Add reminder'
+	String get reminder_add => 'Add reminder';
+
+	/// en: 'Adjustable offset and time. Several reminders per task.'
+	String get reminder_note => 'Adjustable offset and time. Several reminders per task.';
+
+	/// en: 'Supplies'
+	String get supplies_title => 'Supplies';
+
+	/// en: 'This step is here because the task usually consumes supplies. They are deducted from stock.'
+	String get supplies_why => 'This step is here because the task usually consumes supplies. They are deducted from stock.';
+
+	/// en: 'Add supply from stock'
+	String get supplies_add => 'Add supply from stock';
+
+	/// en: 'One mix for all selected plants — deducted once.'
+	String get supplies_note => 'One mix for all selected plants — deducted once.';
+
+	/// en: 'Check it over — tap a row to edit'
+	String get review_title => 'Check it over — tap a row to edit';
+
+	/// en: 'Task'
+	String get review_type => 'Task';
+
+	/// en: 'For what'
+	String get review_subject => 'For what';
+
+	/// en: 'When'
+	String get review_when => 'When';
+
+	/// en: 'Reminder'
+	String get review_reminder => 'Reminder';
+
+	/// en: 'Supplies'
+	String get review_supplies => 'Supplies';
+
+	/// en: 'Edit'
+	String get review_fix => 'Edit';
+
+	/// en: '—'
+	String get review_none => '—';
+
+	/// en: 'Note'
+	String get note_label => 'Note';
+
+	/// en: 'e.g. in the morning before forecast rain'
+	String get note_hint => 'e.g. in the morning before forecast rain';
+
+	/// en: '🌧️ Weather is saved automatically on completion.'
+	String get weather_note => '🌧️ Weather is saved automatically on completion.';
+
+	/// en: 'Pick at least one plant or area.'
+	String get err_subject => 'Pick at least one plant or area.';
+
+	/// en: 'At event time'
+	String get rem_event => 'At event time';
+
+	/// en: '10 minutes before'
+	String get rem_10min => '10 minutes before';
+
+	/// en: '1 hour before'
+	String get rem_1hour => '1 hour before';
+
+	/// en: '1 day before'
+	String get rem_1day => '1 day before';
+
+	/// en: '2 days before'
+	String get rem_2day => '2 days before';
+
+	/// en: 'Custom…'
+	String get rem_custom => 'Custom…';
+
+	/// en: 'min'
+	String get rem_unit_min => 'min';
+
+	/// en: 'hrs'
+	String get rem_unit_hour => 'hrs';
+
+	/// en: 'days'
+	String get rem_unit_day => 'days';
+
+	/// en: 'How long before?'
+	String get rem_custom_label => 'How long before?';
+
+	/// en: 'before'
+	String get rem_before => 'before';
+
+	/// en: 'at $t'
+	String rem_at({required Object t}) => 'at ${t}';
+
+	/// en: 'At time'
+	String get rem_choose_time => 'At time';
+
+	/// en: 'The time applies to day-based offsets (e.g. "1 day before at 18:00").'
+	String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
+
+	/// en: 'Notifications are disabled, so a reminder can't be added.'
+	String get rem_perm_denied => 'Notifications are disabled, so a reminder can\'t be added.';
+
+	/// en: 'Allow exact reminders'
+	String get rem_exact_title => 'Allow exact reminders';
+
+	/// en: 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.'
+	String get rem_exact_body => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.';
+
+	/// en: 'Open settings'
+	String get rem_exact_open => 'Open settings';
+
+	/// en: 'already added'
+	String get rem_added => 'already added';
 }
 
 // Path: plant_edit
-class _Translations$plant_edit$en extends Translations$plant_edit$sl {
-	_Translations$plant_edit$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$plant_edit$en {
+	Translations$plant_edit$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title_edit => 'Edit plant';
-	@override String get species => 'Species';
-	@override String get alias => 'Personal name (optional)';
-	@override String get alias_hint => 'e.g. “old apple by the fence”';
-	@override String get alias_note => 'Only you see it; shown instead of the default name.';
-	@override String get location_label => 'Area';
-	@override String get delete => 'Remove plant from garden';
-	@override String get delete_note => 'Task history stays in the journal.';
-	@override String get save => 'Save';
+
+	/// en: 'Edit plant'
+	String get title_edit => 'Edit plant';
+
+	/// en: 'Species'
+	String get species => 'Species';
+
+	/// en: 'Personal name (optional)'
+	String get alias => 'Personal name (optional)';
+
+	/// en: 'e.g. “old apple by the fence”'
+	String get alias_hint => 'e.g. “old apple by the fence”';
+
+	/// en: 'Only you see it; shown instead of the default name.'
+	String get alias_note => 'Only you see it; shown instead of the default name.';
+
+	/// en: 'Area'
+	String get location_label => 'Area';
+
+	/// en: 'Remove plant from garden'
+	String get delete => 'Remove plant from garden';
+
+	/// en: 'Task history stays in the journal.'
+	String get delete_note => 'Task history stays in the journal.';
+
+	/// en: 'Save'
+	String get save => 'Save';
 }
 
 // Path: plant_detail
-class _Translations$plant_detail$en extends Translations$plant_detail$sl {
-	_Translations$plant_detail$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$plant_detail$en {
+	Translations$plant_detail$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get not_found => 'Plant not found.';
-	@override String get history_title => 'Task history';
-	@override String get history_empty => 'No tasks for this plant yet.';
-	@override String get move => 'move';
-	@override String get assign_area => 'Assign area';
+
+	/// en: 'Plant not found.'
+	String get not_found => 'Plant not found.';
+
+	/// en: 'Task history'
+	String get history_title => 'Task history';
+
+	/// en: 'No tasks for this plant yet.'
+	String get history_empty => 'No tasks for this plant yet.';
+
+	/// en: 'move'
+	String get move => 'move';
+
+	/// en: 'Assign area'
+	String get assign_area => 'Assign area';
 }
 
 // Path: area_pick
-class _Translations$area_pick$en extends Translations$area_pick$sl {
-	_Translations$area_pick$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$area_pick$en {
+	Translations$area_pick$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String move_title({required Object name}) => 'Move „${name}“';
-	@override String get choose_title => 'Choose area';
-	@override String get note => 'A plant lives in one area (or none). Its task history stays.';
-	@override String get none => 'No area';
-	@override String get current => 'current';
-	@override String get new_area => 'New area';
-	@override String get duplicate => 'This plant is already in the selected area.';
+
+	/// en: 'Move „${name}“'
+	String move_title({required Object name}) => 'Move „${name}“';
+
+	/// en: 'Choose area'
+	String get choose_title => 'Choose area';
+
+	/// en: 'A plant lives in one area (or none). Its task history stays.'
+	String get note => 'A plant lives in one area (or none). Its task history stays.';
+
+	/// en: 'No area'
+	String get none => 'No area';
+
+	/// en: 'current'
+	String get current => 'current';
+
+	/// en: 'New area'
+	String get new_area => 'New area';
+
+	/// en: 'This plant is already in the selected area.'
+	String get duplicate => 'This plant is already in the selected area.';
 }
 
 // Path: areas
-class _Translations$areas$en extends Translations$areas$sl {
-	_Translations$areas$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$areas$en {
+	Translations$areas$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Garden';
-	@override String get subtitle => 'plants and lawns';
-	@override String get unassigned => 'No area';
-	@override String get last_prefix => 'last:';
-	@override String get type_lawn => 'Lawn';
-	@override String get type_hedge => 'Hedge';
-	@override String get type_bed => 'Bed';
-	@override String get type_tree => 'Fruit tree';
-	@override String get type_ornamental => 'Ornamental';
-	@override String get type_other => 'Other';
-	@override String get history_title => 'Task history';
-	@override String get history_empty => 'No tasks in this area yet.';
-	@override String get plants_section => 'Plants';
-	@override String add_plant_here({required Object area}) => 'Add plant to ${area}';
-	@override String get delete_reparent_note => 'Plants in this area move to “No area” (they are not deleted).';
-	@override String get new_area_inline => 'New area';
-	@override String get empty_title => 'Your garden is empty';
-	@override String get empty_body => 'Add the plants you have. Areas (beds, lawns) are optional.';
-	@override String get empty_cta_plant => 'Add plants';
-	@override String get empty_cta_area => 'Add area';
-	@override String get action_edit => 'Edit';
-	@override String get action_delete => 'Delete';
-	@override String get delete_confirm_title => 'Delete area?';
-	@override String get delete_confirm_body => 'Tasks remain but lose their link to this area.';
-	@override String get form_title_new => 'New area';
-	@override String get form_title_edit => 'Edit area';
-	@override String get form_name => 'Name';
-	@override String get form_name_hint => 'e.g. Raised bed 1';
-	@override String get form_type => 'Type';
-	@override String get form_save => 'Save area';
-	@override String get err_name => 'Enter an area name.';
+
+	/// en: 'Garden'
+	String get title => 'Garden';
+
+	/// en: 'plants and lawns'
+	String get subtitle => 'plants and lawns';
+
+	/// en: 'No area'
+	String get unassigned => 'No area';
+
+	/// en: 'last:'
+	String get last_prefix => 'last:';
+
+	/// en: 'Lawn'
+	String get type_lawn => 'Lawn';
+
+	/// en: 'Hedge'
+	String get type_hedge => 'Hedge';
+
+	/// en: 'Bed'
+	String get type_bed => 'Bed';
+
+	/// en: 'Fruit tree'
+	String get type_tree => 'Fruit tree';
+
+	/// en: 'Ornamental'
+	String get type_ornamental => 'Ornamental';
+
+	/// en: 'Other'
+	String get type_other => 'Other';
+
+	/// en: 'Task history'
+	String get history_title => 'Task history';
+
+	/// en: 'No tasks in this area yet.'
+	String get history_empty => 'No tasks in this area yet.';
+
+	/// en: 'Plants'
+	String get plants_section => 'Plants';
+
+	/// en: 'Add plant to $area'
+	String add_plant_here({required Object area}) => 'Add plant to ${area}';
+
+	/// en: 'Plants in this area move to “No area” (they are not deleted).'
+	String get delete_reparent_note => 'Plants in this area move to “No area” (they are not deleted).';
+
+	/// en: 'New area'
+	String get new_area_inline => 'New area';
+
+	/// en: 'Your garden is empty'
+	String get empty_title => 'Your garden is empty';
+
+	/// en: 'Add the plants you have. Areas (beds, lawns) are optional.'
+	String get empty_body => 'Add the plants you have. Areas (beds, lawns) are optional.';
+
+	/// en: 'Add plants'
+	String get empty_cta_plant => 'Add plants';
+
+	/// en: 'Add area'
+	String get empty_cta_area => 'Add area';
+
+	/// en: 'Edit'
+	String get action_edit => 'Edit';
+
+	/// en: 'Delete'
+	String get action_delete => 'Delete';
+
+	/// en: 'Delete area?'
+	String get delete_confirm_title => 'Delete area?';
+
+	/// en: 'Tasks remain but lose their link to this area.'
+	String get delete_confirm_body => 'Tasks remain but lose their link to this area.';
+
+	/// en: 'New area'
+	String get form_title_new => 'New area';
+
+	/// en: 'Edit area'
+	String get form_title_edit => 'Edit area';
+
+	/// en: 'Name'
+	String get form_name => 'Name';
+
+	/// en: 'e.g. Raised bed 1'
+	String get form_name_hint => 'e.g. Raised bed 1';
+
+	/// en: 'Type'
+	String get form_type => 'Type';
+
+	/// en: 'Save area'
+	String get form_save => 'Save area';
+
+	/// en: 'Enter an area name.'
+	String get err_name => 'Enter an area name.';
 }
 
 // Path: plants
-class _Translations$plants$en extends Translations$plants$sl {
-	_Translations$plants$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$plants$en {
+	Translations$plants$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get picker_title => 'Select plant';
-	@override String get search_hint => 'Search plant…';
-	@override String get cat_all => 'All';
-	@override String get cat_fruit_tree => 'Fruit trees';
-	@override String get cat_berries => 'Berries';
-	@override String get cat_vegetable => 'Vegetables';
-	@override String get cat_herbs => 'Herbs';
-	@override String get cat_ornamental => 'Ornamental';
-	@override String get cat_houseplant => 'Houseplants';
-	@override String get cat_lawn => 'Lawn';
-	@override String get from_catalog => 'From catalog';
-	@override String get not_found => 'Can\'t find it?';
-	@override String custom_add({required Object q}) => '+ Add custom: “${q}”';
-	@override String get custom_private => 'A custom entry is private and not shared with the community.';
-	@override String get add_title => 'Add plants';
-	@override String get frequent => 'Frequent';
-	@override String get undo => 'Undo';
-	@override String get done => 'Done';
-	@override String get add_to_label => 'Add to';
-	@override String get choose_area => 'choose';
-	@override String get field_add => 'Select plant';
-	@override String get field_empty => 'This area has no plants yet. Add one with the button below.';
+
+	/// en: 'Select plant'
+	String get picker_title => 'Select plant';
+
+	/// en: 'Search plant…'
+	String get search_hint => 'Search plant…';
+
+	/// en: 'All'
+	String get cat_all => 'All';
+
+	/// en: 'Fruit trees'
+	String get cat_fruit_tree => 'Fruit trees';
+
+	/// en: 'Berries'
+	String get cat_berries => 'Berries';
+
+	/// en: 'Vegetables'
+	String get cat_vegetable => 'Vegetables';
+
+	/// en: 'Herbs'
+	String get cat_herbs => 'Herbs';
+
+	/// en: 'Ornamental'
+	String get cat_ornamental => 'Ornamental';
+
+	/// en: 'Houseplants'
+	String get cat_houseplant => 'Houseplants';
+
+	/// en: 'Lawn'
+	String get cat_lawn => 'Lawn';
+
+	/// en: 'From catalog'
+	String get from_catalog => 'From catalog';
+
+	/// en: 'Can't find it?'
+	String get not_found => 'Can\'t find it?';
+
+	/// en: '+ Add custom: “$q”'
+	String custom_add({required Object q}) => '+ Add custom: “${q}”';
+
+	/// en: 'A custom entry is private and not shared with the community.'
+	String get custom_private => 'A custom entry is private and not shared with the community.';
+
+	/// en: 'Add plants'
+	String get add_title => 'Add plants';
+
+	/// en: 'Frequent'
+	String get frequent => 'Frequent';
+
+	/// en: 'Undo'
+	String get undo => 'Undo';
+
+	/// en: 'Done'
+	String get done => 'Done';
+
+	/// en: 'Add to'
+	String get add_to_label => 'Add to';
+
+	/// en: 'choose'
+	String get choose_area => 'choose';
+
+	/// en: 'Select plant'
+	String get field_add => 'Select plant';
+
+	/// en: 'This area has no plants yet. Add one with the button below.'
+	String get field_empty => 'This area has no plants yet. Add one with the button below.';
 }
 
 // Path: supplies
-class _Translations$supplies$en extends Translations$supplies$sl {
-	_Translations$supplies$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$supplies$en {
+	Translations$supplies$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Supplies';
-	@override String get subtitle => 'what I have at home';
-	@override String get empty => 'No supplies yet. Add some with +.';
-	@override String get low => 'low';
-	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
-	@override String get form_new => 'New supply';
-	@override String get form_edit => 'Edit supply';
-	@override String get form_name => 'Name';
-	@override String get form_quantity => 'Quantity';
-	@override String get form_unit => 'Unit';
-	@override String get form_threshold => 'Warn at (threshold)';
-	@override String get form_save => 'Save';
-	@override String get err_name => 'Enter a supply name.';
-	@override String get add_to_task => 'Add supply';
-	@override String get pick_new => 'New supply';
-	@override String get amount => 'Amount used';
-	@override String get add_confirm => 'Add';
+
+	/// en: 'Supplies'
+	String get title => 'Supplies';
+
+	/// en: 'what I have at home'
+	String get subtitle => 'what I have at home';
+
+	/// en: 'No supplies yet. Add some with +.'
+	String get empty => 'No supplies yet. Add some with +.';
+
+	/// en: 'low'
+	String get low => 'low';
+
+	/// en: '~$q$unit'
+	String qty({required Object q, required Object unit}) => '~${q}${unit}';
+
+	/// en: 'New supply'
+	String get form_new => 'New supply';
+
+	/// en: 'Edit supply'
+	String get form_edit => 'Edit supply';
+
+	/// en: 'Name'
+	String get form_name => 'Name';
+
+	/// en: 'Quantity'
+	String get form_quantity => 'Quantity';
+
+	/// en: 'Unit'
+	String get form_unit => 'Unit';
+
+	/// en: 'Warn at (threshold)'
+	String get form_threshold => 'Warn at (threshold)';
+
+	/// en: 'Save'
+	String get form_save => 'Save';
+
+	/// en: 'Enter a supply name.'
+	String get err_name => 'Enter a supply name.';
+
+	/// en: 'Add supply'
+	String get add_to_task => 'Add supply';
+
+	/// en: 'New supply'
+	String get pick_new => 'New supply';
+
+	/// en: 'Amount used'
+	String get amount => 'Amount used';
+
+	/// en: 'Add'
+	String get add_confirm => 'Add';
 }
 
 // Path: settings
-class _Translations$settings$en extends Translations$settings$sl {
-	_Translations$settings$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$settings$en {
+	Translations$settings$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Settings';
-	@override String get profile_guest => 'Guest (not signed in)';
-	@override String get sign_in_prompt => 'Sign in to back up your data';
-	@override String get signed_in => 'Signed in — data backed up';
-	@override String get section_location => 'Location';
-	@override String get location_placeholder => 'Weather location';
-	@override String get section_language => 'Language';
-	@override String get section_notifications => 'Notifications';
-	@override String get notifications_placeholder => 'Notifications and reminders';
-	@override String get section_garden => 'Garden';
-	@override String get supplies => '📦 Supplies';
-	@override String get supplies_sub => 'urea, algae, fertilizers, gear';
-	@override String get section_account => 'Account & data';
-	@override String get export_data => 'Export data (GDPR)';
-	@override String get logout => 'Sign out';
-	@override String get logout_confirm_title => 'Sign out?';
-	@override String get logout_confirm_body => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.';
-	@override String get logout_cancel => 'Cancel';
-	@override String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
-	@override String get export_share_text => 'Tendask data export';
-	@override String get export_error => 'Export failed. Please try again.';
-	@override String get delete_account => 'Delete account and all data';
-	@override String get delete_account_confirm_title => 'Delete account?';
-	@override String get delete_account_confirm_body => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.';
-	@override String get delete_account_confirm => 'Delete account';
-	@override String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
+
+	/// en: 'Settings'
+	String get title => 'Settings';
+
+	/// en: 'Guest (not signed in)'
+	String get profile_guest => 'Guest (not signed in)';
+
+	/// en: 'Sign in to back up your data'
+	String get sign_in_prompt => 'Sign in to back up your data';
+
+	/// en: 'Signed in — data backed up'
+	String get signed_in => 'Signed in — data backed up';
+
+	/// en: 'Location'
+	String get section_location => 'Location';
+
+	/// en: 'Weather location'
+	String get location_placeholder => 'Weather location';
+
+	/// en: 'Language'
+	String get section_language => 'Language';
+
+	/// en: 'Notifications'
+	String get section_notifications => 'Notifications';
+
+	/// en: 'Notifications and reminders'
+	String get notifications_placeholder => 'Notifications and reminders';
+
+	/// en: 'Garden'
+	String get section_garden => 'Garden';
+
+	/// en: '📦 Supplies'
+	String get supplies => '📦 Supplies';
+
+	/// en: 'urea, algae, fertilizers, gear'
+	String get supplies_sub => 'urea, algae, fertilizers, gear';
+
+	/// en: 'Account & data'
+	String get section_account => 'Account & data';
+
+	/// en: 'Export data (GDPR)'
+	String get export_data => 'Export data (GDPR)';
+
+	/// en: 'Sign out'
+	String get logout => 'Sign out';
+
+	/// en: 'Sign out?'
+	String get logout_confirm_title => 'Sign out?';
+
+	/// en: 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.'
+	String get logout_confirm_body => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.';
+
+	/// en: 'Cancel'
+	String get logout_cancel => 'Cancel';
+
+	/// en: 'Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.'
+	String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
+
+	/// en: 'Tendask data export'
+	String get export_share_text => 'Tendask data export';
+
+	/// en: 'Export failed. Please try again.'
+	String get export_error => 'Export failed. Please try again.';
+
+	/// en: 'Delete account and all data'
+	String get delete_account => 'Delete account and all data';
+
+	/// en: 'Delete account?'
+	String get delete_account_confirm_title => 'Delete account?';
+
+	/// en: 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.'
+	String get delete_account_confirm_body => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.';
+
+	/// en: 'Delete account'
+	String get delete_account_confirm => 'Delete account';
+
+	/// en: 'Deletion failed. Try again when you're connected.'
+	String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
 }
 
 // Path: weather
-class _Translations$weather$en extends Translations$weather$sl {
-	_Translations$weather$en._(TranslationsEn root) : this._root = root, super.internal(root);
+class Translations$weather$en {
+	Translations$weather$en.internal(this._root);
 
-	final TranslationsEn _root; // ignore: unused_field
+	final Translations _root; // ignore: unused_field
 
 	// Translations
-	@override String get cond_clear => 'Clear';
-	@override String get cond_mainly_clear => 'Mostly clear';
-	@override String get cond_cloudy => 'Cloudy';
-	@override String get cond_fog => 'Fog';
-	@override String get cond_drizzle => 'Drizzle';
-	@override String get cond_rain => 'Rain';
-	@override String get cond_snow => 'Snow';
-	@override String get cond_showers => 'Showers';
-	@override String get cond_thunderstorm => 'Thunderstorm';
-	@override String get cond_unknown => '—';
-	@override String get band_forecast => 'Forecast';
-	@override String get rain_past48h => 'Rain last 48 h:';
-	@override String get detail_waiting => 'Weather will be recorded when you mark the task done.';
-	@override String get detail_none => 'No weather snapshot (captured offline).';
-	@override String get home_unavailable => 'Weather is currently unavailable.';
-	@override String get home_retry => 'Tap to retry';
+
+	/// en: 'Clear'
+	String get cond_clear => 'Clear';
+
+	/// en: 'Mostly clear'
+	String get cond_mainly_clear => 'Mostly clear';
+
+	/// en: 'Cloudy'
+	String get cond_cloudy => 'Cloudy';
+
+	/// en: 'Fog'
+	String get cond_fog => 'Fog';
+
+	/// en: 'Drizzle'
+	String get cond_drizzle => 'Drizzle';
+
+	/// en: 'Rain'
+	String get cond_rain => 'Rain';
+
+	/// en: 'Snow'
+	String get cond_snow => 'Snow';
+
+	/// en: 'Showers'
+	String get cond_showers => 'Showers';
+
+	/// en: 'Thunderstorm'
+	String get cond_thunderstorm => 'Thunderstorm';
+
+	/// en: '—'
+	String get cond_unknown => '—';
+
+	/// en: 'Forecast'
+	String get band_forecast => 'Forecast';
+
+	/// en: 'Rain last 48 h:'
+	String get rain_past48h => 'Rain last 48 h:';
+
+	/// en: 'Weather will be recorded when you mark the task done.'
+	String get detail_waiting => 'Weather will be recorded when you mark the task done.';
+
+	/// en: 'No weather snapshot (captured offline).'
+	String get detail_none => 'No weather snapshot (captured offline).';
+
+	/// en: 'Weather is currently unavailable.'
+	String get home_unavailable => 'Weather is currently unavailable.';
+
+	/// en: 'Tap to retry'
+	String get home_retry => 'Tap to retry';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -730,7 +1541,7 @@ class _Translations$weather$en extends Translations$weather$sl {
 ///
 /// The Dart AOT compiler has issues with very large switch statements,
 /// so the map is split into smaller functions (512 entries each).
-extension on TranslationsEn {
+extension on Translations {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'splash.tagline' => 'Your garden journal 🌿',

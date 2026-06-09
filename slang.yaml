@@ -1,4 +1,4 @@
-base_locale: sl
+base_locale: en
 fallback_strategy: base_locale
 # Eager-load all locales (3 small ones): lets plural resolvers register for
 # every locale up front and avoids deferred-library loading in tests.
