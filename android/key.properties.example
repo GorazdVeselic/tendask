@@ -1,0 +1,11 @@
+# Android release signing — kopiraj v android/key.properties in vnesi prave vrednosti.
+# key.properties je gitignored (skrivnost). Keystore (.jks) hrani IZVEN repa
+# (npr. domača mapa) in NAREDI VARNOSTNO KOPIJO — brez njega ne moreš več
+# objaviti posodobitve iste aplikacije na Play.
+#
+# storeFile: absolutna pot do .jks (npr. C:/Users/Uporabnik/keys/tendask-upload.jks)
+# ali relativna na mapo android/.
+storePassword=CHANGE_ME
+keyPassword=CHANGE_ME
+keyAlias=upload
+storeFile=CHANGE_ME_PATH_TO/tendask-upload.jks

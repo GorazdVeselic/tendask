@@ -10,6 +10,11 @@
 /dart_defines.json
 .env
 
+# Android release signing — keystore + gesla nikoli v repo (CLAUDE.md)
+/android/key.properties
+*.jks
+*.keystore
+
 # Miscellaneous
 *.class
 *.log
