@@ -9,6 +9,7 @@ import '../../../core/app_info.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
+import '../../../core/legal.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
@@ -231,6 +232,17 @@ class SettingsScreen extends ConsumerWidget {
                   onTap: () => unawaited(_deleteAccount(context, ref)),
                 ),
               ],
+            ),
+          ),
+
+          // About — public privacy policy (also the URL given to Play).
+          SectionLabel(t.settings.section_about),
+          Card(
+            child: ListTile(
+              leading: const Icon(Icons.privacy_tip_outlined),
+              title: Text(t.settings.privacy_policy),
+              trailing: const Icon(Icons.open_in_new, size: 18),
+              onTap: () => unawaited(openPrivacyPolicy()),
             ),
           ),
 

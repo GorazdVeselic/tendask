@@ -98,3 +98,7 @@ const kSuppliesEnabled = false;
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).
 const kSentryDsn = String.fromEnvironment('SENTRY_DSN');
+
+/// Public privacy policy (GDPR). Shown as a tappable link on the sign-in screen
+/// and in Settings; same URL is submitted to Play Console.
+const kPrivacyPolicyUrl = 'https://tendask.netlify.app/';

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
@@ -5,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/legal.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -156,6 +158,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   color: cs.onSurfaceVariant,
                 ),
                 textAlign: TextAlign.center,
+              ),
+              TextButton(
+                onPressed: () => unawaited(openPrivacyPolicy()),
+                child: Text(
+                  t.auth.privacy_link,
+                  style: const TextStyle(decoration: TextDecoration.underline),
+                ),
               ),
             ],
           ),
