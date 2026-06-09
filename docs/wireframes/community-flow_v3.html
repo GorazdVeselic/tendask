@@ -124,9 +124,10 @@
       opravilu). Vsak tap na opravilo od koderkoli vodi na <b>isti</b> per-opravilo zaslon → ni »izgubljanja« po podstraneh.
     </p>
     <div class="split">
-      Predlagana delitev (odprto): <b class="free">Brezplačno</b> = »Ta teden« feed (socialni dokaz / kavelj) ·
-      <b class="plus">Tendask+</b> = »Kje si ti« + časovni percentil + frekvenca + namigi okolice.
-      Ne-premium uporabnik vidi <b>tease</b> (vrednost zamegljena + odkleni).
+      <b class="plus">Celotna »Okolica« = Tendask+</b> (nič trajno brezplačnega; beleženje + jedro app ostanejo free in
+      hranijo agregat). Ne-naročnik vidi <b>tease</b> (predogled vrednosti + »Preizkusi 14 dni«). Preizkus:
+      <b>14 dni, brez kartice, uporabniško sprožen</b> (+ sezonske re-trial kampanje). Cena: <b class="plus">~9,99 €/leto</b>
+      (primarno) ali ~1,99 €/mes.
     </div>
   </div>
 
@@ -372,7 +373,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <div class="group-title">C · Ne-premium (tease) <span>vrednost vidiš, številke odkleneš</span></div>
+  <div class="group-title">C · Ne-naročnik (tease → preizkus) <span>celotna Okolica = Tendask+; predogled + »Preizkusi 14 dni«</span></div>
   <div class="grid">
 
     <!-- FREE LANDING -->
@@ -387,22 +388,24 @@
             <a class="block" href="#s-free-detail" style="flex:1;"><div class="seg">Kje si ti <span class="lk">🔒</span></div></a></div>
           <div class="scope-meta"><span class="dot"></span> zadnjih 7 dni · ~40 vrtnarjev v okolici</div>
 
-          <!-- feed = BREZPLAČEN kavelj -->
-          <div class="card" style="margin-top:12px;">
+          <!-- feed = PREDOGLED (tease, ne brezplačno): prva vrstica vab, ostalo zamegljeno -->
+          <div class="card locked" style="margin-top:12px;padding:6px 16px;overflow:hidden;">
             <div class="list-item"><div class="avatar">🍅</div><div class="li-main"><div class="li-title">Sajenje paradižnika</div></div><span class="qpill hi">pogosto</span></div>
-            <div class="list-item"><div class="avatar">🌾</div><div class="li-main"><div class="li-title">Prvo gnojenje trate</div></div><span class="qpill mid">nekaj</span></div>
-            <div class="list-item" style="border-bottom:none;"><div class="avatar">🌶️</div><div class="li-main"><div class="li-title">Sajenje paprike</div></div><span class="qpill hi">pogosto</span></div>
+            <div class="blur">
+              <div class="list-item"><div class="avatar">🌾</div><div class="li-main"><div class="li-title">Prvo gnojenje trate</div></div><span class="qpill mid">nekaj</span></div>
+              <div class="list-item" style="border-bottom:none;"><div class="avatar">🌶️</div><div class="li-main"><div class="li-title">Sajenje paprike</div></div><span class="qpill hi">pogosto</span></div>
+            </div>
           </div>
 
-          <!-- tease za premium vpoglede -->
+          <!-- glavni CTA: preizkus celotne Okolice -->
           <a class="block" href="#s-upgrade">
           <div class="tease-card" style="margin-top:6px;">
-            <span class="ti">🔒</span>
-            <div style="flex:1;"><div class="tt">Kje si ti glede na sosede?</div>
-              <div class="ts">Odkleni časovni percentil + frekvenco za vsako svoje opravilo.</div></div>
+            <span class="ti">⬡</span>
+            <div style="flex:1;"><div class="tt">Odkleni Okolico</div>
+              <div class="ts">Kaj sosedje delajo · kdaj · kje si ti · frekvenca. Preizkusi 14 dni (brez kartice).</div></div>
             <span style="color:#9a7416;font-weight:800;">›</span></div></a>
 
-          <div class="privacy-note"><span class="ico">🔒</span><span>»Ta teden« je brezplačno. Osebni vpogledi = Tendask+.</span></div>
+          <div class="privacy-note"><span class="ico">🔒</span><span>Celotna Okolica je del Tendask+. Beleženje (ki hrani agregat) ostaja brezplačno.</span></div>
         </div>
         <nav class="bottomnav nav5">
           <a class="block" href="#s-home"><div class="nav-item"><span class="ico">🏠</span>Domov</div></a>
@@ -412,8 +415,8 @@
           <div class="nav-item active"><span class="ico">⬡</span>Okolica</div>
         </nav>
       </div>
-      <div class="cap">C1 · Free landing (tease)
-        <small><span class="flowtag out">→ upgrade</span> Feed brezplačno (kavelj). »Kje si ti« ima 🔒; tease kartica vodi na upgrade.</small></div>
+      <div class="cap">C1 · Tease landing (ne-naročnik)
+        <small><span class="flowtag out">→ upgrade</span> Stalen zavihek (N1) → predogled »Ta teden« (prva vrstica vab, ostalo zamegljeno) + »Preizkusi 14 dni«.</small></div>
     </div>
 
     <!-- FREE DETAIL (LOCKED) -->
@@ -440,7 +443,7 @@
               <div class="ls">so del Tendask+ · beleženje ostaja brezplačno</div>
               <div class="minibtn">Odkleni</div></div>
           </div></a>
-          <div class="info-card"><span class="ico">⬡</span><div class="it"><b>Ta teden</b> v okolici: <b>nekaj</b> sosedov gnoji — to vidiš tudi brezplačno.</div></div>
+          <div class="info-card"><span class="ico">⬡</span><div class="it"><b>14-dnevni preizkus</b> odklene vse vpoglede te »Okolice« — brez kartice.</div></div>
         </div>
       </div>
       <div class="cap">C2 · Free detail (zaklenjeno / tease)
@@ -462,10 +465,10 @@
             <div class="benefit"><div class="bi">⏱</div><div><div class="bt">Kdaj začeti</div><div class="bs">»Kje si ti« glede na sosede — za vsako opravilo.</div></div></div>
             <div class="benefit"><div class="bi">📊</div><div><div class="bt">Kako pogosto</div><div class="bs">Tipična frekvenca opravil med vrtnarji.</div></div></div>
             <div class="benefit"><div class="bi">🔔</div><div><div class="bt">Namigi okolice</div><div class="bs">»Sosedje sadijo paradižnik«.</div></div></div>
-            <div class="benefit"><div class="bi">🔥</div><div><div class="bt">»Ta teden«</div><div class="bs">ostane brezplačno — to je tvoj kavelj.</div></div></div>
+            <div class="benefit"><div class="bi">🔥</div><div><div class="bt">»Ta teden«</div><div class="bs">kaj sosedje delajo zdaj (drseče 7-dnevno okno).</div></div></div>
           </div>
           <button class="btn" style="margin-top:8px;">Preizkusi 14 dni brezplačno</button>
-          <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">nato 1,99 € / mes · kadarkoli prekličeš</div>
+          <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">brez kartice · nato <b>9,99 €/leto</b> ali 1,99 €/mes · kadarkoli prekličeš</div>
         </div>
       </div>
       <div class="cap">C3 · Tendask+ (upgrade)
@@ -567,8 +570,9 @@
 
   <div class="hero" style="margin-top:50px;">
     <p style="font-size:13px;color:var(--muted);">
-      <b>Odprto za potrditev:</b> (1) delitev free/Tendask+ (predlog: »Ta teden« free, ostalo Tendask+);
-      (2) ali landing privzeto odpre »Ta teden« ali »Kje si ti«; (3) cena/preizkus. Vrednosti vzorčne.
+      <b>Potrjeno (2026-06-09):</b> celotna Okolica = Tendask+; 14-dnevni preizkus (uporabniško sprožen, brez kartice)
+      + sezonske re-trial kampanje; cena ~9,99 €/leto (primarno) ali ~1,99 €/mes; stalen zavihek (N1) s tease za
+      ne-naročnike; landing privzeto »Ta teden«. Cene/vrednosti vzorčne (potrditi ob trgovinski objavi).
     </p>
   </div>
 

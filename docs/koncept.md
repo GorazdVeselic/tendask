@@ -822,7 +822,11 @@ eksplicitne zvezdice (manipulabilno, oslabi "opisno ne predpisno"); raje implici
 - [x] **Monetizacija — smer določena:** **free za osnovno uporabo; plačljivost dodamo
       šele ob uvedbi premium funkcij** (vpogledi/percentili). **Brez oglasov** (kolizija z
       zasebnostjo + UX). Prioriteta = gostota skupnosti; nikoli ne zaračunamo *beleženja*.
-      Dolgoročni vzvod = agregirana anonimizirana baza (B2B, GDPR-čisto). Cene/Pro paket = kasneje.
+      Dolgoročni vzvod = agregirana anonimizirana baza (B2B, GDPR-čisto).
+- [x] **Tendask+ model DOREČEN (2026-06-09, podrobno v `skupnost-agregacija.md §12.5`):** prvi premium
+      paket = **celotna »Okolica«** (skupnostni vpogledi) — nič trajno free; **14-dnevni preizkus**
+      (uporabniško sprožen, brez kartice) + sezonske re-trial kampanje; **~9,99 €/leto** (primarno) ali
+      ~1,99 €/mes; stalen zavihek s tease za ne-naročnike; privzeti pogled »Ta teden«. Cene vzorčne (potrditi ob objavi).
 - [x] **Dokončno ime = „Tendask"** (domeni kupljeni). [ ] Preostane: preverba znamke (EUIPO/SIPO, razreda 9/42 + App Store/Play).
 
 ---

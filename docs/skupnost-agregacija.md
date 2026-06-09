@@ -400,11 +400,23 @@ Naprava enkrat na dan potegne rezino agregata za svoje vedro in jo shrani v drif
 ponovna odprtja berejo lokalno (0 oblaka), pogled deluje offline, ujame se z nočnim ritmom crona.
 Realna obremenitev ≈ **1 majhen pull / uporabnik / dan + 1 cron / noč skupno** → daleč pod free limiti.
 
-### 12.5 Monetizacija (PREDLOG, odprto)
-- **Brezplačno:** »Ta teden« feed (socialni dokaz / kavelj) + da agregat sploh raste.
-- **Tendask+:** »Kje si ti«, časovni percentil, frekvenca, namigi okolice.
-- Ne-premium vidi **tease** (vrednost zamegljena + »odkleni«). **Beleženje ostaja vedno brezplačno.**
-- Odprto: cena/preizkus; ali landing privzeto odpre »Ta teden« ali »Kje si ti«.
+### 12.5 Monetizacija (POTRJENO 2026-06-09)
+- **Celotna »Okolica« = Tendask+** (plačljivo) — **nič trajno brezplačnega** znotraj funkcije. Jedro
+  aplikacije (beleženje, vreme, opomniki) ostane brezplačno; **beleženje hrani agregat**, zato gostota
+  (prioriteta) ni ogrožena — gradijo jo brezplačni beležniki, ne plačniki pogleda.
+- **Preizkus:** 14 dni, **uporabniško sprožen, brez kartice**, pametno spodbujen (dovolj opravil +
+  dovolj sosedov + aktivna sezona, da preizkus pristane, ko lahko navduši).
+- **Sezonske re-trial kampanje** (pomlad/jesen, ko je vnosov največ): ponovni 14-dnevni preizkus
+  ne-naročnikom. Rabi server-side trial-eligibility zastavico/kampanjsko kodo; **kapica ~2×/leto**;
+  cilj = ne-naročniki/potekli (NIKOLI aktivni naročniki → prepreči devalvacijo); kanal in-app + push.
+- **Cena:** **letno ~9,99 €** (primarno) + **mesečno ~1,99 €** (nizko-pražna opcija). Letno ujame
+  sezonsko rabo in se izogne zimskemu odpovedovanju. (Cene vzorčne; potrditi ob trgovinski objavi.)
+- **Tease (ne-naročnik):** stalen **5. zavihek »Okolica« (⬡) za vse** (N1) → okusen tease landing
+  (predogled »Ta teden«: prva vrstica vab, ostalo zamegljeno) + »Preizkusi 14 dni«; zaklenjen per-opravilo
+  detajl (zamegljeno + odkleni). Tab je glavna upsell površina.
+- **Privzeti pogled landinga = »Ta teden«** (vedno poln → najboljši prvi vtis + najmočnejši tease).
+- Skladno z zapisano strategijo (koncept §9 TODO): brez oglasov; nikoli ne zaračunamo beleženja;
+  dolgoročni vzvod = agregirana anonimna baza (B2B).
 
 ---
 
