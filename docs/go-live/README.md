@@ -6,7 +6,8 @@
 > **Legenda:** ✅ narejeno · ⏳ čaka/blokirano · 👤 tvoj korak · 🤖 lahko jaz (koda/dokument) · ⬜ odprto
 >
 > Povezani dokumenti: [`store-listing.md`](store-listing.md) · [`content-rating.md`](content-rating.md) ·
-> [`assets/`](assets/) · [`../legal/privacy-policy.md`](../legal/privacy-policy.md) ·
+> [`testing-plan.md`](testing-plan.md) · [`sentry-symbols.md`](sentry-symbols.md) · [`assets/`](assets/) ·
+> [`../legal/privacy-policy.md`](../legal/privacy-policy.md) ·
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md).
 > **Politika zasebnosti (živa):** https://tendask.netlify.app/
 
@@ -98,17 +99,21 @@
   Cloud (isti projekt kot `serverClientId`). *Brez tega Google login na Play buildu ne dela.*
 - [ ] ⏳ 👤 **Google login** na release buildu (po propagaciji SHA-1).
 - [ ] ⏳ 👤 **Email OTP** na poljuben naslov (tendask.com verificiran).
-- [ ] ⏳ 👤 **GDPR izvoz** (share sheet) + **dejanski izbris računa** (RPC počisti oblak).
+- [ ] ⏳ 👤 **GDPR izvoz** (share sheet) + **dejanski izbris računa** (RPC počisti oblak) — koraki:
+  [`gdpr-verify.md`](gdpr-verify.md) (čaka priklopljeno napravo).
 - [ ] ⏳ 👤 Splash → Domov, vreme, sync, opomniki — splošni smoke test.
 
 ---
 
 ## Faza 7 — Pred PRODUKCIJO (kasneje, ko se odločiš za javno objavo)
 
-- [ ] ⬜ 🤖 **Sentry debug symbols upload** (rabi `sentry-cli` + auth token) — za berljive release stacktrace.
+- [x] ✅ 🤖 **Sentry debug symbols** — analiza: **N/A za MVP** (pure-Dart `sentry` → release ni
+  obfusciran, stacktrace že berljiv; simbolikacija bi rabila `sentry_flutter`). Glej
+  [`sentry-symbols.md`](sentry-symbols.md). NE dodajaj `--obfuscate`.
 - [ ] ⬜ 🤖 Flip `kVersionChannel` `' (beta)'` → `''` (`core/config.dart`) za produkcijsko verzijo.
 - [ ] ⬜ 👤 **Zaprti test 12 testerjev × 14 dni** — Googlova zahteva za **osebne** račune pred dostopom
-  do produkcije (NE velja za interni test). Načrtuj zgodaj.
+  do produkcije (NE velja za interni test). Načrtuj zgodaj — plan + predloge sporočil:
+  [`testing-plan.md`](testing-plan.md).
 - [ ] ⬜ 👤 Dvigni `versionCode` (`pubspec version: 1.0.0+2`) ob vsakem novem uploadu.
 - [ ] ⬜ 👤 Production release + postopen rollout.
 
