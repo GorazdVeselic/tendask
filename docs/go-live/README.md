@@ -5,8 +5,9 @@
 > **čaka na preverjanje identitete** (blokira ustvarjanje aplikacije).
 > **Legenda:** ✅ narejeno · ⏳ čaka/blokirano · 👤 tvoj korak · 🤖 lahko jaz (koda/dokument) · ⬜ odprto
 >
-> Povezani dokumenti: [`store-listing.md`](store-listing.md) · [`content-rating.md`](content-rating.md) ·
-> [`testing-plan.md`](testing-plan.md) · [`sentry-symbols.md`](sentry-symbols.md) · [`assets/`](assets/) ·
+> Povezani dokumenti: [`store-listing.md`](store-listing.md) · [`release-notes.md`](release-notes.md) ·
+> [`content-rating.md`](content-rating.md) · [`testing-plan.md`](testing-plan.md) ·
+> [`sentry-symbols.md`](sentry-symbols.md) · [`assets/`](assets/) ·
 > [`../legal/privacy-policy.md`](../legal/privacy-policy.md) ·
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md).
 > **Politika zasebnosti (živa):** https://tendask.netlify.app/
@@ -43,6 +44,10 @@
   [`assets/README.md`](assets/README.md).
 - [x] ✅ 🤖 `targetSdkVersion` = `flutter.targetSdkVersion` (Flutterjev privzeti, pri tem skladu
   ≥34 — AAB se je uspešno zgradil). Ustreza Play minimumu; če bi bil prenizek, Play to javi ob uploadu.
+- [x] ✅ 🤖 **In-app povezava do politike zasebnosti** (`url_launcher`) — prijava (pod pravnim
+  besedilom) + Nastavitve → »Privacy policy« → odpre `https://tendask.netlify.app/`.
+- [x] ✅ 🤖 **Release-readiness pregled** (0 blokerjev) → popravljen `android:allowBackup="false"`
+  (zasebnost: lokalna DB se ne kopira v Drive). Release notes pripravljene.
 
 ---
 
@@ -52,7 +57,7 @@
   (default/fallback; SL+DE dodaš kot prevoda), tip **App**, **Free**, potrdi deklaracije.
 - [ ] ⏳ 👤 **Testing → Internal testing → Create new release**.
 - [ ] ⏳ 👤 Upload `app-release.aab` (drag-drop). Release name = `1.0.0 (1)`.
-- [ ] ⏳ 👤 Release notes (kratko, npr. »Prva interna različica.«).
+- [ ] ⏳ 👤 Release notes — iz [`release-notes.md`](release-notes.md) (v1.0.0, SL/EN/DE).
 
 ---
 
