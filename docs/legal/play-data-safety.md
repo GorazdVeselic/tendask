@@ -1,0 +1,82 @@
+# Tendask — Play Console »Data Safety« mapiranje
+
+> **Osnutek za pregled (2026-06-09).** Pripravljeni odgovori za Play Console → App content →
+> **Data safety** obrazec. Vsaka vrstica = en podatkovni tip v Googlovem obrazcu, z razlago, zakaj
+> tak odgovor. **Vir resnice za dejstva = `privacy-policy.md` + koda** (Open-Meteo dobi koordinate;
+> v oblak gre le H3; Supabase EU; Sentry diagnostika; Google/Resend).
+>
+> Legenda stolpcev (kot v obrazcu): **Collected** = podatek zapusti napravo (na naš strežnik / se
+> hrani) · **Shared** = preneseno tretji osebi · **Ephemeral** = obdelan le v pomnilniku za zahtevo,
+> ne shranjen · **Required/Optional** = ali ga app nujno zbira ali le ob privolitvi/prijavi.
+
+---
+
+## 1. Splošno (uvodna vprašanja obrazca)
+
+| Vprašanje | Odgovor | Opomba |
+|---|---|---|
+| Does your app collect or share any of the required user data types? | **Yes** | Email, lokacija, diagnostika, vsebina. |
+| Is all of the user data encrypted in transit? | **Yes** | Vse prek HTTPS/TLS (Supabase, Open-Meteo, Sentry, Google). |
+| Do you provide a way for users to request that their data be deleted? | **Yes** | V aplikaciji: Nastavitve → izbris računa (kaskadno počisti oblak) + lokalni clear. Dodatno e-pošta `gorazd@spletnakoda.si`. |
+
+---
+
+## 2. Podatkovni tipi
+
+### Location
+
+| Tip | Collected | Shared | Ephemeral | Required/Optional | Namen (purposes) | Pojasnilo |
+|---|---|---|---|---|---|---|
+| **Approximate location** | **Yes** | No | No | **Optional** | App functionality | V oblak (Supabase, EU) shranimo le celico **H3 (~1 km)**, ne koordinat. Le ob prijavi + dovoljenju za lokacijo. |
+| **Precise location** | **Yes** | **Yes** | **Yes** | **Optional** | App functionality | Natančne koordinate gredo **samo Open-Meteo** za vreme; **ne shranimo jih** (ne lokalno za prenos, ne v oblak). Zato shared+ephemeral. |
+
+> ⚠️ **Edina prava presoja v tem obrazcu = precise location.** Koordinate ne zapustijo naprave za
+> _shranjevanje_, a se _pošljejo_ Open-Meteo ob vsakem vremenskem klicu. Pošteno (in skladno z
+> Googlovo definicijo »collected« = zapusti napravo) je to prijaviti kot **Collected: Yes, Shared:
+> Yes (Open-Meteo), Processed ephemerally: Yes**. Tako se ujema s politiko zasebnosti §2/§5.
+
+### Personal info
+
+| Tip | Collected | Shared | Required/Optional | Namen | Pojasnilo |
+|---|---|---|---|---|---|
+| **Email address** | **Yes** | No | **Optional** | Account management, App functionality | Le ob prijavi s kodo (gost brez računa dela brez nje). Dostava kode prek Resend (obdelovalec), ne »sharing« za njihove namene. |
+| **User IDs** | **Yes** | No | **Optional** | Account management, App functionality | Supabase `user_id` (in identifikator Google računa ob Google prijavi). Le ob prijavi. |
+
+### App activity / App info and performance
+
+| Tip | Collected | Shared | Required/Optional | Namen | Pojasnilo |
+|---|---|---|---|---|---|
+| **Crash logs** | **Yes** | **Yes** | Required | Analytics, App functionality (stabilnost) | Sentry ob sesutju/napaki (sled klicev, kontekst). |
+| **Diagnostics** | **Yes** | **Yes** | Required | Analytics | Sentry: različica aplikacije, tip naprave/OS. |
+
+### Other / app content
+
+| Tip | Collected | Shared | Required/Optional | Namen | Pojasnilo |
+|---|---|---|---|---|---|
+| **Other user-generated content** (vrtni dnevnik: opravila, opombe, rastline, območja) | **Yes** | No | **Optional** | App functionality | Sinhronizira se v oblak (Supabase, EU) **le ob prijavi**; brez računa ostane na napravi. Izbor »Other« — Google nima namenske kategorije za vrtne zapise. |
+
+---
+
+## 3. Security practices (zadnja sekcija obrazca)
+
+| Vprašanje | Odgovor |
+|---|---|
+| Data is encrypted in transit | **Yes** (HTTPS/TLS povsod) |
+| Users can request that data be deleted | **Yes** (v aplikaciji + e-pošta) |
+| Independent security review | **No** |
+| Committed to Google Play Families Policy | **No** (ni namenjeno otrokom <16) |
+
+---
+
+## 4. Povzetek za hitro izpolnjevanje
+
+- **Email, User IDs** → collected, NOT shared, optional, account management.
+- **Approximate location** → collected (H3), NOT shared, optional, app functionality.
+- **Precise location** → collected + **shared (Open-Meteo)** + **ephemeral**, optional, app functionality.
+- **Crash logs + Diagnostics** → collected + **shared (Sentry)**, required, analytics.
+- **Vrtna vsebina** → collected (Other UGC), NOT shared, optional, app functionality.
+- **Encryption in transit: Yes · Deletion available: Yes.**
+
+> Tretje osebe, ki prejmejo podatke (za »shared«): **Open-Meteo** (precise location), **Sentry**
+> (crash/diagnostics). **Supabase** in **Resend** sta _obdelovalca_ v našem imenu (hramba/dostava),
+> ne »sharing« v Googlovem pomenu — Supabase shranjuje, zato so tipi »collected«.

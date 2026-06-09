@@ -1,0 +1,353 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tendask — Politika zasebnosti / Privacy Policy / Datenschutzerklärung</title>
+<meta name="robots" content="index,follow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --green: #2e7d32;
+    --honey: #E0A82E;
+    --ink: #1c2419;
+    --muted: #5c6b58;
+    --bg: #f7f9f5;
+    --card: #ffffff;
+    --line: #e3e9de;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Plus Jakarta Sans", system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    color: var(--ink);
+    background: var(--bg);
+    line-height: 1.6;
+  }
+  header {
+    background: linear-gradient(135deg, var(--green), #256528);
+    color: #fff;
+    padding: 40px 20px 28px;
+    text-align: center;
+  }
+  header h1 { margin: 0 0 6px; font-size: 1.5rem; font-weight: 700; }
+  header p { margin: 0; opacity: .9; font-size: .9rem; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 24px 20px 64px; }
+  .langbar {
+    display: flex; gap: 8px; justify-content: center;
+    margin: 22px 0 8px; flex-wrap: wrap;
+  }
+  .langbar button {
+    font: inherit; font-weight: 600; cursor: pointer;
+    border: 1px solid var(--line); background: var(--card); color: var(--muted);
+    padding: 8px 16px; border-radius: 999px;
+  }
+  .langbar button.active { background: var(--green); color: #fff; border-color: var(--green); }
+  section.lang { display: none; }
+  section.lang.active { display: block; }
+  article {
+    background: var(--card); border: 1px solid var(--line);
+    border-radius: 14px; padding: 22px 24px; margin-top: 18px;
+  }
+  h2 { color: var(--green); font-size: 1.05rem; margin: 0 0 6px; }
+  h2 .num {
+    display: inline-block; min-width: 1.4em; color: var(--honey); font-weight: 700;
+  }
+  article + article { margin-top: 14px; }
+  a { color: var(--green); }
+  ul { margin: 8px 0 0; padding-left: 20px; }
+  li { margin: 4px 0; }
+  .meta { color: var(--muted); font-size: .85rem; text-align: center; margin-top: 4px; }
+  strong { font-weight: 700; }
+  footer { text-align: center; color: var(--muted); font-size: .8rem; padding: 0 20px 40px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Tendask</h1>
+  <p>Politika zasebnosti · Privacy Policy · Datenschutzerklärung</p>
+</header>
+
+<div class="wrap">
+  <div class="langbar">
+    <button data-lang="sl" class="active">Slovenščina</button>
+    <button data-lang="en">English</button>
+    <button data-lang="de">Deutsch</button>
+  </div>
+  <p class="meta">Datum uveljavitve / Effective date / Datum des Inkrafttretens: 2026-06-09 · v1.0</p>
+
+  <!-- ================= SLOVENŠČINA ================= -->
+  <section class="lang active" id="sl">
+    <article>
+      <h2><span class="num">1.</span>Upravljavec podatkov</h2>
+      <p>Upravljavec osebnih podatkov je <strong>Gorazd Veselic</strong> (fizična oseba). Kontakt za
+      vprašanja o zasebnosti in uveljavljanje pravic: <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>.</p>
+    </article>
+    <article>
+      <h2><span class="num">2.</span>Načelo: zasebnost po zasnovi</h2>
+      <p>Tendask je vrtnarska evidenčna aplikacija, ki deluje <strong>offline-first</strong> — tvoji
+      podatki živijo najprej na napravi. V oblak (Supabase, strežniki v EU) se sinhronizirajo le, če
+      se prijaviš z računom; brez prijave ostanejo izključno na napravi.</p>
+      <p><strong>Tvoje natančne lokacijske koordinate (GPS) nikoli ne zapustijo naprave za
+      shranjevanje.</strong> Iz koordinat na napravi izračunamo le približno celico (sistem H3,
+      ločljivost ~1 km) in v oblak shranimo <strong>samo to celico</strong>, nikoli surovih
+      koordinat. (Izjema je vremenska storitev — glej §5.)</p>
+    </article>
+    <article>
+      <h2><span class="num">3.</span>Kateri podatki se obdelujejo</h2>
+      <ul>
+        <li><strong>Podatki računa (ob prijavi):</strong> e-poštni naslov (za prijavo s kodo) oz.
+        identifikator Google računa. Brez prijave teh podatkov ni.</li>
+        <li><strong>Vsebina vrta:</strong> opravila, območja, rastline, opombe, opomniki, nastavitve
+        obvestil. Brez prijave samo na napravi; ob prijavi sinhronizacija v oblak.</li>
+        <li><strong>Približna lokacija:</strong> celice H3 (≈ 1 km in širše), izpeljane na napravi.
+        Natančne koordinate so shranjene <strong>samo lokalno</strong> in se uporabljajo le za vreme.</li>
+        <li><strong>Diagnostični podatki (Sentry):</strong> ob napaki poročilo o napaki, sled klicev,
+        različica aplikacije ter tip naprave/OS. Za stabilnost, ne identifikacijo.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">4.</span>Nameni obdelave in pravna podlaga (čl. 6 GDPR)</h2>
+      <ul>
+        <li><strong>Zagotavljanje storitve</strong> (vrtni dnevnik, sinhronizacija) — pogodba (čl. 6(1)(b)).</li>
+        <li><strong>Lokacija in obvestila</strong> — privolitev (čl. 6(1)(a)); prek sistemskih
+        dovoljenj, preklicljiva kadar koli.</li>
+        <li><strong>Diagnostika in varnost</strong> — zakoniti interes (čl. 6(1)(f)).</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">5.</span>Tretje osebe (obdelovalci in storitve)</h2>
+      <ul>
+        <li><strong>Supabase</strong> (avtentikacija in baza), strežniki v <strong>EU (Frankfurt)</strong>.
+        Shranjuje: e-pošto, celice H3, vsebino vrta, nastavitve obvestil. Koordinate se ne pošiljajo.</li>
+        <li><strong>Open-Meteo</strong> (vreme in geokodiranje). Ob vremenu se pošljejo <strong>natančne
+        koordinate</strong>, ob iskanju kraja vpisano ime kraja. Podatki se ne hranijo; brez računa.</li>
+        <li><strong>Sentry</strong> (diagnostika napak). Lahko obdeluje podatke izven EU (ZDA) na podlagi
+        standardnih pogodbenih klavzul.</li>
+        <li><strong>Google</strong> (prijava z Google računom — neobvezno). Izmenjava prijavnega žetona.</li>
+        <li><strong>Resend</strong> (dostava e-pošte s prijavno kodo z <code>no-reply@tendask.com</code>).
+        Prejme naslov prejemnika.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">6.</span>Hramba podatkov</h2>
+      <p>Podatki računa in vrta se hranijo, dokler obstaja tvoj račun. Ob izbrisu računa (§7) se oblačni
+      podatki nepovratno izbrišejo (kaskadni izbris). Lokalni podatki ostanejo na napravi do odjave ali
+      odstranitve aplikacije. Diagnostični podatki se hranijo omejen čas skladno s politiko Sentry.</p>
+    </article>
+    <article>
+      <h2><span class="num">7.</span>Tvoje pravice</h2>
+      <p>Skladno z GDPR imaš pravico do dostopa, popravka, izbrisa, omejitve in prenosljivosti ter do
+      ugovora obdelavi. V aplikaciji neposredno:</p>
+      <ul>
+        <li><strong>Izvoz podatkov</strong> (Nastavitve → izvoz) — vsi podatki v datoteki JSON.</li>
+        <li><strong>Izbris računa</strong> (Nastavitve → izbris računa) — nepovraten izbris oblačnih
+        podatkov + počiščenje lokalne baze.</li>
+      </ul>
+      <p>Za ostale zahteve piši na <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>.
+      Pritožbo lahko vložiš pri Informacijskem pooblaščencu RS (<a href="https://www.ip-rs.si">ip-rs.si</a>).</p>
+    </article>
+    <article>
+      <h2><span class="num">8.</span>Otroci</h2>
+      <p>Aplikacija ni namenjena otrokom, mlajšim od 16 let, in jih ciljno ne obravnava.</p>
+    </article>
+    <article>
+      <h2><span class="num">9.</span>Spremembe</h2>
+      <p>Politiko lahko posodobimo; o bistvenih spremembah obvestimo prek aplikacije ali objave na tej
+      strani. Velja zadnja objavljena različica z datumom uveljavitve.</p>
+    </article>
+  </section>
+
+  <!-- ================= ENGLISH ================= -->
+  <section class="lang" id="en">
+    <article>
+      <h2><span class="num">1.</span>Data controller</h2>
+      <p>The controller of personal data is <strong>Gorazd Veselic</strong> (a natural person). Contact
+      for privacy questions and exercising your rights:
+      <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>.</p>
+    </article>
+    <article>
+      <h2><span class="num">2.</span>Principle: privacy by design</h2>
+      <p>Tendask is a garden-logging app that is <strong>offline-first</strong> — your data lives on your
+      device first. It is synced to the cloud (Supabase, servers in the EU) only if you sign in with an
+      account; without an account it stays solely on your device.</p>
+      <p><strong>Your precise location coordinates (GPS) never leave the device for storage.</strong> From
+      the coordinates we compute only an approximate cell on-device (H3 system, ~1 km resolution) and
+      store <strong>only that cell</strong> in the cloud — never raw coordinates. (The weather service is
+      an exception — see §5.)</p>
+    </article>
+    <article>
+      <h2><span class="num">3.</span>Data we process</h2>
+      <ul>
+        <li><strong>Account data (when signed in):</strong> email address (for code sign-in) or a Google
+        account identifier. None of this exists without signing in.</li>
+        <li><strong>Garden content:</strong> tasks, areas, plants, notes, reminders, notification
+        settings. Without an account this stays on the device; when signed in it syncs to the cloud.</li>
+        <li><strong>Approximate location:</strong> H3 cells (≈ 1 km and coarser), derived on-device.
+        Precise coordinates are stored <strong>locally only</strong> and used solely for weather.</li>
+        <li><strong>Diagnostic data (Sentry):</strong> on an error, an error report, stack trace, app
+        version and device/OS type. For stability, not identification.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">4.</span>Purposes and legal basis (Art. 6 GDPR)</h2>
+      <ul>
+        <li><strong>Providing the service</strong> (garden log, syncing) — contract (Art. 6(1)(b)).</li>
+        <li><strong>Location and notifications</strong> — consent (Art. 6(1)(a)); via system permissions,
+        withdrawable at any time.</li>
+        <li><strong>Diagnostics and security</strong> — legitimate interest (Art. 6(1)(f)).</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">5.</span>Third parties (processors and services)</h2>
+      <ul>
+        <li><strong>Supabase</strong> (authentication and database), servers in the
+        <strong>EU (Frankfurt)</strong>. Stores: email, H3 cells, garden content, notification settings.
+        No coordinates are sent.</li>
+        <li><strong>Open-Meteo</strong> (weather and geocoding). Fetching weather sends <strong>precise
+        coordinates</strong>; searching a place sends the typed place name. Data is not retained; no
+        account.</li>
+        <li><strong>Sentry</strong> (error diagnostics). May process data outside the EU (US) under
+        Standard Contractual Clauses.</li>
+        <li><strong>Google</strong> (Google sign-in — optional). Performs a token exchange.</li>
+        <li><strong>Resend</strong> (delivery of sign-in code emails from <code>no-reply@tendask.com</code>).
+        Receives the recipient address.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">6.</span>Data retention</h2>
+      <p>Account and garden data are kept while your account exists. Deleting your account (§7)
+      irreversibly deletes cloud data (cascade delete). Local data remains on the device until you sign
+      out or remove the app. Diagnostic data is retained for a limited period per Sentry's policy.</p>
+    </article>
+    <article>
+      <h2><span class="num">7.</span>Your rights</h2>
+      <p>Under the GDPR you have the right to access, rectification, erasure, restriction and portability,
+      and to object to processing. Directly available in the app:</p>
+      <ul>
+        <li><strong>Data export</strong> (Settings → export) — all your data in a JSON file.</li>
+        <li><strong>Account deletion</strong> (Settings → delete account) — irreversible deletion of
+        cloud data + wiping the local database.</li>
+      </ul>
+      <p>For other requests email <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>. You may
+      also lodge a complaint with your local supervisory authority.</p>
+    </article>
+    <article>
+      <h2><span class="num">8.</span>Children</h2>
+      <p>The app is not intended for, and does not target, children under 16.</p>
+    </article>
+    <article>
+      <h2><span class="num">9.</span>Changes</h2>
+      <p>We may update this policy; material changes will be announced in the app or on this page. The
+      latest published version with its effective date always applies.</p>
+    </article>
+  </section>
+
+  <!-- ================= DEUTSCH ================= -->
+  <section class="lang" id="de">
+    <article>
+      <h2><span class="num">1.</span>Verantwortlicher</h2>
+      <p>Verantwortlicher für die Verarbeitung personenbezogener Daten ist <strong>Gorazd Veselic</strong>
+      (natürliche Person). Kontakt für Datenschutzfragen und die Ausübung Ihrer Rechte:
+      <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>.</p>
+    </article>
+    <article>
+      <h2><span class="num">2.</span>Grundsatz: Datenschutz durch Technikgestaltung</h2>
+      <p>Tendask ist eine App zur Gartendokumentation und arbeitet <strong>offline-first</strong> — Ihre
+      Daten liegen zuerst auf Ihrem Gerät. Eine Synchronisierung in die Cloud (Supabase, Server in der EU)
+      erfolgt nur, wenn Sie sich mit einem Konto anmelden; ohne Konto bleiben sie ausschließlich auf dem
+      Gerät.</p>
+      <p><strong>Ihre genauen Standortkoordinaten (GPS) verlassen das Gerät niemals zur
+      Speicherung.</strong> Aus den Koordinaten berechnen wir auf dem Gerät nur eine ungefähre Zelle
+      (H3-System, ~1 km Auflösung) und speichern <strong>nur diese Zelle</strong> in der Cloud — niemals
+      Rohkoordinaten. (Ausnahme: der Wetterdienst — siehe §5.)</p>
+    </article>
+    <article>
+      <h2><span class="num">3.</span>Verarbeitete Daten</h2>
+      <ul>
+        <li><strong>Kontodaten (bei Anmeldung):</strong> E-Mail-Adresse (für die Code-Anmeldung) bzw. eine
+        Google-Konto-Kennung. Ohne Anmeldung existieren diese Daten nicht.</li>
+        <li><strong>Garteninhalte:</strong> Aufgaben, Bereiche, Pflanzen, Notizen, Erinnerungen,
+        Benachrichtigungseinstellungen. Ohne Konto nur auf dem Gerät; bei Anmeldung Synchronisierung in
+        die Cloud.</li>
+        <li><strong>Ungefährer Standort:</strong> H3-Zellen (≈ 1 km und gröber), auf dem Gerät abgeleitet.
+        Genaue Koordinaten werden <strong>nur lokal</strong> gespeichert und ausschließlich für das Wetter
+        verwendet.</li>
+        <li><strong>Diagnosedaten (Sentry):</strong> bei einem Fehler ein Fehlerbericht, Stacktrace,
+        App-Version sowie Geräte-/OS-Typ. Für Stabilität, nicht Identifizierung.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">4.</span>Zwecke und Rechtsgrundlage (Art. 6 DSGVO)</h2>
+      <ul>
+        <li><strong>Bereitstellung des Dienstes</strong> (Gartentagebuch, Synchronisierung) — Vertrag
+        (Art. 6(1)(b)).</li>
+        <li><strong>Standort und Benachrichtigungen</strong> — Einwilligung (Art. 6(1)(a)); über
+        Systemberechtigungen, jederzeit widerrufbar.</li>
+        <li><strong>Diagnose und Sicherheit</strong> — berechtigtes Interesse (Art. 6(1)(f)).</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">5.</span>Dritte (Auftragsverarbeiter und Dienste)</h2>
+      <ul>
+        <li><strong>Supabase</strong> (Authentifizierung und Datenbank), Server in der
+        <strong>EU (Frankfurt)</strong>. Speichert: E-Mail, H3-Zellen, Garteninhalte,
+        Benachrichtigungseinstellungen. Es werden keine Koordinaten gesendet.</li>
+        <li><strong>Open-Meteo</strong> (Wetter und Geokodierung). Beim Wetter werden <strong>genaue
+        Koordinaten</strong> gesendet, bei der Ortssuche der eingegebene Ortsname. Die Daten werden nicht
+        gespeichert; kein Konto.</li>
+        <li><strong>Sentry</strong> (Fehlerdiagnose). Kann Daten außerhalb der EU (USA) auf Grundlage von
+        Standardvertragsklauseln verarbeiten.</li>
+        <li><strong>Google</strong> (Google-Anmeldung — optional). Token-Austausch.</li>
+        <li><strong>Resend</strong> (Zustellung der Anmelde-Code-E-Mails von
+        <code>no-reply@tendask.com</code>). Erhält die Empfängeradresse.</li>
+      </ul>
+    </article>
+    <article>
+      <h2><span class="num">6.</span>Speicherdauer</h2>
+      <p>Konto- und Gartendaten werden gespeichert, solange Ihr Konto besteht. Beim Löschen des Kontos
+      (§7) werden die Cloud-Daten unwiderruflich gelöscht (kaskadierende Löschung). Lokale Daten verbleiben
+      auf dem Gerät bis zur Abmeldung oder Entfernung der App. Diagnosedaten werden gemäß der
+      Sentry-Richtlinie für einen begrenzten Zeitraum aufbewahrt.</p>
+    </article>
+    <article>
+      <h2><span class="num">7.</span>Ihre Rechte</h2>
+      <p>Nach der DSGVO haben Sie das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung und
+      Übertragbarkeit sowie auf Widerspruch. Direkt in der App verfügbar:</p>
+      <ul>
+        <li><strong>Datenexport</strong> (Einstellungen → Export) — alle Ihre Daten in einer JSON-Datei.</li>
+        <li><strong>Kontolöschung</strong> (Einstellungen → Konto löschen) — unwiderrufliche Löschung der
+        Cloud-Daten + Bereinigung der lokalen Datenbank.</li>
+      </ul>
+      <p>Für weitere Anfragen schreiben Sie an
+      <a href="mailto:gorazd@spletnakoda.si">gorazd@spletnakoda.si</a>. Sie können auch Beschwerde bei der
+      zuständigen Aufsichtsbehörde einlegen.</p>
+    </article>
+    <article>
+      <h2><span class="num">8.</span>Kinder</h2>
+      <p>Die App ist nicht für Kinder unter 16 Jahren bestimmt und richtet sich nicht an diese.</p>
+    </article>
+    <article>
+      <h2><span class="num">9.</span>Änderungen</h2>
+      <p>Wir können diese Richtlinie aktualisieren; über wesentliche Änderungen informieren wir in der App
+      oder auf dieser Seite. Es gilt stets die zuletzt veröffentlichte Fassung.</p>
+    </article>
+  </section>
+
+  <footer>© 2026 Tendask · Gorazd Veselic</footer>
+</div>
+
+<script>
+  const buttons = document.querySelectorAll('.langbar button');
+  const sections = document.querySelectorAll('section.lang');
+  buttons.forEach(btn => btn.addEventListener('click', () => {
+    const lang = btn.dataset.lang;
+    buttons.forEach(b => b.classList.toggle('active', b === btn));
+    sections.forEach(s => s.classList.toggle('active', s.id === lang));
+    document.documentElement.lang = lang;
+  }));
+</script>
+</body>
+</html>
