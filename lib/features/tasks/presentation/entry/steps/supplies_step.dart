@@ -22,6 +22,7 @@ class SuppliesStepBody extends ConsumerWidget {
 
   Future<void> _add(BuildContext context) async {
     final spec = await showAddSupplyToTaskSheet(context);
+    if (!context.mounted) return;
     if (spec != null) onAdd(spec);
   }
 

@@ -87,6 +87,7 @@ class ReminderStepBody extends ConsumerWidget {
       reminders,
       initialOffset: settings.defaultReminderOffset,
     );
+    if (!context.mounted) return;
     if (spec != null) onAdd(spec);
   }
 
