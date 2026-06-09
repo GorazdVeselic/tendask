@@ -245,8 +245,8 @@ class Translations$notif_settings$en {
 	/// en: 'Task reminders'
 	String get type_reminders => 'Task reminders';
 
-	/// en: 'local · work without internet'
-	String get type_reminders_sub => 'local · work without internet';
+	/// en: 'local · works offline'
+	String get type_reminders_sub => 'local · works offline';
 
 	/// en: 'Smart hints (weather)'
 	String get type_weather => 'Smart hints (weather)';
@@ -1133,8 +1133,8 @@ class Translations$area_pick$en {
 
 	// Translations
 
-	/// en: 'Move „${name}“'
-	String move_title({required Object name}) => 'Move „${name}“';
+	/// en: 'Move “$name”'
+	String move_title({required Object name}) => 'Move “${name}”';
 
 	/// en: 'Choose area'
 	String get choose_title => 'Choose area';
@@ -1526,8 +1526,8 @@ class Translations$weather$en {
 	/// en: 'Weather will be recorded when you mark the task done.'
 	String get detail_waiting => 'Weather will be recorded when you mark the task done.';
 
-	/// en: 'No weather snapshot (captured offline).'
-	String get detail_none => 'No weather snapshot (captured offline).';
+	/// en: 'No weather snapshot (was offline at the time).'
+	String get detail_none => 'No weather snapshot (was offline at the time).';
 
 	/// en: 'Weather is currently unavailable.'
 	String get home_unavailable => 'Weather is currently unavailable.';
@@ -1578,7 +1578,7 @@ extension on Translations {
 			'notif_settings.load_error' => 'Couldn\'t load settings.',
 			'notif_settings.section_types' => 'Notification types',
 			'notif_settings.type_reminders' => 'Task reminders',
-			'notif_settings.type_reminders_sub' => 'local · work without internet',
+			'notif_settings.type_reminders_sub' => 'local · works offline',
 			'notif_settings.type_weather' => 'Smart hints (weather)',
 			'notif_settings.type_weather_sub' => 'soon · via server',
 			'notif_settings.type_community' => 'Nearby hints',
@@ -1830,7 +1830,7 @@ extension on Translations {
 			'plant_detail.history_empty' => 'No tasks for this plant yet.',
 			'plant_detail.move' => 'move',
 			'plant_detail.assign_area' => 'Assign area',
-			'area_pick.move_title' => ({required Object name}) => 'Move „${name}“',
+			'area_pick.move_title' => ({required Object name}) => 'Move “${name}”',
 			'area_pick.choose_title' => 'Choose area',
 			'area_pick.note' => 'A plant lives in one area (or none). Its task history stays.',
 			'area_pick.none' => 'No area',
@@ -1946,7 +1946,7 @@ extension on Translations {
 			'weather.band_forecast' => 'Forecast',
 			'weather.rain_past48h' => 'Rain last 48 h:',
 			'weather.detail_waiting' => 'Weather will be recorded when you mark the task done.',
-			'weather.detail_none' => 'No weather snapshot (captured offline).',
+			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
 			_ => null,

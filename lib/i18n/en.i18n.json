@@ -51,7 +51,7 @@
     "load_error": "Couldn't load settings.",
     "section_types": "Notification types",
     "type_reminders": "Task reminders",
-    "type_reminders_sub": "local · work without internet",
+    "type_reminders_sub": "local · works offline",
     "type_weather": "Smart hints (weather)",
     "type_weather_sub": "soon · via server",
     "type_community": "Nearby hints",
@@ -337,7 +337,7 @@
     "assign_area": "Assign area"
   },
   "area_pick": {
-    "move_title(name)": "Move „${name}“",
+    "move_title(name)": "Move “$name”",
     "choose_title": "Choose area",
     "note": "A plant lives in one area (or none). Its task history stays.",
     "none": "No area",
@@ -463,7 +463,7 @@
     "band_forecast": "Forecast",
     "rain_past48h": "Rain last 48 h:",
     "detail_waiting": "Weather will be recorded when you mark the task done.",
-    "detail_none": "No weather snapshot (captured offline).",
+    "detail_none": "No weather snapshot (was offline at the time).",
     "home_unavailable": "Weather is currently unavailable.",
     "home_retry": "Tap to retry"
   }
