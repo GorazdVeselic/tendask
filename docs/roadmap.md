@@ -347,6 +347,21 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-09 — **FIX: aplikacija obtiči na splash (release).** Sentry je javil
+  `PlatformException(invalid_icon: ic_stat_notify could not be found)` iz `NotificationService.init`
+  → `initialPayload()`, kar je **await-ano** v `_bootstrap` PRED `runApp()` → native splash obvisi za vedno.
+  **Dva ločena popravka:** (1) **odporen bootstrap** — `initialPayload()` + `reminderCoordinator.start()` v
+  `try/catch`; obvestila niso esencialna za zagon, zato napaka (ikona/timezone/plugin) ne sme več preprečiti
+  `runApp` (degradira gracefully, poroča v Sentry). (2) **PNG ikona obvestila** — status-bar ikona je bil
+  **vektor** (`ic_stat_notify.xml`); `flutter_local_notifications` ikono razreši prek
+  `getResources().getIdentifier(...,"drawable",...)`, kar pri vektorjih v določenih build konfiguracijah vrne
+  0 → `invalid_icon`. Zamenjano z belo silhueto brand znaka (`logomark-white.svg`) renderiran v 5 density
+  bucketov (`drawable-mdpi`…`xxxhdpi`, 24→96 px prek sharp); vektor zbrisan. **On-device potrjeno (release
+  APK, SM RZCT70XGC5P): app gre čez splash naravnost na Domov, brez `invalid_icon`.** **Stranski nauk
+  (release login):** Google sign-in na release buildu zahteva, da je upload-key SHA-1
+  (`62:CF:B4:…:2C:F9`) registriran kot dodaten **Android OAuth client** (`app.tendask`) v Google Cloud — en
+  client = en package+SHA-1, zato nov client poleg debug; koda/`serverClientId` (Web client) se NE spremeni.
+  Play kasneje rabi še Play App Signing SHA-1. *Commit:* `fix: app obtiči na splash – odporen notification bootstrap + PNG ikona`
 - 2026-06-09 — **9.7 — GDPR: izvoz podatkov + izbris računa.** **Izvoz:** `AppDatabase.exportUserData()`
   zbere vse uporabnikove tabele (profile/area/user_plant/task + task_subject/reminder/note/supply/recipe/
   task_supply) v JSON-serializabilen `Map`; **izpusti `device_location`** (surove koordinate nikoli ne

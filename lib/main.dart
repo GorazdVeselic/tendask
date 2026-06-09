@@ -90,13 +90,25 @@ Future<void> _bootstrap() async {
   // resolve a cold-start deep-link below. The permission prompt stays deferred to
   // the priming screen (21), never at startup. If a tapped reminder launched the
   // app (M8.3), open its task detail instead of home.
-  final launchTaskId = await container
-      .read(notificationServiceProvider)
-      .initialPayload();
+  //
+  // Notifications are NOT essential to booting: a plugin/icon/timezone failure
+  // here must never prevent runApp (it would hang the app on the native splash).
+  // Degrade gracefully — report and continue without the deep-link.
+  String? launchTaskId;
+  try {
+    launchTaskId = await container
+        .read(notificationServiceProvider)
+        .initialPayload();
 
-  // Reconcile OS reminders with the task_reminder rows now, then reactively on
-  // every task/reminder change (M8.2). Fire-and-forget.
-  container.read(reminderCoordinatorProvider.notifier).start();
+    // Reconcile OS reminders with the task_reminder rows now, then reactively on
+    // every task/reminder change (M8.2). Fire-and-forget.
+    container.read(reminderCoordinatorProvider.notifier).start();
+  } catch (error, stack) {
+    debugPrint('Notification bootstrap failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container
