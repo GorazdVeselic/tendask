@@ -278,6 +278,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 >
 > **Agregacija okolice — celovit statistični + podatkovni model: [`skupnost-agregacija.md`](skupnost-agregacija.md)**
 > (vsa odprta vprašanja razrešena 2026-06-08; povzetek v `koncept.md §8`).
+> Wireframe (klikabilni flow): [`wireframes/community-flow_v3.html`](wireframes/community-flow_v3.html) — 2-zaslonski IA + tease za ne-premium.
 > - **Zgodnji temelj (poceni, kandidat za PRED-V2, da kopiči zgodovino):** nova polja
 >   `profile.climate_bucket` + `climate_profile` (jsonb, owner-only) + `timezone`, `task.agg_context`
 >   (jsonb posnetek veder ob `done`), `task_type.seasonal`; on-device izpeljava klime (Open-Meteo

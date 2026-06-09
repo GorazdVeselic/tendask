@@ -668,7 +668,9 @@ Agregirani (anonimizirani, GDPR-skladni) signali sosedov po območjih + primerja
 Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
 
 > **Podroben statistični + podatkovni model:** [`skupnost-agregacija.md`](skupnost-agregacija.md)
-> (natančne definicije, agregacijski cevovod, princip prikaza, statistične pasti). Spodaj je povzetek.
+> (natančne definicije, agregacijski cevovod, princip prikaza, statistične pasti, §12 UI/IA). Spodaj je povzetek.
+> **Wireframe (klikabilni flow):** [`wireframes/community-flow_v3.html`](wireframes/community-flow_v3.html)
+> — 2-zaslonski IA (landing s preklopom »Ta teden / Kje si ti« + per-opravilo predloga), vstopne točke, tease za ne-premium.
 
 ### ⭐ Časovni percentili opravil v okolici (V2 ključni diferenciator)
 - **Ideja:** namesto da bi AI *svetoval* "gnoji 15. marca" (tvegano, agronomska

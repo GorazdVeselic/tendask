@@ -369,5 +369,44 @@ Vsa konceptualna/shemska vprašanja so razrešena (§0.1). Ostane le:
 
 ---
 
+## 12. UI / prikaz (wireframe, IA, od kod teksti)
+
+**Wireframe (klikabilni flow):** `docs/wireframes/community-flow_v3.html`.
+
+### 12.1 Informacijska arhitektura — dva zaslona
+- **Okolica (landing)** s preklopom `[ Ta teden | Kje si ti ]` + grob izbirnik obsega
+  (📍 okolica / klima / vsi). »Ta teden« = feed (§7.1); »Kje si ti« = osebni pregled tvojih opravil
+  z zgoden/običajen/pozen (§7.2).
+- **Opravilo v okolici (predloga)** — en zaslon, vsebina se prilagodi izbranemu opravilu; združuje
+  percentil (§7.2) + frekvenco (§7.3) + »ta teden« (§7.1). **Vsi vstopi se stekajo sem** (ne »druga
+  podstran« — ista predloga, drugi podatki).
+- **Vstopne točke:** proaktivna kartica na Domov (najrelevantnejši namig → naravnost na predlogo),
+  CTA na detajlu opravila (→ predloga tega opravila), zavihek »Okolica« (**⬡ ikona = H3 celica**, kot logo).
+
+### 12.2 Od kod pride vsak tekst (tri vrste)
+- **i18n predloga** (slang sl/en/de): statične oznake + predloge z luknjami (»Bil si med zgodnejšimi {X} %«).
+- **Lokalni podatek** (drift): tvoja lastna opravila (datum prve izvedbe, oznaka »ti«). 0 oblaka.
+- **Agregat** (tabele §5): številke (`{X} %`, vrh tedna, `2–4×`, populacija). Edini oblačni vir.
+Imena opravil/rastlin = katalog (`catalog_labels.dart`); datumi prek `core/date_format.dart`.
+
+### 12.3 »Motor« = nočni cron + branje + sestava (NE per-uporabnik)
+Personaliziranega generatorja feeda **ni**. (1) Strežnik: en nočni `pg_cron` `GROUP BY` osveži drobne
+`activity_*` / `bucket_population` — skupno za vse, ne na uporabnika. (2) Naprava: ob odprtju prebere
+**majhno rezino** za svoje vedro, jo zlije z lokalnimi podatki in vstavi v i18n predloge; percentil/CDF
+**izračuna na napravi** iz ~14 številk. Brez AI, brez per-uporabnik funkcij.
+
+### 12.4 Dnevni cache na napravi (poceni + offline)
+Naprava enkrat na dan potegne rezino agregata za svoje vedro in jo shrani v drift (kot vreme) →
+ponovna odprtja berejo lokalno (0 oblaka), pogled deluje offline, ujame se z nočnim ritmom crona.
+Realna obremenitev ≈ **1 majhen pull / uporabnik / dan + 1 cron / noč skupno** → daleč pod free limiti.
+
+### 12.5 Monetizacija (PREDLOG, odprto)
+- **Brezplačno:** »Ta teden« feed (socialni dokaz / kavelj) + da agregat sploh raste.
+- **Tendask+:** »Kje si ti«, časovni percentil, frekvenca, namigi okolice.
+- Ne-premium vidi **tease** (vrednost zamegljena + »odkleni«). **Beleženje ostaja vedno brezplačno.**
+- Odprto: cena/preizkus; ali landing privzeto odpre »Ta teden« ali »Kje si ti«.
+
+---
+
 *Ko se začne implementacija, povzamemo v `koncept.md §8` in dodamo korake v `roadmap.md`
 (zgodnji temelj + V2 pogledi).*
