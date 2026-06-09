@@ -698,7 +698,6 @@ class _Translations$settings$en extends Translations$settings$sl {
 	@override String get delete_account_confirm_body => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.';
 	@override String get delete_account_confirm => 'Delete account';
 	@override String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
-	@override String get version => 'Tendask · v1 (MVP)';
 }
 
 // Path: weather
@@ -1123,7 +1122,6 @@ extension on TranslationsEn {
 			'settings.delete_account_confirm_body' => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.',
 			'settings.delete_account_confirm' => 'Delete account',
 			'settings.delete_account_error' => 'Deletion failed. Try again when you\'re connected.',
-			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Clear',
 			'weather.cond_mainly_clear' => 'Mostly clear',
 			'weather.cond_cloudy' => 'Cloudy',

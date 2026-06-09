@@ -1483,9 +1483,6 @@ class Translations$settings$sl {
 
 	/// sl: 'Izbris ni uspel. Poskusi znova, ko boš povezan.'
 	String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
-
-	/// sl: 'Tendask · v1 (MVP)'
-	String get version => 'Tendask · v1 (MVP)';
 }
 
 // Path: weather
@@ -1942,7 +1939,6 @@ extension on Translations {
 			'settings.delete_account_confirm_body' => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.',
 			'settings.delete_account_confirm' => 'Izbriši račun',
 			'settings.delete_account_error' => 'Izbris ni uspel. Poskusi znova, ko boš povezan.',
-			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Jasno',
 			'weather.cond_mainly_clear' => 'Pretežno jasno',
 			'weather.cond_cloudy' => 'Oblačno',

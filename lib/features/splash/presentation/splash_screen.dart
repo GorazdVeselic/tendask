@@ -2,29 +2,29 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../core/app_info.dart';
 import '../../../core/config.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Brief branded splash (zaslon 00) shown over the native splash, then routes to
 /// [next] (home / onboarding / a cold-start deep-link). Android 12+ system splash
 /// can only show a centered icon, so the wordmark + version live here instead.
-class SplashScreen extends StatefulWidget {
+class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key, required this.next});
 
   /// Where to go once the splash has shown for [kSplashMinDuration].
   final String next;
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
+class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
-  String? _version;
   late final AnimationController _dotsController = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 1000),
@@ -33,15 +33,9 @@ class _SplashScreenState extends State<SplashScreen>
   @override
   void initState() {
     super.initState();
-    unawaited(_loadVersion());
     Timer(kSplashMinDuration, () {
       if (mounted) context.go(widget.next);
     });
-  }
-
-  Future<void> _loadVersion() async {
-    final info = await PackageInfo.fromPlatform();
-    if (mounted) setState(() => _version = info.version);
   }
 
   @override
@@ -111,7 +105,10 @@ class _SplashScreenState extends State<SplashScreen>
                       _LoadingDots(controller: _dotsController),
                       const SizedBox(height: 24),
                       Text(
-                        _version == null ? '' : 'v$_version',
+                        switch (ref.watch(packageInfoProvider).asData?.value) {
+                          final info? => 'v${info.version}',
+                          null => '',
+                        },
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.white.withValues(alpha: 0.7),

@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/app_info.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
@@ -236,7 +237,10 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: 20),
           Center(
             child: Text(
-              t.settings.version,
+              switch (ref.watch(packageInfoProvider).asData?.value) {
+                final info? => 'Tendask · ${info.version}$kVersionChannel',
+                null => '',
+              },
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

@@ -447,8 +447,7 @@
     "delete_account_confirm_title": "Delete account?",
     "delete_account_confirm_body": "Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.",
     "delete_account_confirm": "Delete account",
-    "delete_account_error": "Deletion failed. Try again when you're connected.",
-    "version": "Tendask · v1 (MVP)"
+    "delete_account_error": "Deletion failed. Try again when you're connected."
   },
   "weather": {
     "cond_clear": "Clear",

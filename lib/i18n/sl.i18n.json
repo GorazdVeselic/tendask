@@ -453,8 +453,7 @@
     "delete_account_confirm_title": "Izbriši račun?",
     "delete_account_confirm_body": "Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.",
     "delete_account_confirm": "Izbriši račun",
-    "delete_account_error": "Izbris ni uspel. Poskusi znova, ko boš povezan.",
-    "version": "Tendask · v1 (MVP)"
+    "delete_account_error": "Izbris ni uspel. Poskusi znova, ko boš povezan."
   },
   "weather": {
     "cond_clear": "Jasno",

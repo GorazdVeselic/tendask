@@ -698,7 +698,6 @@ class _Translations$settings$de extends Translations$settings$sl {
 	@override String get delete_account_confirm_body => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.';
 	@override String get delete_account_confirm => 'Konto löschen';
 	@override String get delete_account_error => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.';
-	@override String get version => 'Tendask · v1 (MVP)';
 }
 
 // Path: weather
@@ -1123,7 +1122,6 @@ extension on TranslationsDe {
 			'settings.delete_account_confirm_body' => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.',
 			'settings.delete_account_confirm' => 'Konto löschen',
 			'settings.delete_account_error' => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.',
-			'settings.version' => 'Tendask · v1 (MVP)',
 			'weather.cond_clear' => 'Klar',
 			'weather.cond_mainly_clear' => 'Überwiegend klar',
 			'weather.cond_cloudy' => 'Bewölkt',

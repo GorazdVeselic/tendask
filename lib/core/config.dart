@@ -85,6 +85,10 @@ const kGoogleServerClientId = String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 /// so the logo + wordmark + version are readable on a fast cold start.
 const kSplashMinDuration = Duration(milliseconds: 1200);
 
+/// Release-channel suffix appended to the displayed version (e.g. " (beta)" for
+/// the internal/beta track). Empty for a production release — one place to flip.
+const kVersionChannel = ' (beta)';
+
 /// Supplies feature gate (temporarily off): hides the supplies wizard step and
 /// the settings garden/supplies section without removing the code. Flip to true
 /// to re-enable. See entry_screen (step list) and settings_screen.
