@@ -265,7 +265,8 @@ class SettingsScreen extends ConsumerWidget {
           Center(
             child: Text(
               switch (ref.watch(packageInfoProvider).asData?.value) {
-                final info? => 'Tendask · ${info.version}$kVersionChannel',
+                final info? =>
+                  'Tendask · ${info.version}+${info.buildNumber}$kVersionChannel',
                 null => '',
               },
               style: theme.textTheme.bodySmall?.copyWith(
