@@ -39,7 +39,7 @@ Ne glede na to sta zahtevi 1 in 2 veljavni obrambni popravek.
 
 ## BUG-002 — po prijavi (in logout→login) vedno vpraša za lokacijo, čeprav je že nastavljena
 
-- **Status:** odprt
+- **Status:** razrešen (2026-06-10) — nov helper `goToLocationOrHome` (`features/auth/presentation/post_sign_in_navigation.dart`): po prijavi/gostu gre na `/home`, če `gardenCoordinates()` obstaja (device-local), sicer na `/location`. Uporabljen na vseh 3 mestih (Google, e-pošta, gost). Po logoutu koordinate po zasnovi izginejo → takrat gre na `/location`, ki pa ima preskočni gumb »Nadaljuj« (ni prisilen).
 - **Najden:** 2026-06-10 (interni test iz Play, Samsung A53 / SM-A536B)
 - **Resnost:** srednja — odvečen korak, slaba izkušnja; ni izgube podatkov
 

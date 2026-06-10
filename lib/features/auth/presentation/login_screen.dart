@@ -9,6 +9,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/legal.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
+import 'post_sign_in_navigation.dart';
 
 /// Sign-in / onboarding choice (wireframe 13): Apple (iOS only — M10), Google
 /// and email, or continue as a guest. Signing in keeps the guest's local data
@@ -30,9 +31,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ..showSnackBar(SnackBar(content: Text(t.auth.coming_soon)));
   }
 
-  void _continueAsGuest() {
-    // Guest stays local (no cloud session) — straight to the location step.
-    context.go('/location');
+  Future<void> _continueAsGuest() async {
+    // Guest stays local (no cloud session); skip the location step if this
+    // device already has one set.
+    await goToLocationOrHome(context, ref);
   }
 
   Future<void> _signInWithGoogle() async {
@@ -45,7 +47,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       // start() claims the guest's local rows to this account, pushes them, and
       // pulls the account's existing data (a merge — sign-in keeps data).
       ref.read(syncCoordinatorProvider.notifier).start();
-      context.go('/location');
+      await goToLocationOrHome(context, ref);
     } on Object {
       if (!mounted) return;
       ScaffoldMessenger.of(context)
