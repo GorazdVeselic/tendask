@@ -705,6 +705,10 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get delete_account_confirm_body => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.';
 	@override String get delete_account_confirm => 'Izbriši račun';
 	@override String get delete_account_error => 'Izbris ni uspel. Poskusi znova, ko boš povezan.';
+	@override String get delete_data => 'Izbriši vse podatke v tej napravi';
+	@override String get delete_data_confirm_title => 'Izbriši vse podatke?';
+	@override String get delete_data_confirm_body => 'Trajno izbriše vse podatke v tej napravi (opravila, območja, rastline, opombe). Tega ni mogoče razveljaviti.';
+	@override String get delete_data_confirm => 'Izbriši';
 	@override String get section_about => 'O aplikaciji';
 	@override String get privacy_policy => 'Politika zasebnosti';
 }
@@ -1132,6 +1136,10 @@ extension on TranslationsSl {
 			'settings.delete_account_confirm_body' => 'Trajno izbriše tvoj račun in vse podatke (opravila, območja, rastline, opombe) — tako v oblaku kot na tej napravi. Tega ni mogoče razveljaviti.',
 			'settings.delete_account_confirm' => 'Izbriši račun',
 			'settings.delete_account_error' => 'Izbris ni uspel. Poskusi znova, ko boš povezan.',
+			'settings.delete_data' => 'Izbriši vse podatke v tej napravi',
+			'settings.delete_data_confirm_title' => 'Izbriši vse podatke?',
+			'settings.delete_data_confirm_body' => 'Trajno izbriše vse podatke v tej napravi (opravila, območja, rastline, opombe). Tega ni mogoče razveljaviti.',
+			'settings.delete_data_confirm' => 'Izbriši',
 			'settings.section_about' => 'O aplikaciji',
 			'settings.privacy_policy' => 'Politika zasebnosti',
 			'weather.cond_clear' => 'Jasno',

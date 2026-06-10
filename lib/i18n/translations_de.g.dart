@@ -699,6 +699,10 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get delete_account_confirm_body => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.';
 	@override String get delete_account_confirm => 'Konto löschen';
 	@override String get delete_account_error => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.';
+	@override String get delete_data => 'Alle Daten auf diesem Gerät löschen';
+	@override String get delete_data_confirm_title => 'Alle Daten löschen?';
+	@override String get delete_data_confirm_body => 'Löscht alle Daten auf diesem Gerät (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig. Dies kann nicht rückgängig gemacht werden.';
+	@override String get delete_data_confirm => 'Löschen';
 	@override String get section_about => 'Über';
 	@override String get privacy_policy => 'Datenschutzerklärung';
 }
@@ -1126,6 +1130,10 @@ extension on TranslationsDe {
 			'settings.delete_account_confirm_body' => 'Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.',
 			'settings.delete_account_confirm' => 'Konto löschen',
 			'settings.delete_account_error' => 'Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.',
+			'settings.delete_data' => 'Alle Daten auf diesem Gerät löschen',
+			'settings.delete_data_confirm_title' => 'Alle Daten löschen?',
+			'settings.delete_data_confirm_body' => 'Löscht alle Daten auf diesem Gerät (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig. Dies kann nicht rückgängig gemacht werden.',
+			'settings.delete_data_confirm' => 'Löschen',
 			'settings.section_about' => 'Über',
 			'settings.privacy_policy' => 'Datenschutzerklärung',
 			'weather.cond_clear' => 'Klar',

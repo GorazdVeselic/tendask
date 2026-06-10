@@ -91,14 +91,22 @@ class SettingsScreen extends ConsumerWidget {
   }
 
   /// GDPR account deletion — confirm, then delete the cloud account (cascades)
-  /// and wipe local data, returning to onboarding. A guest only wipes locally.
+  /// and wipe local data, returning to onboarding. A guest only wipes locally,
+  /// so it shows "delete all data" wording (no cloud account to delete).
   Future<void> _deleteAccount(BuildContext context, WidgetRef ref) async {
     final t = context.t;
+    final isGuest = ref.read(authServiceProvider).email == null;
     final confirmed = await showConfirmDialog(
       context,
-      title: t.settings.delete_account_confirm_title,
-      body: t.settings.delete_account_confirm_body,
-      confirmLabel: t.settings.delete_account_confirm,
+      title: isGuest
+          ? t.settings.delete_data_confirm_title
+          : t.settings.delete_account_confirm_title,
+      body: isGuest
+          ? t.settings.delete_data_confirm_body
+          : t.settings.delete_account_confirm_body,
+      confirmLabel: isGuest
+          ? t.settings.delete_data_confirm
+          : t.settings.delete_account_confirm,
       cancelLabel: t.settings.logout_cancel,
       destructive: true,
     );
@@ -220,14 +228,21 @@ class SettingsScreen extends ConsumerWidget {
                   label: t.settings.export_data,
                   onTap: () => unawaited(_export(context, ref)),
                 ),
+                // Sign-out only for a signed-in account: a guest has no session
+                // to end, and logging out wipes local data the guest can never
+                // recover (it never reached the cloud) — see BUG-003.
+                if (email != null) ...[
+                  Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                  _PlaceholderTile(
+                    label: t.settings.logout,
+                    onTap: () => unawaited(_logout(context, ref)),
+                  ),
+                ],
                 Divider(height: 1, color: theme.colorScheme.outlineVariant),
                 _PlaceholderTile(
-                  label: t.settings.logout,
-                  onTap: () => unawaited(_logout(context, ref)),
-                ),
-                Divider(height: 1, color: theme.colorScheme.outlineVariant),
-                _PlaceholderTile(
-                  label: t.settings.delete_account,
+                  label: email != null
+                      ? t.settings.delete_account
+                      : t.settings.delete_data,
                   destructive: true,
                   onTap: () => unawaited(_deleteAccount(context, ref)),
                 ),

@@ -449,6 +449,10 @@
     "delete_account_confirm_body": "Löscht dein Konto und alle Daten (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig — sowohl in der Cloud als auch auf diesem Gerät. Dies kann nicht rückgängig gemacht werden.",
     "delete_account_confirm": "Konto löschen",
     "delete_account_error": "Löschen fehlgeschlagen. Versuche es erneut, sobald du verbunden bist.",
+    "delete_data": "Alle Daten auf diesem Gerät löschen",
+    "delete_data_confirm_title": "Alle Daten löschen?",
+    "delete_data_confirm_body": "Löscht alle Daten auf diesem Gerät (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig. Dies kann nicht rückgängig gemacht werden.",
+    "delete_data_confirm": "Löschen",
     "section_about": "Über",
     "privacy_policy": "Datenschutzerklärung"
   },

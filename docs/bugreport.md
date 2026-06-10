@@ -6,7 +6,7 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ## BUG-003 — gost ima »Odjava« + logout tiho izbriše nesinhronizirane podatke
 
-- **Status:** odprt
+- **Status:** razrešen (2026-06-10) — »Odjava« skrita za gosta (`email != null`); »Izbriši« za gosta dobi besedilo »Izbriši vse podatke v tej napravi«. Prijavljeni je bil že zaščiten (flush pred `clearUserData`, prekine če offline).
 - **Najden:** 2026-06-10 (med internim testom iz Play, Samsung A53 / SM-A536B)
 - **Resnost:** visoka — možna **izguba podatkov** (blokator pred zaprtim testom)
 

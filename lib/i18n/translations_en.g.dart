@@ -1481,6 +1481,18 @@ class Translations$settings$en {
 	/// en: 'Deletion failed. Try again when you're connected.'
 	String get delete_account_error => 'Deletion failed. Try again when you\'re connected.';
 
+	/// en: 'Delete all data on this device'
+	String get delete_data => 'Delete all data on this device';
+
+	/// en: 'Delete all data?'
+	String get delete_data_confirm_title => 'Delete all data?';
+
+	/// en: 'Permanently deletes all data on this device (tasks, areas, plants, notes). This cannot be undone.'
+	String get delete_data_confirm_body => 'Permanently deletes all data on this device (tasks, areas, plants, notes). This cannot be undone.';
+
+	/// en: 'Delete'
+	String get delete_data_confirm => 'Delete';
+
 	/// en: 'About'
 	String get section_about => 'About';
 
@@ -1943,6 +1955,10 @@ extension on Translations {
 			'settings.delete_account_confirm_body' => 'Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.',
 			'settings.delete_account_confirm' => 'Delete account',
 			'settings.delete_account_error' => 'Deletion failed. Try again when you\'re connected.',
+			'settings.delete_data' => 'Delete all data on this device',
+			'settings.delete_data_confirm_title' => 'Delete all data?',
+			'settings.delete_data_confirm_body' => 'Permanently deletes all data on this device (tasks, areas, plants, notes). This cannot be undone.',
+			'settings.delete_data_confirm' => 'Delete',
 			'settings.section_about' => 'About',
 			'settings.privacy_policy' => 'Privacy policy',
 			'weather.cond_clear' => 'Clear',

@@ -449,6 +449,10 @@
     "delete_account_confirm_body": "Permanently deletes your account and all data (tasks, areas, plants, notes) — both in the cloud and on this device. This cannot be undone.",
     "delete_account_confirm": "Delete account",
     "delete_account_error": "Deletion failed. Try again when you're connected.",
+    "delete_data": "Delete all data on this device",
+    "delete_data_confirm_title": "Delete all data?",
+    "delete_data_confirm_body": "Permanently deletes all data on this device (tasks, areas, plants, notes). This cannot be undone.",
+    "delete_data_confirm": "Delete",
     "section_about": "About",
     "privacy_policy": "Privacy policy"
   },
