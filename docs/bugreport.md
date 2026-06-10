@@ -4,6 +4,74 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ---
 
+## BUG-003 — gost ima »Odjava« + logout tiho izbriše nesinhronizirane podatke
+
+- **Status:** odprt
+- **Najden:** 2026-06-10 (med internim testom iz Play, Samsung A53 / SM-A536B)
+- **Resnost:** visoka — možna **izguba podatkov** (blokator pred zaprtim testom)
+
+### Opis
+
+Med testom (ko Google prijava še ni delala zaradi SHA-1) je uporabnik ostal **gost**, a je
+UI vseeno ponujal **»Odjava«**. Ob odjavi je `clearUserData()` pobrisal lokalno drift bazo —
+ker gostovi podatki nikoli ne gredo v oblak, so se **nepovratno izgubili**.
+
+### Zahtevano obnašanje (od uporabnika)
+
+1. **Gost nima »Odjava«** — gumb skrit/onemogočen (gost nima seje, nima česa odjaviti).
+2. **Logout nikoli ne sme tiho izbrisati nesinhroniziranih podatkov** — vsaj opozorilo
+   (»imaš nesinhronizirane podatke« → flush ali potrditev), sicer izguba.
+
+### Vzrok (za preveriti)
+
+Stanje je verjetno postalo zmedeno, ker je Google prijava tiho spodletela (SHA-1 ni bil
+registriran) → UI je mislil, da je uporabnik prijavljen → pokazal »Odjava«. **SHA-1 je zdaj
+urejen (Google login dela)**, zato je treba preveriti, ali se bug še pojavi v normalnem toku.
+Ne glede na to sta zahtevi 1 in 2 veljavni obrambni popravek.
+
+### Smer popravka (predlog, NE implementirano)
+
+- V `settings` profil/logout: gate na `AuthService.email == null` (gost) → »Odjava« skrita.
+- Pred `clearUserData()` ob odjavi: `flushPush()` (vzorec že obstaja za e-poštno prijavo,
+  glej [[tendask-work-status]] »BUG REŠEN logout→login«) ali potrditveni dialog, če je flush neuspešen (offline).
+
+---
+
+## BUG-002 — po prijavi (in logout→login) vedno vpraša za lokacijo, čeprav je že nastavljena
+
+- **Status:** odprt
+- **Najden:** 2026-06-10 (interni test iz Play, Samsung A53 / SM-A536B)
+- **Resnost:** srednja — odvečen korak, slaba izkušnja; ni izgube podatkov
+
+### Opis
+
+Po `logout` → `login` (Google) aplikacija znova zahteva **izbiro lokacije**, čeprav ima profil
+lokacijo verjetno že shranjeno.
+
+### Vzrok
+
+Po **vsaki** prijavi koda **brezpogojno** navigira na `/location`, brez preverbe, ali je lokacija
+že nastavljena:
+
+- `lib/features/auth/presentation/login_screen.dart:48` — po Google prijavi `context.go('/location')`
+- `lib/features/auth/presentation/email_login_screen.dart:86` — po e-poštni prijavi `context.go('/location')`
+- `lib/features/auth/presentation/login_screen.dart:35` — gost: `context.go('/location')`
+
+Dodatna nianса: lokacija se hrani kot **surove koordinate v `device_location`** (lokalna-only
+tabela, se **NE** sinhronizira, ob logoutu jo `clearUserData()` pobriše). V oblak gre samo **H3
+celica** (`profile.h3_r7/r6/r5`). Zato tudi state-aware preverba na `device_location` ne bi pomagala
+po logout→login — koordinate se po zasnovi ne vrnejo (zasebnost). Preverba mora upoštevati
+**`profile.h3` (sinhronizirano)** ali pa naj bo korak preskočljiv.
+
+### Smer popravka (predlog, NE implementirano)
+
+Po prijavi **preveri, ali je lokacija že nastavljena** (npr. `profile.h3_r7 != null` — sinhronizirano,
+ali `device_location` obstaja) → če je, pojdi naravnost na `/home`, sicer na `/location`. Ker surove
+koordinate po logoutu po zasnovi izginejo, razmisli: ali korak preskočiš (vreme pade na zadnje znano/
+privzeto, dokler uporabnik sam ne nastavi) ali ga pokažeš kot **neobvezen** (»Preskoči«), ne prisilen.
+
+---
+
 ## BUG-001 — `gardenLocationProvider` disposed during loading (StateError)
 
 - **Status:** razrešen (2026-06-08) — `gardenLocation` → `@Riverpod(keepAlive: true)`; čaka on-device verifikacijo
