@@ -145,136 +145,138 @@ class SettingsScreen extends ConsumerWidget {
         title: Text(t.settings.title),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-        children: [
-          // Profile. Signed in → show the email; guest → entry point to sign in
-          // (link account, keeps data). Sign-out is wired in M7.5.
-          Card(
-            child: email != null
-                ? ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.person)),
-                    title: Text(email),
-                    subtitle: Text(t.settings.signed_in),
-                  )
-                : ListTile(
-                    leading: const CircleAvatar(child: Icon(Icons.person)),
-                    title: Text(t.settings.profile_guest),
-                    subtitle: Text(t.settings.sign_in_prompt),
-                    trailing: const Icon(Icons.chevron_right),
-                    // Signing in keeps the guest's local data (claimed on sign-in).
-                    onTap: () => context.push('/login'),
-                  ),
-          ),
-
-          // Location — opens the location screen (set/update garden location).
-          SectionLabel(t.settings.section_location),
-          Card(
-            child: ListTile(
-              leading: const Text('📍', style: TextStyle(fontSize: 22)),
-              title: Text(t.settings.location_placeholder),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.push('/location'),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          children: [
+            // Profile. Signed in → show the email; guest → entry point to sign in
+            // (link account, keeps data). Sign-out is wired in M7.5.
+            Card(
+              child: email != null
+                  ? ListTile(
+                      leading: const CircleAvatar(child: Icon(Icons.person)),
+                      title: Text(email),
+                      subtitle: Text(t.settings.signed_in),
+                    )
+                  : ListTile(
+                      leading: const CircleAvatar(child: Icon(Icons.person)),
+                      title: Text(t.settings.profile_guest),
+                      subtitle: Text(t.settings.sign_in_prompt),
+                      trailing: const Icon(Icons.chevron_right),
+                      // Signing in keeps the guest's local data (claimed on sign-in).
+                      onTap: () => context.push('/login'),
+                    ),
             ),
-          ),
 
-          // Language (ACTIVE)
-          SectionLabel(t.settings.section_language),
-          SegmentedButton<AppLocale>(
-            segments: [
-              for (final loc in AppLocale.values)
-                ButtonSegment(value: loc, label: Text(_langLabel(loc))),
-            ],
-            selected: {current},
-            onSelectionChanged: (s) => _setLang(ref, s.first),
-            // Endonyms ("Slovenščina") are long; the selected-check would push
-            // the row past the screen width, so drop it.
-            showSelectedIcon: false,
-            style: const ButtonStyle(visualDensity: VisualDensity.compact),
-          ),
-
-          // Notifications — screen 22 (M8.4)
-          SectionLabel(t.settings.section_notifications),
-          Card(
-            child: ListTile(
-              leading: const Text('🔔', style: TextStyle(fontSize: 22)),
-              title: Text(t.settings.notifications_placeholder),
-              trailing: const Icon(Icons.chevron_right),
-              onTap: () => context.pushNamed('notification-settings'),
-            ),
-          ),
-
-          // Garden / supplies — gated off for now (kSuppliesEnabled). The title
-          // string already carries the 📦, so it provides the leading glyph here
-          // (avoids the double-icon when re-enabled).
-          if (kSuppliesEnabled) ...[
-            SectionLabel(t.settings.section_garden),
+            // Location — opens the location screen (set/update garden location).
+            SectionLabel(t.settings.section_location),
             Card(
               child: ListTile(
-                title: Text(t.settings.supplies),
-                subtitle: Text(t.settings.supplies_sub),
+                leading: const Text('📍', style: TextStyle(fontSize: 22)),
+                title: Text(t.settings.location_placeholder),
                 trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.pushNamed('supplies'),
+                onTap: () => context.push('/location'),
+              ),
+            ),
+
+            // Language (ACTIVE)
+            SectionLabel(t.settings.section_language),
+            SegmentedButton<AppLocale>(
+              segments: [
+                for (final loc in AppLocale.values)
+                  ButtonSegment(value: loc, label: Text(_langLabel(loc))),
+              ],
+              selected: {current},
+              onSelectionChanged: (s) => _setLang(ref, s.first),
+              // Endonyms ("Slovenščina") are long; the selected-check would push
+              // the row past the screen width, so drop it.
+              showSelectedIcon: false,
+              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+            ),
+
+            // Notifications — screen 22 (M8.4)
+            SectionLabel(t.settings.section_notifications),
+            Card(
+              child: ListTile(
+                leading: const Text('🔔', style: TextStyle(fontSize: 22)),
+                title: Text(t.settings.notifications_placeholder),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('notification-settings'),
+              ),
+            ),
+
+            // Garden / supplies — gated off for now (kSuppliesEnabled). The title
+            // string already carries the 📦, so it provides the leading glyph here
+            // (avoids the double-icon when re-enabled).
+            if (kSuppliesEnabled) ...[
+              SectionLabel(t.settings.section_garden),
+              Card(
+                child: ListTile(
+                  title: Text(t.settings.supplies),
+                  subtitle: Text(t.settings.supplies_sub),
+                  trailing: const Icon(Icons.chevron_right),
+                  onTap: () => context.pushNamed('supplies'),
+                ),
+              ),
+            ],
+
+            // Account & data (placeholder — M7 / GDPR)
+            SectionLabel(t.settings.section_account),
+            Card(
+              child: Column(
+                children: [
+                  _PlaceholderTile(
+                    label: t.settings.export_data,
+                    onTap: () => unawaited(_export(context, ref)),
+                  ),
+                  // Sign-out only for a signed-in account: a guest has no session
+                  // to end, and logging out wipes local data the guest can never
+                  // recover (it never reached the cloud) — see BUG-003.
+                  if (email != null) ...[
+                    Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                    _PlaceholderTile(
+                      label: t.settings.logout,
+                      onTap: () => unawaited(_logout(context, ref)),
+                    ),
+                  ],
+                  Divider(height: 1, color: theme.colorScheme.outlineVariant),
+                  _PlaceholderTile(
+                    label: email != null
+                        ? t.settings.delete_account
+                        : t.settings.delete_data,
+                    destructive: true,
+                    onTap: () => unawaited(_deleteAccount(context, ref)),
+                  ),
+                ],
+              ),
+            ),
+
+            // About — public privacy policy (also the URL given to Play).
+            SectionLabel(t.settings.section_about),
+            Card(
+              child: ListTile(
+                leading: const Icon(Icons.privacy_tip_outlined),
+                title: Text(t.settings.privacy_policy),
+                trailing: const Icon(Icons.open_in_new, size: 18),
+                onTap: () => unawaited(openPrivacyPolicy()),
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            Center(
+              child: Text(
+                switch (ref.watch(packageInfoProvider).asData?.value) {
+                  final info? =>
+                    'Tendask · ${info.version}+${info.buildNumber}$kVersionChannel',
+                  null => '',
+                },
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
               ),
             ),
           ],
-
-          // Account & data (placeholder — M7 / GDPR)
-          SectionLabel(t.settings.section_account),
-          Card(
-            child: Column(
-              children: [
-                _PlaceholderTile(
-                  label: t.settings.export_data,
-                  onTap: () => unawaited(_export(context, ref)),
-                ),
-                // Sign-out only for a signed-in account: a guest has no session
-                // to end, and logging out wipes local data the guest can never
-                // recover (it never reached the cloud) — see BUG-003.
-                if (email != null) ...[
-                  Divider(height: 1, color: theme.colorScheme.outlineVariant),
-                  _PlaceholderTile(
-                    label: t.settings.logout,
-                    onTap: () => unawaited(_logout(context, ref)),
-                  ),
-                ],
-                Divider(height: 1, color: theme.colorScheme.outlineVariant),
-                _PlaceholderTile(
-                  label: email != null
-                      ? t.settings.delete_account
-                      : t.settings.delete_data,
-                  destructive: true,
-                  onTap: () => unawaited(_deleteAccount(context, ref)),
-                ),
-              ],
-            ),
-          ),
-
-          // About — public privacy policy (also the URL given to Play).
-          SectionLabel(t.settings.section_about),
-          Card(
-            child: ListTile(
-              leading: const Icon(Icons.privacy_tip_outlined),
-              title: Text(t.settings.privacy_policy),
-              trailing: const Icon(Icons.open_in_new, size: 18),
-              onTap: () => unawaited(openPrivacyPolicy()),
-            ),
-          ),
-
-          const SizedBox(height: 20),
-          Center(
-            child: Text(
-              switch (ref.watch(packageInfoProvider).asData?.value) {
-                final info? =>
-                  'Tendask · ${info.version}+${info.buildNumber}$kVersionChannel',
-                null => '',
-              },
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }
