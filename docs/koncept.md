@@ -477,6 +477,10 @@ Odprto ostaja le **in-app nabiralnik (da/ne)**.
 ### In-app nabiralnik? → REŠENO: pas na Domov
 - Pametni predlogi (plast B) živijo na **pasu na Domov (01)** z gumboma Načrtuj/Opusti.
   Poseben center obvestil zato (zaenkrat) ne rabimo; push je le opozorilo, dom je Domov.
+- **Dopolnitev (2026-06-11, M11 spec):** bralna **zgodovina predlogov** (»Pretekli predlogi« —
+  kaj je bilo predlagano + uporabnikov odziv) NI center obvestil in odločitve ne krši: je
+  revizijski pogled za razložljivost motorja (»zakaj sem to dobil«), brez akcij za reagiranje.
+  Glej `docs/m11/08` + korak M11.13b.
 
 ---
 

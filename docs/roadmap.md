@@ -272,7 +272,12 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 ## M11 — *(po MVP / V2)* Pametni motor + FCM + percentili
 
-> Plast B: dnevni paketni pregled (cron/Edge Function) + FCM push, 3–4 kurirana pravila (brez AI),
+> ⭐ **POLNA PRED-IMPLEMENTACIJSKA SPECIFIKACIJA: [`docs/m11/`](m11/README.md)** (2026-06-11) —
+> agronomska pravila (61, z viri), signalni sloj, formalna pravila R1–R7, točen SQL (0005/0006),
+> drift zrcalo, FCM, klimatski profil, Flutter arhitektura. **Delovni tasklist s koraki
+> M11.1–M11.21 + DoD: [`docs/m11/09-koraki.md`](m11/09-koraki.md)** — koraki se odkljukavajo tam.
+>
+> Plast B: dnevni paketni pregled (cron/Edge Function) + FCM push, kurirana pravila (brez AI),
 > vodenje proti gnjavljenju (cooldown, vremenske straže, dedup, frekvenčna kapica). Glej
 > [`pametni-motor.md`](pametni-motor.md) + `koncept.md` §7.13. V2: percentili okolice (`activity_agg`, §8).
 > Razširitev kataloga rastlin 35 → 100–200 (Wikidata/GBIF) je **premaknjena na PRED-RELEASE → glej 9.6** (mora biti pred internim testom; ne čaka na M11).
