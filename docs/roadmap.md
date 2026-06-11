@@ -308,12 +308,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   **Skrij** (nazaj na 6). Bonus: sortiranje po pogostosti uporabe **per user** — izvedljivo brez nove
   sheme prek `SELECT task_type_id, COUNT(*) FROM task WHERE deleted=0 GROUP BY task_type_id ORDER BY 2 DESC`
   (najpogostejši v zgornjih 6). Najprej ekstrahiraj skupni `TaskTypeGrid` widget (zdaj podvojen v 02/07).
-- **FR-3 — Zatikanja (performance).** 🔄 **Glavni opaženi izvor odpravljen (2026-06-07), ostalo opazovano.**
-  Med ročno preverbo M3.7 opažena rahla zatikanja pri navigaciji/scrollu. Najbolj opazen izvor —
+- **FR-3 — Zatikanja (performance).** ✅ **Zaprto (2026-06-11).** Glavni opaženi izvor —
   »občutek zmrznitve« na plant-add (katalog ~128 vrst grajen kot `Column` naenkrat + rebuild ob vsakem
   toggle; `recentPlantsProvider` `AsyncLoading` flicker) — odpravljen v `8c1cd05` (lazy `SliverList` +
-  snapshot pogostih v `initState`); na napravi zatikanja ni več zaznati. **Namenski profiling pass se ni
-  zgodil** — širša zatikanja niso izmerjena. Pusti odprto: če se spet pojavi, profiliraj (DevTools timeline),
+  snapshot pogostih v `initState`); na napravi zatikanja ni več zaznati. Namenski profiling pass se ni
+  zgodil, a širših zatikanj ni opaziti → zapiramo. **Če se spet pojavi:** profiliraj (DevTools timeline),
   poišči nepotrebne rebuilde (`const`, ozki `watch`/`select`), preveri drift stream rebuilde. Najprej izmeri.
 - **FR-2 — Dodaj območje iz obrazca opravila.** ✅ **Implementirano (potrjeno 2026-06-04).** Vsi trije
   »ustvari sproti« vzorci so v stepperju: subject_step »+ Dodaj območje« (`area-new` → `area_form` vrne nov
