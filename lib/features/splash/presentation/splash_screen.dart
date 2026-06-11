@@ -162,14 +162,16 @@ class _LoadingDots extends StatelessWidget {
   }
 }
 
-/// Decorative H3 hexagon grid behind the brand (wireframe 00-splash), faint white
-/// outlines tiled over the green gradient.
+/// Decorative H3 honeycomb behind the brand (wireframe 00-splash): faint white
+/// pointy-top hexagons tiled edge-to-edge over the green gradient.
 class _HexGridPainter extends CustomPainter {
   const _HexGridPainter();
 
-  static const double _tileW = 56;
-  static const double _tileH = 64;
-  static const double _scale = 1.3;
+  static const double _r =
+      42; // circumradius (center → pointy top/bottom vertex)
+  static const double _w = _r * 1.7320508; // flat-to-flat width = √3·r
+  static const double _rowStep =
+      _r * 1.5; // pointy-top rows interlock at ¾ height
 
   @override
   void paint(Canvas canvas, Size size) {
@@ -179,28 +181,27 @@ class _HexGridPainter extends CustomPainter {
       ..strokeJoin = StrokeJoin.round
       ..color = Colors.white.withValues(alpha: 0.10);
 
+    // One pointy-top hexagon centered at the origin; placed by translation.
     final hex = Path()
-      ..moveTo(28, 1)
-      ..lineTo(55, 16)
-      ..lineTo(55, 48)
-      ..lineTo(28, 63)
-      ..lineTo(1, 48)
-      ..lineTo(1, 16)
+      ..moveTo(0, -_r)
+      ..lineTo(_w / 2, -_r / 2)
+      ..lineTo(_w / 2, _r / 2)
+      ..lineTo(0, _r)
+      ..lineTo(-_w / 2, _r / 2)
+      ..lineTo(-_w / 2, -_r / 2)
       ..close();
 
-    canvas.save();
-    canvas.scale(_scale);
-    final w = size.width / _scale;
-    final h = size.height / _scale;
-    for (double y = 0; y < h; y += _tileH) {
-      for (double x = 0; x < w; x += _tileW) {
+    var row = 0;
+    for (double cy = -_rowStep; cy - _r < size.height; cy += _rowStep, row++) {
+      // Every other row shifts half a hex so the columns interlock.
+      final startX = (row.isOdd ? _w / 2 : 0.0) - _w;
+      for (double cx = startX; cx - _w / 2 < size.width; cx += _w) {
         canvas.save();
-        canvas.translate(x, y);
+        canvas.translate(cx, cy);
         canvas.drawPath(hex, paint);
         canvas.restore();
       }
     }
-    canvas.restore();
   }
 
   @override
