@@ -23,13 +23,31 @@
 }
 ```
 
+## Guard key (granularnost cooldowna in muta)
+
+Cooldown in dismiss/mute v `suggestion_log` sta vezana na **guard key**, ne na grobi
+`rule_id` (`'R5'` bi pomenil, da »ne predlagaj obreza te jablane« utiša tudi gnojenje
+iste jablane — narobe):
+
+```
+guard_key = plant_task_rule_id            // R5/R7 (konkretno agronomsko pravilo)
+          ?? '<ruleId>:<taskTypeId>'      // R1–R3, R6 (npr. 'R3:mow', 'R6:fertilize')
+```
+
+`suggestion.rule_id` ostane `'R1'..'R7'` (analitika); guard key je izpeljiv iz vrstice
+(`plant_task_rule_id ?? rule_id + ':' + task_type_id`) — housekeeping ga izpelje ob
+zapisu v `suggestion_log` (shema → `04` §4.3).
+
 ## Sporočila (i18n pogodba)
 
 Vsak `message_key` ima v slang `suggestions.*` tri pod-ključe: `.title`, `.body`, `.cta_hint`
 (neobvezen). Parametri so **vedno** posredovani v `suggestion.message_params` (jsonb) — klient
 NE računa ničesar, samo vstavi v predlogo. Standardni parametri:
 `{subject_label_key, days_overdue, days_since, last_year_date, window_end_date, supply_name,
-suggested_date, frost_date, percent}` — pravilo navede, katere pošlje. `subject_label_key` je
+suggested_date, frost_date, percent}` — pravilo navede, katere pošlje. **`suggested_date`
+pošlje VSAKO pravilo** (engine izračuna datum iz svoje »AKCIJA ob Načrtuj« formule; klient
+ga samo prebere — nikoli ne računa sam, fallback `tomorrow 09:00` le ob manjkajočem paramu).
+`subject_label_key` je
 **katalog ID** (klient prevede prek `catalogLabel()`; custom rastlina → `personal alias/custom_name`,
 ki ga engine pošlje kot `subject_label_raw`).
 
@@ -64,7 +82,7 @@ dry_hours}`; če izvira iz R3/R5, engine uporabi specifičnejši `message_key` I
 doda param `dry_window: true` (predloga doda »jutri kaže suho«).
 **AKCIJA ob Načrtuj:** task `{task_type_id, subjects: [subject], date: tomorrow 09:00 local,
 status: waiting}`.
-**COOLDOWN:** 3 dni po emitu (per rule+subjekt). **DISMISS:** 7 dni.
+**COOLDOWN:** 3 dni po emitu (per guard key+subjekt — §Guard key). **DISMISS:** 7 dni.
 **validUntil:** `today + 2 dni` (vremensko okno hitro zastara).
 
 ## R2 — Osebna obletnica (»lani tačas si …«)
@@ -85,8 +103,9 @@ za `weather_sensitive` tip še `weather_guard` tipa iz `plant_task_rule` (če pr
 sama obletnica (1.0) NE preseže `emit_threshold` (2.0) — emitira se šele v kombinaciji z
 vremenskim oknom ALI sezonskim oknom (+1.0 → 2.0). Namerno: obletnica je šibek signal.
 **SPOROČILO:** `suggestions.history.anniversary` — params `{subject_label_key, task_type_id,
-last_year_date}` (»Lani si {last_year_date} {task}. Letos še nisi.«).
-**AKCIJA ob Načrtuj:** task na `max(today+1, lastYearDate letos)` 09:00.
+last_year_date, suggested_date}` (»Lani si {last_year_date} {task}. Letos še nisi.«).
+**AKCIJA ob Načrtuj:** task na `suggested_date` = `max(today+1, lastYearDate letos)` 09:00
+(izračuna ENGINE in pošlje v params — klient ne računa).
 **COOLDOWN:** 30 dni (efektivno 1× na sezono — naslednje leto je nov sprožilec).
 **DISMISS:** 60 dni (preskoči letošnjo obletnico). **validUntil:** `today + 7`.
 
@@ -181,10 +200,11 @@ SPROŽILEC:
       emit candidate (tudi če today > end — veriga ne zastara, sporočilo dobi late=true)
 ```
 **KONTEKST:** `history.chainStepDate`, `climate.lastFrostDate`.
-**STRAŽE:** skupne + `weather_guard` (zaščiten subjekt → preskok; `harden_off`/`transplant`
-imata frost guard, ki se NE preskoči, ker je `no_frost_forecast_48h` del frost-gate semantike —
-tehnično: koda `no_frost_forecast_48h` se vrednoti tudi za zaščitene subjekte, kadar
-`rule.frost_gate = true`).
+**STRAŽE:** skupne + `weather_guard` — za zaščiten subjekt se `weather_guard` preskoči
+(enako kot povsod, `02` §G + `pametni-motor.md` §2.2). **Izjema (frost-gate semantika):**
+kadar je `rule.frost_gate = true`, se koda `no_frost_forecast_48h` vrednoti TUDI za
+zaščitene subjekte — presaditev ven mora počakati pozebo ne glede na to, kje sadika stoji
+zdaj. Druge guard kode istega pravila ostanejo preskočene.
 **OCENA:** `score_chain_ready (2.0) + (today > end ? 0.5 : 0)` → vedno nad pragom (veriga je
 najmočnejši signal — uporabnik je investiral v sadike).
 **SPOROČILO:** `message_key` iz pravila — params `{subject_label_key, days_since, late}`
@@ -221,11 +241,12 @@ runForUser(userId):
           task_reminders, supplies+task_supplies (če enabled), suggestion_log,
           suggestions (status != 'new' spremembe od zadnjega teka), plant_task_rule (cache).
  2. housekeeping:
-    a. suggestions s status='dismissed' brez log vnosa → upsert suggestion_log:
+    a. suggestions s status='dismissed' brez log vnosa → upsert suggestion_log
+       (ključ = GUARD KEY, gl. §Guard key; vedno SET updated_at = now() — 04 §4.3):
        - dismiss_scope='season'  → dismissed_until = updated_at + dismissDays(rule)
                                    (R5: konec regionaliziranega okna),
        - dismiss_scope='forever' → dismissed_until = 'infinity' (trajen mute za
-         (rule, subjekt); straža 5b ga pokrije brez posebne logike).
+         (guard_key, subjekt); straža 5b ga pokrije brez posebne logike).
     b. suggestions s status='logged' → nič v suggestion_log: klient je ustvaril done
        opravilo → straža 5d (cooldown po izvedbi) + history signali utišajo sami.
     c. suggestions s status='new' in valid_until < today → status='expired'.
@@ -238,14 +259,18 @@ runForUser(userId):
  3. signals = buildSignals(...)          // Poglavje 2 (weather_cache po celici!)
  4. candidates = R5() + R7() + R3() + R2() + R1()       // R1 zadnji (bere R3/R5 stanje)
     → R4 obogatitev.
- 5. STRAŽE za vsak kandidat (vrstni red, fail-fast):
+ 5. STRAŽE za vsak kandidat (vrstni red, fail-fast; cooldown/mute po GUARD KEY):
     a. upravičenost (subjekt obstaja, ni deleted)        — vgrajeno v emit
-    b. state.dismissed(ruleId, subjectKey)               → drop
-    c. cooldown: now - state.lastSuggestedAt < cooldown  → drop
+    b. state.dismissed(guardKey, subjectKey)             → drop
+    c. cooldown: now - state.lastSuggestedAt(guardKey, subjectKey) < cooldown → drop
     d. cooldown po izvedbi: history.lastDone(subject, taskType) > today - cooldownDone
        (cooldownDone = max(3 dni, cadence/2) za cadence tipe; za R5 'v tem oknu/sezoni')
     e. dedup: state.planned(subjectKey, taskTypeId, 14)  → drop
-    f. dedup: state.activeSuggestion(ruleId, subjectKey) → drop (že na pasu)
+    f. dedup: state.activeSuggestion(taskTypeId, subjectKey) → drop — po TIPU, ne po
+       pravilu: dokler je na pasu aktiven predlog istega tipa za isti subjekt, drug
+       (tudi drugo pravilo — npr. drugo hydrangea prune pravilo s prekrivajočim oknom
+       8–13/12–16) NE pride; to je cross-run dedup, ki ga korak 6 (samo znotraj teka)
+       ne pokrije
     g. weather_guard (preskočen za protected subjekt; frost_gate vedno velja)
     h. score < emit_threshold                            → drop
  6. dedup med kandidati: po (taskTypeId, subjectKey) obdrži najvišjo oceno.
@@ -274,9 +299,9 @@ Tri resnice »ne kaži mi tega« → tri ločene poti (+ Načrtuj). Vidna gumba 
 | **Načrtuj** | gumb | `status='planned'`, `planned_task_id` (+ ustvari waiting task) | dedup straža 5e prevzame |
 | **Opusti** (»letos ne«) | gumb | `status='dismissed'`, `dismiss_scope='season'` | housekeeping 2a → `dismissed_until` do konca okna/`dismissDays` |
 | **✓ Že opravljeno** | ⋯ | mini-sheet danes/včeraj/izberi datum → ustvari **done** task (z `agg_context`!) → `status='logged'`, `planned_task_id` | history + cooldown po izvedbi utišata; dnevnik in V2 agregat dobita dogodek |
-| **Ne predlagaj več tega** (»not interested«) | ⋯ | `status='dismissed'`, `dismiss_scope='forever'` | housekeeping 2a → `dismissed_until='infinity'` za (rule, subjekt) |
+| **Ne predlagaj več tega** (»not interested«) | ⋯ | `status='dismissed'`, `dismiss_scope='forever'` | housekeeping 2a → `dismissed_until='infinity'` za (guard key, subjekt) |
 | **Te rastline/območja nimam več** | ⋯ | confirm dialog → soft-delete `user_plant`/`area` (obstoječi repo) + `status='dismissed'` | upravičenost pobije VSA prihodnja pravila za subjekt; housekeeping 2d počisti morebitne ostale aktivne |
 
-Trajen mute je per **(rule_id, subject_key)** — »ne predlagaj obreza te jablane« ne utiša
-gnojenja iste jablane niti obreza druge. Razveljavitev trajnega muta v MVP ni v UI
-(zavestno; če bo potreba → Settings seznam mutov, backlog).
+Trajen mute je per **(guard_key, subject_key)** (gl. §Guard key) — »ne predlagaj obreza te
+jablane« ne utiša gnojenja iste jablane niti obreza druge. Razveljavitev trajnega muta v MVP
+ni v UI (zavestno; če bo potreba → Settings seznam mutov, backlog).

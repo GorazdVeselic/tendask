@@ -76,7 +76,9 @@ Seed vsebine: `tool/gen_rules_sql.dart` (vzorec po `tool/gen_catalog_sql.dart`) 
 -- the client only ever updates status (+updated_at) via normal sync push.
 create table suggestion (
   id              uuid primary key,
-  user_id         uuid not null,
+  -- FK na auth.users je OBVEZEN: delete_account() (0004) briše auth.users in se
+  -- zanaša izključno na ON DELETE CASCADE (GDPR) — brez FK vrstice osirotijo.
+  user_id         uuid not null references auth.users(id) on delete cascade,
   rule_id         text not null,              -- 'R1'..'R7' engine rule
   plant_task_rule_id text references plant_task_rule(id),  -- null for R1–R4
   task_type_id    text not null references task_type(id),
@@ -115,14 +117,17 @@ create policy suggestion_update on suggestion
 
 -- Engine guard state (cooldown / dismissed_until). SERVER-ONLY writer; the
 -- client pulls a read-only mirror (no insert/update policies on purpose).
+-- guard_key is FINE-GRAINED (docs/m11/03 §Guard key): plant_task_rule.id for
+-- R5/R7, '<R>:<task_type_id>' for R1-R3/R6 — NOT the bare 'R5' (a bare engine
+-- rule id would make "Don't suggest pruning" also mute fertilizing).
 create table suggestion_log (
-  user_id           uuid not null,
-  rule_id           text not null,
+  user_id           uuid not null references auth.users(id) on delete cascade,
+  guard_key         text not null,
   subject_key       text not null,
   last_suggested_at timestamptz,
   dismissed_until   timestamptz,
   updated_at        timestamptz not null default now(),
-  primary key (user_id, rule_id, subject_key)
+  primary key (user_id, guard_key, subject_key)
 );
 
 create index suggestion_log_user_updated_idx on suggestion_log (user_id, updated_at);
@@ -130,10 +135,19 @@ create index suggestion_log_user_updated_idx on suggestion_log (user_id, updated
 alter table suggestion_log enable row level security;
 create policy suggestion_log_select on suggestion_log
   for select to authenticated using (user_id = auth.uid());
+```
+
+> **⚠️ `updated_at` ob strežniškem UPDATE:** Postgres `default now()` velja SAMO ob INSERT.
+> Vsak strežniški UPDATE/UPSERT na `suggestion` (housekeeping: `status='expired'`, retencija
+> `deleted=true`) in `suggestion_log` mora **eksplicitno** nastaviti `updated_at = now()`,
+> sicer inkrementalni pull (`updated_at > last_pulled_at`) spremembe nikoli ne prinese na
+> napravo (potekle kartice bi lokalno ostale žive). Engine to dela v `emit`/`housekeep` kodi.
+
+```sql
 
 -- Engine bookkeeping: one row per user, server-only (no client policies).
 create table engine_run (
-  user_id       uuid primary key,
+  user_id       uuid primary key references auth.users(id) on delete cascade,
   last_run_date date,                          -- user-local date of last engine run
   last_push_date date                          -- frequency cap: max 1 push per local day
 );
@@ -463,7 +477,10 @@ begin
       and (now() at time zone coalesce(p.timezone, 'UTC'))::time <  time '12:00'
       and (r.last_run_date is null
            or r.last_run_date < (now() at time zone coalesce(p.timezone, 'UTC'))::date)
-    limit 50
+    -- Batch 25 (ne več): worst-case uporabnik = svež weather fetch s 3 retry-ji
+    -- (do ~13 s) → 50 bi lahko prebil Edge Function wall-clock limit. Dispatcher
+    -- itak pobere ostanek čez 30 min (engine_run filter).
+    limit 25
   ) u;
 
   if ids is null then return; end if;
@@ -594,9 +611,11 @@ export async function sendSuggestionPush(opts: {
 }
 ```
 
-4. Push **besedilo** lokalizira strežnik iz `profile.lang` (en/sl/de) — Edge Function ima
-   minimalen slovar push naslovov (`_shared/push_i18n.ts`, generiran iz slang JSON-ov v
-   koraku M11.12); telo v pasu na Domov pa vedno prevede klient (poln slang).
+4. Push **besedilo** lokalizira strežnik iz `profile.lang` (en/sl/de; null → en) — Edge
+   Function ima minimalen slovar push naslovov (`_shared/push_i18n.ts`, ki ga generira
+   `tool/gen_push_i18n.dart` iz `i18n/*.i18n.json` rezine `suggestions.*.title` — poženi ob
+   vsaki spremembi ključev, korak M11.12); telo v pasu na Domov pa vedno prevede klient
+   (poln slang).
 5. Ob `false` (UNREGISTERED): `update profile set fcm_token = null where user_id = ...`.
 
 ## 4.9 Entitlement (Tendask+, za M11.20)
@@ -604,7 +623,7 @@ export async function sendSuggestionPush(opts: {
 ```sql
 -- 0007_entitlement.sql (ob koraku M11.20)
 create table entitlement (
-  user_id          uuid primary key,
+  user_id          uuid primary key references auth.users(id) on delete cascade,
   product          text not null default 'tendask_plus',
   status           text not null default 'none'
                    check (status in ('none', 'trial', 'active', 'expired')),

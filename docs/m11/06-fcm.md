@@ -55,8 +55,8 @@ class FcmTokenService extends _$FcmTokenService {
 
   @override
   Future<void> build() async {
-    final auth = ref.watch(authStateProvider);          // obstoječi provider
-    if (!auth.isSignedIn) return;                       // guest: no engine, no token
+    final auth = ref.watch(authServiceProvider);        // obstoječi provider
+    if (!auth.hasSession) return;                       // guest: no engine, no token
     final messaging = FirebaseMessaging.instance;
     final settings = await messaging.getNotificationSettings();
     if (settings.authorizationStatus != AuthorizationStatus.authorized) return;
@@ -93,7 +93,8 @@ Future<void> initFcmHandlers(Ref ref) async {
 
   FirebaseMessaging.onMessage.listen((msg) {
     if (msg.data['type'] != 'suggestion') return;
-    unawaited(ref.read(syncCoordinatorProvider).pullNow());   // pas se osveži iz drift streama
+    // pullNow() je NOVA javna metoda na koordinatorju (08 §8.5) — pas se osveži iz drift streama
+    unawaited(ref.read(syncCoordinatorProvider).pullNow());
     ref.read(notificationServiceProvider)
         .showForegroundSuggestion(msg);                       // tiha lokalna notifikacija
   });

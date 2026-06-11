@@ -19,7 +19,7 @@
 | [`06-fcm.md`](06-fcm.md) | Firebase/FCM setup, token, foreground/background, deep link, opt-in |
 | [`07-climate-profile.md`](07-climate-profile.md) | Open-Meteo klimatski profil: API klici, bucket algoritem, frost datumi |
 | [`08-flutter-arhitektura.md`](08-flutter-arhitektura.md) | Riverpod providerji, SuggestionRepository, Okolica zavihek, paywall |
-| [`09-koraki.md`](09-koraki.md) | **Delovni tasklist** — koraki M11.1–M11.22 z DoD, odvisnostmi, commiti |
+| [`09-koraki.md`](09-koraki.md) | **Delovni tasklist** — koraki M11.1–M11.21 z DoD, odvisnostmi, commiti |
 | [`10-odprta-vprasanja.md`](10-odprta-vprasanja.md) | Edine odločitve, ki se kalibrirajo po podatkih/testu |
 
 ## Ključne arhitekturne odločitve (povzetek, podrobnosti v poglavjih)

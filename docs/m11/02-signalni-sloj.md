@@ -35,6 +35,14 @@ GET https://api.open-meteo.com/v1/forecast
 > postavijo na `null` → vsa pravila z vremenskim SPROŽILCEM (R1) se preskočijo, pravila z
 > vremensko STRAŽO pa se preskočijo le, če straža potrebuje manjkajoči signal (fail-closed:
 > raje brez predloga kot predlog ob neznanem vremenu). Tek se NE prekine.
+> **Op. 3 — uporabnik BREZ lokacije ≠ izpad:** če je `profile.h3_r7 = null`, vreme ni
+> »začasno nedosegljivo«, ampak **trajno neznano** — fail-closed bi trajno ugasnil večino
+> pravil (skoraj vsa R5 imajo guard). ODLOČITEV: za uporabnika brez lokacije se
+> `weather_guard` straže PRESKOČIJO (kot pri zaščitenem subjektu), R1 (vremenski sprožilec)
+> se preskoči, frost sidra padejo na `frost_defaults`; engine doda param
+> `no_location: true` → predloga sporočila doda »preveri vreme« pripis, klient pa v
+> Settings/pas footer pokaže »nastavi lokacijo za natančnejše predloge«
+> (`suggestions.no_location_hint`).
 
 ## B) Klimatski signali (iz `profile.climate_profile`, izračunan na napravi — gl. `07`)
 
@@ -86,16 +94,17 @@ uporabnikovem lokalnem dnevu (`profile.timezone`).
 |---|---|---|---|
 | `state.planned(subjectKey, taskTypeId, withinDays)` | `bool` | obstaja `task` `status='waiting' AND deleted=false` istega tipa z istim subjektom in `date ∈ [today, today+withinDays]` | dedup straža (withinDays=14) |
 | `state.reminderExists(subjectKey, taskTypeId, withinDays)` | `bool` | kot `planned`, a task ima ≥1 `task_reminder` | dedup proti plasti A (vsebovan v `planned` — opomnik visi na tasku; ločen signal za telemetrijo) |
-| `state.dismissed(ruleId, subjectKey)` | `bool` | `suggestion_log.dismissed_until > now()` | straža Opusti |
-| `state.lastSuggestedAt(ruleId, subjectKey)` | `DateTime?` | `suggestion_log.last_suggested_at` | cooldown predloga |
-| `state.activeSuggestion(ruleId, subjectKey)` | `bool` | obstaja `suggestion` `status='new' AND valid_until >= today` | ne podvoji aktivnega predloga |
+| `state.dismissed(guardKey, subjectKey)` | `bool` | `suggestion_log.dismissed_until > now()` (guard key → `03` §Guard key) | straža Opusti |
+| `state.lastSuggestedAt(guardKey, subjectKey)` | `DateTime?` | `suggestion_log.last_suggested_at` | cooldown predloga |
+| `state.activeSuggestion(taskTypeId, subjectKey)` | `bool` | obstaja `suggestion` `status='new' AND valid_until >= today` istega TIPA za isti subjekt (ne glede na pravilo) | cross-run dedup (straža 5f) |
 
 ## G) Slovar `weather_guard` kod (strojno-berljive straže iz Poglavja 1)
 
 Guard se vrednoti kot **konjunkcija** kod (`"dry24h,wind_lt_15"` = obe). Neznana koda → guard
 fail-closed (pravilo se ne sproži) + Sentry opozorilo (tolerantni parser, a viden signal).
 Za subjekt v **zaščitenem območju** se CELOTEN guard preskoči (`frost_gate` pa NE — gl.
-`pametni-motor.md` §2.2).
+`pametni-motor.md` §2.2). Enak preskok velja za uporabnika **brez lokacije** (op. 3 zgoraj —
+trajno neznano vreme ≠ izpad).
 
 | Koda | Pogoj |
 |---|---|

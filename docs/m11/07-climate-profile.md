@@ -53,6 +53,13 @@ growing_season_days    = frost_first_autumn_doy - frost_last_spring_doy   (null,
 ```
 - **Mediana, ne povprečje** (odporna na ekstremno leto). Prestopna leta: DOY računamo z dnem
   v ne-prestopnem koledarju (29. feb → DOY 59.5 zaokrožen na 60) — napaka ±1 dan je pod šumom.
+- **Južna polobla (`lat < 0`):** iskalni okni se ZAMENJATA — zadnja pomladna pozeba v
+  [1. jul, 31. dec], prva jesenska v [1. jan, 30. jun] (frost sidra so datumi → `frost_offset`
+  in `growth_stage` pravila delujejo pravilno brez sprememb). **`month_window` pravila in
+  sezonske omejitve `cadence_only` se za južno poloblo PRESKOČIJO** — regionalizacijski
+  Δ-clamp ±4 tednov ne more popraviti 26-tedenskega zamika in bi lagal. Klimatski profil
+  shrani `"hemisphere": "south"` (tolerantni parser; severna = polje odsotno). Ciljni trg je
+  severni — to je zavestna MVP meja, ne hrošč.
 - Varnostni rob `kFrostSafetyDays = 7` aplicira MOTOR ob branju (02 §B), ne shramba —
   shranimo surovo mediano (re-kalibracija brez re-fetcha).
 - Frost-free lokacije: motor pade na `app_config.frost_defaults` SAMO za `month_window`

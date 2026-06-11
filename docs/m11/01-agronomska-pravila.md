@@ -881,8 +881,10 @@ message_key: "suggestions.hydrangea.prune_new_wood"
 ```
 > Aplikacija ne pozna podvrste hortenzije → obe pravili se sprožita v svojih oknih in vsako
 > sporočilo razloži, za KATERO skupino velja (»če imaš metlasto/drevesasto → zdaj ostro;
-> če vrtno (macrophylla) → samo odcveteli del aprila«). Dedup straža prepreči, da bi v istem
-> tednu prišli obe (cooldown po (subjekt+tip) — gl. R5).
+> če vrtno (macrophylla) → samo odcveteli del aprila«). Okni se PREKRIVATA (tedna 12–13) —
+> da ne prideta obe kartici hkrati, skrbita straža 5f (aktivni predlog po **(tip, subjekt)**,
+> cross-run) in dedup koraka 6 (znotraj teka) — gl. `03` §Cevovod. Cooldown/mute sta sicer
+> per guard key (`03` §Guard key), zato dismiss enega pravila NE utiša drugega trajno.
 
 ---
 

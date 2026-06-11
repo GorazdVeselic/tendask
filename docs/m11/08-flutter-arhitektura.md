@@ -44,7 +44,10 @@ return switch (suggestions) {
 - **Filter v streamu (drift, ne v widgetu):** `status = 'new' AND deleted = 0 AND
   valid_until >= startOfDay(clock.now())` **+ join na subjekt: `user_plant.deleted = 0`
   oz. `area.deleted = 0`** (odstranjena rastlina takoj umakne kartico, ne šele strežniški
-  housekeeping). `Clock` injectan (testabilnost).
+  housekeeping). **POZOR: LEFT join z OR logiko** — `cat:` predlogi (R2/R6 brez konkretnega
+  subjekta) nimajo ne `user_plant_id` ne `area_id`; INNER join bi jih požrl. Pogoj:
+  `(user_plant_id IS NULL OR user_plant.deleted = 0) AND (area_id IS NULL OR area.deleted = 0)`.
+  `Clock` injectan (testabilnost).
 - **Načrtuj:**
 ```dart
 Future<void> planSuggestion(SuggestionRow s) async {
@@ -198,6 +201,10 @@ final hasPlus = ent?.isActive ?? false;     // trial ali active, expires_at > no
 
 ## 8.4 Nove i18n vsebine (slang)
 
+> **Obseg, ne podrobnost:** 61 ključev × (title+body) × 3 jeziki ≈ **400+ uporabniško vidnih
+> nizov** — to je vsebinsko pisanje, ne koda. V M11.13 ga obravnavaj kot ločen pod-korak
+> (najprej EN celoten, nato SL/DE prevod v bloku) — ne mešaj s widget kodo v istem sedenju.
+
 - `suggestions.*` — naslov/telo za vsak `message_key` iz 01 (61 pravil; en/sl/de) +
   `suggestions.actions.plan/.dismiss/.already_done/.never/.remove_subject`,
   `suggestions.toast.planned/.logged`, `suggestions.history_status.*`,
@@ -207,10 +214,19 @@ final hasPlus = ent?.isActive ?? false;     // trial ali active, expires_at > no
 - `community.*` — landing/detajl/tease/empty state.
 - Po dodajanju: `dart run slang` (ločen CLI!).
 
-## 8.5 Kaj se NE spremeni
+## 8.5 Kaj se NE spremeni — in kaj je vseeno NOVO v core
 
 - Sync servis: samo registracija novih tabel (pull: suggestion, suggestion_log,
   plant_task_rule[katalog]; push: suggestion, profile nova polja) — brez novih arhitekturnih
   plasti.
 - Plast A (lokalni opomniki) ostane nedotaknjena; dedup proti njej dela strežnik.
 - Domov zasloni: pas je NOV widget nad obstoječim seznamom; nič se ne prestrukturira.
+
+**Manjše NOVE core zmožnosti, ki jih psevdokoda v 06 predpostavlja (danes NE obstajajo):**
+- `routerProvider` — router danes nastane prek `createAppRouter()` brez Riverpod providerja;
+  za FCM deep link ga ovij v provider (ali uporabi globalni `GoRouter` instance — odloči ob
+  M11.7, manjša od obeh sprememb).
+- Javni pull trigger na sync koordinatorju (`pullNow()` ali raba obstoječega
+  `syncServiceProvider.sync()`) — koordinator danes nima javnega API-ja za »osveži zdaj«.
+- Auth: spec piše `authStateProvider.isSignedIn` — dejanski API je
+  `authServiceProvider.hasSession` (gost = `kLocalUserId`, brez seje). Uporabi obstoječe ime.

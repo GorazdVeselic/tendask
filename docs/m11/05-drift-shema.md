@@ -41,8 +41,10 @@ class Tasks extends Table {
 ```
 - **Migracija:** additive.
 - **Piše:** `TasksRepository` — ob prehodu `status → done` (ista koda kot vremenski posnetek;
-  vrednosti iz `profile` v drift). Ob `↩ Na čaka` se posnetek NE briše (zamrznjen je za
-  zgodovinsko semantiko; ponovni `done` ga prepiše z aktualnim).
+  vrednosti iz `profile` v drift). **Semantika = ENAKA kot `weather` (`_captureWeather`):
+  piši samo, če je `null`** (write-once, zamrznjen). Ob `↩ Na čaka` se NE briše; ponovni
+  `done` ga torej NE prepiše — prvi posnetek velja (konsistentno z `vreme-shranjevanje.md`
+  »zamrznjen posnetek«).
 - **Bere:** samo strežniški cron (klient ga ne prikazuje).
 
 ## 5.3 `suggestion` (nova, sinhronizirana) + `suggestion_log` (nova, pull-only zrcalo)
@@ -65,8 +67,8 @@ class Suggestions extends Table {
   // JSON params for the i18n template; client only interpolates, never computes.
   TextColumn get messageParams => text().withDefault(const Constant('{}'))();
   RealColumn get score => real()();
-  TextColumn get status =>
-      textEnum<SuggestionStatus>().withDefault(const Constant('new'))();
+  // Plain TextColumn + top-level constants, NOT textEnum (see note below).
+  TextColumn get status => text().withDefault(const Constant('new'))();
   // 'season' | 'forever' — meaningful only with status='dismissed' (docs/m11/03 §Akcije).
   TextColumn get dismissScope =>
       text().withDefault(const Constant('season'))();
@@ -84,8 +86,8 @@ class Suggestions extends Table {
 
 // lib/core/suggestion_status.dart
 // POZOR: 'new' je Dart rezervirana beseda, DB vrednost pa MORA biti 'new' (zrcalo
-// Supabase) — drift textEnum ne zna remap-ati. ODLOČITEV: navaden TextColumn `status`
-// + top-level konstante (vzorec kot sync_status), brez textEnum za to polje:
+// Supabase) — drift textEnum ne zna remap-ati. ODLOČITEV (koda zgoraj jo že odraža):
+// navaden TextColumn `status` + top-level konstante (vzorec kot sync_status):
 // kSuggestionNew='new', kSuggestionPlanned='planned', kSuggestionDismissed='dismissed',
 // kSuggestionLogged='logged', kSuggestionExpired='expired';
 // kDismissScopeSeason='season', kDismissScopeForever='forever'.
@@ -95,7 +97,8 @@ class SuggestionLogs extends Table {
   String get tableName => 'suggestion_log';
 
   TextColumn get userId => text()();
-  TextColumn get ruleId => text()();
+  // Fine-grained guard key (docs/m11/03 §Guard key), mirrors Supabase.
+  TextColumn get guardKey => text()();
   TextColumn get subjectKey => text()();
   DateTimeColumn get lastSuggestedAt => dateTime().nullable()();
   DateTimeColumn get dismissedUntil => dateTime().nullable()();
@@ -103,7 +106,7 @@ class SuggestionLogs extends Table {
   // Pull-only mirror: no syncStatus column — the client NEVER pushes this table.
 
   @override
-  Set<Column> get primaryKey => {userId, ruleId, subjectKey};
+  Set<Column> get primaryKey => {userId, guardKey, subjectKey};
 }
 ```
 - **Migracija:** `m.createTable` ×2.
@@ -116,6 +119,13 @@ class SuggestionLogs extends Table {
   (`markPlanned`/`dismiss` → status + `updated_at` + `sync_status=pending`).
 - **Gost (brez računa):** motor teče samo strežniško → gost predlogov nima (pas se ne pokaže).
   To je sprejeta MVP omejitev — dokumentirana v Settings copy (»predlogi zahtevajo račun«).
+  (Arhitekturno potrjeno: gost je čisto lokalen, `kLocalUserId='local'`, brez Supabase seje →
+  dispatcher ga nikoli ne vidi.)
+- **GDPR izvoz:** `AppDatabase.exportUserData()` (account_repository) razširi s tabelo
+  `suggestion` in novimi `profile` polji (`climate_profile`, `climate_bucket`, `timezone`;
+  `fcm_token` izpusti — tehnični identifikator naprave, ne uporabniška vsebina, in se ob
+  odjavi itak ponulli). `suggestion_log` je strežniška izpeljanka istih odločitev — v izvoz
+  ne sodi. Izbris računa pokrijejo novi `ON DELETE CASCADE` FK-ji (04 §4.3/§4.9).
 
 ## 5.4 `plant_task_rule` (nova, katalog — seed ob zagonu + redki pull)
 

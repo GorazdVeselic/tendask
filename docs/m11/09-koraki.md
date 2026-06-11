@@ -10,18 +10,23 @@
 SQL iz `04` §4.1–4.3: novi stolpci (profile/task/task_type), `plant_task_rule`, `suggestion`,
 `suggestion_log`, `engine_run`, `weather_cache`, `app_config` (+seed vrednosti), `k_privacy()`.
 - **DoD:** `supabase db push` uspe; RLS preverjena ročno (anon bere `plant_task_rule`, ne bere
-  `suggestion_log` tujega; authenticated bere/piše samo svoje `suggestion`); obstoječi APK
-  (vc2) ob pull-u NE crasha (tolerantni parser — nova polja ignorira).
+  `suggestion_log` tujega; authenticated bere/piše samo svoje `suggestion`); **GDPR cascade
+  preverjen** (testni uporabnik s `suggestion`/`suggestion_log`/`engine_run` vrsticami →
+  `delete_account()` → vse izginejo); obstoječi APK (vc2) ob pull-u NE crasha (tolerantni
+  parser — nova polja ignorira).
 - **Odvisnosti:** — · **Kompleksnost:** M
 - **Commit:** `feat(db): M11 shema motorja — plant_task_rule, suggestion, app_config`
 
 ### M11.2 — drift migracija (zrcalo) + agg_context štemplanje `[ ]`
 `05` §5.1–5.3 + 5.5: profile +5 stolpcev, task.aggContext, task_type.seasonal, tabeli
 suggestion/suggestion_log, schemaVersion bump, sync registracija (pull+push po 05), mappers.
-TasksRepository ob `done` štemplja `agg_context` (+ ohrani ob `↩ Na čaka`).
+TasksRepository ob `done` štemplja `agg_context` (write-once kot weather; ohrani ob
+`↩ Na čaka`). **GDPR izvoz:** `exportUserData()` razširi s `suggestion` + nova profile polja
+(05 §5.3).
 - **DoD:** `flutter test` zelen (migracijski test od stare sheme); ✓ na opravilu zapiše
   `agg_context` z vrednostmi iz profila (drift inspekcija); sync round-trip (push+pull) za
-  suggestion vrstico deluje proti dev Supabase.
+  suggestion vrstico deluje proti dev Supabase; izvozni JSON vsebuje suggestion vrstice +
+  climate polja.
 - **Odvisnosti:** M11.1 · **Kompleksnost:** L
 - **Commit:** `feat(db): drift zrcalo M11 sheme + agg_context posnetek ob opravljeno`
 
@@ -111,8 +116,9 @@ dedup med kandidati, rank, band_max_active, housekeeping (expired, dismissed→l
 - **Commit:** `feat(engine): R1 vremensko okno, R4 zaloga, rangiranje in frekvenčna kapica`
 
 ### M11.12 — Dispatch cron + FCM pošiljanje `[ ]`
-`04` §4.7 (engine_dispatch + pg_cron + Vault secret 👤) + §4.8 (_shared/fcm.ts, push_i18n
-slovar iz slang, UNREGISTERED handling, quiet-hours/cap check, engine_run.last_push_date).
+`04` §4.7 (engine_dispatch + pg_cron + Vault secret 👤) + §4.8 (_shared/fcm.ts;
+`tool/gen_push_i18n.dart` generira `_shared/push_i18n.ts` iz slang JSON-ov — nov mini tool;
+UNREGISTERED handling, quiet-hours/cap check, engine_run.last_push_date).
 - **DoD:** na dev: pg_cron sproži batch ob lokalni 07:00+ (simulacija: ročni
   `select engine_dispatch()`); push prispe na fizično napravo z naslovom v jeziku profila;
   drugi tek isti dan NE pošlje (kapica); opt-out uporabnik ne dobi pusha, suggestion vrstica
@@ -127,7 +133,7 @@ slovar iz slang, UNREGISTERED handling, quiet-hours/cap check, engine_run.last_p
 plan/dismiss flow, **⋯ action sheet (»Že opravljeno« z mini-sheetom datuma + done task;
 »Ne predlagaj več tega« = dismiss forever; »Te rastline nimam več« = confirm + soft-delete
 subjekta)**, deep-link highlight, i18n `suggestions.*` (en/sl/de — vseh 61 message_key +
-akcije + disclaimer), `dart run slang`.
+akcije + disclaimer; **ločen pod-korak, ~400+ nizov — gl. 08 §8.4**), `dart run slang`.
 - **DoD:** widget testi (Plan ustvari waiting task in skrije kartico; Dismiss skrije;
   »Že opravljeno« ustvari DONE task z izbranim datumom + `agg_context` in skrije;
   »Ne predlagaj več« zapiše `dismiss_scope='forever'`; »Nimam več« soft-deleta subjekt
@@ -138,6 +144,8 @@ akcije + disclaimer), `dart run slang`.
 - **Commit:** `feat(home): pas pametnih predlogov z Načrtuj/Opusti`
 
 ### M11.13b — Zaslon Pretekli predlogi `[ ]`
+**Wireframe NE obstaja** — pred kodo skiciraj `docs/wireframes/` (CLAUDE.md pravilo: wireframe
+pred zaslonom) ali zapiši zavestno izjemo v koncept §7.12.
 `08` §8.1 (suggestion_history_screen) + `03` §Cevovod 2e (retencija 365 d v housekeeping):
 `watchHistory()`, bralna časovnica s status čipi, vstopa (⋯ na pasu + Nastavitve), tap na
 `Planned` odpre nastalo opravilo; i18n `suggestions.history_status.*`.
@@ -175,6 +183,8 @@ Konsolidacija: Deno test suite (signali, vsa pravila, cevovod, regionalizacija) 
 - **Commit:** `feat(db): V2 agregatne tabele + nočni cron (feed, percentil, frekvenca)`
 
 ### M11.17 — Okolica: data + landing (feed »Ta teden«) `[ ]`
+**Wireframe:** preveri, ali `community-flow_v3.html` pokriva landing IN detajl (M11.18) —
+sicer pred kodo dopolni wireframe.
 `08` §8.3: CommunityRepository (feed + population + cache tabela 05 §5.6), 5. zavihek ⬡,
 landing »This week« (kvalitativen feed), obseg label, empty/cold-start stanja.
 - **DoD:** widget test landing (feed iz mock repo); na napravi z dev agregati: feed se
@@ -204,7 +214,7 @@ community_hints opt-in že iz M11.6.
 `04` §4.9 (entitlement, 0007) + `08` §8.3 paywall: tease overlay, start-trial Edge Function,
 in_app_purchase + verify-purchase + play-rtdn (👤 Play Console produkt ~9,99 €/leto +
 ~1,99 €/mes, RTDN topic). **PRED začetkom: potrditev paketa `in_app_purchase` (ni v
-tech-stack §1) + cen.**
+tech-stack §1) + cen; wireframe za paywall/tease overlay NE obstaja — skiciraj pred kodo.**
 - **DoD:** trial flow e2e na napravi (start → 14 dni → expired → tease); nakup v internem
   testu (Play sandbox) odklene; RLS: entitlement bere samo lastnik; brez Plus = tease,
   s Plus = polni pogledi.
