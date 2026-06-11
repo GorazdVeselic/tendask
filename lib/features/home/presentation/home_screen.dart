@@ -187,16 +187,16 @@ class _WeatherSection extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final weather = ref.watch(currentWeatherProvider);
+    // Keep the last snapshot visible while a refresh is in flight — the spinner
+    // is only for the very first load, when there is nothing to show yet.
+    final snapshot = weather.value;
+    if (snapshot != null) return CurrentWeatherCard(snapshot: snapshot);
     if (weather.isLoading) return const _WeatherLoadingCard();
-    final snapshot = weather.asData?.value;
-    if (snapshot == null) {
-      return InkWell(
-        borderRadius: BorderRadius.circular(12),
-        onTap: () => ref.invalidate(currentWeatherProvider),
-        child: const CurrentWeatherCard(snapshot: null),
-      );
-    }
-    return CurrentWeatherCard(snapshot: snapshot);
+    return InkWell(
+      borderRadius: BorderRadius.circular(12),
+      onTap: () => ref.invalidate(currentWeatherProvider),
+      child: const CurrentWeatherCard(snapshot: null),
+    );
   }
 }
 
@@ -205,15 +205,26 @@ class _WeatherLoadingCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Card(
+    final theme = Theme.of(context);
+    return Card(
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 18),
-        child: Center(
-          child: SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator.adaptive(strokeWidth: 2),
-          ),
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 18),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            const SizedBox(
+              width: 18,
+              height: 18,
+              child: CircularProgressIndicator.adaptive(strokeWidth: 2),
+            ),
+            const SizedBox(width: 12),
+            Text(
+              context.t.weather.loading,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ],
         ),
       ),
     );

@@ -730,6 +730,8 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get detail_none => 'Keine Wetteraufnahme (zum Zeitpunkt offline).';
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
 	@override String get home_retry => 'Zum Wiederholen tippen';
+	@override String get loading => 'Wetter wird geladen…';
+	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
 }
 
 /// The flat map containing all translations for locale <de>.
@@ -1152,6 +1154,8 @@ extension on TranslationsDe {
 			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
+			'weather.loading' => 'Wetter wird geladen…',
+			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
 			_ => null,
 		};
 	}

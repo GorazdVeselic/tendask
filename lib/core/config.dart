@@ -23,9 +23,11 @@ const kWeatherRetryDelays = <Duration>[
 const kWeatherCacheTtl = Duration(minutes: 30);
 
 /// How long a persisted snapshot may still be shown when a re-fetch fails
-/// (offline). Past this the dashboard degrades to "unavailable" rather than
-/// showing a stale forecast. Survives app restarts (device-local cache).
-const kWeatherStaleTtl = Duration(hours: 2);
+/// (offline or a degraded Open-Meteo). Generous on purpose: opening the app the
+/// next morning must show yesterday's weather (with a "updated at" stamp) rather
+/// than a blank card. Past this the dashboard degrades to "unavailable", because
+/// the forecast strip would then be mostly past days. Survives app restarts.
+const kWeatherStaleTtl = Duration(hours: 48);
 
 /// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
 /// The rest stay collapsed until expanded; sorted by per-user frequency.

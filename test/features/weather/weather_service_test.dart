@@ -34,6 +34,12 @@ class _StubClient implements OpenMeteoClient {
     }
     return r;
   }
+
+  @override
+  Future<OpenMeteoResponse> fetchCurrent({
+    required double latitude,
+    required double longitude,
+  }) => fetch(latitude: latitude, longitude: longitude);
 }
 
 /// In-memory cache standing in for the local_flag-backed repository.
@@ -116,6 +122,24 @@ void main() {
       expect(client.calls, 2);
     });
 
+    test('keeps a day-old snapshot when offline (within the stale TTL)', () async {
+      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+      final client = _StubClient()..next = _respWithTemp(20);
+      final service = _service(client, clock);
+
+      await service.captureCached(latitude: 46, longitude: 14.5);
+
+      // Next morning (24 h later) and offline: still show yesterday's snapshot
+      // rather than a blank card.
+      clock.advance(const Duration(hours: 24));
+      client.next = null;
+      final degraded = await service.captureCached(
+        latitude: 46,
+        longitude: 14.5,
+      );
+      expect(degraded?.temperature, 20);
+    });
+
     test('drops the stale snapshot once past the stale TTL', () async {
       final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
       final client = _StubClient()..next = _respWithTemp(20);
@@ -123,8 +147,8 @@ void main() {
 
       await service.captureCached(latitude: 46, longitude: 14.5);
 
-      // 3 h later and offline: beyond the 2 h stale window → unavailable.
-      clock.advance(const Duration(hours: 3));
+      // 49 h later and offline: beyond the 48 h stale window → unavailable.
+      clock.advance(const Duration(hours: 49));
       client.next = null;
       final result = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(result, isNull);

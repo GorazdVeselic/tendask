@@ -193,3 +193,22 @@ za V2 cron backstop, ki bi sicer trčil v throttling (§9.1) in licenco (§9.2) 
 
 **Vir:** [pricing](https://open-meteo.com/en/pricing) · [terms](https://open-meteo.com/en/terms) ·
 [discussion #853](https://github.com/open-meteo/open-meteo/discussions/853). Odločitev pred V2/launch.
+
+## 10. Odpornost dashboarda (implementirano, M9.9)
+
+Ločeno od shrambnega modela (§1–§8): kako se **živa vremenska kartica na Domov** obnaša, ko je
+Open-Meteo nedosegljiv ali počasen. Offline/degradiran API je **normalno stanje** (vrt + opažen
+realni izpad: 502 + odzivi 40+ s), ne izjema. Pravila (konstante v `core/config.dart`):
+
+- **Lažji zahtevek za dashboard.** Kartica kaže le trenutne pogoje + 3-dnevno napoved, zato
+  `OpenMeteoClient.fetchCurrent()` izpusti `hourly` (soil/precip) in `et0` — najtežja, najpočasnejša
+  dela payloada. Težki tri-pasni posnetek (§3 tip A + §7.10 detajl opravila) ostane poln prek
+  `fetch()`. Hitreje in bolj zanesljivo na počasnih povezavah (ne reši pa popolnega izpada).
+- **Zadnji posnetek preživi izpad.** Sveže velja `kWeatherCacheTtl` (30 min, brez re-fetcha);
+  ob spodletelem re-fetchu se zadnji posnetek še kaže do `kWeatherStaleTtl` (**48 h**) — odpiranje
+  naslednje jutro pokaže včerajšnje vreme, ne prazne kartice. Čez 48 h pade na »ni na voljo«
+  (napovedni pas bi bil sicer večinoma pretekli dnevi). Cache je device-local (`local_flags`),
+  preživi restart.
+- **Pošten prikaz starosti.** Star posnetek nosi tih žig »Osveženo ob X« (`weather.updated_at`);
+  svež (< 30 min) je brez žiga. Med osveževanjem star posnetek ostane viden (ne spinner) — spinner
+  z besedilom »Nalagam vreme…« le ob prvem nalaganju, ko ni česa pokazati.

@@ -736,6 +736,8 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
 	@override String get home_unavailable => 'Vreme trenutno ni na voljo.';
 	@override String get home_retry => 'Tapni za ponovni poskus';
+	@override String get loading => 'Nalagam vreme…';
+	@override String updated_at({required Object time}) => 'Osveženo ${time}';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1158,6 +1160,8 @@ extension on TranslationsSl {
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
+			'weather.loading' => 'Nalagam vreme…',
+			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			_ => null,
 		};
 	}

@@ -472,6 +472,8 @@
     "detail_waiting": "Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.",
     "detail_none": "Keine Wetteraufnahme (zum Zeitpunkt offline).",
     "home_unavailable": "Wetter derzeit nicht verfügbar.",
-    "home_retry": "Zum Wiederholen tippen"
+    "home_retry": "Zum Wiederholen tippen",
+    "loading": "Wetter wird geladen…",
+    "updated_at(time)": "Aktualisiert $time"
   }
 }

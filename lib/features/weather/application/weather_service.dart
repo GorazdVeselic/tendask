@@ -31,16 +31,22 @@ class WeatherService {
   final Duration _freshTtl;
   final Duration _staleTtl;
 
+  /// [full] requests every band for the frozen task snapshot (§7.10); pass false
+  /// for the dashboard, which needs only current conditions + the forecast and
+  /// benefits from the lighter, faster request.
   Future<WeatherSnapshot?> capture({
     required double latitude,
     required double longitude,
+    bool full = true,
   }) async {
     for (var attempt = 0; ; attempt++) {
       try {
-        final res = await _client.fetch(
-          latitude: latitude,
-          longitude: longitude,
-        );
+        final res = full
+            ? await _client.fetch(latitude: latitude, longitude: longitude)
+            : await _client.fetchCurrent(
+                latitude: latitude,
+                longitude: longitude,
+              );
         return buildSnapshot(res, at: _clock.now());
       } on Exception catch (e) {
         if (attempt >= _retryDelays.length) {
@@ -67,7 +73,11 @@ class WeatherService {
     if (cached != null && now.difference(cached.capturedAt) < _freshTtl) {
       return cached;
     }
-    final fresh = await capture(latitude: latitude, longitude: longitude);
+    final fresh = await capture(
+      latitude: latitude,
+      longitude: longitude,
+      full: false,
+    );
     if (fresh != null) {
       await _cache.save(fresh);
       return fresh;

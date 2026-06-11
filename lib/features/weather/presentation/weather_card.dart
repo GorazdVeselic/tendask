@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/config.dart';
+import '../../../core/date_format.dart';
 import '../../../i18n/translations.g.dart';
 import '../data/weather_code.dart';
 import '../data/weather_snapshot.dart';
@@ -136,41 +138,72 @@ class CurrentWeatherCard extends StatelessWidget {
     }
 
     final condition = weatherConditionFromCode(snap.weatherCode);
+    final stamp = _capturedLabel(snap.capturedAt);
     return Card(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Row(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(weatherEmoji(condition), style: const TextStyle(fontSize: 28)),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    _temp(snap.temperature),
-                    style: theme.textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
+            Row(
+              children: [
+                Text(
+                  weatherEmoji(condition),
+                  style: const TextStyle(fontSize: 28),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        _temp(snap.temperature),
+                        style: theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      Text(
+                        _conditionLabel(condition, context.t),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: theme.colorScheme.onSurfaceVariant,
+                        ),
+                      ),
+                    ],
                   ),
-                  Text(
-                    _conditionLabel(condition, context.t),
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                ],
-              ),
+                ),
+                if (snap.forecast.isNotEmpty)
+                  _ForecastStrip(snap.forecast, compact: true),
+              ],
             ),
-            if (snap.forecast.isNotEmpty)
-              _ForecastStrip(snap.forecast, compact: true),
+            if (stamp != null) ...[
+              const SizedBox(height: 6),
+              Text(
+                context.t.weather.updated_at(time: stamp),
+                style: theme.textTheme.labelSmall?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+            ],
           ],
         ),
       ),
     );
   }
+}
+
+/// "Updated at" stamp for a dashboard snapshot, shown only once it is older than
+/// the fresh window — so a just-fetched snapshot stays clean, while a stale one
+/// kept across an outage tells the user how old it is. Null when still fresh.
+String? _capturedLabel(DateTime capturedAtUtc) {
+  final now = DateTime.now();
+  if (now.difference(capturedAtUtc) < kWeatherCacheTtl) return null;
+  final local = capturedAtUtc.toLocal();
+  final time = formatHm(local);
+  return startOfDay(local) == startOfDay(now)
+      ? time
+      : '${formatDm(local)} $time';
 }
 
 /// A row of mini forecast days (date · emoji · max/min).

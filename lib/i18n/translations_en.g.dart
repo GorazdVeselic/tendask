@@ -1555,6 +1555,12 @@ class Translations$weather$en {
 
 	/// en: 'Tap to retry'
 	String get home_retry => 'Tap to retry';
+
+	/// en: 'Loading weather…'
+	String get loading => 'Loading weather…';
+
+	/// en: 'Updated $time'
+	String updated_at({required Object time}) => 'Updated ${time}';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -1977,6 +1983,8 @@ extension on Translations {
 			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
+			'weather.loading' => 'Loading weather…',
+			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			_ => null,
 		};
 	}

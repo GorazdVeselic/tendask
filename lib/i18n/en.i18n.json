@@ -472,6 +472,8 @@
     "detail_waiting": "Weather will be recorded when you mark the task done.",
     "detail_none": "No weather snapshot (was offline at the time).",
     "home_unavailable": "Weather is currently unavailable.",
-    "home_retry": "Tap to retry"
+    "home_retry": "Tap to retry",
+    "loading": "Loading weather…",
+    "updated_at(time)": "Updated $time"
   }
 }
