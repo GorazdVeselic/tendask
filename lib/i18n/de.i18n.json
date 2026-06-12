@@ -53,9 +53,9 @@
     "type_reminders": "Aufgaben-Erinnerungen",
     "type_reminders_sub": "lokal · funktionieren ohne Internet",
     "type_weather": "Smarte Hinweise (Wetter)",
-    "type_weather_sub": "demnächst · über Server",
+    "type_weather_sub": "„morgen trocken — ein guter Zeitpunkt“",
     "type_community": "Hinweise aus der Umgebung",
-    "type_community_sub": "demnächst (V2)",
+    "type_community_sub": "was andere in der Nähe tun",
     "section_default_offset": "Standard-Vorlaufzeit",
     "default_offset_hint": "Füllt neue Aufgaben vor; jederzeit änderbar.",
     "section_quiet": "Damit du nicht überflutet wirst",
@@ -68,7 +68,8 @@
     "preview_sub": "wie sie auf dem Sperrbildschirm aussehen",
     "system_permission": "Systemberechtigung",
     "system_permission_on": "Gerät: erlaubt",
-    "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen"
+    "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen",
+    "hints_perm_denied": "Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden."
   },
   "notif_preview": {
     "title": "Benachrichtigungen — Vorschau",

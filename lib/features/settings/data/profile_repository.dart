@@ -100,6 +100,41 @@ class ProfileRepository {
     }
   }
 
+  /// Mirrors the device's FCM registration token into the profile (null on
+  /// sign-out); the pending row rides the existing push to the cloud.
+  ///
+  /// Update-only: inserting a bare row here (a sign-in races the first pull)
+  /// would beat the cloud row on LWW and permanently wipe its other fields.
+  /// Callers gate on [waitForProfile] instead.
+  Future<void> updateFcmToken(String userId, String? token) async {
+    final exists = await (_db.select(
+      _db.profiles,
+    )..where((p) => p.userId.equals(userId))).getSingleOrNull();
+    // getToken() yields the same value on every app start — skip the no-op
+    // write so boot doesn't bump updated_at and trigger a pointless push.
+    if (exists == null || exists.fcmToken == token) return;
+    final now = _clock.now();
+    // Update only the token fields — never clobber lang / settings / h3*.
+    await (_db.update(
+      _db.profiles,
+    )..where((p) => p.userId.equals(userId))).write(
+      ProfilesCompanion(
+        fcmToken: Value(token),
+        fcmTokenUpdatedAt: Value(now),
+        updatedAt: Value(now),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
+  }
+
+  /// Completes once the profile row for [userId] exists — born via the sign-in
+  /// claim, the first pull, or a first local write (lang/settings/location).
+  Future<void> waitForProfile(String userId) async {
+    await (_db.select(_db.profiles)..where((p) => p.userId.equals(userId)))
+        .watchSingleOrNull()
+        .firstWhere((row) => row != null);
+  }
+
   NotificationSettings _decode(String? json) {
     if (json == null || json.isEmpty) return const NotificationSettings();
     return NotificationSettings.fromJson(

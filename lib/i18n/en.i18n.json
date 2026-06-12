@@ -53,9 +53,9 @@
     "type_reminders": "Task reminders",
     "type_reminders_sub": "local · works offline",
     "type_weather": "Smart hints (weather)",
-    "type_weather_sub": "soon · via server",
+    "type_weather_sub": "\"dry tomorrow — a good time\"",
     "type_community": "Nearby hints",
-    "type_community_sub": "soon (V2)",
+    "type_community_sub": "what others nearby are doing",
     "section_default_offset": "Default reminder offset",
     "default_offset_hint": "Prefills new tasks; you can always change it.",
     "section_quiet": "So you're not overwhelmed",
@@ -68,7 +68,8 @@
     "preview_sub": "how they look on the lock screen",
     "system_permission": "System permission",
     "system_permission_on": "device: allowed",
-    "system_permission_off": "exact reminders not allowed — tap for settings"
+    "system_permission_off": "exact reminders not allowed — tap for settings",
+    "hints_perm_denied": "Notifications are disabled, so hints can't be turned on."
   },
   "notif_preview": {
     "title": "Notification appearance",

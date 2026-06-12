@@ -11,6 +11,8 @@ import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
+import '../application/fcm_token_service.dart';
+import 'notification_priming_sheet.dart';
 
 /// Default reminder offsets offered in settings — a subset of the reminder
 /// sheet presets so the prefilled value always matches a selectable option.
@@ -26,9 +28,9 @@ final _exactAlarmsAllowedProvider = FutureProvider.autoDispose<bool>(
   (ref) => ref.watch(notificationServiceProvider).canScheduleExactAlarms(),
 );
 
-/// Screen 22 — notification settings. Task reminders are local and live; weather
-/// and community hints are server-side (FCM, deferred), so their toggles and the
-/// anti-spam controls are persisted but shown disabled / inert for now.
+/// Screen 22 — notification settings. Task reminders are local; weather and
+/// community hints are server-side pushes (M11) — their opt-ins are stored in
+/// the profile and the engine enforces them (the client only records intent).
 class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key});
 
@@ -68,6 +70,34 @@ class _Body extends ConsumerWidget {
     );
   }
 
+  /// Enabling a hint type needs POST_NOTIFICATIONS: run the M8 priming +
+  /// permission flow first, then save and (re)kick the FCM token sync.
+  /// Disabling goes straight through [_save] — no permission involved.
+  Future<void> _enableHints(
+    BuildContext context,
+    WidgetRef ref,
+    NotificationSettings next,
+  ) async {
+    final t = context.t;
+    final notif = ref.read(notificationServiceProvider);
+    final messenger = ScaffoldMessenger.of(context);
+
+    if (!await notif.areNotificationsEnabled()) {
+      if (!context.mounted) return;
+      if (await showNotificationPriming(context) != true) return;
+    }
+    if (!await notif.requestPermission()) {
+      messenger.showSnackBar(
+        SnackBar(content: Text(t.notif_settings.hints_perm_denied)),
+      );
+      return;
+    }
+    _save(ref, next);
+    // The permission may have just been granted — re-run the token flow now
+    // instead of waiting for the next auth change.
+    ref.invalidate(fcmTokenServiceProvider);
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
@@ -93,14 +123,36 @@ class _Body extends ConsumerWidget {
                 title: Text(t.notif_settings.type_weather),
                 subtitle: Text(t.notif_settings.type_weather_sub),
                 value: settings.weatherHintsEnabled,
-                onChanged: null, // FCM deferred
+                onChanged: (v) => v
+                    ? unawaited(
+                        _enableHints(
+                          context,
+                          ref,
+                          settings.copyWith(weatherHintsEnabled: true),
+                        ),
+                      )
+                    : _save(
+                        ref,
+                        settings.copyWith(weatherHintsEnabled: false),
+                      ),
               ),
               SwitchListTile(
                 secondary: const Text('🌍', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_community),
                 subtitle: Text(t.notif_settings.type_community_sub),
                 value: settings.communityHintsEnabled,
-                onChanged: null, // V2
+                onChanged: (v) => v
+                    ? unawaited(
+                        _enableHints(
+                          context,
+                          ref,
+                          settings.copyWith(communityHintsEnabled: true),
+                        ),
+                      )
+                    : _save(
+                        ref,
+                        settings.copyWith(communityHintsEnabled: false),
+                      ),
               ),
             ],
           ),
@@ -146,13 +198,8 @@ class _Body extends ConsumerWidget {
                 onChanged: (v) =>
                     _save(ref, settings.copyWith(quietHoursEnabled: v)),
               ),
-              SwitchListTile(
-                title: Text(t.notif_settings.frequency_cap),
-                subtitle: Text(t.notif_settings.frequency_cap_sub),
-                value: settings.frequencyCapEnabled,
-                onChanged: (v) =>
-                    _save(ref, settings.copyWith(frequencyCapEnabled: v)),
-              ),
+              // The frequency-cap toggle is hidden in MVP: the engine always
+              // caps at 1 hint/day (06 §6.5); the switch returns with digests.
             ],
           ),
         ),

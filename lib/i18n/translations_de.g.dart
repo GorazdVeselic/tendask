@@ -177,9 +177,9 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get type_reminders => 'Aufgaben-Erinnerungen';
 	@override String get type_reminders_sub => 'lokal · funktionieren ohne Internet';
 	@override String get type_weather => 'Smarte Hinweise (Wetter)';
-	@override String get type_weather_sub => 'demnächst · über Server';
+	@override String get type_weather_sub => '„morgen trocken — ein guter Zeitpunkt“';
 	@override String get type_community => 'Hinweise aus der Umgebung';
-	@override String get type_community_sub => 'demnächst (V2)';
+	@override String get type_community_sub => 'was andere in der Nähe tun';
 	@override String get section_default_offset => 'Standard-Vorlaufzeit';
 	@override String get default_offset_hint => 'Füllt neue Aufgaben vor; jederzeit änderbar.';
 	@override String get section_quiet => 'Damit du nicht überflutet wirst';
@@ -193,6 +193,7 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get system_permission => 'Systemberechtigung';
 	@override String get system_permission_on => 'Gerät: erlaubt';
 	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
+	@override String get hints_perm_denied => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.';
 }
 
 // Path: notif_preview
@@ -778,9 +779,9 @@ extension on TranslationsDe {
 			'notif_settings.type_reminders' => 'Aufgaben-Erinnerungen',
 			'notif_settings.type_reminders_sub' => 'lokal · funktionieren ohne Internet',
 			'notif_settings.type_weather' => 'Smarte Hinweise (Wetter)',
-			'notif_settings.type_weather_sub' => 'demnächst · über Server',
+			'notif_settings.type_weather_sub' => '„morgen trocken — ein guter Zeitpunkt“',
 			'notif_settings.type_community' => 'Hinweise aus der Umgebung',
-			'notif_settings.type_community_sub' => 'demnächst (V2)',
+			'notif_settings.type_community_sub' => 'was andere in der Nähe tun',
 			'notif_settings.section_default_offset' => 'Standard-Vorlaufzeit',
 			'notif_settings.default_offset_hint' => 'Füllt neue Aufgaben vor; jederzeit änderbar.',
 			'notif_settings.section_quiet' => 'Damit du nicht überflutet wirst',
@@ -794,6 +795,7 @@ extension on TranslationsDe {
 			'notif_settings.system_permission' => 'Systemberechtigung',
 			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
 			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
+			'notif_settings.hints_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.',
 			'notif_preview.title' => 'Benachrichtigungen — Vorschau',
 			'notif_preview.date' => 'Dienstag, 1. Juni',
 			'notif_preview.rem_now' => 'jetzt',

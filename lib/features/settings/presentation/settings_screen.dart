@@ -14,6 +14,7 @@ import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../notifications/application/fcm_token_service.dart';
 import '../application/profile_providers.dart';
 import '../data/account_repository.dart';
 
@@ -52,9 +53,16 @@ class SettingsScreen extends ConsumerWidget {
     // clearUserData is irreversible, so abort if the cloud is unreachable. A
     // guest has no cloud account — nothing to flush, just reset to clean state.
     if (auth.hasSession) {
+      // Null the FCM token BEFORE the session ends so the server stops pushing
+      // to this device — the cleared value rides along with the final flush.
+      await ref
+          .read(profileRepositoryProvider)
+          .updateFcmToken(auth.userId, null);
       final flushed = await ref.read(syncServiceProvider).flushPush();
       if (!context.mounted) return;
       if (!flushed) {
+        // Logout aborted — re-acquire the token so pushes keep working.
+        ref.invalidate(fcmTokenServiceProvider);
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(t.settings.logout_offline),

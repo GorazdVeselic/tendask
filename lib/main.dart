@@ -16,6 +16,7 @@ import 'core/local_prefs/local_prefs.dart';
 import 'core/location/location_repository.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
+import 'features/notifications/application/fcm_token_service.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -99,6 +100,12 @@ Future<void> _bootstrap() async {
   // triggers. Guests stay local (no session) — sync activates on sign-in.
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
   container.read(syncCoordinatorProvider.notifier).start();
+
+  // FCM token mirror (M11.6): once signed in + notifications granted it stores
+  // the registration token in the profile (the smart engine's push target).
+  // listen, not read: an unlistened keepAlive provider rebuilds lazily, so the
+  // auth-change re-run (sign-in after boot) would otherwise never fire.
+  container.listen(fcmTokenServiceProvider, (_, _) {});
 
   // Silent yearly climate-profile refresh (M11.3): fills a profile left null by
   // an offline onboarding or older than a year. Fire-and-forget, never throws.

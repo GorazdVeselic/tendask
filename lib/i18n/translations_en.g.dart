@@ -251,14 +251,14 @@ class Translations$notif_settings$en {
 	/// en: 'Smart hints (weather)'
 	String get type_weather => 'Smart hints (weather)';
 
-	/// en: 'soon · via server'
-	String get type_weather_sub => 'soon · via server';
+	/// en: '"dry tomorrow — a good time"'
+	String get type_weather_sub => '"dry tomorrow — a good time"';
 
 	/// en: 'Nearby hints'
 	String get type_community => 'Nearby hints';
 
-	/// en: 'soon (V2)'
-	String get type_community_sub => 'soon (V2)';
+	/// en: 'what others nearby are doing'
+	String get type_community_sub => 'what others nearby are doing';
 
 	/// en: 'Default reminder offset'
 	String get section_default_offset => 'Default reminder offset';
@@ -298,6 +298,9 @@ class Translations$notif_settings$en {
 
 	/// en: 'exact reminders not allowed — tap for settings'
 	String get system_permission_off => 'exact reminders not allowed — tap for settings';
+
+	/// en: 'Notifications are disabled, so hints can't be turned on.'
+	String get hints_perm_denied => 'Notifications are disabled, so hints can\'t be turned on.';
 }
 
 // Path: notif_preview
@@ -1607,9 +1610,9 @@ extension on Translations {
 			'notif_settings.type_reminders' => 'Task reminders',
 			'notif_settings.type_reminders_sub' => 'local · works offline',
 			'notif_settings.type_weather' => 'Smart hints (weather)',
-			'notif_settings.type_weather_sub' => 'soon · via server',
+			'notif_settings.type_weather_sub' => '"dry tomorrow — a good time"',
 			'notif_settings.type_community' => 'Nearby hints',
-			'notif_settings.type_community_sub' => 'soon (V2)',
+			'notif_settings.type_community_sub' => 'what others nearby are doing',
 			'notif_settings.section_default_offset' => 'Default reminder offset',
 			'notif_settings.default_offset_hint' => 'Prefills new tasks; you can always change it.',
 			'notif_settings.section_quiet' => 'So you\'re not overwhelmed',
@@ -1623,6 +1626,7 @@ extension on Translations {
 			'notif_settings.system_permission' => 'System permission',
 			'notif_settings.system_permission_on' => 'device: allowed',
 			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
+			'notif_settings.hints_perm_denied' => 'Notifications are disabled, so hints can\'t be turned on.',
 			'notif_preview.title' => 'Notification appearance',
 			'notif_preview.date' => 'Tuesday, 1 June',
 			'notif_preview.rem_now' => 'now',

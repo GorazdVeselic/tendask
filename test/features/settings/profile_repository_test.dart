@@ -76,6 +76,66 @@ void main() {
     },
   );
 
+  test('updateFcmToken writes the token into an existing row', () async {
+    await repo.setLang(userId, 'sl');
+    await repo.updateFcmToken(userId, 'tok-1');
+
+    final row = await db.select(db.profiles).getSingle();
+    expect(row.fcmToken, 'tok-1');
+    // drift returns local-time DateTime — compare the instant in UTC.
+    expect(row.fcmTokenUpdatedAt?.toUtc(), t0);
+    expect(row.syncStatus, 'pending');
+  });
+
+  test('updateFcmToken with the same token is a no-op write', () async {
+    await repo.setLang(userId, 'sl');
+    await repo.updateFcmToken(userId, 'tok-1');
+    clock.advance(const Duration(hours: 1));
+    await repo.updateFcmToken(userId, 'tok-1');
+
+    final row = await db.select(db.profiles).getSingle();
+    // updated_at untouched → no pointless push on every app start.
+    expect(row.updatedAt.toUtc(), t0);
+    expect(row.fcmTokenUpdatedAt?.toUtc(), t0);
+  });
+
+  test('updateFcmToken(null) clears the token and marks pending', () async {
+    await repo.setLang(userId, 'sl');
+    await repo.updateFcmToken(userId, 'tok-1');
+    clock.advance(const Duration(hours: 1));
+    await repo.updateFcmToken(userId, null);
+
+    final row = await db.select(db.profiles).getSingle();
+    expect(row.fcmToken, isNull);
+    expect(row.fcmTokenUpdatedAt?.toUtc(), t0.add(const Duration(hours: 1)));
+    expect(row.syncStatus, 'pending');
+  });
+
+  test('updateFcmToken never inserts a bare row (LWW safety)', () async {
+    await repo.updateFcmToken(userId, 'tok-1');
+    expect(await db.select(db.profiles).get(), isEmpty);
+  });
+
+  test('waitForProfile completes once the row appears', () async {
+    final wait = repo.waitForProfile(userId);
+    await repo.setLang(userId, 'sl');
+    await expectLater(wait, completes);
+  });
+
+  test('updateFcmToken does not clobber lang or settings', () async {
+    await repo.setLang(userId, 'de');
+    await repo.setNotificationSettings(
+      userId,
+      const NotificationSettings(weatherHintsEnabled: true),
+    );
+    await repo.updateFcmToken(userId, 'tok-1');
+
+    expect(await repo.getLang(userId), 'de');
+    expect((await repo.notificationSettings(userId)).weatherHintsEnabled, true);
+    final rows = await db.select(db.profiles).get();
+    expect(rows.length, 1);
+  });
+
   test('settings and lang do not clobber each other', () async {
     await repo.setLang(userId, 'de');
     await repo.setNotificationSettings(

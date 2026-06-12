@@ -55,9 +55,9 @@
     "type_reminders": "Opomniki opravil",
     "type_reminders_sub": "lokalno · delujejo brez interneta",
     "type_weather": "Pametni namigi (vreme)",
-    "type_weather_sub": "kmalu · prek strežnika",
+    "type_weather_sub": "»jutri suho — primeren čas«",
     "type_community": "Namigi okolice",
-    "type_community_sub": "kmalu (V2)",
+    "type_community_sub": "kaj počnejo drugi v bližini",
     "section_default_offset": "Privzeti zamik opomnika",
     "default_offset_hint": "Predizpolni nova opravila; vedno lahko spremeniš.",
     "section_quiet": "Da te ne zasipa",
@@ -70,7 +70,8 @@
     "preview_sub": "kako izgledajo na zaklenjenem zaslonu",
     "system_permission": "Sistemsko dovoljenje",
     "system_permission_on": "naprava: dovoljeno",
-    "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve"
+    "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve",
+    "hints_perm_denied": "Obvestila so onemogočena, zato namigov ni mogoče vklopiti."
   },
   "notif_preview": {
     "title": "Videz obvestil",

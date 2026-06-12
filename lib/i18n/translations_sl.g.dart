@@ -179,9 +179,9 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get type_reminders => 'Opomniki opravil';
 	@override String get type_reminders_sub => 'lokalno · delujejo brez interneta';
 	@override String get type_weather => 'Pametni namigi (vreme)';
-	@override String get type_weather_sub => 'kmalu · prek strežnika';
+	@override String get type_weather_sub => '»jutri suho — primeren čas«';
 	@override String get type_community => 'Namigi okolice';
-	@override String get type_community_sub => 'kmalu (V2)';
+	@override String get type_community_sub => 'kaj počnejo drugi v bližini';
 	@override String get section_default_offset => 'Privzeti zamik opomnika';
 	@override String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
 	@override String get section_quiet => 'Da te ne zasipa';
@@ -195,6 +195,7 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get system_permission => 'Sistemsko dovoljenje';
 	@override String get system_permission_on => 'naprava: dovoljeno';
 	@override String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
+	@override String get hints_perm_denied => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.';
 }
 
 // Path: notif_preview
@@ -784,9 +785,9 @@ extension on TranslationsSl {
 			'notif_settings.type_reminders' => 'Opomniki opravil',
 			'notif_settings.type_reminders_sub' => 'lokalno · delujejo brez interneta',
 			'notif_settings.type_weather' => 'Pametni namigi (vreme)',
-			'notif_settings.type_weather_sub' => 'kmalu · prek strežnika',
+			'notif_settings.type_weather_sub' => '»jutri suho — primeren čas«',
 			'notif_settings.type_community' => 'Namigi okolice',
-			'notif_settings.type_community_sub' => 'kmalu (V2)',
+			'notif_settings.type_community_sub' => 'kaj počnejo drugi v bližini',
 			'notif_settings.section_default_offset' => 'Privzeti zamik opomnika',
 			'notif_settings.default_offset_hint' => 'Predizpolni nova opravila; vedno lahko spremeniš.',
 			'notif_settings.section_quiet' => 'Da te ne zasipa',
@@ -800,6 +801,7 @@ extension on TranslationsSl {
 			'notif_settings.system_permission' => 'Sistemsko dovoljenje',
 			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
 			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
+			'notif_settings.hints_perm_denied' => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.',
 			'notif_preview.title' => 'Videz obvestil',
 			'notif_preview.date' => 'torek, 1. junij',
 			'notif_preview.rem_now' => 'zdaj',
