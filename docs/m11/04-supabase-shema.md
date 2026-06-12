@@ -479,8 +479,9 @@ begin
       and (r.last_run_date is null
            or r.last_run_date < (now() at time zone coalesce(p.timezone, 'UTC'))::date)
     -- Batch 25 (ne več): worst-case uporabnik = svež weather fetch s 3 retry-ji
-    -- (do ~13 s) → 50 bi lahko prebil Edge Function wall-clock limit. Dispatcher
-    -- itak pobere ostanek čez 30 min (engine_run filter).
+    -- (13 s sleep + do 4×10 s timeout ≈ 53 s; per-invocation memo deli en fetch
+    -- na celico, tudi neuspelega) → 50 bi lahko prebil Edge Function wall-clock
+    -- limit. Dispatcher itak pobere ostanek čez 30 min (engine_run filter).
     limit 25
   ) u;
 
@@ -538,7 +539,10 @@ Deno.serve(async (req) => {
 
 async function cellWeather(db, h3r7) {
   if (!h3r7) return null;                              // brez lokacije → brez vremenskih signalov
-  const today = utcToday();
+  // Dan = UPORABNIKOV lokalni dan (coalesce(timezone,'UTC') — isto kot dispatch okno).
+  // UTC ključ bi na UTC+8..+11 dvema zaporednima lokalnima jutroma vrnil isti payload
+  // (pregled M11.8). Neuspeli fetchi se memo-irajo na invokacijo (en retry ladder/celico).
+  const today = userLocalToday(profile.timezone);
   const hit = await db.from('weather_cache').select('payload')
     .eq('h3_r7', h3r7).eq('date', today).maybeSingle();
   if (hit.data) return hit.data.payload;

@@ -15,8 +15,11 @@ GET https://api.open-meteo.com/v1/forecast
   ?latitude={lat}&longitude={lon}
   &hourly=temperature_2m,precipitation,wind_speed_10m,soil_temperature_6cm
   &daily=temperature_2m_min,precipitation_sum
-  &past_days=2&forecast_days=3&timezone=auto
+  &past_days=3&forecast_days=3&timezone=auto
 ```
+
+> `past_days=3` (ne 2): okno `recentRainMm72h` mora biti ob jutranjem teku v celoti pokrito —
+> z 2 obstaja le ~55 h zgodovine in dež izpred 56–72 h bi tiho štel 0 (pregled M11.8).
 
 | Signal | Tip / enota | Izračun | Osveževanje | Primer rabe v pravilu |
 |---|---|---|---|---|
@@ -25,7 +28,7 @@ GET https://api.open-meteo.com/v1/forecast
 | `weather.recentRainMm72h` | `double`, mm | vsota za zadnjih 72 h | isto | guard `drought7d` aproksimacija (gl. op. 1) |
 | `weather.soilTempC` | `double`, °C | povprečje `soil_temperature_6cm` za naslednjih 24 h | isto | guard `soil_gt_8`: `soilTempC > 8` |
 | `weather.windSpeedKmh` | `double`, km/h | max `wind_speed_10m` v dnevnem oknu 08–20 h danes | isto | guard `wind_lt_15`: `windSpeedKmh < 15` |
-| `weather.minTempC48h` | `double`, °C | min `daily.temperature_2m_min` naslednjih 48 h | isto | guard `no_frost_forecast_48h`: `minTempC48h > 0` |
+| `weather.minTempC48h` | `double`, °C | min **hourly** `temperature_2m` naslednjih 48 h (dnevni min bi zajel že mimo jutranjo pozebo + dan+2 do ~72 h — pregled M11.8) | isto | guard `no_frost_forecast_48h`: `minTempC48h > 0` |
 | `weather.maxTempCToday` | `double`, °C | max `temperature_2m` danes 08–20 h | isto | guard `temp_lt_30` |
 
 > **Op. 1:** `drought7d` (suša ≥ 7 dni) iz forecast API-ja ni neposredno izračunljiva
@@ -121,5 +124,10 @@ trajno neznano vreme ≠ izpad).
 | `no_frost_forecast_48h` | `minTempC48h > 0` |
 | `drought7d` | aproksimacija — gl. op. 1 zgoraj |
 
-Vse številčne pragove drži `app_config.weather_thresholds` (jsonb, en zapis) → server-nastavljivo
-brez deploya; vrednosti zgoraj so privzetki ob seedu.
+Pragovi (odločitev ob pregledu M11.8): koda s **številko v imenu** (`dry12h`, `dry24h`,
+`wind_lt_15/20`, `temp_gt_0/5`, `temp_lt_30`, `soil_gt_8/10/12`, 15 mm v `soil_moist`) je
+**fiksen literal** — ime kode je pogodba, vidna v `plant_task_rule.weather_guard` vrsticah.
+Samo pragove brez številke v imenu (`no_rain_forecast_*`, `no_heavy_rain_24h`, `soil_moist`
+72-urni mm, `drought7d`) drži `app_config.weather_thresholds` (server-nastavljivo brez deploya).
+Dež-vsote so fail-closed: okno, ki ga payload ne pokrije v celoti (null ure, star cache), → signal
+`null` → guard pade.

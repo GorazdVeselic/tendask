@@ -78,7 +78,7 @@ highlight na pasu (placeholder do M11.13 — navigacija na Domov).
 
 ## Faza C — motor (strežnik)
 
-### M11.8 — Edge Function skeleton + signalni sloj `[ ]`
+### M11.8 — Edge Function skeleton + signalni sloj `[x]`
 `supabase/functions/smart-engine/`: auth guard, batch loop, loadUserBundle, weather_cache +
 Open-Meteo fetch (h3-js centroid), buildSignals (VSI signali iz `02`), guard evaluator (§G).
 Brez pravil — funkcija vrne izračunane signale v debug odgovoru (za test).
