@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,6 +62,18 @@ Future<void> _bootstrap() async {
 
   await LocaleSettings.useDeviceLocale();
   configurePluralResolvers();
+
+  // FCM (M11.5): Firebase reads its config from native resources
+  // (google-services.json), so init works offline. FCM is only a bell — a
+  // failure here must never block boot (suggestions still arrive via pull).
+  try {
+    await Firebase.initializeApp();
+  } catch (error, stack) {
+    debugPrint('Firebase bootstrap failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
 
   // Cloud backend (M5). Skipped when unconfigured so the app still boots fully
   // offline — drift remains the source of truth regardless of Supabase.

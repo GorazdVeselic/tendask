@@ -52,7 +52,7 @@ catalog_sync pull + `tool/gen_rules_sql.dart` → `supabase/seed/plant_task_rule
 
 ## Faza B — FCM
 
-### M11.5 — Firebase projekt + flutter integracija 👤🤖 `[ ]`
+### M11.5 — Firebase projekt + flutter integracija 👤🤖 `[x]`
 `06` §6.1: Firebase projekt (👤 konzola), google-services.json, gradle plugin, pubspec
 (`firebase_core`, `firebase_messaging` — potrjena v tech-stack §1 za M11), kanal `suggestions`.
 - **DoD:** app se zbuilda + zažene z inicializiranim Firebase; `flutter analyze`/test zelena;

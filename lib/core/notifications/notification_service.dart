@@ -21,6 +21,19 @@ const _reminderDetails = NotificationDetails(
   ),
 );
 
+/// Channel for smart-engine suggestion pushes (tech-stack §4, layer B). Created
+/// eagerly at init so FCM background messages (manifest meta-data) land on it.
+const _kSuggestionChannelId = 'suggestions';
+const _kSuggestionChannelName = 'Pametni predlogi';
+
+// Default importance: suggestions are hints, not alarms — tray entry without
+// heads-up, unlike high-importance task reminders.
+const _suggestionChannel = AndroidNotificationChannel(
+  _kSuggestionChannelId,
+  _kSuggestionChannelName,
+  importance: Importance.defaultImportance,
+);
+
 /// Thin wrapper around flutter_local_notifications for local task reminders.
 /// [init] runs at bootstrap (timezone + plugin); the permission prompt is
 /// deferred to the priming screen (21) and never fired at startup. Taps deep-link
@@ -55,6 +68,7 @@ class NotificationService {
       settings: settings,
       onDidReceiveNotificationResponse: _onTap,
     );
+    await _android?.createNotificationChannel(_suggestionChannel);
     _ready = true;
   }
 
