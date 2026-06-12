@@ -99,7 +99,7 @@ final class LocationRepositoryProvider
 }
 
 String _$locationRepositoryHash() =>
-    r'4b6927e710ae6da1cb8731f58a227abde192fdb6';
+    r'17f885caad2879ab560c90d0e0a47addf860f1dc';
 
 /// The garden location for the weather lookup: the stored device-local
 /// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets

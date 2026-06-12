@@ -57,6 +57,7 @@ class SyncCoordinator extends _$SyncCoordinator {
               db.taskSubjects,
               db.taskReminders,
               db.taskSupplies,
+              db.suggestions,
             ]),
           )
           .listen((_) {

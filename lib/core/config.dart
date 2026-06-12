@@ -29,6 +29,20 @@ const kWeatherCacheTtl = Duration(minutes: 30);
 /// the forecast strip would then be mostly past days. Survives app restarts.
 const kWeatherStaleTtl = Duration(hours: 48);
 
+/// Climate profile (M11.3, docs/m11/07): how many full past years of the
+/// Open-Meteo ERA5 archive feed the climate normals/frost medians.
+const kClimateHistoryYears = 10;
+
+/// How old a stored climate profile may get before the silent yearly re-fetch
+/// on app start (normals drift slowly — once a year is plenty).
+const kClimateProfileMaxAge = Duration(days: 365);
+
+/// Climate bucket bands (docs/m11/07 §7.2). Elevation cut-offs in metres →
+/// e1..e4; annual-mean temperature cut-offs in °C → t1..t6. A value below the
+/// first cut-off falls in band 1, above the last in the highest band.
+const kClimateElevationBandsM = <double>[300, 600, 900];
+const kClimateTempBandsC = <double>[4, 6, 8, 10, 12];
+
 /// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;

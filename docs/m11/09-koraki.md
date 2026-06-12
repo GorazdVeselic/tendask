@@ -30,7 +30,7 @@ TasksRepository ob `done` štemplja `agg_context` (write-once kot weather; ohran
 - **Odvisnosti:** M11.1 · **Kompleksnost:** L
 - **Commit:** `feat(db): drift zrcalo M11 sheme + agg_context posnetek ob opravljeno`
 
-### M11.3 — Climate profile fetch (naprava) `[ ]`
+### M11.3 — Climate profile fetch (naprava) `[x]`
 `07` v celoti: `ClimateService` (archive API klic na centroid r7, bucket algoritem, frost
 mediane), vključitev v LocationRepository (set/clear/letni re-fetch), zapis v profile.
 - **DoD:** unit testi `computeClimateProfile` (sintetični 10-letni vhod → pričakovani bucket,

@@ -12,6 +12,7 @@ import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
+import 'core/location/location_repository.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
@@ -85,6 +86,10 @@ Future<void> _bootstrap() async {
   // triggers. Guests stay local (no session) — sync activates on sign-in.
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
   container.read(syncCoordinatorProvider.notifier).start();
+
+  // Silent yearly climate-profile refresh (M11.3): fills a profile left null by
+  // an offline onboarding or older than a year. Fire-and-forget, never throws.
+  unawaited(container.read(locationRepositoryProvider).refreshClimateIfStale(userId));
 
   // Local notifications (M8): init the plugin (timezone + plugin), needed to
   // resolve a cold-start deep-link below. The permission prompt stays deferred to
