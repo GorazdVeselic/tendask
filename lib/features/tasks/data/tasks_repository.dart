@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:drift/drift.dart';
 import 'package:uuid/uuid.dart';
@@ -278,6 +279,7 @@ class TasksRepository {
           );
       await _insertSubjects(id, subjects, now);
       await _insertReminders(id, reminders, now);
+      if (status == TaskStatus.done) await _stampAggContext(id);
     });
     // Logged as already done → freeze a weather snapshot (§7.10).
     if (status == TaskStatus.done) unawaited(_captureWeather(id));
@@ -382,9 +384,42 @@ class TasksRepository {
       );
       // Deduct supplies from stock now that the task is done.
       await _supplies.applyForTask(id);
+      await _stampAggContext(id);
     });
     // Freeze a weather snapshot for the moment of completion (§7.10).
     unawaited(_captureWeather(id));
+  }
+
+  /// Freezes the aggregation-buckets snapshot ({h3_r7,h3_r6,h3_r5,
+  /// climate_bucket} from the local profile) when a task is done. Same
+  /// semantics as the weather snapshot: write-once, kept on revert-to-waiting,
+  /// never overwritten. No profile buckets yet → stays null (the server falls
+  /// back to the current profile via COALESCE).
+  Future<void> _stampAggContext(String id) async {
+    final task = await byId(id);
+    if (task == null) return;
+    final profile = await (_db.select(
+      _db.profiles,
+    )..where((p) => p.userId.equals(task.userId))).getSingleOrNull();
+    if (profile == null) return;
+    final context = <String, String?>{
+      'h3_r7': profile.h3R7,
+      'h3_r6': profile.h3R6,
+      'h3_r5': profile.h3R5,
+      'climate_bucket': profile.climateBucket,
+    }..removeWhere((_, v) => v == null);
+    if (context.isEmpty) return;
+    await (_db.update(_db.tasks)..where(
+          (t) =>
+              t.id.equals(id) & t.aggContext.isNull() & t.deleted.equals(false),
+        ))
+        .write(
+          TasksCompanion(
+            aggContext: Value(jsonEncode(context)),
+            updatedAt: Value(_clock.now()),
+            syncStatus: const Value(kSyncPending),
+          ),
+        );
   }
 
   /// Fetches a weather snapshot (fire-and-forget) and stores it only if the task

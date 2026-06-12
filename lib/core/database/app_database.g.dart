@@ -103,6 +103,21 @@ class $TaskTypesTable extends TaskTypes
     type: DriftSqlType.int,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _seasonalMeta = const VerificationMeta(
+    'seasonal',
+  );
+  @override
+  late final GeneratedColumn<bool> seasonal = GeneratedColumn<bool>(
+    'seasonal',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("seasonal" IN (0, 1))',
+    ),
+    defaultValue: const Constant(true),
+  );
   @override
   List<GeneratedColumn> get $columns => [
     id,
@@ -113,6 +128,7 @@ class $TaskTypesTable extends TaskTypes
     weatherSensitive,
     consumesSupplies,
     defaultCadence,
+    seasonal,
   ];
   @override
   String get aliasedName => _alias ?? actualTableName;
@@ -191,6 +207,12 @@ class $TaskTypesTable extends TaskTypes
         ),
       );
     }
+    if (data.containsKey('seasonal')) {
+      context.handle(
+        _seasonalMeta,
+        seasonal.isAcceptableOrUnknown(data['seasonal']!, _seasonalMeta),
+      );
+    }
     return context;
   }
 
@@ -232,6 +254,10 @@ class $TaskTypesTable extends TaskTypes
         DriftSqlType.int,
         data['${effectivePrefix}default_cadence'],
       ),
+      seasonal: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}seasonal'],
+      )!,
     );
   }
 
@@ -250,6 +276,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
   final bool weatherSensitive;
   final bool consumesSupplies;
   final int? defaultCadence;
+  final bool seasonal;
   const TaskType({
     required this.id,
     required this.labels,
@@ -259,6 +286,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     required this.weatherSensitive,
     required this.consumesSupplies,
     this.defaultCadence,
+    required this.seasonal,
   });
   @override
   Map<String, Expression> toColumns(bool nullToAbsent) {
@@ -273,6 +301,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     if (!nullToAbsent || defaultCadence != null) {
       map['default_cadence'] = Variable<int>(defaultCadence);
     }
+    map['seasonal'] = Variable<bool>(seasonal);
     return map;
   }
 
@@ -288,6 +317,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       defaultCadence: defaultCadence == null && nullToAbsent
           ? const Value.absent()
           : Value(defaultCadence),
+      seasonal: Value(seasonal),
     );
   }
 
@@ -305,6 +335,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       weatherSensitive: serializer.fromJson<bool>(json['weatherSensitive']),
       consumesSupplies: serializer.fromJson<bool>(json['consumesSupplies']),
       defaultCadence: serializer.fromJson<int?>(json['defaultCadence']),
+      seasonal: serializer.fromJson<bool>(json['seasonal']),
     );
   }
   @override
@@ -319,6 +350,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       'weatherSensitive': serializer.toJson<bool>(weatherSensitive),
       'consumesSupplies': serializer.toJson<bool>(consumesSupplies),
       'defaultCadence': serializer.toJson<int?>(defaultCadence),
+      'seasonal': serializer.toJson<bool>(seasonal),
     };
   }
 
@@ -331,6 +363,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     bool? weatherSensitive,
     bool? consumesSupplies,
     Value<int?> defaultCadence = const Value.absent(),
+    bool? seasonal,
   }) => TaskType(
     id: id ?? this.id,
     labels: labels ?? this.labels,
@@ -342,6 +375,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     defaultCadence: defaultCadence.present
         ? defaultCadence.value
         : this.defaultCadence,
+    seasonal: seasonal ?? this.seasonal,
   );
   TaskType copyWithCompanion(TaskTypesCompanion data) {
     return TaskType(
@@ -361,6 +395,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
       defaultCadence: data.defaultCadence.present
           ? data.defaultCadence.value
           : this.defaultCadence,
+      seasonal: data.seasonal.present ? data.seasonal.value : this.seasonal,
     );
   }
 
@@ -374,7 +409,8 @@ class TaskType extends DataClass implements Insertable<TaskType> {
           ..write('requiresSubject: $requiresSubject, ')
           ..write('weatherSensitive: $weatherSensitive, ')
           ..write('consumesSupplies: $consumesSupplies, ')
-          ..write('defaultCadence: $defaultCadence')
+          ..write('defaultCadence: $defaultCadence, ')
+          ..write('seasonal: $seasonal')
           ..write(')'))
         .toString();
   }
@@ -389,6 +425,7 @@ class TaskType extends DataClass implements Insertable<TaskType> {
     weatherSensitive,
     consumesSupplies,
     defaultCadence,
+    seasonal,
   );
   @override
   bool operator ==(Object other) =>
@@ -401,7 +438,8 @@ class TaskType extends DataClass implements Insertable<TaskType> {
           other.requiresSubject == this.requiresSubject &&
           other.weatherSensitive == this.weatherSensitive &&
           other.consumesSupplies == this.consumesSupplies &&
-          other.defaultCadence == this.defaultCadence);
+          other.defaultCadence == this.defaultCadence &&
+          other.seasonal == this.seasonal);
 }
 
 class TaskTypesCompanion extends UpdateCompanion<TaskType> {
@@ -413,6 +451,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
   final Value<bool> weatherSensitive;
   final Value<bool> consumesSupplies;
   final Value<int?> defaultCadence;
+  final Value<bool> seasonal;
   final Value<int> rowid;
   const TaskTypesCompanion({
     this.id = const Value.absent(),
@@ -423,6 +462,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     this.weatherSensitive = const Value.absent(),
     this.consumesSupplies = const Value.absent(),
     this.defaultCadence = const Value.absent(),
+    this.seasonal = const Value.absent(),
     this.rowid = const Value.absent(),
   });
   TaskTypesCompanion.insert({
@@ -434,6 +474,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     this.weatherSensitive = const Value.absent(),
     this.consumesSupplies = const Value.absent(),
     this.defaultCadence = const Value.absent(),
+    this.seasonal = const Value.absent(),
     this.rowid = const Value.absent(),
   }) : id = Value(id),
        labels = Value(labels),
@@ -448,6 +489,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     Expression<bool>? weatherSensitive,
     Expression<bool>? consumesSupplies,
     Expression<int>? defaultCadence,
+    Expression<bool>? seasonal,
     Expression<int>? rowid,
   }) {
     return RawValuesInsertable({
@@ -459,6 +501,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
       if (weatherSensitive != null) 'weather_sensitive': weatherSensitive,
       if (consumesSupplies != null) 'consumes_supplies': consumesSupplies,
       if (defaultCadence != null) 'default_cadence': defaultCadence,
+      if (seasonal != null) 'seasonal': seasonal,
       if (rowid != null) 'rowid': rowid,
     });
   }
@@ -472,6 +515,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     Value<bool>? weatherSensitive,
     Value<bool>? consumesSupplies,
     Value<int?>? defaultCadence,
+    Value<bool>? seasonal,
     Value<int>? rowid,
   }) {
     return TaskTypesCompanion(
@@ -483,6 +527,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
       weatherSensitive: weatherSensitive ?? this.weatherSensitive,
       consumesSupplies: consumesSupplies ?? this.consumesSupplies,
       defaultCadence: defaultCadence ?? this.defaultCadence,
+      seasonal: seasonal ?? this.seasonal,
       rowid: rowid ?? this.rowid,
     );
   }
@@ -514,6 +559,9 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
     if (defaultCadence.present) {
       map['default_cadence'] = Variable<int>(defaultCadence.value);
     }
+    if (seasonal.present) {
+      map['seasonal'] = Variable<bool>(seasonal.value);
+    }
     if (rowid.present) {
       map['rowid'] = Variable<int>(rowid.value);
     }
@@ -531,6 +579,7 @@ class TaskTypesCompanion extends UpdateCompanion<TaskType> {
           ..write('weatherSensitive: $weatherSensitive, ')
           ..write('consumesSupplies: $consumesSupplies, ')
           ..write('defaultCadence: $defaultCadence, ')
+          ..write('seasonal: $seasonal, ')
           ..write('rowid: $rowid')
           ..write(')'))
         .toString();
@@ -1490,6 +1539,62 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _timezoneMeta = const VerificationMeta(
+    'timezone',
+  );
+  @override
+  late final GeneratedColumn<String> timezone = GeneratedColumn<String>(
+    'timezone',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _climateBucketMeta = const VerificationMeta(
+    'climateBucket',
+  );
+  @override
+  late final GeneratedColumn<String> climateBucket = GeneratedColumn<String>(
+    'climate_bucket',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _climateProfileMeta = const VerificationMeta(
+    'climateProfile',
+  );
+  @override
+  late final GeneratedColumn<String> climateProfile = GeneratedColumn<String>(
+    'climate_profile',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fcmTokenMeta = const VerificationMeta(
+    'fcmToken',
+  );
+  @override
+  late final GeneratedColumn<String> fcmToken = GeneratedColumn<String>(
+    'fcm_token',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _fcmTokenUpdatedAtMeta = const VerificationMeta(
+    'fcmTokenUpdatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fcmTokenUpdatedAt =
+      GeneratedColumn<DateTime>(
+        'fcm_token_updated_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -1521,6 +1626,11 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     h3R5,
     lang,
     notificationSettings,
+    timezone,
+    climateBucket,
+    climateProfile,
+    fcmToken,
+    fcmTokenUpdatedAt,
     updatedAt,
     syncStatus,
   ];
@@ -1577,6 +1687,45 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('timezone')) {
+      context.handle(
+        _timezoneMeta,
+        timezone.isAcceptableOrUnknown(data['timezone']!, _timezoneMeta),
+      );
+    }
+    if (data.containsKey('climate_bucket')) {
+      context.handle(
+        _climateBucketMeta,
+        climateBucket.isAcceptableOrUnknown(
+          data['climate_bucket']!,
+          _climateBucketMeta,
+        ),
+      );
+    }
+    if (data.containsKey('climate_profile')) {
+      context.handle(
+        _climateProfileMeta,
+        climateProfile.isAcceptableOrUnknown(
+          data['climate_profile']!,
+          _climateProfileMeta,
+        ),
+      );
+    }
+    if (data.containsKey('fcm_token')) {
+      context.handle(
+        _fcmTokenMeta,
+        fcmToken.isAcceptableOrUnknown(data['fcm_token']!, _fcmTokenMeta),
+      );
+    }
+    if (data.containsKey('fcm_token_updated_at')) {
+      context.handle(
+        _fcmTokenUpdatedAtMeta,
+        fcmTokenUpdatedAt.isAcceptableOrUnknown(
+          data['fcm_token_updated_at']!,
+          _fcmTokenUpdatedAtMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -1624,6 +1773,26 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.string,
         data['${effectivePrefix}notification_settings'],
       ),
+      timezone: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timezone'],
+      ),
+      climateBucket: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}climate_bucket'],
+      ),
+      climateProfile: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}climate_profile'],
+      ),
+      fcmToken: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}fcm_token'],
+      ),
+      fcmTokenUpdatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fcm_token_updated_at'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -1648,6 +1817,11 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? h3R5;
   final String? lang;
   final String? notificationSettings;
+  final String? timezone;
+  final String? climateBucket;
+  final String? climateProfile;
+  final String? fcmToken;
+  final DateTime? fcmTokenUpdatedAt;
   final DateTime updatedAt;
   final String syncStatus;
   const Profile({
@@ -1657,6 +1831,11 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.h3R5,
     this.lang,
     this.notificationSettings,
+    this.timezone,
+    this.climateBucket,
+    this.climateProfile,
+    this.fcmToken,
+    this.fcmTokenUpdatedAt,
     required this.updatedAt,
     required this.syncStatus,
   });
@@ -1679,6 +1858,21 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || notificationSettings != null) {
       map['notification_settings'] = Variable<String>(notificationSettings);
     }
+    if (!nullToAbsent || timezone != null) {
+      map['timezone'] = Variable<String>(timezone);
+    }
+    if (!nullToAbsent || climateBucket != null) {
+      map['climate_bucket'] = Variable<String>(climateBucket);
+    }
+    if (!nullToAbsent || climateProfile != null) {
+      map['climate_profile'] = Variable<String>(climateProfile);
+    }
+    if (!nullToAbsent || fcmToken != null) {
+      map['fcm_token'] = Variable<String>(fcmToken);
+    }
+    if (!nullToAbsent || fcmTokenUpdatedAt != null) {
+      map['fcm_token_updated_at'] = Variable<DateTime>(fcmTokenUpdatedAt);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
@@ -1694,6 +1888,21 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: notificationSettings == null && nullToAbsent
           ? const Value.absent()
           : Value(notificationSettings),
+      timezone: timezone == null && nullToAbsent
+          ? const Value.absent()
+          : Value(timezone),
+      climateBucket: climateBucket == null && nullToAbsent
+          ? const Value.absent()
+          : Value(climateBucket),
+      climateProfile: climateProfile == null && nullToAbsent
+          ? const Value.absent()
+          : Value(climateProfile),
+      fcmToken: fcmToken == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fcmToken),
+      fcmTokenUpdatedAt: fcmTokenUpdatedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(fcmTokenUpdatedAt),
       updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
     );
@@ -1713,6 +1922,13 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: serializer.fromJson<String?>(
         json['notificationSettings'],
       ),
+      timezone: serializer.fromJson<String?>(json['timezone']),
+      climateBucket: serializer.fromJson<String?>(json['climateBucket']),
+      climateProfile: serializer.fromJson<String?>(json['climateProfile']),
+      fcmToken: serializer.fromJson<String?>(json['fcmToken']),
+      fcmTokenUpdatedAt: serializer.fromJson<DateTime?>(
+        json['fcmTokenUpdatedAt'],
+      ),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
@@ -1727,6 +1943,11 @@ class Profile extends DataClass implements Insertable<Profile> {
       'h3R5': serializer.toJson<String?>(h3R5),
       'lang': serializer.toJson<String?>(lang),
       'notificationSettings': serializer.toJson<String?>(notificationSettings),
+      'timezone': serializer.toJson<String?>(timezone),
+      'climateBucket': serializer.toJson<String?>(climateBucket),
+      'climateProfile': serializer.toJson<String?>(climateProfile),
+      'fcmToken': serializer.toJson<String?>(fcmToken),
+      'fcmTokenUpdatedAt': serializer.toJson<DateTime?>(fcmTokenUpdatedAt),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
@@ -1739,6 +1960,11 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<String?> h3R5 = const Value.absent(),
     Value<String?> lang = const Value.absent(),
     Value<String?> notificationSettings = const Value.absent(),
+    Value<String?> timezone = const Value.absent(),
+    Value<String?> climateBucket = const Value.absent(),
+    Value<String?> climateProfile = const Value.absent(),
+    Value<String?> fcmToken = const Value.absent(),
+    Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
     DateTime? updatedAt,
     String? syncStatus,
   }) => Profile(
@@ -1750,6 +1976,17 @@ class Profile extends DataClass implements Insertable<Profile> {
     notificationSettings: notificationSettings.present
         ? notificationSettings.value
         : this.notificationSettings,
+    timezone: timezone.present ? timezone.value : this.timezone,
+    climateBucket: climateBucket.present
+        ? climateBucket.value
+        : this.climateBucket,
+    climateProfile: climateProfile.present
+        ? climateProfile.value
+        : this.climateProfile,
+    fcmToken: fcmToken.present ? fcmToken.value : this.fcmToken,
+    fcmTokenUpdatedAt: fcmTokenUpdatedAt.present
+        ? fcmTokenUpdatedAt.value
+        : this.fcmTokenUpdatedAt,
     updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
   );
@@ -1763,6 +2000,17 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: data.notificationSettings.present
           ? data.notificationSettings.value
           : this.notificationSettings,
+      timezone: data.timezone.present ? data.timezone.value : this.timezone,
+      climateBucket: data.climateBucket.present
+          ? data.climateBucket.value
+          : this.climateBucket,
+      climateProfile: data.climateProfile.present
+          ? data.climateProfile.value
+          : this.climateProfile,
+      fcmToken: data.fcmToken.present ? data.fcmToken.value : this.fcmToken,
+      fcmTokenUpdatedAt: data.fcmTokenUpdatedAt.present
+          ? data.fcmTokenUpdatedAt.value
+          : this.fcmTokenUpdatedAt,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -1779,6 +2027,11 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
+          ..write('timezone: $timezone, ')
+          ..write('climateBucket: $climateBucket, ')
+          ..write('climateProfile: $climateProfile, ')
+          ..write('fcmToken: $fcmToken, ')
+          ..write('fcmTokenUpdatedAt: $fcmTokenUpdatedAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
@@ -1793,6 +2046,11 @@ class Profile extends DataClass implements Insertable<Profile> {
     h3R5,
     lang,
     notificationSettings,
+    timezone,
+    climateBucket,
+    climateProfile,
+    fcmToken,
+    fcmTokenUpdatedAt,
     updatedAt,
     syncStatus,
   );
@@ -1806,6 +2064,11 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.h3R5 == this.h3R5 &&
           other.lang == this.lang &&
           other.notificationSettings == this.notificationSettings &&
+          other.timezone == this.timezone &&
+          other.climateBucket == this.climateBucket &&
+          other.climateProfile == this.climateProfile &&
+          other.fcmToken == this.fcmToken &&
+          other.fcmTokenUpdatedAt == this.fcmTokenUpdatedAt &&
           other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus);
 }
@@ -1817,6 +2080,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String?> h3R5;
   final Value<String?> lang;
   final Value<String?> notificationSettings;
+  final Value<String?> timezone;
+  final Value<String?> climateBucket;
+  final Value<String?> climateProfile;
+  final Value<String?> fcmToken;
+  final Value<DateTime?> fcmTokenUpdatedAt;
   final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
@@ -1827,6 +2095,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.climateBucket = const Value.absent(),
+    this.climateProfile = const Value.absent(),
+    this.fcmToken = const Value.absent(),
+    this.fcmTokenUpdatedAt = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1838,6 +2111,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
+    this.timezone = const Value.absent(),
+    this.climateBucket = const Value.absent(),
+    this.climateProfile = const Value.absent(),
+    this.fcmToken = const Value.absent(),
+    this.fcmTokenUpdatedAt = const Value.absent(),
     required DateTime updatedAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1850,6 +2128,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? h3R5,
     Expression<String>? lang,
     Expression<String>? notificationSettings,
+    Expression<String>? timezone,
+    Expression<String>? climateBucket,
+    Expression<String>? climateProfile,
+    Expression<String>? fcmToken,
+    Expression<DateTime>? fcmTokenUpdatedAt,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
@@ -1862,6 +2145,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (lang != null) 'lang': lang,
       if (notificationSettings != null)
         'notification_settings': notificationSettings,
+      if (timezone != null) 'timezone': timezone,
+      if (climateBucket != null) 'climate_bucket': climateBucket,
+      if (climateProfile != null) 'climate_profile': climateProfile,
+      if (fcmToken != null) 'fcm_token': fcmToken,
+      if (fcmTokenUpdatedAt != null) 'fcm_token_updated_at': fcmTokenUpdatedAt,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
@@ -1875,6 +2163,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String?>? h3R5,
     Value<String?>? lang,
     Value<String?>? notificationSettings,
+    Value<String?>? timezone,
+    Value<String?>? climateBucket,
+    Value<String?>? climateProfile,
+    Value<String?>? fcmToken,
+    Value<DateTime?>? fcmTokenUpdatedAt,
     Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<int>? rowid,
@@ -1886,6 +2179,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       h3R5: h3R5 ?? this.h3R5,
       lang: lang ?? this.lang,
       notificationSettings: notificationSettings ?? this.notificationSettings,
+      timezone: timezone ?? this.timezone,
+      climateBucket: climateBucket ?? this.climateBucket,
+      climateProfile: climateProfile ?? this.climateProfile,
+      fcmToken: fcmToken ?? this.fcmToken,
+      fcmTokenUpdatedAt: fcmTokenUpdatedAt ?? this.fcmTokenUpdatedAt,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
@@ -1915,6 +2213,21 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
         notificationSettings.value,
       );
     }
+    if (timezone.present) {
+      map['timezone'] = Variable<String>(timezone.value);
+    }
+    if (climateBucket.present) {
+      map['climate_bucket'] = Variable<String>(climateBucket.value);
+    }
+    if (climateProfile.present) {
+      map['climate_profile'] = Variable<String>(climateProfile.value);
+    }
+    if (fcmToken.present) {
+      map['fcm_token'] = Variable<String>(fcmToken.value);
+    }
+    if (fcmTokenUpdatedAt.present) {
+      map['fcm_token_updated_at'] = Variable<DateTime>(fcmTokenUpdatedAt.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1936,6 +2249,11 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
+          ..write('timezone: $timezone, ')
+          ..write('climateBucket: $climateBucket, ')
+          ..write('climateProfile: $climateProfile, ')
+          ..write('fcmToken: $fcmToken, ')
+          ..write('fcmTokenUpdatedAt: $fcmTokenUpdatedAt, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
@@ -3157,6 +3475,17 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _aggContextMeta = const VerificationMeta(
+    'aggContext',
+  );
+  @override
+  late final GeneratedColumn<String> aggContext = GeneratedColumn<String>(
+    'agg_context',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _recurrenceMeta = const VerificationMeta(
     'recurrence',
   );
@@ -3215,6 +3544,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     status,
     note,
     weather,
+    aggContext,
     recurrence,
     updatedAt,
     deleted,
@@ -3274,6 +3604,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
       context.handle(
         _weatherMeta,
         weather.isAcceptableOrUnknown(data['weather']!, _weatherMeta),
+      );
+    }
+    if (data.containsKey('agg_context')) {
+      context.handle(
+        _aggContextMeta,
+        aggContext.isAcceptableOrUnknown(data['agg_context']!, _aggContextMeta),
       );
     }
     if (data.containsKey('recurrence')) {
@@ -3341,6 +3677,10 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}weather'],
       ),
+      aggContext: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}agg_context'],
+      ),
       recurrence: attachedDatabase.typeMapping.read(
         DriftSqlType.string,
         data['${effectivePrefix}recurrence'],
@@ -3377,6 +3717,7 @@ class Task extends DataClass implements Insertable<Task> {
   final TaskStatus status;
   final String? note;
   final String? weather;
+  final String? aggContext;
   final String? recurrence;
   final DateTime updatedAt;
   final bool deleted;
@@ -3389,6 +3730,7 @@ class Task extends DataClass implements Insertable<Task> {
     required this.status,
     this.note,
     this.weather,
+    this.aggContext,
     this.recurrence,
     required this.updatedAt,
     required this.deleted,
@@ -3412,6 +3754,9 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || weather != null) {
       map['weather'] = Variable<String>(weather);
     }
+    if (!nullToAbsent || aggContext != null) {
+      map['agg_context'] = Variable<String>(aggContext);
+    }
     if (!nullToAbsent || recurrence != null) {
       map['recurrence'] = Variable<String>(recurrence);
     }
@@ -3432,6 +3777,9 @@ class Task extends DataClass implements Insertable<Task> {
       weather: weather == null && nullToAbsent
           ? const Value.absent()
           : Value(weather),
+      aggContext: aggContext == null && nullToAbsent
+          ? const Value.absent()
+          : Value(aggContext),
       recurrence: recurrence == null && nullToAbsent
           ? const Value.absent()
           : Value(recurrence),
@@ -3456,6 +3804,7 @@ class Task extends DataClass implements Insertable<Task> {
       ),
       note: serializer.fromJson<String?>(json['note']),
       weather: serializer.fromJson<String?>(json['weather']),
+      aggContext: serializer.fromJson<String?>(json['aggContext']),
       recurrence: serializer.fromJson<String?>(json['recurrence']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
@@ -3475,6 +3824,7 @@ class Task extends DataClass implements Insertable<Task> {
       ),
       'note': serializer.toJson<String?>(note),
       'weather': serializer.toJson<String?>(weather),
+      'aggContext': serializer.toJson<String?>(aggContext),
       'recurrence': serializer.toJson<String?>(recurrence),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
@@ -3490,6 +3840,7 @@ class Task extends DataClass implements Insertable<Task> {
     TaskStatus? status,
     Value<String?> note = const Value.absent(),
     Value<String?> weather = const Value.absent(),
+    Value<String?> aggContext = const Value.absent(),
     Value<String?> recurrence = const Value.absent(),
     DateTime? updatedAt,
     bool? deleted,
@@ -3502,6 +3853,7 @@ class Task extends DataClass implements Insertable<Task> {
     status: status ?? this.status,
     note: note.present ? note.value : this.note,
     weather: weather.present ? weather.value : this.weather,
+    aggContext: aggContext.present ? aggContext.value : this.aggContext,
     recurrence: recurrence.present ? recurrence.value : this.recurrence,
     updatedAt: updatedAt ?? this.updatedAt,
     deleted: deleted ?? this.deleted,
@@ -3518,6 +3870,9 @@ class Task extends DataClass implements Insertable<Task> {
       status: data.status.present ? data.status.value : this.status,
       note: data.note.present ? data.note.value : this.note,
       weather: data.weather.present ? data.weather.value : this.weather,
+      aggContext: data.aggContext.present
+          ? data.aggContext.value
+          : this.aggContext,
       recurrence: data.recurrence.present
           ? data.recurrence.value
           : this.recurrence,
@@ -3539,6 +3894,7 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('status: $status, ')
           ..write('note: $note, ')
           ..write('weather: $weather, ')
+          ..write('aggContext: $aggContext, ')
           ..write('recurrence: $recurrence, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
@@ -3556,6 +3912,7 @@ class Task extends DataClass implements Insertable<Task> {
     status,
     note,
     weather,
+    aggContext,
     recurrence,
     updatedAt,
     deleted,
@@ -3572,6 +3929,7 @@ class Task extends DataClass implements Insertable<Task> {
           other.status == this.status &&
           other.note == this.note &&
           other.weather == this.weather &&
+          other.aggContext == this.aggContext &&
           other.recurrence == this.recurrence &&
           other.updatedAt == this.updatedAt &&
           other.deleted == this.deleted &&
@@ -3586,6 +3944,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<TaskStatus> status;
   final Value<String?> note;
   final Value<String?> weather;
+  final Value<String?> aggContext;
   final Value<String?> recurrence;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
@@ -3599,6 +3958,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.status = const Value.absent(),
     this.note = const Value.absent(),
     this.weather = const Value.absent(),
+    this.aggContext = const Value.absent(),
     this.recurrence = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deleted = const Value.absent(),
@@ -3613,6 +3973,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.status = const Value.absent(),
     this.note = const Value.absent(),
     this.weather = const Value.absent(),
+    this.aggContext = const Value.absent(),
     this.recurrence = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
@@ -3631,6 +3992,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<String>? status,
     Expression<String>? note,
     Expression<String>? weather,
+    Expression<String>? aggContext,
     Expression<String>? recurrence,
     Expression<DateTime>? updatedAt,
     Expression<bool>? deleted,
@@ -3645,6 +4007,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (status != null) 'status': status,
       if (note != null) 'note': note,
       if (weather != null) 'weather': weather,
+      if (aggContext != null) 'agg_context': aggContext,
       if (recurrence != null) 'recurrence': recurrence,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deleted != null) 'deleted': deleted,
@@ -3661,6 +4024,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<TaskStatus>? status,
     Value<String?>? note,
     Value<String?>? weather,
+    Value<String?>? aggContext,
     Value<String?>? recurrence,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
@@ -3675,6 +4039,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       status: status ?? this.status,
       note: note ?? this.note,
       weather: weather ?? this.weather,
+      aggContext: aggContext ?? this.aggContext,
       recurrence: recurrence ?? this.recurrence,
       updatedAt: updatedAt ?? this.updatedAt,
       deleted: deleted ?? this.deleted,
@@ -3709,6 +4074,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (weather.present) {
       map['weather'] = Variable<String>(weather.value);
     }
+    if (aggContext.present) {
+      map['agg_context'] = Variable<String>(aggContext.value);
+    }
     if (recurrence.present) {
       map['recurrence'] = Variable<String>(recurrence.value);
     }
@@ -3737,6 +4105,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('status: $status, ')
           ..write('note: $note, ')
           ..write('weather: $weather, ')
+          ..write('aggContext: $aggContext, ')
           ..write('recurrence: $recurrence, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
@@ -6891,6 +7260,1523 @@ class TaskSuppliesCompanion extends UpdateCompanion<TaskSupply> {
   }
 }
 
+class $SuggestionsTable extends Suggestions
+    with TableInfo<$SuggestionsTable, Suggestion> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SuggestionsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _ruleIdMeta = const VerificationMeta('ruleId');
+  @override
+  late final GeneratedColumn<String> ruleId = GeneratedColumn<String>(
+    'rule_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _plantTaskRuleIdMeta = const VerificationMeta(
+    'plantTaskRuleId',
+  );
+  @override
+  late final GeneratedColumn<String> plantTaskRuleId = GeneratedColumn<String>(
+    'plant_task_rule_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _taskTypeIdMeta = const VerificationMeta(
+    'taskTypeId',
+  );
+  @override
+  late final GeneratedColumn<String> taskTypeId = GeneratedColumn<String>(
+    'task_type_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES task_type (id)',
+    ),
+  );
+  static const VerificationMeta _userPlantIdMeta = const VerificationMeta(
+    'userPlantId',
+  );
+  @override
+  late final GeneratedColumn<String> userPlantId = GeneratedColumn<String>(
+    'user_plant_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES user_plant (id)',
+    ),
+  );
+  static const VerificationMeta _areaIdMeta = const VerificationMeta('areaId');
+  @override
+  late final GeneratedColumn<String> areaId = GeneratedColumn<String>(
+    'area_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES area (id)',
+    ),
+  );
+  static const VerificationMeta _subjectKeyMeta = const VerificationMeta(
+    'subjectKey',
+  );
+  @override
+  late final GeneratedColumn<String> subjectKey = GeneratedColumn<String>(
+    'subject_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _messageKeyMeta = const VerificationMeta(
+    'messageKey',
+  );
+  @override
+  late final GeneratedColumn<String> messageKey = GeneratedColumn<String>(
+    'message_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _messageParamsMeta = const VerificationMeta(
+    'messageParams',
+  );
+  @override
+  late final GeneratedColumn<String> messageParams = GeneratedColumn<String>(
+    'message_params',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('{}'),
+  );
+  static const VerificationMeta _scoreMeta = const VerificationMeta('score');
+  @override
+  late final GeneratedColumn<double> score = GeneratedColumn<double>(
+    'score',
+    aliasedName,
+    false,
+    type: DriftSqlType.double,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _statusMeta = const VerificationMeta('status');
+  @override
+  late final GeneratedColumn<String> status = GeneratedColumn<String>(
+    'status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('new'),
+  );
+  static const VerificationMeta _dismissScopeMeta = const VerificationMeta(
+    'dismissScope',
+  );
+  @override
+  late final GeneratedColumn<String> dismissScope = GeneratedColumn<String>(
+    'dismiss_scope',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant('season'),
+  );
+  static const VerificationMeta _plannedTaskIdMeta = const VerificationMeta(
+    'plannedTaskId',
+  );
+  @override
+  late final GeneratedColumn<String> plannedTaskId = GeneratedColumn<String>(
+    'planned_task_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _validUntilMeta = const VerificationMeta(
+    'validUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> validUntil = GeneratedColumn<DateTime>(
+    'valid_until',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _createdAtMeta = const VerificationMeta(
+    'createdAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> createdAt = GeneratedColumn<DateTime>(
+    'created_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _deletedMeta = const VerificationMeta(
+    'deleted',
+  );
+  @override
+  late final GeneratedColumn<bool> deleted = GeneratedColumn<bool>(
+    'deleted',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("deleted" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _syncStatusMeta = const VerificationMeta(
+    'syncStatus',
+  );
+  @override
+  late final GeneratedColumn<String> syncStatus = GeneratedColumn<String>(
+    'sync_status',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+    defaultValue: const Constant(kSyncSynced),
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    userId,
+    ruleId,
+    plantTaskRuleId,
+    taskTypeId,
+    userPlantId,
+    areaId,
+    subjectKey,
+    messageKey,
+    messageParams,
+    score,
+    status,
+    dismissScope,
+    plannedTaskId,
+    validUntil,
+    createdAt,
+    updatedAt,
+    deleted,
+    syncStatus,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'suggestion';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<Suggestion> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('rule_id')) {
+      context.handle(
+        _ruleIdMeta,
+        ruleId.isAcceptableOrUnknown(data['rule_id']!, _ruleIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_ruleIdMeta);
+    }
+    if (data.containsKey('plant_task_rule_id')) {
+      context.handle(
+        _plantTaskRuleIdMeta,
+        plantTaskRuleId.isAcceptableOrUnknown(
+          data['plant_task_rule_id']!,
+          _plantTaskRuleIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('task_type_id')) {
+      context.handle(
+        _taskTypeIdMeta,
+        taskTypeId.isAcceptableOrUnknown(
+          data['task_type_id']!,
+          _taskTypeIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_taskTypeIdMeta);
+    }
+    if (data.containsKey('user_plant_id')) {
+      context.handle(
+        _userPlantIdMeta,
+        userPlantId.isAcceptableOrUnknown(
+          data['user_plant_id']!,
+          _userPlantIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('area_id')) {
+      context.handle(
+        _areaIdMeta,
+        areaId.isAcceptableOrUnknown(data['area_id']!, _areaIdMeta),
+      );
+    }
+    if (data.containsKey('subject_key')) {
+      context.handle(
+        _subjectKeyMeta,
+        subjectKey.isAcceptableOrUnknown(data['subject_key']!, _subjectKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subjectKeyMeta);
+    }
+    if (data.containsKey('message_key')) {
+      context.handle(
+        _messageKeyMeta,
+        messageKey.isAcceptableOrUnknown(data['message_key']!, _messageKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_messageKeyMeta);
+    }
+    if (data.containsKey('message_params')) {
+      context.handle(
+        _messageParamsMeta,
+        messageParams.isAcceptableOrUnknown(
+          data['message_params']!,
+          _messageParamsMeta,
+        ),
+      );
+    }
+    if (data.containsKey('score')) {
+      context.handle(
+        _scoreMeta,
+        score.isAcceptableOrUnknown(data['score']!, _scoreMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scoreMeta);
+    }
+    if (data.containsKey('status')) {
+      context.handle(
+        _statusMeta,
+        status.isAcceptableOrUnknown(data['status']!, _statusMeta),
+      );
+    }
+    if (data.containsKey('dismiss_scope')) {
+      context.handle(
+        _dismissScopeMeta,
+        dismissScope.isAcceptableOrUnknown(
+          data['dismiss_scope']!,
+          _dismissScopeMeta,
+        ),
+      );
+    }
+    if (data.containsKey('planned_task_id')) {
+      context.handle(
+        _plannedTaskIdMeta,
+        plannedTaskId.isAcceptableOrUnknown(
+          data['planned_task_id']!,
+          _plannedTaskIdMeta,
+        ),
+      );
+    }
+    if (data.containsKey('valid_until')) {
+      context.handle(
+        _validUntilMeta,
+        validUntil.isAcceptableOrUnknown(data['valid_until']!, _validUntilMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_validUntilMeta);
+    }
+    if (data.containsKey('created_at')) {
+      context.handle(
+        _createdAtMeta,
+        createdAt.isAcceptableOrUnknown(data['created_at']!, _createdAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_createdAtMeta);
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    if (data.containsKey('deleted')) {
+      context.handle(
+        _deletedMeta,
+        deleted.isAcceptableOrUnknown(data['deleted']!, _deletedMeta),
+      );
+    }
+    if (data.containsKey('sync_status')) {
+      context.handle(
+        _syncStatusMeta,
+        syncStatus.isAcceptableOrUnknown(data['sync_status']!, _syncStatusMeta),
+      );
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  Suggestion map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return Suggestion(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      ruleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}rule_id'],
+      )!,
+      plantTaskRuleId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plant_task_rule_id'],
+      ),
+      taskTypeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_type_id'],
+      )!,
+      userPlantId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_plant_id'],
+      ),
+      areaId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}area_id'],
+      ),
+      subjectKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subject_key'],
+      )!,
+      messageKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}message_key'],
+      )!,
+      messageParams: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}message_params'],
+      )!,
+      score: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}score'],
+      )!,
+      status: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}status'],
+      )!,
+      dismissScope: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}dismiss_scope'],
+      )!,
+      plannedTaskId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}planned_task_id'],
+      ),
+      validUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}valid_until'],
+      )!,
+      createdAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}created_at'],
+      )!,
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+      deleted: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}deleted'],
+      )!,
+      syncStatus: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}sync_status'],
+      )!,
+    );
+  }
+
+  @override
+  $SuggestionsTable createAlias(String alias) {
+    return $SuggestionsTable(attachedDatabase, alias);
+  }
+}
+
+class Suggestion extends DataClass implements Insertable<Suggestion> {
+  final String id;
+  final String userId;
+  final String ruleId;
+  final String? plantTaskRuleId;
+  final String taskTypeId;
+  final String? userPlantId;
+  final String? areaId;
+  final String subjectKey;
+  final String messageKey;
+  final String messageParams;
+  final double score;
+  final String status;
+  final String dismissScope;
+  final String? plannedTaskId;
+  final DateTime validUntil;
+  final DateTime createdAt;
+  final DateTime updatedAt;
+  final bool deleted;
+  final String syncStatus;
+  const Suggestion({
+    required this.id,
+    required this.userId,
+    required this.ruleId,
+    this.plantTaskRuleId,
+    required this.taskTypeId,
+    this.userPlantId,
+    this.areaId,
+    required this.subjectKey,
+    required this.messageKey,
+    required this.messageParams,
+    required this.score,
+    required this.status,
+    required this.dismissScope,
+    this.plannedTaskId,
+    required this.validUntil,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.deleted,
+    required this.syncStatus,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['user_id'] = Variable<String>(userId);
+    map['rule_id'] = Variable<String>(ruleId);
+    if (!nullToAbsent || plantTaskRuleId != null) {
+      map['plant_task_rule_id'] = Variable<String>(plantTaskRuleId);
+    }
+    map['task_type_id'] = Variable<String>(taskTypeId);
+    if (!nullToAbsent || userPlantId != null) {
+      map['user_plant_id'] = Variable<String>(userPlantId);
+    }
+    if (!nullToAbsent || areaId != null) {
+      map['area_id'] = Variable<String>(areaId);
+    }
+    map['subject_key'] = Variable<String>(subjectKey);
+    map['message_key'] = Variable<String>(messageKey);
+    map['message_params'] = Variable<String>(messageParams);
+    map['score'] = Variable<double>(score);
+    map['status'] = Variable<String>(status);
+    map['dismiss_scope'] = Variable<String>(dismissScope);
+    if (!nullToAbsent || plannedTaskId != null) {
+      map['planned_task_id'] = Variable<String>(plannedTaskId);
+    }
+    map['valid_until'] = Variable<DateTime>(validUntil);
+    map['created_at'] = Variable<DateTime>(createdAt);
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    map['deleted'] = Variable<bool>(deleted);
+    map['sync_status'] = Variable<String>(syncStatus);
+    return map;
+  }
+
+  SuggestionsCompanion toCompanion(bool nullToAbsent) {
+    return SuggestionsCompanion(
+      id: Value(id),
+      userId: Value(userId),
+      ruleId: Value(ruleId),
+      plantTaskRuleId: plantTaskRuleId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plantTaskRuleId),
+      taskTypeId: Value(taskTypeId),
+      userPlantId: userPlantId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(userPlantId),
+      areaId: areaId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(areaId),
+      subjectKey: Value(subjectKey),
+      messageKey: Value(messageKey),
+      messageParams: Value(messageParams),
+      score: Value(score),
+      status: Value(status),
+      dismissScope: Value(dismissScope),
+      plannedTaskId: plannedTaskId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plannedTaskId),
+      validUntil: Value(validUntil),
+      createdAt: Value(createdAt),
+      updatedAt: Value(updatedAt),
+      deleted: Value(deleted),
+      syncStatus: Value(syncStatus),
+    );
+  }
+
+  factory Suggestion.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return Suggestion(
+      id: serializer.fromJson<String>(json['id']),
+      userId: serializer.fromJson<String>(json['userId']),
+      ruleId: serializer.fromJson<String>(json['ruleId']),
+      plantTaskRuleId: serializer.fromJson<String?>(json['plantTaskRuleId']),
+      taskTypeId: serializer.fromJson<String>(json['taskTypeId']),
+      userPlantId: serializer.fromJson<String?>(json['userPlantId']),
+      areaId: serializer.fromJson<String?>(json['areaId']),
+      subjectKey: serializer.fromJson<String>(json['subjectKey']),
+      messageKey: serializer.fromJson<String>(json['messageKey']),
+      messageParams: serializer.fromJson<String>(json['messageParams']),
+      score: serializer.fromJson<double>(json['score']),
+      status: serializer.fromJson<String>(json['status']),
+      dismissScope: serializer.fromJson<String>(json['dismissScope']),
+      plannedTaskId: serializer.fromJson<String?>(json['plannedTaskId']),
+      validUntil: serializer.fromJson<DateTime>(json['validUntil']),
+      createdAt: serializer.fromJson<DateTime>(json['createdAt']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+      deleted: serializer.fromJson<bool>(json['deleted']),
+      syncStatus: serializer.fromJson<String>(json['syncStatus']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'userId': serializer.toJson<String>(userId),
+      'ruleId': serializer.toJson<String>(ruleId),
+      'plantTaskRuleId': serializer.toJson<String?>(plantTaskRuleId),
+      'taskTypeId': serializer.toJson<String>(taskTypeId),
+      'userPlantId': serializer.toJson<String?>(userPlantId),
+      'areaId': serializer.toJson<String?>(areaId),
+      'subjectKey': serializer.toJson<String>(subjectKey),
+      'messageKey': serializer.toJson<String>(messageKey),
+      'messageParams': serializer.toJson<String>(messageParams),
+      'score': serializer.toJson<double>(score),
+      'status': serializer.toJson<String>(status),
+      'dismissScope': serializer.toJson<String>(dismissScope),
+      'plannedTaskId': serializer.toJson<String?>(plannedTaskId),
+      'validUntil': serializer.toJson<DateTime>(validUntil),
+      'createdAt': serializer.toJson<DateTime>(createdAt),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+      'deleted': serializer.toJson<bool>(deleted),
+      'syncStatus': serializer.toJson<String>(syncStatus),
+    };
+  }
+
+  Suggestion copyWith({
+    String? id,
+    String? userId,
+    String? ruleId,
+    Value<String?> plantTaskRuleId = const Value.absent(),
+    String? taskTypeId,
+    Value<String?> userPlantId = const Value.absent(),
+    Value<String?> areaId = const Value.absent(),
+    String? subjectKey,
+    String? messageKey,
+    String? messageParams,
+    double? score,
+    String? status,
+    String? dismissScope,
+    Value<String?> plannedTaskId = const Value.absent(),
+    DateTime? validUntil,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    bool? deleted,
+    String? syncStatus,
+  }) => Suggestion(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    ruleId: ruleId ?? this.ruleId,
+    plantTaskRuleId: plantTaskRuleId.present
+        ? plantTaskRuleId.value
+        : this.plantTaskRuleId,
+    taskTypeId: taskTypeId ?? this.taskTypeId,
+    userPlantId: userPlantId.present ? userPlantId.value : this.userPlantId,
+    areaId: areaId.present ? areaId.value : this.areaId,
+    subjectKey: subjectKey ?? this.subjectKey,
+    messageKey: messageKey ?? this.messageKey,
+    messageParams: messageParams ?? this.messageParams,
+    score: score ?? this.score,
+    status: status ?? this.status,
+    dismissScope: dismissScope ?? this.dismissScope,
+    plannedTaskId: plannedTaskId.present
+        ? plannedTaskId.value
+        : this.plannedTaskId,
+    validUntil: validUntil ?? this.validUntil,
+    createdAt: createdAt ?? this.createdAt,
+    updatedAt: updatedAt ?? this.updatedAt,
+    deleted: deleted ?? this.deleted,
+    syncStatus: syncStatus ?? this.syncStatus,
+  );
+  Suggestion copyWithCompanion(SuggestionsCompanion data) {
+    return Suggestion(
+      id: data.id.present ? data.id.value : this.id,
+      userId: data.userId.present ? data.userId.value : this.userId,
+      ruleId: data.ruleId.present ? data.ruleId.value : this.ruleId,
+      plantTaskRuleId: data.plantTaskRuleId.present
+          ? data.plantTaskRuleId.value
+          : this.plantTaskRuleId,
+      taskTypeId: data.taskTypeId.present
+          ? data.taskTypeId.value
+          : this.taskTypeId,
+      userPlantId: data.userPlantId.present
+          ? data.userPlantId.value
+          : this.userPlantId,
+      areaId: data.areaId.present ? data.areaId.value : this.areaId,
+      subjectKey: data.subjectKey.present
+          ? data.subjectKey.value
+          : this.subjectKey,
+      messageKey: data.messageKey.present
+          ? data.messageKey.value
+          : this.messageKey,
+      messageParams: data.messageParams.present
+          ? data.messageParams.value
+          : this.messageParams,
+      score: data.score.present ? data.score.value : this.score,
+      status: data.status.present ? data.status.value : this.status,
+      dismissScope: data.dismissScope.present
+          ? data.dismissScope.value
+          : this.dismissScope,
+      plannedTaskId: data.plannedTaskId.present
+          ? data.plannedTaskId.value
+          : this.plannedTaskId,
+      validUntil: data.validUntil.present
+          ? data.validUntil.value
+          : this.validUntil,
+      createdAt: data.createdAt.present ? data.createdAt.value : this.createdAt,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+      deleted: data.deleted.present ? data.deleted.value : this.deleted,
+      syncStatus: data.syncStatus.present
+          ? data.syncStatus.value
+          : this.syncStatus,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('Suggestion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('plantTaskRuleId: $plantTaskRuleId, ')
+          ..write('taskTypeId: $taskTypeId, ')
+          ..write('userPlantId: $userPlantId, ')
+          ..write('areaId: $areaId, ')
+          ..write('subjectKey: $subjectKey, ')
+          ..write('messageKey: $messageKey, ')
+          ..write('messageParams: $messageParams, ')
+          ..write('score: $score, ')
+          ..write('status: $status, ')
+          ..write('dismissScope: $dismissScope, ')
+          ..write('plannedTaskId: $plannedTaskId, ')
+          ..write('validUntil: $validUntil, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deleted: $deleted, ')
+          ..write('syncStatus: $syncStatus')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    userId,
+    ruleId,
+    plantTaskRuleId,
+    taskTypeId,
+    userPlantId,
+    areaId,
+    subjectKey,
+    messageKey,
+    messageParams,
+    score,
+    status,
+    dismissScope,
+    plannedTaskId,
+    validUntil,
+    createdAt,
+    updatedAt,
+    deleted,
+    syncStatus,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Suggestion &&
+          other.id == this.id &&
+          other.userId == this.userId &&
+          other.ruleId == this.ruleId &&
+          other.plantTaskRuleId == this.plantTaskRuleId &&
+          other.taskTypeId == this.taskTypeId &&
+          other.userPlantId == this.userPlantId &&
+          other.areaId == this.areaId &&
+          other.subjectKey == this.subjectKey &&
+          other.messageKey == this.messageKey &&
+          other.messageParams == this.messageParams &&
+          other.score == this.score &&
+          other.status == this.status &&
+          other.dismissScope == this.dismissScope &&
+          other.plannedTaskId == this.plannedTaskId &&
+          other.validUntil == this.validUntil &&
+          other.createdAt == this.createdAt &&
+          other.updatedAt == this.updatedAt &&
+          other.deleted == this.deleted &&
+          other.syncStatus == this.syncStatus);
+}
+
+class SuggestionsCompanion extends UpdateCompanion<Suggestion> {
+  final Value<String> id;
+  final Value<String> userId;
+  final Value<String> ruleId;
+  final Value<String?> plantTaskRuleId;
+  final Value<String> taskTypeId;
+  final Value<String?> userPlantId;
+  final Value<String?> areaId;
+  final Value<String> subjectKey;
+  final Value<String> messageKey;
+  final Value<String> messageParams;
+  final Value<double> score;
+  final Value<String> status;
+  final Value<String> dismissScope;
+  final Value<String?> plannedTaskId;
+  final Value<DateTime> validUntil;
+  final Value<DateTime> createdAt;
+  final Value<DateTime> updatedAt;
+  final Value<bool> deleted;
+  final Value<String> syncStatus;
+  final Value<int> rowid;
+  const SuggestionsCompanion({
+    this.id = const Value.absent(),
+    this.userId = const Value.absent(),
+    this.ruleId = const Value.absent(),
+    this.plantTaskRuleId = const Value.absent(),
+    this.taskTypeId = const Value.absent(),
+    this.userPlantId = const Value.absent(),
+    this.areaId = const Value.absent(),
+    this.subjectKey = const Value.absent(),
+    this.messageKey = const Value.absent(),
+    this.messageParams = const Value.absent(),
+    this.score = const Value.absent(),
+    this.status = const Value.absent(),
+    this.dismissScope = const Value.absent(),
+    this.plannedTaskId = const Value.absent(),
+    this.validUntil = const Value.absent(),
+    this.createdAt = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.deleted = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SuggestionsCompanion.insert({
+    required String id,
+    required String userId,
+    required String ruleId,
+    this.plantTaskRuleId = const Value.absent(),
+    required String taskTypeId,
+    this.userPlantId = const Value.absent(),
+    this.areaId = const Value.absent(),
+    required String subjectKey,
+    required String messageKey,
+    this.messageParams = const Value.absent(),
+    required double score,
+    this.status = const Value.absent(),
+    this.dismissScope = const Value.absent(),
+    this.plannedTaskId = const Value.absent(),
+    required DateTime validUntil,
+    required DateTime createdAt,
+    required DateTime updatedAt,
+    this.deleted = const Value.absent(),
+    this.syncStatus = const Value.absent(),
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       userId = Value(userId),
+       ruleId = Value(ruleId),
+       taskTypeId = Value(taskTypeId),
+       subjectKey = Value(subjectKey),
+       messageKey = Value(messageKey),
+       score = Value(score),
+       validUntil = Value(validUntil),
+       createdAt = Value(createdAt),
+       updatedAt = Value(updatedAt);
+  static Insertable<Suggestion> custom({
+    Expression<String>? id,
+    Expression<String>? userId,
+    Expression<String>? ruleId,
+    Expression<String>? plantTaskRuleId,
+    Expression<String>? taskTypeId,
+    Expression<String>? userPlantId,
+    Expression<String>? areaId,
+    Expression<String>? subjectKey,
+    Expression<String>? messageKey,
+    Expression<String>? messageParams,
+    Expression<double>? score,
+    Expression<String>? status,
+    Expression<String>? dismissScope,
+    Expression<String>? plannedTaskId,
+    Expression<DateTime>? validUntil,
+    Expression<DateTime>? createdAt,
+    Expression<DateTime>? updatedAt,
+    Expression<bool>? deleted,
+    Expression<String>? syncStatus,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (userId != null) 'user_id': userId,
+      if (ruleId != null) 'rule_id': ruleId,
+      if (plantTaskRuleId != null) 'plant_task_rule_id': plantTaskRuleId,
+      if (taskTypeId != null) 'task_type_id': taskTypeId,
+      if (userPlantId != null) 'user_plant_id': userPlantId,
+      if (areaId != null) 'area_id': areaId,
+      if (subjectKey != null) 'subject_key': subjectKey,
+      if (messageKey != null) 'message_key': messageKey,
+      if (messageParams != null) 'message_params': messageParams,
+      if (score != null) 'score': score,
+      if (status != null) 'status': status,
+      if (dismissScope != null) 'dismiss_scope': dismissScope,
+      if (plannedTaskId != null) 'planned_task_id': plannedTaskId,
+      if (validUntil != null) 'valid_until': validUntil,
+      if (createdAt != null) 'created_at': createdAt,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (deleted != null) 'deleted': deleted,
+      if (syncStatus != null) 'sync_status': syncStatus,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SuggestionsCompanion copyWith({
+    Value<String>? id,
+    Value<String>? userId,
+    Value<String>? ruleId,
+    Value<String?>? plantTaskRuleId,
+    Value<String>? taskTypeId,
+    Value<String?>? userPlantId,
+    Value<String?>? areaId,
+    Value<String>? subjectKey,
+    Value<String>? messageKey,
+    Value<String>? messageParams,
+    Value<double>? score,
+    Value<String>? status,
+    Value<String>? dismissScope,
+    Value<String?>? plannedTaskId,
+    Value<DateTime>? validUntil,
+    Value<DateTime>? createdAt,
+    Value<DateTime>? updatedAt,
+    Value<bool>? deleted,
+    Value<String>? syncStatus,
+    Value<int>? rowid,
+  }) {
+    return SuggestionsCompanion(
+      id: id ?? this.id,
+      userId: userId ?? this.userId,
+      ruleId: ruleId ?? this.ruleId,
+      plantTaskRuleId: plantTaskRuleId ?? this.plantTaskRuleId,
+      taskTypeId: taskTypeId ?? this.taskTypeId,
+      userPlantId: userPlantId ?? this.userPlantId,
+      areaId: areaId ?? this.areaId,
+      subjectKey: subjectKey ?? this.subjectKey,
+      messageKey: messageKey ?? this.messageKey,
+      messageParams: messageParams ?? this.messageParams,
+      score: score ?? this.score,
+      status: status ?? this.status,
+      dismissScope: dismissScope ?? this.dismissScope,
+      plannedTaskId: plannedTaskId ?? this.plannedTaskId,
+      validUntil: validUntil ?? this.validUntil,
+      createdAt: createdAt ?? this.createdAt,
+      updatedAt: updatedAt ?? this.updatedAt,
+      deleted: deleted ?? this.deleted,
+      syncStatus: syncStatus ?? this.syncStatus,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (ruleId.present) {
+      map['rule_id'] = Variable<String>(ruleId.value);
+    }
+    if (plantTaskRuleId.present) {
+      map['plant_task_rule_id'] = Variable<String>(plantTaskRuleId.value);
+    }
+    if (taskTypeId.present) {
+      map['task_type_id'] = Variable<String>(taskTypeId.value);
+    }
+    if (userPlantId.present) {
+      map['user_plant_id'] = Variable<String>(userPlantId.value);
+    }
+    if (areaId.present) {
+      map['area_id'] = Variable<String>(areaId.value);
+    }
+    if (subjectKey.present) {
+      map['subject_key'] = Variable<String>(subjectKey.value);
+    }
+    if (messageKey.present) {
+      map['message_key'] = Variable<String>(messageKey.value);
+    }
+    if (messageParams.present) {
+      map['message_params'] = Variable<String>(messageParams.value);
+    }
+    if (score.present) {
+      map['score'] = Variable<double>(score.value);
+    }
+    if (status.present) {
+      map['status'] = Variable<String>(status.value);
+    }
+    if (dismissScope.present) {
+      map['dismiss_scope'] = Variable<String>(dismissScope.value);
+    }
+    if (plannedTaskId.present) {
+      map['planned_task_id'] = Variable<String>(plannedTaskId.value);
+    }
+    if (validUntil.present) {
+      map['valid_until'] = Variable<DateTime>(validUntil.value);
+    }
+    if (createdAt.present) {
+      map['created_at'] = Variable<DateTime>(createdAt.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (deleted.present) {
+      map['deleted'] = Variable<bool>(deleted.value);
+    }
+    if (syncStatus.present) {
+      map['sync_status'] = Variable<String>(syncStatus.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuggestionsCompanion(')
+          ..write('id: $id, ')
+          ..write('userId: $userId, ')
+          ..write('ruleId: $ruleId, ')
+          ..write('plantTaskRuleId: $plantTaskRuleId, ')
+          ..write('taskTypeId: $taskTypeId, ')
+          ..write('userPlantId: $userPlantId, ')
+          ..write('areaId: $areaId, ')
+          ..write('subjectKey: $subjectKey, ')
+          ..write('messageKey: $messageKey, ')
+          ..write('messageParams: $messageParams, ')
+          ..write('score: $score, ')
+          ..write('status: $status, ')
+          ..write('dismissScope: $dismissScope, ')
+          ..write('plannedTaskId: $plannedTaskId, ')
+          ..write('validUntil: $validUntil, ')
+          ..write('createdAt: $createdAt, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('deleted: $deleted, ')
+          ..write('syncStatus: $syncStatus, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
+class $SuggestionLogsTable extends SuggestionLogs
+    with TableInfo<$SuggestionLogsTable, SuggestionLog> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $SuggestionLogsTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _userIdMeta = const VerificationMeta('userId');
+  @override
+  late final GeneratedColumn<String> userId = GeneratedColumn<String>(
+    'user_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _guardKeyMeta = const VerificationMeta(
+    'guardKey',
+  );
+  @override
+  late final GeneratedColumn<String> guardKey = GeneratedColumn<String>(
+    'guard_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _subjectKeyMeta = const VerificationMeta(
+    'subjectKey',
+  );
+  @override
+  late final GeneratedColumn<String> subjectKey = GeneratedColumn<String>(
+    'subject_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _lastSuggestedAtMeta = const VerificationMeta(
+    'lastSuggestedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> lastSuggestedAt =
+      GeneratedColumn<DateTime>(
+        'last_suggested_at',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _dismissedUntilMeta = const VerificationMeta(
+    'dismissedUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> dismissedUntil =
+      GeneratedColumn<DateTime>(
+        'dismissed_until',
+        aliasedName,
+        true,
+        type: DriftSqlType.dateTime,
+        requiredDuringInsert: false,
+      );
+  static const VerificationMeta _updatedAtMeta = const VerificationMeta(
+    'updatedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> updatedAt = GeneratedColumn<DateTime>(
+    'updated_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    userId,
+    guardKey,
+    subjectKey,
+    lastSuggestedAt,
+    dismissedUntil,
+    updatedAt,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'suggestion_log';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<SuggestionLog> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('user_id')) {
+      context.handle(
+        _userIdMeta,
+        userId.isAcceptableOrUnknown(data['user_id']!, _userIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_userIdMeta);
+    }
+    if (data.containsKey('guard_key')) {
+      context.handle(
+        _guardKeyMeta,
+        guardKey.isAcceptableOrUnknown(data['guard_key']!, _guardKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_guardKeyMeta);
+    }
+    if (data.containsKey('subject_key')) {
+      context.handle(
+        _subjectKeyMeta,
+        subjectKey.isAcceptableOrUnknown(data['subject_key']!, _subjectKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_subjectKeyMeta);
+    }
+    if (data.containsKey('last_suggested_at')) {
+      context.handle(
+        _lastSuggestedAtMeta,
+        lastSuggestedAt.isAcceptableOrUnknown(
+          data['last_suggested_at']!,
+          _lastSuggestedAtMeta,
+        ),
+      );
+    }
+    if (data.containsKey('dismissed_until')) {
+      context.handle(
+        _dismissedUntilMeta,
+        dismissedUntil.isAcceptableOrUnknown(
+          data['dismissed_until']!,
+          _dismissedUntilMeta,
+        ),
+      );
+    }
+    if (data.containsKey('updated_at')) {
+      context.handle(
+        _updatedAtMeta,
+        updatedAt.isAcceptableOrUnknown(data['updated_at']!, _updatedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_updatedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {userId, guardKey, subjectKey};
+  @override
+  SuggestionLog map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return SuggestionLog(
+      userId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}user_id'],
+      )!,
+      guardKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}guard_key'],
+      )!,
+      subjectKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}subject_key'],
+      )!,
+      lastSuggestedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}last_suggested_at'],
+      ),
+      dismissedUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}dismissed_until'],
+      ),
+      updatedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}updated_at'],
+      )!,
+    );
+  }
+
+  @override
+  $SuggestionLogsTable createAlias(String alias) {
+    return $SuggestionLogsTable(attachedDatabase, alias);
+  }
+}
+
+class SuggestionLog extends DataClass implements Insertable<SuggestionLog> {
+  final String userId;
+  final String guardKey;
+  final String subjectKey;
+  final DateTime? lastSuggestedAt;
+  final DateTime? dismissedUntil;
+  final DateTime updatedAt;
+  const SuggestionLog({
+    required this.userId,
+    required this.guardKey,
+    required this.subjectKey,
+    this.lastSuggestedAt,
+    this.dismissedUntil,
+    required this.updatedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['user_id'] = Variable<String>(userId);
+    map['guard_key'] = Variable<String>(guardKey);
+    map['subject_key'] = Variable<String>(subjectKey);
+    if (!nullToAbsent || lastSuggestedAt != null) {
+      map['last_suggested_at'] = Variable<DateTime>(lastSuggestedAt);
+    }
+    if (!nullToAbsent || dismissedUntil != null) {
+      map['dismissed_until'] = Variable<DateTime>(dismissedUntil);
+    }
+    map['updated_at'] = Variable<DateTime>(updatedAt);
+    return map;
+  }
+
+  SuggestionLogsCompanion toCompanion(bool nullToAbsent) {
+    return SuggestionLogsCompanion(
+      userId: Value(userId),
+      guardKey: Value(guardKey),
+      subjectKey: Value(subjectKey),
+      lastSuggestedAt: lastSuggestedAt == null && nullToAbsent
+          ? const Value.absent()
+          : Value(lastSuggestedAt),
+      dismissedUntil: dismissedUntil == null && nullToAbsent
+          ? const Value.absent()
+          : Value(dismissedUntil),
+      updatedAt: Value(updatedAt),
+    );
+  }
+
+  factory SuggestionLog.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return SuggestionLog(
+      userId: serializer.fromJson<String>(json['userId']),
+      guardKey: serializer.fromJson<String>(json['guardKey']),
+      subjectKey: serializer.fromJson<String>(json['subjectKey']),
+      lastSuggestedAt: serializer.fromJson<DateTime?>(json['lastSuggestedAt']),
+      dismissedUntil: serializer.fromJson<DateTime?>(json['dismissedUntil']),
+      updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'userId': serializer.toJson<String>(userId),
+      'guardKey': serializer.toJson<String>(guardKey),
+      'subjectKey': serializer.toJson<String>(subjectKey),
+      'lastSuggestedAt': serializer.toJson<DateTime?>(lastSuggestedAt),
+      'dismissedUntil': serializer.toJson<DateTime?>(dismissedUntil),
+      'updatedAt': serializer.toJson<DateTime>(updatedAt),
+    };
+  }
+
+  SuggestionLog copyWith({
+    String? userId,
+    String? guardKey,
+    String? subjectKey,
+    Value<DateTime?> lastSuggestedAt = const Value.absent(),
+    Value<DateTime?> dismissedUntil = const Value.absent(),
+    DateTime? updatedAt,
+  }) => SuggestionLog(
+    userId: userId ?? this.userId,
+    guardKey: guardKey ?? this.guardKey,
+    subjectKey: subjectKey ?? this.subjectKey,
+    lastSuggestedAt: lastSuggestedAt.present
+        ? lastSuggestedAt.value
+        : this.lastSuggestedAt,
+    dismissedUntil: dismissedUntil.present
+        ? dismissedUntil.value
+        : this.dismissedUntil,
+    updatedAt: updatedAt ?? this.updatedAt,
+  );
+  SuggestionLog copyWithCompanion(SuggestionLogsCompanion data) {
+    return SuggestionLog(
+      userId: data.userId.present ? data.userId.value : this.userId,
+      guardKey: data.guardKey.present ? data.guardKey.value : this.guardKey,
+      subjectKey: data.subjectKey.present
+          ? data.subjectKey.value
+          : this.subjectKey,
+      lastSuggestedAt: data.lastSuggestedAt.present
+          ? data.lastSuggestedAt.value
+          : this.lastSuggestedAt,
+      dismissedUntil: data.dismissedUntil.present
+          ? data.dismissedUntil.value
+          : this.dismissedUntil,
+      updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuggestionLog(')
+          ..write('userId: $userId, ')
+          ..write('guardKey: $guardKey, ')
+          ..write('subjectKey: $subjectKey, ')
+          ..write('lastSuggestedAt: $lastSuggestedAt, ')
+          ..write('dismissedUntil: $dismissedUntil, ')
+          ..write('updatedAt: $updatedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    userId,
+    guardKey,
+    subjectKey,
+    lastSuggestedAt,
+    dismissedUntil,
+    updatedAt,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is SuggestionLog &&
+          other.userId == this.userId &&
+          other.guardKey == this.guardKey &&
+          other.subjectKey == this.subjectKey &&
+          other.lastSuggestedAt == this.lastSuggestedAt &&
+          other.dismissedUntil == this.dismissedUntil &&
+          other.updatedAt == this.updatedAt);
+}
+
+class SuggestionLogsCompanion extends UpdateCompanion<SuggestionLog> {
+  final Value<String> userId;
+  final Value<String> guardKey;
+  final Value<String> subjectKey;
+  final Value<DateTime?> lastSuggestedAt;
+  final Value<DateTime?> dismissedUntil;
+  final Value<DateTime> updatedAt;
+  final Value<int> rowid;
+  const SuggestionLogsCompanion({
+    this.userId = const Value.absent(),
+    this.guardKey = const Value.absent(),
+    this.subjectKey = const Value.absent(),
+    this.lastSuggestedAt = const Value.absent(),
+    this.dismissedUntil = const Value.absent(),
+    this.updatedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  SuggestionLogsCompanion.insert({
+    required String userId,
+    required String guardKey,
+    required String subjectKey,
+    this.lastSuggestedAt = const Value.absent(),
+    this.dismissedUntil = const Value.absent(),
+    required DateTime updatedAt,
+    this.rowid = const Value.absent(),
+  }) : userId = Value(userId),
+       guardKey = Value(guardKey),
+       subjectKey = Value(subjectKey),
+       updatedAt = Value(updatedAt);
+  static Insertable<SuggestionLog> custom({
+    Expression<String>? userId,
+    Expression<String>? guardKey,
+    Expression<String>? subjectKey,
+    Expression<DateTime>? lastSuggestedAt,
+    Expression<DateTime>? dismissedUntil,
+    Expression<DateTime>? updatedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (userId != null) 'user_id': userId,
+      if (guardKey != null) 'guard_key': guardKey,
+      if (subjectKey != null) 'subject_key': subjectKey,
+      if (lastSuggestedAt != null) 'last_suggested_at': lastSuggestedAt,
+      if (dismissedUntil != null) 'dismissed_until': dismissedUntil,
+      if (updatedAt != null) 'updated_at': updatedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  SuggestionLogsCompanion copyWith({
+    Value<String>? userId,
+    Value<String>? guardKey,
+    Value<String>? subjectKey,
+    Value<DateTime?>? lastSuggestedAt,
+    Value<DateTime?>? dismissedUntil,
+    Value<DateTime>? updatedAt,
+    Value<int>? rowid,
+  }) {
+    return SuggestionLogsCompanion(
+      userId: userId ?? this.userId,
+      guardKey: guardKey ?? this.guardKey,
+      subjectKey: subjectKey ?? this.subjectKey,
+      lastSuggestedAt: lastSuggestedAt ?? this.lastSuggestedAt,
+      dismissedUntil: dismissedUntil ?? this.dismissedUntil,
+      updatedAt: updatedAt ?? this.updatedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (userId.present) {
+      map['user_id'] = Variable<String>(userId.value);
+    }
+    if (guardKey.present) {
+      map['guard_key'] = Variable<String>(guardKey.value);
+    }
+    if (subjectKey.present) {
+      map['subject_key'] = Variable<String>(subjectKey.value);
+    }
+    if (lastSuggestedAt.present) {
+      map['last_suggested_at'] = Variable<DateTime>(lastSuggestedAt.value);
+    }
+    if (dismissedUntil.present) {
+      map['dismissed_until'] = Variable<DateTime>(dismissedUntil.value);
+    }
+    if (updatedAt.present) {
+      map['updated_at'] = Variable<DateTime>(updatedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('SuggestionLogsCompanion(')
+          ..write('userId: $userId, ')
+          ..write('guardKey: $guardKey, ')
+          ..write('subjectKey: $subjectKey, ')
+          ..write('lastSuggestedAt: $lastSuggestedAt, ')
+          ..write('dismissedUntil: $dismissedUntil, ')
+          ..write('updatedAt: $updatedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $SyncCursorsTable extends SyncCursors
     with TableInfo<$SyncCursorsTable, SyncCursor> {
   @override
@@ -7634,6 +9520,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SuppliesTable supplies = $SuppliesTable(this);
   late final $RecipesTable recipes = $RecipesTable(this);
   late final $TaskSuppliesTable taskSupplies = $TaskSuppliesTable(this);
+  late final $SuggestionsTable suggestions = $SuggestionsTable(this);
+  late final $SuggestionLogsTable suggestionLogs = $SuggestionLogsTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   late final $DeviceLocationsTable deviceLocations = $DeviceLocationsTable(
     this,
@@ -7658,6 +9546,8 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     supplies,
     recipes,
     taskSupplies,
+    suggestions,
+    suggestionLogs,
     syncCursors,
     deviceLocations,
     localFlags,
@@ -7674,6 +9564,7 @@ typedef $$TaskTypesTableCreateCompanionBuilder =
       Value<bool> weatherSensitive,
       Value<bool> consumesSupplies,
       Value<int?> defaultCadence,
+      Value<bool> seasonal,
       Value<int> rowid,
     });
 typedef $$TaskTypesTableUpdateCompanionBuilder =
@@ -7686,6 +9577,7 @@ typedef $$TaskTypesTableUpdateCompanionBuilder =
       Value<bool> weatherSensitive,
       Value<bool> consumesSupplies,
       Value<int?> defaultCadence,
+      Value<bool> seasonal,
       Value<int> rowid,
     });
 
@@ -7731,6 +9623,24 @@ final class $$TaskTypesTableReferences
     ).filter((f) => f.taskTypeId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_tasksRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$SuggestionsTable, List<Suggestion>>
+  _suggestionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.suggestions,
+    aliasName: $_aliasNameGenerator(db.taskTypes.id, db.suggestions.taskTypeId),
+  );
+
+  $$SuggestionsTableProcessedTableManager get suggestionsRefs {
+    final manager = $$SuggestionsTableTableManager(
+      $_db,
+      $_db.suggestions,
+    ).filter((f) => f.taskTypeId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_suggestionsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -7786,6 +9696,11 @@ class $$TaskTypesTableFilterComposer
     builder: (column) => ColumnFilters(column),
   );
 
+  ColumnFilters<bool> get seasonal => $composableBuilder(
+    column: $table.seasonal,
+    builder: (column) => ColumnFilters(column),
+  );
+
   Expression<bool> categoryTaskTypesRefs(
     Expression<bool> Function($$CategoryTaskTypesTableFilterComposer f) f,
   ) {
@@ -7827,6 +9742,31 @@ class $$TaskTypesTableFilterComposer
           }) => $$TasksTableFilterComposer(
             $db: $db,
             $table: $db.tasks,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> suggestionsRefs(
+    Expression<bool> Function($$SuggestionsTableFilterComposer f) f,
+  ) {
+    final $$SuggestionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.taskTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableFilterComposer(
+            $db: $db,
+            $table: $db.suggestions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -7885,6 +9825,11 @@ class $$TaskTypesTableOrderingComposer
     column: $table.defaultCadence,
     builder: (column) => ColumnOrderings(column),
   );
+
+  ColumnOrderings<bool> get seasonal => $composableBuilder(
+    column: $table.seasonal,
+    builder: (column) => ColumnOrderings(column),
+  );
 }
 
 class $$TaskTypesTableAnnotationComposer
@@ -7927,6 +9872,9 @@ class $$TaskTypesTableAnnotationComposer
     column: $table.defaultCadence,
     builder: (column) => column,
   );
+
+  GeneratedColumn<bool> get seasonal =>
+      $composableBuilder(column: $table.seasonal, builder: (column) => column);
 
   Expression<T> categoryTaskTypesRefs<T extends Object>(
     Expression<T> Function($$CategoryTaskTypesTableAnnotationComposer a) f,
@@ -7978,6 +9926,31 @@ class $$TaskTypesTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> suggestionsRefs<T extends Object>(
+    Expression<T> Function($$SuggestionsTableAnnotationComposer a) f,
+  ) {
+    final $$SuggestionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.taskTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.suggestions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$TaskTypesTableTableManager
@@ -7993,7 +9966,11 @@ class $$TaskTypesTableTableManager
           $$TaskTypesTableUpdateCompanionBuilder,
           (TaskType, $$TaskTypesTableReferences),
           TaskType,
-          PrefetchHooks Function({bool categoryTaskTypesRefs, bool tasksRefs})
+          PrefetchHooks Function({
+            bool categoryTaskTypesRefs,
+            bool tasksRefs,
+            bool suggestionsRefs,
+          })
         > {
   $$TaskTypesTableTableManager(_$AppDatabase db, $TaskTypesTable table)
     : super(
@@ -8016,6 +9993,7 @@ class $$TaskTypesTableTableManager
                 Value<bool> weatherSensitive = const Value.absent(),
                 Value<bool> consumesSupplies = const Value.absent(),
                 Value<int?> defaultCadence = const Value.absent(),
+                Value<bool> seasonal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TaskTypesCompanion(
                 id: id,
@@ -8026,6 +10004,7 @@ class $$TaskTypesTableTableManager
                 weatherSensitive: weatherSensitive,
                 consumesSupplies: consumesSupplies,
                 defaultCadence: defaultCadence,
+                seasonal: seasonal,
                 rowid: rowid,
               ),
           createCompanionCallback:
@@ -8038,6 +10017,7 @@ class $$TaskTypesTableTableManager
                 Value<bool> weatherSensitive = const Value.absent(),
                 Value<bool> consumesSupplies = const Value.absent(),
                 Value<int?> defaultCadence = const Value.absent(),
+                Value<bool> seasonal = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
               }) => TaskTypesCompanion.insert(
                 id: id,
@@ -8048,6 +10028,7 @@ class $$TaskTypesTableTableManager
                 weatherSensitive: weatherSensitive,
                 consumesSupplies: consumesSupplies,
                 defaultCadence: defaultCadence,
+                seasonal: seasonal,
                 rowid: rowid,
               ),
           withReferenceMapper: (p0) => p0
@@ -8059,12 +10040,17 @@ class $$TaskTypesTableTableManager
               )
               .toList(),
           prefetchHooksCallback:
-              ({categoryTaskTypesRefs = false, tasksRefs = false}) {
+              ({
+                categoryTaskTypesRefs = false,
+                tasksRefs = false,
+                suggestionsRefs = false,
+              }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (categoryTaskTypesRefs) db.categoryTaskTypes,
                     if (tasksRefs) db.tasks,
+                    if (suggestionsRefs) db.suggestions,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -8111,6 +10097,27 @@ class $$TaskTypesTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (suggestionsRefs)
+                        await $_getPrefetchedData<
+                          TaskType,
+                          $TaskTypesTable,
+                          Suggestion
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TaskTypesTableReferences
+                              ._suggestionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TaskTypesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).suggestionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.taskTypeId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -8131,7 +10138,11 @@ typedef $$TaskTypesTableProcessedTableManager =
       $$TaskTypesTableUpdateCompanionBuilder,
       (TaskType, $$TaskTypesTableReferences),
       TaskType,
-      PrefetchHooks Function({bool categoryTaskTypesRefs, bool tasksRefs})
+      PrefetchHooks Function({
+        bool categoryTaskTypesRefs,
+        bool tasksRefs,
+        bool suggestionsRefs,
+      })
     >;
 typedef $$PlantsTableCreateCompanionBuilder =
     PlantsCompanion Function({
@@ -9112,6 +11123,11 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String?> h3R5,
       Value<String?> lang,
       Value<String?> notificationSettings,
+      Value<String?> timezone,
+      Value<String?> climateBucket,
+      Value<String?> climateProfile,
+      Value<String?> fcmToken,
+      Value<DateTime?> fcmTokenUpdatedAt,
       required DateTime updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9124,6 +11140,11 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String?> h3R5,
       Value<String?> lang,
       Value<String?> notificationSettings,
+      Value<String?> timezone,
+      Value<String?> climateBucket,
+      Value<String?> climateProfile,
+      Value<String?> fcmToken,
+      Value<DateTime?> fcmTokenUpdatedAt,
       Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9165,6 +11186,31 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<String> get notificationSettings => $composableBuilder(
     column: $table.notificationSettings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get climateBucket => $composableBuilder(
+    column: $table.climateBucket,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get climateProfile => $composableBuilder(
+    column: $table.climateProfile,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get fcmToken => $composableBuilder(
+    column: $table.fcmToken,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fcmTokenUpdatedAt => $composableBuilder(
+    column: $table.fcmTokenUpdatedAt,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9218,6 +11264,31 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get timezone => $composableBuilder(
+    column: $table.timezone,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get climateBucket => $composableBuilder(
+    column: $table.climateBucket,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get climateProfile => $composableBuilder(
+    column: $table.climateProfile,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get fcmToken => $composableBuilder(
+    column: $table.fcmToken,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fcmTokenUpdatedAt => $composableBuilder(
+    column: $table.fcmTokenUpdatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -9255,6 +11326,27 @@ class $$ProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get notificationSettings => $composableBuilder(
     column: $table.notificationSettings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get timezone =>
+      $composableBuilder(column: $table.timezone, builder: (column) => column);
+
+  GeneratedColumn<String> get climateBucket => $composableBuilder(
+    column: $table.climateBucket,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get climateProfile => $composableBuilder(
+    column: $table.climateProfile,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get fcmToken =>
+      $composableBuilder(column: $table.fcmToken, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fcmTokenUpdatedAt => $composableBuilder(
+    column: $table.fcmTokenUpdatedAt,
     builder: (column) => column,
   );
 
@@ -9301,6 +11393,11 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> climateBucket = const Value.absent(),
+                Value<String?> climateProfile = const Value.absent(),
+                Value<String?> fcmToken = const Value.absent(),
+                Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9311,6 +11408,11 @@ class $$ProfilesTableTableManager
                 h3R5: h3R5,
                 lang: lang,
                 notificationSettings: notificationSettings,
+                timezone: timezone,
+                climateBucket: climateBucket,
+                climateProfile: climateProfile,
+                fcmToken: fcmToken,
+                fcmTokenUpdatedAt: fcmTokenUpdatedAt,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -9323,6 +11425,11 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
+                Value<String?> timezone = const Value.absent(),
+                Value<String?> climateBucket = const Value.absent(),
+                Value<String?> climateProfile = const Value.absent(),
+                Value<String?> fcmToken = const Value.absent(),
+                Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
                 required DateTime updatedAt,
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9333,6 +11440,11 @@ class $$ProfilesTableTableManager
                 h3R5: h3R5,
                 lang: lang,
                 notificationSettings: notificationSettings,
+                timezone: timezone,
+                climateBucket: climateBucket,
+                climateProfile: climateProfile,
+                fcmToken: fcmToken,
+                fcmTokenUpdatedAt: fcmTokenUpdatedAt,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -9438,6 +11550,24 @@ final class $$AreasTableReferences
     ).filter((f) => f.areaId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_notesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$SuggestionsTable, List<Suggestion>>
+  _suggestionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.suggestions,
+    aliasName: $_aliasNameGenerator(db.areas.id, db.suggestions.areaId),
+  );
+
+  $$SuggestionsTableProcessedTableManager get suggestionsRefs {
+    final manager = $$SuggestionsTableTableManager(
+      $_db,
+      $_db.suggestions,
+    ).filter((f) => f.areaId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_suggestionsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -9559,6 +11689,31 @@ class $$AreasTableFilterComposer extends Composer<_$AppDatabase, $AreasTable> {
           }) => $$NotesTableFilterComposer(
             $db: $db,
             $table: $db.notes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> suggestionsRefs(
+    Expression<bool> Function($$SuggestionsTableFilterComposer f) f,
+  ) {
+    final $$SuggestionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.areaId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableFilterComposer(
+            $db: $db,
+            $table: $db.suggestions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9728,6 +11883,31 @@ class $$AreasTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> suggestionsRefs<T extends Object>(
+    Expression<T> Function($$SuggestionsTableAnnotationComposer a) f,
+  ) {
+    final $$SuggestionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.areaId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.suggestions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$AreasTableTableManager
@@ -9747,6 +11927,7 @@ class $$AreasTableTableManager
             bool userPlantsRefs,
             bool taskSubjectsRefs,
             bool notesRefs,
+            bool suggestionsRefs,
           })
         > {
   $$AreasTableTableManager(_$AppDatabase db, $AreasTable table)
@@ -9815,6 +11996,7 @@ class $$AreasTableTableManager
                 userPlantsRefs = false,
                 taskSubjectsRefs = false,
                 notesRefs = false,
+                suggestionsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
@@ -9822,6 +12004,7 @@ class $$AreasTableTableManager
                     if (userPlantsRefs) db.userPlants,
                     if (taskSubjectsRefs) db.taskSubjects,
                     if (notesRefs) db.notes,
+                    if (suggestionsRefs) db.suggestions,
                   ],
                   addJoins: null,
                   getPrefetchedDataCallback: (items) async {
@@ -9877,6 +12060,27 @@ class $$AreasTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (suggestionsRefs)
+                        await $_getPrefetchedData<
+                          Area,
+                          $AreasTable,
+                          Suggestion
+                        >(
+                          currentTable: table,
+                          referencedTable: $$AreasTableReferences
+                              ._suggestionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$AreasTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).suggestionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.areaId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -9901,6 +12105,7 @@ typedef $$AreasTableProcessedTableManager =
         bool userPlantsRefs,
         bool taskSubjectsRefs,
         bool notesRefs,
+        bool suggestionsRefs,
       })
     >;
 typedef $$UserPlantsTableCreateCompanionBuilder =
@@ -10007,6 +12212,27 @@ final class $$UserPlantsTableReferences
     ).filter((f) => f.userPlantId.id.sqlEquals($_itemColumn<String>('id')!));
 
     final cache = $_typedResult.readTableOrNull(_notesRefsTable($_db));
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$SuggestionsTable, List<Suggestion>>
+  _suggestionsRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.suggestions,
+    aliasName: $_aliasNameGenerator(
+      db.userPlants.id,
+      db.suggestions.userPlantId,
+    ),
+  );
+
+  $$SuggestionsTableProcessedTableManager get suggestionsRefs {
+    final manager = $$SuggestionsTableTableManager(
+      $_db,
+      $_db.suggestions,
+    ).filter((f) => f.userPlantId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_suggestionsRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -10149,6 +12375,31 @@ class $$UserPlantsTableFilterComposer
           }) => $$NotesTableFilterComposer(
             $db: $db,
             $table: $db.notes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> suggestionsRefs(
+    Expression<bool> Function($$SuggestionsTableFilterComposer f) f,
+  ) {
+    final $$SuggestionsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.userPlantId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableFilterComposer(
+            $db: $db,
+            $table: $db.suggestions,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -10389,6 +12640,31 @@ class $$UserPlantsTableAnnotationComposer
     );
     return f(composer);
   }
+
+  Expression<T> suggestionsRefs<T extends Object>(
+    Expression<T> Function($$SuggestionsTableAnnotationComposer a) f,
+  ) {
+    final $$SuggestionsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.suggestions,
+      getReferencedColumn: (t) => t.userPlantId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$SuggestionsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.suggestions,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
 }
 
 class $$UserPlantsTableTableManager
@@ -10409,6 +12685,7 @@ class $$UserPlantsTableTableManager
             bool plantId,
             bool taskSubjectsRefs,
             bool notesRefs,
+            bool suggestionsRefs,
           })
         > {
   $$UserPlantsTableTableManager(_$AppDatabase db, $UserPlantsTable table)
@@ -10488,12 +12765,14 @@ class $$UserPlantsTableTableManager
                 plantId = false,
                 taskSubjectsRefs = false,
                 notesRefs = false,
+                suggestionsRefs = false,
               }) {
                 return PrefetchHooks(
                   db: db,
                   explicitlyWatchedTables: [
                     if (taskSubjectsRefs) db.taskSubjects,
                     if (notesRefs) db.notes,
+                    if (suggestionsRefs) db.suggestions,
                   ],
                   addJoins:
                       <
@@ -10586,6 +12865,27 @@ class $$UserPlantsTableTableManager
                               ),
                           typedResults: items,
                         ),
+                      if (suggestionsRefs)
+                        await $_getPrefetchedData<
+                          UserPlant,
+                          $UserPlantsTable,
+                          Suggestion
+                        >(
+                          currentTable: table,
+                          referencedTable: $$UserPlantsTableReferences
+                              ._suggestionsRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$UserPlantsTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).suggestionsRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.userPlantId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
                     ];
                   },
                 );
@@ -10611,6 +12911,7 @@ typedef $$UserPlantsTableProcessedTableManager =
         bool plantId,
         bool taskSubjectsRefs,
         bool notesRefs,
+        bool suggestionsRefs,
       })
     >;
 typedef $$TasksTableCreateCompanionBuilder =
@@ -10622,6 +12923,7 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<TaskStatus> status,
       Value<String?> note,
       Value<String?> weather,
+      Value<String?> aggContext,
       Value<String?> recurrence,
       required DateTime updatedAt,
       Value<bool> deleted,
@@ -10637,6 +12939,7 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<TaskStatus> status,
       Value<String?> note,
       Value<String?> weather,
+      Value<String?> aggContext,
       Value<String?> recurrence,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
@@ -10756,6 +13059,11 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<String> get weather => $composableBuilder(
     column: $table.weather,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get aggContext => $composableBuilder(
+    column: $table.aggContext,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10917,6 +13225,11 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get aggContext => $composableBuilder(
+    column: $table.aggContext,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<String> get recurrence => $composableBuilder(
     column: $table.recurrence,
     builder: (column) => ColumnOrderings(column),
@@ -10987,6 +13300,11 @@ class $$TasksTableAnnotationComposer
 
   GeneratedColumn<String> get weather =>
       $composableBuilder(column: $table.weather, builder: (column) => column);
+
+  GeneratedColumn<String> get aggContext => $composableBuilder(
+    column: $table.aggContext,
+    builder: (column) => column,
+  );
 
   GeneratedColumn<String> get recurrence => $composableBuilder(
     column: $table.recurrence,
@@ -11143,6 +13461,7 @@ class $$TasksTableTableManager
                 Value<TaskStatus> status = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
+                Value<String?> aggContext = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
@@ -11156,6 +13475,7 @@ class $$TasksTableTableManager
                 status: status,
                 note: note,
                 weather: weather,
+                aggContext: aggContext,
                 recurrence: recurrence,
                 updatedAt: updatedAt,
                 deleted: deleted,
@@ -11171,6 +13491,7 @@ class $$TasksTableTableManager
                 Value<TaskStatus> status = const Value.absent(),
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
+                Value<String?> aggContext = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),
@@ -11184,6 +13505,7 @@ class $$TasksTableTableManager
                 status: status,
                 note: note,
                 weather: weather,
+                aggContext: aggContext,
                 recurrence: recurrence,
                 updatedAt: updatedAt,
                 deleted: deleted,
@@ -13835,6 +16157,1020 @@ typedef $$TaskSuppliesTableProcessedTableManager =
       TaskSupply,
       PrefetchHooks Function({bool taskId, bool supplyId})
     >;
+typedef $$SuggestionsTableCreateCompanionBuilder =
+    SuggestionsCompanion Function({
+      required String id,
+      required String userId,
+      required String ruleId,
+      Value<String?> plantTaskRuleId,
+      required String taskTypeId,
+      Value<String?> userPlantId,
+      Value<String?> areaId,
+      required String subjectKey,
+      required String messageKey,
+      Value<String> messageParams,
+      required double score,
+      Value<String> status,
+      Value<String> dismissScope,
+      Value<String?> plannedTaskId,
+      required DateTime validUntil,
+      required DateTime createdAt,
+      required DateTime updatedAt,
+      Value<bool> deleted,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+typedef $$SuggestionsTableUpdateCompanionBuilder =
+    SuggestionsCompanion Function({
+      Value<String> id,
+      Value<String> userId,
+      Value<String> ruleId,
+      Value<String?> plantTaskRuleId,
+      Value<String> taskTypeId,
+      Value<String?> userPlantId,
+      Value<String?> areaId,
+      Value<String> subjectKey,
+      Value<String> messageKey,
+      Value<String> messageParams,
+      Value<double> score,
+      Value<String> status,
+      Value<String> dismissScope,
+      Value<String?> plannedTaskId,
+      Value<DateTime> validUntil,
+      Value<DateTime> createdAt,
+      Value<DateTime> updatedAt,
+      Value<bool> deleted,
+      Value<String> syncStatus,
+      Value<int> rowid,
+    });
+
+final class $$SuggestionsTableReferences
+    extends BaseReferences<_$AppDatabase, $SuggestionsTable, Suggestion> {
+  $$SuggestionsTableReferences(super.$_db, super.$_table, super.$_typedResult);
+
+  static $TaskTypesTable _taskTypeIdTable(_$AppDatabase db) =>
+      db.taskTypes.createAlias(
+        $_aliasNameGenerator(db.suggestions.taskTypeId, db.taskTypes.id),
+      );
+
+  $$TaskTypesTableProcessedTableManager get taskTypeId {
+    final $_column = $_itemColumn<String>('task_type_id')!;
+
+    final manager = $$TaskTypesTableTableManager(
+      $_db,
+      $_db.taskTypes,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_taskTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $UserPlantsTable _userPlantIdTable(_$AppDatabase db) =>
+      db.userPlants.createAlias(
+        $_aliasNameGenerator(db.suggestions.userPlantId, db.userPlants.id),
+      );
+
+  $$UserPlantsTableProcessedTableManager? get userPlantId {
+    final $_column = $_itemColumn<String>('user_plant_id');
+    if ($_column == null) return null;
+    final manager = $$UserPlantsTableTableManager(
+      $_db,
+      $_db.userPlants,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_userPlantIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+
+  static $AreasTable _areaIdTable(_$AppDatabase db) => db.areas.createAlias(
+    $_aliasNameGenerator(db.suggestions.areaId, db.areas.id),
+  );
+
+  $$AreasTableProcessedTableManager? get areaId {
+    final $_column = $_itemColumn<String>('area_id');
+    if ($_column == null) return null;
+    final manager = $$AreasTableTableManager(
+      $_db,
+      $_db.areas,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_areaIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$SuggestionsTableFilterComposer
+    extends Composer<_$AppDatabase, $SuggestionsTable> {
+  $$SuggestionsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plantTaskRuleId => $composableBuilder(
+    column: $table.plantTaskRuleId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get messageParams => $composableBuilder(
+    column: $table.messageParams,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get score => $composableBuilder(
+    column: $table.score,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get dismissScope => $composableBuilder(
+    column: $table.dismissScope,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plannedTaskId => $composableBuilder(
+    column: $table.plannedTaskId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get validUntil => $composableBuilder(
+    column: $table.validUntil,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TaskTypesTableFilterComposer get taskTypeId {
+    final $$TaskTypesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableFilterComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableFilterComposer get userPlantId {
+    final $$UserPlantsTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableFilterComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableFilterComposer get areaId {
+    final $$AreasTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableFilterComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SuggestionsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SuggestionsTable> {
+  $$SuggestionsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get ruleId => $composableBuilder(
+    column: $table.ruleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plantTaskRuleId => $composableBuilder(
+    column: $table.plantTaskRuleId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get messageParams => $composableBuilder(
+    column: $table.messageParams,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get score => $composableBuilder(
+    column: $table.score,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get status => $composableBuilder(
+    column: $table.status,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get dismissScope => $composableBuilder(
+    column: $table.dismissScope,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plannedTaskId => $composableBuilder(
+    column: $table.plannedTaskId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get validUntil => $composableBuilder(
+    column: $table.validUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get createdAt => $composableBuilder(
+    column: $table.createdAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get deleted => $composableBuilder(
+    column: $table.deleted,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TaskTypesTableOrderingComposer get taskTypeId {
+    final $$TaskTypesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableOrderingComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableOrderingComposer get userPlantId {
+    final $$UserPlantsTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableOrderingComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableOrderingComposer get areaId {
+    final $$AreasTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableOrderingComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SuggestionsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SuggestionsTable> {
+  $$SuggestionsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get ruleId =>
+      $composableBuilder(column: $table.ruleId, builder: (column) => column);
+
+  GeneratedColumn<String> get plantTaskRuleId => $composableBuilder(
+    column: $table.plantTaskRuleId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get messageParams => $composableBuilder(
+    column: $table.messageParams,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<double> get score =>
+      $composableBuilder(column: $table.score, builder: (column) => column);
+
+  GeneratedColumn<String> get status =>
+      $composableBuilder(column: $table.status, builder: (column) => column);
+
+  GeneratedColumn<String> get dismissScope => $composableBuilder(
+    column: $table.dismissScope,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get plannedTaskId => $composableBuilder(
+    column: $table.plannedTaskId,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get validUntil => $composableBuilder(
+    column: $table.validUntil,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get createdAt =>
+      $composableBuilder(column: $table.createdAt, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+
+  GeneratedColumn<bool> get deleted =>
+      $composableBuilder(column: $table.deleted, builder: (column) => column);
+
+  GeneratedColumn<String> get syncStatus => $composableBuilder(
+    column: $table.syncStatus,
+    builder: (column) => column,
+  );
+
+  $$TaskTypesTableAnnotationComposer get taskTypeId {
+    final $$TaskTypesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$UserPlantsTableAnnotationComposer get userPlantId {
+    final $$UserPlantsTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.userPlantId,
+      referencedTable: $db.userPlants,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$UserPlantsTableAnnotationComposer(
+            $db: $db,
+            $table: $db.userPlants,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+
+  $$AreasTableAnnotationComposer get areaId {
+    final $$AreasTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.areaId,
+      referencedTable: $db.areas,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$AreasTableAnnotationComposer(
+            $db: $db,
+            $table: $db.areas,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$SuggestionsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SuggestionsTable,
+          Suggestion,
+          $$SuggestionsTableFilterComposer,
+          $$SuggestionsTableOrderingComposer,
+          $$SuggestionsTableAnnotationComposer,
+          $$SuggestionsTableCreateCompanionBuilder,
+          $$SuggestionsTableUpdateCompanionBuilder,
+          (Suggestion, $$SuggestionsTableReferences),
+          Suggestion,
+          PrefetchHooks Function({
+            bool taskTypeId,
+            bool userPlantId,
+            bool areaId,
+          })
+        > {
+  $$SuggestionsTableTableManager(_$AppDatabase db, $SuggestionsTable table)
+    : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SuggestionsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SuggestionsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SuggestionsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> userId = const Value.absent(),
+                Value<String> ruleId = const Value.absent(),
+                Value<String?> plantTaskRuleId = const Value.absent(),
+                Value<String> taskTypeId = const Value.absent(),
+                Value<String?> userPlantId = const Value.absent(),
+                Value<String?> areaId = const Value.absent(),
+                Value<String> subjectKey = const Value.absent(),
+                Value<String> messageKey = const Value.absent(),
+                Value<String> messageParams = const Value.absent(),
+                Value<double> score = const Value.absent(),
+                Value<String> status = const Value.absent(),
+                Value<String> dismissScope = const Value.absent(),
+                Value<String?> plannedTaskId = const Value.absent(),
+                Value<DateTime> validUntil = const Value.absent(),
+                Value<DateTime> createdAt = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<bool> deleted = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SuggestionsCompanion(
+                id: id,
+                userId: userId,
+                ruleId: ruleId,
+                plantTaskRuleId: plantTaskRuleId,
+                taskTypeId: taskTypeId,
+                userPlantId: userPlantId,
+                areaId: areaId,
+                subjectKey: subjectKey,
+                messageKey: messageKey,
+                messageParams: messageParams,
+                score: score,
+                status: status,
+                dismissScope: dismissScope,
+                plannedTaskId: plannedTaskId,
+                validUntil: validUntil,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deleted: deleted,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String userId,
+                required String ruleId,
+                Value<String?> plantTaskRuleId = const Value.absent(),
+                required String taskTypeId,
+                Value<String?> userPlantId = const Value.absent(),
+                Value<String?> areaId = const Value.absent(),
+                required String subjectKey,
+                required String messageKey,
+                Value<String> messageParams = const Value.absent(),
+                required double score,
+                Value<String> status = const Value.absent(),
+                Value<String> dismissScope = const Value.absent(),
+                Value<String?> plannedTaskId = const Value.absent(),
+                required DateTime validUntil,
+                required DateTime createdAt,
+                required DateTime updatedAt,
+                Value<bool> deleted = const Value.absent(),
+                Value<String> syncStatus = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SuggestionsCompanion.insert(
+                id: id,
+                userId: userId,
+                ruleId: ruleId,
+                plantTaskRuleId: plantTaskRuleId,
+                taskTypeId: taskTypeId,
+                userPlantId: userPlantId,
+                areaId: areaId,
+                subjectKey: subjectKey,
+                messageKey: messageKey,
+                messageParams: messageParams,
+                score: score,
+                status: status,
+                dismissScope: dismissScope,
+                plannedTaskId: plannedTaskId,
+                validUntil: validUntil,
+                createdAt: createdAt,
+                updatedAt: updatedAt,
+                deleted: deleted,
+                syncStatus: syncStatus,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$SuggestionsTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback:
+              ({taskTypeId = false, userPlantId = false, areaId = false}) {
+                return PrefetchHooks(
+                  db: db,
+                  explicitlyWatchedTables: [],
+                  addJoins:
+                      <
+                        T extends TableManagerState<
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic,
+                          dynamic
+                        >
+                      >(state) {
+                        if (taskTypeId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.taskTypeId,
+                                    referencedTable:
+                                        $$SuggestionsTableReferences
+                                            ._taskTypeIdTable(db),
+                                    referencedColumn:
+                                        $$SuggestionsTableReferences
+                                            ._taskTypeIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (userPlantId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.userPlantId,
+                                    referencedTable:
+                                        $$SuggestionsTableReferences
+                                            ._userPlantIdTable(db),
+                                    referencedColumn:
+                                        $$SuggestionsTableReferences
+                                            ._userPlantIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+                        if (areaId) {
+                          state =
+                              state.withJoin(
+                                    currentTable: table,
+                                    currentColumn: table.areaId,
+                                    referencedTable:
+                                        $$SuggestionsTableReferences
+                                            ._areaIdTable(db),
+                                    referencedColumn:
+                                        $$SuggestionsTableReferences
+                                            ._areaIdTable(db)
+                                            .id,
+                                  )
+                                  as T;
+                        }
+
+                        return state;
+                      },
+                  getPrefetchedDataCallback: (items) async {
+                    return [];
+                  },
+                );
+              },
+        ),
+      );
+}
+
+typedef $$SuggestionsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SuggestionsTable,
+      Suggestion,
+      $$SuggestionsTableFilterComposer,
+      $$SuggestionsTableOrderingComposer,
+      $$SuggestionsTableAnnotationComposer,
+      $$SuggestionsTableCreateCompanionBuilder,
+      $$SuggestionsTableUpdateCompanionBuilder,
+      (Suggestion, $$SuggestionsTableReferences),
+      Suggestion,
+      PrefetchHooks Function({bool taskTypeId, bool userPlantId, bool areaId})
+    >;
+typedef $$SuggestionLogsTableCreateCompanionBuilder =
+    SuggestionLogsCompanion Function({
+      required String userId,
+      required String guardKey,
+      required String subjectKey,
+      Value<DateTime?> lastSuggestedAt,
+      Value<DateTime?> dismissedUntil,
+      required DateTime updatedAt,
+      Value<int> rowid,
+    });
+typedef $$SuggestionLogsTableUpdateCompanionBuilder =
+    SuggestionLogsCompanion Function({
+      Value<String> userId,
+      Value<String> guardKey,
+      Value<String> subjectKey,
+      Value<DateTime?> lastSuggestedAt,
+      Value<DateTime?> dismissedUntil,
+      Value<DateTime> updatedAt,
+      Value<int> rowid,
+    });
+
+class $$SuggestionLogsTableFilterComposer
+    extends Composer<_$AppDatabase, $SuggestionLogsTable> {
+  $$SuggestionLogsTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get guardKey => $composableBuilder(
+    column: $table.guardKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get lastSuggestedAt => $composableBuilder(
+    column: $table.lastSuggestedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get dismissedUntil => $composableBuilder(
+    column: $table.dismissedUntil,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$SuggestionLogsTableOrderingComposer
+    extends Composer<_$AppDatabase, $SuggestionLogsTable> {
+  $$SuggestionLogsTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get userId => $composableBuilder(
+    column: $table.userId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get guardKey => $composableBuilder(
+    column: $table.guardKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get lastSuggestedAt => $composableBuilder(
+    column: $table.lastSuggestedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get dismissedUntil => $composableBuilder(
+    column: $table.dismissedUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
+    column: $table.updatedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$SuggestionLogsTableAnnotationComposer
+    extends Composer<_$AppDatabase, $SuggestionLogsTable> {
+  $$SuggestionLogsTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get userId =>
+      $composableBuilder(column: $table.userId, builder: (column) => column);
+
+  GeneratedColumn<String> get guardKey =>
+      $composableBuilder(column: $table.guardKey, builder: (column) => column);
+
+  GeneratedColumn<String> get subjectKey => $composableBuilder(
+    column: $table.subjectKey,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get lastSuggestedAt => $composableBuilder(
+    column: $table.lastSuggestedAt,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get dismissedUntil => $composableBuilder(
+    column: $table.dismissedUntil,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<DateTime> get updatedAt =>
+      $composableBuilder(column: $table.updatedAt, builder: (column) => column);
+}
+
+class $$SuggestionLogsTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $SuggestionLogsTable,
+          SuggestionLog,
+          $$SuggestionLogsTableFilterComposer,
+          $$SuggestionLogsTableOrderingComposer,
+          $$SuggestionLogsTableAnnotationComposer,
+          $$SuggestionLogsTableCreateCompanionBuilder,
+          $$SuggestionLogsTableUpdateCompanionBuilder,
+          (
+            SuggestionLog,
+            BaseReferences<_$AppDatabase, $SuggestionLogsTable, SuggestionLog>,
+          ),
+          SuggestionLog,
+          PrefetchHooks Function()
+        > {
+  $$SuggestionLogsTableTableManager(
+    _$AppDatabase db,
+    $SuggestionLogsTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$SuggestionLogsTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$SuggestionLogsTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$SuggestionLogsTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> userId = const Value.absent(),
+                Value<String> guardKey = const Value.absent(),
+                Value<String> subjectKey = const Value.absent(),
+                Value<DateTime?> lastSuggestedAt = const Value.absent(),
+                Value<DateTime?> dismissedUntil = const Value.absent(),
+                Value<DateTime> updatedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => SuggestionLogsCompanion(
+                userId: userId,
+                guardKey: guardKey,
+                subjectKey: subjectKey,
+                lastSuggestedAt: lastSuggestedAt,
+                dismissedUntil: dismissedUntil,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String userId,
+                required String guardKey,
+                required String subjectKey,
+                Value<DateTime?> lastSuggestedAt = const Value.absent(),
+                Value<DateTime?> dismissedUntil = const Value.absent(),
+                required DateTime updatedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => SuggestionLogsCompanion.insert(
+                userId: userId,
+                guardKey: guardKey,
+                subjectKey: subjectKey,
+                lastSuggestedAt: lastSuggestedAt,
+                dismissedUntil: dismissedUntil,
+                updatedAt: updatedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$SuggestionLogsTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $SuggestionLogsTable,
+      SuggestionLog,
+      $$SuggestionLogsTableFilterComposer,
+      $$SuggestionLogsTableOrderingComposer,
+      $$SuggestionLogsTableAnnotationComposer,
+      $$SuggestionLogsTableCreateCompanionBuilder,
+      $$SuggestionLogsTableUpdateCompanionBuilder,
+      (
+        SuggestionLog,
+        BaseReferences<_$AppDatabase, $SuggestionLogsTable, SuggestionLog>,
+      ),
+      SuggestionLog,
+      PrefetchHooks Function()
+    >;
 typedef $$SyncCursorsTableCreateCompanionBuilder =
     SyncCursorsCompanion Function({
       required String name,
@@ -14329,6 +17665,10 @@ class $AppDatabaseManager {
       $$RecipesTableTableManager(_db, _db.recipes);
   $$TaskSuppliesTableTableManager get taskSupplies =>
       $$TaskSuppliesTableTableManager(_db, _db.taskSupplies);
+  $$SuggestionsTableTableManager get suggestions =>
+      $$SuggestionsTableTableManager(_db, _db.suggestions);
+  $$SuggestionLogsTableTableManager get suggestionLogs =>
+      $$SuggestionLogsTableTableManager(_db, _db.suggestionLogs);
   $$SyncCursorsTableTableManager get syncCursors =>
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
   $$DeviceLocationsTableTableManager get deviceLocations =>

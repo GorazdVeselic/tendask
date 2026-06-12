@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 import '../area_type.dart';
 import '../database/app_database.dart';
+import '../suggestion_status.dart';
 import '../task_status.dart';
 import 'sync_status.dart';
 
@@ -19,6 +20,8 @@ import 'sync_status.dart';
 
 String _ts(DateTime d) => d.toUtc().toIso8601String();
 
+String? _tsOrNull(DateTime? d) => d == null ? null : _ts(d);
+
 Object? _jsonb(String? s) => s == null ? null : jsonDecode(s);
 
 Map<String, dynamic> profileToRemote(Profile r) => {
@@ -28,6 +31,11 @@ Map<String, dynamic> profileToRemote(Profile r) => {
   'h3_r5': r.h3R5,
   'lang': r.lang,
   'notification_settings': _jsonb(r.notificationSettings),
+  'timezone': r.timezone,
+  'climate_bucket': r.climateBucket,
+  'climate_profile': _jsonb(r.climateProfile),
+  'fcm_token': r.fcmToken,
+  'fcm_token_updated_at': _tsOrNull(r.fcmTokenUpdatedAt),
   'updated_at': _ts(r.updatedAt),
 };
 
@@ -61,6 +69,7 @@ Map<String, dynamic> taskToRemote(Task r) => {
   'status': r.status.name,
   'note': r.note,
   'weather': _jsonb(r.weather),
+  'agg_context': _jsonb(r.aggContext),
   'recurrence': _jsonb(r.recurrence),
   'updated_at': _ts(r.updatedAt),
   'deleted': r.deleted,
@@ -117,6 +126,28 @@ Map<String, dynamic> recipeToRemote(Recipe r) => {
   'deleted': r.deleted,
 };
 
+Map<String, dynamic> suggestionToRemote(Suggestion r) => {
+  'id': r.id,
+  'user_id': r.userId,
+  'rule_id': r.ruleId,
+  'plant_task_rule_id': r.plantTaskRuleId,
+  'task_type_id': r.taskTypeId,
+  'user_plant_id': r.userPlantId,
+  'area_id': r.areaId,
+  'subject_key': r.subjectKey,
+  'message_key': r.messageKey,
+  'message_params': _jsonb(r.messageParams),
+  'score': r.score,
+  'status': r.status,
+  'dismiss_scope': r.dismissScope,
+  'planned_task_id': r.plannedTaskId,
+  // Postgres `date` column — send the date part only.
+  'valid_until': _ts(r.validUntil).substring(0, 10),
+  'created_at': _ts(r.createdAt),
+  'updated_at': _ts(r.updatedAt),
+  'deleted': r.deleted,
+};
+
 Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
   'id': r.id,
   'task_id': r.taskId,
@@ -138,6 +169,8 @@ Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
 // Tolerant by design: unknown keys are ignored, missing optionals default.
 
 DateTime _dt(Object? v) => DateTime.parse(v as String);
+
+DateTime? _dtOrNull(Object? v) => v == null ? null : _dt(v);
 
 String? _text(Object? v) {
   if (v == null) return null;
@@ -165,6 +198,11 @@ ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
       h3R5: Value(r['h3_r5'] as String?),
       lang: Value(r['lang'] as String?),
       notificationSettings: Value(_text(r['notification_settings'])),
+      timezone: Value(r['timezone'] as String?),
+      climateBucket: Value(r['climate_bucket'] as String?),
+      climateProfile: Value(_text(r['climate_profile'])),
+      fcmToken: Value(r['fcm_token'] as String?),
+      fcmTokenUpdatedAt: Value(_dtOrNull(r['fcm_token_updated_at'])),
       updatedAt: Value(_dt(r['updated_at'])),
       syncStatus: const Value(kSyncSynced),
     );
@@ -202,6 +240,7 @@ TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
   status: Value(_taskStatus(r['status'])),
   note: Value(r['note'] as String?),
   weather: Value(_text(r['weather'])),
+  aggContext: Value(_text(r['agg_context'])),
   recurrence: Value(_text(r['recurrence'])),
   updatedAt: Value(_dt(r['updated_at'])),
   deleted: Value(r['deleted'] as bool? ?? false),
@@ -266,6 +305,39 @@ RecipesCompanion recipeFromRemote(Map<String, dynamic> r) => RecipesCompanion(
   syncStatus: const Value(kSyncSynced),
 );
 
+SuggestionsCompanion suggestionFromRemote(Map<String, dynamic> r) =>
+    SuggestionsCompanion(
+      id: Value(r['id'] as String),
+      userId: Value(r['user_id'] as String),
+      ruleId: Value(r['rule_id'] as String),
+      plantTaskRuleId: Value(r['plant_task_rule_id'] as String?),
+      taskTypeId: Value(r['task_type_id'] as String),
+      userPlantId: Value(r['user_plant_id'] as String?),
+      areaId: Value(r['area_id'] as String?),
+      subjectKey: Value(r['subject_key'] as String),
+      messageKey: Value(r['message_key'] as String),
+      messageParams: Value(_text(r['message_params']) ?? '{}'),
+      score: Value((r['score'] as num).toDouble()),
+      status: Value(r['status'] as String? ?? kSuggestionNew),
+      dismissScope: Value(r['dismiss_scope'] as String? ?? kDismissScopeSeason),
+      plannedTaskId: Value(r['planned_task_id'] as String?),
+      validUntil: Value(_dt(r['valid_until'])),
+      createdAt: Value(_dt(r['created_at'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+      deleted: Value(r['deleted'] as bool? ?? false),
+      syncStatus: const Value(kSyncSynced),
+    );
+
+SuggestionLogsCompanion suggestionLogFromRemote(Map<String, dynamic> r) =>
+    SuggestionLogsCompanion(
+      userId: Value(r['user_id'] as String),
+      guardKey: Value(r['guard_key'] as String),
+      subjectKey: Value(r['subject_key'] as String),
+      lastSuggestedAt: Value(_dtOrNull(r['last_suggested_at'])),
+      dismissedUntil: Value(_dtOrNull(r['dismissed_until'])),
+      updatedAt: Value(_dt(r['updated_at'])),
+    );
+
 TaskSuppliesCompanion taskSupplyFromRemote(Map<String, dynamic> r) =>
     TaskSuppliesCompanion(
       id: Value(r['id'] as String),
@@ -295,6 +367,7 @@ TaskTypesCompanion taskTypeFromRemote(Map<String, dynamic> r) =>
       weatherSensitive: Value(r['weather_sensitive'] as bool? ?? false),
       consumesSupplies: Value(r['consumes_supplies'] as bool? ?? false),
       defaultCadence: Value((r['default_cadence'] as num?)?.toInt()),
+      seasonal: Value(r['seasonal'] as bool? ?? true),
     );
 
 PlantsCompanion plantFromRemote(Map<String, dynamic> r) => PlantsCompanion(

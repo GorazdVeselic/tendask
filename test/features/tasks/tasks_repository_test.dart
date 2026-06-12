@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
@@ -267,6 +269,71 @@ void main() {
       expect(usage['water'], 2);
       expect(usage['mow'], 1);
       expect(usage.containsKey('prune'), false);
+    });
+  });
+
+  group('agg_context snapshot', () {
+    Future<void> seedProfile({String? h3r7, String? bucket}) => db
+        .into(db.profiles)
+        .insert(
+          ProfilesCompanion.insert(
+            userId: userId,
+            h3R7: Value(h3r7),
+            h3R6: const Value('861f1d4ffffffff'),
+            climateBucket: Value(bucket),
+            updatedAt: t0,
+          ),
+        );
+
+    test('complete() freezes the profile buckets, write-once', () async {
+      await seedProfile(h3r7: '871f1d4ffffffff', bucket: 'e1_t5');
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
+
+      await repo.complete(id);
+      final done = await repo.byId(id);
+      expect(done!.aggContext, isNotNull);
+      final context = jsonDecode(done.aggContext!) as Map<String, dynamic>;
+      expect(context, {
+        'h3_r7': '871f1d4ffffffff',
+        'h3_r6': '861f1d4ffffffff',
+        'climate_bucket': 'e1_t5',
+      });
+
+      // Revert keeps the snapshot; a second complete must not overwrite it.
+      await repo.revertToWaiting(id);
+      expect((await repo.byId(id))!.aggContext, done.aggContext);
+      await (db.update(db.profiles)..where((p) => p.userId.equals(userId)))
+          .write(const ProfilesCompanion(climateBucket: Value('e9_t9')));
+      await repo.complete(id);
+      expect((await repo.byId(id))!.aggContext, done.aggContext);
+    });
+
+    test('create() with status=done stamps the snapshot too', () async {
+      await seedProfile(h3r7: '871f1d4ffffffff');
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        status: TaskStatus.done,
+      );
+      expect((await repo.byId(id))!.aggContext, isNotNull);
+    });
+
+    test('stays null without profile buckets (server falls back)', () async {
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
+      await repo.complete(id);
+      expect((await repo.byId(id))!.aggContext, isNull);
     });
   });
 

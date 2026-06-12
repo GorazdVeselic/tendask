@@ -50,6 +50,7 @@ class SeedService {
       weatherSensitive: Value(t.weatherSensitive),
       consumesSupplies: Value(t.consumesSupplies),
       defaultCadence: Value(t.defaultCadence),
+      seasonal: Value(t.seasonal),
     );
   }
 

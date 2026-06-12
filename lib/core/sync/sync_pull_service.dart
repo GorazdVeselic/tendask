@@ -128,6 +128,22 @@ class SyncPullService {
         taskSupplyFromRemote,
         updatedAt: (t) => t.updatedAt,
       ),
+      // Smart engine (M11): suggestion is two-way (status changes push back),
+      // suggestion_log is a pull-only mirror of server guard state.
+      await _pull(
+        _db.suggestions,
+        userId: uid,
+        since: since,
+        suggestionFromRemote,
+        updatedAt: (t) => t.updatedAt,
+      ),
+      await _pull(
+        _db.suggestionLogs,
+        userId: uid,
+        since: since,
+        suggestionLogFromRemote,
+        updatedAt: (t) => t.updatedAt,
+      ),
     ]) {
       total += r.count;
       if (r.maxUpdatedAt != null && r.maxUpdatedAt!.isAfter(maxTs)) {

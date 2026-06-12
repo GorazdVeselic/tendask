@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/suggestion_status.dart';
 import 'package:tendask/core/sync/sync_pull_service.dart';
 import 'package:tendask/core/sync/sync_push_service.dart';
 import 'package:tendask/core/sync/sync_status.dart';
@@ -171,6 +172,82 @@ void main() {
       expect(a.syncStatus, kSyncSynced);
     },
   );
+
+  test(
+    'suggestion: server-authored row pulls in, a status flip pushes back',
+    () async {
+      // The engine (server) authored a suggestion in the cloud.
+      cloud.store['suggestion'] = [
+        {
+          'id': 's1',
+          'user_id': uid,
+          'rule_id': 'R5',
+          'plant_task_rule_id': 'apple.prune.winter',
+          'task_type_id': 'prune',
+          'user_plant_id': null,
+          'area_id': null,
+          'subject_key': 'cat:fruit_tree',
+          'message_key': 'suggestions.prune_window',
+          'message_params': {'plant': 'apple'},
+          'score': 2.5,
+          'status': 'new',
+          'dismiss_scope': 'season',
+          'planned_task_id': null,
+          'valid_until': '2026-07-01',
+          'created_at': t1.toIso8601String(),
+          'updated_at': t1.toIso8601String(),
+          'deleted': false,
+        },
+      ];
+
+      await pullA.pull();
+      final pulledRow = await dbA.select(dbA.suggestions).getSingle();
+      expect(pulledRow.status, kSuggestionNew);
+      expect(jsonDecode(pulledRow.messageParams), {'plant': 'apple'});
+      // Server-authored → synced; the pull must not create pending noise.
+      expect(pulledRow.syncStatus, kSyncSynced);
+
+      // The user plans it → only that change goes pending and pushes back.
+      await (dbA.update(dbA.suggestions)..where((s) => s.id.equals('s1')))
+          .write(
+            SuggestionsCompanion(
+              status: const Value(kSuggestionPlanned),
+              updatedAt: Value(t2),
+              syncStatus: const Value(kSyncPending),
+            ),
+          );
+      final pushed = await pushA.push();
+      expect(pushed, 1);
+      expect(cloud.store['suggestion']!.single['status'], kSuggestionPlanned);
+
+      // A second device picks the change up on pull.
+      await pullB.pull();
+      final b = await dbB.select(dbB.suggestions).getSingle();
+      expect(b.status, kSuggestionPlanned);
+    },
+  );
+
+  test('suggestion_log mirrors in as pull-only guard state', () async {
+    cloud.store['suggestion_log'] = [
+      {
+        'user_id': uid,
+        'guard_key': 'R5:prune',
+        'subject_key': 'cat:fruit_tree',
+        'last_suggested_at': t1.toIso8601String(),
+        'dismissed_until': null,
+        'updated_at': t1.toIso8601String(),
+      },
+    ];
+
+    await pullA.pull();
+    final log = await dbA.select(dbA.suggestionLogs).getSingle();
+    expect(log.guardKey, 'R5:prune');
+    expect(log.lastSuggestedAt, isNotNull);
+    expect(log.dismissedUntil, isNull);
+
+    // Nothing to push back — the table has no syncStatus column at all.
+    expect(await pushA.push(), 0);
+  });
 
   test('a soft delete propagates as a tombstone to the other device', () async {
     await putArea(dbA, 'a1', name: 'Doomed', at: t1);

@@ -32,6 +32,8 @@ part 'app_database.g.dart';
     Supplies,
     Recipes,
     TaskSupplies,
+    Suggestions,
+    SuggestionLogs,
     // local-only (never synced)
     SyncCursors,
     DeviceLocations,
@@ -45,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 8;
+  int get schemaVersion => 9;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -55,6 +57,8 @@ class AppDatabase extends _$AppDatabase {
   Future<void> clearUserData({bool keepFlags = false}) async {
     await transaction(() async {
       for (final table in <TableInfo<Table, dynamic>>[
+        suggestions,
+        suggestionLogs,
         taskSupplies,
         taskReminders,
         taskSubjects,
@@ -79,19 +83,25 @@ class AppDatabase extends _$AppDatabase {
   /// garden coordinates, which must never leave the device (only the derived H3
   /// cells in profile are exported); local_flag/sync_cursor are internal. The
   /// public catalog is omitted (not user data). sync_status is stripped — an
-  /// internal sync detail, not user content.
+  /// internal sync detail, not user content. The FCM token is stripped too: a
+  /// technical device identifier, not user content (nulled on sign-out anyway).
+  /// suggestion_log is a server-side derivative of the same decisions — not
+  /// exported.
   Future<Map<String, dynamic>> exportUserData() async {
     List<Map<String, dynamic>> rows<D extends DataClass>(
       List<D> data,
     ) => data.map((r) {
       final json = r.toJson();
       json.remove('syncStatus');
+      json.remove('fcmToken');
+      json.remove('fcmTokenUpdatedAt');
       return json;
     }).toList();
 
     return {
       'schema_version': schemaVersion,
       'profile': rows(await select(profiles).get()),
+      'suggestion': rows(await select(suggestions).get()),
       'area': rows(await select(areas).get()),
       'user_plant': rows(await select(userPlants).get()),
       'task': rows(await select(tasks).get()),
@@ -144,6 +154,25 @@ class AppDatabase extends _$AppDatabase {
       // v8: notification settings (screen 22, M8.4) live in profile and sync.
       if (from < 8) {
         await m.addColumn(profiles, profiles.notificationSettings);
+      }
+      // v9: smart engine (M11.2) — climate/FCM profile fields, frozen
+      // agg_context snapshot on task, task_type.seasonal flag, suggestion
+      // tables. Mirrors Supabase migration 0005.
+      if (from < 9) {
+        await m.addColumn(profiles, profiles.timezone);
+        await m.addColumn(profiles, profiles.climateBucket);
+        await m.addColumn(profiles, profiles.climateProfile);
+        await m.addColumn(profiles, profiles.fcmToken);
+        await m.addColumn(profiles, profiles.fcmTokenUpdatedAt);
+        await m.addColumn(tasks, tasks.aggContext);
+        await m.addColumn(taskTypes, taskTypes.seasonal);
+        // Backfill for already-seeded catalogs (offline devices won't pull soon).
+        await customStatement(
+          "UPDATE task_type SET seasonal = 0 "
+          "WHERE id IN ('water', 'weed', 'stake', 'repot')",
+        );
+        await m.createTable(suggestions);
+        await m.createTable(suggestionLogs);
       }
     },
   );

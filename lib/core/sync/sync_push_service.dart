@@ -111,6 +111,19 @@ class SyncPushService {
       keyOf: (r) => r.id,
       updatedAtOf: (r) => r.updatedAt,
     );
+    // Engine-authored rows default to synced; only local status changes
+    // (plan/dismiss/logged) go pending. Last: planned_task_id FKs on task.
+    n += await _pushTable(
+      _db.suggestions,
+      () => _pending(
+        _db.suggestions,
+        (t) => t.syncStatus,
+        ownerId: (t) => t.userId,
+      ),
+      suggestionToRemote,
+      keyOf: (r) => r.id,
+      updatedAtOf: (r) => r.updatedAt,
+    );
     return n;
   }
 

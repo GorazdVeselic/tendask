@@ -17,7 +17,7 @@ SQL iz `04` §4.1–4.3: novi stolpci (profile/task/task_type), `plant_task_rule
 - **Odvisnosti:** — · **Kompleksnost:** M
 - **Commit:** `feat(db): M11 shema motorja — plant_task_rule, suggestion, app_config`
 
-### M11.2 — drift migracija (zrcalo) + agg_context štemplanje `[ ]`
+### M11.2 — drift migracija (zrcalo) + agg_context štemplanje `[x]`
 `05` §5.1–5.3 + 5.5: profile +5 stolpcev, task.aggContext, task_type.seasonal, tabeli
 suggestion/suggestion_log, schemaVersion bump, sync registracija (pull+push po 05), mappers.
 TasksRepository ob `done` štemplja `agg_context` (write-once kot weather; ohrani ob

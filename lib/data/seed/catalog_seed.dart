@@ -14,6 +14,7 @@ class TaskTypeSeed {
     this.weatherSensitive = false,
     this.consumesSupplies = false,
     this.defaultCadence,
+    this.seasonal = true,
   });
 
   final String id;
@@ -28,6 +29,8 @@ class TaskTypeSeed {
   final bool consumesSupplies;
   // Days between repetitions; null = no fixed cadence
   final int? defaultCadence;
+  // Seasonal types get a time-percentile curve (V2); non-seasonal only feed+frequency
+  final bool seasonal;
 }
 
 class PlantSeed {
@@ -75,6 +78,7 @@ abstract final class CatalogSeed {
       icon: '💧',
       category: 'general',
       weatherSensitive: true,
+      seasonal: false,
     ),
     TaskTypeSeed(
       id: 'fertilize',
@@ -142,6 +146,7 @@ abstract final class CatalogSeed {
       de: 'Jäten',
       icon: '🌿',
       category: 'general',
+      seasonal: false,
     ),
     TaskTypeSeed(
       id: 'mulch',
@@ -275,6 +280,7 @@ abstract final class CatalogSeed {
       icon: '🪵',
       category: 'plant_care',
       requiresSubject: true,
+      seasonal: false,
     ),
     TaskTypeSeed(
       id: 'thin_fruit',
@@ -293,6 +299,7 @@ abstract final class CatalogSeed {
       icon: '🪴',
       category: 'plant_care',
       requiresSubject: true,
+      seasonal: false,
     ),
     TaskTypeSeed(
       id: 'overwinter',

@@ -39,18 +39,19 @@ String buildCatalogSql() {
     b.writeln(
       'insert into task_type '
       '(id, labels, icon, category, requires_subject, weather_sensitive, '
-      'consumes_supplies, default_cadence) values ('
+      'consumes_supplies, default_cadence, seasonal) values ('
       '${_q(t.id)}, ${_jsonb({'sl': t.sl, 'en': t.en, 'de': t.de})}, '
       '${_q(t.icon)}, ${_q(t.category)}, ${t.requiresSubject}, '
       '${t.weatherSensitive}, ${t.consumesSupplies}, '
-      '${t.defaultCadence ?? 'null'}) '
+      '${t.defaultCadence ?? 'null'}, ${t.seasonal}) '
       'on conflict (id) do update set '
       'labels = excluded.labels, icon = excluded.icon, '
       'category = excluded.category, '
       'requires_subject = excluded.requires_subject, '
       'weather_sensitive = excluded.weather_sensitive, '
       'consumes_supplies = excluded.consumes_supplies, '
-      'default_cadence = excluded.default_cadence;',
+      'default_cadence = excluded.default_cadence, '
+      'seasonal = excluded.seasonal;',
     );
   }
 

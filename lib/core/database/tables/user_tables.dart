@@ -19,6 +19,16 @@ class Profiles extends Table {
   TextColumn get lang => text().nullable()();
   // Notification preferences (screen 22), stored as JSON text → Supabase jsonb.
   TextColumn get notificationSettings => text().nullable()();
+  // IANA timezone (e.g. 'Europe/Ljubljana'); set on device, used server-side.
+  TextColumn get timezone => text().nullable()();
+  // Coarse public climate bucket (e.g. 'e1_t5') — the ONLY climate data synced
+  // into public aggregates.
+  TextColumn get climateBucket => text().nullable()();
+  // Rich owner-only climate profile (JSON, see docs/m11/07) — never aggregated.
+  TextColumn get climateProfile => text().nullable()();
+  // FCM push token (MVP: last device wins). Cleared on sign-out.
+  TextColumn get fcmToken => text().nullable()();
+  DateTimeColumn get fcmTokenUpdatedAt => dateTime().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
       text().withDefault(const Constant(kSyncPending))();
@@ -84,6 +94,9 @@ class Tasks extends Table {
   TextColumn get note => text().nullable()();
   // Frozen weather snapshot (JSON); set on completion, never overwritten
   TextColumn get weather => text().nullable()();
+  // Frozen aggregation buckets snapshot ({h3_r7,h3_r6,h3_r5,climate_bucket}),
+  // stamped on completion like the weather snapshot; never overwritten.
+  TextColumn get aggContext => text().nullable()();
   // JSON recurrence rule; null = one-off
   TextColumn get recurrence => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
@@ -200,6 +213,63 @@ class Recipes extends Table {
 
   @override
   Set<Column> get primaryKey => {id};
+}
+
+/// Engine-authored suggestions (M11). The server writes them; the client only
+/// flips status (plan/dismiss/logged) and pushes that change back.
+class Suggestions extends Table {
+  @override
+  String get tableName => 'suggestion';
+
+  TextColumn get id => text()();
+  TextColumn get userId => text()();
+  // 'R1'..'R7' engine rule
+  TextColumn get ruleId => text()();
+  TextColumn get plantTaskRuleId => text().nullable()();
+  TextColumn get taskTypeId => text().references(TaskTypes, #id)();
+  TextColumn get userPlantId => text().nullable().references(UserPlants, #id)();
+  TextColumn get areaId => text().nullable().references(Areas, #id)();
+  // 'up:<id>' | 'ar:<id>' | 'cat:<slug>'
+  TextColumn get subjectKey => text()();
+  TextColumn get messageKey => text()();
+  // JSON params for the i18n template; client only interpolates, never computes.
+  TextColumn get messageParams => text().withDefault(const Constant('{}'))();
+  RealColumn get score => real()();
+  // Plain TextColumn + constants (suggestion_status.dart), NOT textEnum: the DB
+  // value must be 'new', a Dart reserved word textEnum cannot remap.
+  TextColumn get status => text().withDefault(const Constant('new'))();
+  // 'season' | 'forever' — meaningful only with status='dismissed'.
+  TextColumn get dismissScope =>
+      text().withDefault(const Constant('season'))();
+  TextColumn get plannedTaskId => text().nullable()();
+  DateTimeColumn get validUntil => dateTime()();
+  DateTimeColumn get createdAt => dateTime()();
+  DateTimeColumn get updatedAt => dateTime()();
+  BoolColumn get deleted => boolean().withDefault(const Constant(false))();
+  // Server-authored: synced by default; only a local status change goes pending.
+  TextColumn get syncStatus =>
+      text().withDefault(const Constant(kSyncSynced))();
+
+  @override
+  Set<Column> get primaryKey => {id};
+}
+
+/// Read-only mirror of the engine's guard state (cooldown / dismissed_until).
+/// Pull-only: no syncStatus column — the client NEVER pushes this table.
+class SuggestionLogs extends Table {
+  @override
+  String get tableName => 'suggestion_log';
+
+  TextColumn get userId => text()();
+  // Fine-grained guard key (docs/m11/03 §Guard key), mirrors Supabase.
+  TextColumn get guardKey => text()();
+  TextColumn get subjectKey => text()();
+  DateTimeColumn get lastSuggestedAt => dateTime().nullable()();
+  DateTimeColumn get dismissedUntil => dateTime().nullable()();
+  DateTimeColumn get updatedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {userId, guardKey, subjectKey};
 }
 
 class TaskSupplies extends Table {

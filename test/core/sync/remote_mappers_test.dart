@@ -96,6 +96,11 @@ void main() {
       'h3_r5': null,
       'lang': 'sl',
       'notification_settings': null,
+      'timezone': null,
+      'climate_bucket': null,
+      'climate_profile': null,
+      'fcm_token': null,
+      'fcm_token_updated_at': null,
       'updated_at': '2026-06-05T10:00:00.000Z',
     });
     expect(map.containsKey('deleted'), isFalse);

@@ -19,6 +19,8 @@ class TaskTypes extends Table {
       boolean().withDefault(const Constant(false))();
   // Days between repetitions; null = no default cadence
   IntColumn get defaultCadence => integer().nullable()();
+  // Seasonal types get a time-percentile curve (V2); non-seasonal only feed+frequency.
+  BoolColumn get seasonal => boolean().withDefault(const Constant(true))();
 
   @override
   Set<Column> get primaryKey => {id};
