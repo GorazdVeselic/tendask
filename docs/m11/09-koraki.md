@@ -6,7 +6,7 @@
 
 ## Faza A — temelj (shema + klima + seed)
 
-### M11.1 — Supabase migracija 0005 (smart engine shema) `[ ]`
+### M11.1 — Supabase migracija 0005 (smart engine shema) `[x]`
 SQL iz `04` §4.1–4.3: novi stolpci (profile/task/task_type), `plant_task_rule`, `suggestion`,
 `suggestion_log`, `engine_run`, `weather_cache`, `app_config` (+seed vrednosti), `k_privacy()`.
 - **DoD:** `supabase db push` uspe; RLS preverjena ročno (anon bere `plant_task_rule`, ne bere

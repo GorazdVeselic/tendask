@@ -46,7 +46,8 @@ create table plant_task_rule (
   task_type_id  text not null references task_type(id),
   timing_anchor text not null check (timing_anchor in
                   ('month_window', 'frost_offset', 'growth_stage', 'cadence_only')),
-  window        jsonb not null,              -- shape per anchor, see docs/m11/01 §0
+  -- "window" is a reserved word in Postgres — must stay quoted in raw SQL.
+  "window"      jsonb not null,              -- shape per anchor, see docs/m11/01 §0
   cadence       text,                        -- human-readable; machine logic reads window
   frost_gate    boolean not null default false,
   weather_guard text,                        -- comma-joined guard codes (docs/m11/02 §G); null = none
