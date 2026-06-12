@@ -40,7 +40,7 @@ mediane), vključitev v LocationRepository (set/clear/letni re-fetch), zapis v p
 - **Odvisnosti:** M11.2 · **Kompleksnost:** L
 - **Commit:** `feat(weather): klimatski profil + koš + frost datumi iz Open-Meteo arhiva`
 
-### M11.4 — plant_task_rule seed (61 pravil) `[ ]`
+### M11.4 — plant_task_rule seed (61 pravil) `[x]`
 Preveri vse `(verify)` vire iz `01` (WebFetch/ročno; nepotrjene vire zamenjaj ali pravilo
 izpusti). `lib/data/seed/plant_task_rules_seed.dart` + drift tabela (05 §5.4) + seed_service +
 catalog_sync pull + `tool/gen_rules_sql.dart` → `supabase/seed/plant_task_rules.sql` → apply.

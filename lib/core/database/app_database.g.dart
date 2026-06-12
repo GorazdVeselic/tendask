@@ -1478,6 +1478,729 @@ class CategoryTaskTypesCompanion extends UpdateCompanion<CategoryTaskType> {
   }
 }
 
+class $PlantTaskRulesTable extends PlantTaskRules
+    with TableInfo<$PlantTaskRulesTable, PlantTaskRule> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $PlantTaskRulesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _idMeta = const VerificationMeta('id');
+  @override
+  late final GeneratedColumn<String> id = GeneratedColumn<String>(
+    'id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _scopeMeta = const VerificationMeta('scope');
+  @override
+  late final GeneratedColumn<String> scope = GeneratedColumn<String>(
+    'scope',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _refIdMeta = const VerificationMeta('refId');
+  @override
+  late final GeneratedColumn<String> refId = GeneratedColumn<String>(
+    'ref_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _taskTypeIdMeta = const VerificationMeta(
+    'taskTypeId',
+  );
+  @override
+  late final GeneratedColumn<String> taskTypeId = GeneratedColumn<String>(
+    'task_type_id',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'REFERENCES task_type (id)',
+    ),
+  );
+  static const VerificationMeta _timingAnchorMeta = const VerificationMeta(
+    'timingAnchor',
+  );
+  @override
+  late final GeneratedColumn<String> timingAnchor = GeneratedColumn<String>(
+    'timing_anchor',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _windowMeta = const VerificationMeta('window');
+  @override
+  late final GeneratedColumn<String> window = GeneratedColumn<String>(
+    'window',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _cadenceMeta = const VerificationMeta(
+    'cadence',
+  );
+  @override
+  late final GeneratedColumn<String> cadence = GeneratedColumn<String>(
+    'cadence',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _frostGateMeta = const VerificationMeta(
+    'frostGate',
+  );
+  @override
+  late final GeneratedColumn<bool> frostGate = GeneratedColumn<bool>(
+    'frost_gate',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("frost_gate" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
+  static const VerificationMeta _weatherGuardMeta = const VerificationMeta(
+    'weatherGuard',
+  );
+  @override
+  late final GeneratedColumn<String> weatherGuard = GeneratedColumn<String>(
+    'weather_guard',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _sourceRefMeta = const VerificationMeta(
+    'sourceRef',
+  );
+  @override
+  late final GeneratedColumn<String> sourceRef = GeneratedColumn<String>(
+    'source_ref',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _confidenceMeta = const VerificationMeta(
+    'confidence',
+  );
+  @override
+  late final GeneratedColumn<String> confidence = GeneratedColumn<String>(
+    'confidence',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _messageKeyMeta = const VerificationMeta(
+    'messageKey',
+  );
+  @override
+  late final GeneratedColumn<String> messageKey = GeneratedColumn<String>(
+    'message_key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [
+    id,
+    scope,
+    refId,
+    taskTypeId,
+    timingAnchor,
+    window,
+    cadence,
+    frostGate,
+    weatherGuard,
+    sourceRef,
+    confidence,
+    messageKey,
+  ];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'plant_task_rule';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<PlantTaskRule> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('id')) {
+      context.handle(_idMeta, id.isAcceptableOrUnknown(data['id']!, _idMeta));
+    } else if (isInserting) {
+      context.missing(_idMeta);
+    }
+    if (data.containsKey('scope')) {
+      context.handle(
+        _scopeMeta,
+        scope.isAcceptableOrUnknown(data['scope']!, _scopeMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_scopeMeta);
+    }
+    if (data.containsKey('ref_id')) {
+      context.handle(
+        _refIdMeta,
+        refId.isAcceptableOrUnknown(data['ref_id']!, _refIdMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_refIdMeta);
+    }
+    if (data.containsKey('task_type_id')) {
+      context.handle(
+        _taskTypeIdMeta,
+        taskTypeId.isAcceptableOrUnknown(
+          data['task_type_id']!,
+          _taskTypeIdMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_taskTypeIdMeta);
+    }
+    if (data.containsKey('timing_anchor')) {
+      context.handle(
+        _timingAnchorMeta,
+        timingAnchor.isAcceptableOrUnknown(
+          data['timing_anchor']!,
+          _timingAnchorMeta,
+        ),
+      );
+    } else if (isInserting) {
+      context.missing(_timingAnchorMeta);
+    }
+    if (data.containsKey('window')) {
+      context.handle(
+        _windowMeta,
+        window.isAcceptableOrUnknown(data['window']!, _windowMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_windowMeta);
+    }
+    if (data.containsKey('cadence')) {
+      context.handle(
+        _cadenceMeta,
+        cadence.isAcceptableOrUnknown(data['cadence']!, _cadenceMeta),
+      );
+    }
+    if (data.containsKey('frost_gate')) {
+      context.handle(
+        _frostGateMeta,
+        frostGate.isAcceptableOrUnknown(data['frost_gate']!, _frostGateMeta),
+      );
+    }
+    if (data.containsKey('weather_guard')) {
+      context.handle(
+        _weatherGuardMeta,
+        weatherGuard.isAcceptableOrUnknown(
+          data['weather_guard']!,
+          _weatherGuardMeta,
+        ),
+      );
+    }
+    if (data.containsKey('source_ref')) {
+      context.handle(
+        _sourceRefMeta,
+        sourceRef.isAcceptableOrUnknown(data['source_ref']!, _sourceRefMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_sourceRefMeta);
+    }
+    if (data.containsKey('confidence')) {
+      context.handle(
+        _confidenceMeta,
+        confidence.isAcceptableOrUnknown(data['confidence']!, _confidenceMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_confidenceMeta);
+    }
+    if (data.containsKey('message_key')) {
+      context.handle(
+        _messageKeyMeta,
+        messageKey.isAcceptableOrUnknown(data['message_key']!, _messageKeyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_messageKeyMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {id};
+  @override
+  PlantTaskRule map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return PlantTaskRule(
+      id: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}id'],
+      )!,
+      scope: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}scope'],
+      )!,
+      refId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}ref_id'],
+      )!,
+      taskTypeId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}task_type_id'],
+      )!,
+      timingAnchor: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}timing_anchor'],
+      )!,
+      window: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}window'],
+      )!,
+      cadence: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}cadence'],
+      ),
+      frostGate: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}frost_gate'],
+      )!,
+      weatherGuard: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}weather_guard'],
+      ),
+      sourceRef: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}source_ref'],
+      )!,
+      confidence: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}confidence'],
+      )!,
+      messageKey: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}message_key'],
+      )!,
+    );
+  }
+
+  @override
+  $PlantTaskRulesTable createAlias(String alias) {
+    return $PlantTaskRulesTable(attachedDatabase, alias);
+  }
+}
+
+class PlantTaskRule extends DataClass implements Insertable<PlantTaskRule> {
+  final String id;
+  final String scope;
+  final String refId;
+  final String taskTypeId;
+  final String timingAnchor;
+  final String window;
+  final String? cadence;
+  final bool frostGate;
+  final String? weatherGuard;
+  final String sourceRef;
+  final String confidence;
+  final String messageKey;
+  const PlantTaskRule({
+    required this.id,
+    required this.scope,
+    required this.refId,
+    required this.taskTypeId,
+    required this.timingAnchor,
+    required this.window,
+    this.cadence,
+    required this.frostGate,
+    this.weatherGuard,
+    required this.sourceRef,
+    required this.confidence,
+    required this.messageKey,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['id'] = Variable<String>(id);
+    map['scope'] = Variable<String>(scope);
+    map['ref_id'] = Variable<String>(refId);
+    map['task_type_id'] = Variable<String>(taskTypeId);
+    map['timing_anchor'] = Variable<String>(timingAnchor);
+    map['window'] = Variable<String>(window);
+    if (!nullToAbsent || cadence != null) {
+      map['cadence'] = Variable<String>(cadence);
+    }
+    map['frost_gate'] = Variable<bool>(frostGate);
+    if (!nullToAbsent || weatherGuard != null) {
+      map['weather_guard'] = Variable<String>(weatherGuard);
+    }
+    map['source_ref'] = Variable<String>(sourceRef);
+    map['confidence'] = Variable<String>(confidence);
+    map['message_key'] = Variable<String>(messageKey);
+    return map;
+  }
+
+  PlantTaskRulesCompanion toCompanion(bool nullToAbsent) {
+    return PlantTaskRulesCompanion(
+      id: Value(id),
+      scope: Value(scope),
+      refId: Value(refId),
+      taskTypeId: Value(taskTypeId),
+      timingAnchor: Value(timingAnchor),
+      window: Value(window),
+      cadence: cadence == null && nullToAbsent
+          ? const Value.absent()
+          : Value(cadence),
+      frostGate: Value(frostGate),
+      weatherGuard: weatherGuard == null && nullToAbsent
+          ? const Value.absent()
+          : Value(weatherGuard),
+      sourceRef: Value(sourceRef),
+      confidence: Value(confidence),
+      messageKey: Value(messageKey),
+    );
+  }
+
+  factory PlantTaskRule.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return PlantTaskRule(
+      id: serializer.fromJson<String>(json['id']),
+      scope: serializer.fromJson<String>(json['scope']),
+      refId: serializer.fromJson<String>(json['refId']),
+      taskTypeId: serializer.fromJson<String>(json['taskTypeId']),
+      timingAnchor: serializer.fromJson<String>(json['timingAnchor']),
+      window: serializer.fromJson<String>(json['window']),
+      cadence: serializer.fromJson<String?>(json['cadence']),
+      frostGate: serializer.fromJson<bool>(json['frostGate']),
+      weatherGuard: serializer.fromJson<String?>(json['weatherGuard']),
+      sourceRef: serializer.fromJson<String>(json['sourceRef']),
+      confidence: serializer.fromJson<String>(json['confidence']),
+      messageKey: serializer.fromJson<String>(json['messageKey']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'id': serializer.toJson<String>(id),
+      'scope': serializer.toJson<String>(scope),
+      'refId': serializer.toJson<String>(refId),
+      'taskTypeId': serializer.toJson<String>(taskTypeId),
+      'timingAnchor': serializer.toJson<String>(timingAnchor),
+      'window': serializer.toJson<String>(window),
+      'cadence': serializer.toJson<String?>(cadence),
+      'frostGate': serializer.toJson<bool>(frostGate),
+      'weatherGuard': serializer.toJson<String?>(weatherGuard),
+      'sourceRef': serializer.toJson<String>(sourceRef),
+      'confidence': serializer.toJson<String>(confidence),
+      'messageKey': serializer.toJson<String>(messageKey),
+    };
+  }
+
+  PlantTaskRule copyWith({
+    String? id,
+    String? scope,
+    String? refId,
+    String? taskTypeId,
+    String? timingAnchor,
+    String? window,
+    Value<String?> cadence = const Value.absent(),
+    bool? frostGate,
+    Value<String?> weatherGuard = const Value.absent(),
+    String? sourceRef,
+    String? confidence,
+    String? messageKey,
+  }) => PlantTaskRule(
+    id: id ?? this.id,
+    scope: scope ?? this.scope,
+    refId: refId ?? this.refId,
+    taskTypeId: taskTypeId ?? this.taskTypeId,
+    timingAnchor: timingAnchor ?? this.timingAnchor,
+    window: window ?? this.window,
+    cadence: cadence.present ? cadence.value : this.cadence,
+    frostGate: frostGate ?? this.frostGate,
+    weatherGuard: weatherGuard.present ? weatherGuard.value : this.weatherGuard,
+    sourceRef: sourceRef ?? this.sourceRef,
+    confidence: confidence ?? this.confidence,
+    messageKey: messageKey ?? this.messageKey,
+  );
+  PlantTaskRule copyWithCompanion(PlantTaskRulesCompanion data) {
+    return PlantTaskRule(
+      id: data.id.present ? data.id.value : this.id,
+      scope: data.scope.present ? data.scope.value : this.scope,
+      refId: data.refId.present ? data.refId.value : this.refId,
+      taskTypeId: data.taskTypeId.present
+          ? data.taskTypeId.value
+          : this.taskTypeId,
+      timingAnchor: data.timingAnchor.present
+          ? data.timingAnchor.value
+          : this.timingAnchor,
+      window: data.window.present ? data.window.value : this.window,
+      cadence: data.cadence.present ? data.cadence.value : this.cadence,
+      frostGate: data.frostGate.present ? data.frostGate.value : this.frostGate,
+      weatherGuard: data.weatherGuard.present
+          ? data.weatherGuard.value
+          : this.weatherGuard,
+      sourceRef: data.sourceRef.present ? data.sourceRef.value : this.sourceRef,
+      confidence: data.confidence.present
+          ? data.confidence.value
+          : this.confidence,
+      messageKey: data.messageKey.present
+          ? data.messageKey.value
+          : this.messageKey,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlantTaskRule(')
+          ..write('id: $id, ')
+          ..write('scope: $scope, ')
+          ..write('refId: $refId, ')
+          ..write('taskTypeId: $taskTypeId, ')
+          ..write('timingAnchor: $timingAnchor, ')
+          ..write('window: $window, ')
+          ..write('cadence: $cadence, ')
+          ..write('frostGate: $frostGate, ')
+          ..write('weatherGuard: $weatherGuard, ')
+          ..write('sourceRef: $sourceRef, ')
+          ..write('confidence: $confidence, ')
+          ..write('messageKey: $messageKey')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(
+    id,
+    scope,
+    refId,
+    taskTypeId,
+    timingAnchor,
+    window,
+    cadence,
+    frostGate,
+    weatherGuard,
+    sourceRef,
+    confidence,
+    messageKey,
+  );
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is PlantTaskRule &&
+          other.id == this.id &&
+          other.scope == this.scope &&
+          other.refId == this.refId &&
+          other.taskTypeId == this.taskTypeId &&
+          other.timingAnchor == this.timingAnchor &&
+          other.window == this.window &&
+          other.cadence == this.cadence &&
+          other.frostGate == this.frostGate &&
+          other.weatherGuard == this.weatherGuard &&
+          other.sourceRef == this.sourceRef &&
+          other.confidence == this.confidence &&
+          other.messageKey == this.messageKey);
+}
+
+class PlantTaskRulesCompanion extends UpdateCompanion<PlantTaskRule> {
+  final Value<String> id;
+  final Value<String> scope;
+  final Value<String> refId;
+  final Value<String> taskTypeId;
+  final Value<String> timingAnchor;
+  final Value<String> window;
+  final Value<String?> cadence;
+  final Value<bool> frostGate;
+  final Value<String?> weatherGuard;
+  final Value<String> sourceRef;
+  final Value<String> confidence;
+  final Value<String> messageKey;
+  final Value<int> rowid;
+  const PlantTaskRulesCompanion({
+    this.id = const Value.absent(),
+    this.scope = const Value.absent(),
+    this.refId = const Value.absent(),
+    this.taskTypeId = const Value.absent(),
+    this.timingAnchor = const Value.absent(),
+    this.window = const Value.absent(),
+    this.cadence = const Value.absent(),
+    this.frostGate = const Value.absent(),
+    this.weatherGuard = const Value.absent(),
+    this.sourceRef = const Value.absent(),
+    this.confidence = const Value.absent(),
+    this.messageKey = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  PlantTaskRulesCompanion.insert({
+    required String id,
+    required String scope,
+    required String refId,
+    required String taskTypeId,
+    required String timingAnchor,
+    required String window,
+    this.cadence = const Value.absent(),
+    this.frostGate = const Value.absent(),
+    this.weatherGuard = const Value.absent(),
+    required String sourceRef,
+    required String confidence,
+    required String messageKey,
+    this.rowid = const Value.absent(),
+  }) : id = Value(id),
+       scope = Value(scope),
+       refId = Value(refId),
+       taskTypeId = Value(taskTypeId),
+       timingAnchor = Value(timingAnchor),
+       window = Value(window),
+       sourceRef = Value(sourceRef),
+       confidence = Value(confidence),
+       messageKey = Value(messageKey);
+  static Insertable<PlantTaskRule> custom({
+    Expression<String>? id,
+    Expression<String>? scope,
+    Expression<String>? refId,
+    Expression<String>? taskTypeId,
+    Expression<String>? timingAnchor,
+    Expression<String>? window,
+    Expression<String>? cadence,
+    Expression<bool>? frostGate,
+    Expression<String>? weatherGuard,
+    Expression<String>? sourceRef,
+    Expression<String>? confidence,
+    Expression<String>? messageKey,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (id != null) 'id': id,
+      if (scope != null) 'scope': scope,
+      if (refId != null) 'ref_id': refId,
+      if (taskTypeId != null) 'task_type_id': taskTypeId,
+      if (timingAnchor != null) 'timing_anchor': timingAnchor,
+      if (window != null) 'window': window,
+      if (cadence != null) 'cadence': cadence,
+      if (frostGate != null) 'frost_gate': frostGate,
+      if (weatherGuard != null) 'weather_guard': weatherGuard,
+      if (sourceRef != null) 'source_ref': sourceRef,
+      if (confidence != null) 'confidence': confidence,
+      if (messageKey != null) 'message_key': messageKey,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  PlantTaskRulesCompanion copyWith({
+    Value<String>? id,
+    Value<String>? scope,
+    Value<String>? refId,
+    Value<String>? taskTypeId,
+    Value<String>? timingAnchor,
+    Value<String>? window,
+    Value<String?>? cadence,
+    Value<bool>? frostGate,
+    Value<String?>? weatherGuard,
+    Value<String>? sourceRef,
+    Value<String>? confidence,
+    Value<String>? messageKey,
+    Value<int>? rowid,
+  }) {
+    return PlantTaskRulesCompanion(
+      id: id ?? this.id,
+      scope: scope ?? this.scope,
+      refId: refId ?? this.refId,
+      taskTypeId: taskTypeId ?? this.taskTypeId,
+      timingAnchor: timingAnchor ?? this.timingAnchor,
+      window: window ?? this.window,
+      cadence: cadence ?? this.cadence,
+      frostGate: frostGate ?? this.frostGate,
+      weatherGuard: weatherGuard ?? this.weatherGuard,
+      sourceRef: sourceRef ?? this.sourceRef,
+      confidence: confidence ?? this.confidence,
+      messageKey: messageKey ?? this.messageKey,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (id.present) {
+      map['id'] = Variable<String>(id.value);
+    }
+    if (scope.present) {
+      map['scope'] = Variable<String>(scope.value);
+    }
+    if (refId.present) {
+      map['ref_id'] = Variable<String>(refId.value);
+    }
+    if (taskTypeId.present) {
+      map['task_type_id'] = Variable<String>(taskTypeId.value);
+    }
+    if (timingAnchor.present) {
+      map['timing_anchor'] = Variable<String>(timingAnchor.value);
+    }
+    if (window.present) {
+      map['window'] = Variable<String>(window.value);
+    }
+    if (cadence.present) {
+      map['cadence'] = Variable<String>(cadence.value);
+    }
+    if (frostGate.present) {
+      map['frost_gate'] = Variable<bool>(frostGate.value);
+    }
+    if (weatherGuard.present) {
+      map['weather_guard'] = Variable<String>(weatherGuard.value);
+    }
+    if (sourceRef.present) {
+      map['source_ref'] = Variable<String>(sourceRef.value);
+    }
+    if (confidence.present) {
+      map['confidence'] = Variable<String>(confidence.value);
+    }
+    if (messageKey.present) {
+      map['message_key'] = Variable<String>(messageKey.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('PlantTaskRulesCompanion(')
+          ..write('id: $id, ')
+          ..write('scope: $scope, ')
+          ..write('refId: $refId, ')
+          ..write('taskTypeId: $taskTypeId, ')
+          ..write('timingAnchor: $timingAnchor, ')
+          ..write('window: $window, ')
+          ..write('cadence: $cadence, ')
+          ..write('frostGate: $frostGate, ')
+          ..write('weatherGuard: $weatherGuard, ')
+          ..write('sourceRef: $sourceRef, ')
+          ..write('confidence: $confidence, ')
+          ..write('messageKey: $messageKey, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
   @override
   final GeneratedDatabase attachedDatabase;
@@ -9510,6 +10233,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $PlantSynonymsTable plantSynonyms = $PlantSynonymsTable(this);
   late final $CategoryTaskTypesTable categoryTaskTypes =
       $CategoryTaskTypesTable(this);
+  late final $PlantTaskRulesTable plantTaskRules = $PlantTaskRulesTable(this);
   late final $ProfilesTable profiles = $ProfilesTable(this);
   late final $AreasTable areas = $AreasTable(this);
   late final $UserPlantsTable userPlants = $UserPlantsTable(this);
@@ -9536,6 +10260,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     plants,
     plantSynonyms,
     categoryTaskTypes,
+    plantTaskRules,
     profiles,
     areas,
     userPlants,
@@ -9604,6 +10329,27 @@ final class $$TaskTypesTableReferences
     final cache = $_typedResult.readTableOrNull(
       _categoryTaskTypesRefsTable($_db),
     );
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: cache),
+    );
+  }
+
+  static MultiTypedResultKey<$PlantTaskRulesTable, List<PlantTaskRule>>
+  _plantTaskRulesRefsTable(_$AppDatabase db) => MultiTypedResultKey.fromTable(
+    db.plantTaskRules,
+    aliasName: $_aliasNameGenerator(
+      db.taskTypes.id,
+      db.plantTaskRules.taskTypeId,
+    ),
+  );
+
+  $$PlantTaskRulesTableProcessedTableManager get plantTaskRulesRefs {
+    final manager = $$PlantTaskRulesTableTableManager(
+      $_db,
+      $_db.plantTaskRules,
+    ).filter((f) => f.taskTypeId.id.sqlEquals($_itemColumn<String>('id')!));
+
+    final cache = $_typedResult.readTableOrNull(_plantTaskRulesRefsTable($_db));
     return ProcessedTableManager(
       manager.$state.copyWith(prefetchedData: cache),
     );
@@ -9717,6 +10463,31 @@ class $$TaskTypesTableFilterComposer
           }) => $$CategoryTaskTypesTableFilterComposer(
             $db: $db,
             $table: $db.categoryTaskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
+  Expression<bool> plantTaskRulesRefs(
+    Expression<bool> Function($$PlantTaskRulesTableFilterComposer f) f,
+  ) {
+    final $$PlantTaskRulesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.plantTaskRules,
+      getReferencedColumn: (t) => t.taskTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlantTaskRulesTableFilterComposer(
+            $db: $db,
+            $table: $db.plantTaskRules,
             $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
             joinBuilder: joinBuilder,
             $removeJoinBuilderFromRootComposer:
@@ -9902,6 +10673,31 @@ class $$TaskTypesTableAnnotationComposer
     return f(composer);
   }
 
+  Expression<T> plantTaskRulesRefs<T extends Object>(
+    Expression<T> Function($$PlantTaskRulesTableAnnotationComposer a) f,
+  ) {
+    final $$PlantTaskRulesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.id,
+      referencedTable: $db.plantTaskRules,
+      getReferencedColumn: (t) => t.taskTypeId,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$PlantTaskRulesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.plantTaskRules,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return f(composer);
+  }
+
   Expression<T> tasksRefs<T extends Object>(
     Expression<T> Function($$TasksTableAnnotationComposer a) f,
   ) {
@@ -9968,6 +10764,7 @@ class $$TaskTypesTableTableManager
           TaskType,
           PrefetchHooks Function({
             bool categoryTaskTypesRefs,
+            bool plantTaskRulesRefs,
             bool tasksRefs,
             bool suggestionsRefs,
           })
@@ -10042,6 +10839,7 @@ class $$TaskTypesTableTableManager
           prefetchHooksCallback:
               ({
                 categoryTaskTypesRefs = false,
+                plantTaskRulesRefs = false,
                 tasksRefs = false,
                 suggestionsRefs = false,
               }) {
@@ -10049,6 +10847,7 @@ class $$TaskTypesTableTableManager
                   db: db,
                   explicitlyWatchedTables: [
                     if (categoryTaskTypesRefs) db.categoryTaskTypes,
+                    if (plantTaskRulesRefs) db.plantTaskRules,
                     if (tasksRefs) db.tasks,
                     if (suggestionsRefs) db.suggestions,
                   ],
@@ -10070,6 +10869,27 @@ class $$TaskTypesTableTableManager
                                 table,
                                 p0,
                               ).categoryTaskTypesRefs,
+                          referencedItemsForCurrentItem:
+                              (item, referencedItems) => referencedItems.where(
+                                (e) => e.taskTypeId == item.id,
+                              ),
+                          typedResults: items,
+                        ),
+                      if (plantTaskRulesRefs)
+                        await $_getPrefetchedData<
+                          TaskType,
+                          $TaskTypesTable,
+                          PlantTaskRule
+                        >(
+                          currentTable: table,
+                          referencedTable: $$TaskTypesTableReferences
+                              ._plantTaskRulesRefsTable(db),
+                          managerFromTypedResult: (p0) =>
+                              $$TaskTypesTableReferences(
+                                db,
+                                table,
+                                p0,
+                              ).plantTaskRulesRefs,
                           referencedItemsForCurrentItem:
                               (item, referencedItems) => referencedItems.where(
                                 (e) => e.taskTypeId == item.id,
@@ -10140,6 +10960,7 @@ typedef $$TaskTypesTableProcessedTableManager =
       TaskType,
       PrefetchHooks Function({
         bool categoryTaskTypesRefs,
+        bool plantTaskRulesRefs,
         bool tasksRefs,
         bool suggestionsRefs,
       })
@@ -11113,6 +11934,473 @@ typedef $$CategoryTaskTypesTableProcessedTableManager =
       $$CategoryTaskTypesTableUpdateCompanionBuilder,
       (CategoryTaskType, $$CategoryTaskTypesTableReferences),
       CategoryTaskType,
+      PrefetchHooks Function({bool taskTypeId})
+    >;
+typedef $$PlantTaskRulesTableCreateCompanionBuilder =
+    PlantTaskRulesCompanion Function({
+      required String id,
+      required String scope,
+      required String refId,
+      required String taskTypeId,
+      required String timingAnchor,
+      required String window,
+      Value<String?> cadence,
+      Value<bool> frostGate,
+      Value<String?> weatherGuard,
+      required String sourceRef,
+      required String confidence,
+      required String messageKey,
+      Value<int> rowid,
+    });
+typedef $$PlantTaskRulesTableUpdateCompanionBuilder =
+    PlantTaskRulesCompanion Function({
+      Value<String> id,
+      Value<String> scope,
+      Value<String> refId,
+      Value<String> taskTypeId,
+      Value<String> timingAnchor,
+      Value<String> window,
+      Value<String?> cadence,
+      Value<bool> frostGate,
+      Value<String?> weatherGuard,
+      Value<String> sourceRef,
+      Value<String> confidence,
+      Value<String> messageKey,
+      Value<int> rowid,
+    });
+
+final class $$PlantTaskRulesTableReferences
+    extends BaseReferences<_$AppDatabase, $PlantTaskRulesTable, PlantTaskRule> {
+  $$PlantTaskRulesTableReferences(
+    super.$_db,
+    super.$_table,
+    super.$_typedResult,
+  );
+
+  static $TaskTypesTable _taskTypeIdTable(_$AppDatabase db) =>
+      db.taskTypes.createAlias(
+        $_aliasNameGenerator(db.plantTaskRules.taskTypeId, db.taskTypes.id),
+      );
+
+  $$TaskTypesTableProcessedTableManager get taskTypeId {
+    final $_column = $_itemColumn<String>('task_type_id')!;
+
+    final manager = $$TaskTypesTableTableManager(
+      $_db,
+      $_db.taskTypes,
+    ).filter((f) => f.id.sqlEquals($_column));
+    final item = $_typedResult.readTableOrNull(_taskTypeIdTable($_db));
+    if (item == null) return manager;
+    return ProcessedTableManager(
+      manager.$state.copyWith(prefetchedData: [item]),
+    );
+  }
+}
+
+class $$PlantTaskRulesTableFilterComposer
+    extends Composer<_$AppDatabase, $PlantTaskRulesTable> {
+  $$PlantTaskRulesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get refId => $composableBuilder(
+    column: $table.refId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get timingAnchor => $composableBuilder(
+    column: $table.timingAnchor,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get window => $composableBuilder(
+    column: $table.window,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get cadence => $composableBuilder(
+    column: $table.cadence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get frostGate => $composableBuilder(
+    column: $table.frostGate,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get weatherGuard => $composableBuilder(
+    column: $table.weatherGuard,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get sourceRef => $composableBuilder(
+    column: $table.sourceRef,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get confidence => $composableBuilder(
+    column: $table.confidence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  $$TaskTypesTableFilterComposer get taskTypeId {
+    final $$TaskTypesTableFilterComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableFilterComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlantTaskRulesTableOrderingComposer
+    extends Composer<_$AppDatabase, $PlantTaskRulesTable> {
+  $$PlantTaskRulesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get id => $composableBuilder(
+    column: $table.id,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get scope => $composableBuilder(
+    column: $table.scope,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get refId => $composableBuilder(
+    column: $table.refId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get timingAnchor => $composableBuilder(
+    column: $table.timingAnchor,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get window => $composableBuilder(
+    column: $table.window,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get cadence => $composableBuilder(
+    column: $table.cadence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<bool> get frostGate => $composableBuilder(
+    column: $table.frostGate,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get weatherGuard => $composableBuilder(
+    column: $table.weatherGuard,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get sourceRef => $composableBuilder(
+    column: $table.sourceRef,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get confidence => $composableBuilder(
+    column: $table.confidence,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  $$TaskTypesTableOrderingComposer get taskTypeId {
+    final $$TaskTypesTableOrderingComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableOrderingComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlantTaskRulesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $PlantTaskRulesTable> {
+  $$PlantTaskRulesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get id =>
+      $composableBuilder(column: $table.id, builder: (column) => column);
+
+  GeneratedColumn<String> get scope =>
+      $composableBuilder(column: $table.scope, builder: (column) => column);
+
+  GeneratedColumn<String> get refId =>
+      $composableBuilder(column: $table.refId, builder: (column) => column);
+
+  GeneratedColumn<String> get timingAnchor => $composableBuilder(
+    column: $table.timingAnchor,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get window =>
+      $composableBuilder(column: $table.window, builder: (column) => column);
+
+  GeneratedColumn<String> get cadence =>
+      $composableBuilder(column: $table.cadence, builder: (column) => column);
+
+  GeneratedColumn<bool> get frostGate =>
+      $composableBuilder(column: $table.frostGate, builder: (column) => column);
+
+  GeneratedColumn<String> get weatherGuard => $composableBuilder(
+    column: $table.weatherGuard,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get sourceRef =>
+      $composableBuilder(column: $table.sourceRef, builder: (column) => column);
+
+  GeneratedColumn<String> get confidence => $composableBuilder(
+    column: $table.confidence,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get messageKey => $composableBuilder(
+    column: $table.messageKey,
+    builder: (column) => column,
+  );
+
+  $$TaskTypesTableAnnotationComposer get taskTypeId {
+    final $$TaskTypesTableAnnotationComposer composer = $composerBuilder(
+      composer: this,
+      getCurrentColumn: (t) => t.taskTypeId,
+      referencedTable: $db.taskTypes,
+      getReferencedColumn: (t) => t.id,
+      builder:
+          (
+            joinBuilder, {
+            $addJoinBuilderToRootComposer,
+            $removeJoinBuilderFromRootComposer,
+          }) => $$TaskTypesTableAnnotationComposer(
+            $db: $db,
+            $table: $db.taskTypes,
+            $addJoinBuilderToRootComposer: $addJoinBuilderToRootComposer,
+            joinBuilder: joinBuilder,
+            $removeJoinBuilderFromRootComposer:
+                $removeJoinBuilderFromRootComposer,
+          ),
+    );
+    return composer;
+  }
+}
+
+class $$PlantTaskRulesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $PlantTaskRulesTable,
+          PlantTaskRule,
+          $$PlantTaskRulesTableFilterComposer,
+          $$PlantTaskRulesTableOrderingComposer,
+          $$PlantTaskRulesTableAnnotationComposer,
+          $$PlantTaskRulesTableCreateCompanionBuilder,
+          $$PlantTaskRulesTableUpdateCompanionBuilder,
+          (PlantTaskRule, $$PlantTaskRulesTableReferences),
+          PlantTaskRule,
+          PrefetchHooks Function({bool taskTypeId})
+        > {
+  $$PlantTaskRulesTableTableManager(
+    _$AppDatabase db,
+    $PlantTaskRulesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$PlantTaskRulesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$PlantTaskRulesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$PlantTaskRulesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> id = const Value.absent(),
+                Value<String> scope = const Value.absent(),
+                Value<String> refId = const Value.absent(),
+                Value<String> taskTypeId = const Value.absent(),
+                Value<String> timingAnchor = const Value.absent(),
+                Value<String> window = const Value.absent(),
+                Value<String?> cadence = const Value.absent(),
+                Value<bool> frostGate = const Value.absent(),
+                Value<String?> weatherGuard = const Value.absent(),
+                Value<String> sourceRef = const Value.absent(),
+                Value<String> confidence = const Value.absent(),
+                Value<String> messageKey = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => PlantTaskRulesCompanion(
+                id: id,
+                scope: scope,
+                refId: refId,
+                taskTypeId: taskTypeId,
+                timingAnchor: timingAnchor,
+                window: window,
+                cadence: cadence,
+                frostGate: frostGate,
+                weatherGuard: weatherGuard,
+                sourceRef: sourceRef,
+                confidence: confidence,
+                messageKey: messageKey,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String id,
+                required String scope,
+                required String refId,
+                required String taskTypeId,
+                required String timingAnchor,
+                required String window,
+                Value<String?> cadence = const Value.absent(),
+                Value<bool> frostGate = const Value.absent(),
+                Value<String?> weatherGuard = const Value.absent(),
+                required String sourceRef,
+                required String confidence,
+                required String messageKey,
+                Value<int> rowid = const Value.absent(),
+              }) => PlantTaskRulesCompanion.insert(
+                id: id,
+                scope: scope,
+                refId: refId,
+                taskTypeId: taskTypeId,
+                timingAnchor: timingAnchor,
+                window: window,
+                cadence: cadence,
+                frostGate: frostGate,
+                weatherGuard: weatherGuard,
+                sourceRef: sourceRef,
+                confidence: confidence,
+                messageKey: messageKey,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map(
+                (e) => (
+                  e.readTable(table),
+                  $$PlantTaskRulesTableReferences(db, table, e),
+                ),
+              )
+              .toList(),
+          prefetchHooksCallback: ({taskTypeId = false}) {
+            return PrefetchHooks(
+              db: db,
+              explicitlyWatchedTables: [],
+              addJoins:
+                  <
+                    T extends TableManagerState<
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic,
+                      dynamic
+                    >
+                  >(state) {
+                    if (taskTypeId) {
+                      state =
+                          state.withJoin(
+                                currentTable: table,
+                                currentColumn: table.taskTypeId,
+                                referencedTable: $$PlantTaskRulesTableReferences
+                                    ._taskTypeIdTable(db),
+                                referencedColumn:
+                                    $$PlantTaskRulesTableReferences
+                                        ._taskTypeIdTable(db)
+                                        .id,
+                              )
+                              as T;
+                    }
+
+                    return state;
+                  },
+              getPrefetchedDataCallback: (items) async {
+                return [];
+              },
+            );
+          },
+        ),
+      );
+}
+
+typedef $$PlantTaskRulesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $PlantTaskRulesTable,
+      PlantTaskRule,
+      $$PlantTaskRulesTableFilterComposer,
+      $$PlantTaskRulesTableOrderingComposer,
+      $$PlantTaskRulesTableAnnotationComposer,
+      $$PlantTaskRulesTableCreateCompanionBuilder,
+      $$PlantTaskRulesTableUpdateCompanionBuilder,
+      (PlantTaskRule, $$PlantTaskRulesTableReferences),
+      PlantTaskRule,
       PrefetchHooks Function({bool taskTypeId})
     >;
 typedef $$ProfilesTableCreateCompanionBuilder =
@@ -17645,6 +18933,8 @@ class $AppDatabaseManager {
       $$PlantSynonymsTableTableManager(_db, _db.plantSynonyms);
   $$CategoryTaskTypesTableTableManager get categoryTaskTypes =>
       $$CategoryTaskTypesTableTableManager(_db, _db.categoryTaskTypes);
+  $$PlantTaskRulesTableTableManager get plantTaskRules =>
+      $$PlantTaskRulesTableTableManager(_db, _db.plantTaskRules);
   $$ProfilesTableTableManager get profiles =>
       $$ProfilesTableTableManager(_db, _db.profiles);
   $$AreasTableTableManager get areas =>

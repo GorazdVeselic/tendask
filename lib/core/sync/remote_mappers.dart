@@ -383,3 +383,19 @@ CategoryTaskTypesCompanion categoryTaskTypeFromRemote(Map<String, dynamic> r) =>
       category: Value(r['category'] as String),
       taskTypeId: Value(r['task_type_id'] as String),
     );
+
+PlantTaskRulesCompanion plantTaskRuleFromRemote(Map<String, dynamic> r) =>
+    PlantTaskRulesCompanion(
+      id: Value(r['id'] as String),
+      scope: Value(r['scope'] as String),
+      refId: Value(r['ref_id'] as String),
+      taskTypeId: Value(r['task_type_id'] as String),
+      timingAnchor: Value(r['timing_anchor'] as String),
+      window: Value(_text(r['window']) ?? '{}'),
+      cadence: Value(r['cadence'] as String?),
+      frostGate: Value(r['frost_gate'] as bool? ?? false),
+      weatherGuard: Value(r['weather_guard'] as String?),
+      sourceRef: Value(r['source_ref'] as String? ?? ''),
+      confidence: Value(r['confidence'] as String),
+      messageKey: Value(r['message_key'] as String),
+    );

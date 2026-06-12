@@ -4,6 +4,12 @@
 > Vsako pravilo ima `source_ref` (revizijska sled). Kjer vir ni 100 % potrjen, je označen
 > **(verify)** — pred seedom korak M11.4 vsak (verify) vir odpre in potrdi/zamenja; pravila brez
 > potrjenega vira se NE seedajo (`pametni-motor.md` §2.4).
+>
+> **M11.4 ✅ (2026-06-12):** vseh 61 virov preverjenih; KONČNE citate (potrjeni URL-ji, zamenjave
+> 404 slugov, SL/DE viri) drži `lib/data/seed/plant_task_rules_seed.dart` — ta dokument ostaja
+> vsebinska specifikacija, seed je revizijska sled. Vsebinski kalibraciji ob verifikaciji:
+> `vegetable.harden_off` −21..0 (RHS: 2–3 tedne) in `vegetable.fertilize` 14–28 dni (RHS: na
+> ~2 tedna), obe vneseni tudi spodaj.
 
 ## 0. Regionalizacija oken (velja za vsa pravila)
 
@@ -408,11 +414,11 @@ message_key: "suggestions.vegetable.prick_out"
 rule_id: vegetable.harden_off
 scope: category | ref_id: vegetable | task_type_id: harden_off
 timing_anchor: frost_offset
-window: {"anchor": "last_frost", "offset_min_days": -14, "offset_max_days": 0}
-cadence: once per chain (1–2 weeks before planting out)
+window: {"anchor": "last_frost", "offset_min_days": -21, "offset_max_days": 0}
+cadence: once per chain (2–3 weeks before planting out)
 frost_gate: false
 weather_guard: "no frost forecast 48h" → code: no_frost_forecast_48h
-source_ref: "RHS – Hardening off tender plants (verify)"
+source_ref: "RHS – Hardening off tender plants (rhs.org.uk/prevention-protection/hardening-off-tender-plants)"
 confidence: visoka
 message_key: "suggestions.vegetable.harden_off"
 ```
@@ -460,11 +466,11 @@ message_key: "suggestions.vegetable.plant_out"
 rule_id: vegetable.fertilize
 scope: category | ref_id: vegetable | task_type_id: fertilize
 timing_anchor: cadence_only
-window: {"min_days_since_last": 21, "max_days_since_last": 35, "season_start_week": 18, "season_end_week": 35}
-cadence: every 3–5 weeks in season (hungry crops)
+window: {"min_days_since_last": 14, "max_days_since_last": 28, "season_start_week": 18, "season_end_week": 35}
+cadence: every 2–4 weeks in season (hungry crops)
 frost_gate: false
 weather_guard: NULL
-source_ref: "RHS – Vegetables: feeding (verify)"
+source_ref: "RHS – How to feed plants (rhs.org.uk/garden-jobs/nutrition-feeding-plants)"
 confidence: srednja
 message_key: "suggestions.vegetable.fertilize_season"
 ```

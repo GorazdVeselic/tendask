@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../../data/seed/catalog_seed.dart';
+import '../../data/seed/plant_task_rules_seed.dart';
 import 'app_database.dart';
 
 class SeedService {
@@ -11,6 +12,10 @@ class SeedService {
   final AppDatabase _db;
 
   Future<void> runIfNeeded() async {
+    // Tables added after first launch (migration createTable) start empty on
+    // upgraded installs — backfill them independently of the first-launch seed.
+    await _seedRulesIfEmpty();
+
     final existing = await (_db.select(_db.taskTypes)..limit(1)).get();
     if (existing.isNotEmpty) return;
 
@@ -37,6 +42,33 @@ class SeedService {
           );
         }
       });
+    });
+  }
+
+  Future<void> _seedRulesIfEmpty() async {
+    final existing = await (_db.select(_db.plantTaskRules)..limit(1)).get();
+    if (existing.isNotEmpty) return;
+
+    await _db.batch((batch) {
+      for (final r in PlantTaskRulesSeed.rules) {
+        batch.insert(
+          _db.plantTaskRules,
+          PlantTaskRulesCompanion.insert(
+            id: r.id,
+            scope: r.scope,
+            refId: r.refId,
+            taskTypeId: r.taskTypeId,
+            timingAnchor: r.timingAnchor,
+            window: r.window,
+            cadence: Value(r.cadence),
+            frostGate: Value(r.frostGate),
+            weatherGuard: Value(r.weatherGuard),
+            sourceRef: r.sourceRef,
+            confidence: r.confidence,
+            messageKey: r.messageKey,
+          ),
+        );
+      }
     });
   }
 

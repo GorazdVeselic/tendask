@@ -32,6 +32,7 @@ class CatalogSyncService {
     n += await _upsert(_db.taskTypes, taskTypeFromRemote);
     n += await _upsert(_db.plants, plantFromRemote);
     n += await _ignoreDup(_db.categoryTaskTypes, categoryTaskTypeFromRemote);
+    n += await _upsert(_db.plantTaskRules, plantTaskRuleFromRemote);
     return n;
   }
 

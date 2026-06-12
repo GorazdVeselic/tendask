@@ -21,6 +21,7 @@ part 'app_database.g.dart';
     Plants,
     PlantSynonyms,
     CategoryTaskTypes,
+    PlantTaskRules,
     // user data (sync-ready: uuid / updated_at / deleted / sync_status)
     Profiles,
     Areas,
@@ -47,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -173,6 +174,12 @@ class AppDatabase extends _$AppDatabase {
         );
         await m.createTable(suggestions);
         await m.createTable(suggestionLogs);
+      }
+      // v10: plant_task_rule catalog (M11.4) — seeded by SeedService on the
+      // next startup (it backfills any empty catalog table), pulled by
+      // catalog sync afterwards.
+      if (from < 10) {
+        await m.createTable(plantTaskRules);
       }
     },
   );
