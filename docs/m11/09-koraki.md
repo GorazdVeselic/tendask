@@ -60,7 +60,7 @@ catalog_sync pull + `tool/gen_rules_sql.dart` → `supabase/seed/plant_task_rule
 - **Odvisnosti:** — (vzporedno s fazo A) · **Kompleksnost:** M
 - **Commit:** `feat(notifications): Firebase FCM integracija (projekt, gradle, kanal)`
 
-### M11.6 — FCM token + opt-in UI `[ ]`
+### M11.6 — FCM token + opt-in UI `[x]`
 `06` §6.2 + 6.5: FcmTokenService, profile.fcm_token pisanje/sync, signOut čiščenje; zaslon 22
 stikali weather/community hints oživi (notification_settings ključa že obstajata).
 - **DoD:** po prijavi + dovoljenju je token viden v Supabase profile; onTokenRefresh prepiše;
@@ -68,7 +68,7 @@ stikali weather/community hints oživi (notification_settings ključa že obstaj
 - **Odvisnosti:** M11.2, M11.5 · **Kompleksnost:** M
 - **Commit:** `feat(notifications): FCM token v profilu + granularen opt-in (zaslon 22)`
 
-### M11.7 — FCM handlerji + deep link `[ ]`
+### M11.7 — FCM handlerji + deep link `[x]`
 `06` §6.3 + 6.4: onMessage/onMessageOpenedApp/getInitialMessage, route `/?suggestion=<id>`,
 highlight na pasu (placeholder do M11.13 — navigacija na Domov).
 - **DoD:** testni push (Firebase konzola → token) v foreground pokaže lokalno notifikacijo,

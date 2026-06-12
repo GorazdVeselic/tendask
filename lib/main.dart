@@ -14,6 +14,7 @@ import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
 import 'core/location/location_repository.dart';
+import 'core/notifications/fcm_handler.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/notifications/application/fcm_token_service.dart';
@@ -119,9 +120,9 @@ Future<void> _bootstrap() async {
   // Notifications are NOT essential to booting: a plugin/icon/timezone failure
   // here must never prevent runApp (it would hang the app on the native splash).
   // Degrade gracefully — report and continue without the deep-link.
-  String? launchTaskId;
+  String? launchPayload;
   try {
-    launchTaskId = await container
+    launchPayload = await container
         .read(notificationServiceProvider)
         .initialPayload();
 
@@ -135,16 +136,41 @@ Future<void> _bootstrap() async {
     }
   }
 
+  // FCM message handlers (M11.7): foreground pushes pull + notify locally,
+  // taps deep-link to Home. If a tapped push cold-started the app, route to
+  // Home below. Non-fatal like the Firebase init above (FCM is only a bell).
+  String? launchSuggestionId;
+  try {
+    final fcm = container.read(fcmHandlerProvider);
+    fcm.start();
+    launchSuggestionId = await fcm.initialSuggestionId();
+  } catch (error, stack) {
+    debugPrint('FCM bootstrap failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
+
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
   final onboardingSeen = await container
       .read(localPrefsProvider)
       .onboardingSeen();
 
+  // A locally shown suggestion notification (FCM foreground) carries a
+  // 'suggestion:' payload; a bare payload is a reminder's task id (M8.3).
+  final suggestionId =
+      launchSuggestionId ??
+      (launchPayload != null
+          ? NotificationService.suggestionIdFromPayload(launchPayload)
+          : null);
+
   final String target;
   if (!onboardingSeen) {
     target = '/onboarding';
-  } else if (launchTaskId != null) {
-    target = '/tasks/$launchTaskId';
+  } else if (suggestionId != null) {
+    target = '/home?suggestion=$suggestionId';
+  } else if (launchPayload != null) {
+    target = '/tasks/$launchPayload';
   } else {
     target = '/home';
   }

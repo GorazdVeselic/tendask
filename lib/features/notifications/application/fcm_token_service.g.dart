@@ -48,7 +48,7 @@ final class FcmTokenServiceProvider
   FcmTokenService create() => FcmTokenService();
 }
 
-String _$fcmTokenServiceHash() => r'193b3409c01a32247b199a305fc9f2733e029581';
+String _$fcmTokenServiceHash() => r'506ea2c9c55b514532431fd0530401f23b8074e6';
 
 /// Keeps profile.fcm_token in sync with the device's FCM registration token
 /// (docs/m11/06-fcm.md §6.2). The token is acquired only after sign-in (the

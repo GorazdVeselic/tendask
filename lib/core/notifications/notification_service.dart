@@ -34,6 +34,19 @@ const _suggestionChannel = AndroidNotificationChannel(
   importance: Importance.defaultImportance,
 );
 
+const _suggestionDetails = NotificationDetails(
+  android: AndroidNotificationDetails(
+    _kSuggestionChannelId,
+    _kSuggestionChannelName,
+    importance: Importance.defaultImportance,
+    priority: Priority.defaultPriority,
+  ),
+);
+
+// Distinguishes suggestion payloads from reminder payloads (bare task ids) in
+// the shared tap stream / launch payload.
+const _kSuggestionPayloadPrefix = 'suggestion:';
+
 /// Thin wrapper around flutter_local_notifications for local task reminders.
 /// [init] runs at bootstrap (timezone + plugin); the permission prompt is
 /// deferred to the priming screen (21) and never fired at startup. Taps deep-link
@@ -120,6 +133,37 @@ class NotificationService {
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
     );
   }
+
+  /// Shows a suggestion notification immediately (M11.7): with the app in
+  /// foreground the OS does not render an FCM push itself, so the client does.
+  /// Tap deep-links to Home via the suggestion payload.
+  Future<void> showForegroundSuggestion({
+    required String suggestionId,
+    String? title,
+    String? body,
+  }) async {
+    await init();
+    await _plugin.show(
+      // Same stable 31-bit scheme as reminderNotificationId — one notification
+      // per suggestion, a re-send replaces the previous one.
+      id: suggestionId.hashCode & 0x7fffffff,
+      title: title,
+      body: body,
+      notificationDetails: _suggestionDetails,
+      payload: suggestionPayload(suggestionId),
+    );
+  }
+
+  /// Payload carried by suggestion notifications; reminders use bare task ids.
+  static String suggestionPayload(String suggestionId) =>
+      '$_kSuggestionPayloadPrefix$suggestionId';
+
+  /// The suggestion id when [payload] came from a suggestion notification,
+  /// null for reminder payloads (bare task ids).
+  static String? suggestionIdFromPayload(String payload) =>
+      payload.startsWith(_kSuggestionPayloadPrefix)
+      ? payload.substring(_kSuggestionPayloadPrefix.length)
+      : null;
 
   Future<void> cancel(int id) => _plugin.cancel(id: id);
 
