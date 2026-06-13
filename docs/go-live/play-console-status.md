@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-10**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-13**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -15,13 +15,28 @@
   - Privzeti jezik: **EN** · Tip: **Aplikacija** · Cena: **Brezplačna**
   - Deklaracije ob ustvarjanju: dev policies + **Play App Signing** + US export ✅
 
+## VersionCode zgodovina
+
+- `1.0.0+1` (vc1) — interni test (prva izdaja)
+- `1.0.0+2` (vc2) — porabljen na Play (interni test, BUG-002/003 fix + allowBackup/i18n)
+- `1.0.0+3` (vc3) — **že naložen v Play Console**
+- `1.0.0+4` (vc4) — **zgrajen 2026-06-13 za ZAPRTI test**, iz veje `main` (M0–M9; brez M11/FCM/pametnega motorja).
+  AAB: `build/app/outputs/bundle/release/app-release.aab` (66,5 MB, upload-key podpisan, dart-defines = živi Supabase).
+  Naslednji versionCode mora biti `+5` ali več.
+
 ## Interni test
 
 - [x] AAB naložen na **interni test** (izdaja `1.0.0 – interni test`, versionCode 1)
   - 11,7 MB install · SDK 36 · API 24+ · 16 KB page support ✅ · multi-ABI · Play App Signing ON
   - Stanje: **Aktivno · Ni pregledano** (»app.tendask (unreviewed)«)
-- [ ] Dodaj testerje (e-poštni seznam) + namesti build prek opt-in povezave
+
+## Zaprti test (gate za produkcijo)
+
+- [x] **AAB `1.0.0+4` zgrajen** iz `main` (2026-06-13) — čaka 👤 upload v Closed testing track
+- [ ] 👤 Upload `app-release.aab` (vc4) → Closed testing → Create new release → rollout
+- [ ] Dodaj **≥12 testerjev** (e-poštni seznam) + namesti prek opt-in povezave
 - [ ] Preveri release build na napravi — posebej **prijava** (e-koda + Google)
+- [ ] 14-dnevni števec teče šele z ≥12 vključenimi testerji
 
 ## Store presence
 
