@@ -9,34 +9,23 @@
 
 ## 🇸🇮 Osebno sporočilo (prijatelji / znanci)
 
-**Naslov:** Mi pomagaš zagnati mojo vrtnarsko aplikacijo? 🌱
+**Naslov:** Vabilo k testiranju moje vrtnarske aplikacije
 
-Živjo [ime]!
+Živjo [ime],
 
-Zadnje mesece v prostem času razvijam svojo mobilno aplikacijo — **Tendask**, preprost **vrtnarski dnevnik** za Android. Z njo v nekaj dotikih zabeležiš, kaj si naredil na vrtu (pokosil, zalil, pognojil …), ob opravilu se shrani vreme, dobiš opomnike in voden pregled vrta z območji in rastlinami. Deluje tudi **brez signala** (sredi vrta!), je **brezplačna** in **brez oglasov**.
+v prostem času delam mobilno aplikacijo Tendask — preprost vrtnarski dnevnik za Android. Z njo zabeležiš, kaj boš/si naredil na vrtu (posadil, pokosil, zalil, pognojil …), ob vsakem opravilu se shrani vreme, lahko si nastaviš opomnike in imaš pregled nad vrtom po območjih in rastlinah. Deluje tudi brez internetne povezave, je brezplačna in brez oglasov. Več si lahko pogledaš na [tendask.com](https://tendask.com).
 
-Zdaj sem v zadnji fazi pred objavo na Google Play — in tu rabim tvojo pomoč. Google zahteva, da aplikacijo pred objavo vsaj **14 dni preizkuša najmanj 12 ljudi**; brez tega je ne morem objaviti. Zato te prosim, če bi bil eden mojih testerjev. 🙏
+Zdaj sem v zaključni fazi pred objavo na Google Play. Google zahteva, da aplikacijo pred objavo vsaj 14 dni preizkuša najmanj 12 ljudi, zato iščem nekaj testerjev in upam, da mi pri tem lahko pomagaš.
 
-**Kaj rabim od tebe:**
-- Imaš **Android telefon** (iPhone žal ne gre — nima Trgovine Play).
-- Pošlješ mi svoj **Gmail naslov** — točno tistega, ki ga imaš prijavljenega na telefonu v Trgovini Play. Rabim ga, da te dodam na seznam testerjev (brez tega ti Google ne dovoli prenosa testne različice). **Naslova ne uporabim za nič drugega.**
+Rabim dvoje: da imaš telefon z Androidom (iPhone ne gre) in da mi pošlješ Gmail naslov, ki ga imaš prijavljenega v Trgovini Play. Brez tega te Google ne uvrsti med testerje. Naslova ne bom uporabil za nič drugega.
 
-**Kaj dobiš od mene:**
-- **Povezavo za pridružitev testu** in **povezavo za prenos** aplikacije iz Trgovine Play.
+Jaz pa ti pošljem povezavo za pridružitev testu in za prenos prenos testne verzije aplikacije. Prosil bi te le, da jo občasno odpreš in da ostaneš v testu vsaj dva tedna. Če opaziš kakšno napako ali imaš predlog, mi lahko poveš.
 
-**Kaj te prosim, da narediš:**
-1. Klikneš povezavo → potrdiš sodelovanje → namestiš aplikacijo iz Play.
-2. V naslednjih ~2 tednih jo **občasno odpreš in malo uporabiš** (ni treba vsak dan — samo da ne ostane čisto pri miru).
-3. **Ostaneš v testu vsaj 14 dni** (se ne odjaviš).
-4. Če opaziš kaj čudnega ali imaš predlog — **mi povej**, zelo dobrodošlo!
-
-Časovno te skoraj nič ne stane, meni pa ogromno pomaga — brez 12 ljudi aplikacije ne morem spustiti v svet. 🌿
-
-Si zraven? Če ja, mi samo odpiši svoj **Gmail naslov**, pa ti pošljem povezavi. Najlepša hvala!
+Če si pripravljen sodelovati, mi odpiši svoj Gmail naslov in ti pošljem povezavi. Hvala.
 
 [Tvoje ime]
 
-*P.S. Zasebnost mi je pomembna: aplikacija tvoje točne lokacije nikoli ne shrani (uporabi jo le za vreme), podatkov ne prodajam, in iz testa lahko kadar koli izstopiš v Trgovini Play.*
+*P.S. Glede zasebnosti: aplikacija tvoje točne lokacije ne shrani (uporabi jo samo za vreme), podatkov ne prodajam, iz testa pa lahko kadar koli izstopiš.*
 
 ---
 

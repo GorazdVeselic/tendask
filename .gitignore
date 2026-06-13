@@ -10,6 +10,10 @@
 /dart_defines.json
 .env
 
+# Osebni podatki tretjih oseb (GDPR) — seznami testerjev z e-naslovi nikoli v repo
+/docs/go-live/testers.md
+/docs/go-live/testers.csv
+
 # Android release signing — keystore + gesla nikoli v repo (CLAUDE.md)
 /android/key.properties
 *.jks
