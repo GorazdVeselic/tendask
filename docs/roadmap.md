@@ -347,6 +347,24 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   uporabi centroid celice (`cellToLatLng`), ne koordinat. **Faznost:** MVP = lokalni hibrid + kompaktiranje
   blob-a; shared cloud `weather_observation` + cross-user dedup + cron = V2 (skala). Posledica: posodobi
   `koncept.md` §7.9/§7.10 (frozen → hibrid) ob implementaciji. Opozorilo: Open-Meteo pri 10k = komercialna raba.
+- **FR-8 — Lokacija prek centroida `h3_r7` namesto surovih koordinat.** 📝 **Potrjeno z uporabnikom
+  2026-06-12, PREDNOSTNO parkirano (po M11.7 ali po M11 fazi B).** Surove GPS koordinate danes živijo
+  device-local (`device_location`) samo zato, da vreme in post-sign-in usmerjanje dobita točko — ampak
+  r7 celica ima rob ~1,2 km (centroid ≤ ~1,4 km od vrta), kar je **pod ločljivostjo Open-Meteo mreže**
+  (1–11 km), in ClimateService (M11.3) centroid že uporablja. Sprememba: (1) vreme (dashboard +
+  zamrznjen posnetek ob ✓) bere `cellToLatLng(profile.h3_r7)`; (2) usmerjanje po prijavi preverja
+  `profile.h3_r7` namesto device-local koordinat → **lokacijski zaslon po odjavi/prijavi izgine**
+  (uporabnikova pritožba); (3) `device_location` shramba postane odveč; (4) izbira lokacije lahko dela
+  s coarse dovoljenjem ali samo ročnim pinom. Pomislek: nadmorska višina v razgibanem terenu (centroid
+  na pobočju → ~1–2 °C odmik). **OBVEZNI spremljevalni del — dokumentacija in pravni vidiki, ker se
+  spremeni, kateri podatek zapusti napravo (ne več točne koordinate, samo centroid celice):**
+  `koncept.md` (lokacija/zasebnost, sklep BUG-002) + `tech-stack.md` §2; **pravno:** politika zasebnosti
+  (`docs/legal/privacy-policy.md` + `.html` — SL/EN/DE, opis kaj se pošlje Open-Meteo) → ponovna objava
+  na spletni strani (`tendask.netlify.app`, kasneje tendask.com); **Play Data Safety**
+  (`docs/legal/play-data-safety.md` + 👤 obrazec v konzoli: precise location → approximate, »Shared
+  z Open-Meteo« opis); **v aplikaciji:** besedila na lokacijskem zaslonu/onboardingu in priming/privacy
+  mikrocopy (i18n sl/en/de), ki obljubljajo ravnanje z lokacijo. Brez teh uskladitev se sprememba NE
+  shipa — deklaracije morajo ustrezati dejanskemu vedenju.
 
 ## Dnevnik napredka
 
