@@ -35,6 +35,9 @@ export interface HistorySignals {
   cadenceDays(subjectKey: string, taskTypeId: string): number | null;
   chainStepDate(subjectKey: string, stepTypeId: string): string | null;
   lastDoneYearAgo(subjectKey: string, taskTypeId: string): string | null;
+  /** Distinct (subjectKey, taskTypeId) pairs with at least one done task — the
+   * trigger set for the history rules R2/R3 (docs/m11/03 §R2, §R3). */
+  donePairs(): { subjectKey: string; taskTypeId: string }[];
   debug(): unknown;
 }
 
@@ -50,6 +53,9 @@ export interface EligibilitySignals {
   plantsById(plantId: string): UserPlant[];
   protectedAreas: Set<string>;
   isProtectedSubject(subjectKey: string): boolean;
+  /** Subject still owned (not soft-deleted) — guard 5a. A history pair can name
+   * a plant/area the user has since removed; the bundle excludes deleted rows. */
+  subjectExists(subjectKey: string): boolean;
   debug(): unknown;
 }
 
@@ -199,12 +205,19 @@ function buildHistorySignals(
     return last(dates.filter((d) => Math.abs(dayDiff(d, yearAgo)) <= 7));
   };
 
+  const donePairs = (): { subjectKey: string; taskTypeId: string }[] =>
+    [...byPair.keys()].map((key) => {
+      const sep = key.lastIndexOf('|');
+      return { subjectKey: key.slice(0, sep), taskTypeId: key.slice(sep + 1) };
+    });
+
   return {
     lastDone,
     lastDoneAnySubject: (taskTypeId) => last(byType.get(taskTypeId)),
     cadenceDays,
     chainStepDate,
     lastDoneYearAgo,
+    donePairs,
     debug: () =>
       [...byPair.entries()].map(([key, dates]) => {
         const sep = key.lastIndexOf('|');
@@ -256,6 +269,12 @@ function buildEligibilitySignals(bundle: UserBundle): EligibilitySignals {
     bundle.areas.filter((a) => a.protected).map((a) => a.id),
   );
   const plantsByUid = new Map(bundle.plants.map((p) => [p.id, p]));
+  const areaIds = new Set(bundle.areas.map((a) => a.id));
+  const subjectExists = (subjectKey: string): boolean => {
+    if (subjectKey.startsWith('up:')) return plantsByUid.has(subjectKey.slice(3));
+    if (subjectKey.startsWith('ar:')) return areaIds.has(subjectKey.slice(3));
+    return true; // 'cat:' subjects are virtual (no per-row existence)
+  };
   const isProtectedSubject = (subjectKey: string): boolean => {
     if (subjectKey.startsWith('ar:')) return protectedAreas.has(subjectKey.slice(3));
     if (subjectKey.startsWith('up:')) {
@@ -272,6 +291,7 @@ function buildEligibilitySignals(bundle: UserBundle): EligibilitySignals {
     plantsById: (plantId) => bundle.plants.filter((p) => p.plant_id === plantId),
     protectedAreas,
     isProtectedSubject,
+    subjectExists,
     debug: () => ({
       areas: bundle.areas.map((a) => ({ id: a.id, type: a.type, protected: a.protected })),
       plants: bundle.plants.map((p) => ({

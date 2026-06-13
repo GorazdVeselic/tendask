@@ -124,6 +124,25 @@ export interface WeatherSignals {
   maxTempCToday: number | null;
 }
 
+// A rule's proposal before guards/ranking (docs/m11/03 §3 header). guardKey is
+// derived (plant_task_rule_id ?? '<ruleId>:<taskTypeId>') and used for cooldown/
+// dismiss state; suggestion.rule_id stays the bare 'R1'..'R7'.
+export interface Candidate {
+  ruleId: string;
+  plantTaskRuleId: string | null;
+  taskTypeId: string;
+  subjectKey: string; // 'up:<id>' | 'ar:<id>' | 'cat:<slug>'
+  userPlantId: string | null;
+  areaId: string | null;
+  messageKey: string;
+  messageParams: Record<string, unknown>;
+  score: number;
+  suggestedDate: string; // YYYY-MM-DD
+  validUntil: string; // YYYY-MM-DD
+  cooldownDays: number; // guard 5c window since last_suggested_at
+  weatherGuard: string | null; // per-rule guard CSV (R5/R7); null for R2/R3 without a rule
+}
+
 export interface ClimateSignals {
   lastFrostDate: string | null; // YYYY-MM-DD this year, +frost_safety_days
   firstFrostDate: string | null; // YYYY-MM-DD this year, -frost_safety_days
