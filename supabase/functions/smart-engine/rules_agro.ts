@@ -64,10 +64,15 @@ export function regionalizedWeekWindow(
   } else if (reg === 'autumn') {
     delta = clamp((climate.firstFrostWeek ?? base.autumn) - base.autumn, -4, 4);
   }
-  return {
-    start: isoWeekMonday(year, startWeek + delta),
-    end: addDaysStr(isoWeekMonday(year, endWeek + delta), 6), // Sunday of the end week
-  };
+  const start = isoWeekMonday(year, startWeek + delta);
+  let end = addDaysStr(isoWeekMonday(year, endWeek + delta), 6); // Sunday of the end week
+  // Window crossing the new year (e.g. overwintering wk44→wk8): roll the end into
+  // the next year so the range is non-empty instead of silently never matching.
+  // (The Jan–Feb tail of a window opened the previous year is out of MVP scope.)
+  if (end < start) {
+    end = addDaysStr(isoWeekMonday(year + 1, endWeek + delta), 6);
+  }
+  return { start, end };
 }
 
 /** Resolve a rule's window to concrete dates for the given climate + year.

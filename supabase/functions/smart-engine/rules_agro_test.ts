@@ -133,6 +133,7 @@ function bundle(over: Partial<UserBundle> = {}): UserBundle {
         hemisphere: 'north',
       },
       fcm_token: null,
+      notification_settings: null,
     },
     areas: [],
     plants: [],
@@ -184,6 +185,23 @@ Deno.test('R5 window: apple prune weeks 2–11 (regionalize none, no shift)', ()
   );
   assertEquals(w.start, '2026-01-05'); // Monday of ISO week 2
   assertEquals(w.end, '2026-03-15'); // Sunday of ISO week 11
+});
+
+Deno.test('R5 window: overwintering window crossing the new year rolls end forward', () => {
+  // wk44 → wk8: without the roll-forward the end (Feb same year) lands before the
+  // start (Nov same year), the range is empty and the rule silently never fires.
+  const w = resolveWindow(
+    rule({
+      ref_id: 'garlic',
+      window: { start_week: 44, end_week: 8, regionalize: 'none', climate_bucket_filter: null },
+    }),
+    climate(),
+    kCfg,
+    2026,
+  );
+  assertEquals(w.start, isoWeekMonday(2026, 44)); // Nov 2026
+  assertEquals(w.end, addDaysStr(isoWeekMonday(2027, 8), 6)); // Sunday of wk8 2027
+  assertEquals(w.start! < w.end!, true); // non-empty
 });
 
 Deno.test('R5 window: tomato sowing frost_offset −56..−42 around last frost', () => {
