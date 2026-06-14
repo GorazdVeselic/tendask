@@ -136,16 +136,19 @@ export async function housekeep(
   );
   const nowIso = nowUtc.toISOString();
 
+  // The service role bypasses RLS, so every write fences user_id explicitly — the
+  // ids already come from a user-scoped select, but the filter makes the boundary
+  // enforced at the query, not merely by construction.
   if (plan.expireIds.length > 0) {
     const up = await db.from('suggestion')
       .update({ status: 'expired', updated_at: nowIso })
-      .in('id', plan.expireIds);
+      .eq('user_id', userId).in('id', plan.expireIds);
     if (up.error) throw up.error;
   }
   if (plan.retentionIds.length > 0) {
     const up = await db.from('suggestion')
       .update({ deleted: true, updated_at: nowIso })
-      .in('id', plan.retentionIds);
+      .eq('user_id', userId).in('id', plan.retentionIds);
     if (up.error) throw up.error;
   }
   if (plan.newMutes.length > 0) {
