@@ -92,6 +92,9 @@ class _Body extends ConsumerWidget {
       );
       return;
     }
+    // The permission dialog is async — bail if the screen was popped meanwhile,
+    // so we never touch a defunct WidgetRef.
+    if (!context.mounted) return;
     _save(ref, next);
     // The permission may have just been granted — re-run the token flow now
     // instead of waiting for the next auth change.

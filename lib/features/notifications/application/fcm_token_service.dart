@@ -42,7 +42,8 @@ class FcmTokenService extends _$FcmTokenService {
       }
       // Subscribe before getToken so a registration that completes late
       // (offline boot) still lands in the profile.
-      _refreshSub = messaging.onTokenRefresh.listen((t) => _store(userId, t));
+      _refreshSub =
+          messaging.onTokenRefresh.listen((t) => unawaited(_onRefresh(userId, t)));
       final token = await messaging.getToken();
       if (token == null) return;
       // The profile row is born via claim/pull moments after sign-in; writing
@@ -51,6 +52,17 @@ class FcmTokenService extends _$FcmTokenService {
       await _store(userId, token);
     } catch (e) {
       debugPrint('FCM token sync failed (non-fatal): $e');
+    }
+  }
+
+  /// Token rotation handler: gate on the profile row (updateFcmToken is
+  /// update-only) and swallow errors — a rotation is best-effort, never fatal.
+  Future<void> _onRefresh(String userId, String token) async {
+    try {
+      await ref.read(profileRepositoryProvider).waitForProfile(userId);
+      await _store(userId, token);
+    } catch (e) {
+      debugPrint('FCM token refresh sync failed (non-fatal): $e');
     }
   }
 
