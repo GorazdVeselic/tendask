@@ -328,6 +328,8 @@ SuggestionsCompanion suggestionFromRemote(Map<String, dynamic> r) =>
       status: Value(r['status'] as String? ?? kSuggestionNew),
       dismissScope: Value(r['dismiss_scope'] as String? ?? kDismissScopeSeason),
       plannedTaskId: Value(r['planned_task_id'] as String?),
+      // `valid_until` is a Postgres date; DateTime.parse on a bare date string
+      // yields local midnight, round-tripping cleanly with _dateOnly on push.
       validUntil: Value(_dt(r['valid_until'])),
       createdAt: Value(_dt(r['created_at'])),
       updatedAt: Value(_dt(r['updated_at'])),

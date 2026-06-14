@@ -6,9 +6,17 @@ import { importPKCS8, SignJWT } from 'jose';
 let cachedToken: { token: string; exp: number } | null = null;
 let cachedProjectId: string | null = null;
 
+// Fail closed with a named error if the secret is missing — a bare `!` would
+// throw an opaque "Cannot read of null" deep inside JSON.parse.
+function serviceAccount(): Record<string, string> {
+  const raw = Deno.env.get('FCM_SERVICE_ACCOUNT_JSON');
+  if (!raw) throw new Error('FCM_SERVICE_ACCOUNT_JSON secret is not set');
+  return JSON.parse(raw);
+}
+
 async function oauthToken(): Promise<string> {
   if (cachedToken && cachedToken.exp > Date.now() / 1000 + 60) return cachedToken.token;
-  const sa = JSON.parse(Deno.env.get('FCM_SERVICE_ACCOUNT_JSON')!);
+  const sa = serviceAccount();
   if (!cachedProjectId) cachedProjectId = sa.project_id as string;
   const key = await importPKCS8(sa.private_key as string, 'RS256');
   const jwt = await new SignJWT({
@@ -40,8 +48,7 @@ async function oauthToken(): Promise<string> {
 /** Project ID from the service account JSON (cached after first call). */
 export function fcmProjectId(): string {
   if (!cachedProjectId) {
-    const sa = JSON.parse(Deno.env.get('FCM_SERVICE_ACCOUNT_JSON')!);
-    cachedProjectId = sa.project_id as string;
+    cachedProjectId = serviceAccount().project_id as string;
   }
   return cachedProjectId!;
 }

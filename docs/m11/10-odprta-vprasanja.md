@@ -109,3 +109,14 @@ ali server endpoint; odločiti ob potrebi, ne prej).
    ljudi; NE commitati v produkcijski seed.
 4. **Dev-only ročni invoke:** `supabase functions invoke smart-engine --body '{"user_ids":[...]}'`
    za tek »zdaj« na lastnem računu (namesto čakanja na 7:00).
+
+## 13. `agg_context` write-once samo app-level (ne DB-vsiljeno)
+
+**Privzetek:** `task.agg_context` je zamrznjen ob `done` na klientu (write-once, ohranjen ob
+`↩ Na čaka`), a stolpec je navaden `jsonb` brez CHECK/trigger — invarianta živi samo v
+`TasksRepository`. CLAUDE.md sicer želi DB-level invariante.
+**Odločitveno drevo:** posnetek konzumira šele V2 agregacija (M11.16, `agg_event`). Ob M11.16,
+preden agregati štejejo na ta polja, dodaj `before update` trigger, ki zavrne spremembo
+`agg_context`, ko je stara vrednost ne-null (immutable po prvem zapisu) — takrat je tudi
+jasno, ali kak migracijski backfill rabi izjemo. Prej ne (en sam pisalec = klient, app-level
+guard zadošča za MVP, kjer se posnetek nikamor ne agregira).
