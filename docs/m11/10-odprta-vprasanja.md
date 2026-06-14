@@ -135,3 +135,19 @@ Občutljivi `engine_service_key` je zato pravilno v Vault (`0006`), URL pa ne �
 Vault secret (ujemi vzorec `engine_service_key`), ali z ročnim `update app_config` ob postavitvi
 okolja (kot je za ključ že dokumentirano v `0006`). Tako migracija postane okoljsko-nevtralna.
 Prej ne (enoprojektni MVP — hardcodan URL je za edino okolje pravilen).
+
+## 15. Profile pull `<=` tie-break lahko povozi še-ne-pushan `pending` profil
+
+**Privzetek:** inkrementalni pull (`sync_pull_service.dart`) uporablja generično
+`onConflict: DoUpdate(where: updated_at <= ts)` za VSE tabele — ob enakem `updated_at`
+zmaga oblak (dokumentiran LWW tie-break). drift ima sekundno ločljivost.
+**Zakaj odprto:** profil nima per-field LWW (povozi se cela vrstica). Če uporabnik offline
+uredi `lang`/`notification_settings` v **isti sekundi**, kot je `updated_at` oblačne vrstice,
+ki jo pull prinese, `<=` tiho povozi lokalni `pending` zapis pred pushem → izguba nastavitve.
+Verjetnost je ~ničelna (enouporabniški račun; zahteva dve napravi v isti sekundi), realno
+clobber-pot (parcialni insert ob prvem pullu) pa že pokriva grace-straža (`profile_write_guard`).
+**Odločitveno drevo (sprožilec = poročilo o izgubljeni nastavitvi ali multi-device urejanje):**
+če tester/telemetrija pokaže tiho izgubo profilne nastavitve, dodaj per-status izjemo —
+za `sync_status = pending` vrstice uporabi strogi `<` (lokalni pending ob izenačenju zmaga),
+ALI primerjaj po podsekundah, kjer je na voljo. Ne prej: globalna sprememba `<=`→`<` v stabilni
+sync poti za ~nemogoč rob ni vredna blast radiusa; polja so nizko-tvegana in ponovno nastavljiva.
