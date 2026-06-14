@@ -16,6 +16,7 @@
 
 # Android release signing — keystore + gesla nikoli v repo (CLAUDE.md)
 /android/key.properties
+/android/app/google-services.json
 *.jks
 *.keystore
 
