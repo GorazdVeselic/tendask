@@ -120,3 +120,18 @@ preden agregati štejejo na ta polja, dodaj `before update` trigger, ki zavrne s
 `agg_context`, ko je stara vrednost ne-null (immutable po prvem zapisu) — takrat je tudi
 jasno, ali kak migracijski backfill rabi izjemo. Prej ne (en sam pisalec = klient, app-level
 guard zadošča za MVP, kjer se posnetek nikamor ne agregira).
+
+## 14. `engine_endpoint` URL hardcodan v migraciji (okoljsko specifičen)
+
+**Privzetek:** `0005` seed-a `app_config.engine_endpoint` z absolutnim URL-jem produkcijskega
+projekta (`https://<ref>.functions.supabase.co/smart-engine`); nočni `engine_dispatch()`
+(`0006`) ga prebere in POST-a nanj. Za en živ projekt je pravilen; `app_config` je nastavljiv
+brez deploya (`update app_config set value = ...`).
+**Zakaj odprto:** project ref je zapečen v migracijo. Ob **drugem okolju (test/staging)** isti
+migracije usmerijo cron novega okolja na **produkcijsko** funkcijo — tiho, brez napake.
+Občutljivi `engine_service_key` je zato pravilno v Vault (`0006`), URL pa ne — neskladje.
+**Odločitveno drevo (sprožilec = prvo ne-produkcijsko okolje):** preden postaviš test/staging,
+**odstrani** `engine_endpoint` vrstico iz `0005` seeda in nastavi URL per-okolje — ali kot
+Vault secret (ujemi vzorec `engine_service_key`), ali z ročnim `update app_config` ob postavitvi
+okolja (kot je za ključ že dokumentirano v `0006`). Tako migracija postane okoljsko-nevtralna.
+Prej ne (enoprojektni MVP — hardcodan URL je za edino okolje pravilen).
