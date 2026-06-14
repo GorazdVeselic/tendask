@@ -52,6 +52,7 @@ function bundle(tasks: TaskRow[], overrides: Partial<UserBundle> = {}): UserBund
       climate_bucket: 'e1_t6',
       climate_profile: null,
       fcm_token: null,
+      notification_settings: null,
     },
     areas: [],
     plants: [{

@@ -16,6 +16,8 @@ import { housekeep } from './housekeep.ts';
 import { fetchOpenMeteoWithRetry } from './weather.ts';
 import { localDateStr, safeTimeZone } from './dates.ts';
 import type { EngineConfig } from './types.ts';
+import { fcmProjectId, sendSuggestionPush } from '../_shared/fcm.ts';
+import { pushBody, pushTitle } from '../_shared/push_i18n.ts';
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -140,13 +142,57 @@ Deno.serve(async (req) => {
         const guarded = applyGuards(candidates, signals, cfg, nowUtc);
         const enriched = enrichR4(guarded, signals.inventory, cfg);
         const ranked = dedupAndRank(enriched, cfg);
-        const emitted = await emit(db, bundle, ranked, nowUtc);
-        const runUp = await db.from('engine_run')
-          .upsert({ user_id: userId, last_run_date: signals.localToday });
+        const { count: emitted, topId } = await emit(db, bundle, ranked, nowUtc);
+        // Step 8c: FCM push for the top candidate (max 1 per local day). The
+        // per-day cap is structural (one dispatcher run/day + last_push_date gate);
+        // push_cap_per_day=0 is an ops kill-switch that disables all pushes.
+        let pushed = false;
+        const pushCap = cfg.engine.push_cap_per_day ?? 1;
+        if (pushCap >= 1 && topId && bundle.profile.fcm_token) {
+          const ns = bundle.profile.notification_settings;
+          const topCandidate = ranked[0];
+          // R6 = community hints; all others = weather hints opt-in.
+          const hintAllowed = topCandidate.ruleId === 'R6'
+            ? (ns?.community_hints ?? false)
+            : (ns?.weather_hints ?? false);
+          if (hintAllowed) {
+            const runRes = await db.from('engine_run')
+              .select('last_push_date').eq('user_id', userId).maybeSingle();
+            const lastPush: string | null = runRes.data?.last_push_date ?? null;
+            if (!lastPush || lastPush < signals.localToday) {
+              const ok = await sendSuggestionPush({
+                fcmToken: bundle.profile.fcm_token,
+                projectId: fcmProjectId(),
+                title: pushTitle(topCandidate.messageKey, bundle.profile.lang),
+                body: pushBody(bundle.profile.lang),
+                suggestionId: topId,
+              }).catch((e) => {
+                console.error('smart-engine: FCM send failed', userId, e);
+                return false as boolean;
+              });
+              if (ok) {
+                pushed = true;
+              } else {
+                // UNREGISTERED or invalid token — clear it so we stop sending.
+                // Deliberately does NOT bump updated_at: if the client has since
+                // registered a fresh token (newer updated_at), bumping here would
+                // let this null win the LWW pull and clobber the live token.
+                await db.from('profile')
+                  .update({ fcm_token: null }).eq('user_id', userId);
+              }
+            }
+          }
+        }
+        const runUp = await db.from('engine_run').upsert({
+          user_id: userId,
+          last_run_date: signals.localToday,
+          ...(pushed ? { last_push_date: signals.localToday } : {}),
+        });
         if (runUp.error) console.error('smart-engine: engine_run upsert failed', runUp.error);
         results.push({
           user_id: userId,
           emitted,
+          pushed,
           candidates: ranked.map((c) => ({ rule_id: c.ruleId, task_type_id: c.taskTypeId,
             subject_key: c.subjectKey, score: c.score, valid_until: c.validUntil })),
           signals: debugSignals(signals, cfg),

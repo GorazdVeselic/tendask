@@ -1,7 +1,8 @@
 {
   "imports": {
     "@supabase/supabase-js": "npm:@supabase/supabase-js@2",
-    "h3-js": "npm:h3-js@4"
+    "h3-js": "npm:h3-js@4",
+    "jose": "npm:jose@5"
   },
   "fmt": {
     "singleQuote": true,

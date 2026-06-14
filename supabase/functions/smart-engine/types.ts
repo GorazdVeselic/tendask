@@ -8,6 +8,11 @@ export interface ClimateProfileJson {
   hemisphere?: string | null;
 }
 
+export interface NotificationSettings {
+  weather_hints?: boolean;
+  community_hints?: boolean;
+}
+
 export interface Profile {
   user_id: string;
   h3_r7: string | null;
@@ -16,6 +21,7 @@ export interface Profile {
   climate_bucket: string | null;
   climate_profile: ClimateProfileJson | null;
   fcm_token: string | null;
+  notification_settings: NotificationSettings | null;
 }
 
 export interface Area {

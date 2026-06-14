@@ -32,6 +32,7 @@ function profile(overrides: Partial<Profile> = {}): Profile {
       growing_season_days: 187,
     },
     fcm_token: null,
+    notification_settings: null,
     ...overrides,
   };
 }

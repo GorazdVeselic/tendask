@@ -1,4 +1,4 @@
-import { assertEquals } from 'jsr:@std/assert@1';
+import { assertEquals, assertNotEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r2, r3 } from './rules.ts';
 import { applyGuards, dedupAndRank, emit, enrichR4 } from './pipeline.ts';
@@ -46,6 +46,7 @@ function bundle(tasks: TaskRow[], overrides: Partial<UserBundle> = {}): UserBund
       climate_bucket: 'e1_t6',
       climate_profile: null,
       fcm_token: null,
+      notification_settings: null,
     },
     areas: [],
     plants: [{
@@ -305,8 +306,9 @@ Deno.test('emit: inserts suggestion rows and stamps suggestion_log with updated_
     },
   };
   const b = bundle([]);
-  const n = await emit(db, b, [cand()], kNow);
-  assertEquals(n, 1);
+  const { count, topId } = await emit(db, b, [cand()], kNow);
+  assertEquals(count, 1);
+  assertNotEquals(topId, null);
   assertEquals(state.inserted.length, 1);
   assertEquals(state.inserted[0].status, 'new');
   assertEquals(state.inserted[0].subject_key, 'up:p1');

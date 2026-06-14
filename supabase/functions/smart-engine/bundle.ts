@@ -41,7 +41,7 @@ export async function loadUserBundle(
 ): Promise<UserBundle | null> {
   const profileRes = await db
     .from('profile')
-    .select('user_id,h3_r7,timezone,lang,climate_bucket,climate_profile,fcm_token')
+    .select('user_id,h3_r7,timezone,lang,climate_bucket,climate_profile,fcm_token,notification_settings')
     .eq('user_id', userId)
     .maybeSingle();
   throwIfError(profileRes);

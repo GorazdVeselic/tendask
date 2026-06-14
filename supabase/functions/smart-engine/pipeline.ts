@@ -106,14 +106,17 @@ export function dedupAndRank(candidates: Candidate[], cfg: EngineConfig): Candid
 /** Step 8a/8b: insert each surviving candidate into `suggestion` and stamp
  * `suggestion_log.last_suggested_at`. The log upsert sets updated_at explicitly
  * (PG default fires only on INSERT) and omits dismissed_until so a prior mute
- * survives the merge (docs/m11/04 §4.3 gotcha). */
+ * survives the merge (docs/m11/04 §4.3 gotcha).
+ *
+ * Returns count of inserted rows and the UUID of the top-ranked suggestion
+ * (candidates[0]) so the caller can send an FCM push with the correct id. */
 export async function emit(
   db: any,
   bundle: UserBundle,
   candidates: Candidate[],
   nowUtc: Date,
-): Promise<number> {
-  if (candidates.length === 0) return 0;
+): Promise<{ count: number; topId: string | null }> {
+  if (candidates.length === 0) return { count: 0, topId: null };
   const userId = bundle.profile.user_id;
   const nowIso = nowUtc.toISOString();
   const rows = candidates.map((c) => ({
@@ -144,5 +147,5 @@ export async function emit(
   const up = await db.from('suggestion_log')
     .upsert(logRows, { onConflict: 'user_id,guard_key,subject_key' });
   if (up.error) throw up.error;
-  return rows.length;
+  return { count: rows.length, topId: rows[0].id };
 }
