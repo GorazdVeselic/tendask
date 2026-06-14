@@ -138,6 +138,33 @@ void main() {
     );
   });
 
+  test('suggestionToRemote: valid_until is the LOCAL date, not UTC-shifted', () {
+    // valid_until is a Postgres `date`. drift returns the DateTime in local time,
+    // so a UTC-based truncation would roll local midnight back a day in positive
+    // offsets (UTC+1/+2 = our market). Assert the local calendar date survives.
+    final validUntil = DateTime(2026, 8, 15); // local midnight
+    final map = suggestionToRemote(
+      Suggestion(
+        id: 's1',
+        userId: 'u1',
+        ruleId: 'R5',
+        taskTypeId: 'prune',
+        subjectKey: 'up:p1',
+        messageKey: 'suggestions.x',
+        messageParams: '{}',
+        score: 2.0,
+        status: 'new',
+        dismissScope: 'season',
+        validUntil: validUntil,
+        createdAt: t0,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+      ),
+    );
+    expect(map['valid_until'], '2026-08-15');
+  });
+
   test('noteToRemote: content maps to the "text" column', () {
     final map = noteToRemote(
       Note(

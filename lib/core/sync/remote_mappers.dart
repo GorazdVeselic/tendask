@@ -22,6 +22,13 @@ String _ts(DateTime d) => d.toUtc().toIso8601String();
 
 String? _tsOrNull(DateTime? d) => d == null ? null : _ts(d);
 
+String _two(int n) => n.toString().padLeft(2, '0');
+
+/// A Postgres `date` value: the LOCAL calendar date, never UTC-shifted. drift
+/// returns the DateTime in local time, so `toUtc()` before truncation would roll
+/// midnight back a day in positive offsets (UTC+1/+2 = our target market).
+String _dateOnly(DateTime d) => '${d.year}-${_two(d.month)}-${_two(d.day)}';
+
 Object? _jsonb(String? s) => s == null ? null : jsonDecode(s);
 
 Map<String, dynamic> profileToRemote(Profile r) => {
@@ -141,8 +148,8 @@ Map<String, dynamic> suggestionToRemote(Suggestion r) => {
   'status': r.status,
   'dismiss_scope': r.dismissScope,
   'planned_task_id': r.plannedTaskId,
-  // Postgres `date` column — send the date part only.
-  'valid_until': _ts(r.validUntil).substring(0, 10),
+  // Postgres `date` column — send the local date part only (see _dateOnly).
+  'valid_until': _dateOnly(r.validUntil),
   'created_at': _ts(r.createdAt),
   'updated_at': _ts(r.updatedAt),
   'deleted': r.deleted,
