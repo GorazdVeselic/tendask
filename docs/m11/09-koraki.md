@@ -88,7 +88,7 @@ Brez pravil — funkcija vrne izračunane signale v debug odgovoru (za test).
 - **Odvisnosti:** M11.1, M11.3 (klima v profilu) · **Kompleksnost:** XL
 - **Commit:** `feat(engine): smart-engine edge function — signalni sloj + weather cache`
 
-### M11.9 — Pravila R3 + R2 (zgodovina) `[ ]`
+### M11.9 — Pravila R3 + R2 (zgodovina) `[x]`
 `03`: R3 (cadence zamuda; mediana zadnjih 5 + default_cadence fallback) in R2 (obletnica) +
 skupne straže (cooldown, dismissed, dedup planned, cooldown-po-izvedbi) + ocena + emit v
 `suggestion` + suggestion_log update. (R3/R2 prva: ne rabita plant_task_rule.)
@@ -115,7 +115,7 @@ dedup med kandidati, rank, band_max_active, housekeeping (expired, dismissed→l
 - **Odvisnosti:** M11.9, M11.10 · **Kompleksnost:** L
 - **Commit:** `feat(engine): R1 vremensko okno, R4 zaloga, rangiranje in frekvenčna kapica`
 
-### M11.12 — Dispatch cron + FCM pošiljanje `[ ]`
+### M11.12 — Dispatch cron + FCM pošiljanje `[x]`
 `04` §4.7 (engine_dispatch + pg_cron + Vault secret 👤) + §4.8 (_shared/fcm.ts;
 `tool/gen_push_i18n.dart` generira `_shared/push_i18n.ts` iz slang JSON-ov — nov mini tool;
 UNREGISTERED handling, quiet-hours/cap check, engine_run.last_push_date).
