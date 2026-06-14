@@ -141,6 +141,21 @@ export interface Candidate {
   validUntil: string; // YYYY-MM-DD
   cooldownDays: number; // guard 5c window since last_suggested_at
   weatherGuard: string | null; // per-rule guard CSV (R5/R7); null for R2/R3 without a rule
+  frostGate: boolean; // rule.frost_gate — frost code still evaluates for protected subjects
+}
+
+// One curated agronomy rule (plant_task_rule). The window jsonb shape depends on
+// timing_anchor (docs/m11/01 §0); rules_agro.ts resolves it against the climate.
+export interface PlantTaskRule {
+  id: string;
+  scope: 'plant' | 'category';
+  ref_id: string; // plant.id or plant category slug
+  task_type_id: string;
+  timing_anchor: 'month_window' | 'frost_offset' | 'growth_stage' | 'cadence_only';
+  window: Record<string, unknown>;
+  frost_gate: boolean;
+  weather_guard: string | null;
+  message_key: string;
 }
 
 export interface ClimateSignals {

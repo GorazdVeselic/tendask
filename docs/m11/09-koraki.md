@@ -98,7 +98,7 @@ skupne straže (cooldown, dismissed, dedup planned, cooldown-po-izvedbi) + ocena
 - **Odvisnosti:** M11.8 · **Kompleksnost:** L
 - **Commit:** `feat(engine): pravili R3 (zamuda ritma) in R2 (obletnica) s stražami`
 
-### M11.10 — Pravili R5 + R7 (agronomski sloj) `[ ]`
+### M11.10 — Pravili R5 + R7 (agronomski sloj) `[x]`
 `03`: R5 (month_window regionalizacija + frost_offset + frost_gate + bucket filter +
 override semantika) in R7 (veriga growth_stage). R1 ojačitve (+score) za oba.
 - **DoD:** Deno testi: (koš, frost datuma, pravilo) → pričakovano okno (vzorci: jablana

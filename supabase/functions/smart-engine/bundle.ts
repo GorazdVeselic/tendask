@@ -3,7 +3,7 @@
 // the row count stays bounded by the task limit.
 
 // deno-lint-ignore-file no-explicit-any
-import type { TaskRow, TaskTypeMeta, UserBundle } from './types.ts';
+import type { PlantTaskRule, TaskRow, TaskTypeMeta, UserBundle } from './types.ts';
 
 function throwIfError(...results: { error: unknown }[]): void {
   for (const r of results) {
@@ -17,6 +17,21 @@ export async function loadTaskTypes(db: any): Promise<Map<string, TaskTypeMeta>>
     .select('id,default_cadence,weather_sensitive,seasonal');
   throwIfError(res);
   return new Map((res.data ?? []).map((t: TaskTypeMeta) => [t.id, t]));
+}
+
+/** All agronomy rules, cached once per invocation (docs/m11/03 §Cevovod step 1).
+ * "window" jsonb arrives already parsed; the tolerant resolver reads it per anchor.
+ * Ordered by id so a score-tie between two rules for the same (task_type, subject)
+ * resolves deterministically in dedupAndRank (03 §Determinizem). */
+export async function loadRules(db: any): Promise<PlantTaskRule[]> {
+  const res = await db
+    .from('plant_task_rule')
+    .select(
+      'id,scope,ref_id,task_type_id,timing_anchor,window,frost_gate,weather_guard,message_key',
+    )
+    .order('id', { ascending: true });
+  throwIfError(res);
+  return (res.data ?? []) as PlantTaskRule[];
 }
 
 export async function loadUserBundle(

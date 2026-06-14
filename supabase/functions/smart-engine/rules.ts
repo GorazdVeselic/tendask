@@ -62,6 +62,7 @@ export function r3(
       validUntil: addDaysStr(localToday, 5),
       cooldownDays: 5,
       weatherGuard: null,
+      frostGate: false,
     });
   }
   return out;
@@ -78,7 +79,7 @@ export function r2(
 ): Candidate[] {
   const { history, weather, eligibility, localToday } = signals;
   const k = cfg.engine;
-  const startOfSeason = localToday.slice(0, 4) + '-01-01'; // north; south → M11.10
+  const startOfSeason = localToday.slice(0, 4) + '-01-01'; // north; south out of MVP scope
   const out: Candidate[] = [];
   for (const { subjectKey, taskTypeId } of history.donePairs()) {
     const type = taskTypes.get(taskTypeId);
@@ -112,6 +113,7 @@ export function r2(
       validUntil: addDaysStr(localToday, 7),
       cooldownDays: 30,
       weatherGuard: null,
+      frostGate: false,
     });
   }
   return out;

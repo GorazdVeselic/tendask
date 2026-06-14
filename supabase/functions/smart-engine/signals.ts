@@ -196,7 +196,8 @@ function buildHistorySignals(
     return gaps.length % 2 === 1 ? gaps[mid] : (gaps[mid - 1] + gaps[mid]) / 2;
   };
   const chainStepDate = (subjectKey: string, stepTypeId: string): string | null => {
-    // Current season = local calendar year (north; south handled in M11.10).
+    // Current season = local calendar year (north; southern-hemisphere season
+    // boundary out of MVP scope — R7 is event-driven and the target market is north).
     const dates = byPair.get(subjectKey + '|' + stepTypeId) ?? [];
     return last(dates.filter((d) => d.slice(0, 4) === year));
   };

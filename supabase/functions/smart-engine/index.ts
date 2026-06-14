@@ -6,10 +6,11 @@
 import { createClient } from '@supabase/supabase-js';
 import { cellToLatLng } from 'h3-js';
 import { loadAppConfig } from './config.ts';
-import { loadTaskTypes, loadUserBundle } from './bundle.ts';
+import { loadRules, loadTaskTypes, loadUserBundle } from './bundle.ts';
 import { buildSignals, type Signals } from './signals.ts';
 import { debugGuardCodes } from './guards.ts';
 import { r2, r3 } from './rules.ts';
+import { r5, r7 } from './rules_agro.ts';
 import { applyGuards, dedupAndRank, emit } from './pipeline.ts';
 import { fetchOpenMeteoWithRetry } from './weather.ts';
 import { localDateStr, safeTimeZone } from './dates.ts';
@@ -108,6 +109,7 @@ Deno.serve(async (req) => {
     const db = createClient(supabaseUrl, serviceKey);
     const cfg = await loadAppConfig(db);
     const taskTypes = await loadTaskTypes(db);
+    const rules = await loadRules(db); // cached once per invocation (03 §Cevovod 1)
     const nowUtc = new Date();
 
     const results: unknown[] = [];
@@ -122,8 +124,13 @@ Deno.serve(async (req) => {
         const cacheDay = localDateStr(nowUtc, safeTimeZone(bundle.profile.timezone));
         const weatherPayload = await cellWeather(db, bundle.profile.h3_r7, cacheDay, weatherMemo);
         const signals = buildSignals(bundle, taskTypes, weatherPayload, cfg, nowUtc);
-        // R5/R7/R1 + R4 enrichment join here in M11.10/M11.11.
-        const candidates = [...r3(bundle, signals, taskTypes, cfg), ...r2(bundle, signals, taskTypes, cfg)];
+        // R1 + R4 enrichment join here in M11.11. Order per 03 §Cevovod 4.
+        const candidates = [
+          ...r5(bundle, rules, signals, taskTypes, cfg),
+          ...r7(bundle, rules, signals, cfg),
+          ...r3(bundle, signals, taskTypes, cfg),
+          ...r2(bundle, signals, taskTypes, cfg),
+        ];
         const guarded = applyGuards(candidates, signals, cfg, nowUtc);
         const ranked = dedupAndRank(guarded, cfg);
         const emitted = await emit(db, bundle, ranked, nowUtc);

@@ -48,7 +48,7 @@ export function applyGuards(
     const guard = evaluateWeatherGuard(c.weatherGuard, weather, cfg.weatherThresholds, {
       protectedSubject: eligibility.isProtectedSubject(c.subjectKey),
       noLocation,
-      frostGate: false, // R5/R7 set this in M11.10
+      frostGate: c.frostGate, // R5/R7 frost-gate rules evaluate the 48h code under cover
     });
     if (!guard.pass) return false;
     // h. below the emit threshold.

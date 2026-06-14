@@ -68,6 +68,16 @@ export function sameDateLastYear(day: string): string {
   return msToDay(Date.UTC(y - 1, m - 1, d));
 }
 
+/** Monday (YYYY-MM-DD) of ISO week W in the given year. Inverse of isoWeek().
+ * Accepts out-of-range weeks (e.g. after a regionalisation shift) — the ms math
+ * rolls into the adjacent year, which is the intended clamp-tolerant behaviour. */
+export function isoWeekMonday(year: number, week: number): string {
+  const jan4 = Date.UTC(year, 0, 4); // Jan 4 is always in ISO week 1.
+  const jan4Weekday = (new Date(jan4).getUTCDay() + 6) % 7; // Mon = 0
+  const week1Monday = jan4 - jan4Weekday * kDayMs;
+  return msToDay(week1Monday + (week - 1) * 7 * kDayMs);
+}
+
 export function isoWeek(day: string): number {
   const date = new Date(dayMs(day));
   const weekday = (date.getUTCDay() + 6) % 7; // Mon = 0

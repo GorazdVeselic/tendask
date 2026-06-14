@@ -195,6 +195,7 @@ function cand(overrides: Partial<Candidate> = {}): Candidate {
     validUntil: '2026-06-17',
     cooldownDays: 5,
     weatherGuard: null,
+    frostGate: false,
     ...overrides,
   };
 }
