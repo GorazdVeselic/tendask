@@ -11,6 +11,8 @@ import '../clock.dart';
 import '../config.dart';
 import '../database/app_database.dart';
 import '../database/database_provider.dart';
+import '../sync/connectivity.dart';
+import '../sync/profile_write_guard.dart';
 import '../sync/sync_status.dart';
 import 'climate_profile.dart';
 import 'climate_service.dart';
@@ -31,12 +33,16 @@ class LocationRepository {
     this._clock = const SystemClock(),
     this._climate,
     this._deviceTimezone,
+    this._isOnline,
   });
 
   final AppDatabase _db;
   final H3 _h3;
   final Clock _clock;
   final ClimateService? _climate;
+
+  /// One-shot online check (see [profileRowReadyForWrite]); null in tests.
+  final OnlineCheck? _isOnline;
 
   /// IANA timezone of the device — an offline-capable first guess for the
   /// garden's timezone, refined by the archive response when the network is up.
@@ -55,6 +61,15 @@ class LocationRepository {
     // away; the climate fetch below refines it asynchronously (docs/m11/07 §7.6).
     final timezone = await _deviceTimezone?.call();
     final now = _clock.now();
+    // Decide the merge-vs-insert path BEFORE the transaction: the grace wait
+    // uses a watch stream, which must not run inside a write transaction. Lets a
+    // first pull land the cloud profile so this write merges (UPDATE) instead of
+    // inserting a partial row that clobbers cloud lang / notification_settings.
+    final exists = await profileRowReadyForWrite(
+      _db,
+      userId,
+      isOnline: _isOnline,
+    );
     await _db.transaction(() async {
       // Singleton table: wipe first so a stray duplicate left by an older
       // schema can't survive and crash the single-row read below.
@@ -68,10 +83,7 @@ class LocationRepository {
               updatedAt: now,
             ),
           );
-      final exists = await (_db.select(
-        _db.profiles,
-      )..where((p) => p.userId.equals(userId))).getSingleOrNull();
-      if (exists == null) {
+      if (!exists) {
         await _db
             .into(_db.profiles)
             .insert(
@@ -214,6 +226,7 @@ LocationRepository locationRepository(Ref ref) => LocationRepository(
   ref.watch(databaseProvider),
   ref.watch(h3Provider),
   climate: ref.watch(climateServiceProvider),
+  isOnline: checkOnline,
   deviceTimezone: () async {
     try {
       return (await FlutterTimezone.getLocalTimezone()).identifier;

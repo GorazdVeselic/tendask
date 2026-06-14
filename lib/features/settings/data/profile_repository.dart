@@ -5,13 +5,17 @@ import 'package:drift/drift.dart';
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/notifications/notification_settings.dart';
+import '../../../core/sync/profile_write_guard.dart';
 import '../../../core/sync/sync_status.dart';
 
 class ProfileRepository {
-  ProfileRepository(this._db, {this._clock = const SystemClock()});
+  ProfileRepository(this._db, {this._clock = const SystemClock(), this._isOnline});
 
   final AppDatabase _db;
   final Clock _clock;
+
+  /// One-shot online check (see [profileRowReadyForWrite]); null in tests.
+  final OnlineCheck? _isOnline;
 
   /// Stored UI language code ('sl'/'en'/'de') for [userId], or null if unset.
   Future<String?> getLang(String userId) async {
@@ -22,11 +26,15 @@ class ProfileRepository {
   }
 
   Future<void> setLang(String userId, String lang) async {
-    final exists = await (_db.select(
-      _db.profiles,
-    )..where((p) => p.userId.equals(userId))).getSingleOrNull();
+    // Let an in-flight first pull land the cloud profile first, so this write
+    // merges instead of inserting a partial row that clobbers it (LWW).
+    final exists = await profileRowReadyForWrite(
+      _db,
+      userId,
+      isOnline: _isOnline,
+    );
     final now = _clock.now();
-    if (exists == null) {
+    if (!exists) {
       await _db
           .into(_db.profiles)
           .insert(
@@ -71,11 +79,15 @@ class ProfileRepository {
     NotificationSettings settings,
   ) async {
     final json = jsonEncode(settings.toJson());
-    final exists = await (_db.select(
-      _db.profiles,
-    )..where((p) => p.userId.equals(userId))).getSingleOrNull();
+    // Same first-pull grace as setLang — never insert a partial profile that
+    // would clobber the cloud's lang / h3* on push.
+    final exists = await profileRowReadyForWrite(
+      _db,
+      userId,
+      isOnline: _isOnline,
+    );
     final now = _clock.now();
-    if (exists == null) {
+    if (!exists) {
       await _db
           .into(_db.profiles)
           .insert(
@@ -129,10 +141,17 @@ class ProfileRepository {
 
   /// Completes once the profile row for [userId] exists — born via the sign-in
   /// claim, the first pull, or a first local write (lang/settings/location).
-  Future<void> waitForProfile(String userId) async {
+  /// Bounded so a never-arriving profile (permanent offline, RLS quirk) can't
+  /// hang the caller forever; on timeout it throws TimeoutException and the
+  /// caller (FCM token sync) retries on the next auth change / cold start.
+  Future<void> waitForProfile(
+    String userId, {
+    Duration timeout = const Duration(seconds: 20),
+  }) async {
     await (_db.select(_db.profiles)..where((p) => p.userId.equals(userId)))
         .watchSingleOrNull()
-        .firstWhere((row) => row != null);
+        .firstWhere((row) => row != null)
+        .timeout(timeout);
   }
 
   NotificationSettings _decode(String? json) {

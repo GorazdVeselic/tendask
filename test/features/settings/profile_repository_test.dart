@@ -1,3 +1,6 @@
+import 'dart:async';
+
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
@@ -52,6 +55,50 @@ void main() {
     expect(await repo.getLang(userId), 'de');
     final rows = await db.select(db.profiles).get();
     expect(rows.length, 1);
+  });
+
+  test('setLang waits for an in-flight pull, then merges (no clobber)', () async {
+    // Simulate the cloud profile landing via pull shortly after the write begins.
+    unawaited(
+      Future(
+        () => db
+            .into(db.profiles)
+            .insert(
+              ProfilesCompanion.insert(
+                userId: userId,
+                h3R7: const Value('abc'),
+                notificationSettings: const Value('{"weather_hints":true}'),
+                updatedAt: t0,
+                syncStatus: const Value('synced'),
+              ),
+            ),
+      ),
+    );
+    final onlineRepo = ProfileRepository(
+      db,
+      clock: clock,
+      isOnline: () async => true,
+    );
+    await onlineRepo.setLang(userId, 'de');
+
+    final rows = await db.select(db.profiles).get();
+    expect(rows.length, 1); // merged into the pulled row, not a second insert
+    expect(rows.single.lang, 'de'); // our write
+    expect(rows.single.h3R7, 'abc'); // cloud field preserved (no clobber)
+    expect(rows.single.notificationSettings, '{"weather_hints":true}');
+  });
+
+  test('setLang offline inserts immediately (no grace hang)', () async {
+    final offlineRepo = ProfileRepository(
+      db,
+      clock: clock,
+      isOnline: () async => false,
+    );
+    // Must NOT block on the grace window when there is no cloud to wait for.
+    await offlineRepo
+        .setLang(userId, 'sl')
+        .timeout(const Duration(seconds: 1));
+    expect(await offlineRepo.getLang(userId), 'sl');
   });
 
   test('notificationSettings returns defaults on an empty profile', () async {

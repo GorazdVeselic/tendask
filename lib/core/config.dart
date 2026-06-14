@@ -72,6 +72,12 @@ const kPushDebounce = Duration(seconds: 2);
 /// reschedules OS notifications after this delay, coalescing rapid edits.
 const kReminderDebounce = Duration(milliseconds: 800);
 
+/// Grace window a first local profile write gives the initial pull to land the
+/// cloud profile, so the write merges (UPDATE) instead of inserting a partial
+/// row that clobbers the cloud on LWW push. Only waited when a real session
+/// exists AND the device is online; a guest / offline write proceeds at once.
+const kProfilePullGrace = Duration(seconds: 3);
+
 /// Default reminder offset (minutes before the task) prefilled when adding a new
 /// reminder. 1440 = one day before. User-overridable in notification settings.
 const kDefaultReminderOffset = 1440;

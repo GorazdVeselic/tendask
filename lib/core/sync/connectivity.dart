@@ -10,6 +10,12 @@ part 'connectivity.g.dart';
 bool _isOnline(List<ConnectivityResult> results) =>
     results.any((r) => r != ConnectivityResult.none);
 
+/// One-shot online check (no stream) — for code paths that need the current
+/// status once, e.g. deciding whether to wait for the first pull before a
+/// profile write. Same interface-presence caveat as [onlineStatus].
+Future<bool> checkOnline() async =>
+    _isOnline(await Connectivity().checkConnectivity());
+
 /// Emits the device's online/offline status, de-duplicated so an unchanged
 /// state never triggers a needless rebuild/flush. keepAlive: the sync service
 /// listens for the whole app lifetime.
