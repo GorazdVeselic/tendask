@@ -2,7 +2,14 @@ import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r2, r3 } from './rules.ts';
 import { kDefaultEngine, kDefaultFrost, kDefaultThresholds } from './config.ts';
-import type { EngineConfig, TaskRow, TaskSubjectRef, TaskTypeMeta, UserBundle } from './types.ts';
+import type {
+  EngineConfig,
+  PlantTaskRule,
+  TaskRow,
+  TaskSubjectRef,
+  TaskTypeMeta,
+  UserBundle,
+} from './types.ts';
 
 const kCfg: EngineConfig = {
   engine: kDefaultEngine,
@@ -95,7 +102,7 @@ function signalsOf(b: UserBundle, payload: unknown = null) {
 
 Deno.test('R3: 10 days overdue without weather scores 1.0 (below threshold)', () => {
   const b = bundle([done('treat', '2026-05-26')]); // 17 days ago, default cadence 7
-  const c = r3(b, signalsOf(b), kTaskTypes, kCfg);
+  const c = r3(b, [], signalsOf(b), kTaskTypes, kCfg);
   assertEquals(c.length, 1);
   assertEquals(c[0].score, 1.0); // min(10*0.1, 2.0)
   assertEquals(c[0].messageParams.days_overdue, 10);
@@ -106,7 +113,7 @@ Deno.test('R3: 10 days overdue without weather scores 1.0 (below threshold)', ()
 
 Deno.test('R3: a dry window adds the weather bonus (3.0)', () => {
   const b = bundle([done('treat', '2026-05-26')]);
-  const c = r3(b, signalsOf(b, dryPayload()), kTaskTypes, kCfg);
+  const c = r3(b, [], signalsOf(b, dryPayload()), kTaskTypes, kCfg);
   assertEquals(c.length, 1);
   assertEquals(c[0].score, 3.0); // 1.0 + score_weather_window 2.0
 });
@@ -115,7 +122,7 @@ Deno.test('R3: mow gets the +1.0 boost past 4 days overdue', () => {
   const b = bundle([done('mow', '2026-05-23', [{ user_plant_id: null, area_id: 'a1' }])], {
     areas: [{ id: 'a1', name: 'Lawn', type: 'lawn', protected: false }],
   });
-  const c = r3(b, signalsOf(b), kTaskTypes, kCfg); // 20 days ago, cadence 10 → overdue 10
+  const c = r3(b, [], signalsOf(b), kTaskTypes, kCfg); // 20 days ago, cadence 10 → overdue 10
   assertEquals(c.length, 1);
   assertEquals(c[0].score, 2.0); // min(1.0,2.0)=1.0 + mow_boost 1.0
   assertEquals(c[0].areaId, 'a1');
@@ -134,14 +141,14 @@ Deno.test('R3: a protected subject gets no dry-window bonus (stays 1.0)', () => 
       category: 'vegetable',
     }],
   });
-  const c = r3(b, signalsOf(b, dryPayload()), kTaskTypes, kCfg);
+  const c = r3(b, [], signalsOf(b, dryPayload()), kTaskTypes, kCfg);
   assertEquals(c.length, 1);
   assertEquals(c[0].score, 1.0); // dry window suppressed under cover
 });
 
 Deno.test('R3: not overdue until days > cadence × 1.25', () => {
   const b = bundle([done('treat', '2026-06-04')]); // 8 days ago, cadence 7 → 8 ≤ 8.75
-  assertEquals(r3(b, signalsOf(b), kTaskTypes, kCfg).length, 0);
+  assertEquals(r3(b, [], signalsOf(b), kTaskTypes, kCfg).length, 0);
 });
 
 // ---------- R2 (anniversary) ----------
@@ -170,4 +177,68 @@ Deno.test('R2: dry window on a weather-sensitive seasonal type lifts it to 3.0',
   const c = r2(b, signalsOf(b, dryPayload()), kTaskTypes, kCfg);
   assertEquals(c.length, 1);
   assertEquals(c[0].score, 3.0); // anniversary 1.0 + dry window 2.0
+});
+
+// ---------- R1 (weather window, inline reinforcement) ----------
+
+function windyDryPayload(): Record<string, unknown> {
+  const p = dryPayload();
+  // deno-lint-ignore no-explicit-any
+  (p.hourly as any).wind_speed_10m = Array.from({ length: 24 * 6 }, () => 20);
+  return p;
+}
+
+Deno.test('R1: a dry window stamps the dry_window param on the source candidate', () => {
+  const b = bundle([done('treat', '2026-05-26')]);
+  const c = r3(b, [], signalsOf(b, dryPayload()), kTaskTypes, kCfg);
+  assertEquals(c[0].messageKey, 'suggestions.cadence.overdue'); // keeps source key
+  assertEquals(c[0].messageParams.dry_window, true);
+  assertEquals(c[0].messageParams.dry_hours, 48);
+});
+
+Deno.test('R1: treat loses the dry bonus when wind ≥ 15 (spray drift)', () => {
+  const b = bundle([done('treat', '2026-05-26')]);
+  const c = r3(b, [], signalsOf(b, windyDryPayload()), kTaskTypes, kCfg);
+  assertEquals(c[0].score, 1.0); // overdue only; windy → no spray window
+  assertEquals('dry_window' in c[0].messageParams, false);
+});
+
+// ---------- R3 cadence_only season gate + weather_guard ----------
+
+const kLawnSubj: TaskSubjectRef[] = [{ user_plant_id: null, area_id: 'a1' }];
+
+function lawnBundle(tasks: TaskRow[]): UserBundle {
+  return bundle(tasks, { areas: [{ id: 'a1', name: 'Lawn', type: 'lawn', protected: false }] });
+}
+
+const kMowRule: PlantTaskRule = {
+  id: 'lawn.mow',
+  scope: 'category',
+  ref_id: 'lawn',
+  task_type_id: 'mow',
+  timing_anchor: 'cadence_only',
+  window: {
+    min_days_since_last: 5,
+    max_days_since_last: 10,
+    season_start_week: 12,
+    season_end_week: 46,
+  },
+  frost_gate: false,
+  weather_guard: 'dry12h',
+  message_key: 'suggestions.lawn.mow_due',
+};
+
+Deno.test('R3: cadence rule in season carries its weather_guard', () => {
+  const b = lawnBundle([done('mow', '2026-05-23', kLawnSubj)]); // 20 days, cadence 10
+  const c = r3(b, [kMowRule], signalsOf(b), kTaskTypes, kCfg); // June → week 24 ∈ 12–46
+  assertEquals(c.length, 1);
+  assertEquals(c[0].weatherGuard, 'dry12h');
+  assertEquals(c[0].areaId, 'a1');
+});
+
+Deno.test('R3: cadence rule out of its season is skipped', () => {
+  const dec = new Date('2026-12-15T12:00:00Z'); // week 51 > 46
+  const b = lawnBundle([done('mow', '2026-11-20', kLawnSubj)]); // overdue, but off-season
+  const c = r3(b, [kMowRule], buildSignals(b, kTaskTypes, null, kCfg, dec), kTaskTypes, kCfg);
+  assertEquals(c.length, 0);
 });

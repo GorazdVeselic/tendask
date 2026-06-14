@@ -13,7 +13,7 @@ import type {
   UserBundle,
 } from './types.ts';
 import type { EligibilitySignals, Signals } from './signals.ts';
-import { isDryWindow, splitSubjectKey, subjectLabelParams } from './candidate.ts';
+import { dryWindowBonus, splitSubjectKey, subjectLabelParams } from './candidate.ts';
 import { addDaysStr, dayDiff, doyToDateStr, isoWeek, isoWeekMonday } from './dates.ts';
 
 export interface ResolvedWindow {
@@ -43,6 +43,33 @@ function baselineWeeks(cfg: EngineConfig, year: number): { spring: number; autum
   };
 }
 
+/** Regionalise an ISO-week window (month_window + cadence_only season gates).
+ * Shifts spring/autumn windows by the user's frost week (clamped ±4); returns
+ * null when the window cannot apply (southern hemisphere — the 26-week shift
+ * exceeds the clamp, 07 §7.3, decision S2). */
+export function regionalizedWeekWindow(
+  startWeek: number,
+  endWeek: number,
+  regionalize: string | undefined,
+  climate: ClimateSignals,
+  cfg: EngineConfig,
+  year: number,
+): { start: string; end: string } | null {
+  if (climate.hemisphereSouth) return null;
+  const reg = regionalize ?? deriveReg(startWeek);
+  const base = baselineWeeks(cfg, year);
+  let delta = 0;
+  if (reg === 'spring') {
+    delta = clamp((climate.lastFrostWeek ?? base.spring) - base.spring, -4, 4);
+  } else if (reg === 'autumn') {
+    delta = clamp((climate.firstFrostWeek ?? base.autumn) - base.autumn, -4, 4);
+  }
+  return {
+    start: isoWeekMonday(year, startWeek + delta),
+    end: addDaysStr(isoWeekMonday(year, endWeek + delta), 6), // Sunday of the end week
+  };
+}
+
 /** Resolve a rule's window to concrete dates for the given climate + year.
  * month_window regionalises by frost week (clamped ±4); frost_offset anchors to a
  * local frost date. Returns null bounds when the rule must be skipped. */
@@ -54,24 +81,16 @@ export function resolveWindow(
 ): ResolvedWindow {
   const w = rule.window;
   if (rule.timing_anchor === 'month_window') {
-    // ISO-week windows are northern-calendar; a ±4-week clamp can't bridge the
-    // 26-week southern shift, so skip (07 §7.3, decision S2).
-    if (climate.hemisphereSouth) return { start: null, end: null, anchor: null };
-    const startWeek = Number(w.start_week);
-    const endWeek = Number(w.end_week);
-    const reg = (w.regionalize as string | undefined) ?? deriveReg(startWeek);
-    const base = baselineWeeks(cfg, year);
-    let delta = 0;
-    if (reg === 'spring') {
-      delta = clamp((climate.lastFrostWeek ?? base.spring) - base.spring, -4, 4);
-    } else if (reg === 'autumn') {
-      delta = clamp((climate.firstFrostWeek ?? base.autumn) - base.autumn, -4, 4);
-    }
-    return {
-      start: isoWeekMonday(year, startWeek + delta),
-      end: addDaysStr(isoWeekMonday(year, endWeek + delta), 6), // Sunday of the end week
-      anchor: null,
-    };
+    const win = regionalizedWeekWindow(
+      Number(w.start_week),
+      Number(w.end_week),
+      w.regionalize as string | undefined,
+      climate,
+      cfg,
+      year,
+    );
+    if (win == null) return { start: null, end: null, anchor: null };
+    return { start: win.start, end: win.end, anchor: null };
   }
   if (rule.timing_anchor === 'frost_offset') {
     const anchor = w.anchor as string;
@@ -159,12 +178,18 @@ export function r5(
       // task done before the gate still counts as done in the window (03 §R5).
       const lastDone = history.lastDone(subjectKey, rule.task_type_id);
       if (lastDone != null && lastDone >= windowOpen) continue;
-      const dry = type?.weather_sensitive && !eligibility.isProtectedSubject(subjectKey) &&
-        isDryWindow(weather, cfg.weatherThresholds);
+      const dry = dryWindowBonus(
+        weather,
+        cfg.weatherThresholds,
+        rule.task_type_id,
+        type?.weather_sensitive ?? false,
+        eligibility.isProtectedSubject(subjectKey),
+        k.score_weather_window,
+      );
       const anniversary = history.lastDoneYearAgo(subjectKey, rule.task_type_id) != null;
       const score = base +
         (localToday >= closingStart ? k.score_window_closing : 0) +
-        (dry ? k.score_weather_window : 0) +
+        (dry?.score ?? 0) +
         (anniversary ? k.score_anniversary : 0);
       const suggestedDate = start > addDaysStr(localToday, 1) ? start : addDaysStr(localToday, 1);
       out.push({
@@ -179,6 +204,7 @@ export function r5(
           task_type_id: rule.task_type_id,
           window_end_date: win.end,
           ...frostParam,
+          ...(dry?.params ?? {}),
           suggested_date: suggestedDate,
         },
         score,

@@ -107,7 +107,7 @@ override semantika) in R7 (veriga growth_stage). R1 ojačitve (+score) za oba.
 - **Odvisnosti:** M11.8, M11.4 · **Kompleksnost:** XL
 - **Commit:** `feat(engine): pravili R5 (sezonska okna, frost-anchor) in R7 (veriga sadik)`
 
-### M11.11 — Pravilo R1 + R4 + rangiranje/kapica `[ ]`
+### M11.11 — Pravilo R1 + R4 + rangiranje/kapica `[x]`
 `03`: R1 (vremensko okno nad R3/R5 potrebo), R4 obogatitev (za kSuppliesEnabled flip),
 dedup med kandidati, rank, band_max_active, housekeeping (expired, dismissed→log).
 - **DoD:** Deno testi celega cevovoda (3 scenariji iz `03` §Cevovod: dež → R1 nič; suho+zamuda

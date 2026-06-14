@@ -7,11 +7,12 @@ import { createClient } from '@supabase/supabase-js';
 import { cellToLatLng } from 'h3-js';
 import { loadAppConfig } from './config.ts';
 import { loadRules, loadTaskTypes, loadUserBundle } from './bundle.ts';
-import { buildSignals, type Signals } from './signals.ts';
+import { buildClimateSignals, buildSignals, type Signals } from './signals.ts';
 import { debugGuardCodes } from './guards.ts';
 import { r2, r3 } from './rules.ts';
 import { r5, r7 } from './rules_agro.ts';
-import { applyGuards, dedupAndRank, emit } from './pipeline.ts';
+import { applyGuards, dedupAndRank, emit, enrichR4 } from './pipeline.ts';
+import { housekeep } from './housekeep.ts';
 import { fetchOpenMeteoWithRetry } from './weather.ts';
 import { localDateStr, safeTimeZone } from './dates.ts';
 import type { EngineConfig } from './types.ts';
@@ -122,17 +123,23 @@ Deno.serve(async (req) => {
           continue;
         }
         const cacheDay = localDateStr(nowUtc, safeTimeZone(bundle.profile.timezone));
+        // Housekeeping (03 §Cevovod 2) runs before signals so a just-dismissed
+        // suggestion's mute is reflected in this run's guards.
+        const climate = buildClimateSignals(bundle.profile, cfg, cacheDay);
+        await housekeep(db, bundle, cacheDay, nowUtc, climate, rules, cfg);
         const weatherPayload = await cellWeather(db, bundle.profile.h3_r7, cacheDay, weatherMemo);
         const signals = buildSignals(bundle, taskTypes, weatherPayload, cfg, nowUtc);
-        // R1 + R4 enrichment join here in M11.11. Order per 03 §Cevovod 4.
+        // Order per 03 §Cevovod 4; R1 is folded into R3/R5 (inline dry-window
+        // bonus), R4 enriches survivors after the guards.
         const candidates = [
           ...r5(bundle, rules, signals, taskTypes, cfg),
           ...r7(bundle, rules, signals, cfg),
-          ...r3(bundle, signals, taskTypes, cfg),
+          ...r3(bundle, rules, signals, taskTypes, cfg),
           ...r2(bundle, signals, taskTypes, cfg),
         ];
         const guarded = applyGuards(candidates, signals, cfg, nowUtc);
-        const ranked = dedupAndRank(guarded, cfg);
+        const enriched = enrichR4(guarded, signals.inventory, cfg);
+        const ranked = dedupAndRank(enriched, cfg);
         const emitted = await emit(db, bundle, ranked, nowUtc);
         const runUp = await db.from('engine_run')
           .upsert({ user_id: userId, last_run_date: signals.localToday });

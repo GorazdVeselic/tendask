@@ -1,7 +1,7 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r2, r3 } from './rules.ts';
-import { applyGuards, dedupAndRank, emit } from './pipeline.ts';
+import { applyGuards, dedupAndRank, emit, enrichR4 } from './pipeline.ts';
 import { kDefaultEngine, kDefaultFrost, kDefaultThresholds } from './config.ts';
 import type {
   Candidate,
@@ -91,7 +91,7 @@ function dryPayload(): Record<string, unknown> {
 function overdueDry(overrides: Partial<UserBundle> = {}) {
   const b = bundle([done('treat', '2026-05-26')], overrides);
   const signals = buildSignals(b, kTaskTypes, dryPayload(), kCfg, kNow);
-  const candidates = [...r3(b, signals, kTaskTypes, kCfg), ...r2(b, signals, kTaskTypes, kCfg)];
+  const candidates = [...r3(b, [], signals, kTaskTypes, kCfg), ...r2(b, signals, kTaskTypes, kCfg)];
   return { b, signals, candidates };
 }
 
@@ -105,7 +105,7 @@ function guardedCount(overrides: Partial<UserBundle> = {}): number {
 Deno.test('guard h: 10 days overdue without weather is dropped (1.0 < 2.0)', () => {
   const b = bundle([done('treat', '2026-05-26')]);
   const signals = buildSignals(b, kTaskTypes, null, kCfg, kNow);
-  const candidates = r3(b, signals, kTaskTypes, kCfg);
+  const candidates = r3(b, [], signals, kTaskTypes, kCfg);
   assertEquals(candidates.length, 1); // produced…
   assertEquals(applyGuards(candidates, signals, kCfg, kNow).length, 0); // …but dropped
 });
@@ -225,6 +225,64 @@ Deno.test('determinism: identical input twice yields identical ranking', () => {
     return dedupAndRank(applyGuards(candidates, signals, kCfg, kNow), kCfg);
   };
   assertEquals(JSON.stringify(run()), JSON.stringify(run()));
+});
+
+// ---------- full pipeline scenarios (docs/m11/03 §Cevovod) ----------
+
+function wetPayload(): Record<string, unknown> {
+  const p = dryPayload();
+  // deno-lint-ignore no-explicit-any
+  (p.hourly as any).precipitation = Array.from({ length: 24 * 6 }, () => 1);
+  return p;
+}
+
+function runPipeline(b: UserBundle, payload: unknown): Candidate[] {
+  const signals = buildSignals(b, kTaskTypes, payload, kCfg, kNow);
+  const candidates = [...r3(b, [], signals, kTaskTypes, kCfg), ...r2(b, signals, kTaskTypes, kCfg)];
+  const guarded = applyGuards(candidates, signals, kCfg, kNow);
+  return dedupAndRank(enrichR4(guarded, signals.inventory, kCfg), kCfg);
+}
+
+Deno.test('scenario: rain over an overdue treat emits nothing (R1 absent)', () => {
+  const b = bundle([done('treat', '2026-05-26')]); // overdue 10 → 1.0 alone, < 2.0
+  assertEquals(runPipeline(b, wetPayload()).length, 0);
+});
+
+Deno.test('scenario: dry + overdue treat emits one card at 4.0', () => {
+  const b = bundle([done('treat', '2026-05-16')]); // overdue 20 → 2.0 + dry 2.0
+  const ranked = runPipeline(b, dryPayload());
+  assertEquals(ranked.length, 1);
+  assertEquals(ranked[0].score, 4.0);
+  assertEquals(ranked[0].messageParams.dry_window, true);
+});
+
+Deno.test('scenario: five overdue+dry subjects collapse to the top 3', () => {
+  const plants = Array.from({ length: 5 }, (_, i) => ({
+    id: 'q' + i,
+    area_id: null,
+    plant_id: 'tomato',
+    custom_name: null,
+    personal_alias: null,
+    is_custom: false,
+    category: 'vegetable',
+  }));
+  const tasks = plants.map((p) => ({
+    ...done('treat', '2026-05-16'),
+    subjects: [{ user_plant_id: p.id, area_id: null }],
+  }));
+  const ranked = runPipeline(bundle(tasks, { plants }), dryPayload());
+  assertEquals(ranked.length, 3); // band_max_active
+});
+
+Deno.test('R4: a low supply bumps the score and adds the supply params', () => {
+  const b = bundle([{ ...done('treat', '2026-05-16'), supplyIds: ['s1'] }], {
+    supplies: [{ id: 's1', name: 'Copper spray', quantity: 0, low_threshold: 1 }],
+  });
+  const ranked = runPipeline(b, dryPayload());
+  assertEquals(ranked.length, 1);
+  assertEquals(ranked[0].score, 4.5); // 4.0 + low supply 0.5
+  assertEquals(ranked[0].messageParams.low_supply, true);
+  assertEquals(ranked[0].messageParams.supply_name, 'Copper spray');
 });
 
 // ---------- emit (step 8) ----------

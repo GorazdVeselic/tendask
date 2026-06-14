@@ -6,8 +6,16 @@ import type { Candidate, UserBundle, WeatherSignals, WeatherThresholds } from '.
 
 /** Cooldown/dismiss granularity (docs/m11/03 §Guard key): the concrete agronomy
  * rule id for R5/R7, else '<ruleId>:<taskTypeId>' for R1–R3/R6. */
+export function guardKey(
+  plantTaskRuleId: string | null,
+  ruleId: string,
+  taskTypeId: string,
+): string {
+  return plantTaskRuleId ?? `${ruleId}:${taskTypeId}`;
+}
+
 export function guardKeyOf(c: Candidate): string {
-  return c.plantTaskRuleId ?? `${c.ruleId}:${c.taskTypeId}`;
+  return guardKey(c.plantTaskRuleId, c.ruleId, c.taskTypeId);
 }
 
 /** 'up:<id>'/'ar:<id>' → the suggestion row's user_plant_id/area_id columns. */
@@ -41,13 +49,45 @@ export function subjectLabelParams(
 }
 
 /** R1's core condition (docs/m11/03 §R1 SPROŽILEC): a dry forecast window over a
- * recently-dry surface. The history rules add a weather bonus when it holds;
- * R1's own candidate (with wind handling for treat) lands in M11.11. */
+ * recently-dry surface. For `treat` (spraying) it additionally needs low wind +
+ * no rain forecast 24h — drift resistance, which the generic window can't see. */
 export function isDryWindow(
   weather: WeatherSignals | null,
   t: WeatherThresholds,
+  taskTypeId?: string,
 ): boolean {
-  return weather != null &&
-    weather.forecastDryHours >= t.dry_hours_min &&
-    weather.recentRainMm24h != null && weather.recentRainMm24h < t.recent_rain_wet_mm;
+  if (weather == null) return false;
+  if (weather.forecastDryHours < t.dry_hours_min) return false;
+  if (weather.recentRainMm24h == null || weather.recentRainMm24h >= t.recent_rain_wet_mm) {
+    return false;
+  }
+  if (taskTypeId === 'treat') {
+    if (weather.windSpeedKmh == null || weather.windSpeedKmh >= t.wind_treat_kmh) return false;
+    if (weather.forecastRainMm24h == null || weather.forecastRainMm24h >= t.rain_24h_mm) {
+      return false;
+    }
+  }
+  return true;
+}
+
+/** R1 reinforcement (docs/m11/03 §R1): a weather-sensitive, unprotected subject in
+ * a dry forecast window earns the weather-window score plus the params the client
+ * shows ("jutri kaže suho"). Returns null when no window applies — the history/
+ * season rule keeps its own message_key and just gains the bonus (R1 never emits a
+ * standalone card here; it only ojača R3/R5 need). */
+export function dryWindowBonus(
+  weather: WeatherSignals | null,
+  t: WeatherThresholds,
+  taskTypeId: string,
+  weatherSensitive: boolean,
+  protectedSubject: boolean,
+  scoreWeatherWindow: number,
+): { score: number; params: Record<string, unknown> } | null {
+  if (!weatherSensitive || protectedSubject) return null;
+  if (!isDryWindow(weather, t, taskTypeId)) return null;
+  // weather is non-null: isDryWindow returned true.
+  return {
+    score: scoreWeatherWindow,
+    params: { dry_window: true, dry_hours: weather!.forecastDryHours },
+  };
 }

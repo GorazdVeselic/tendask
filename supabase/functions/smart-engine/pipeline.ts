@@ -1,15 +1,44 @@
-// Shared candidate pipeline (docs/m11/03 §Cevovod steps 5–8): guards → dedup →
-// rank → emit. Rules feed candidates in; this writes the surviving ones to
-// `suggestion` and stamps `suggestion_log`. R4 enrichment + housekeeping
-// (expired/dismissed→log/retention) layer on in M11.11.
+// Shared candidate pipeline (docs/m11/03 §Cevovod steps 5–8): guards → R4 enrich
+// → dedup → rank → emit. Rules feed candidates in; this writes the surviving ones
+// to `suggestion` and stamps `suggestion_log`. Housekeeping (expired/dismissed→
+// log/retention) runs before signals — see housekeep.ts.
 // deno-lint-ignore-file no-explicit-any
 import type { Candidate, EngineConfig, UserBundle } from './types.ts';
-import type { Signals } from './signals.ts';
+import type { InventorySignals, Signals } from './signals.ts';
 import { guardKeyOf } from './candidate.ts';
 import { evaluateWeatherGuard } from './guards.ts';
 import { dayDiff } from './dates.ts';
 
 const kCooldownDoneMinDays = 3; // docs/m11/03 §Cevovod 5d
+
+// Task types that consume a supply — R4 piggybacks a low-stock nudge onto these
+// (docs/m11/03 §R4). Inert until the client enables supplies (no supply rows →
+// no enrichment), so the engine always computes it; the client hides the param.
+const kSupplyTaskTypes = new Set(
+  ['fertilize', 'treat', 'lawn_weed_moss', 'lime', 'overseed', 'topdress'],
+);
+
+/** R4 — low-supply enrichment (docs/m11/03 §R4). Never emits a standalone card:
+ * for a surviving candidate whose type consumes a supply that is now low, bumps
+ * the score and adds the supply name params. */
+export function enrichR4(
+  candidates: Candidate[],
+  inventory: InventorySignals,
+  cfg: EngineConfig,
+): Candidate[] {
+  const bonus = cfg.engine.score_low_supply;
+  return candidates.map((c) => {
+    if (!kSupplyTaskTypes.has(c.taskTypeId)) return c;
+    const low = inventory.suppliesForTaskType(c.taskTypeId)
+      .find((s) => !inventory.hasSupply(s.id));
+    if (!low) return c;
+    return {
+      ...c,
+      score: c.score + bonus,
+      messageParams: { ...c.messageParams, supply_name: low.name, low_supply: true },
+    };
+  });
+}
 
 /** Steps 5a–5h, fail-fast per candidate. Cooldown/dismiss state is keyed by the
  * fine-grained guard key (docs/m11/03 §Guard key). */
