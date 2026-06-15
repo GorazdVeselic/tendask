@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>23 · Pretekli predlogi</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ====== postavitev strani (dokumentacijski pogled) ====== */
+  .page { max-width:1500px; margin:0 auto; padding:40px 24px 80px; }
+  .page > header { text-align:center; margin-bottom:8px; }
+  .page > header h1 { font-size:26px; font-weight:700; letter-spacing:-.4px; }
+  .page > header p { font-size:14px; color:var(--muted); margin-top:8px; line-height:1.6; max-width:680px; margin-left:auto; margin-right:auto; }
+  .badge { display:inline-block; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px;
+    background:var(--accent-soft); color:var(--accent); padding:4px 10px; border-radius:999px; margin-bottom:14px; }
+
+  .flow { display:flex; flex-wrap:wrap; gap:48px; justify-content:center; align-items:flex-start; margin-top:34px; }
+  .frame { text-align:center; }
+  .frame .cap { margin-top:14px; font-size:14px; font-weight:600; color:var(--text); }
+  .frame .cap small { display:block; color:var(--muted); font-weight:500; margin-top:3px; max-width:360px; }
+  .step-no { display:inline-grid; place-items:center; width:22px; height:22px; border-radius:50%;
+    background:var(--accent); color:#fff; font-size:12px; font-weight:700; margin-right:6px; vertical-align:middle; }
+
+  /* ====== status čipi ====== */
+  .status { display:inline-block; font-size:11px; font-weight:700; padding:3px 9px; border-radius:999px; white-space:nowrap; }
+  .status.planned   { background:var(--accent-soft); color:var(--accent); }
+  .status.logged    { background:#dff0e2; color:var(--accent-900); }
+  .status.dismissed { background:#eef0ee; color:var(--muted); }
+  .status.muted     { background:#eef0ee; color:var(--muted); }
+  .status.missed    { background:var(--warn-soft); color:var(--warn); }
+  .list-item.tappable { cursor:pointer; }
+  .list-item.tappable .li-trail { color:var(--accent); font-weight:600; }
+
+  .hint { font-size:12.5px; color:var(--muted); line-height:1.55; padding:12px 4px 4px; }
+  .hint.top { padding-top:6px; }
+
+  /* ====== glava pasu predlogov na Domovu (NOVO v M11.13b) ====== */
+  .band-head { display:flex; align-items:center; justify-content:space-between; margin:6px 2px 8px; }
+  .band-head .bh-title { font-size:13px; font-weight:700; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); }
+  .band-head .bh-link { font-size:13px; font-weight:600; color:var(--accent); display:flex; align-items:center; gap:3px; }
+  .sug-card { background:var(--surface); border:1px solid var(--line); border-radius:var(--radius); padding:14px 14px 8px; box-shadow:0 1px 2px rgba(20,40,30,.04); }
+  .sug-card .sc-row { display:flex; gap:12px; }
+  .sug-card .sc-ico { font-size:22px; line-height:1; margin-top:2px; }
+  .sug-card .sc-title { font-size:15px; font-weight:700; }
+  .sug-card .sc-body { font-size:13px; color:var(--muted); margin-top:2px; line-height:1.4; }
+  .sug-card .sc-actions { display:flex; justify-content:space-between; align-items:center; margin-top:10px; }
+
+  /* ====== legenda + opombe ====== */
+  .notes { max-width:760px; margin:56px auto 0; }
+  .notes h2 { font-size:16px; font-weight:700; margin-bottom:14px; padding-bottom:8px; border-bottom:2px solid var(--accent); }
+  .legend { display:grid; grid-template-columns:repeat(auto-fill,minmax(220px,1fr)); gap:10px 18px; margin-bottom:30px; }
+  .legend .row { display:flex; align-items:center; gap:10px; font-size:13px; color:var(--text); }
+  .legend .row .desc { color:var(--muted); }
+  .notes ul { list-style:none; }
+  .notes li { position:relative; font-size:13.5px; line-height:1.6; color:var(--text); padding-left:20px; margin-bottom:9px; }
+  .notes li::before { content:"›"; position:absolute; left:4px; color:var(--accent); font-weight:700; }
+  .notes code { background:#eef0ee; border-radius:5px; padding:1px 6px; font-size:12px; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <header>
+    <div class="badge">M11.13b · pametni predlogi</div>
+    <h1>23 · Pretekli predlogi</h1>
+    <p>Bralna revizijska časovnica: kaj je Tendask predlagal in kako se je uporabnik odzval.
+       Krepi razložljivost (»zakaj sem to dobil«). <b>Ni center obvestil</b> — dom predlogov ostaja
+       pas na Domovu (koncept §7.12). Brez akcij za nazaj v MVP (samo branje).</p>
+  </header>
+
+  <div class="flow">
+
+    <!-- ============ ① VSTOPA ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <div><h1>Dober dan 🌿</h1><div class="sub">torek, 1. junij</div></div>
+          <div class="icon-btn">⚙️</div>
+        </div>
+        <div class="content">
+          <!-- Pas pametnih predlogov + NOVA glava z »Zgodovina ›« linkom -->
+          <div class="band-head">
+            <span class="bh-title">Predlogi zate</span>
+            <span class="bh-link">Zgodovina ›</span>
+          </div>
+          <div class="sug-card">
+            <div class="sc-row">
+              <span class="sc-ico">🌾</span>
+              <div>
+                <div class="sc-title">Čas za košnjo</div>
+                <div class="sc-body">Trata — okoli 18. maja, ~14-dnevni ritem.</div>
+              </div>
+            </div>
+            <div class="sc-actions">
+              <span class="pill ghost">Opusti</span>
+              <span class="pill">Načrtuj</span>
+            </div>
+          </div>
+          <p class="hint">Predlogi so splošno vodilo — vrt poznaš najbolje.</p>
+
+          <div class="section-title">Danes</div>
+          <div class="card" style="padding:6px 16px;">
+            <div class="list-item">
+              <div class="li-check"></div>
+              <div class="li-main"><div class="li-title">Pokositi trato</div><div class="li-sub">🌱 Trata zadaj · opomnik 7:00</div></div>
+              <div class="li-trail">🔔</div>
+            </div>
+          </div>
+
+          <!-- Vedno-deluje vstop: vrstica v Nastavitvah -->
+          <div class="section-title">… ali iz Nastavitev</div>
+          <div class="card" style="padding:6px 16px;">
+            <div class="list-item">
+              <div class="avatar">💡</div>
+              <div class="li-main"><div class="li-title">Pretekli predlogi</div><div class="li-sub">kaj je bilo predlagano + tvoj odziv</div></div>
+              <div class="li-trail">›</div>
+            </div>
+          </div>
+        </div>
+        <nav class="bottomnav">
+          <div class="nav-item active"><span class="ico">🏠</span>Domov</div>
+          <div class="nav-item"><span class="ico">📋</span>Opravila</div>
+          <div class="nav-item"><span class="ico">📅</span>Dnevnik</div>
+          <div class="nav-item"><span class="ico">🪴</span>Vrt</div>
+        </nav>
+      </div>
+      <div class="cap"><span class="step-no">1</span>Vstopa
+        <small>»Zgodovina ›« na glavi pasu (NOVO) · vrstica v Nastavitvah — deluje tudi ob praznem pasu</small></div>
+    </div>
+
+    <!-- ============ ② CILJNI ZASLON (polno) ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <span class="back">‹ Nazaj</span>
+          <h1 style="font-size:20px;">Pretekli predlogi</h1>
+          <span style="width:48px;"></span>
+        </div>
+        <div class="content" style="padding-bottom:24px;">
+          <p class="hint top">Kaj ti je Tendask predlagal in kako si se odzval. Samo za vpogled.</p>
+
+          <div class="day-group">
+            <div class="day-head">danes · 15. jun. 2026</div>
+            <div class="list-item tappable">
+              <div class="avatar">🌾</div>
+              <div class="li-main"><div class="li-title">Čas za košnjo</div><div class="li-sub">🌱 Trata zadaj</div></div>
+              <div class="li-trail"><span class="status planned">Načrtovano ›</span></div>
+            </div>
+            <div class="list-item">
+              <div class="avatar">💧</div>
+              <div class="li-main"><div class="li-title">Zalivanje paradižnika</div><div class="li-sub">🍅 Gredica ob hiši</div></div>
+              <div class="li-trail"><span class="status dismissed">Opuščeno</span></div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head">12. jun. 2026</div>
+            <div class="list-item tappable">
+              <div class="avatar">🌿</div>
+              <div class="li-main"><div class="li-title">Foliarno škropljenje</div><div class="li-sub">🌳 Lovorikovec</div></div>
+              <div class="li-trail"><span class="status logged">Zabeleženo ›</span></div>
+            </div>
+            <div class="list-item">
+              <div class="avatar">🧪</div>
+              <div class="li-main"><div class="li-title">Gnojenje paradižnika</div><div class="li-sub">🍅 Gredica ob hiši</div></div>
+              <div class="li-trail"><span class="status muted">Utišano</span></div>
+            </div>
+          </div>
+
+          <div class="day-group">
+            <div class="day-head">5. jun. 2026</div>
+            <div class="list-item">
+              <div class="avatar">🌱</div>
+              <div class="li-main"><div class="li-title">Setev solate</div><div class="li-sub">🪴 Visoka greda 1</div></div>
+              <div class="li-trail"><span class="status missed">Zamujeno</span></div>
+            </div>
+          </div>
+
+          <p class="hint">Predloge starejše od enega leta samodejno počistimo.</p>
+        </div>
+      </div>
+      <div class="cap"><span class="step-no">2</span>Pretekli predlogi
+        <small>časovnica po dnevu odziva (najnovejše zgoraj) · tap »Načrtovano«/»Zabeleženo« → detajl opravila</small></div>
+    </div>
+
+    <!-- ============ ③ PRAZNO STANJE ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <span class="back">‹ Nazaj</span>
+          <h1 style="font-size:20px;">Pretekli predlogi</h1>
+          <span style="width:48px;"></span>
+        </div>
+        <div class="content" style="display:flex; align-items:center; justify-content:center;">
+          <div class="empty">
+            <div class="ico">💡</div>
+            <p><b style="color:var(--text);">Še ni zgodovine</b><br>
+               Ko se odzoveš na predlog (načrtuješ, opustiš ali zabeležiš),
+               se zapis pojavi tukaj.</p>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><span class="step-no">3</span>Prazno stanje
+        <small>brez terminalnih vrstic → centriran <code style="font-size:11px;">EmptyState</code></small></div>
+    </div>
+
+    <!-- ============ ④ ROBNA STANJA (nalaganje + napaka) ============ -->
+    <div class="frame">
+      <div class="phone">
+        <div class="phone__notch"></div>
+        <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+        <div class="appbar">
+          <span class="back">‹ Nazaj</span>
+          <h1 style="font-size:20px;">Pretekli predlogi</h1>
+          <span style="width:48px;"></span>
+        </div>
+        <div class="content" style="padding-bottom:24px;">
+          <!-- Nalaganje: skeleton vrstice (drift stream še ni resolviran) -->
+          <div class="section-title" style="opacity:.5;">Nalaganje …</div>
+          <div class="card" style="padding:6px 16px;">
+            <div class="list-item">
+              <div class="avatar" style="background:#eef0ee;"></div>
+              <div class="li-main">
+                <div style="height:11px;width:60%;background:#e7eae7;border-radius:6px;"></div>
+                <div style="height:9px;width:40%;background:#eef0ee;border-radius:6px;margin-top:8px;"></div>
+              </div>
+            </div>
+            <div class="list-item">
+              <div class="avatar" style="background:#eef0ee;"></div>
+              <div class="li-main">
+                <div style="height:11px;width:52%;background:#e7eae7;border-radius:6px;"></div>
+                <div style="height:9px;width:34%;background:#eef0ee;border-radius:6px;margin-top:8px;"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Napaka: lokalni DB read fail = miren indikator, ne tiho požiranje -->
+          <div class="section-title">Ob napaki branja</div>
+          <div class="card" style="background:#faf3f1;border-color:#f0d9d3;">
+            <div style="font-size:13px;color:#9a4a39;line-height:1.5;">
+              Predlogov trenutno ni mogoče naložiti.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="cap"><span class="step-no">4</span>Robna stanja
+        <small>nalaganje = skeleton · lokalna DB napaka = miren indikator (ne <code style="font-size:11px;">shrink</code>)</small></div>
+    </div>
+
+  </div>
+
+  <!-- ============ LEGENDA + OPOMBE ZA RAZVOJ ============ -->
+  <div class="notes">
+    <h2>Status čipi</h2>
+    <div class="legend">
+      <div class="row"><span class="status planned">Načrtovano ›</span><span class="desc">predlog → ustvarjeno opravilo (<code>planned</code>); tap odpre opravilo</span></div>
+      <div class="row"><span class="status logged">Zabeleženo</span><span class="desc">»že opravljeno« → done opravilo (<code>logged</code>)</span></div>
+      <div class="row"><span class="status dismissed">Opuščeno</span><span class="desc">opuščeno za sezono (<code>dismissed</code> + <code>season</code>)</span></div>
+      <div class="row"><span class="status muted">Utišano</span><span class="desc">»ne predlagaj več« — trajno (<code>dismissed</code> + <code>forever</code>)</span></div>
+      <div class="row"><span class="status missed">Zamujeno</span><span class="desc">poteklo brez ukrepa (<code>expired</code>)</span></div>
+    </div>
+
+    <h2>Opombe za razvoj</h2>
+    <ul>
+      <li>Podatki: <code>watchHistory()</code> = vse vrstice <code>status != 'new'</code> &amp; <code>deleted = 0</code>, urejene <code>updated_at</code> desc; grupiraj po dnevu prek <code>core/date_format.dart</code> (<code>startOfDay</code> / <code>formatDmy</code>).</li>
+      <li>Naslov vrstice = isti vzorec kot kartica na pasu: <code>fillTemplate(t['&lt;messageKey&gt;.title'], displayParams)</code>; ikona iz <code>taskTypesMap → catalogLabel</code>; subjekt iz rastline/območja (cat: predlogi brez subjekta).</li>
+      <li>Tap je aktiven na <code>planned</code> <b>in</b> <code>logged</code> (oba imata povezano opravilo prek <code>planned_task_id</code>) → <code>pushNamed('task-detail', {id: plannedTaskId})</code>. <code>dismissed</code>/<code>muted</code>/<code>missed</code> so neinteraktivni (samo branje).</li>
+      <li>Grupiranje je po <b>datumu odziva</b> (<code>updated_at</code>), ne po datumu predloga — za <code>missed</code> je to čas, ko je strežnik označil potek.</li>
+      <li>Robna stanja (kot pas): <code>loading</code> → skeleton; <code>AsyncError</code> (lokalna DB napaka) → miren indikator, NIKOLI <code>SizedBox.shrink()</code> (CLAUDE.md).</li>
+      <li>Retencija: terminalne vrstice &gt; 365 dni počisti <b>strežnik</b> (housekeeping, M11.12); klient jih le ne kaže (<code>deleted = 0</code> filter).</li>
+      <li>Vstopa: droben link na glavi pasu (Domov) + vrstica v Nastavitvah; oba na route <code>/suggestions/history</code> (full-screen nad shell). Link na pasu obstaja samo ob ne-praznem pasu → vrstica v Nastavitvah je obvezni vstop.</li>
+      <li>Preklic trajnega muta (<code>muted</code> → spet aktivno) je <b>zavestno odložen na V2</b> (<code>10</code> #11); MVP je samo bralni, brez akcij za nazaj.</li>
+      <li>Vse besedilo prek <code>t.*</code>; status čipi <code>suggestions.history_status.{planned,logged,dismissed,muted,missed}</code>. UI nikoli ne uporablja besede »motor«.</li>
+    </ul>
+  </div>
+
+</div>
+</body>
+</html>
