@@ -370,6 +370,28 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-15 — **M11.14 — E2E veriga paradižnika potrjena na napravi + poliranje.** Cel krog
+  §0.1 v živo (SM A536B, dev `exogenus@gmail.com`): `start_seedlings` done (−16 dni) → ročni
+  engine invoke → **R7 emitira `prick_out`** (score 2, okno +14..21) → predlog se pull-a na pas
+  na Domov → **FCM push prispe** (kanal `suggestions`) → Načrtuj → waiting opravilo → ponovni tek
+  **NE podvoji** (dedup-planned straža + cooldown). **GLAVNA NAJDBA:** skrivnost
+  `FCM_SERVICE_ACCOUNT_JSON` **nikoli ni bila nastavljena** na deployani funkciji (`secrets list`
+  je pokazal le privzete) → push je tiho padal (per-user error, batch se nadaljuje). Provisionirano
+  iz Firebase service-accounta (projekt `tendask-app`). **Robustnost (popravek):** push ovit v
+  `try/catch` — `fcmProjectId()` throw (manjkajoča skrivnost) je prej obšel `.catch` in zrušil
+  uporabnikov tek **po** emitu (engine_run se ni zapisal); zdaj FCM napaka graciozno preskoči push,
+  tek se dokonča in token **ne** ponulli (krivda = naša konfiguracija, ne mrtva naprava). **Error
+  sink:** `_shared/report.ts` (`reportError`, `evt:"engine_error"`, stage) čez 6 mest v
+  index.ts/weather.ts — eno mesto za Sentry DSN, queryable v log drainu. **UI popravek:** modalni
+  sheet-i predloga (⋯ akcije + »že opravljeno« datum) dobili `useRootNavigator:true` — prej je
+  centrirani FAB shell-a prekrival sheet. Deno 96/96, app rebuild+install na napravo. **Parkirano
+  (must-do):** slovenska sklanjatev `{subject}` v sporočilih (npr. »Od setve paradižnik« → rabi
+  rodilnik »paradižnika«; robustno le z nominativ-oznako čez vseh ~61 sporočil); TENDASK-6
+  RenderFlex (nereproduciran). **Test-nauk** (v `docs/m11/e2e-runbook.local.md`): prihodnje-datiran
+  `updated_at` v ročnih reset PATCH-ih pokvari `last_pulled_at` watermark naprave → realni `now()`
+  emiti se ne pull-ajo (le testni artefakt; motor v produkciji vedno `now()`).
+  *Commit:* `fix(suggestions): modalni sheet nad FAB (useRootNavigator)`,
+  `feat(engine): FCM robustnost + strukturiran error sink (M11.14 e2e)`
 - 2026-06-15 — **M11.15 — celovita test suite motorja v CI.** GitHub Actions ima zdaj dva joba:
   obstoječi `ci` (Flutter: pub get → slang → build_runner → analyze → test) + nov `engine`
   (`denoland/setup-deno@v2` → `deno test supabase/functions/`). 96 Deno testov (signali, pravila

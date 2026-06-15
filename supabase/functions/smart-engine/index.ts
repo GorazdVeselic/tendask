@@ -18,6 +18,7 @@ import { localDateStr, safeTimeZone } from './dates.ts';
 import type { EngineConfig } from './types.ts';
 import { fcmProjectId, sendSuggestionPush } from '../_shared/fcm.ts';
 import { pushBody, pushTitle } from '../_shared/push_i18n.ts';
+import { reportError } from '../_shared/report.ts';
 
 function jsonResponse(body: unknown, status = 200): Response {
   return new Response(JSON.stringify(body), {
@@ -70,7 +71,7 @@ async function cellWeather(
     if (payload != null) {
       const up = await db.from('weather_cache')
         .upsert({ h3_r7: h3r7, date: cacheDay, payload });
-      if (up.error) console.error('smart-engine: weather_cache upsert failed', up.error);
+      if (up.error) reportError('weather_cache_upsert', up.error, { h3r7 });
     }
   }
   memo.set(key, payload);
@@ -160,25 +161,32 @@ Deno.serve(async (req) => {
               .select('last_push_date').eq('user_id', userId).maybeSingle();
             const lastPush: string | null = runRes.data?.last_push_date ?? null;
             if (!lastPush || lastPush < signals.localToday) {
-              const ok = await sendSuggestionPush({
-                fcmToken: bundle.profile.fcm_token,
-                projectId: fcmProjectId(),
-                title: pushTitle(topCandidate.messageKey, bundle.profile.lang),
-                body: pushBody(bundle.profile.lang),
-                suggestionId: topId,
-              }).catch((e) => {
-                console.error('smart-engine: FCM send failed', userId, e);
-                return false as boolean;
-              });
-              if (ok) {
-                pushed = true;
-              } else {
-                // UNREGISTERED or invalid token — clear it so we stop sending.
-                // Deliberately does NOT bump updated_at: if the client has since
-                // registered a fresh token (newer updated_at), bumping here would
-                // let this null win the LWW pull and clobber the live token.
-                await db.from('profile')
-                  .update({ fcm_token: null }).eq('user_id', userId);
+              // A push failure must never abort the user's run: the suggestion
+              // is already emitted and engine_run must still record the run.
+              // fcmProjectId() can throw (secret missing) during arg eval, so
+              // the whole send is wrapped — a throw is our config fault, not a
+              // dead device, so it must NOT null the token (only an explicit
+              // UNREGISTERED/invalid result below does).
+              try {
+                const ok = await sendSuggestionPush({
+                  fcmToken: bundle.profile.fcm_token,
+                  projectId: fcmProjectId(),
+                  title: pushTitle(topCandidate.messageKey, bundle.profile.lang),
+                  body: pushBody(bundle.profile.lang),
+                  suggestionId: topId,
+                });
+                if (ok) {
+                  pushed = true;
+                } else {
+                  // UNREGISTERED or invalid token — clear it so we stop sending.
+                  // Deliberately does NOT bump updated_at: if the client has since
+                  // registered a fresh token (newer updated_at), bumping here would
+                  // let this null win the LWW pull and clobber the live token.
+                  await db.from('profile')
+                    .update({ fcm_token: null }).eq('user_id', userId);
+                }
+              } catch (e) {
+                reportError('fcm_send', e, { userId });
               }
             }
           }
@@ -188,7 +196,7 @@ Deno.serve(async (req) => {
           last_run_date: signals.localToday,
           ...(pushed ? { last_push_date: signals.localToday } : {}),
         });
-        if (runUp.error) console.error('smart-engine: engine_run upsert failed', runUp.error);
+        if (runUp.error) reportError('engine_run_upsert', runUp.error, { userId });
         results.push({
           user_id: userId,
           emitted,
@@ -199,13 +207,13 @@ Deno.serve(async (req) => {
         });
       } catch (e) {
         // One failing user must not break the batch (04 §4.7).
-        console.error('smart-engine: user failed', userId, e);
+        reportError('user', e, { userId });
         results.push({ user_id: userId, error: String(e) });
       }
     }
     return jsonResponse({ ok: true, results });
   } catch (e) {
-    console.error('smart-engine: request failed', e);
+    reportError('request', e);
     return jsonResponse({ error: 'internal' }, 500);
   }
 });

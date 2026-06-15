@@ -155,7 +155,7 @@ pred zaslonom) ali zapiši zavestno izjemo v koncept §7.12.
 - **Odvisnosti:** M11.13 · **Kompleksnost:** M
 - **Commit:** `feat(suggestions): zaslon preteklih predlogov z odzivi uporabnika`
 
-### M11.14 — E2E preverba motorja na napravi + poliranje `[ ]`
+### M11.14 — E2E preverba motorja na napravi + poliranje `[x]`
 Cel krog na fizični napravi: vnos zgodovine → ročni engine invoke → push → tap → highlight →
 Plan → task → naslednji tek ne podvoji. Uglasitev besedil, Sentry za engine napake
 (console.error → Sentry stub ali log drain), disclaimer copy.

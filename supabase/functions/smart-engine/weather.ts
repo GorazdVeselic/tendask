@@ -3,6 +3,7 @@
 
 import type { WeatherSignals } from './types.ts';
 import { offsetDateStr } from './dates.ts';
+import { reportError } from '../_shared/report.ts';
 
 /** Exact call from docs/m11/02 §A — do not extend without updating the spec. */
 export function forecastUrl(lat: number, lon: number): string {
@@ -38,7 +39,7 @@ export async function fetchOpenMeteoWithRetry(
       return await res.json();
     } catch (e) {
       if (attempt >= kRetryDelaysMs.length) {
-        console.error('smart-engine: open-meteo fetch failed after retries', e);
+        reportError('open_meteo_fetch', e, { lat, lon });
         return null;
       }
       await new Promise((resolve) => setTimeout(resolve, kRetryDelaysMs[attempt]));
