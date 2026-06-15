@@ -476,5 +476,342 @@
     "home_retry": "Zum Wiederholen tippen",
     "loading": "Wetter wird geladen…",
     "updated_at(time)": "Aktualisiert $time"
+  },
+  "suggestions": {
+    "actions": {
+      "plan": "Einplanen",
+      "dismiss": "Überspringen",
+      "already_done": "Schon erledigt",
+      "never": "Nicht mehr vorschlagen",
+      "remove_subject": "Habe ich nicht mehr"
+    },
+    "toast": {
+      "planned": "Zu deinen Aufgaben hinzugefügt",
+      "logged": "Als erledigt erfasst"
+    },
+    "disclaimer": "Vorschläge sind allgemeine Hinweise — deinen Garten kennst du am besten.",
+    "done_sheet": {
+      "title": "Wann hast du es gemacht?",
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "pick": "Datum wählen…"
+    },
+    "remove": {
+      "title": "Entfernen?",
+      "body": "Entfernt {subject} aus deinem Garten und stoppt die Vorschläge dazu. Deine bisherigen Einträge bleiben.",
+      "confirm": "Entfernen"
+    },
+    "history_status": {
+      "planned": "Eingeplant",
+      "logged": "Erfasst",
+      "dismissed": "Verworfen",
+      "muted": "Stumm",
+      "missed": "Verpasst",
+      "expired": "Abgelaufen"
+    },
+    "cadence": {
+      "overdue": {
+        "title": "{task} ist fällig",
+        "body": "{subject}: ca. {days_overdue} Tage über dem üblichen Rhythmus (~{cadence_days} Tage)."
+      }
+    },
+    "history": {
+      "anniversary": {
+        "title": "{task} — vor einem Jahr",
+        "body": "Letztes Jahr um den {last_year_date} — {task} bei {subject}. Wieder fällig?"
+      }
+    },
+    "weather": {
+      "window_open": {
+        "title": "{task}: gutes Zeitfenster",
+        "body": "Für {subject} steht eine trockene Phase an — ein guter Zeitpunkt."
+      }
+    },
+    "community": {
+      "most_started": {
+        "title": "{task} in der Nähe",
+        "body": "Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen."
+      }
+    },
+    "lawn": {
+      "mow_due": {
+        "title": "Mähen fällig",
+        "body": "{subject} ist bereit zum Mähen."
+      },
+      "water_drought": {
+        "title": "Gießen bei Trockenheit",
+        "body": "{subject} braucht bei trockenem Wetter eventuell Wasser."
+      },
+      "fertilize_spring": {
+        "title": "Frühjahrsdüngung",
+        "body": "Dünge {subject} für die Saison — am besten bis etwa {window_end_date}."
+      },
+      "fertilize_autumn": {
+        "title": "Herbstdüngung",
+        "body": "Gib {subject} vor dem Winter eine Herbstdüngung — Zeitfenster bis ~{window_end_date}."
+      },
+      "lime": {
+        "title": "Rasen kalken",
+        "body": "Kalke {subject} bei saurem Boden — bis etwa {window_end_date}."
+      },
+      "moss_control": {
+        "title": "Moosbekämpfung",
+        "body": "Bekämpfe Moos in {subject} — Zeitfenster bis ~{window_end_date}."
+      },
+      "weed_control": {
+        "title": "Unkrautbekämpfung",
+        "body": "Geh das Unkraut in {subject} an — am besten bis etwa {window_end_date}."
+      },
+      "overseed_spring": {
+        "title": "Nachsaat (Frühjahr)",
+        "body": "Säe kahle Stellen in {subject} nach — bis etwa {window_end_date}."
+      },
+      "overseed_autumn": {
+        "title": "Nachsaat (Herbst)",
+        "body": "Übersäe {subject} im Herbst — Zeitfenster bis ~{window_end_date}."
+      },
+      "scarify_spring": {
+        "title": "Vertikutieren (Frühjahr)",
+        "body": "Vertikutiere {subject} gegen Rasenfilz — bis etwa {window_end_date}."
+      },
+      "scarify_autumn": {
+        "title": "Vertikutieren (Herbst)",
+        "body": "Vertikutiere {subject} im Herbst — Zeitfenster bis ~{window_end_date}."
+      },
+      "aerate": {
+        "title": "Aerifizieren",
+        "body": "Lüfte {subject} gegen Verdichtung — bis etwa {window_end_date}."
+      },
+      "roll": {
+        "title": "Rasen walzen",
+        "body": "Walze {subject} nach dem Winter — Zeitfenster bis ~{window_end_date}."
+      },
+      "topdress": {
+        "title": "Topdressing",
+        "body": "Sande {subject} ab und ebne ein — bis etwa {window_end_date}."
+      }
+    },
+    "fruit_tree": {
+      "fertilize_spring": {
+        "title": "Frühjahrsdüngung",
+        "body": "Dünge deinen {subject} zu Wachstumsbeginn — bis etwa {window_end_date}."
+      },
+      "prune_winter": {
+        "title": "Winterschnitt",
+        "body": "Schneide {subject} in der Ruhephase — Zeitfenster bis ~{window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Winterspritzung",
+        "body": "Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}."
+      },
+      "mulch": {
+        "title": "Mulchen",
+        "body": "Mulche um {subject}, um Feuchtigkeit zu halten — bis etwa {window_end_date}."
+      },
+      "thin_fruit": {
+        "title": "Früchte ausdünnen",
+        "body": "Dünne die Fruchtansätze von {subject} aus — Zeitfenster bis ~{window_end_date}."
+      },
+      "graft_spring": {
+        "title": "Frühjahrsveredelung",
+        "body": "Veredle {subject} beim Saftaufstieg — bis etwa {window_end_date}."
+      },
+      "graft_budding": {
+        "title": "Sommerokulation",
+        "body": "Okuliere {subject} im Spätsommer — Zeitfenster bis ~{window_end_date}."
+      }
+    },
+    "berries": {
+      "prune_winter": {
+        "title": "Winterschnitt",
+        "body": "Schneide {subject} in der Ruhephase — bis etwa {window_end_date}."
+      },
+      "fertilize_spring": {
+        "title": "Frühjahrsdüngung",
+        "body": "Dünge {subject} zu Wachstumsbeginn — bis etwa {window_end_date}."
+      },
+      "mulch": {
+        "title": "Mulchen",
+        "body": "Mulche {subject} für kühle, feuchte Wurzeln — bis etwa {window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Winterspritzung",
+        "body": "Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}."
+      }
+    },
+    "vegetable": {
+      "start_seedlings": {
+        "title": "Anzucht starten",
+        "body": "Säe {subject} drinnen für das spätere Auspflanzen — bis etwa {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Pikieren",
+        "body": "{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe."
+      },
+      "harden_off": {
+        "title": "Abhärten",
+        "body": "Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Auspflanzen",
+        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}."
+      },
+      "transplant": {
+        "title": "Umpflanzen",
+        "body": "Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}."
+      },
+      "sow_direct": {
+        "title": "Direktsaat",
+        "body": "Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Düngen",
+        "body": "Dünge {subject} während der Wachstumszeit."
+      },
+      "treat_window": {
+        "title": "Kontrollieren",
+        "body": "Prüfe {subject} und behandle bei Bedarf — am besten bei trockenem Wetter."
+      }
+    },
+    "herbs": {
+      "start_seedlings": {
+        "title": "Anzucht starten",
+        "body": "Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}."
+      },
+      "sow_direct": {
+        "title": "Direktsaat",
+        "body": "Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Auspflanzen",
+        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}."
+      }
+    },
+    "tomato": {
+      "start_seedlings": {
+        "title": "Anzucht starten",
+        "body": "Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Pikieren",
+        "body": "{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe."
+      },
+      "harden_off": {
+        "title": "Abhärten",
+        "body": "Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}."
+      },
+      "transplant": {
+        "title": "Umpflanzen",
+        "body": "{subject} wächst seit {days_since} Tagen — an den endgültigen Platz setzen."
+      },
+      "stake": {
+        "title": "Stützen",
+        "body": "{subject}: {days_since} Tage Wachstum — Stab oder Stütze anbringen."
+      }
+    },
+    "shrub": {
+      "prune_spring": {
+        "title": "Frühjahrsschnitt",
+        "body": "Schneide {subject} nach Bedarf — bis etwa {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Winterschutz",
+        "body": "Schütze {subject} vor dem ersten starken Frost — bis etwa {window_end_date}."
+      }
+    },
+    "hedge": {
+      "prune_early_summer": {
+        "title": "Frühsommerschnitt",
+        "body": "Schneide {subject} in Form — Zeitfenster bis ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Spätsommerschnitt",
+        "body": "Gib {subject} vor dem Herbst einen letzten Schnitt — bis etwa {window_end_date}."
+      }
+    },
+    "conifer": {
+      "prune": {
+        "title": "Rückschnitt",
+        "body": "Schneide {subject} leicht ins neue Wachstum — bis etwa {window_end_date}."
+      }
+    },
+    "houseplant": {
+      "repot": {
+        "title": "Umtopfen",
+        "body": "Topfe {subject} bei Wachstumsbeginn um — Zeitfenster bis ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Düngen",
+        "body": "Dünge {subject} während der aktiven Wachstumszeit."
+      },
+      "overwinter": {
+        "title": "Reinholen",
+        "body": "Hole {subject} vor dem ersten Frost ins Haus — bis etwa {window_end_date}."
+      }
+    },
+    "blueberry": {
+      "prune": {
+        "title": "Schnitt",
+        "body": "Schneide {subject} in der Ruhephase — bis etwa {window_end_date}."
+      }
+    },
+    "cherry_laurel": {
+      "prune_late_spring": {
+        "title": "Spätfrühlingsschnitt",
+        "body": "Schneide {subject} nach dem ersten Austrieb — Zeitfenster bis ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Spätsommerschnitt",
+        "body": "Schneide {subject} ein zweites Mal — bis etwa {window_end_date}."
+      }
+    },
+    "hydrangea": {
+      "prune_old_wood": {
+        "title": "Schnitt (altes Holz)",
+        "body": "Verblühtes ausputzen und {subject} am alten Holz nach der Blüte schneiden — bis etwa {window_end_date}."
+      },
+      "prune_new_wood": {
+        "title": "Schnitt (neues Holz)",
+        "body": "Schneide {subject} am neuen Holz im Spätwinter zurück — bis etwa {window_end_date}."
+      }
+    },
+    "peach": {
+      "prune_spring": {
+        "title": "Frühjahrsschnitt",
+        "body": "Schneide {subject} beim Knospenschwellen gegen Kräuselkrankheit — bis etwa {window_end_date}."
+      }
+    },
+    "raspberry": {
+      "prune_late_winter": {
+        "title": "Spätwinterschnitt",
+        "body": "Schneide die Ruten von {subject} vor dem Austrieb — bis etwa {window_end_date}."
+      },
+      "prune_after_harvest": {
+        "title": "Schnitt nach der Ernte",
+        "body": "{subject} hat vor {days_since} Tagen getragen — schneide die alten Ruten heraus."
+      }
+    },
+    "rose": {
+      "prune_spring": {
+        "title": "Frühjahrsschnitt",
+        "body": "Schneide {subject} beim Austrieb — bis etwa {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Winterschutz",
+        "body": "Häufle {subject} an oder schütze sie vor starkem Frost — bis etwa {window_end_date}."
+      }
+    },
+    "cucumber": {
+      "sow_direct": {
+        "title": "Direktsaat",
+        "body": "Säe {subject} ins Freie, sobald es warm und frostfrei ist — um {frost_date}."
+      }
+    },
+    "zucchini": {
+      "sow_direct": {
+        "title": "Direktsaat",
+        "body": "Säe {subject} nach dem Frost ins Freie — um {frost_date}."
+      }
+    }
   }
 }

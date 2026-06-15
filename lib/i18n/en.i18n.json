@@ -476,5 +476,342 @@
     "home_retry": "Tap to retry",
     "loading": "Loading weather…",
     "updated_at(time)": "Updated $time"
+  },
+  "suggestions": {
+    "actions": {
+      "plan": "Plan",
+      "dismiss": "Skip",
+      "already_done": "Already done",
+      "never": "Don't suggest this again",
+      "remove_subject": "I no longer have this"
+    },
+    "toast": {
+      "planned": "Added to your tasks",
+      "logged": "Logged as done"
+    },
+    "disclaimer": "Suggestions are general guidance — you know your garden best.",
+    "done_sheet": {
+      "title": "When did you do it?",
+      "today": "Today",
+      "yesterday": "Yesterday",
+      "pick": "Pick a date…"
+    },
+    "remove": {
+      "title": "Remove this?",
+      "body": "This removes {subject} from your garden and stops its suggestions. Your past records stay.",
+      "confirm": "Remove"
+    },
+    "history_status": {
+      "planned": "Planned",
+      "logged": "Logged",
+      "dismissed": "Dismissed",
+      "muted": "Muted",
+      "missed": "Missed",
+      "expired": "Expired"
+    },
+    "cadence": {
+      "overdue": {
+        "title": "{task} is due",
+        "body": "{subject} is about {days_overdue} days past the usual ~{cadence_days}-day rhythm."
+      }
+    },
+    "history": {
+      "anniversary": {
+        "title": "{task} — a year ago",
+        "body": "Last year around {last_year_date} — {task} for {subject}. Worth repeating?"
+      }
+    },
+    "weather": {
+      "window_open": {
+        "title": "{task}: good window",
+        "body": "A dry spell is on the way for {subject} — a good time to do it."
+      }
+    },
+    "community": {
+      "most_started": {
+        "title": "{task} nearby",
+        "body": "About {percent}% of gardeners near you have started this so far this season."
+      }
+    },
+    "lawn": {
+      "mow_due": {
+        "title": "Mowing due",
+        "body": "{subject} is ready for a mow."
+      },
+      "water_drought": {
+        "title": "Water in the dry spell",
+        "body": "{subject} may need watering during the dry weather."
+      },
+      "fertilize_spring": {
+        "title": "Spring feed",
+        "body": "Feed {subject} for the season — best by about {window_end_date}."
+      },
+      "fertilize_autumn": {
+        "title": "Autumn feed",
+        "body": "Give {subject} an autumn feed before winter — window open until ~{window_end_date}."
+      },
+      "lime": {
+        "title": "Lime the lawn",
+        "body": "Apply lime to {subject} if the soil is acidic — by about {window_end_date}."
+      },
+      "moss_control": {
+        "title": "Moss control",
+        "body": "Treat moss in {subject} — window open until ~{window_end_date}."
+      },
+      "weed_control": {
+        "title": "Weed control",
+        "body": "Tackle weeds in {subject} — best by about {window_end_date}."
+      },
+      "overseed_spring": {
+        "title": "Overseed (spring)",
+        "body": "Overseed thin patches in {subject} — by about {window_end_date}."
+      },
+      "overseed_autumn": {
+        "title": "Overseed (autumn)",
+        "body": "Overseed {subject} in autumn — window open until ~{window_end_date}."
+      },
+      "scarify_spring": {
+        "title": "Scarify (spring)",
+        "body": "Scarify {subject} to clear thatch — by about {window_end_date}."
+      },
+      "scarify_autumn": {
+        "title": "Scarify (autumn)",
+        "body": "Scarify {subject} in autumn — window open until ~{window_end_date}."
+      },
+      "aerate": {
+        "title": "Aerate",
+        "body": "Aerate {subject} to ease compaction — by about {window_end_date}."
+      },
+      "roll": {
+        "title": "Roll the lawn",
+        "body": "Roll {subject} after winter heave — window open until ~{window_end_date}."
+      },
+      "topdress": {
+        "title": "Top-dress",
+        "body": "Top-dress {subject} to level and feed — by about {window_end_date}."
+      }
+    },
+    "fruit_tree": {
+      "fertilize_spring": {
+        "title": "Spring feed",
+        "body": "Feed your {subject} as growth starts — by about {window_end_date}."
+      },
+      "prune_winter": {
+        "title": "Winter pruning",
+        "body": "Prune {subject} while dormant — window open until ~{window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Dormant spray",
+        "body": "Apply a dormant treatment to {subject} — by about {window_end_date}."
+      },
+      "mulch": {
+        "title": "Mulch",
+        "body": "Mulch around {subject} to hold moisture — by about {window_end_date}."
+      },
+      "thin_fruit": {
+        "title": "Thin the fruit",
+        "body": "Thin {subject}'s fruitlets for better size — window open until ~{window_end_date}."
+      },
+      "graft_spring": {
+        "title": "Spring grafting",
+        "body": "Graft {subject} while the sap is rising — by about {window_end_date}."
+      },
+      "graft_budding": {
+        "title": "Summer budding",
+        "body": "Bud-graft {subject} in late summer — window open until ~{window_end_date}."
+      }
+    },
+    "berries": {
+      "prune_winter": {
+        "title": "Winter pruning",
+        "body": "Prune {subject} while dormant — by about {window_end_date}."
+      },
+      "fertilize_spring": {
+        "title": "Spring feed",
+        "body": "Feed {subject} as growth starts — by about {window_end_date}."
+      },
+      "mulch": {
+        "title": "Mulch",
+        "body": "Mulch {subject} to keep roots cool and moist — by about {window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Dormant spray",
+        "body": "Apply a dormant treatment to {subject} — by about {window_end_date}."
+      }
+    },
+    "vegetable": {
+      "start_seedlings": {
+        "title": "Start seedlings",
+        "body": "Sow {subject} indoors to get ahead for planting out — by about {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Prick out",
+        "body": "You started {subject} {days_since} days ago — prick the seedlings into pots."
+      },
+      "harden_off": {
+        "title": "Harden off",
+        "body": "Acclimatise {subject} outdoors before planting out — window open until ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Plant out",
+        "body": "Plant {subject} outside once frost has passed — around {frost_date}."
+      },
+      "transplant": {
+        "title": "Transplant",
+        "body": "Move {subject} to its final spot after frost — around {frost_date}."
+      },
+      "sow_direct": {
+        "title": "Direct sow",
+        "body": "Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Feed",
+        "body": "Give {subject} a feed during the growing season."
+      },
+      "treat_window": {
+        "title": "Treat",
+        "body": "Check {subject} and treat if needed — dry weather is best."
+      }
+    },
+    "herbs": {
+      "start_seedlings": {
+        "title": "Start seedlings",
+        "body": "Sow {subject} indoors for a head start — by about {window_end_date}."
+      },
+      "sow_direct": {
+        "title": "Direct sow",
+        "body": "Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Plant out",
+        "body": "Plant {subject} outside once frost has passed — around {frost_date}."
+      }
+    },
+    "tomato": {
+      "start_seedlings": {
+        "title": "Start seedlings",
+        "body": "Sow {subject} indoors for a head start — by about {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Prick out",
+        "body": "You sowed {subject} {days_since} days ago — prick the seedlings into pots."
+      },
+      "harden_off": {
+        "title": "Harden off",
+        "body": "Acclimatise {subject} outdoors before planting out — window open until ~{window_end_date}."
+      },
+      "transplant": {
+        "title": "Transplant",
+        "body": "{subject} has grown for {days_since} days — move it to its final position."
+      },
+      "stake": {
+        "title": "Stake",
+        "body": "{subject} is {days_since} days on — add a stake or support."
+      }
+    },
+    "shrub": {
+      "prune_spring": {
+        "title": "Spring pruning",
+        "body": "Prune {subject} as needed — by about {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Winter protection",
+        "body": "Protect {subject} before the first hard frost — by about {window_end_date}."
+      }
+    },
+    "hedge": {
+      "prune_early_summer": {
+        "title": "Early-summer trim",
+        "body": "Trim {subject} for shape — window open until ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Late-summer trim",
+        "body": "Give {subject} a final trim before autumn — by about {window_end_date}."
+      }
+    },
+    "conifer": {
+      "prune": {
+        "title": "Trim",
+        "body": "Trim {subject} lightly into new growth — by about {window_end_date}."
+      }
+    },
+    "houseplant": {
+      "repot": {
+        "title": "Repot",
+        "body": "Repot {subject} as growth resumes — window open until ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Feed",
+        "body": "Feed {subject} during the active growing season."
+      },
+      "overwinter": {
+        "title": "Bring indoors",
+        "body": "Move {subject} indoors before the first frost — by about {window_end_date}."
+      }
+    },
+    "blueberry": {
+      "prune": {
+        "title": "Pruning",
+        "body": "Prune {subject} while dormant — by about {window_end_date}."
+      }
+    },
+    "cherry_laurel": {
+      "prune_late_spring": {
+        "title": "Late-spring trim",
+        "body": "Trim {subject} after the first flush — window open until ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Late-summer trim",
+        "body": "Give {subject} a second trim — by about {window_end_date}."
+      }
+    },
+    "hydrangea": {
+      "prune_old_wood": {
+        "title": "Prune (old wood)",
+        "body": "Deadhead and tidy old-wood {subject} after flowering — by about {window_end_date}."
+      },
+      "prune_new_wood": {
+        "title": "Prune (new wood)",
+        "body": "Cut back new-wood {subject} in late winter — by about {window_end_date}."
+      }
+    },
+    "peach": {
+      "prune_spring": {
+        "title": "Spring pruning",
+        "body": "Prune {subject} as the buds swell to limit leaf curl — by about {window_end_date}."
+      }
+    },
+    "raspberry": {
+      "prune_late_winter": {
+        "title": "Late-winter pruning",
+        "body": "Prune {subject} canes before growth starts — by about {window_end_date}."
+      },
+      "prune_after_harvest": {
+        "title": "After-harvest pruning",
+        "body": "{subject} fruited {days_since} days ago — cut out the old canes."
+      }
+    },
+    "rose": {
+      "prune_spring": {
+        "title": "Spring pruning",
+        "body": "Prune {subject} as the buds break — by about {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Winter protection",
+        "body": "Mound or wrap {subject} before hard frost — by about {window_end_date}."
+      }
+    },
+    "cucumber": {
+      "sow_direct": {
+        "title": "Direct sow",
+        "body": "Sow {subject} outdoors once it is warm and frost-free — around {frost_date}."
+      }
+    },
+    "zucchini": {
+      "sow_direct": {
+        "title": "Direct sow",
+        "body": "Sow {subject} outdoors after frost — around {frost_date}."
+      }
+    }
   }
 }

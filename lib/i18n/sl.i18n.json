@@ -482,5 +482,342 @@
     "home_retry": "Tapni za ponovni poskus",
     "loading": "Nalagam vreme…",
     "updated_at(time)": "Osveženo $time"
+  },
+  "suggestions": {
+    "actions": {
+      "plan": "Načrtuj",
+      "dismiss": "Preskoči",
+      "already_done": "Že opravljeno",
+      "never": "Ne predlagaj več",
+      "remove_subject": "Tega nimam več"
+    },
+    "toast": {
+      "planned": "Dodano med opravila",
+      "logged": "Zabeleženo kot opravljeno"
+    },
+    "disclaimer": "Predlogi so splošna usmeritev — tvoj vrt najbolje poznaš ti.",
+    "done_sheet": {
+      "title": "Kdaj je bilo opravljeno?",
+      "today": "Danes",
+      "yesterday": "Včeraj",
+      "pick": "Izberi datum…"
+    },
+    "remove": {
+      "title": "Odstranim?",
+      "body": "{subject} odstrani iz vrta in ustavi njegove predloge. Pretekli zapisi ostanejo.",
+      "confirm": "Odstrani"
+    },
+    "history_status": {
+      "planned": "Načrtovano",
+      "logged": "Zabeleženo",
+      "dismissed": "Opuščeno",
+      "muted": "Utišano",
+      "missed": "Zamujeno",
+      "expired": "Poteklo"
+    },
+    "cadence": {
+      "overdue": {
+        "title": "{task} je na vrsti",
+        "body": "{subject}: zamuda približno {days_overdue} dni (običajni ritem ~{cadence_days} dni)."
+      }
+    },
+    "history": {
+      "anniversary": {
+        "title": "{task} — pred letom dni",
+        "body": "Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?"
+      }
+    },
+    "weather": {
+      "window_open": {
+        "title": "{task}: ugodno okno",
+        "body": "Za {subject} prihaja suho obdobje — primeren čas."
+      }
+    },
+    "community": {
+      "most_started": {
+        "title": "{task} v okolici",
+        "body": "Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo."
+      }
+    },
+    "lawn": {
+      "mow_due": {
+        "title": "Čas za košnjo",
+        "body": "{subject}: čas za košnjo."
+      },
+      "water_drought": {
+        "title": "Zalivanje v suši",
+        "body": "{subject} ob suši morda potrebuje zalivanje."
+      },
+      "fertilize_spring": {
+        "title": "Spomladansko gnojenje",
+        "body": "Pognoji {subject} za sezono — najbolje do približno {window_end_date}."
+      },
+      "fertilize_autumn": {
+        "title": "Jesensko gnojenje",
+        "body": "Jesensko pognoji {subject} pred zimo — okno odprto do ~{window_end_date}."
+      },
+      "lime": {
+        "title": "Apnenje trate",
+        "body": "Če so tla kisla, apni {subject} — do približno {window_end_date}."
+      },
+      "moss_control": {
+        "title": "Zatiranje mahu",
+        "body": "Zatri mah pri {subject} — okno odprto do ~{window_end_date}."
+      },
+      "weed_control": {
+        "title": "Zatiranje plevela",
+        "body": "Loti se plevela pri {subject} — najbolje do približno {window_end_date}."
+      },
+      "overseed_spring": {
+        "title": "Dosejavanje (pomlad)",
+        "body": "Dosej redke dele pri {subject} — do približno {window_end_date}."
+      },
+      "overseed_autumn": {
+        "title": "Dosejavanje (jesen)",
+        "body": "Jeseni dosej {subject} — okno odprto do ~{window_end_date}."
+      },
+      "scarify_spring": {
+        "title": "Vertikutiranje (pomlad)",
+        "body": "Odstrani travni filc pri {subject} — do približno {window_end_date}."
+      },
+      "scarify_autumn": {
+        "title": "Vertikutiranje (jesen)",
+        "body": "Jeseni vertikutiraj {subject} — okno odprto do ~{window_end_date}."
+      },
+      "aerate": {
+        "title": "Prezračevanje",
+        "body": "Prezrači {subject} za manjšo zbitost — do približno {window_end_date}."
+      },
+      "roll": {
+        "title": "Valjanje trate",
+        "body": "Po zimi povaljaj {subject} — okno odprto do ~{window_end_date}."
+      },
+      "topdress": {
+        "title": "Nasipavanje",
+        "body": "Nasuj in poravnaj {subject} — do približno {window_end_date}."
+      }
+    },
+    "fruit_tree": {
+      "fertilize_spring": {
+        "title": "Spomladansko gnojenje",
+        "body": "Pognoji {subject} ob začetku rasti — do približno {window_end_date}."
+      },
+      "prune_winter": {
+        "title": "Zimska rez",
+        "body": "Obreži {subject} v mirovanju — okno odprto do ~{window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Zimsko škropljenje",
+        "body": "Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}."
+      },
+      "mulch": {
+        "title": "Zastiranje",
+        "body": "Zastri okolico {subject} za ohranjanje vlage — do približno {window_end_date}."
+      },
+      "thin_fruit": {
+        "title": "Redčenje plodov",
+        "body": "Razredči plodiče pri {subject} za boljšo velikost — okno odprto do ~{window_end_date}."
+      },
+      "graft_spring": {
+        "title": "Spomladansko cepljenje",
+        "body": "Cepi {subject} ob dvigu soka — do približno {window_end_date}."
+      },
+      "graft_budding": {
+        "title": "Poletno okuliranje",
+        "body": "Okuliraj {subject} v poznem poletju — okno odprto do ~{window_end_date}."
+      }
+    },
+    "berries": {
+      "prune_winter": {
+        "title": "Zimska rez",
+        "body": "Obreži {subject} v mirovanju — do približno {window_end_date}."
+      },
+      "fertilize_spring": {
+        "title": "Spomladansko gnojenje",
+        "body": "Pognoji {subject} ob začetku rasti — do približno {window_end_date}."
+      },
+      "mulch": {
+        "title": "Zastiranje",
+        "body": "Zastri {subject} za hladne in vlažne korenine — do približno {window_end_date}."
+      },
+      "treat_dormant": {
+        "title": "Zimsko škropljenje",
+        "body": "Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}."
+      }
+    },
+    "vegetable": {
+      "start_seedlings": {
+        "title": "Setev za sadike",
+        "body": "Posej {subject} v zavetju za prednost pred saditvijo — do približno {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Pikiranje",
+        "body": "Od setve {subject} je {days_since} dni — pikiraj sadike v lončke."
+      },
+      "harden_off": {
+        "title": "Utrjevanje sadik",
+        "body": "Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Saditev na prosto",
+        "body": "Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}."
+      },
+      "transplant": {
+        "title": "Presaditev",
+        "body": "Presadi {subject} na končno mesto po pozebi — okoli {frost_date}."
+      },
+      "sow_direct": {
+        "title": "Neposredna setev",
+        "body": "Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Dognojevanje",
+        "body": "Med rastno dobo pognoji {subject}."
+      },
+      "treat_window": {
+        "title": "Pregled in zaščita",
+        "body": "Preglej {subject} in po potrebi zaščiti — najbolje v suhem vremenu."
+      }
+    },
+    "herbs": {
+      "start_seedlings": {
+        "title": "Setev za sadike",
+        "body": "Posej {subject} v zavetju za prednost — do približno {window_end_date}."
+      },
+      "sow_direct": {
+        "title": "Neposredna setev",
+        "body": "Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}."
+      },
+      "plant_out": {
+        "title": "Saditev na prosto",
+        "body": "Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}."
+      }
+    },
+    "tomato": {
+      "start_seedlings": {
+        "title": "Setev za sadike",
+        "body": "Posej {subject} v zavetju za prednost — do približno {window_end_date}."
+      },
+      "prick_out": {
+        "title": "Pikiranje",
+        "body": "Od setve {subject} je {days_since} dni — pikiraj sadike v lončke."
+      },
+      "harden_off": {
+        "title": "Utrjevanje sadik",
+        "body": "Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}."
+      },
+      "transplant": {
+        "title": "Presaditev",
+        "body": "{subject} raste že {days_since} dni — presadi na končno mesto."
+      },
+      "stake": {
+        "title": "Opora",
+        "body": "{subject}: {days_since} dni rasti — dodaj oporo ali kol."
+      }
+    },
+    "shrub": {
+      "prune_spring": {
+        "title": "Spomladanska rez",
+        "body": "Po potrebi obreži {subject} — do približno {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Zimska zaščita",
+        "body": "Zaščiti {subject} pred prvo močno pozebo — do približno {window_end_date}."
+      }
+    },
+    "hedge": {
+      "prune_early_summer": {
+        "title": "Zgodnja poletna rez",
+        "body": "Oblikuj {subject} z rezjo — okno odprto do ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Pozna poletna rez",
+        "body": "Pred jesenjo še zadnjič obreži {subject} — do približno {window_end_date}."
+      }
+    },
+    "conifer": {
+      "prune": {
+        "title": "Prirez",
+        "body": "Rahlo prireži {subject} v mlado rast — do približno {window_end_date}."
+      }
+    },
+    "houseplant": {
+      "repot": {
+        "title": "Presaditev",
+        "body": "Presadi {subject} ob ponovni rasti — okno odprto do ~{window_end_date}."
+      },
+      "fertilize_season": {
+        "title": "Dognojevanje",
+        "body": "Med aktivno rastjo gnoji {subject}."
+      },
+      "overwinter": {
+        "title": "Prenesi v zavetje",
+        "body": "Prenesi {subject} v notranjost pred prvo pozebo — do približno {window_end_date}."
+      }
+    },
+    "blueberry": {
+      "prune": {
+        "title": "Rez",
+        "body": "Obreži {subject} v mirovanju — do približno {window_end_date}."
+      }
+    },
+    "cherry_laurel": {
+      "prune_late_spring": {
+        "title": "Pozna spomladanska rez",
+        "body": "Po prvem poganjku obreži {subject} — okno odprto do ~{window_end_date}."
+      },
+      "prune_late_summer": {
+        "title": "Pozna poletna rez",
+        "body": "Drugič obreži {subject} — do približno {window_end_date}."
+      }
+    },
+    "hydrangea": {
+      "prune_old_wood": {
+        "title": "Rez (stari les)",
+        "body": "Po cvetenju počisti odcvetelo pri {subject} na starem lesu — do približno {window_end_date}."
+      },
+      "prune_new_wood": {
+        "title": "Rez (novi les)",
+        "body": "V pozni zimi prikrajšaj {subject} na novem lesu — do približno {window_end_date}."
+      }
+    },
+    "peach": {
+      "prune_spring": {
+        "title": "Spomladanska rez",
+        "body": "Obreži {subject} ob nabrekanju brstov proti kodravosti — do približno {window_end_date}."
+      }
+    },
+    "raspberry": {
+      "prune_late_winter": {
+        "title": "Pozno zimska rez",
+        "body": "Pred rastjo obreži poganjke pri {subject} — do približno {window_end_date}."
+      },
+      "prune_after_harvest": {
+        "title": "Rez po obiranju",
+        "body": "Od obiranja {subject} je {days_since} dni — izreži stare poganjke."
+      }
+    },
+    "rose": {
+      "prune_spring": {
+        "title": "Spomladanska rez",
+        "body": "Obreži {subject} ob brstenju — do približno {window_end_date}."
+      },
+      "overwinter": {
+        "title": "Zimska zaščita",
+        "body": "Pred močno pozebo osuj ali zaščiti {subject} — do približno {window_end_date}."
+      }
+    },
+    "cucumber": {
+      "sow_direct": {
+        "title": "Neposredna setev",
+        "body": "Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}."
+      }
+    },
+    "zucchini": {
+      "sow_direct": {
+        "title": "Neposredna setev",
+        "body": "Posej {subject} na prosto po pozebi — okoli {frost_date}."
+      }
+    }
   }
 }

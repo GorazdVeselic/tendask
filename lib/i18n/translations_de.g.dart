@@ -66,6 +66,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
+	@override late final _Translations$suggestions$de suggestions = _Translations$suggestions$de._(_root);
 }
 
 // Path: splash
@@ -735,6 +736,1086 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
 }
 
+// Path: suggestions
+class _Translations$suggestions$de extends Translations$suggestions$en {
+	_Translations$suggestions$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$actions$de actions = _Translations$suggestions$actions$de._(_root);
+	@override late final _Translations$suggestions$toast$de toast = _Translations$suggestions$toast$de._(_root);
+	@override String get disclaimer => 'Vorschläge sind allgemeine Hinweise — deinen Garten kennst du am besten.';
+	@override late final _Translations$suggestions$done_sheet$de done_sheet = _Translations$suggestions$done_sheet$de._(_root);
+	@override late final _Translations$suggestions$remove$de remove = _Translations$suggestions$remove$de._(_root);
+	@override late final _Translations$suggestions$history_status$de history_status = _Translations$suggestions$history_status$de._(_root);
+	@override late final _Translations$suggestions$cadence$de cadence = _Translations$suggestions$cadence$de._(_root);
+	@override late final _Translations$suggestions$history$de history = _Translations$suggestions$history$de._(_root);
+	@override late final _Translations$suggestions$weather$de weather = _Translations$suggestions$weather$de._(_root);
+	@override late final _Translations$suggestions$community$de community = _Translations$suggestions$community$de._(_root);
+	@override late final _Translations$suggestions$lawn$de lawn = _Translations$suggestions$lawn$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$de fruit_tree = _Translations$suggestions$fruit_tree$de._(_root);
+	@override late final _Translations$suggestions$berries$de berries = _Translations$suggestions$berries$de._(_root);
+	@override late final _Translations$suggestions$vegetable$de vegetable = _Translations$suggestions$vegetable$de._(_root);
+	@override late final _Translations$suggestions$herbs$de herbs = _Translations$suggestions$herbs$de._(_root);
+	@override late final _Translations$suggestions$tomato$de tomato = _Translations$suggestions$tomato$de._(_root);
+	@override late final _Translations$suggestions$shrub$de shrub = _Translations$suggestions$shrub$de._(_root);
+	@override late final _Translations$suggestions$hedge$de hedge = _Translations$suggestions$hedge$de._(_root);
+	@override late final _Translations$suggestions$conifer$de conifer = _Translations$suggestions$conifer$de._(_root);
+	@override late final _Translations$suggestions$houseplant$de houseplant = _Translations$suggestions$houseplant$de._(_root);
+	@override late final _Translations$suggestions$blueberry$de blueberry = _Translations$suggestions$blueberry$de._(_root);
+	@override late final _Translations$suggestions$cherry_laurel$de cherry_laurel = _Translations$suggestions$cherry_laurel$de._(_root);
+	@override late final _Translations$suggestions$hydrangea$de hydrangea = _Translations$suggestions$hydrangea$de._(_root);
+	@override late final _Translations$suggestions$peach$de peach = _Translations$suggestions$peach$de._(_root);
+	@override late final _Translations$suggestions$raspberry$de raspberry = _Translations$suggestions$raspberry$de._(_root);
+	@override late final _Translations$suggestions$rose$de rose = _Translations$suggestions$rose$de._(_root);
+	@override late final _Translations$suggestions$cucumber$de cucumber = _Translations$suggestions$cucumber$de._(_root);
+	@override late final _Translations$suggestions$zucchini$de zucchini = _Translations$suggestions$zucchini$de._(_root);
+}
+
+// Path: suggestions.actions
+class _Translations$suggestions$actions$de extends Translations$suggestions$actions$en {
+	_Translations$suggestions$actions$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get plan => 'Einplanen';
+	@override String get dismiss => 'Überspringen';
+	@override String get already_done => 'Schon erledigt';
+	@override String get never => 'Nicht mehr vorschlagen';
+	@override String get remove_subject => 'Habe ich nicht mehr';
+}
+
+// Path: suggestions.toast
+class _Translations$suggestions$toast$de extends Translations$suggestions$toast$en {
+	_Translations$suggestions$toast$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get planned => 'Zu deinen Aufgaben hinzugefügt';
+	@override String get logged => 'Als erledigt erfasst';
+}
+
+// Path: suggestions.done_sheet
+class _Translations$suggestions$done_sheet$de extends Translations$suggestions$done_sheet$en {
+	_Translations$suggestions$done_sheet$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Wann hast du es gemacht?';
+	@override String get today => 'Heute';
+	@override String get yesterday => 'Gestern';
+	@override String get pick => 'Datum wählen…';
+}
+
+// Path: suggestions.remove
+class _Translations$suggestions$remove$de extends Translations$suggestions$remove$en {
+	_Translations$suggestions$remove$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Entfernen?';
+	@override String get body => 'Entfernt {subject} aus deinem Garten und stoppt die Vorschläge dazu. Deine bisherigen Einträge bleiben.';
+	@override String get confirm => 'Entfernen';
+}
+
+// Path: suggestions.history_status
+class _Translations$suggestions$history_status$de extends Translations$suggestions$history_status$en {
+	_Translations$suggestions$history_status$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get planned => 'Eingeplant';
+	@override String get logged => 'Erfasst';
+	@override String get dismissed => 'Verworfen';
+	@override String get muted => 'Stumm';
+	@override String get missed => 'Verpasst';
+	@override String get expired => 'Abgelaufen';
+}
+
+// Path: suggestions.cadence
+class _Translations$suggestions$cadence$de extends Translations$suggestions$cadence$en {
+	_Translations$suggestions$cadence$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cadence$overdue$de overdue = _Translations$suggestions$cadence$overdue$de._(_root);
+}
+
+// Path: suggestions.history
+class _Translations$suggestions$history$de extends Translations$suggestions$history$en {
+	_Translations$suggestions$history$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$history$anniversary$de anniversary = _Translations$suggestions$history$anniversary$de._(_root);
+}
+
+// Path: suggestions.weather
+class _Translations$suggestions$weather$de extends Translations$suggestions$weather$en {
+	_Translations$suggestions$weather$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$weather$window_open$de window_open = _Translations$suggestions$weather$window_open$de._(_root);
+}
+
+// Path: suggestions.community
+class _Translations$suggestions$community$de extends Translations$suggestions$community$en {
+	_Translations$suggestions$community$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$community$most_started$de most_started = _Translations$suggestions$community$most_started$de._(_root);
+}
+
+// Path: suggestions.lawn
+class _Translations$suggestions$lawn$de extends Translations$suggestions$lawn$en {
+	_Translations$suggestions$lawn$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$lawn$mow_due$de mow_due = _Translations$suggestions$lawn$mow_due$de._(_root);
+	@override late final _Translations$suggestions$lawn$water_drought$de water_drought = _Translations$suggestions$lawn$water_drought$de._(_root);
+	@override late final _Translations$suggestions$lawn$fertilize_spring$de fertilize_spring = _Translations$suggestions$lawn$fertilize_spring$de._(_root);
+	@override late final _Translations$suggestions$lawn$fertilize_autumn$de fertilize_autumn = _Translations$suggestions$lawn$fertilize_autumn$de._(_root);
+	@override late final _Translations$suggestions$lawn$lime$de lime = _Translations$suggestions$lawn$lime$de._(_root);
+	@override late final _Translations$suggestions$lawn$moss_control$de moss_control = _Translations$suggestions$lawn$moss_control$de._(_root);
+	@override late final _Translations$suggestions$lawn$weed_control$de weed_control = _Translations$suggestions$lawn$weed_control$de._(_root);
+	@override late final _Translations$suggestions$lawn$overseed_spring$de overseed_spring = _Translations$suggestions$lawn$overseed_spring$de._(_root);
+	@override late final _Translations$suggestions$lawn$overseed_autumn$de overseed_autumn = _Translations$suggestions$lawn$overseed_autumn$de._(_root);
+	@override late final _Translations$suggestions$lawn$scarify_spring$de scarify_spring = _Translations$suggestions$lawn$scarify_spring$de._(_root);
+	@override late final _Translations$suggestions$lawn$scarify_autumn$de scarify_autumn = _Translations$suggestions$lawn$scarify_autumn$de._(_root);
+	@override late final _Translations$suggestions$lawn$aerate$de aerate = _Translations$suggestions$lawn$aerate$de._(_root);
+	@override late final _Translations$suggestions$lawn$roll$de roll = _Translations$suggestions$lawn$roll$de._(_root);
+	@override late final _Translations$suggestions$lawn$topdress$de topdress = _Translations$suggestions$lawn$topdress$de._(_root);
+}
+
+// Path: suggestions.fruit_tree
+class _Translations$suggestions$fruit_tree$de extends Translations$suggestions$fruit_tree$en {
+	_Translations$suggestions$fruit_tree$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$fruit_tree$fertilize_spring$de fertilize_spring = _Translations$suggestions$fruit_tree$fertilize_spring$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$prune_winter$de prune_winter = _Translations$suggestions$fruit_tree$prune_winter$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$treat_dormant$de treat_dormant = _Translations$suggestions$fruit_tree$treat_dormant$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$mulch$de mulch = _Translations$suggestions$fruit_tree$mulch$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$thin_fruit$de thin_fruit = _Translations$suggestions$fruit_tree$thin_fruit$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$graft_spring$de graft_spring = _Translations$suggestions$fruit_tree$graft_spring$de._(_root);
+	@override late final _Translations$suggestions$fruit_tree$graft_budding$de graft_budding = _Translations$suggestions$fruit_tree$graft_budding$de._(_root);
+}
+
+// Path: suggestions.berries
+class _Translations$suggestions$berries$de extends Translations$suggestions$berries$en {
+	_Translations$suggestions$berries$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$berries$prune_winter$de prune_winter = _Translations$suggestions$berries$prune_winter$de._(_root);
+	@override late final _Translations$suggestions$berries$fertilize_spring$de fertilize_spring = _Translations$suggestions$berries$fertilize_spring$de._(_root);
+	@override late final _Translations$suggestions$berries$mulch$de mulch = _Translations$suggestions$berries$mulch$de._(_root);
+	@override late final _Translations$suggestions$berries$treat_dormant$de treat_dormant = _Translations$suggestions$berries$treat_dormant$de._(_root);
+}
+
+// Path: suggestions.vegetable
+class _Translations$suggestions$vegetable$de extends Translations$suggestions$vegetable$en {
+	_Translations$suggestions$vegetable$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$vegetable$start_seedlings$de start_seedlings = _Translations$suggestions$vegetable$start_seedlings$de._(_root);
+	@override late final _Translations$suggestions$vegetable$prick_out$de prick_out = _Translations$suggestions$vegetable$prick_out$de._(_root);
+	@override late final _Translations$suggestions$vegetable$harden_off$de harden_off = _Translations$suggestions$vegetable$harden_off$de._(_root);
+	@override late final _Translations$suggestions$vegetable$plant_out$de plant_out = _Translations$suggestions$vegetable$plant_out$de._(_root);
+	@override late final _Translations$suggestions$vegetable$transplant$de transplant = _Translations$suggestions$vegetable$transplant$de._(_root);
+	@override late final _Translations$suggestions$vegetable$sow_direct$de sow_direct = _Translations$suggestions$vegetable$sow_direct$de._(_root);
+	@override late final _Translations$suggestions$vegetable$fertilize_season$de fertilize_season = _Translations$suggestions$vegetable$fertilize_season$de._(_root);
+	@override late final _Translations$suggestions$vegetable$treat_window$de treat_window = _Translations$suggestions$vegetable$treat_window$de._(_root);
+}
+
+// Path: suggestions.herbs
+class _Translations$suggestions$herbs$de extends Translations$suggestions$herbs$en {
+	_Translations$suggestions$herbs$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$herbs$start_seedlings$de start_seedlings = _Translations$suggestions$herbs$start_seedlings$de._(_root);
+	@override late final _Translations$suggestions$herbs$sow_direct$de sow_direct = _Translations$suggestions$herbs$sow_direct$de._(_root);
+	@override late final _Translations$suggestions$herbs$plant_out$de plant_out = _Translations$suggestions$herbs$plant_out$de._(_root);
+}
+
+// Path: suggestions.tomato
+class _Translations$suggestions$tomato$de extends Translations$suggestions$tomato$en {
+	_Translations$suggestions$tomato$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$tomato$start_seedlings$de start_seedlings = _Translations$suggestions$tomato$start_seedlings$de._(_root);
+	@override late final _Translations$suggestions$tomato$prick_out$de prick_out = _Translations$suggestions$tomato$prick_out$de._(_root);
+	@override late final _Translations$suggestions$tomato$harden_off$de harden_off = _Translations$suggestions$tomato$harden_off$de._(_root);
+	@override late final _Translations$suggestions$tomato$transplant$de transplant = _Translations$suggestions$tomato$transplant$de._(_root);
+	@override late final _Translations$suggestions$tomato$stake$de stake = _Translations$suggestions$tomato$stake$de._(_root);
+}
+
+// Path: suggestions.shrub
+class _Translations$suggestions$shrub$de extends Translations$suggestions$shrub$en {
+	_Translations$suggestions$shrub$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$shrub$prune_spring$de prune_spring = _Translations$suggestions$shrub$prune_spring$de._(_root);
+	@override late final _Translations$suggestions$shrub$overwinter$de overwinter = _Translations$suggestions$shrub$overwinter$de._(_root);
+}
+
+// Path: suggestions.hedge
+class _Translations$suggestions$hedge$de extends Translations$suggestions$hedge$en {
+	_Translations$suggestions$hedge$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$hedge$prune_early_summer$de prune_early_summer = _Translations$suggestions$hedge$prune_early_summer$de._(_root);
+	@override late final _Translations$suggestions$hedge$prune_late_summer$de prune_late_summer = _Translations$suggestions$hedge$prune_late_summer$de._(_root);
+}
+
+// Path: suggestions.conifer
+class _Translations$suggestions$conifer$de extends Translations$suggestions$conifer$en {
+	_Translations$suggestions$conifer$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$conifer$prune$de prune = _Translations$suggestions$conifer$prune$de._(_root);
+}
+
+// Path: suggestions.houseplant
+class _Translations$suggestions$houseplant$de extends Translations$suggestions$houseplant$en {
+	_Translations$suggestions$houseplant$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$houseplant$repot$de repot = _Translations$suggestions$houseplant$repot$de._(_root);
+	@override late final _Translations$suggestions$houseplant$fertilize_season$de fertilize_season = _Translations$suggestions$houseplant$fertilize_season$de._(_root);
+	@override late final _Translations$suggestions$houseplant$overwinter$de overwinter = _Translations$suggestions$houseplant$overwinter$de._(_root);
+}
+
+// Path: suggestions.blueberry
+class _Translations$suggestions$blueberry$de extends Translations$suggestions$blueberry$en {
+	_Translations$suggestions$blueberry$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$blueberry$prune$de prune = _Translations$suggestions$blueberry$prune$de._(_root);
+}
+
+// Path: suggestions.cherry_laurel
+class _Translations$suggestions$cherry_laurel$de extends Translations$suggestions$cherry_laurel$en {
+	_Translations$suggestions$cherry_laurel$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cherry_laurel$prune_late_spring$de prune_late_spring = _Translations$suggestions$cherry_laurel$prune_late_spring$de._(_root);
+	@override late final _Translations$suggestions$cherry_laurel$prune_late_summer$de prune_late_summer = _Translations$suggestions$cherry_laurel$prune_late_summer$de._(_root);
+}
+
+// Path: suggestions.hydrangea
+class _Translations$suggestions$hydrangea$de extends Translations$suggestions$hydrangea$en {
+	_Translations$suggestions$hydrangea$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$hydrangea$prune_old_wood$de prune_old_wood = _Translations$suggestions$hydrangea$prune_old_wood$de._(_root);
+	@override late final _Translations$suggestions$hydrangea$prune_new_wood$de prune_new_wood = _Translations$suggestions$hydrangea$prune_new_wood$de._(_root);
+}
+
+// Path: suggestions.peach
+class _Translations$suggestions$peach$de extends Translations$suggestions$peach$en {
+	_Translations$suggestions$peach$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$peach$prune_spring$de prune_spring = _Translations$suggestions$peach$prune_spring$de._(_root);
+}
+
+// Path: suggestions.raspberry
+class _Translations$suggestions$raspberry$de extends Translations$suggestions$raspberry$en {
+	_Translations$suggestions$raspberry$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$raspberry$prune_late_winter$de prune_late_winter = _Translations$suggestions$raspberry$prune_late_winter$de._(_root);
+	@override late final _Translations$suggestions$raspberry$prune_after_harvest$de prune_after_harvest = _Translations$suggestions$raspberry$prune_after_harvest$de._(_root);
+}
+
+// Path: suggestions.rose
+class _Translations$suggestions$rose$de extends Translations$suggestions$rose$en {
+	_Translations$suggestions$rose$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$rose$prune_spring$de prune_spring = _Translations$suggestions$rose$prune_spring$de._(_root);
+	@override late final _Translations$suggestions$rose$overwinter$de overwinter = _Translations$suggestions$rose$overwinter$de._(_root);
+}
+
+// Path: suggestions.cucumber
+class _Translations$suggestions$cucumber$de extends Translations$suggestions$cucumber$en {
+	_Translations$suggestions$cucumber$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cucumber$sow_direct$de sow_direct = _Translations$suggestions$cucumber$sow_direct$de._(_root);
+}
+
+// Path: suggestions.zucchini
+class _Translations$suggestions$zucchini$de extends Translations$suggestions$zucchini$en {
+	_Translations$suggestions$zucchini$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$zucchini$sow_direct$de sow_direct = _Translations$suggestions$zucchini$sow_direct$de._(_root);
+}
+
+// Path: suggestions.cadence.overdue
+class _Translations$suggestions$cadence$overdue$de extends Translations$suggestions$cadence$overdue$en {
+	_Translations$suggestions$cadence$overdue$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} ist fällig';
+	@override String get body => '{subject}: ca. {days_overdue} Tage über dem üblichen Rhythmus (~{cadence_days} Tage).';
+}
+
+// Path: suggestions.history.anniversary
+class _Translations$suggestions$history$anniversary$de extends Translations$suggestions$history$anniversary$en {
+	_Translations$suggestions$history$anniversary$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} — vor einem Jahr';
+	@override String get body => 'Letztes Jahr um den {last_year_date} — {task} bei {subject}. Wieder fällig?';
+}
+
+// Path: suggestions.weather.window_open
+class _Translations$suggestions$weather$window_open$de extends Translations$suggestions$weather$window_open$en {
+	_Translations$suggestions$weather$window_open$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task}: gutes Zeitfenster';
+	@override String get body => 'Für {subject} steht eine trockene Phase an — ein guter Zeitpunkt.';
+}
+
+// Path: suggestions.community.most_started
+class _Translations$suggestions$community$most_started$de extends Translations$suggestions$community$most_started$en {
+	_Translations$suggestions$community$most_started$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} in der Nähe';
+	@override String get body => 'Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen.';
+}
+
+// Path: suggestions.lawn.mow_due
+class _Translations$suggestions$lawn$mow_due$de extends Translations$suggestions$lawn$mow_due$en {
+	_Translations$suggestions$lawn$mow_due$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Mähen fällig';
+	@override String get body => '{subject} ist bereit zum Mähen.';
+}
+
+// Path: suggestions.lawn.water_drought
+class _Translations$suggestions$lawn$water_drought$de extends Translations$suggestions$lawn$water_drought$en {
+	_Translations$suggestions$lawn$water_drought$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Gießen bei Trockenheit';
+	@override String get body => '{subject} braucht bei trockenem Wetter eventuell Wasser.';
+}
+
+// Path: suggestions.lawn.fertilize_spring
+class _Translations$suggestions$lawn$fertilize_spring$de extends Translations$suggestions$lawn$fertilize_spring$en {
+	_Translations$suggestions$lawn$fertilize_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsdüngung';
+	@override String get body => 'Dünge {subject} für die Saison — am besten bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.fertilize_autumn
+class _Translations$suggestions$lawn$fertilize_autumn$de extends Translations$suggestions$lawn$fertilize_autumn$en {
+	_Translations$suggestions$lawn$fertilize_autumn$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Herbstdüngung';
+	@override String get body => 'Gib {subject} vor dem Winter eine Herbstdüngung — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.lime
+class _Translations$suggestions$lawn$lime$de extends Translations$suggestions$lawn$lime$en {
+	_Translations$suggestions$lawn$lime$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rasen kalken';
+	@override String get body => 'Kalke {subject} bei saurem Boden — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.moss_control
+class _Translations$suggestions$lawn$moss_control$de extends Translations$suggestions$lawn$moss_control$en {
+	_Translations$suggestions$lawn$moss_control$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Moosbekämpfung';
+	@override String get body => 'Bekämpfe Moos in {subject} — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.weed_control
+class _Translations$suggestions$lawn$weed_control$de extends Translations$suggestions$lawn$weed_control$en {
+	_Translations$suggestions$lawn$weed_control$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Unkrautbekämpfung';
+	@override String get body => 'Geh das Unkraut in {subject} an — am besten bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.overseed_spring
+class _Translations$suggestions$lawn$overseed_spring$de extends Translations$suggestions$lawn$overseed_spring$en {
+	_Translations$suggestions$lawn$overseed_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nachsaat (Frühjahr)';
+	@override String get body => 'Säe kahle Stellen in {subject} nach — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.overseed_autumn
+class _Translations$suggestions$lawn$overseed_autumn$de extends Translations$suggestions$lawn$overseed_autumn$en {
+	_Translations$suggestions$lawn$overseed_autumn$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nachsaat (Herbst)';
+	@override String get body => 'Übersäe {subject} im Herbst — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.scarify_spring
+class _Translations$suggestions$lawn$scarify_spring$de extends Translations$suggestions$lawn$scarify_spring$en {
+	_Translations$suggestions$lawn$scarify_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vertikutieren (Frühjahr)';
+	@override String get body => 'Vertikutiere {subject} gegen Rasenfilz — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.scarify_autumn
+class _Translations$suggestions$lawn$scarify_autumn$de extends Translations$suggestions$lawn$scarify_autumn$en {
+	_Translations$suggestions$lawn$scarify_autumn$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vertikutieren (Herbst)';
+	@override String get body => 'Vertikutiere {subject} im Herbst — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.aerate
+class _Translations$suggestions$lawn$aerate$de extends Translations$suggestions$lawn$aerate$en {
+	_Translations$suggestions$lawn$aerate$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Aerifizieren';
+	@override String get body => 'Lüfte {subject} gegen Verdichtung — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.lawn.roll
+class _Translations$suggestions$lawn$roll$de extends Translations$suggestions$lawn$roll$en {
+	_Translations$suggestions$lawn$roll$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rasen walzen';
+	@override String get body => 'Walze {subject} nach dem Winter — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.topdress
+class _Translations$suggestions$lawn$topdress$de extends Translations$suggestions$lawn$topdress$en {
+	_Translations$suggestions$lawn$topdress$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Topdressing';
+	@override String get body => 'Sande {subject} ab und ebne ein — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.fertilize_spring
+class _Translations$suggestions$fruit_tree$fertilize_spring$de extends Translations$suggestions$fruit_tree$fertilize_spring$en {
+	_Translations$suggestions$fruit_tree$fertilize_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsdüngung';
+	@override String get body => 'Dünge deinen {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.prune_winter
+class _Translations$suggestions$fruit_tree$prune_winter$de extends Translations$suggestions$fruit_tree$prune_winter$en {
+	_Translations$suggestions$fruit_tree$prune_winter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterschnitt';
+	@override String get body => 'Schneide {subject} in der Ruhephase — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.treat_dormant
+class _Translations$suggestions$fruit_tree$treat_dormant$de extends Translations$suggestions$fruit_tree$treat_dormant$en {
+	_Translations$suggestions$fruit_tree$treat_dormant$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterspritzung';
+	@override String get body => 'Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.mulch
+class _Translations$suggestions$fruit_tree$mulch$de extends Translations$suggestions$fruit_tree$mulch$en {
+	_Translations$suggestions$fruit_tree$mulch$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Mulchen';
+	@override String get body => 'Mulche um {subject}, um Feuchtigkeit zu halten — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.thin_fruit
+class _Translations$suggestions$fruit_tree$thin_fruit$de extends Translations$suggestions$fruit_tree$thin_fruit$en {
+	_Translations$suggestions$fruit_tree$thin_fruit$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Früchte ausdünnen';
+	@override String get body => 'Dünne die Fruchtansätze von {subject} aus — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.graft_spring
+class _Translations$suggestions$fruit_tree$graft_spring$de extends Translations$suggestions$fruit_tree$graft_spring$en {
+	_Translations$suggestions$fruit_tree$graft_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsveredelung';
+	@override String get body => 'Veredle {subject} beim Saftaufstieg — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.graft_budding
+class _Translations$suggestions$fruit_tree$graft_budding$de extends Translations$suggestions$fruit_tree$graft_budding$en {
+	_Translations$suggestions$fruit_tree$graft_budding$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Sommerokulation';
+	@override String get body => 'Okuliere {subject} im Spätsommer — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.berries.prune_winter
+class _Translations$suggestions$berries$prune_winter$de extends Translations$suggestions$berries$prune_winter$en {
+	_Translations$suggestions$berries$prune_winter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterschnitt';
+	@override String get body => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.berries.fertilize_spring
+class _Translations$suggestions$berries$fertilize_spring$de extends Translations$suggestions$berries$fertilize_spring$en {
+	_Translations$suggestions$berries$fertilize_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsdüngung';
+	@override String get body => 'Dünge {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.berries.mulch
+class _Translations$suggestions$berries$mulch$de extends Translations$suggestions$berries$mulch$en {
+	_Translations$suggestions$berries$mulch$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Mulchen';
+	@override String get body => 'Mulche {subject} für kühle, feuchte Wurzeln — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.berries.treat_dormant
+class _Translations$suggestions$berries$treat_dormant$de extends Translations$suggestions$berries$treat_dormant$en {
+	_Translations$suggestions$berries$treat_dormant$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterspritzung';
+	@override String get body => 'Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.vegetable.start_seedlings
+class _Translations$suggestions$vegetable$start_seedlings$de extends Translations$suggestions$vegetable$start_seedlings$en {
+	_Translations$suggestions$vegetable$start_seedlings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Anzucht starten';
+	@override String get body => 'Säe {subject} drinnen für das spätere Auspflanzen — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.vegetable.prick_out
+class _Translations$suggestions$vegetable$prick_out$de extends Translations$suggestions$vegetable$prick_out$en {
+	_Translations$suggestions$vegetable$prick_out$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pikieren';
+	@override String get body => '{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe.';
+}
+
+// Path: suggestions.vegetable.harden_off
+class _Translations$suggestions$vegetable$harden_off$de extends Translations$suggestions$vegetable$harden_off$en {
+	_Translations$suggestions$vegetable$harden_off$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Abhärten';
+	@override String get body => 'Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.vegetable.plant_out
+class _Translations$suggestions$vegetable$plant_out$de extends Translations$suggestions$vegetable$plant_out$en {
+	_Translations$suggestions$vegetable$plant_out$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Auspflanzen';
+	@override String get body => 'Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}.';
+}
+
+// Path: suggestions.vegetable.transplant
+class _Translations$suggestions$vegetable$transplant$de extends Translations$suggestions$vegetable$transplant$en {
+	_Translations$suggestions$vegetable$transplant$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Umpflanzen';
+	@override String get body => 'Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}.';
+}
+
+// Path: suggestions.vegetable.sow_direct
+class _Translations$suggestions$vegetable$sow_direct$de extends Translations$suggestions$vegetable$sow_direct$en {
+	_Translations$suggestions$vegetable$sow_direct$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Direktsaat';
+	@override String get body => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.vegetable.fertilize_season
+class _Translations$suggestions$vegetable$fertilize_season$de extends Translations$suggestions$vegetable$fertilize_season$en {
+	_Translations$suggestions$vegetable$fertilize_season$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Düngen';
+	@override String get body => 'Dünge {subject} während der Wachstumszeit.';
+}
+
+// Path: suggestions.vegetable.treat_window
+class _Translations$suggestions$vegetable$treat_window$de extends Translations$suggestions$vegetable$treat_window$en {
+	_Translations$suggestions$vegetable$treat_window$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Kontrollieren';
+	@override String get body => 'Prüfe {subject} und behandle bei Bedarf — am besten bei trockenem Wetter.';
+}
+
+// Path: suggestions.herbs.start_seedlings
+class _Translations$suggestions$herbs$start_seedlings$de extends Translations$suggestions$herbs$start_seedlings$en {
+	_Translations$suggestions$herbs$start_seedlings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Anzucht starten';
+	@override String get body => 'Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.herbs.sow_direct
+class _Translations$suggestions$herbs$sow_direct$de extends Translations$suggestions$herbs$sow_direct$en {
+	_Translations$suggestions$herbs$sow_direct$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Direktsaat';
+	@override String get body => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.herbs.plant_out
+class _Translations$suggestions$herbs$plant_out$de extends Translations$suggestions$herbs$plant_out$en {
+	_Translations$suggestions$herbs$plant_out$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Auspflanzen';
+	@override String get body => 'Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}.';
+}
+
+// Path: suggestions.tomato.start_seedlings
+class _Translations$suggestions$tomato$start_seedlings$de extends Translations$suggestions$tomato$start_seedlings$en {
+	_Translations$suggestions$tomato$start_seedlings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Anzucht starten';
+	@override String get body => 'Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.tomato.prick_out
+class _Translations$suggestions$tomato$prick_out$de extends Translations$suggestions$tomato$prick_out$en {
+	_Translations$suggestions$tomato$prick_out$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pikieren';
+	@override String get body => '{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe.';
+}
+
+// Path: suggestions.tomato.harden_off
+class _Translations$suggestions$tomato$harden_off$de extends Translations$suggestions$tomato$harden_off$en {
+	_Translations$suggestions$tomato$harden_off$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Abhärten';
+	@override String get body => 'Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.tomato.transplant
+class _Translations$suggestions$tomato$transplant$de extends Translations$suggestions$tomato$transplant$en {
+	_Translations$suggestions$tomato$transplant$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Umpflanzen';
+	@override String get body => '{subject} wächst seit {days_since} Tagen — an den endgültigen Platz setzen.';
+}
+
+// Path: suggestions.tomato.stake
+class _Translations$suggestions$tomato$stake$de extends Translations$suggestions$tomato$stake$en {
+	_Translations$suggestions$tomato$stake$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Stützen';
+	@override String get body => '{subject}: {days_since} Tage Wachstum — Stab oder Stütze anbringen.';
+}
+
+// Path: suggestions.shrub.prune_spring
+class _Translations$suggestions$shrub$prune_spring$de extends Translations$suggestions$shrub$prune_spring$en {
+	_Translations$suggestions$shrub$prune_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsschnitt';
+	@override String get body => 'Schneide {subject} nach Bedarf — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.shrub.overwinter
+class _Translations$suggestions$shrub$overwinter$de extends Translations$suggestions$shrub$overwinter$en {
+	_Translations$suggestions$shrub$overwinter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterschutz';
+	@override String get body => 'Schütze {subject} vor dem ersten starken Frost — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.hedge.prune_early_summer
+class _Translations$suggestions$hedge$prune_early_summer$de extends Translations$suggestions$hedge$prune_early_summer$en {
+	_Translations$suggestions$hedge$prune_early_summer$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühsommerschnitt';
+	@override String get body => 'Schneide {subject} in Form — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.hedge.prune_late_summer
+class _Translations$suggestions$hedge$prune_late_summer$de extends Translations$suggestions$hedge$prune_late_summer$en {
+	_Translations$suggestions$hedge$prune_late_summer$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spätsommerschnitt';
+	@override String get body => 'Gib {subject} vor dem Herbst einen letzten Schnitt — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.conifer.prune
+class _Translations$suggestions$conifer$prune$de extends Translations$suggestions$conifer$prune$en {
+	_Translations$suggestions$conifer$prune$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rückschnitt';
+	@override String get body => 'Schneide {subject} leicht ins neue Wachstum — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.houseplant.repot
+class _Translations$suggestions$houseplant$repot$de extends Translations$suggestions$houseplant$repot$en {
+	_Translations$suggestions$houseplant$repot$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Umtopfen';
+	@override String get body => 'Topfe {subject} bei Wachstumsbeginn um — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.houseplant.fertilize_season
+class _Translations$suggestions$houseplant$fertilize_season$de extends Translations$suggestions$houseplant$fertilize_season$en {
+	_Translations$suggestions$houseplant$fertilize_season$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Düngen';
+	@override String get body => 'Dünge {subject} während der aktiven Wachstumszeit.';
+}
+
+// Path: suggestions.houseplant.overwinter
+class _Translations$suggestions$houseplant$overwinter$de extends Translations$suggestions$houseplant$overwinter$en {
+	_Translations$suggestions$houseplant$overwinter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Reinholen';
+	@override String get body => 'Hole {subject} vor dem ersten Frost ins Haus — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.blueberry.prune
+class _Translations$suggestions$blueberry$prune$de extends Translations$suggestions$blueberry$prune$en {
+	_Translations$suggestions$blueberry$prune$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Schnitt';
+	@override String get body => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.cherry_laurel.prune_late_spring
+class _Translations$suggestions$cherry_laurel$prune_late_spring$de extends Translations$suggestions$cherry_laurel$prune_late_spring$en {
+	_Translations$suggestions$cherry_laurel$prune_late_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spätfrühlingsschnitt';
+	@override String get body => 'Schneide {subject} nach dem ersten Austrieb — Zeitfenster bis ~{window_end_date}.';
+}
+
+// Path: suggestions.cherry_laurel.prune_late_summer
+class _Translations$suggestions$cherry_laurel$prune_late_summer$de extends Translations$suggestions$cherry_laurel$prune_late_summer$en {
+	_Translations$suggestions$cherry_laurel$prune_late_summer$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spätsommerschnitt';
+	@override String get body => 'Schneide {subject} ein zweites Mal — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.hydrangea.prune_old_wood
+class _Translations$suggestions$hydrangea$prune_old_wood$de extends Translations$suggestions$hydrangea$prune_old_wood$en {
+	_Translations$suggestions$hydrangea$prune_old_wood$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Schnitt (altes Holz)';
+	@override String get body => 'Verblühtes ausputzen und {subject} am alten Holz nach der Blüte schneiden — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.hydrangea.prune_new_wood
+class _Translations$suggestions$hydrangea$prune_new_wood$de extends Translations$suggestions$hydrangea$prune_new_wood$en {
+	_Translations$suggestions$hydrangea$prune_new_wood$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Schnitt (neues Holz)';
+	@override String get body => 'Schneide {subject} am neuen Holz im Spätwinter zurück — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.peach.prune_spring
+class _Translations$suggestions$peach$prune_spring$de extends Translations$suggestions$peach$prune_spring$en {
+	_Translations$suggestions$peach$prune_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsschnitt';
+	@override String get body => 'Schneide {subject} beim Knospenschwellen gegen Kräuselkrankheit — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.raspberry.prune_late_winter
+class _Translations$suggestions$raspberry$prune_late_winter$de extends Translations$suggestions$raspberry$prune_late_winter$en {
+	_Translations$suggestions$raspberry$prune_late_winter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spätwinterschnitt';
+	@override String get body => 'Schneide die Ruten von {subject} vor dem Austrieb — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.raspberry.prune_after_harvest
+class _Translations$suggestions$raspberry$prune_after_harvest$de extends Translations$suggestions$raspberry$prune_after_harvest$en {
+	_Translations$suggestions$raspberry$prune_after_harvest$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Schnitt nach der Ernte';
+	@override String get body => '{subject} hat vor {days_since} Tagen getragen — schneide die alten Ruten heraus.';
+}
+
+// Path: suggestions.rose.prune_spring
+class _Translations$suggestions$rose$prune_spring$de extends Translations$suggestions$rose$prune_spring$en {
+	_Translations$suggestions$rose$prune_spring$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Frühjahrsschnitt';
+	@override String get body => 'Schneide {subject} beim Austrieb — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.rose.overwinter
+class _Translations$suggestions$rose$overwinter$de extends Translations$suggestions$rose$overwinter$en {
+	_Translations$suggestions$rose$overwinter$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Winterschutz';
+	@override String get body => 'Häufle {subject} an oder schütze sie vor starkem Frost — bis etwa {window_end_date}.';
+}
+
+// Path: suggestions.cucumber.sow_direct
+class _Translations$suggestions$cucumber$sow_direct$de extends Translations$suggestions$cucumber$sow_direct$en {
+	_Translations$suggestions$cucumber$sow_direct$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Direktsaat';
+	@override String get body => 'Säe {subject} ins Freie, sobald es warm und frostfrei ist — um {frost_date}.';
+}
+
+// Path: suggestions.zucchini.sow_direct
+class _Translations$suggestions$zucchini$sow_direct$de extends Translations$suggestions$zucchini$sow_direct$en {
+	_Translations$suggestions$zucchini$sow_direct$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Direktsaat';
+	@override String get body => 'Säe {subject} nach dem Frost ins Freie — um {frost_date}.';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1158,6 +2239,159 @@ extension on TranslationsDe {
 			'weather.home_retry' => 'Zum Wiederholen tippen',
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
+			'suggestions.actions.plan' => 'Einplanen',
+			'suggestions.actions.dismiss' => 'Überspringen',
+			'suggestions.actions.already_done' => 'Schon erledigt',
+			'suggestions.actions.never' => 'Nicht mehr vorschlagen',
+			'suggestions.actions.remove_subject' => 'Habe ich nicht mehr',
+			'suggestions.toast.planned' => 'Zu deinen Aufgaben hinzugefügt',
+			'suggestions.toast.logged' => 'Als erledigt erfasst',
+			'suggestions.disclaimer' => 'Vorschläge sind allgemeine Hinweise — deinen Garten kennst du am besten.',
+			'suggestions.done_sheet.title' => 'Wann hast du es gemacht?',
+			'suggestions.done_sheet.today' => 'Heute',
+			'suggestions.done_sheet.yesterday' => 'Gestern',
+			'suggestions.done_sheet.pick' => 'Datum wählen…',
+			'suggestions.remove.title' => 'Entfernen?',
+			'suggestions.remove.body' => 'Entfernt {subject} aus deinem Garten und stoppt die Vorschläge dazu. Deine bisherigen Einträge bleiben.',
+			'suggestions.remove.confirm' => 'Entfernen',
+			'suggestions.history_status.planned' => 'Eingeplant',
+			'suggestions.history_status.logged' => 'Erfasst',
+			'suggestions.history_status.dismissed' => 'Verworfen',
+			'suggestions.history_status.muted' => 'Stumm',
+			'suggestions.history_status.missed' => 'Verpasst',
+			'suggestions.history_status.expired' => 'Abgelaufen',
+			'suggestions.cadence.overdue.title' => '{task} ist fällig',
+			'suggestions.cadence.overdue.body' => '{subject}: ca. {days_overdue} Tage über dem üblichen Rhythmus (~{cadence_days} Tage).',
+			'suggestions.history.anniversary.title' => '{task} — vor einem Jahr',
+			'suggestions.history.anniversary.body' => 'Letztes Jahr um den {last_year_date} — {task} bei {subject}. Wieder fällig?',
+			'suggestions.weather.window_open.title' => '{task}: gutes Zeitfenster',
+			'suggestions.weather.window_open.body' => 'Für {subject} steht eine trockene Phase an — ein guter Zeitpunkt.',
+			'suggestions.community.most_started.title' => '{task} in der Nähe',
+			'suggestions.community.most_started.body' => 'Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen.',
+			'suggestions.lawn.mow_due.title' => 'Mähen fällig',
+			'suggestions.lawn.mow_due.body' => '{subject} ist bereit zum Mähen.',
+			'suggestions.lawn.water_drought.title' => 'Gießen bei Trockenheit',
+			'suggestions.lawn.water_drought.body' => '{subject} braucht bei trockenem Wetter eventuell Wasser.',
+			'suggestions.lawn.fertilize_spring.title' => 'Frühjahrsdüngung',
+			'suggestions.lawn.fertilize_spring.body' => 'Dünge {subject} für die Saison — am besten bis etwa {window_end_date}.',
+			'suggestions.lawn.fertilize_autumn.title' => 'Herbstdüngung',
+			'suggestions.lawn.fertilize_autumn.body' => 'Gib {subject} vor dem Winter eine Herbstdüngung — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.lawn.lime.title' => 'Rasen kalken',
+			'suggestions.lawn.lime.body' => 'Kalke {subject} bei saurem Boden — bis etwa {window_end_date}.',
+			'suggestions.lawn.moss_control.title' => 'Moosbekämpfung',
+			'suggestions.lawn.moss_control.body' => 'Bekämpfe Moos in {subject} — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.lawn.weed_control.title' => 'Unkrautbekämpfung',
+			'suggestions.lawn.weed_control.body' => 'Geh das Unkraut in {subject} an — am besten bis etwa {window_end_date}.',
+			'suggestions.lawn.overseed_spring.title' => 'Nachsaat (Frühjahr)',
+			'suggestions.lawn.overseed_spring.body' => 'Säe kahle Stellen in {subject} nach — bis etwa {window_end_date}.',
+			'suggestions.lawn.overseed_autumn.title' => 'Nachsaat (Herbst)',
+			'suggestions.lawn.overseed_autumn.body' => 'Übersäe {subject} im Herbst — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.lawn.scarify_spring.title' => 'Vertikutieren (Frühjahr)',
+			'suggestions.lawn.scarify_spring.body' => 'Vertikutiere {subject} gegen Rasenfilz — bis etwa {window_end_date}.',
+			'suggestions.lawn.scarify_autumn.title' => 'Vertikutieren (Herbst)',
+			'suggestions.lawn.scarify_autumn.body' => 'Vertikutiere {subject} im Herbst — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.lawn.aerate.title' => 'Aerifizieren',
+			'suggestions.lawn.aerate.body' => 'Lüfte {subject} gegen Verdichtung — bis etwa {window_end_date}.',
+			'suggestions.lawn.roll.title' => 'Rasen walzen',
+			'suggestions.lawn.roll.body' => 'Walze {subject} nach dem Winter — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.lawn.topdress.title' => 'Topdressing',
+			'suggestions.lawn.topdress.body' => 'Sande {subject} ab und ebne ein — bis etwa {window_end_date}.',
+			'suggestions.fruit_tree.fertilize_spring.title' => 'Frühjahrsdüngung',
+			'suggestions.fruit_tree.fertilize_spring.body' => 'Dünge deinen {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.',
+			'suggestions.fruit_tree.prune_winter.title' => 'Winterschnitt',
+			'suggestions.fruit_tree.prune_winter.body' => 'Schneide {subject} in der Ruhephase — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.fruit_tree.treat_dormant.title' => 'Winterspritzung',
+			'suggestions.fruit_tree.treat_dormant.body' => 'Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}.',
+			'suggestions.fruit_tree.mulch.title' => 'Mulchen',
+			'suggestions.fruit_tree.mulch.body' => 'Mulche um {subject}, um Feuchtigkeit zu halten — bis etwa {window_end_date}.',
+			'suggestions.fruit_tree.thin_fruit.title' => 'Früchte ausdünnen',
+			'suggestions.fruit_tree.thin_fruit.body' => 'Dünne die Fruchtansätze von {subject} aus — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.fruit_tree.graft_spring.title' => 'Frühjahrsveredelung',
+			'suggestions.fruit_tree.graft_spring.body' => 'Veredle {subject} beim Saftaufstieg — bis etwa {window_end_date}.',
+			'suggestions.fruit_tree.graft_budding.title' => 'Sommerokulation',
+			'suggestions.fruit_tree.graft_budding.body' => 'Okuliere {subject} im Spätsommer — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.berries.prune_winter.title' => 'Winterschnitt',
+			'suggestions.berries.prune_winter.body' => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.',
+			'suggestions.berries.fertilize_spring.title' => 'Frühjahrsdüngung',
+			'suggestions.berries.fertilize_spring.body' => 'Dünge {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.',
+			'suggestions.berries.mulch.title' => 'Mulchen',
+			'suggestions.berries.mulch.body' => 'Mulche {subject} für kühle, feuchte Wurzeln — bis etwa {window_end_date}.',
+			'suggestions.berries.treat_dormant.title' => 'Winterspritzung',
+			'suggestions.berries.treat_dormant.body' => 'Behandle {subject} mit einer Winterspritzung — bis etwa {window_end_date}.',
+			'suggestions.vegetable.start_seedlings.title' => 'Anzucht starten',
+			'suggestions.vegetable.start_seedlings.body' => 'Säe {subject} drinnen für das spätere Auspflanzen — bis etwa {window_end_date}.',
+			'suggestions.vegetable.prick_out.title' => 'Pikieren',
+			'suggestions.vegetable.prick_out.body' => '{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe.',
+			'suggestions.vegetable.harden_off.title' => 'Abhärten',
+			'suggestions.vegetable.harden_off.body' => 'Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.vegetable.plant_out.title' => 'Auspflanzen',
+			'suggestions.vegetable.plant_out.body' => 'Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}.',
+			'suggestions.vegetable.transplant.title' => 'Umpflanzen',
+			'suggestions.vegetable.transplant.body' => 'Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}.',
+			'suggestions.vegetable.sow_direct.title' => 'Direktsaat',
+			'suggestions.vegetable.sow_direct.body' => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.vegetable.fertilize_season.title' => 'Düngen',
+			'suggestions.vegetable.fertilize_season.body' => 'Dünge {subject} während der Wachstumszeit.',
+			'suggestions.vegetable.treat_window.title' => 'Kontrollieren',
+			'suggestions.vegetable.treat_window.body' => 'Prüfe {subject} und behandle bei Bedarf — am besten bei trockenem Wetter.',
+			'suggestions.herbs.start_seedlings.title' => 'Anzucht starten',
+			'suggestions.herbs.start_seedlings.body' => 'Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}.',
+			_ => null,
+		} ?? switch (path) {
+			'suggestions.herbs.sow_direct.title' => 'Direktsaat',
+			'suggestions.herbs.sow_direct.body' => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.herbs.plant_out.title' => 'Auspflanzen',
+			'suggestions.herbs.plant_out.body' => 'Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}.',
+			'suggestions.tomato.start_seedlings.title' => 'Anzucht starten',
+			'suggestions.tomato.start_seedlings.body' => 'Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}.',
+			'suggestions.tomato.prick_out.title' => 'Pikieren',
+			'suggestions.tomato.prick_out.body' => '{subject} wurde vor {days_since} Tagen ausgesät — pikiere die Sämlinge in Töpfe.',
+			'suggestions.tomato.harden_off.title' => 'Abhärten',
+			'suggestions.tomato.harden_off.body' => 'Gewöhne {subject} vor dem Auspflanzen draußen ab — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.tomato.transplant.title' => 'Umpflanzen',
+			'suggestions.tomato.transplant.body' => '{subject} wächst seit {days_since} Tagen — an den endgültigen Platz setzen.',
+			'suggestions.tomato.stake.title' => 'Stützen',
+			'suggestions.tomato.stake.body' => '{subject}: {days_since} Tage Wachstum — Stab oder Stütze anbringen.',
+			'suggestions.shrub.prune_spring.title' => 'Frühjahrsschnitt',
+			'suggestions.shrub.prune_spring.body' => 'Schneide {subject} nach Bedarf — bis etwa {window_end_date}.',
+			'suggestions.shrub.overwinter.title' => 'Winterschutz',
+			'suggestions.shrub.overwinter.body' => 'Schütze {subject} vor dem ersten starken Frost — bis etwa {window_end_date}.',
+			'suggestions.hedge.prune_early_summer.title' => 'Frühsommerschnitt',
+			'suggestions.hedge.prune_early_summer.body' => 'Schneide {subject} in Form — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.hedge.prune_late_summer.title' => 'Spätsommerschnitt',
+			'suggestions.hedge.prune_late_summer.body' => 'Gib {subject} vor dem Herbst einen letzten Schnitt — bis etwa {window_end_date}.',
+			'suggestions.conifer.prune.title' => 'Rückschnitt',
+			'suggestions.conifer.prune.body' => 'Schneide {subject} leicht ins neue Wachstum — bis etwa {window_end_date}.',
+			'suggestions.houseplant.repot.title' => 'Umtopfen',
+			'suggestions.houseplant.repot.body' => 'Topfe {subject} bei Wachstumsbeginn um — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.houseplant.fertilize_season.title' => 'Düngen',
+			'suggestions.houseplant.fertilize_season.body' => 'Dünge {subject} während der aktiven Wachstumszeit.',
+			'suggestions.houseplant.overwinter.title' => 'Reinholen',
+			'suggestions.houseplant.overwinter.body' => 'Hole {subject} vor dem ersten Frost ins Haus — bis etwa {window_end_date}.',
+			'suggestions.blueberry.prune.title' => 'Schnitt',
+			'suggestions.blueberry.prune.body' => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.',
+			'suggestions.cherry_laurel.prune_late_spring.title' => 'Spätfrühlingsschnitt',
+			'suggestions.cherry_laurel.prune_late_spring.body' => 'Schneide {subject} nach dem ersten Austrieb — Zeitfenster bis ~{window_end_date}.',
+			'suggestions.cherry_laurel.prune_late_summer.title' => 'Spätsommerschnitt',
+			'suggestions.cherry_laurel.prune_late_summer.body' => 'Schneide {subject} ein zweites Mal — bis etwa {window_end_date}.',
+			'suggestions.hydrangea.prune_old_wood.title' => 'Schnitt (altes Holz)',
+			'suggestions.hydrangea.prune_old_wood.body' => 'Verblühtes ausputzen und {subject} am alten Holz nach der Blüte schneiden — bis etwa {window_end_date}.',
+			'suggestions.hydrangea.prune_new_wood.title' => 'Schnitt (neues Holz)',
+			'suggestions.hydrangea.prune_new_wood.body' => 'Schneide {subject} am neuen Holz im Spätwinter zurück — bis etwa {window_end_date}.',
+			'suggestions.peach.prune_spring.title' => 'Frühjahrsschnitt',
+			'suggestions.peach.prune_spring.body' => 'Schneide {subject} beim Knospenschwellen gegen Kräuselkrankheit — bis etwa {window_end_date}.',
+			'suggestions.raspberry.prune_late_winter.title' => 'Spätwinterschnitt',
+			'suggestions.raspberry.prune_late_winter.body' => 'Schneide die Ruten von {subject} vor dem Austrieb — bis etwa {window_end_date}.',
+			'suggestions.raspberry.prune_after_harvest.title' => 'Schnitt nach der Ernte',
+			'suggestions.raspberry.prune_after_harvest.body' => '{subject} hat vor {days_since} Tagen getragen — schneide die alten Ruten heraus.',
+			'suggestions.rose.prune_spring.title' => 'Frühjahrsschnitt',
+			'suggestions.rose.prune_spring.body' => 'Schneide {subject} beim Austrieb — bis etwa {window_end_date}.',
+			'suggestions.rose.overwinter.title' => 'Winterschutz',
+			'suggestions.rose.overwinter.body' => 'Häufle {subject} an oder schütze sie vor starkem Frost — bis etwa {window_end_date}.',
+			'suggestions.cucumber.sow_direct.title' => 'Direktsaat',
+			'suggestions.cucumber.sow_direct.body' => 'Säe {subject} ins Freie, sobald es warm und frostfrei ist — um {frost_date}.',
+			'suggestions.zucchini.sow_direct.title' => 'Direktsaat',
+			'suggestions.zucchini.sow_direct.body' => 'Säe {subject} nach dem Frost ins Freie — um {frost_date}.',
 			_ => null,
 		};
 	}

@@ -66,6 +66,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$supplies$sl supplies = _Translations$supplies$sl._(_root);
 	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
+	@override late final _Translations$suggestions$sl suggestions = _Translations$suggestions$sl._(_root);
 }
 
 // Path: splash
@@ -741,6 +742,1086 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String updated_at({required Object time}) => 'Osveženo ${time}';
 }
 
+// Path: suggestions
+class _Translations$suggestions$sl extends Translations$suggestions$en {
+	_Translations$suggestions$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$actions$sl actions = _Translations$suggestions$actions$sl._(_root);
+	@override late final _Translations$suggestions$toast$sl toast = _Translations$suggestions$toast$sl._(_root);
+	@override String get disclaimer => 'Predlogi so splošna usmeritev — tvoj vrt najbolje poznaš ti.';
+	@override late final _Translations$suggestions$done_sheet$sl done_sheet = _Translations$suggestions$done_sheet$sl._(_root);
+	@override late final _Translations$suggestions$remove$sl remove = _Translations$suggestions$remove$sl._(_root);
+	@override late final _Translations$suggestions$history_status$sl history_status = _Translations$suggestions$history_status$sl._(_root);
+	@override late final _Translations$suggestions$cadence$sl cadence = _Translations$suggestions$cadence$sl._(_root);
+	@override late final _Translations$suggestions$history$sl history = _Translations$suggestions$history$sl._(_root);
+	@override late final _Translations$suggestions$weather$sl weather = _Translations$suggestions$weather$sl._(_root);
+	@override late final _Translations$suggestions$community$sl community = _Translations$suggestions$community$sl._(_root);
+	@override late final _Translations$suggestions$lawn$sl lawn = _Translations$suggestions$lawn$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$sl fruit_tree = _Translations$suggestions$fruit_tree$sl._(_root);
+	@override late final _Translations$suggestions$berries$sl berries = _Translations$suggestions$berries$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$sl vegetable = _Translations$suggestions$vegetable$sl._(_root);
+	@override late final _Translations$suggestions$herbs$sl herbs = _Translations$suggestions$herbs$sl._(_root);
+	@override late final _Translations$suggestions$tomato$sl tomato = _Translations$suggestions$tomato$sl._(_root);
+	@override late final _Translations$suggestions$shrub$sl shrub = _Translations$suggestions$shrub$sl._(_root);
+	@override late final _Translations$suggestions$hedge$sl hedge = _Translations$suggestions$hedge$sl._(_root);
+	@override late final _Translations$suggestions$conifer$sl conifer = _Translations$suggestions$conifer$sl._(_root);
+	@override late final _Translations$suggestions$houseplant$sl houseplant = _Translations$suggestions$houseplant$sl._(_root);
+	@override late final _Translations$suggestions$blueberry$sl blueberry = _Translations$suggestions$blueberry$sl._(_root);
+	@override late final _Translations$suggestions$cherry_laurel$sl cherry_laurel = _Translations$suggestions$cherry_laurel$sl._(_root);
+	@override late final _Translations$suggestions$hydrangea$sl hydrangea = _Translations$suggestions$hydrangea$sl._(_root);
+	@override late final _Translations$suggestions$peach$sl peach = _Translations$suggestions$peach$sl._(_root);
+	@override late final _Translations$suggestions$raspberry$sl raspberry = _Translations$suggestions$raspberry$sl._(_root);
+	@override late final _Translations$suggestions$rose$sl rose = _Translations$suggestions$rose$sl._(_root);
+	@override late final _Translations$suggestions$cucumber$sl cucumber = _Translations$suggestions$cucumber$sl._(_root);
+	@override late final _Translations$suggestions$zucchini$sl zucchini = _Translations$suggestions$zucchini$sl._(_root);
+}
+
+// Path: suggestions.actions
+class _Translations$suggestions$actions$sl extends Translations$suggestions$actions$en {
+	_Translations$suggestions$actions$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get plan => 'Načrtuj';
+	@override String get dismiss => 'Preskoči';
+	@override String get already_done => 'Že opravljeno';
+	@override String get never => 'Ne predlagaj več';
+	@override String get remove_subject => 'Tega nimam več';
+}
+
+// Path: suggestions.toast
+class _Translations$suggestions$toast$sl extends Translations$suggestions$toast$en {
+	_Translations$suggestions$toast$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get planned => 'Dodano med opravila';
+	@override String get logged => 'Zabeleženo kot opravljeno';
+}
+
+// Path: suggestions.done_sheet
+class _Translations$suggestions$done_sheet$sl extends Translations$suggestions$done_sheet$en {
+	_Translations$suggestions$done_sheet$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Kdaj je bilo opravljeno?';
+	@override String get today => 'Danes';
+	@override String get yesterday => 'Včeraj';
+	@override String get pick => 'Izberi datum…';
+}
+
+// Path: suggestions.remove
+class _Translations$suggestions$remove$sl extends Translations$suggestions$remove$en {
+	_Translations$suggestions$remove$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Odstranim?';
+	@override String get body => '{subject} odstrani iz vrta in ustavi njegove predloge. Pretekli zapisi ostanejo.';
+	@override String get confirm => 'Odstrani';
+}
+
+// Path: suggestions.history_status
+class _Translations$suggestions$history_status$sl extends Translations$suggestions$history_status$en {
+	_Translations$suggestions$history_status$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get planned => 'Načrtovano';
+	@override String get logged => 'Zabeleženo';
+	@override String get dismissed => 'Opuščeno';
+	@override String get muted => 'Utišano';
+	@override String get missed => 'Zamujeno';
+	@override String get expired => 'Poteklo';
+}
+
+// Path: suggestions.cadence
+class _Translations$suggestions$cadence$sl extends Translations$suggestions$cadence$en {
+	_Translations$suggestions$cadence$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cadence$overdue$sl overdue = _Translations$suggestions$cadence$overdue$sl._(_root);
+}
+
+// Path: suggestions.history
+class _Translations$suggestions$history$sl extends Translations$suggestions$history$en {
+	_Translations$suggestions$history$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$history$anniversary$sl anniversary = _Translations$suggestions$history$anniversary$sl._(_root);
+}
+
+// Path: suggestions.weather
+class _Translations$suggestions$weather$sl extends Translations$suggestions$weather$en {
+	_Translations$suggestions$weather$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$weather$window_open$sl window_open = _Translations$suggestions$weather$window_open$sl._(_root);
+}
+
+// Path: suggestions.community
+class _Translations$suggestions$community$sl extends Translations$suggestions$community$en {
+	_Translations$suggestions$community$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$community$most_started$sl most_started = _Translations$suggestions$community$most_started$sl._(_root);
+}
+
+// Path: suggestions.lawn
+class _Translations$suggestions$lawn$sl extends Translations$suggestions$lawn$en {
+	_Translations$suggestions$lawn$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$lawn$mow_due$sl mow_due = _Translations$suggestions$lawn$mow_due$sl._(_root);
+	@override late final _Translations$suggestions$lawn$water_drought$sl water_drought = _Translations$suggestions$lawn$water_drought$sl._(_root);
+	@override late final _Translations$suggestions$lawn$fertilize_spring$sl fertilize_spring = _Translations$suggestions$lawn$fertilize_spring$sl._(_root);
+	@override late final _Translations$suggestions$lawn$fertilize_autumn$sl fertilize_autumn = _Translations$suggestions$lawn$fertilize_autumn$sl._(_root);
+	@override late final _Translations$suggestions$lawn$lime$sl lime = _Translations$suggestions$lawn$lime$sl._(_root);
+	@override late final _Translations$suggestions$lawn$moss_control$sl moss_control = _Translations$suggestions$lawn$moss_control$sl._(_root);
+	@override late final _Translations$suggestions$lawn$weed_control$sl weed_control = _Translations$suggestions$lawn$weed_control$sl._(_root);
+	@override late final _Translations$suggestions$lawn$overseed_spring$sl overseed_spring = _Translations$suggestions$lawn$overseed_spring$sl._(_root);
+	@override late final _Translations$suggestions$lawn$overseed_autumn$sl overseed_autumn = _Translations$suggestions$lawn$overseed_autumn$sl._(_root);
+	@override late final _Translations$suggestions$lawn$scarify_spring$sl scarify_spring = _Translations$suggestions$lawn$scarify_spring$sl._(_root);
+	@override late final _Translations$suggestions$lawn$scarify_autumn$sl scarify_autumn = _Translations$suggestions$lawn$scarify_autumn$sl._(_root);
+	@override late final _Translations$suggestions$lawn$aerate$sl aerate = _Translations$suggestions$lawn$aerate$sl._(_root);
+	@override late final _Translations$suggestions$lawn$roll$sl roll = _Translations$suggestions$lawn$roll$sl._(_root);
+	@override late final _Translations$suggestions$lawn$topdress$sl topdress = _Translations$suggestions$lawn$topdress$sl._(_root);
+}
+
+// Path: suggestions.fruit_tree
+class _Translations$suggestions$fruit_tree$sl extends Translations$suggestions$fruit_tree$en {
+	_Translations$suggestions$fruit_tree$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$fruit_tree$fertilize_spring$sl fertilize_spring = _Translations$suggestions$fruit_tree$fertilize_spring$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$prune_winter$sl prune_winter = _Translations$suggestions$fruit_tree$prune_winter$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$treat_dormant$sl treat_dormant = _Translations$suggestions$fruit_tree$treat_dormant$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$mulch$sl mulch = _Translations$suggestions$fruit_tree$mulch$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$thin_fruit$sl thin_fruit = _Translations$suggestions$fruit_tree$thin_fruit$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$graft_spring$sl graft_spring = _Translations$suggestions$fruit_tree$graft_spring$sl._(_root);
+	@override late final _Translations$suggestions$fruit_tree$graft_budding$sl graft_budding = _Translations$suggestions$fruit_tree$graft_budding$sl._(_root);
+}
+
+// Path: suggestions.berries
+class _Translations$suggestions$berries$sl extends Translations$suggestions$berries$en {
+	_Translations$suggestions$berries$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$berries$prune_winter$sl prune_winter = _Translations$suggestions$berries$prune_winter$sl._(_root);
+	@override late final _Translations$suggestions$berries$fertilize_spring$sl fertilize_spring = _Translations$suggestions$berries$fertilize_spring$sl._(_root);
+	@override late final _Translations$suggestions$berries$mulch$sl mulch = _Translations$suggestions$berries$mulch$sl._(_root);
+	@override late final _Translations$suggestions$berries$treat_dormant$sl treat_dormant = _Translations$suggestions$berries$treat_dormant$sl._(_root);
+}
+
+// Path: suggestions.vegetable
+class _Translations$suggestions$vegetable$sl extends Translations$suggestions$vegetable$en {
+	_Translations$suggestions$vegetable$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$vegetable$start_seedlings$sl start_seedlings = _Translations$suggestions$vegetable$start_seedlings$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$prick_out$sl prick_out = _Translations$suggestions$vegetable$prick_out$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$harden_off$sl harden_off = _Translations$suggestions$vegetable$harden_off$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$plant_out$sl plant_out = _Translations$suggestions$vegetable$plant_out$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$transplant$sl transplant = _Translations$suggestions$vegetable$transplant$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$sow_direct$sl sow_direct = _Translations$suggestions$vegetable$sow_direct$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$fertilize_season$sl fertilize_season = _Translations$suggestions$vegetable$fertilize_season$sl._(_root);
+	@override late final _Translations$suggestions$vegetable$treat_window$sl treat_window = _Translations$suggestions$vegetable$treat_window$sl._(_root);
+}
+
+// Path: suggestions.herbs
+class _Translations$suggestions$herbs$sl extends Translations$suggestions$herbs$en {
+	_Translations$suggestions$herbs$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$herbs$start_seedlings$sl start_seedlings = _Translations$suggestions$herbs$start_seedlings$sl._(_root);
+	@override late final _Translations$suggestions$herbs$sow_direct$sl sow_direct = _Translations$suggestions$herbs$sow_direct$sl._(_root);
+	@override late final _Translations$suggestions$herbs$plant_out$sl plant_out = _Translations$suggestions$herbs$plant_out$sl._(_root);
+}
+
+// Path: suggestions.tomato
+class _Translations$suggestions$tomato$sl extends Translations$suggestions$tomato$en {
+	_Translations$suggestions$tomato$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$tomato$start_seedlings$sl start_seedlings = _Translations$suggestions$tomato$start_seedlings$sl._(_root);
+	@override late final _Translations$suggestions$tomato$prick_out$sl prick_out = _Translations$suggestions$tomato$prick_out$sl._(_root);
+	@override late final _Translations$suggestions$tomato$harden_off$sl harden_off = _Translations$suggestions$tomato$harden_off$sl._(_root);
+	@override late final _Translations$suggestions$tomato$transplant$sl transplant = _Translations$suggestions$tomato$transplant$sl._(_root);
+	@override late final _Translations$suggestions$tomato$stake$sl stake = _Translations$suggestions$tomato$stake$sl._(_root);
+}
+
+// Path: suggestions.shrub
+class _Translations$suggestions$shrub$sl extends Translations$suggestions$shrub$en {
+	_Translations$suggestions$shrub$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$shrub$prune_spring$sl prune_spring = _Translations$suggestions$shrub$prune_spring$sl._(_root);
+	@override late final _Translations$suggestions$shrub$overwinter$sl overwinter = _Translations$suggestions$shrub$overwinter$sl._(_root);
+}
+
+// Path: suggestions.hedge
+class _Translations$suggestions$hedge$sl extends Translations$suggestions$hedge$en {
+	_Translations$suggestions$hedge$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$hedge$prune_early_summer$sl prune_early_summer = _Translations$suggestions$hedge$prune_early_summer$sl._(_root);
+	@override late final _Translations$suggestions$hedge$prune_late_summer$sl prune_late_summer = _Translations$suggestions$hedge$prune_late_summer$sl._(_root);
+}
+
+// Path: suggestions.conifer
+class _Translations$suggestions$conifer$sl extends Translations$suggestions$conifer$en {
+	_Translations$suggestions$conifer$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$conifer$prune$sl prune = _Translations$suggestions$conifer$prune$sl._(_root);
+}
+
+// Path: suggestions.houseplant
+class _Translations$suggestions$houseplant$sl extends Translations$suggestions$houseplant$en {
+	_Translations$suggestions$houseplant$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$houseplant$repot$sl repot = _Translations$suggestions$houseplant$repot$sl._(_root);
+	@override late final _Translations$suggestions$houseplant$fertilize_season$sl fertilize_season = _Translations$suggestions$houseplant$fertilize_season$sl._(_root);
+	@override late final _Translations$suggestions$houseplant$overwinter$sl overwinter = _Translations$suggestions$houseplant$overwinter$sl._(_root);
+}
+
+// Path: suggestions.blueberry
+class _Translations$suggestions$blueberry$sl extends Translations$suggestions$blueberry$en {
+	_Translations$suggestions$blueberry$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$blueberry$prune$sl prune = _Translations$suggestions$blueberry$prune$sl._(_root);
+}
+
+// Path: suggestions.cherry_laurel
+class _Translations$suggestions$cherry_laurel$sl extends Translations$suggestions$cherry_laurel$en {
+	_Translations$suggestions$cherry_laurel$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cherry_laurel$prune_late_spring$sl prune_late_spring = _Translations$suggestions$cherry_laurel$prune_late_spring$sl._(_root);
+	@override late final _Translations$suggestions$cherry_laurel$prune_late_summer$sl prune_late_summer = _Translations$suggestions$cherry_laurel$prune_late_summer$sl._(_root);
+}
+
+// Path: suggestions.hydrangea
+class _Translations$suggestions$hydrangea$sl extends Translations$suggestions$hydrangea$en {
+	_Translations$suggestions$hydrangea$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$hydrangea$prune_old_wood$sl prune_old_wood = _Translations$suggestions$hydrangea$prune_old_wood$sl._(_root);
+	@override late final _Translations$suggestions$hydrangea$prune_new_wood$sl prune_new_wood = _Translations$suggestions$hydrangea$prune_new_wood$sl._(_root);
+}
+
+// Path: suggestions.peach
+class _Translations$suggestions$peach$sl extends Translations$suggestions$peach$en {
+	_Translations$suggestions$peach$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$peach$prune_spring$sl prune_spring = _Translations$suggestions$peach$prune_spring$sl._(_root);
+}
+
+// Path: suggestions.raspberry
+class _Translations$suggestions$raspberry$sl extends Translations$suggestions$raspberry$en {
+	_Translations$suggestions$raspberry$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$raspberry$prune_late_winter$sl prune_late_winter = _Translations$suggestions$raspberry$prune_late_winter$sl._(_root);
+	@override late final _Translations$suggestions$raspberry$prune_after_harvest$sl prune_after_harvest = _Translations$suggestions$raspberry$prune_after_harvest$sl._(_root);
+}
+
+// Path: suggestions.rose
+class _Translations$suggestions$rose$sl extends Translations$suggestions$rose$en {
+	_Translations$suggestions$rose$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$rose$prune_spring$sl prune_spring = _Translations$suggestions$rose$prune_spring$sl._(_root);
+	@override late final _Translations$suggestions$rose$overwinter$sl overwinter = _Translations$suggestions$rose$overwinter$sl._(_root);
+}
+
+// Path: suggestions.cucumber
+class _Translations$suggestions$cucumber$sl extends Translations$suggestions$cucumber$en {
+	_Translations$suggestions$cucumber$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$cucumber$sow_direct$sl sow_direct = _Translations$suggestions$cucumber$sow_direct$sl._(_root);
+}
+
+// Path: suggestions.zucchini
+class _Translations$suggestions$zucchini$sl extends Translations$suggestions$zucchini$en {
+	_Translations$suggestions$zucchini$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$suggestions$zucchini$sow_direct$sl sow_direct = _Translations$suggestions$zucchini$sow_direct$sl._(_root);
+}
+
+// Path: suggestions.cadence.overdue
+class _Translations$suggestions$cadence$overdue$sl extends Translations$suggestions$cadence$overdue$en {
+	_Translations$suggestions$cadence$overdue$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} je na vrsti';
+	@override String get body => '{subject}: zamuda približno {days_overdue} dni (običajni ritem ~{cadence_days} dni).';
+}
+
+// Path: suggestions.history.anniversary
+class _Translations$suggestions$history$anniversary$sl extends Translations$suggestions$history$anniversary$en {
+	_Translations$suggestions$history$anniversary$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} — pred letom dni';
+	@override String get body => 'Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?';
+}
+
+// Path: suggestions.weather.window_open
+class _Translations$suggestions$weather$window_open$sl extends Translations$suggestions$weather$window_open$en {
+	_Translations$suggestions$weather$window_open$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task}: ugodno okno';
+	@override String get body => 'Za {subject} prihaja suho obdobje — primeren čas.';
+}
+
+// Path: suggestions.community.most_started
+class _Translations$suggestions$community$most_started$sl extends Translations$suggestions$community$most_started$en {
+	_Translations$suggestions$community$most_started$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => '{task} v okolici';
+	@override String get body => 'Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo.';
+}
+
+// Path: suggestions.lawn.mow_due
+class _Translations$suggestions$lawn$mow_due$sl extends Translations$suggestions$lawn$mow_due$en {
+	_Translations$suggestions$lawn$mow_due$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Čas za košnjo';
+	@override String get body => '{subject}: čas za košnjo.';
+}
+
+// Path: suggestions.lawn.water_drought
+class _Translations$suggestions$lawn$water_drought$sl extends Translations$suggestions$lawn$water_drought$en {
+	_Translations$suggestions$lawn$water_drought$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zalivanje v suši';
+	@override String get body => '{subject} ob suši morda potrebuje zalivanje.';
+}
+
+// Path: suggestions.lawn.fertilize_spring
+class _Translations$suggestions$lawn$fertilize_spring$sl extends Translations$suggestions$lawn$fertilize_spring$en {
+	_Translations$suggestions$lawn$fertilize_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladansko gnojenje';
+	@override String get body => 'Pognoji {subject} za sezono — najbolje do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.fertilize_autumn
+class _Translations$suggestions$lawn$fertilize_autumn$sl extends Translations$suggestions$lawn$fertilize_autumn$en {
+	_Translations$suggestions$lawn$fertilize_autumn$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Jesensko gnojenje';
+	@override String get body => 'Jesensko pognoji {subject} pred zimo — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.lime
+class _Translations$suggestions$lawn$lime$sl extends Translations$suggestions$lawn$lime$en {
+	_Translations$suggestions$lawn$lime$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Apnenje trate';
+	@override String get body => 'Če so tla kisla, apni {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.moss_control
+class _Translations$suggestions$lawn$moss_control$sl extends Translations$suggestions$lawn$moss_control$en {
+	_Translations$suggestions$lawn$moss_control$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zatiranje mahu';
+	@override String get body => 'Zatri mah pri {subject} — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.weed_control
+class _Translations$suggestions$lawn$weed_control$sl extends Translations$suggestions$lawn$weed_control$en {
+	_Translations$suggestions$lawn$weed_control$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zatiranje plevela';
+	@override String get body => 'Loti se plevela pri {subject} — najbolje do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.overseed_spring
+class _Translations$suggestions$lawn$overseed_spring$sl extends Translations$suggestions$lawn$overseed_spring$en {
+	_Translations$suggestions$lawn$overseed_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Dosejavanje (pomlad)';
+	@override String get body => 'Dosej redke dele pri {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.overseed_autumn
+class _Translations$suggestions$lawn$overseed_autumn$sl extends Translations$suggestions$lawn$overseed_autumn$en {
+	_Translations$suggestions$lawn$overseed_autumn$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Dosejavanje (jesen)';
+	@override String get body => 'Jeseni dosej {subject} — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.scarify_spring
+class _Translations$suggestions$lawn$scarify_spring$sl extends Translations$suggestions$lawn$scarify_spring$en {
+	_Translations$suggestions$lawn$scarify_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vertikutiranje (pomlad)';
+	@override String get body => 'Odstrani travni filc pri {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.scarify_autumn
+class _Translations$suggestions$lawn$scarify_autumn$sl extends Translations$suggestions$lawn$scarify_autumn$en {
+	_Translations$suggestions$lawn$scarify_autumn$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Vertikutiranje (jesen)';
+	@override String get body => 'Jeseni vertikutiraj {subject} — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.aerate
+class _Translations$suggestions$lawn$aerate$sl extends Translations$suggestions$lawn$aerate$en {
+	_Translations$suggestions$lawn$aerate$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Prezračevanje';
+	@override String get body => 'Prezrači {subject} za manjšo zbitost — do približno {window_end_date}.';
+}
+
+// Path: suggestions.lawn.roll
+class _Translations$suggestions$lawn$roll$sl extends Translations$suggestions$lawn$roll$en {
+	_Translations$suggestions$lawn$roll$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Valjanje trate';
+	@override String get body => 'Po zimi povaljaj {subject} — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.lawn.topdress
+class _Translations$suggestions$lawn$topdress$sl extends Translations$suggestions$lawn$topdress$en {
+	_Translations$suggestions$lawn$topdress$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Nasipavanje';
+	@override String get body => 'Nasuj in poravnaj {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.fertilize_spring
+class _Translations$suggestions$fruit_tree$fertilize_spring$sl extends Translations$suggestions$fruit_tree$fertilize_spring$en {
+	_Translations$suggestions$fruit_tree$fertilize_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladansko gnojenje';
+	@override String get body => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.prune_winter
+class _Translations$suggestions$fruit_tree$prune_winter$sl extends Translations$suggestions$fruit_tree$prune_winter$en {
+	_Translations$suggestions$fruit_tree$prune_winter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimska rez';
+	@override String get body => 'Obreži {subject} v mirovanju — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.treat_dormant
+class _Translations$suggestions$fruit_tree$treat_dormant$sl extends Translations$suggestions$fruit_tree$treat_dormant$en {
+	_Translations$suggestions$fruit_tree$treat_dormant$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimsko škropljenje';
+	@override String get body => 'Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.mulch
+class _Translations$suggestions$fruit_tree$mulch$sl extends Translations$suggestions$fruit_tree$mulch$en {
+	_Translations$suggestions$fruit_tree$mulch$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zastiranje';
+	@override String get body => 'Zastri okolico {subject} za ohranjanje vlage — do približno {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.thin_fruit
+class _Translations$suggestions$fruit_tree$thin_fruit$sl extends Translations$suggestions$fruit_tree$thin_fruit$en {
+	_Translations$suggestions$fruit_tree$thin_fruit$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Redčenje plodov';
+	@override String get body => 'Razredči plodiče pri {subject} za boljšo velikost — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.graft_spring
+class _Translations$suggestions$fruit_tree$graft_spring$sl extends Translations$suggestions$fruit_tree$graft_spring$en {
+	_Translations$suggestions$fruit_tree$graft_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladansko cepljenje';
+	@override String get body => 'Cepi {subject} ob dvigu soka — do približno {window_end_date}.';
+}
+
+// Path: suggestions.fruit_tree.graft_budding
+class _Translations$suggestions$fruit_tree$graft_budding$sl extends Translations$suggestions$fruit_tree$graft_budding$en {
+	_Translations$suggestions$fruit_tree$graft_budding$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Poletno okuliranje';
+	@override String get body => 'Okuliraj {subject} v poznem poletju — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.berries.prune_winter
+class _Translations$suggestions$berries$prune_winter$sl extends Translations$suggestions$berries$prune_winter$en {
+	_Translations$suggestions$berries$prune_winter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimska rez';
+	@override String get body => 'Obreži {subject} v mirovanju — do približno {window_end_date}.';
+}
+
+// Path: suggestions.berries.fertilize_spring
+class _Translations$suggestions$berries$fertilize_spring$sl extends Translations$suggestions$berries$fertilize_spring$en {
+	_Translations$suggestions$berries$fertilize_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladansko gnojenje';
+	@override String get body => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.';
+}
+
+// Path: suggestions.berries.mulch
+class _Translations$suggestions$berries$mulch$sl extends Translations$suggestions$berries$mulch$en {
+	_Translations$suggestions$berries$mulch$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zastiranje';
+	@override String get body => 'Zastri {subject} za hladne in vlažne korenine — do približno {window_end_date}.';
+}
+
+// Path: suggestions.berries.treat_dormant
+class _Translations$suggestions$berries$treat_dormant$sl extends Translations$suggestions$berries$treat_dormant$en {
+	_Translations$suggestions$berries$treat_dormant$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimsko škropljenje';
+	@override String get body => 'Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.vegetable.start_seedlings
+class _Translations$suggestions$vegetable$start_seedlings$sl extends Translations$suggestions$vegetable$start_seedlings$en {
+	_Translations$suggestions$vegetable$start_seedlings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Setev za sadike';
+	@override String get body => 'Posej {subject} v zavetju za prednost pred saditvijo — do približno {window_end_date}.';
+}
+
+// Path: suggestions.vegetable.prick_out
+class _Translations$suggestions$vegetable$prick_out$sl extends Translations$suggestions$vegetable$prick_out$en {
+	_Translations$suggestions$vegetable$prick_out$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pikiranje';
+	@override String get body => 'Od setve {subject} je {days_since} dni — pikiraj sadike v lončke.';
+}
+
+// Path: suggestions.vegetable.harden_off
+class _Translations$suggestions$vegetable$harden_off$sl extends Translations$suggestions$vegetable$harden_off$en {
+	_Translations$suggestions$vegetable$harden_off$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Utrjevanje sadik';
+	@override String get body => 'Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.vegetable.plant_out
+class _Translations$suggestions$vegetable$plant_out$sl extends Translations$suggestions$vegetable$plant_out$en {
+	_Translations$suggestions$vegetable$plant_out$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Saditev na prosto';
+	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.';
+}
+
+// Path: suggestions.vegetable.transplant
+class _Translations$suggestions$vegetable$transplant$sl extends Translations$suggestions$vegetable$transplant$en {
+	_Translations$suggestions$vegetable$transplant$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Presaditev';
+	@override String get body => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.';
+}
+
+// Path: suggestions.vegetable.sow_direct
+class _Translations$suggestions$vegetable$sow_direct$sl extends Translations$suggestions$vegetable$sow_direct$en {
+	_Translations$suggestions$vegetable$sow_direct$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Neposredna setev';
+	@override String get body => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.vegetable.fertilize_season
+class _Translations$suggestions$vegetable$fertilize_season$sl extends Translations$suggestions$vegetable$fertilize_season$en {
+	_Translations$suggestions$vegetable$fertilize_season$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Dognojevanje';
+	@override String get body => 'Med rastno dobo pognoji {subject}.';
+}
+
+// Path: suggestions.vegetable.treat_window
+class _Translations$suggestions$vegetable$treat_window$sl extends Translations$suggestions$vegetable$treat_window$en {
+	_Translations$suggestions$vegetable$treat_window$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pregled in zaščita';
+	@override String get body => 'Preglej {subject} in po potrebi zaščiti — najbolje v suhem vremenu.';
+}
+
+// Path: suggestions.herbs.start_seedlings
+class _Translations$suggestions$herbs$start_seedlings$sl extends Translations$suggestions$herbs$start_seedlings$en {
+	_Translations$suggestions$herbs$start_seedlings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Setev za sadike';
+	@override String get body => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.';
+}
+
+// Path: suggestions.herbs.sow_direct
+class _Translations$suggestions$herbs$sow_direct$sl extends Translations$suggestions$herbs$sow_direct$en {
+	_Translations$suggestions$herbs$sow_direct$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Neposredna setev';
+	@override String get body => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.herbs.plant_out
+class _Translations$suggestions$herbs$plant_out$sl extends Translations$suggestions$herbs$plant_out$en {
+	_Translations$suggestions$herbs$plant_out$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Saditev na prosto';
+	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.';
+}
+
+// Path: suggestions.tomato.start_seedlings
+class _Translations$suggestions$tomato$start_seedlings$sl extends Translations$suggestions$tomato$start_seedlings$en {
+	_Translations$suggestions$tomato$start_seedlings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Setev za sadike';
+	@override String get body => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.';
+}
+
+// Path: suggestions.tomato.prick_out
+class _Translations$suggestions$tomato$prick_out$sl extends Translations$suggestions$tomato$prick_out$en {
+	_Translations$suggestions$tomato$prick_out$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pikiranje';
+	@override String get body => 'Od setve {subject} je {days_since} dni — pikiraj sadike v lončke.';
+}
+
+// Path: suggestions.tomato.harden_off
+class _Translations$suggestions$tomato$harden_off$sl extends Translations$suggestions$tomato$harden_off$en {
+	_Translations$suggestions$tomato$harden_off$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Utrjevanje sadik';
+	@override String get body => 'Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.tomato.transplant
+class _Translations$suggestions$tomato$transplant$sl extends Translations$suggestions$tomato$transplant$en {
+	_Translations$suggestions$tomato$transplant$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Presaditev';
+	@override String get body => '{subject} raste že {days_since} dni — presadi na končno mesto.';
+}
+
+// Path: suggestions.tomato.stake
+class _Translations$suggestions$tomato$stake$sl extends Translations$suggestions$tomato$stake$en {
+	_Translations$suggestions$tomato$stake$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Opora';
+	@override String get body => '{subject}: {days_since} dni rasti — dodaj oporo ali kol.';
+}
+
+// Path: suggestions.shrub.prune_spring
+class _Translations$suggestions$shrub$prune_spring$sl extends Translations$suggestions$shrub$prune_spring$en {
+	_Translations$suggestions$shrub$prune_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladanska rez';
+	@override String get body => 'Po potrebi obreži {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.shrub.overwinter
+class _Translations$suggestions$shrub$overwinter$sl extends Translations$suggestions$shrub$overwinter$en {
+	_Translations$suggestions$shrub$overwinter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimska zaščita';
+	@override String get body => 'Zaščiti {subject} pred prvo močno pozebo — do približno {window_end_date}.';
+}
+
+// Path: suggestions.hedge.prune_early_summer
+class _Translations$suggestions$hedge$prune_early_summer$sl extends Translations$suggestions$hedge$prune_early_summer$en {
+	_Translations$suggestions$hedge$prune_early_summer$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zgodnja poletna rez';
+	@override String get body => 'Oblikuj {subject} z rezjo — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.hedge.prune_late_summer
+class _Translations$suggestions$hedge$prune_late_summer$sl extends Translations$suggestions$hedge$prune_late_summer$en {
+	_Translations$suggestions$hedge$prune_late_summer$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pozna poletna rez';
+	@override String get body => 'Pred jesenjo še zadnjič obreži {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.conifer.prune
+class _Translations$suggestions$conifer$prune$sl extends Translations$suggestions$conifer$prune$en {
+	_Translations$suggestions$conifer$prune$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Prirez';
+	@override String get body => 'Rahlo prireži {subject} v mlado rast — do približno {window_end_date}.';
+}
+
+// Path: suggestions.houseplant.repot
+class _Translations$suggestions$houseplant$repot$sl extends Translations$suggestions$houseplant$repot$en {
+	_Translations$suggestions$houseplant$repot$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Presaditev';
+	@override String get body => 'Presadi {subject} ob ponovni rasti — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.houseplant.fertilize_season
+class _Translations$suggestions$houseplant$fertilize_season$sl extends Translations$suggestions$houseplant$fertilize_season$en {
+	_Translations$suggestions$houseplant$fertilize_season$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Dognojevanje';
+	@override String get body => 'Med aktivno rastjo gnoji {subject}.';
+}
+
+// Path: suggestions.houseplant.overwinter
+class _Translations$suggestions$houseplant$overwinter$sl extends Translations$suggestions$houseplant$overwinter$en {
+	_Translations$suggestions$houseplant$overwinter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Prenesi v zavetje';
+	@override String get body => 'Prenesi {subject} v notranjost pred prvo pozebo — do približno {window_end_date}.';
+}
+
+// Path: suggestions.blueberry.prune
+class _Translations$suggestions$blueberry$prune$sl extends Translations$suggestions$blueberry$prune$en {
+	_Translations$suggestions$blueberry$prune$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rez';
+	@override String get body => 'Obreži {subject} v mirovanju — do približno {window_end_date}.';
+}
+
+// Path: suggestions.cherry_laurel.prune_late_spring
+class _Translations$suggestions$cherry_laurel$prune_late_spring$sl extends Translations$suggestions$cherry_laurel$prune_late_spring$en {
+	_Translations$suggestions$cherry_laurel$prune_late_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pozna spomladanska rez';
+	@override String get body => 'Po prvem poganjku obreži {subject} — okno odprto do ~{window_end_date}.';
+}
+
+// Path: suggestions.cherry_laurel.prune_late_summer
+class _Translations$suggestions$cherry_laurel$prune_late_summer$sl extends Translations$suggestions$cherry_laurel$prune_late_summer$en {
+	_Translations$suggestions$cherry_laurel$prune_late_summer$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pozna poletna rez';
+	@override String get body => 'Drugič obreži {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.hydrangea.prune_old_wood
+class _Translations$suggestions$hydrangea$prune_old_wood$sl extends Translations$suggestions$hydrangea$prune_old_wood$en {
+	_Translations$suggestions$hydrangea$prune_old_wood$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rez (stari les)';
+	@override String get body => 'Po cvetenju počisti odcvetelo pri {subject} na starem lesu — do približno {window_end_date}.';
+}
+
+// Path: suggestions.hydrangea.prune_new_wood
+class _Translations$suggestions$hydrangea$prune_new_wood$sl extends Translations$suggestions$hydrangea$prune_new_wood$en {
+	_Translations$suggestions$hydrangea$prune_new_wood$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rez (novi les)';
+	@override String get body => 'V pozni zimi prikrajšaj {subject} na novem lesu — do približno {window_end_date}.';
+}
+
+// Path: suggestions.peach.prune_spring
+class _Translations$suggestions$peach$prune_spring$sl extends Translations$suggestions$peach$prune_spring$en {
+	_Translations$suggestions$peach$prune_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladanska rez';
+	@override String get body => 'Obreži {subject} ob nabrekanju brstov proti kodravosti — do približno {window_end_date}.';
+}
+
+// Path: suggestions.raspberry.prune_late_winter
+class _Translations$suggestions$raspberry$prune_late_winter$sl extends Translations$suggestions$raspberry$prune_late_winter$en {
+	_Translations$suggestions$raspberry$prune_late_winter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Pozno zimska rez';
+	@override String get body => 'Pred rastjo obreži poganjke pri {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.raspberry.prune_after_harvest
+class _Translations$suggestions$raspberry$prune_after_harvest$sl extends Translations$suggestions$raspberry$prune_after_harvest$en {
+	_Translations$suggestions$raspberry$prune_after_harvest$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Rez po obiranju';
+	@override String get body => 'Od obiranja {subject} je {days_since} dni — izreži stare poganjke.';
+}
+
+// Path: suggestions.rose.prune_spring
+class _Translations$suggestions$rose$prune_spring$sl extends Translations$suggestions$rose$prune_spring$en {
+	_Translations$suggestions$rose$prune_spring$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Spomladanska rez';
+	@override String get body => 'Obreži {subject} ob brstenju — do približno {window_end_date}.';
+}
+
+// Path: suggestions.rose.overwinter
+class _Translations$suggestions$rose$overwinter$sl extends Translations$suggestions$rose$overwinter$en {
+	_Translations$suggestions$rose$overwinter$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Zimska zaščita';
+	@override String get body => 'Pred močno pozebo osuj ali zaščiti {subject} — do približno {window_end_date}.';
+}
+
+// Path: suggestions.cucumber.sow_direct
+class _Translations$suggestions$cucumber$sow_direct$sl extends Translations$suggestions$cucumber$sow_direct$en {
+	_Translations$suggestions$cucumber$sow_direct$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Neposredna setev';
+	@override String get body => 'Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}.';
+}
+
+// Path: suggestions.zucchini.sow_direct
+class _Translations$suggestions$zucchini$sow_direct$sl extends Translations$suggestions$zucchini$sow_direct$en {
+	_Translations$suggestions$zucchini$sow_direct$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Neposredna setev';
+	@override String get body => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1164,6 +2245,159 @@ extension on TranslationsSl {
 			'weather.home_retry' => 'Tapni za ponovni poskus',
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
+			'suggestions.actions.plan' => 'Načrtuj',
+			'suggestions.actions.dismiss' => 'Preskoči',
+			'suggestions.actions.already_done' => 'Že opravljeno',
+			'suggestions.actions.never' => 'Ne predlagaj več',
+			'suggestions.actions.remove_subject' => 'Tega nimam več',
+			'suggestions.toast.planned' => 'Dodano med opravila',
+			'suggestions.toast.logged' => 'Zabeleženo kot opravljeno',
+			'suggestions.disclaimer' => 'Predlogi so splošna usmeritev — tvoj vrt najbolje poznaš ti.',
+			'suggestions.done_sheet.title' => 'Kdaj je bilo opravljeno?',
+			'suggestions.done_sheet.today' => 'Danes',
+			'suggestions.done_sheet.yesterday' => 'Včeraj',
+			'suggestions.done_sheet.pick' => 'Izberi datum…',
+			'suggestions.remove.title' => 'Odstranim?',
+			'suggestions.remove.body' => '{subject} odstrani iz vrta in ustavi njegove predloge. Pretekli zapisi ostanejo.',
+			'suggestions.remove.confirm' => 'Odstrani',
+			'suggestions.history_status.planned' => 'Načrtovano',
+			'suggestions.history_status.logged' => 'Zabeleženo',
+			'suggestions.history_status.dismissed' => 'Opuščeno',
+			'suggestions.history_status.muted' => 'Utišano',
+			'suggestions.history_status.missed' => 'Zamujeno',
+			'suggestions.history_status.expired' => 'Poteklo',
+			'suggestions.cadence.overdue.title' => '{task} je na vrsti',
+			'suggestions.cadence.overdue.body' => '{subject}: zamuda približno {days_overdue} dni (običajni ritem ~{cadence_days} dni).',
+			'suggestions.history.anniversary.title' => '{task} — pred letom dni',
+			'suggestions.history.anniversary.body' => 'Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?',
+			'suggestions.weather.window_open.title' => '{task}: ugodno okno',
+			'suggestions.weather.window_open.body' => 'Za {subject} prihaja suho obdobje — primeren čas.',
+			'suggestions.community.most_started.title' => '{task} v okolici',
+			'suggestions.community.most_started.body' => 'Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo.',
+			'suggestions.lawn.mow_due.title' => 'Čas za košnjo',
+			'suggestions.lawn.mow_due.body' => '{subject}: čas za košnjo.',
+			'suggestions.lawn.water_drought.title' => 'Zalivanje v suši',
+			'suggestions.lawn.water_drought.body' => '{subject} ob suši morda potrebuje zalivanje.',
+			'suggestions.lawn.fertilize_spring.title' => 'Spomladansko gnojenje',
+			'suggestions.lawn.fertilize_spring.body' => 'Pognoji {subject} za sezono — najbolje do približno {window_end_date}.',
+			'suggestions.lawn.fertilize_autumn.title' => 'Jesensko gnojenje',
+			'suggestions.lawn.fertilize_autumn.body' => 'Jesensko pognoji {subject} pred zimo — okno odprto do ~{window_end_date}.',
+			'suggestions.lawn.lime.title' => 'Apnenje trate',
+			'suggestions.lawn.lime.body' => 'Če so tla kisla, apni {subject} — do približno {window_end_date}.',
+			'suggestions.lawn.moss_control.title' => 'Zatiranje mahu',
+			'suggestions.lawn.moss_control.body' => 'Zatri mah pri {subject} — okno odprto do ~{window_end_date}.',
+			'suggestions.lawn.weed_control.title' => 'Zatiranje plevela',
+			'suggestions.lawn.weed_control.body' => 'Loti se plevela pri {subject} — najbolje do približno {window_end_date}.',
+			'suggestions.lawn.overseed_spring.title' => 'Dosejavanje (pomlad)',
+			'suggestions.lawn.overseed_spring.body' => 'Dosej redke dele pri {subject} — do približno {window_end_date}.',
+			'suggestions.lawn.overseed_autumn.title' => 'Dosejavanje (jesen)',
+			'suggestions.lawn.overseed_autumn.body' => 'Jeseni dosej {subject} — okno odprto do ~{window_end_date}.',
+			'suggestions.lawn.scarify_spring.title' => 'Vertikutiranje (pomlad)',
+			'suggestions.lawn.scarify_spring.body' => 'Odstrani travni filc pri {subject} — do približno {window_end_date}.',
+			'suggestions.lawn.scarify_autumn.title' => 'Vertikutiranje (jesen)',
+			'suggestions.lawn.scarify_autumn.body' => 'Jeseni vertikutiraj {subject} — okno odprto do ~{window_end_date}.',
+			'suggestions.lawn.aerate.title' => 'Prezračevanje',
+			'suggestions.lawn.aerate.body' => 'Prezrači {subject} za manjšo zbitost — do približno {window_end_date}.',
+			'suggestions.lawn.roll.title' => 'Valjanje trate',
+			'suggestions.lawn.roll.body' => 'Po zimi povaljaj {subject} — okno odprto do ~{window_end_date}.',
+			'suggestions.lawn.topdress.title' => 'Nasipavanje',
+			'suggestions.lawn.topdress.body' => 'Nasuj in poravnaj {subject} — do približno {window_end_date}.',
+			'suggestions.fruit_tree.fertilize_spring.title' => 'Spomladansko gnojenje',
+			'suggestions.fruit_tree.fertilize_spring.body' => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.',
+			'suggestions.fruit_tree.prune_winter.title' => 'Zimska rez',
+			'suggestions.fruit_tree.prune_winter.body' => 'Obreži {subject} v mirovanju — okno odprto do ~{window_end_date}.',
+			'suggestions.fruit_tree.treat_dormant.title' => 'Zimsko škropljenje',
+			'suggestions.fruit_tree.treat_dormant.body' => 'Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}.',
+			'suggestions.fruit_tree.mulch.title' => 'Zastiranje',
+			'suggestions.fruit_tree.mulch.body' => 'Zastri okolico {subject} za ohranjanje vlage — do približno {window_end_date}.',
+			'suggestions.fruit_tree.thin_fruit.title' => 'Redčenje plodov',
+			'suggestions.fruit_tree.thin_fruit.body' => 'Razredči plodiče pri {subject} za boljšo velikost — okno odprto do ~{window_end_date}.',
+			'suggestions.fruit_tree.graft_spring.title' => 'Spomladansko cepljenje',
+			'suggestions.fruit_tree.graft_spring.body' => 'Cepi {subject} ob dvigu soka — do približno {window_end_date}.',
+			'suggestions.fruit_tree.graft_budding.title' => 'Poletno okuliranje',
+			'suggestions.fruit_tree.graft_budding.body' => 'Okuliraj {subject} v poznem poletju — okno odprto do ~{window_end_date}.',
+			'suggestions.berries.prune_winter.title' => 'Zimska rez',
+			'suggestions.berries.prune_winter.body' => 'Obreži {subject} v mirovanju — do približno {window_end_date}.',
+			'suggestions.berries.fertilize_spring.title' => 'Spomladansko gnojenje',
+			'suggestions.berries.fertilize_spring.body' => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.',
+			'suggestions.berries.mulch.title' => 'Zastiranje',
+			'suggestions.berries.mulch.body' => 'Zastri {subject} za hladne in vlažne korenine — do približno {window_end_date}.',
+			'suggestions.berries.treat_dormant.title' => 'Zimsko škropljenje',
+			'suggestions.berries.treat_dormant.body' => 'Opravi zimsko škropljenje pri {subject} — do približno {window_end_date}.',
+			'suggestions.vegetable.start_seedlings.title' => 'Setev za sadike',
+			'suggestions.vegetable.start_seedlings.body' => 'Posej {subject} v zavetju za prednost pred saditvijo — do približno {window_end_date}.',
+			'suggestions.vegetable.prick_out.title' => 'Pikiranje',
+			'suggestions.vegetable.prick_out.body' => 'Od setve {subject} je {days_since} dni — pikiraj sadike v lončke.',
+			'suggestions.vegetable.harden_off.title' => 'Utrjevanje sadik',
+			'suggestions.vegetable.harden_off.body' => 'Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}.',
+			'suggestions.vegetable.plant_out.title' => 'Saditev na prosto',
+			'suggestions.vegetable.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.',
+			'suggestions.vegetable.transplant.title' => 'Presaditev',
+			'suggestions.vegetable.transplant.body' => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.',
+			'suggestions.vegetable.sow_direct.title' => 'Neposredna setev',
+			'suggestions.vegetable.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
+			'suggestions.vegetable.fertilize_season.title' => 'Dognojevanje',
+			'suggestions.vegetable.fertilize_season.body' => 'Med rastno dobo pognoji {subject}.',
+			'suggestions.vegetable.treat_window.title' => 'Pregled in zaščita',
+			'suggestions.vegetable.treat_window.body' => 'Preglej {subject} in po potrebi zaščiti — najbolje v suhem vremenu.',
+			'suggestions.herbs.start_seedlings.title' => 'Setev za sadike',
+			'suggestions.herbs.start_seedlings.body' => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.',
+			_ => null,
+		} ?? switch (path) {
+			'suggestions.herbs.sow_direct.title' => 'Neposredna setev',
+			'suggestions.herbs.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
+			'suggestions.herbs.plant_out.title' => 'Saditev na prosto',
+			'suggestions.herbs.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.',
+			'suggestions.tomato.start_seedlings.title' => 'Setev za sadike',
+			'suggestions.tomato.start_seedlings.body' => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.',
+			'suggestions.tomato.prick_out.title' => 'Pikiranje',
+			'suggestions.tomato.prick_out.body' => 'Od setve {subject} je {days_since} dni — pikiraj sadike v lončke.',
+			'suggestions.tomato.harden_off.title' => 'Utrjevanje sadik',
+			'suggestions.tomato.harden_off.body' => 'Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}.',
+			'suggestions.tomato.transplant.title' => 'Presaditev',
+			'suggestions.tomato.transplant.body' => '{subject} raste že {days_since} dni — presadi na končno mesto.',
+			'suggestions.tomato.stake.title' => 'Opora',
+			'suggestions.tomato.stake.body' => '{subject}: {days_since} dni rasti — dodaj oporo ali kol.',
+			'suggestions.shrub.prune_spring.title' => 'Spomladanska rez',
+			'suggestions.shrub.prune_spring.body' => 'Po potrebi obreži {subject} — do približno {window_end_date}.',
+			'suggestions.shrub.overwinter.title' => 'Zimska zaščita',
+			'suggestions.shrub.overwinter.body' => 'Zaščiti {subject} pred prvo močno pozebo — do približno {window_end_date}.',
+			'suggestions.hedge.prune_early_summer.title' => 'Zgodnja poletna rez',
+			'suggestions.hedge.prune_early_summer.body' => 'Oblikuj {subject} z rezjo — okno odprto do ~{window_end_date}.',
+			'suggestions.hedge.prune_late_summer.title' => 'Pozna poletna rez',
+			'suggestions.hedge.prune_late_summer.body' => 'Pred jesenjo še zadnjič obreži {subject} — do približno {window_end_date}.',
+			'suggestions.conifer.prune.title' => 'Prirez',
+			'suggestions.conifer.prune.body' => 'Rahlo prireži {subject} v mlado rast — do približno {window_end_date}.',
+			'suggestions.houseplant.repot.title' => 'Presaditev',
+			'suggestions.houseplant.repot.body' => 'Presadi {subject} ob ponovni rasti — okno odprto do ~{window_end_date}.',
+			'suggestions.houseplant.fertilize_season.title' => 'Dognojevanje',
+			'suggestions.houseplant.fertilize_season.body' => 'Med aktivno rastjo gnoji {subject}.',
+			'suggestions.houseplant.overwinter.title' => 'Prenesi v zavetje',
+			'suggestions.houseplant.overwinter.body' => 'Prenesi {subject} v notranjost pred prvo pozebo — do približno {window_end_date}.',
+			'suggestions.blueberry.prune.title' => 'Rez',
+			'suggestions.blueberry.prune.body' => 'Obreži {subject} v mirovanju — do približno {window_end_date}.',
+			'suggestions.cherry_laurel.prune_late_spring.title' => 'Pozna spomladanska rez',
+			'suggestions.cherry_laurel.prune_late_spring.body' => 'Po prvem poganjku obreži {subject} — okno odprto do ~{window_end_date}.',
+			'suggestions.cherry_laurel.prune_late_summer.title' => 'Pozna poletna rez',
+			'suggestions.cherry_laurel.prune_late_summer.body' => 'Drugič obreži {subject} — do približno {window_end_date}.',
+			'suggestions.hydrangea.prune_old_wood.title' => 'Rez (stari les)',
+			'suggestions.hydrangea.prune_old_wood.body' => 'Po cvetenju počisti odcvetelo pri {subject} na starem lesu — do približno {window_end_date}.',
+			'suggestions.hydrangea.prune_new_wood.title' => 'Rez (novi les)',
+			'suggestions.hydrangea.prune_new_wood.body' => 'V pozni zimi prikrajšaj {subject} na novem lesu — do približno {window_end_date}.',
+			'suggestions.peach.prune_spring.title' => 'Spomladanska rez',
+			'suggestions.peach.prune_spring.body' => 'Obreži {subject} ob nabrekanju brstov proti kodravosti — do približno {window_end_date}.',
+			'suggestions.raspberry.prune_late_winter.title' => 'Pozno zimska rez',
+			'suggestions.raspberry.prune_late_winter.body' => 'Pred rastjo obreži poganjke pri {subject} — do približno {window_end_date}.',
+			'suggestions.raspberry.prune_after_harvest.title' => 'Rez po obiranju',
+			'suggestions.raspberry.prune_after_harvest.body' => 'Od obiranja {subject} je {days_since} dni — izreži stare poganjke.',
+			'suggestions.rose.prune_spring.title' => 'Spomladanska rez',
+			'suggestions.rose.prune_spring.body' => 'Obreži {subject} ob brstenju — do približno {window_end_date}.',
+			'suggestions.rose.overwinter.title' => 'Zimska zaščita',
+			'suggestions.rose.overwinter.body' => 'Pred močno pozebo osuj ali zaščiti {subject} — do približno {window_end_date}.',
+			'suggestions.cucumber.sow_direct.title' => 'Neposredna setev',
+			'suggestions.cucumber.sow_direct.body' => 'Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}.',
+			'suggestions.zucchini.sow_direct.title' => 'Neposredna setev',
+			'suggestions.zucchini.sow_direct.body' => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.',
 			_ => null,
 		};
 	}
