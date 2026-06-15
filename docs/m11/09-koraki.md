@@ -164,7 +164,7 @@ Plan → task → naslednji tek ne podvoji. Uglasitev besedil, Sentry za engine 
 - **Odvisnosti:** M11.12, M11.13 · **Kompleksnost:** M
 - **Commit:** `feat(engine): e2e veriga paradižnika potrjena na napravi + poliranje sporočil`
 
-### M11.15 — Unit testi motorja (regression suite) `[ ]`
+### M11.15 — Unit testi motorja (regression suite) `[x]`
 Konsolidacija: Deno test suite (signali, vsa pravila, cevovod, regionalizacija) v CI
 (GitHub Actions job `deno test supabase/functions/`); Flutter testi (repo, band, climate).
 - **DoD:** CI zelen z novim jobom; pokritost pravil: vsak R + vsaka straža ima vsaj en test;

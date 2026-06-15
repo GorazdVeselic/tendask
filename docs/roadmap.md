@@ -370,6 +370,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-15 — **M11.15 — celovita test suite motorja v CI.** GitHub Actions ima zdaj dva joba:
+  obstoječi `ci` (Flutter: pub get → slang → build_runner → analyze → test) + nov `engine`
+  (`denoland/setup-deno@v2` → `deno test supabase/functions/`). 96 Deno testov (signali, pravila
+  R1–R5+R7, straže a–h + §G kode, cevovod/dedup/rank/determinizem, housekeeping 2a–2e, vreme) +
+  Flutter testi predlogov (repo/band/history/text/i18n) in klime tečejo na CI. Pokritost potrjena:
+  vsak implementiran R + vsaka straža ima ≥1 test (R6 = Faza E, le forward-ref). README v
+  `supabase/functions/` dokumentira lokalni zagon + opozorilo, da `deno check` z root-a pade zaradi
+  import-mapa v `smart-engine/deno.json` (config discovery, ne tipska napaka — tipe preverja
+  `deno test`). Lokalno: 96/96 Deno zelenih. *Commit:* `test(engine): celovita test suite motorja v CI`
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
   jeziku telefona (`useDeviceLocale`), a je za **nepodprte** jezike padel nazaj na slovenščino. Zdaj
   `slang.yaml base_locale: en` → fallback = **angleščina** (univerzalno); SI/DE naprave še vedno

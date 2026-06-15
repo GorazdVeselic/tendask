@@ -1,4 +1,4 @@
-# Naslednja seja — M11.13b: zaslon »Pretekli predlogi«
+# Naslednja seja — M11.14: E2E preverba motorja na napravi + poliranje
 
 Branch `feat/m11-smart-engine`. Pogovor SL, koda EN. **Pred vsakim commitom vprašaj.**
 En korak roadmapa = en commit; korak odkljukaj v `docs/m11/09-koraki.md`.
@@ -6,107 +6,99 @@ En korak roadmapa = en commit; korak odkljukaj v `docs/m11/09-koraki.md`.
 ## Kje sva (stanje 2026-06-15)
 
 - **Faza A–C (M11.1–M11.12) ✅** — shema, klima, seed, FCM, cel motor (signali + R1–R7 +
-  dispatch/pg_cron + FCM pošiljanje). Vse commitano + deployano na živ Supabase.
-- **M11.13 ✅ — pas pametnih predlogov na Domov** (Faza D, prvi UI korak). Razbit na 3 commite:
-  - `0eb30ae` — `SuggestionRepository` (`watchActive`, `markPlanned`/`dismiss(scope)`/`markLogged`)
-    + providerji + `fillTemplate` čista substitucija. **`watchHistory`/`watchActiveCount` NAMERNO
-    izpuščena** (mrtva koda do TE seje).
-  - `63d9e3e` — i18n katalog predlogov (en/sl/de): 61 agronomskih ključev + 4 generični +
-    akcije/sheet/confirm/**`suggestions.history_status.*`** (planned/logged/dismissed/muted/missed/
-    expired). **history_status ključi že obstajajo — za ta korak verjetno NE rabiš novih nizov.**
-  - `7f1a3eb` — `SuggestionBand` + `SuggestionCard` + akcije + deep-link highlight.
-- **Testi: 234/234, `flutter analyze` čist.**
+  dispatch/pg_cron + FCM pošiljanje). Deployano na živ Supabase.
+- **Faza D UI ✅ do zdaj:**
+  - **M11.13 ✅** — pas pametnih predlogov na Domov (`0eb30ae`/`63d9e3e`/`7f1a3eb`).
+  - **M11.13b ✅** — zaslon »Pretekli predlogi« (`c7f39af`) + wireframe (`9f26807`).
+    `/suggestions/history`, časovnica po dnevu, status čipi (planned/logged/dismissed/
+    muted/missed; `expired`→»Zamujeno«), tap planned+logged→opravilo, vstop iz glave pasu
+    (le ko ni prazen) + Nastavitev. Skupni `core/widgets/day_header.dart` +
+    `suggestionMessage`/`suggestionSubjectLabel` helperja.
+  - **M11.15 ✅** — celovita test suite motorja v CI (`test(engine): …`). GitHub Actions ima
+    dva joba: obstoječi `ci` (Flutter) + nov `engine` (`denoland/setup-deno@v2` →
+    `deno test supabase/functions/`). 96 Deno testov + Flutter testi predlogov/klime na CI;
+    README v `supabase/functions/`. Code+security review čisto (job ostal `ci`, ne `app`, da
+    morebiten zahtevan status-check ne osiroti). Lokalno 96/96 zeleno.
+- **Testi: Flutter 241/241 + Deno 96/96, `flutter analyze` čist.**
+- **👤 ŠE NE:** on-device smoke M11.13b še NI narejen (opcijsko, gl. spodaj).
+- **Vrstni red:** M11.14 (ta seja) je edini še odprt korak Faze D; rabi **fizično napravo**.
+  Če naprave ni, je smiselno preskočiti na 👤 Play zaprti test ali Fazo E (M11.16+).
 
-> POZOR na poimenovanje: prejšnja seja je interno govorila o »13a/13b/13c« kot pod-korakih
-> M11.13. To NI isto kot **`M11.13b`** v roadmapu (= ta naloga, Pretekli predlogi). Uporabljaj
-> samo uradne oznake.
+## Naloga te seje: M11.14 — E2E motorja na napravi + poliranje
 
-## Naloga te seje: M11.13b — zaslon »Pretekli predlogi«
-
-**Vir resnice:** `docs/m11/08-flutter-arhitektura.md` §8.1 (zadnji odstavek o
-`suggestion_history_screen`) + §8.2 (podpisa `watchHistory`/`watchActiveCount`);
-`docs/m11/09-koraki.md` korak M11.13b; `docs/m11/03-pravila-r1-r7.md` §Cevovod 2e (retencija).
+**Vir resnice:** `docs/m11/09-koraki.md` korak M11.14; `docs/m11/00-pregled-za-laika.md` §0.1
+(scenarij paradižnik → pikiranje); `docs/m11/03-pravila-r1-r7.md` (cevovod).
 
 ### Obseg
-
-1. **Repo:** v `lib/features/suggestions/data/suggestion_repository.dart` dodaj (zdaj sta na vrsti):
-   - `Stream<List<Suggestion>> watchHistory()` — vse vrstice s `status != 'new'`, `deleted = 0`,
-     najnovejše prej (`updated_at` desc). LOKALNO.
-   - `Stream<int> watchActiveCount()` — število `status='new'` & ne-poteklih (badge za Nastavitve/
-     vstop); lahko zrcali filter iz `watchActive`. Dodaj providerja v `application/suggestion_providers.dart`.
-2. **Zaslon** `lib/features/suggestions/presentation/suggestion_history_screen.dart`, route
-   `/suggestions/history` (dodaj v `lib/app/router/app_router.dart`, full-screen nad shell):
-   - BRALNA časovnica iz `watchHistory()`, **grupirana po datumih** prek `core/date_format.dart`
-     (`startOfDay`/`formatDmy`). Brez akcij za nazaj (samo branje) v MVP.
-   - Vrstica = ikona tipa (`taskTypesMap` → `catalogLabel`) + naslov predloga
-     (isti vzorec kot kartica: `fillTemplate(t['<messageKey>.title'], displayParams)` —
-     glej `suggestion_card.dart` `_message`/`suggestionDisplayParams`, po potrebi ekstrahiraj skupni helper)
-     + **status čip** prek `t.suggestions.history_status.*`.
-   - **Tap na `planned` vrstico → odpre nastalo opravilo** prek `planned_task_id`
-     (`context.pushNamed('task-detail', pathParameters: {'id': s.plannedTaskId!})`).
-   - Prazna zgodovina → `EmptyState` (`core/widgets/empty_state.dart`).
-3. **Vstopa do zaslona:**
-   - **Vrstica v Nastavitvah** (`features/settings/presentation/settings_screen.dart`) — deluje tudi
-     ob praznem pasu. To je MIN obvezni vstop.
-   - Spec omenja tudi »⋯ na glavi pasu«, A **pas trenutno NIMA glave** (⋯ je na vsaki kartici).
-     ODLOČITEV: bodisi dodaj diskreten »Zgodovina« gumb v glavo pasu, bodisi se zadovolji z vstopom
-     iz Nastavitev (predlagam Nastavitve + po želji majhen link). Uskladi z uporabnikom.
-4. **Wireframe NE obstaja.** Po CLAUDE.md pravilu (»wireframe pred zaslonom«): pred kodo
-   skiciraj v `docs/wireframes/` ALI zavestno zapiši izjemo v `docs/koncept.md §7.12`
-   (zgodovina = revizijska časovnica, NE center obvestil). Vprašaj uporabnika, kaj raje.
-
-### Odprte odločitve (potrdi pred kodo)
-
-- **Mapiranje status → čip:** vrstica ima `status` ∈ {planned, dismissed, logged, expired} +
-  `dismiss_scope` ∈ {season, forever}. i18n čipi: planned/logged/dismissed/**muted**/**missed**/expired.
-  Predlog mapiranja: `logged→Done`(`logged`), `planned→Planned`, `dismissed+season→Dismissed`,
-  `dismissed+forever→Muted`, `expired→Missed`(ali `Expired`). **Potrdi semantiko »missed« vs »expired«.**
-- **Retencija (03 §Cevovod 2e):** soft-delete terminalnih vrstic > 365 dni dela **STREŽNIK**
-  (engine housekeeping, že v M11.12). Klient samo NE kaže `deleted=1` (filter v `watchHistory`).
-  DoD »housekeeping test retencije« je verjetno Deno test motorja — **preveri, ali ni že pokrit**;
-  če je app-side, doreči z uporabnikom.
+Cel krog na **fizični napravi** (SM A536B, USB) brez ročnih popravkov:
+1. Vnos zgodovine (npr. paradižnik posajen) → **ročni engine invoke** za dev userja →
+   suggestion vrstica pull-ana na napravo → FCM push (ali pull) → **tap** push →
+   deep-link highlight kartice na pasu → **Načrtuj** → nastane opravilo → naslednji
+   engine tek **NE podvoji** predloga (cooldown/guard).
+2. **Poliranje:** uglasitev besedil predlogov (preveri realne nize na napravi),
+   disclaimer copy, **Sentry za engine napake** (`console.error` → Sentry stub ali log drain).
+3. **Posebej preveri (parkirano):** RenderFlex overflow čip-vrstice na zaslonu zgodovine ob
+   **dolgem naslovu** predloga (Sentry TENDASK-6) — trailing `Row` (čip + chevron) v `ListTile`.
 
 ### DoD (iz 09-koraki)
+- Scenarij §0.1 (paradižnik → pikiranje) izveden **v živo na napravi brez ročnih popravkov**.
+- Dnevnik napredka v `docs/roadmap.md` dopolnjen.
+- **Commit:** `feat(engine): e2e veriga paradižnika potrjena na napravi + poliranje sporočil`
 
-- Widget test: zgodovina prikaže vse terminalne statuse, `new` izključen; tap `planned` → detajl opravila.
-- Retencija (gl. zgoraj — verjetno engine, ne nujno ta korak).
-- `docs/koncept.md §7.12` dopolnjen (zgodovina ≠ center obvestil).
-- `flutter analyze` čist; cel paket zelen.
-- **Commit:** `feat(suggestions): zaslon preteklih predlogov z odzivi uporabnika`
+### Recept za engine invoke (iz prejšnjih sej — preveri, da še velja)
+- **`.env` DB geslo je bilo STALE** (pooler psycopg skripte mrtve) → delamo prek PostgREST /
+  funkcijskega invoke-a.
+- **Legacy `service_role` JWT** (NE maskirani `sb_secret_*`):
+  `supabase projects api-keys --project-ref jlmkkeijmmnwkizutvkg -o env | grep '^SUPABASE_SERVICE_ROLE_KEY=' | cut -d= -f2- | tr -d '"\r\n'`
+  → `apikey`+`Bearer` za PostgREST IN `functions/v1/smart-engine` (gateway `verify_jwt=true`).
+- Vzorec skripte: `tmp/m119_e2e.py` (check|seed|invoke|cleanup, bere `SR_KEY` iz env).
+- Dev user: **exogenus@gmail.com** (uid `c85fd203`).
+- Drift dump z naprave: `cmd /c "adb exec-out run-as app.tendask cat app_flutter/tendask.db > tmp\device.db"`
+  (PowerShell redirect pokvari binarno!).
+
+### Opcijski lead-in: on-device smoke M11.13b
+Pred M11.14 lahko narediš hiter vizualni smoke zaslona zgodovine + glave pasu + vstopa iz
+Nastavitev. Polno stanje rabi terminalne predloge v lokalni bazi (sicer prazno stanje).
+Deploy: 👤 `! deploy.bat hot`.
+
+### Če naprave NI na voljo
+M11.15 (CI test suite) je **že narejen** (ta seja). Edina preostala možnost brez naprave je
+👤 Play zaprti test (vc4) ali start Faze E (M11.16 — Supabase migracija 0006 V2 agregati,
+pure-server korak). M11.14 je nujno na napravi — ne sili E2E brez nje.
 
 ## Konvencije / arhitektura (kratko)
-
-- Feature-first: `features/suggestions/{data,application,presentation}`. UI bere SAMO iz Riverpod
-  providerjev nad drift; nikoli direktno Supabase. Repo ne vrača `Companion` na meji.
-- `SuggestionRow` (drift row class) je OK kot read-only DTO na meji; pisanja sprejmejo gole parametre.
-- Komponentni katalog: `EmptyState`, `SectionLabel`, `SheetHandle`, `showConfirmDialog`,
-  `showTopToast` — uporabi obstoječe, ne kopiraj.
-- Datumi za prikaz prek `core/date_format.dart`; katalog labels prek `catalogLabel()`.
+- Feature-first: `features/suggestions/{data,application,presentation}`. UI bere SAMO iz
+  Riverpod providerjev nad drift; nikoli direktno Supabase. Repo ne vrača `Companion` na meji.
+- Komponentni katalog: `EmptyState`, `SectionLabel`, `SheetHandle`, `DayHeader`,
+  `showConfirmDialog`, `showTopToast` — uporabi obstoječe.
+- Datumi prek `core/date_format.dart`; katalog labels prek `catalogLabel()`.
 - i18n: vsi nizi prek `t.*`; po dodajanju ključev poženi **`dart run slang`** (ločen CLI!).
 
-## Recepti / gotchas (naučeno to sejo)
+## Gotchas (naučeno)
+- **UI: NIKOLI beseda »motor«** → »Tendask«/»predlogi« (gl. memory feedback-ui-no-engine-word).
+- **Widget test + drift:** `repo.watch*().first` (STREAM) VISI pod `testWidgets` bindingom →
+  beri z enkratnim `.get()` (Future) + filtriraj/sortiraj v Dartu. Za UI override providerje
+  s `Stream.value([...])`, nikoli živ drift watch (viseč timer ob teardownu).
+- **`flutter test` izpis** je medpomnjen prek `Select-Object` (vidiš šele ob koncu); uporabi
+  `Start-Process … -RedirectStandardOutput tmp\out.txt` + `WaitForExit(ms)` s trdo omejitvijo,
+  ALI `Tee-Object`. Izpis je **UTF-16** (razmaknjeni znaki) — beri prek PowerShell `Get-Content`.
+- **Viseči testi:** ubij `flutter_tester`/`dart`/`dartaotruntime`
+  (`Get-Process -Name flutter_tester,dart,dartaotruntime | Stop-Process -Force`) in zaženi znova.
+- **Branch ↔ main na telefonu:** med menjavo `adb uninstall app.tendask` (drift downgrade pusti
+  staro verzijo → duplicate-column crash). M11.13b ne dodaja sheme → ta korak sam ne tvega.
+- **Commit message:** zapiši v `tmp/commit_msg.txt` + `git commit -F` (here-string se v tem
+  harnessu pokvari). Po build_runner pred `git add` preveri riverpod hash churn v `.g.dart`
+  (`git checkout --` nepovezane). M11.13b je uporabil ROČNE StreamProviderje → brez churna.
+- **Wireframe localhost:** `python -m http.server 8099 --bind 127.0.0.1` iz `docs/wireframes/`
+  (Bash background) → `http://127.0.0.1:8099/<ime>.html`.
 
-- **Widget testi predlogov:** NE uporabljaj živega drift `watch` streama v widget testu — pusti
-  viseč timer ob teardownu. Override `activeSuggestionsProvider` (in za zgodovino: nov
-  `historyProvider`) s `Stream.value([...])`. Vzorec: `test/features/suggestions/suggestion_band_widget_test.dart`.
-- **Toast v testih:** `showTopToast` ima `Future.delayed(2200)` → `pumpAndSettle` se med statičnim
-  delayem vrne PREZGODAJ; rabiš eksplicitne stopenjske pumpe (`_settle` v band testu).
-- **riverpod 3.x AsyncError** se v widget-testu ne sproži zanesljivo (ne `Stream.error` ne
-  `StreamController`) → error-stanja ne testiraj prek streama (preveri vizualno).
-- **Auth v testih:** brez Supabase config je `AuthService(null).userId == 'local'` → ni treba
-  override-ati `authServiceProvider`.
-- **Build:** po spremembi `@riverpod`/anotacij → `dart run build_runner build --delete-conflicting-outputs`.
-  Po tem lahko nastane **riverpod hash churn v nepovezanih `.g.dart`** — pred `git add` jih `git checkout --` (atomiren commit).
-- **Commit message:** zapiši v `tmp/commit_msg.txt` + `git commit -F` (here-string se v tem harnessu pokvari).
-- **Branch ↔ main na telefonu:** med menjavo `adb uninstall app.tendask` (drift downgrade pusti staro verzijo → duplicate-column crash).
+## Parkirano (NE pozabi)
+- FR-8 (vreme na centroid `h3_r7` namesto surovih koordinat — `docs/roadmap.md`).
+- Insert-if-missing LWW race (`setLang`/`setNotificationSettings`/`saveGardenLocation`).
+- Sentry TENDASK-6 (RenderFlex overflow 9px — preveri ob M11.14, gl. zgoraj).
+- 👤 Play: upload vc4 (`1.0.0+4` zgrajen iz `main`) v Closed testing + ≥12 testerjev × 14 dni.
 
-## Parkirano (NE pozabi, a ne ta korak)
-
-FR-8 (vreme na centroid `h3_r7` namesto surovih koordinat — `docs/roadmap.md`); insert-if-missing
-LWW race (`setLang`/`setNotificationSettings`/`saveGardenLocation`); Sentry TENDASK-6 (RenderFlex
-overflow); 👤 Play upload vc4 (`1.0.0+4` zgrajen iz `main`) + zbiranje ≥12 testerjev za zaprti test.
-
-## Po M11.13b
-
-M11.14 (e2e motorja na napravi + poliranje) → M11.15 (CI test suite) → Faza E (V2 skupnost,
-M11.16–M11.21) ALI prej preklop na 👤 Play zaprti test.
+## Po M11.14
+Faza D je s tem cela. Naprej: Faza E (V2 skupnost, M11.16–M11.21) ALI preklop na 👤 Play
+zaprti test (≥12 testerjev × 14 dni). Priporočen vrstni red iz roadmapa: D → premor/validacija
+s testerji → E.
