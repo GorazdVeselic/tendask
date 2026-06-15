@@ -89,6 +89,10 @@ const kDefaultReminderOffset = 1440;
 const kQuietHoursStartHour = 22;
 const kQuietHoursEndHour = 7;
 
+/// Max smart-suggestion cards shown on the Home band at once (mirrors the
+/// server's app_config.engine.band_max_active — docs/m11/03).
+const kSuggestionBandMax = 3;
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the

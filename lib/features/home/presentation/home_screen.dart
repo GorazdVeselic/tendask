@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -12,6 +14,7 @@ import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/plants/application/plants_providers.dart';
+import '../../../features/suggestions/presentation/suggestion_band.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../features/tasks/presentation/subject_labels.dart';
 import '../../../features/tasks/presentation/widgets/task_swipe.dart';
@@ -19,11 +22,55 @@ import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
 import '../../../i18n/translations.g.dart';
 
-class HomeScreen extends ConsumerWidget {
-  const HomeScreen({super.key});
+class HomeScreen extends ConsumerStatefulWidget {
+  const HomeScreen({super.key, this.highlightSuggestionId});
+
+  /// Suggestion id from a tapped push deep link; the band card flashes briefly.
+  final String? highlightSuggestionId;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends ConsumerState<HomeScreen> {
+  String? _highlight;
+  Timer? _highlightTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    // Cold-start deep link: set the field directly (first build reads it) —
+    // setState during initState/mount would markNeedsBuild mid-build.
+    _highlight = widget.highlightSuggestionId;
+    if (_highlight != null) _startHighlightTimer();
+  }
+
+  @override
+  void didUpdateWidget(HomeScreen oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    // A fresh deep link (re-tapped push) re-triggers the flash.
+    final id = widget.highlightSuggestionId;
+    if (id != oldWidget.highlightSuggestionId && id != null) {
+      setState(() => _highlight = id);
+      _startHighlightTimer();
+    }
+  }
+
+  void _startHighlightTimer() {
+    _highlightTimer?.cancel();
+    _highlightTimer = Timer(const Duration(seconds: 2), () {
+      if (mounted) setState(() => _highlight = null);
+    });
+  }
+
+  @override
+  void dispose() {
+    _highlightTimer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
     final pending = ref.watch(pendingTasksProvider);
@@ -69,6 +116,7 @@ class HomeScreen extends ConsumerWidget {
           completed: completed,
           catalog: catalog,
           now: now,
+          highlightSuggestionId: _highlight,
         ),
       ),
     );
@@ -81,12 +129,14 @@ class _HomeBody extends ConsumerWidget {
     required this.completed,
     required this.catalog,
     required this.now,
+    this.highlightSuggestionId,
   });
 
   final AsyncValue<List<Task>> pending;
   final AsyncValue<List<Task>> completed;
   final Map<String, TaskType> catalog;
   final DateTime now;
+  final String? highlightSuggestionId;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -136,6 +186,7 @@ class _HomeBody extends ConsumerWidget {
           children: [
             const _WeatherSection(),
             const SizedBox(height: 16),
+            SuggestionBand(highlightId: highlightSuggestionId),
             if (overdueTasks.isNotEmpty) ...[
               _OverdueBanner(
                 tasks: overdueTasks,

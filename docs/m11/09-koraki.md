@@ -128,7 +128,7 @@ UNREGISTERED handling, quiet-hours/cap check, engine_run.last_push_date).
 
 ## Faza D — UI predlogov
 
-### M11.13 — Pas predlogov na Domov (Načrtuj/Opusti/⋯) `[ ]`
+### M11.13 — Pas predlogov na Domov (Načrtuj/Opusti/⋯) `[x]`
 `08` §8.1–8.2 + `03` §Akcije: SuggestionRepository, providerji, SuggestionBand + kartica,
 plan/dismiss flow, **⋯ action sheet (»Že opravljeno« z mini-sheetom datuma + done task;
 »Ne predlagaj več tega« = dismiss forever; »Te rastline nimam več« = confirm + soft-delete

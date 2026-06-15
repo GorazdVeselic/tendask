@@ -37,7 +37,11 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
             GoRoute(
               path: '/home',
               name: 'home',
-              builder: (context, state) => const HomeScreen(),
+              builder: (context, state) => HomeScreen(
+                // Set by a tapped suggestion push (M11.7 deep link) to highlight
+                // the matching band card.
+                highlightSuggestionId: state.uri.queryParameters['suggestion'],
+              ),
             ),
           ],
         ),
