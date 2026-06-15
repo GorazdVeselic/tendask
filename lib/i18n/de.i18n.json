@@ -433,6 +433,8 @@
     "section_language": "Sprache",
     "section_notifications": "Benachrichtigungen",
     "notifications_placeholder": "Benachrichtigungen und Erinnerungen",
+    "section_suggestions": "Vorschläge",
+    "suggestions_history_sub": "Was vorgeschlagen wurde und wie du reagiert hast",
     "section_garden": "Garten",
     "supplies": "📦 Vorräte & Mittel",
     "supplies_sub": "Harnstoff, Algen, Dünger, Geräte",
@@ -506,9 +508,14 @@
       "logged": "Erfasst",
       "dismissed": "Verworfen",
       "muted": "Stumm",
-      "missed": "Verpasst",
-      "expired": "Abgelaufen"
+      "missed": "Verpasst"
     },
+    "band_title": "Vorschläge für dich",
+    "past_link": "Verlauf",
+    "past_title": "Frühere Vorschläge",
+    "past_intro": "Was Tendask vorgeschlagen hat und wie du reagiert hast.",
+    "past_empty": "Noch kein Verlauf. Sobald du auf einen Vorschlag reagierst — einplanen, überspringen oder als erledigt erfassen — erscheint er hier.",
+    "past_retention": "Vorschläge, die älter als ein Jahr sind, werden automatisch entfernt.",
     "cadence": {
       "overdue": {
         "title": "{task} ist fällig",

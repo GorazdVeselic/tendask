@@ -38,6 +38,9 @@ void main() {
     bool deleted = false,
     String ruleId = 'R3',
     String subjectKey = 'up:p1',
+    DateTime? updatedAt,
+    String? plannedTaskId,
+    String dismissScope = kDismissScopeSeason,
   }) => db
       .into(db.suggestions)
       .insert(
@@ -51,11 +54,13 @@ void main() {
           score: score,
           validUntil: validUntil ?? DateTime(2026, 6, 20),
           createdAt: today,
-          updatedAt: today,
+          updatedAt: updatedAt ?? today,
           status: Value(status),
           userPlantId: Value(userPlantId),
           areaId: Value(areaId),
           deleted: Value(deleted),
+          plannedTaskId: Value(plannedTaskId),
+          dismissScope: Value(dismissScope),
         ),
       );
 
@@ -186,5 +191,45 @@ void main() {
     expect(await repo.watchActive().first, hasLength(1));
     await repo.dismiss('s1');
     expect(await repo.watchActive().first, isEmpty);
+  });
+
+  test('watchHistory returns only decided rows, newest first', () async {
+    await insertSuggestion('fresh'); // status new → excluded
+    await insertSuggestion(
+      'planned',
+      status: kSuggestionPlanned,
+      updatedAt: DateTime(2026, 6, 10),
+    );
+    await insertSuggestion(
+      'dismissed',
+      status: kSuggestionDismissed,
+      updatedAt: DateTime(2026, 6, 12),
+    );
+    await insertSuggestion(
+      'expired',
+      status: kSuggestionExpired,
+      updatedAt: DateTime(2026, 6, 11),
+    );
+    final rows = await repo.watchHistory().first;
+    // 'new' excluded; ordered by updated_at desc.
+    expect(rows.map((r) => r.id), ['dismissed', 'expired', 'planned']);
+  });
+
+  test('watchHistory excludes soft-deleted rows (retention)', () async {
+    await insertSuggestion(
+      'purged',
+      status: kSuggestionLogged,
+      deleted: true,
+    );
+    await insertSuggestion('kept', status: kSuggestionLogged);
+    final rows = await repo.watchHistory().first;
+    expect(rows.map((r) => r.id), ['kept']);
+  });
+
+  test('watchActiveCount mirrors the active band size', () async {
+    await insertSuggestion('a');
+    await insertSuggestion('b');
+    await insertSuggestion('decided', status: kSuggestionPlanned);
+    expect(await repo.watchActiveCount().first, 2);
   });
 }

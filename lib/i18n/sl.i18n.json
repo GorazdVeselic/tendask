@@ -439,6 +439,8 @@
     "section_language": "Jezik",
     "section_notifications": "Obvestila",
     "notifications_placeholder": "Obvestila in opomniki",
+    "section_suggestions": "Predlogi",
+    "suggestions_history_sub": "Kaj je bilo predlagano in kako si se odzval",
     "section_garden": "Vrt",
     "supplies": "📦 Zaloge & sredstva",
     "supplies_sub": "urea, alge, gnojila, oprema",
@@ -512,9 +514,14 @@
       "logged": "Zabeleženo",
       "dismissed": "Opuščeno",
       "muted": "Utišano",
-      "missed": "Zamujeno",
-      "expired": "Poteklo"
+      "missed": "Zamujeno"
     },
+    "band_title": "Predlogi zate",
+    "past_link": "Zgodovina",
+    "past_title": "Pretekli predlogi",
+    "past_intro": "Kaj ti je Tendask predlagal in kako si se odzval.",
+    "past_empty": "Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.",
+    "past_retention": "Predloge starejše od enega leta samodejno počistimo.",
     "cadence": {
       "overdue": {
         "title": "{task} je na vrsti",

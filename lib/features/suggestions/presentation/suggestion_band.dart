@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
@@ -46,6 +47,7 @@ class _Band extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
+          const _BandHeader(),
           for (var i = 0; i < suggestions.length; i++) ...[
             if (i > 0) const SizedBox(height: 8),
             SuggestionCard(
@@ -61,6 +63,57 @@ class _Band extends StatelessWidget {
               context.t.suggestions.disclaimer,
               style: theme.textTheme.labelSmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Band head: section title + a discreet link to the read-only history. The
+/// link lives here (not on Home) so it shows only with an active band; when the
+/// band is empty the history is reachable from Settings.
+class _BandHeader extends StatelessWidget {
+  const _BandHeader();
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return Padding(
+      padding: const EdgeInsets.only(left: 4, right: 4, bottom: 8),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              t.suggestions.band_title.toUpperCase(),
+              style: theme.textTheme.labelSmall?.copyWith(
+                letterSpacing: 0.8,
+                fontWeight: FontWeight.w600,
+                color: cs.onSurfaceVariant,
+              ),
+            ),
+          ),
+          InkWell(
+            borderRadius: BorderRadius.circular(8),
+            onTap: () => context.pushNamed('suggestion-history'),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    t.suggestions.past_link,
+                    style: theme.textTheme.labelMedium?.copyWith(
+                      color: cs.primary,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Icon(Icons.chevron_right, size: 16, color: cs.primary),
+                ],
               ),
             ),
           ),

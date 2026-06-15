@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/widgets/day_header.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/plants/application/plants_providers.dart';
@@ -292,7 +293,7 @@ class _DayGroup extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          _DayHeader(date: date),
+          DayHeader(date),
           const SizedBox(height: 6),
           Card(
             clipBehavior: Clip.antiAlias,
@@ -332,36 +333,6 @@ class _DayGroup extends StatelessWidget {
   }
 }
 
-class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.date});
-
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final today = startOfDay(DateTime.now());
-    final d = startOfDay(date);
-
-    final String label;
-    if (d == today) {
-      label = t.common.today;
-    } else if (d == today.subtract(const Duration(days: 1))) {
-      label = t.common.yesterday;
-    } else {
-      label = formatDmy(date);
-    }
-
-    return Text(
-      label,
-      style: theme.textTheme.labelMedium?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-}
 
 class _NoteEntry extends StatelessWidget {
   const _NoteEntry({required this.note, required this.area});

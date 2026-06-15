@@ -143,7 +143,7 @@ akcije + disclaimer; **ločen pod-korak, ~400+ nizov — gl. 08 §8.4**), `dart 
 - **Odvisnosti:** M11.2, vsebinsko M11.9+ · **Kompleksnost:** XL
 - **Commit:** `feat(home): pas pametnih predlogov z Načrtuj/Opusti`
 
-### M11.13b — Zaslon Pretekli predlogi `[ ]`
+### M11.13b — Zaslon Pretekli predlogi `[x]`
 **Wireframe NE obstaja** — pred kodo skiciraj `docs/wireframes/` (CLAUDE.md pravilo: wireframe
 pred zaslonom) ali zapiši zavestno izjemo v koncept §7.12.
 `08` §8.1 (suggestion_history_screen) + `03` §Cevovod 2e (retencija 365 d v housekeeping):

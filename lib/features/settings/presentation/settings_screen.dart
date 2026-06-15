@@ -213,6 +213,20 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
 
+            // Smart suggestions — read-only history of past suggestions and the
+            // user's responses (M11.13b). Always reachable here, even when the
+            // Home band is empty (the band's own link shows only when active).
+            SectionLabel(t.settings.section_suggestions),
+            Card(
+              child: ListTile(
+                leading: const Text('💡', style: TextStyle(fontSize: 22)),
+                title: Text(t.suggestions.past_title),
+                subtitle: Text(t.settings.suggestions_history_sub),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('suggestion-history'),
+              ),
+            ),
+
             // Garden / supplies — gated off for now (kSuppliesEnabled). The title
             // string already carries the 📦, so it provides the leading glyph here
             // (avoids the double-icon when re-enabled).

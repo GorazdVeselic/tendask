@@ -14,7 +14,6 @@ import '../../../../core/widgets/top_toast.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../areas/application/areas_providers.dart';
 import '../../../plants/application/plants_providers.dart';
-import '../../../plants/presentation/plant_display.dart';
 import '../../../tasks/application/tasks_providers.dart';
 import '../../../tasks/data/tasks_repository.dart';
 import '../../application/suggestion_providers.dart';
@@ -77,7 +76,12 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
         ? catalogLabel(taskType.labels)
         : suggestion.taskTypeId;
     final icon = taskType?.icon ?? '🌱';
-    final subject = _subjectLabel(suggestion, userPlants, plants, areas);
+    final subject = suggestionSubjectLabel(
+      suggestion,
+      userPlants,
+      plants,
+      areas,
+    );
 
     final params = suggestionDisplayParams(
       suggestion,
@@ -85,8 +89,10 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
       task: taskLabel,
     );
     final title =
-        _message(t, '${suggestion.messageKey}.title', params) ?? taskLabel;
-    final body = _message(t, '${suggestion.messageKey}.body', params) ?? '';
+        suggestionMessage(t, '${suggestion.messageKey}.title', params) ??
+        taskLabel;
+    final body =
+        suggestionMessage(t, '${suggestion.messageKey}.body', params) ?? '';
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),
@@ -167,27 +173,6 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
       ),
     );
   }
-}
-
-/// Looks up a localized template by its dynamic message_key (flat slang access)
-/// and fills its markers; null when the key is missing (caller falls back).
-String? _message(Translations t, String key, Map<String, String> params) {
-  final template = t[key];
-  return template is String ? fillTemplate(template, params) : null;
-}
-
-String _subjectLabel(
-  Suggestion s,
-  Map<String, UserPlant> userPlants,
-  Map<String, Plant> plants,
-  Map<String, Area> areas,
-) {
-  if (s.userPlantId != null) {
-    final up = userPlants[s.userPlantId];
-    return up != null ? userPlantLabel(up, plants) : '';
-  }
-  if (s.areaId != null) return areas[s.areaId]?.name ?? '';
-  return ''; // cat: suggestion — no concrete subject (its template omits it)
 }
 
 List<TaskSubjectSpec> _subjectsOf(Suggestion s) => [

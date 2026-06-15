@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/date_format.dart';
+import '../../../i18n/translations.g.dart';
+import '../../plants/presentation/plant_display.dart';
 
 /// Builds the `{marker}` display values for a suggestion from its row plus the
 /// already-resolved subject/task labels. `*_date` params are formatted for
@@ -47,3 +49,31 @@ Map<String, String> suggestionDisplayParams(
 /// client never computes message content (docs/m11/03 §Sporočila).
 String fillTemplate(String template, Map<String, String> values) => template
     .replaceAllMapped(RegExp(r'\{(\w+)\}'), (m) => values[m.group(1)] ?? '');
+
+/// Looks up a localized template by its dynamic message_key (flat slang access)
+/// and fills its markers; null when the key is missing (caller falls back).
+/// Shared by the Home band card and the history screen.
+String? suggestionMessage(
+  Translations t,
+  String key,
+  Map<String, String> values,
+) {
+  final template = t[key];
+  return template is String ? fillTemplate(template, values) : null;
+}
+
+/// Resolves the display label of a suggestion's subject (plant or area); empty
+/// for `cat:` suggestions, which have no concrete subject. Never throws.
+String suggestionSubjectLabel(
+  Suggestion s,
+  Map<String, UserPlant> userPlants,
+  Map<String, Plant> plants,
+  Map<String, Area> areas,
+) {
+  if (s.userPlantId != null) {
+    final up = userPlants[s.userPlantId];
+    return up != null ? userPlantLabel(up, plants) : '';
+  }
+  if (s.areaId != null) return areas[s.areaId]?.name ?? '';
+  return '';
+}

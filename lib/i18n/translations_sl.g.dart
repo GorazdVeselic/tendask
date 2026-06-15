@@ -690,6 +690,8 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get section_language => 'Jezik';
 	@override String get section_notifications => 'Obvestila';
 	@override String get notifications_placeholder => 'Obvestila in opomniki';
+	@override String get section_suggestions => 'Predlogi';
+	@override String get suggestions_history_sub => 'Kaj je bilo predlagano in kako si se odzval';
 	@override String get section_garden => 'Vrt';
 	@override String get supplies => '📦 Zaloge & sredstva';
 	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
@@ -755,6 +757,12 @@ class _Translations$suggestions$sl extends Translations$suggestions$en {
 	@override late final _Translations$suggestions$done_sheet$sl done_sheet = _Translations$suggestions$done_sheet$sl._(_root);
 	@override late final _Translations$suggestions$remove$sl remove = _Translations$suggestions$remove$sl._(_root);
 	@override late final _Translations$suggestions$history_status$sl history_status = _Translations$suggestions$history_status$sl._(_root);
+	@override String get band_title => 'Predlogi zate';
+	@override String get past_link => 'Zgodovina';
+	@override String get past_title => 'Pretekli predlogi';
+	@override String get past_intro => 'Kaj ti je Tendask predlagal in kako si se odzval.';
+	@override String get past_empty => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.';
+	@override String get past_retention => 'Predloge starejše od enega leta samodejno počistimo.';
 	@override late final _Translations$suggestions$cadence$sl cadence = _Translations$suggestions$cadence$sl._(_root);
 	@override late final _Translations$suggestions$history$sl history = _Translations$suggestions$history$sl._(_root);
 	@override late final _Translations$suggestions$weather$sl weather = _Translations$suggestions$weather$sl._(_root);
@@ -841,7 +849,6 @@ class _Translations$suggestions$history_status$sl extends Translations$suggestio
 	@override String get dismissed => 'Opuščeno';
 	@override String get muted => 'Utišano';
 	@override String get missed => 'Zamujeno';
-	@override String get expired => 'Poteklo';
 }
 
 // Path: suggestions.cadence
@@ -2204,6 +2211,8 @@ extension on TranslationsSl {
 			'settings.section_language' => 'Jezik',
 			'settings.section_notifications' => 'Obvestila',
 			'settings.notifications_placeholder' => 'Obvestila in opomniki',
+			'settings.section_suggestions' => 'Predlogi',
+			'settings.suggestions_history_sub' => 'Kaj je bilo predlagano in kako si se odzval',
 			'settings.section_garden' => 'Vrt',
 			'settings.supplies' => '📦 Zaloge & sredstva',
 			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
@@ -2265,7 +2274,12 @@ extension on TranslationsSl {
 			'suggestions.history_status.dismissed' => 'Opuščeno',
 			'suggestions.history_status.muted' => 'Utišano',
 			'suggestions.history_status.missed' => 'Zamujeno',
-			'suggestions.history_status.expired' => 'Poteklo',
+			'suggestions.band_title' => 'Predlogi zate',
+			'suggestions.past_link' => 'Zgodovina',
+			'suggestions.past_title' => 'Pretekli predlogi',
+			'suggestions.past_intro' => 'Kaj ti je Tendask predlagal in kako si se odzval.',
+			'suggestions.past_empty' => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.',
+			'suggestions.past_retention' => 'Predloge starejše od enega leta samodejno počistimo.',
 			'suggestions.cadence.overdue.title' => '{task} je na vrsti',
 			'suggestions.cadence.overdue.body' => '{subject}: zamuda približno {days_overdue} dni (običajni ritem ~{cadence_days} dni).',
 			'suggestions.history.anniversary.title' => '{task} — pred letom dni',
@@ -2335,6 +2349,8 @@ extension on TranslationsSl {
 			'suggestions.vegetable.transplant.title' => 'Presaditev',
 			'suggestions.vegetable.transplant.body' => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Neposredna setev',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Dognojevanje',
 			'suggestions.vegetable.fertilize_season.body' => 'Med rastno dobo pognoji {subject}.',
@@ -2342,8 +2358,6 @@ extension on TranslationsSl {
 			'suggestions.vegetable.treat_window.body' => 'Preglej {subject} in po potrebi zaščiti — najbolje v suhem vremenu.',
 			'suggestions.herbs.start_seedlings.title' => 'Setev za sadike',
 			'suggestions.herbs.start_seedlings.body' => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.herbs.sow_direct.title' => 'Neposredna setev',
 			'suggestions.herbs.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
 			'suggestions.herbs.plant_out.title' => 'Saditev na prosto',

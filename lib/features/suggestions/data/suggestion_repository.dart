@@ -60,6 +60,26 @@ class SuggestionRepository {
     );
   }
 
+  /// Read-only history (audit trail): every decided/expired row (status not
+  /// 'new'), newest decision first — for the 'Past suggestions' screen. The
+  /// 365-day retention is server-side (engine housekeeping); the client only
+  /// hides soft-deleted rows. LOCAL.
+  Stream<List<Suggestion>> watchHistory() {
+    final query =
+        _db.select(_db.suggestions)
+          ..where(
+            (s) =>
+                s.status.equals(kSuggestionNew).not() &
+                s.deleted.equals(false),
+          )
+          ..orderBy([(s) => OrderingTerm.desc(s.updatedAt)]);
+    return query.watch();
+  }
+
+  /// Count of currently active suggestions — mirrors [watchActive] exactly (same
+  /// filter, no drift), so a badge can never disagree with the Home band. LOCAL.
+  Stream<int> watchActiveCount() => watchActive().map((rows) => rows.length);
+
   /// Links the created waiting task and retires the suggestion (status=planned).
   Future<void> markPlanned(String id, {required String plannedTaskId}) =>
       _setStatus(id, status: kSuggestionPlanned, plannedTaskId: plannedTaskId);

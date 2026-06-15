@@ -18,6 +18,7 @@ import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
+import '../../features/suggestions/presentation/suggestion_history_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
@@ -158,6 +159,11 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/notification-settings',
       name: 'notification-settings',
       builder: (context, state) => const NotificationSettingsScreen(),
+    ),
+    GoRoute(
+      path: '/suggestions/history',
+      name: 'suggestion-history',
+      builder: (context, state) => const SuggestionHistoryScreen(),
     ),
     GoRoute(
       path: '/notification-preview',

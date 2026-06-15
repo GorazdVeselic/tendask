@@ -684,6 +684,8 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get section_language => 'Sprache';
 	@override String get section_notifications => 'Benachrichtigungen';
 	@override String get notifications_placeholder => 'Benachrichtigungen und Erinnerungen';
+	@override String get section_suggestions => 'Vorschläge';
+	@override String get suggestions_history_sub => 'Was vorgeschlagen wurde und wie du reagiert hast';
 	@override String get section_garden => 'Garten';
 	@override String get supplies => '📦 Vorräte & Mittel';
 	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
@@ -749,6 +751,12 @@ class _Translations$suggestions$de extends Translations$suggestions$en {
 	@override late final _Translations$suggestions$done_sheet$de done_sheet = _Translations$suggestions$done_sheet$de._(_root);
 	@override late final _Translations$suggestions$remove$de remove = _Translations$suggestions$remove$de._(_root);
 	@override late final _Translations$suggestions$history_status$de history_status = _Translations$suggestions$history_status$de._(_root);
+	@override String get band_title => 'Vorschläge für dich';
+	@override String get past_link => 'Verlauf';
+	@override String get past_title => 'Frühere Vorschläge';
+	@override String get past_intro => 'Was Tendask vorgeschlagen hat und wie du reagiert hast.';
+	@override String get past_empty => 'Noch kein Verlauf. Sobald du auf einen Vorschlag reagierst — einplanen, überspringen oder als erledigt erfassen — erscheint er hier.';
+	@override String get past_retention => 'Vorschläge, die älter als ein Jahr sind, werden automatisch entfernt.';
 	@override late final _Translations$suggestions$cadence$de cadence = _Translations$suggestions$cadence$de._(_root);
 	@override late final _Translations$suggestions$history$de history = _Translations$suggestions$history$de._(_root);
 	@override late final _Translations$suggestions$weather$de weather = _Translations$suggestions$weather$de._(_root);
@@ -835,7 +843,6 @@ class _Translations$suggestions$history_status$de extends Translations$suggestio
 	@override String get dismissed => 'Verworfen';
 	@override String get muted => 'Stumm';
 	@override String get missed => 'Verpasst';
-	@override String get expired => 'Abgelaufen';
 }
 
 // Path: suggestions.cadence
@@ -2198,6 +2205,8 @@ extension on TranslationsDe {
 			'settings.section_language' => 'Sprache',
 			'settings.section_notifications' => 'Benachrichtigungen',
 			'settings.notifications_placeholder' => 'Benachrichtigungen und Erinnerungen',
+			'settings.section_suggestions' => 'Vorschläge',
+			'settings.suggestions_history_sub' => 'Was vorgeschlagen wurde und wie du reagiert hast',
 			'settings.section_garden' => 'Garten',
 			'settings.supplies' => '📦 Vorräte & Mittel',
 			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
@@ -2259,7 +2268,12 @@ extension on TranslationsDe {
 			'suggestions.history_status.dismissed' => 'Verworfen',
 			'suggestions.history_status.muted' => 'Stumm',
 			'suggestions.history_status.missed' => 'Verpasst',
-			'suggestions.history_status.expired' => 'Abgelaufen',
+			'suggestions.band_title' => 'Vorschläge für dich',
+			'suggestions.past_link' => 'Verlauf',
+			'suggestions.past_title' => 'Frühere Vorschläge',
+			'suggestions.past_intro' => 'Was Tendask vorgeschlagen hat und wie du reagiert hast.',
+			'suggestions.past_empty' => 'Noch kein Verlauf. Sobald du auf einen Vorschlag reagierst — einplanen, überspringen oder als erledigt erfassen — erscheint er hier.',
+			'suggestions.past_retention' => 'Vorschläge, die älter als ein Jahr sind, werden automatisch entfernt.',
 			'suggestions.cadence.overdue.title' => '{task} ist fällig',
 			'suggestions.cadence.overdue.body' => '{subject}: ca. {days_overdue} Tage über dem üblichen Rhythmus (~{cadence_days} Tage).',
 			'suggestions.history.anniversary.title' => '{task} — vor einem Jahr',
@@ -2329,6 +2343,8 @@ extension on TranslationsDe {
 			'suggestions.vegetable.transplant.title' => 'Umpflanzen',
 			'suggestions.vegetable.transplant.body' => 'Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Direktsaat',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Düngen',
 			'suggestions.vegetable.fertilize_season.body' => 'Dünge {subject} während der Wachstumszeit.',
@@ -2336,8 +2352,6 @@ extension on TranslationsDe {
 			'suggestions.vegetable.treat_window.body' => 'Prüfe {subject} und behandle bei Bedarf — am besten bei trockenem Wetter.',
 			'suggestions.herbs.start_seedlings.title' => 'Anzucht starten',
 			'suggestions.herbs.start_seedlings.body' => 'Säe {subject} drinnen für einen Vorsprung — bis etwa {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.herbs.sow_direct.title' => 'Direktsaat',
 			'suggestions.herbs.sow_direct.body' => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.',
 			'suggestions.herbs.plant_out.title' => 'Auspflanzen',

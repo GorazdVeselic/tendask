@@ -1434,6 +1434,12 @@ class Translations$settings$en {
 	/// en: 'Notifications and reminders'
 	String get notifications_placeholder => 'Notifications and reminders';
 
+	/// en: 'Suggestions'
+	String get section_suggestions => 'Suggestions';
+
+	/// en: 'What was suggested and how you responded'
+	String get suggestions_history_sub => 'What was suggested and how you responded';
+
 	/// en: 'Garden'
 	String get section_garden => 'Garden';
 
@@ -1583,6 +1589,25 @@ class Translations$suggestions$en {
 	late final Translations$suggestions$done_sheet$en done_sheet = Translations$suggestions$done_sheet$en.internal(_root);
 	late final Translations$suggestions$remove$en remove = Translations$suggestions$remove$en.internal(_root);
 	late final Translations$suggestions$history_status$en history_status = Translations$suggestions$history_status$en.internal(_root);
+
+	/// en: 'Suggestions for you'
+	String get band_title => 'Suggestions for you';
+
+	/// en: 'History'
+	String get past_link => 'History';
+
+	/// en: 'Past suggestions'
+	String get past_title => 'Past suggestions';
+
+	/// en: 'What Tendask suggested and how you responded.'
+	String get past_intro => 'What Tendask suggested and how you responded.';
+
+	/// en: 'No history yet. When you respond to a suggestion — plan it, skip it or log it as done — it appears here.'
+	String get past_empty => 'No history yet. When you respond to a suggestion — plan it, skip it or log it as done — it appears here.';
+
+	/// en: 'Suggestions older than a year are cleared automatically.'
+	String get past_retention => 'Suggestions older than a year are cleared automatically.';
+
 	late final Translations$suggestions$cadence$en cadence = Translations$suggestions$cadence$en.internal(_root);
 	late final Translations$suggestions$history$en history = Translations$suggestions$history$en.internal(_root);
 	late final Translations$suggestions$weather$en weather = Translations$suggestions$weather$en.internal(_root);
@@ -1707,9 +1732,6 @@ class Translations$suggestions$history_status$en {
 
 	/// en: 'Missed'
 	String get missed => 'Missed';
-
-	/// en: 'Expired'
-	String get expired => 'Expired';
 }
 
 // Path: suggestions.cadence
@@ -3332,6 +3354,8 @@ extension on Translations {
 			'settings.section_language' => 'Language',
 			'settings.section_notifications' => 'Notifications',
 			'settings.notifications_placeholder' => 'Notifications and reminders',
+			'settings.section_suggestions' => 'Suggestions',
+			'settings.suggestions_history_sub' => 'What was suggested and how you responded',
 			'settings.section_garden' => 'Garden',
 			'settings.supplies' => '📦 Supplies',
 			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
@@ -3393,7 +3417,12 @@ extension on Translations {
 			'suggestions.history_status.dismissed' => 'Dismissed',
 			'suggestions.history_status.muted' => 'Muted',
 			'suggestions.history_status.missed' => 'Missed',
-			'suggestions.history_status.expired' => 'Expired',
+			'suggestions.band_title' => 'Suggestions for you',
+			'suggestions.past_link' => 'History',
+			'suggestions.past_title' => 'Past suggestions',
+			'suggestions.past_intro' => 'What Tendask suggested and how you responded.',
+			'suggestions.past_empty' => 'No history yet. When you respond to a suggestion — plan it, skip it or log it as done — it appears here.',
+			'suggestions.past_retention' => 'Suggestions older than a year are cleared automatically.',
 			'suggestions.cadence.overdue.title' => '{task} is due',
 			'suggestions.cadence.overdue.body' => '{subject} is about {days_overdue} days past the usual ~{cadence_days}-day rhythm.',
 			'suggestions.history.anniversary.title' => '{task} — a year ago',
@@ -3463,6 +3492,8 @@ extension on Translations {
 			'suggestions.vegetable.transplant.title' => 'Transplant',
 			'suggestions.vegetable.transplant.body' => 'Move {subject} to its final spot after frost — around {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Direct sow',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Feed',
 			'suggestions.vegetable.fertilize_season.body' => 'Give {subject} a feed during the growing season.',
@@ -3470,8 +3501,6 @@ extension on Translations {
 			'suggestions.vegetable.treat_window.body' => 'Check {subject} and treat if needed — dry weather is best.',
 			'suggestions.herbs.start_seedlings.title' => 'Start seedlings',
 			'suggestions.herbs.start_seedlings.body' => 'Sow {subject} indoors for a head start — by about {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.herbs.sow_direct.title' => 'Direct sow',
 			'suggestions.herbs.sow_direct.body' => 'Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}.',
 			'suggestions.herbs.plant_out.title' => 'Plant out',

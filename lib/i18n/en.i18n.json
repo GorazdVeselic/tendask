@@ -433,6 +433,8 @@
     "section_language": "Language",
     "section_notifications": "Notifications",
     "notifications_placeholder": "Notifications and reminders",
+    "section_suggestions": "Suggestions",
+    "suggestions_history_sub": "What was suggested and how you responded",
     "section_garden": "Garden",
     "supplies": "📦 Supplies",
     "supplies_sub": "urea, algae, fertilizers, gear",
@@ -506,9 +508,14 @@
       "logged": "Logged",
       "dismissed": "Dismissed",
       "muted": "Muted",
-      "missed": "Missed",
-      "expired": "Expired"
+      "missed": "Missed"
     },
+    "band_title": "Suggestions for you",
+    "past_link": "History",
+    "past_title": "Past suggestions",
+    "past_intro": "What Tendask suggested and how you responded.",
+    "past_empty": "No history yet. When you respond to a suggestion — plan it, skip it or log it as done — it appears here.",
+    "past_retention": "Suggestions older than a year are cleared automatically.",
     "cadence": {
       "overdue": {
         "title": "{task} is due",
