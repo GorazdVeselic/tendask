@@ -227,6 +227,9 @@ Future<void> _showActions(
   final hasSubject = s.userPlantId != null || s.areaId != null;
   final action = await showModalBottomSheet<String>(
     context: context,
+    // Push on the root navigator so the modal sits above the shell's FAB and
+    // bottom nav (otherwise the centre FAB paints over the sheet rows).
+    useRootNavigator: true,
     builder: (ctx) {
       final t = ctx.t;
       final cs = Theme.of(ctx).colorScheme;
@@ -301,6 +304,7 @@ Future<void> _alreadyDone(
 Future<DateTime?> _pickDoneDate(BuildContext context) async {
   final choice = await showModalBottomSheet<String>(
     context: context,
+    useRootNavigator: true,
     builder: (ctx) {
       final t = ctx.t;
       final theme = Theme.of(ctx);
