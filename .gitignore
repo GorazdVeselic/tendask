@@ -9,6 +9,8 @@
 # Local secrets — nikoli v repo (CLAUDE.md)
 /dart_defines.json
 .env
+# Firebase config (vsebuje projektne ključe) — nikoli v repo; gradle ga bere lokalno
+/android/app/google-services.json
 
 # Osebni podatki tretjih oseb (GDPR) — seznami testerjev z e-naslovi nikoli v repo
 /docs/go-live/testers.md
