@@ -174,7 +174,7 @@ Konsolidacija: Deno test suite (signali, vsa pravila, cevovod, regionalizacija) 
 
 ## Faza E — V2 skupnost
 
-### M11.16 — Supabase migracija 0006 (V2 agregati) + nočni cron `[ ]`
+### M11.16 — Supabase migracija 0008 (V2 agregati) + nočni cron `[x]`
 `04` §4.4–4.6: štiri tabele, eligible_user, agg_event, agg_refresh_all(), pg_cron, RLS.
 - **DoD:** `db push` uspe; ročni `select agg_refresh_all()` na dev podatkih (sintetičnih ≥ 6
   uporabnikov) napolni vse štiri tabele; anon vidi SAMO vrstice ≥ K_privacy (ročna RLS
