@@ -78,6 +78,15 @@ const kSupabasePublishableKey = String.fromEnvironment(
   'SUPABASE_PUBLISHABLE_KEY',
 );
 
+/// Human-readable backend environment, derived from [kSupabaseUrl] and logged
+/// once at boot so a debug session can never silently target the wrong backend.
+/// Staging URLs carry the `staging` host segment; everything else is production
+/// (and an empty URL means fully offline).
+String get kEnvLabel {
+  if (kSupabaseUrl.isEmpty) return 'offline (no backend)';
+  return kSupabaseUrl.contains('staging') ? 'staging' : 'production';
+}
+
 /// Google OAuth **Web** client id (serverClientId for native Google sign-in,
 /// M7.4). Arrives via --dart-define (see dart_defines.json). Empty → the Google
 /// button stays disabled (the rest of the app, incl. email sign-in, still works).

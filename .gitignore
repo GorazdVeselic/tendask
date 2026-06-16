@@ -6,8 +6,9 @@
 # `flutter screenshot` saves flutter_NN.png in the repo root by default
 /flutter_*.png
 
-# Local secrets — nikoli v repo (CLAUDE.md)
+# Local secrets — nikoli v repo (CLAUDE.md). Predloge (*.example.json) SMEJO v git.
 /dart_defines.json
+/dart_defines.staging.json
 .env
 # Firebase config (vsebuje projektne ključe) — nikoli v repo; gradle ga bere lokalno
 /android/app/google-services.json

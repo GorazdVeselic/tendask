@@ -44,6 +44,13 @@ void main() async {
 Future<void> _bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // Log the active backend so a debug run can't silently hit the wrong one
+  // (staging vs production). debugPrint is stripped from release builds.
+  debugPrint(
+    'ENV: $kEnvLabel'
+    '${kSupabaseUrl.isEmpty ? '' : ' — SUPABASE_URL=$kSupabaseUrl'}',
+  );
+
   // Pure-Dart sentry has no automatic Flutter integration, so forward framework
   // and platform-dispatcher errors to it (only when configured).
   if (kSentryDsn.isNotEmpty) {
