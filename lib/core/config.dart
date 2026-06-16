@@ -113,3 +113,14 @@ const kSentryDsn = String.fromEnvironment('SENTRY_DSN');
 /// Public privacy policy (GDPR). Shown as a tappable link on the sign-in screen
 /// and in Settings; same URL is submitted to Play Console.
 const kPrivacyPolicyUrl = 'https://tendask.netlify.app/';
+
+/// Minimum gap between OTP code sends (FR-11). Mirrors Supabase's server-side
+/// ~60 s throttle so the resend button counts down locally instead of letting
+/// the user hit a server error. UX rate-limit only; the hard cap stays server-side.
+const kOtpResendCooldown = Duration(seconds: 60);
+
+/// Timeout for the DNS-over-HTTPS domain-existence check (FR-11). Deliberately
+/// short: it runs before sending the OTP, and a slow/failed lookup must fail
+/// OPEN (proceed) rather than make sign-in feel stuck — only a definitive
+/// "domain does not exist" blocks.
+const kDnsCheckTimeout = Duration(seconds: 3);
