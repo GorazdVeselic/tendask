@@ -225,8 +225,10 @@ class _HistoryRow extends StatelessWidget {
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       onTap: linksTask
-          ? () =>
-                context.pushNamed('task-detail', pathParameters: {'id': taskId})
+          // 'task-view' (top-level), not the shell-nested 'task-detail': this
+          // screen lives above the shell, so pushing the nested route would
+          // duplicate the shell page key and crash the navigator.
+          ? () => context.pushNamed('task-view', pathParameters: {'id': taskId})
           : null,
     );
   }

@@ -194,15 +194,30 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       builder: (context, state) =>
           NoteFormScreen(noteId: state.pathParameters['id']),
     ),
+    // Top-level task detail for callers OUTSIDE the shell (suggestion history,
+    // plant detail). Pushing the shell-nested '/tasks/:id' (task-detail) from a
+    // non-shell route re-creates the already-mounted shell page → duplicate page
+    // key → Navigator 'keyReservation' assertion. This sibling renders the same
+    // screen full-screen; in-shell callers keep 'task-detail' (bottom nav stays).
+    GoRoute(
+      path: '/task/:id',
+      name: 'task-view',
+      builder: (context, state) =>
+          TaskDetailScreen(id: state.pathParameters['id']!),
+    ),
     // Path must not collide with the shell '/tasks/:id' (task-detail):
     // '/tasks/new' would match ':id'="new". Use a distinct prefix.
     GoRoute(
       path: '/task-new',
       name: 'task-new',
       builder: (context, state) {
-        final raw = state.uri.queryParameters['date'];
+        final q = state.uri.queryParameters;
+        final raw = q['date'];
         return EntryScreen(
           initialDate: raw != null ? DateTime.tryParse(raw) : null,
+          initialTaskTypeId: q['type'],
+          initialPlantId: q['plant'],
+          initialAreaId: q['area'],
         );
       },
     ),

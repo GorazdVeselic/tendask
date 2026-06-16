@@ -27,13 +27,29 @@ enum EntryStep { type, subject, when, reminder, supplies, review }
 /// Quick Log + Task Form (concept §7.16). Conditional steps: reminder shows
 /// only when the task is waiting; supplies only for supply-consuming types.
 class EntryScreen extends ConsumerStatefulWidget {
-  const EntryScreen({super.key, this.taskId, this.initialDate});
+  const EntryScreen({
+    super.key,
+    this.taskId,
+    this.initialDate,
+    this.initialTaskTypeId,
+    this.initialPlantId,
+    this.initialAreaId,
+  });
 
   /// Null = create; non-null = edit (opens on the review step, pre-filled).
   final String? taskId;
 
-  /// Preselected date for create mode (e.g. tapping a day in the calendar).
+  /// Preselected date for create mode (calendar day tap, or a suggestion's
+  /// suggested date when planning).
   final DateTime? initialDate;
+
+  /// Pre-filled type/subject for create mode — set when planning a suggestion
+  /// (concept §0.5): type + subject are already known, so the form opens on the
+  /// "when" step for the user to pick the date and an optional reminder, then
+  /// save. Null for a blank new task.
+  final String? initialTaskTypeId;
+  final String? initialPlantId;
+  final String? initialAreaId;
 
   @override
   ConsumerState<EntryScreen> createState() => _EntryScreenState();
@@ -43,7 +59,11 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   // Edit opens on the review step; the controller must start there too, since
   // the PageView is first built only after loading finishes.
   late final _pageController = PageController(
-    initialPage: widget.taskId != null ? EntryStep.review.index : 0,
+    initialPage: widget.taskId != null
+        ? EntryStep.review.index
+        : widget.initialTaskTypeId != null
+        ? EntryStep.when.index
+        : 0,
   );
   String? _taskTypeId;
   final Set<String> _plantIds = {};
@@ -70,6 +90,12 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _isLoading = true;
       _step = EntryStep.review;
       Future.microtask(_loadTask);
+    } else if (widget.initialTaskTypeId != null) {
+      // Planning a suggestion: type + subject are known, so open on "when".
+      _taskTypeId = widget.initialTaskTypeId;
+      if (widget.initialPlantId != null) _plantIds.add(widget.initialPlantId!);
+      if (widget.initialAreaId != null) _areaIds.add(widget.initialAreaId!);
+      _step = EntryStep.when;
     }
   }
 
@@ -293,7 +319,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             specs: _supplies,
             isDone: _status == TaskStatus.done,
           );
-      if (mounted) context.pop();
+      // Return the task id so a planning caller (suggestion card) can link it.
+      if (mounted) context.pop(taskId);
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }

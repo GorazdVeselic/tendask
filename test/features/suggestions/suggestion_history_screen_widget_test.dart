@@ -122,8 +122,11 @@ Future<void> _pump(WidgetTester tester, AppDatabase db) async {
         builder: (context, state) => const SuggestionHistoryScreen(),
       ),
       GoRoute(
-        path: '/tasks/:id',
-        name: 'task-detail',
+        // History lives above the shell, so it opens the top-level 'task-view'
+        // sibling (not the shell-nested 'task-detail') to avoid a duplicate
+        // shell page key.
+        path: '/task/:id',
+        name: 'task-view',
         builder: (context, state) =>
             Scaffold(body: Text('TASK ${state.pathParameters['id']}')),
       ),

@@ -370,6 +370,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-16 — **M11.14 follow-up — »Načrtuj« odpre obrazec + nav crash fix (on-device).**
+  Med živo preverbo razkrita dva problema: **(1) UX** — »Načrtuj« je tiho ustvaril opravilo s
+  predlaganim datumom brez izbire termina in brez vidne potrditve; zdaj odpre čarovnik Novo
+  opravilo, predizpolnjen (tip/rastlina/predlagani datum), odprt na koraku »Kdaj«; šele
+  **shranjeno** opravilo označi predlog `planned` (preklic ga pusti na pasu). `EntryScreen`
+  dobi `initialTaskTypeId/Plant/Area` in vrne id nastalega opravila prek `context.pop(taskId)`;
+  koncept §0.5 posodobljen. **(2) Crash** — tap na vnos v »Pretekli predlogi« je sprožil
+  navigator `keyReservation` assertion (rdeč zaslon): zaslon živi NAD shell-om, zato push
+  gnezdene `/tasks/:id` (task-detail) podvoji shell page key. Dodana top-level sestra
+  `/task/:id` (`task-view`); zgodovina + plant-detail (oba zunaj shell-a) jo uporabljata,
+  in-shell klicalci ostanejo na `task-detail`. Oba band Plan testa predelana (router stub),
+  history test na `task-view`. analyze čist, 241/241. *Commit:* `feat(suggestions): »Načrtuj«
+  odpre predizpolnjen obrazec + fix nav crash`
 - 2026-06-15 — **M11.14 — E2E veriga paradižnika potrjena na napravi + poliranje.** Cel krog
   §0.1 v živo (SM A536B, dev `exogenus@gmail.com`): `start_seedlings` done (−16 dni) → ročni
   engine invoke → **R7 emitira `prick_out`** (score 2, okno +14..21) → predlog se pull-a na pas

@@ -5,6 +5,7 @@ import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
@@ -79,9 +80,13 @@ Future<AppDatabase> _buildDb() async {
   return db;
 }
 
-Future<void> _pumpBand(
+/// Pumps [app] (the band lives inside it) with the in-memory DB wired through
+/// Riverpod. Overrides stay inline so their element type is inferred (the
+/// `Override` type is not exported from flutter_riverpod).
+Future<void> _pumpWithBand(
   WidgetTester tester,
-  AppDatabase db, {
+  AppDatabase db,
+  Widget app, {
   Stream<List<Suggestion>>? content,
 }) async {
   final areas = {for (final a in await db.select(db.areas).get()) a.id: a};
@@ -91,7 +96,6 @@ Future<void> _pumpBand(
   final sug = await (db.select(
     db.suggestions,
   )..where((s) => s.id.equals(_sugId))).getSingle();
-
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
@@ -119,14 +123,71 @@ Future<void> _pumpBand(
           ),
           suppliesListProvider.overrideWith((ref) => Stream.value(<Supply>[])),
         ],
-        child: const MaterialApp(
-          home: Scaffold(body: SingleChildScrollView(child: SuggestionBand())),
-        ),
+        child: app,
       ),
     ),
   );
   await tester.pump(); // resolve override streams
   await tester.pump(const Duration(milliseconds: 50));
+}
+
+Future<void> _pumpBand(
+  WidgetTester tester,
+  AppDatabase db, {
+  Stream<List<Suggestion>>? content,
+}) => _pumpWithBand(
+  tester,
+  db,
+  const MaterialApp(
+    home: Scaffold(body: SingleChildScrollView(child: SuggestionBand())),
+  ),
+  content: content,
+);
+
+/// Captures the query params the band hands to the `task-new` route.
+class _RoutedHandle {
+  Map<String, String> params = const {};
+}
+
+/// Pumps the band inside a router whose `task-new` route is a stub: tapping its
+/// STUB_SAVE button pops [popValue] (a fake task id, or null to mimic cancel),
+/// so the plan handoff can be tested without the full wizard.
+Future<_RoutedHandle> _pumpBandRouted(
+  WidgetTester tester,
+  AppDatabase db, {
+  required String? popValue,
+}) async {
+  final handle = _RoutedHandle();
+  final router = GoRouter(
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (c, s) =>
+            const Scaffold(body: SingleChildScrollView(child: SuggestionBand())),
+      ),
+      GoRoute(
+        path: '/task-new',
+        name: 'task-new',
+        builder: (c, s) {
+          handle.params = s.uri.queryParameters;
+          return Scaffold(
+            body: Center(
+              child: ElevatedButton(
+                onPressed: () => c.pop(popValue),
+                child: const Text('STUB_SAVE'),
+              ),
+            ),
+          );
+        },
+      ),
+    ],
+  );
+  await _pumpWithBand(
+    tester,
+    db,
+    MaterialApp.router(routerConfig: router),
+  );
+  return handle;
 }
 
 /// Lets async action futures complete, then steps the top-toast lifecycle to
@@ -199,38 +260,43 @@ void main() {
     expect(find.text(t.suggestions.disclaimer), findsOneWidget); // not per-card
   });
 
-  testWidgets('Načrtuj creates a waiting task on the suggested date', (
+  testWidgets('Načrtuj opens the pre-filled task form; saving marks it planned', (
     tester,
   ) async {
     final db = await _buildDb();
     addTearDown(db.close);
-    await _pumpBand(tester, db);
+    final h = await _pumpBandRouted(tester, db, popValue: 'new-task-id');
 
     await tester.tap(find.text('Načrtuj'));
-    await _settle(tester);
+    await tester.pumpAndSettle();
 
-    final tasks = await db.select(db.tasks).get();
-    expect(tasks, hasLength(1));
-    expect(tasks.single.status, TaskStatus.waiting);
-    expect(tasks.single.taskTypeId, 'mow');
-    expect(tasks.single.date.toLocal().day, 20); // suggested_date 2026-06-20
-    final subjects = await db.select(db.taskSubjects).get();
-    expect(subjects.single.areaId, _areaId);
-    expect((await _suggestion(db)).status, kSuggestionPlanned);
+    // Navigated to the wizard pre-filled from the suggestion (type/subject/date).
+    expect(find.text('STUB_SAVE'), findsOneWidget);
+    expect(h.params['type'], 'mow');
+    expect(h.params['area'], _areaId);
+    expect(h.params['date'], startsWith('2026-06-20')); // suggested_date
+
+    // A saved task (id returned) marks the suggestion planned and links it.
+    await tester.tap(find.text('STUB_SAVE'));
+    await tester.pumpAndSettle();
+    final sug = await _suggestion(db);
+    expect(sug.status, kSuggestionPlanned);
+    expect(sug.plannedTaskId, 'new-task-id');
   });
 
-  testWidgets('double-tapping Načrtuj creates only one task', (tester) async {
+  testWidgets('cancelling the task form leaves the suggestion on the band', (
+    tester,
+  ) async {
     final db = await _buildDb();
     addTearDown(db.close);
-    await _pumpBand(tester, db);
+    await _pumpBandRouted(tester, db, popValue: null); // null pop = cancel
 
-    // Two taps before the first action's rebuild: the _busy guard must drop the
-    // second so the card never creates a duplicate task.
     await tester.tap(find.text('Načrtuj'));
-    await tester.tap(find.text('Načrtuj'));
-    await _settle(tester);
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('STUB_SAVE'));
+    await tester.pumpAndSettle();
 
-    expect(await db.select(db.tasks).get(), hasLength(1));
+    expect((await _suggestion(db)).status, kSuggestionNew); // unchanged
   });
 
   testWidgets('Preskoči dismisses for the season', (tester) async {

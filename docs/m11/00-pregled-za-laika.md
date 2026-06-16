@@ -88,9 +88,12 @@ uporabnike — vedno pa pošteno pove, kateri obseg gleda (»v tvoji okolici« /
 
 ## 0.5 Kaj se zgodi ob »Opusti« in ob »Načrtuj«?
 
-**Načrtuj:** iz predloga z enim dotikom nastane **načrtovano opravilo** (z vnaprej izpolnjenim
-tipom, rastlino in predlaganim datumom) — točno tako, kot bi ga Maja ustvarila ročno. Pas izgine,
-opravilo pa živi naprej v zavihku Opravila; po želji si Maja nanj nastavi še klasičen opomnik.
+**Načrtuj:** odpre **obrazec za novo opravilo, že izpolnjen** s tipom, rastlino in *predlaganim*
+datumom — odprt na koraku »Kdaj«, da Maja potrdi/popravi datum in po želji doda opomnik, nato
+shrani. (Spremenjeno 2026-06-15 iz prvotnega »en dotik«: uporabnik je opozoril, da takojšnja
+tiha izdelava opravila brez izbire termina ni dober UX.) Šele **shranjeno** opravilo označi predlog
+kot »načrtovan« → pas izgine, opravilo živi v zavihku Opravila. Če Maja obrazec prekliče, predlog
+ostane na pasu.
 Motor si zapomni: »to je zdaj načrtovano« → istega ne predlaga več.
 
 **Opusti:** pas izgine in motor si zapiše »tega predloga tej osebi ne kaži N dni« (N je odvisen

@@ -213,8 +213,10 @@ class _HistoryRow extends StatelessWidget {
         ),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      // 'task-view' (top-level): this screen is above the shell, so the nested
+      // 'task-detail' would duplicate the shell page key and crash the navigator.
       onTap: () =>
-          context.pushNamed('task-detail', pathParameters: {'id': task.id}),
+          context.pushNamed('task-view', pathParameters: {'id': task.id}),
     );
   }
 }

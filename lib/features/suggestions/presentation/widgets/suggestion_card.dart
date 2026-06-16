@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/catalog_labels.dart';
@@ -197,19 +198,23 @@ DateTime _suggestedDate(Suggestion s) {
 }
 
 Future<void> _plan(BuildContext context, WidgetRef ref, Suggestion s) async {
-  final taskId = await ref
-      .read(tasksRepositoryProvider)
-      .create(
-        userId: ref.read(authServiceProvider).userId,
-        taskTypeId: s.taskTypeId,
-        date: _suggestedDate(s),
-        subjects: _subjectsOf(s),
-      );
-  await ref
-      .read(suggestionRepositoryProvider)
-      .markPlanned(s.id, plannedTaskId: taskId);
-  if (!context.mounted) return;
-  showTopToast(context, context.t.suggestions.toast.planned);
+  // Open the task wizard pre-filled (concept §0.5): the user picks the date and
+  // an optional reminder, then saves. Only a saved task (id returned) marks the
+  // suggestion planned; cancelling leaves the card on the band. Repo is read
+  // before the await so it survives the card's possible unmount.
+  final repo = ref.read(suggestionRepositoryProvider);
+  final date = _suggestedDate(s);
+  final taskId = await context.pushNamed<String>(
+    'task-new',
+    queryParameters: {
+      'type': s.taskTypeId,
+      'date': date.toIso8601String(),
+      if (s.userPlantId != null) 'plant': s.userPlantId!,
+      if (s.areaId != null) 'area': s.areaId!,
+    },
+  );
+  if (taskId == null) return; // cancelled — suggestion stays
+  await repo.markPlanned(s.id, plannedTaskId: taskId);
 }
 
 Future<void> _dismiss(
