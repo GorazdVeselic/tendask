@@ -368,7 +368,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** ✅ **Implementirano
   2026-06-16 na `feat/vrt-area` (gl. dnevnik). Migracija `0010` (CHECK z `garden`) APLICIRANA na
   živi DB 2026-06-16 prek poolerja (preverjeno: `area_type_check` zdaj vsebuje `garden`); ledger
-  vnos za 0010 pride ob merge brancha (SQL idempotenten). Ostane le 👤 on-device preverba.**
+  vnos za 0010 pride ob merge brancha (SQL idempotenten). **On-device verificirano** (SM A536B,
+  debug): seed ustvaril »Vrt« (type=garden, user=local, pending), flag postavljen, app brez crasha
+  (logcat čist). ZAKLJUČENO; preostane le push brancha + PR.**
   Odstopanji od načrta: (a) seeded flag NI v profile (synced),
   ampak v lokalnih prefs (`local_flags`) — synced stolpec bi zahteval migracijo profila na deljenem
   živem Supabase; lokalni flag se temu izogne (cena: multi-device re-seed edge, MVP enouporabniško
@@ -436,9 +438,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   `0010_area_type_add_garden.sql` (živi ledger ima 0005–0009 iz M11, zato 0010). **Aplicirano na
   živi DB 2026-06-16** prek poolerja (`db push` blokiran zaradi branch divergence — remote ima
   0005–0009, ki jih ta branch nima kot datoteke; direkten SQL kot `apply_catalog.py`; preverjeno z
-  `pg_get_constraintdef`). *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) +
-  `feat(areas): auto-seed privzetega »Vrt« območja...` (`316f5b2`) + `fix(areas): picker uredi po
-  AreaType...` (`5241d64`) + (sledi) migracija 0010.
+  `pg_get_constraintdef`). **On-device verificirano** (SM A536B, debug): seed ustvaril »Vrt«
+  (type=garden, user=local, pending), flag `default_garden_seeded=true`, app brez crasha (logcat
+  čist). Tudi **varnostni popravek:** `android/app/google-services.json` dodan v `.gitignore`
+  (vsebuje projektne ključe; ni bil sledjen ne v zgodovini, a tudi ne ignoriran → zdaj ignoriran).
+  *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) + `feat(areas): auto-seed
+  privzetega »Vrt« območja...` (`316f5b2`) + `fix(areas): picker uredi po AreaType...` (`5241d64`) +
+  `fix(db): razširi area_type_check...` (`bd41913`) + roadmap (`0e04815`, `99738d6`).
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
   jeziku telefona (`useDeviceLocale`), a je za **nepodprte** jezike padel nazaj na slovenščino. Zdaj
   `slang.yaml base_locale: en` → fallback = **angleščina** (univerzalno); SI/DE naprave še vedno
