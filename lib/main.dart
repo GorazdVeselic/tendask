@@ -14,6 +14,8 @@ import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
+import 'features/areas/application/areas_providers.dart';
+import 'features/areas/data/garden_seed_service.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -79,6 +81,27 @@ Future<void> _bootstrap() async {
       .read(profileRepositoryProvider)
       .getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
+
+  // Seed the default "garden" area once per device (FR-9), named in the now-set
+  // language. Runs before sync so the first cycle pushes it; offline-safe (a
+  // pure local write). One-shot via a local flag — a deleted garden stays gone.
+  //
+  // Unlike the catalog seed, the default garden is NOT essential to booting: a
+  // DB hiccup here must never black-screen the app. Degrade gracefully — on
+  // failure the flag stays unset (transaction rolled back), so a later launch
+  // retries.
+  try {
+    await GardenSeedService(
+      container.read(databaseProvider),
+      container.read(areasRepositoryProvider),
+      container.read(localPrefsProvider),
+    ).seedDefaultIfNeeded(userId: userId, name: t.areas.default_garden_name);
+  } catch (error, stack) {
+    debugPrint('Default garden seed failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
 
   // Start the background sync coordinator: a first cycle now (claim + push +
   // pull when signed in; catalog always) plus reconnect/periodic/push-on-save
