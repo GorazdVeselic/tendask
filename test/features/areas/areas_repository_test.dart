@@ -71,6 +71,21 @@ void main() {
     },
   );
 
+  test('watchAll orders by AreaType (garden first), then name', () async {
+    // Insert out of order; the stream must still come back type-then-name.
+    await areas.create(userId: userId, name: 'Trata', type: AreaType.lawn);
+    await areas.create(userId: userId, name: 'Greda B', type: AreaType.bed);
+    await areas.create(userId: userId, name: 'Greda A', type: AreaType.bed);
+    await areas.create(userId: userId, name: 'Vrt', type: AreaType.garden);
+
+    final ordered = await areas.watchAll().first;
+    expect(
+      ordered.map((a) => a.name),
+      ['Vrt', 'Trata', 'Greda A', 'Greda B'],
+      reason: 'garden type first; beds sorted by name within their type',
+    );
+  });
+
   test('softDelete leaves plants in OTHER areas untouched', () async {
     final a1 = await areas.create(
       userId: userId,

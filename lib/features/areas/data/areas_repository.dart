@@ -13,11 +13,20 @@ class AreasRepository {
   final Clock _clock;
   final _uuid = const Uuid();
 
+  /// Areas ordered by type (the `AreaType` declaration order, so the default
+  /// `garden` comes first), then by name within a type — the single ordering
+  /// every consumer sees (garden screen sections, area pickers). The enum index
+  /// can't be expressed in SQL on a `textEnum` column, so the type sort happens
+  /// in Dart; the row count is tiny.
   Stream<List<Area>> watchAll() =>
-      (_db.select(_db.areas)
-            ..where((a) => a.deleted.equals(false))
-            ..orderBy([(a) => OrderingTerm.asc(a.name)]))
-          .watch();
+      (_db.select(_db.areas)..where((a) => a.deleted.equals(false)))
+          .watch()
+          .map(
+            (areas) => areas..sort((a, b) {
+              final byType = a.type.index.compareTo(b.type.index);
+              return byType != 0 ? byType : a.name.compareTo(b.name);
+            }),
+          );
 
   Stream<Area?> watchById(String id) => (_db.select(
     _db.areas,
