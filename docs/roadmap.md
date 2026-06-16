@@ -365,8 +365,16 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   z Open-Meteo« opis); **v aplikaciji:** besedila na lokacijskem zaslonu/onboardingu in priming/privacy
   mikrocopy (i18n sl/en/de), ki obljubljajo ravnanje z lokacijo. Brez teh uskladitev se sprememba NE
   shipa — deklaracije morajo ustrezati dejanskemu vedenju.
-- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** 📝 **Dogovorjeno
-  2026-06-16, neimplementirano. Lasten branch (`feat/vrt-area`), ločena seja.** »Vrt« = primarna
+- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** 🟡 **Koda implementirana
+  2026-06-16 na `feat/vrt-area` (gl. dnevnik); BLOKIRANA na 👤 apply migracije `0010` na živi DB
+  (sicer sync zakleni — gl. spodaj).** Odstopanji od načrta: (a) seeded flag NI v profile (synced),
+  ampak v lokalnih prefs (`local_flags`) — synced stolpec bi zahteval migracijo profila na deljenem
+  živem Supabase; lokalni flag se temu izogne (cena: multi-device re-seed edge, MVP enouporabniško
+  sprejemljivo). (b) **Opomba (4) spodaj je bila NAPAČNA: `area.type` IMA `area_type_check`** (0001),
+  ki ni vključeval `garden` → seedani »Vrt« bi ob pushu sprožil 23514 in fail-fast push bi zaklenil
+  cel sync. Popravljeno z migracijo `0010_area_type_add_garden.sql` (drop+add CHECK z `garden`,
+  expand-safe, idempotentno; oštevilčeno 0010, ker živi DB že ima 0005–0009 iz M11). **Sekvenca:
+  migracijo `0010` aplicirati na živi DB PRED kakršnim koli FR-9 buildom, ki sinhronizira.** »Vrt« = primarna
   v-tla vsajena celota ob hiši (kot majhna njiva) — najpogostejša oblika sajenja; **različen od
   grede** (`bed` = dvignjene grede / manjši otočki). `AreaType` (`lawn/hedge/bed/tree/ornamental/
   other`) **nima** `garden` → opravila »za cel vrt« nimajo kam. Sprememba: (1) `enum AreaType {
@@ -408,6 +416,25 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-16 — **FR-9: privzeto območje »Vrt« (`feat/vrt-area`).** Nov `AreaType.garden`, postavljen
+  **prvi** v enumu (UI vrstni red = vrstni red deklaracije; reorder varen brez migracije, ker drift
+  `textEnum` shranjuje ime in `remote_mappers` bere tolerantno po imenu). Ikona 🌻 + labela; i18n
+  `type_garden` + `default_garden_name` (Vrt/Garden/Garten) v sl/en/de. **Auto-seed** privzetega
+  »Vrta« ob zagonu prek novega `GardenSeedService` (`features/areas/data/`): območje + enkratni flag
+  atomarno v transakciji (rollback ob napaki → ni dvojnega seeda); hook v `main.dart` po nastavitvi
+  jezika, pred syncom, ovit v `try/catch` (seed ni esencialen za boot). **Seeded flag v lokalnih
+  prefs** (`local_flags`, vzorec `onboardingSeen`), NE »if missing« → **izbris drži**. Odstopanje od
+  načrta (flag v profile/synced) zaradi deljenega živega Supabase + vzporednih M11 migracij — gl.
+  FR-9 backlog opombo. Picker vrstni red: `watchAll()` zdaj sortira po `(AreaType.index, name)` —
+  garden prvi povsod (ne le v seznamu, tudi task-entry picker), v vseh jezikih (prej po imenu →
+  »Vrt« v sl proti koncu). Testi: seed enkrat / ne po izbrisu + widget »garden prvi« + watchAll
+  vrstni red; 165/165 zeleni, analyze čist. **Večagentni code+security pregled je odkril BLOCKER:**
+  živi Supabase `area_type_check` (0001) ni vključeval `garden` → seedani »Vrt« bi ob pushu sprožil
+  23514 in fail-fast push bi zaklenil cel sync prijavljenega uporabnika. Popravljeno z migracijo
+  `0010_area_type_add_garden.sql` (živi ledger ima 0005–0009 iz M11, zato 0010). **Čaka 👤 apply na
+  živi DB pred FR-9 buildom.** *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) +
+  `feat(areas): auto-seed privzetega »Vrt« območja...` (`316f5b2`) + `fix(areas): picker uredi po
+  AreaType...` (`5241d64`) + (sledi) migracija 0010.
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
   jeziku telefona (`useDeviceLocale`), a je za **nepodprte** jezike padel nazaj na slovenščino. Zdaj
   `slang.yaml base_locale: en` → fallback = **angleščina** (univerzalno); SI/DE naprave še vedno
