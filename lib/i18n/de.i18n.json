@@ -127,7 +127,10 @@
     "err_email": "Gib eine gültige E-Mail-Adresse ein.",
     "err_code": "Gib den Code aus der E-Mail ein.",
     "err_send": "Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.",
-    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut."
+    "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut.",
+    "err_email_domain": "Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.",
+    "did_you_mean(suggestion)": "Meintest du $suggestion?",
+    "resend_in(seconds)": "Neuen Code senden ($seconds s)"
   },
   "location": {
     "title": "Wo gärtnerst du?",

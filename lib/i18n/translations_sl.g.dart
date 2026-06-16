@@ -282,6 +282,9 @@ class _Translations$email_login$sl extends Translations$email_login$en {
 	@override String get err_code => 'Vpiši kodo iz e-pošte.';
 	@override String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
 	@override String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
+	@override String get err_email_domain => 'Domene tega e-naslova ne najdemo. Preveri naslov.';
+	@override String did_you_mean({required Object suggestion}) => 'Ste mislili ${suggestion}?';
+	@override String resend_in({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)';
 }
 
 // Path: location
@@ -853,6 +856,9 @@ extension on TranslationsSl {
 			'email_login.err_code' => 'Vpiši kodo iz e-pošte.',
 			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
 			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
+			'email_login.err_email_domain' => 'Domene tega e-naslova ne najdemo. Preveri naslov.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Ste mislili ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',

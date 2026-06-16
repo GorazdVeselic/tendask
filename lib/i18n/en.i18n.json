@@ -127,7 +127,10 @@
     "err_email": "Enter a valid email address.",
     "err_code": "Enter the code from the email.",
     "err_send": "Couldn't send the code. Check your connection and try again.",
-    "err_verify": "The code is wrong or has expired. Try again."
+    "err_verify": "The code is wrong or has expired. Try again.",
+    "err_email_domain": "We can't find that email's domain. Check the address.",
+    "did_you_mean(suggestion)": "Did you mean $suggestion?",
+    "resend_in(seconds)": "Send a new code ($seconds s)"
   },
   "location": {
     "title": "Where do you garden?",

@@ -487,6 +487,15 @@ class Translations$email_login$en {
 
 	/// en: 'The code is wrong or has expired. Try again.'
 	String get err_verify => 'The code is wrong or has expired. Try again.';
+
+	/// en: 'We can't find that email's domain. Check the address.'
+	String get err_email_domain => 'We can\'t find that email\'s domain. Check the address.';
+
+	/// en: 'Did you mean $suggestion?'
+	String did_you_mean({required Object suggestion}) => 'Did you mean ${suggestion}?';
+
+	/// en: 'Send a new code ($seconds s)'
+	String resend_in({required Object seconds}) => 'Send a new code (${seconds} s)';
 }
 
 // Path: location
@@ -1680,6 +1689,9 @@ extension on Translations {
 			'email_login.err_code' => 'Enter the code from the email.',
 			'email_login.err_send' => 'Couldn\'t send the code. Check your connection and try again.',
 			'email_login.err_verify' => 'The code is wrong or has expired. Try again.',
+			'email_login.err_email_domain' => 'We can\'t find that email\'s domain. Check the address.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Did you mean ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',

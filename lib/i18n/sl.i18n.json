@@ -129,7 +129,10 @@
     "err_email": "Vpiši veljaven e-poštni naslov.",
     "err_code": "Vpiši kodo iz e-pošte.",
     "err_send": "Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.",
-    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova."
+    "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova.",
+    "err_email_domain": "Domene tega e-naslova ne najdemo. Preveri naslov.",
+    "did_you_mean(suggestion)": "Ste mislili $suggestion?",
+    "resend_in(seconds)": "Pošlji novo kodo ($seconds s)"
   },
   "location": {
     "title": "Kje vrtnariš?",

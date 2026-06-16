@@ -280,6 +280,9 @@ class _Translations$email_login$de extends Translations$email_login$en {
 	@override String get err_code => 'Gib den Code aus der E-Mail ein.';
 	@override String get err_send => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get err_verify => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.';
+	@override String get err_email_domain => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.';
+	@override String did_you_mean({required Object suggestion}) => 'Meintest du ${suggestion}?';
+	@override String resend_in({required Object seconds}) => 'Neuen Code senden (${seconds} s)';
 }
 
 // Path: location
@@ -847,6 +850,9 @@ extension on TranslationsDe {
 			'email_login.err_code' => 'Gib den Code aus der E-Mail ein.',
 			'email_login.err_send' => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.',
 			'email_login.err_verify' => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.',
+			'email_login.err_email_domain' => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Meintest du ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
