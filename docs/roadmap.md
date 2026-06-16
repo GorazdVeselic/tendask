@@ -365,9 +365,11 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   z Open-Meteo« opis); **v aplikaciji:** besedila na lokacijskem zaslonu/onboardingu in priming/privacy
   mikrocopy (i18n sl/en/de), ki obljubljajo ravnanje z lokacijo. Brez teh uskladitev se sprememba NE
   shipa — deklaracije morajo ustrezati dejanskemu vedenju.
-- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** 🟡 **Koda implementirana
-  2026-06-16 na `feat/vrt-area` (gl. dnevnik); BLOKIRANA na 👤 apply migracije `0010` na živi DB
-  (sicer sync zakleni — gl. spodaj).** Odstopanji od načrta: (a) seeded flag NI v profile (synced),
+- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** ✅ **Implementirano
+  2026-06-16 na `feat/vrt-area` (gl. dnevnik). Migracija `0010` (CHECK z `garden`) APLICIRANA na
+  živi DB 2026-06-16 prek poolerja (preverjeno: `area_type_check` zdaj vsebuje `garden`); ledger
+  vnos za 0010 pride ob merge brancha (SQL idempotenten). Ostane le 👤 on-device preverba.**
+  Odstopanji od načrta: (a) seeded flag NI v profile (synced),
   ampak v lokalnih prefs (`local_flags`) — synced stolpec bi zahteval migracijo profila na deljenem
   živem Supabase; lokalni flag se temu izogne (cena: multi-device re-seed edge, MVP enouporabniško
   sprejemljivo). (b) **Opomba (4) spodaj je bila NAPAČNA: `area.type` IMA `area_type_check`** (0001),
@@ -431,8 +433,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   vrstni red; 165/165 zeleni, analyze čist. **Večagentni code+security pregled je odkril BLOCKER:**
   živi Supabase `area_type_check` (0001) ni vključeval `garden` → seedani »Vrt« bi ob pushu sprožil
   23514 in fail-fast push bi zaklenil cel sync prijavljenega uporabnika. Popravljeno z migracijo
-  `0010_area_type_add_garden.sql` (živi ledger ima 0005–0009 iz M11, zato 0010). **Čaka 👤 apply na
-  živi DB pred FR-9 buildom.** *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) +
+  `0010_area_type_add_garden.sql` (živi ledger ima 0005–0009 iz M11, zato 0010). **Aplicirano na
+  živi DB 2026-06-16** prek poolerja (`db push` blokiran zaradi branch divergence — remote ima
+  0005–0009, ki jih ta branch nima kot datoteke; direkten SQL kot `apply_catalog.py`; preverjeno z
+  `pg_get_constraintdef`). *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) +
   `feat(areas): auto-seed privzetega »Vrt« območja...` (`316f5b2`) + `fix(areas): picker uredi po
   AreaType...` (`5241d64`) + (sledi) migracija 0010.
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
