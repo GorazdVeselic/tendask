@@ -34,7 +34,7 @@ class Areas extends Table {
   TextColumn get id => text()();
   TextColumn get userId => text()();
   TextColumn get name => text()();
-  // lawn, hedge, bed, tree, ornamental, other
+  // garden, lawn, hedge, bed, tree, ornamental, other
   TextColumn get type =>
       textEnum<AreaType>().withDefault(const Constant('other'))();
   // True for greenhouse/indoor — excluded from weather guards (§7.7)

@@ -1178,6 +1178,9 @@ class Translations$areas$en {
 	/// en: 'last:'
 	String get last_prefix => 'last:';
 
+	/// en: 'Garden'
+	String get type_garden => 'Garden';
+
 	/// en: 'Lawn'
 	String get type_lawn => 'Lawn';
 
@@ -1195,6 +1198,9 @@ class Translations$areas$en {
 
 	/// en: 'Other'
 	String get type_other => 'Other';
+
+	/// en: 'Garden'
+	String get default_garden_name => 'Garden';
 
 	/// en: 'Task history'
 	String get history_title => 'Task history';
@@ -1869,12 +1875,14 @@ extension on Translations {
 			'areas.subtitle' => 'plants and lawns',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
+			'areas.type_garden' => 'Garden',
 			'areas.type_lawn' => 'Lawn',
 			'areas.type_hedge' => 'Hedge',
 			'areas.type_bed' => 'Bed',
 			'areas.type_tree' => 'Fruit tree',
 			'areas.type_ornamental' => 'Ornamental',
 			'areas.type_other' => 'Other',
+			'areas.default_garden_name' => 'Garden',
 			'areas.history_title' => 'Task history',
 			'areas.history_empty' => 'No tasks in this area yet.',
 			'areas.plants_section' => 'Plants',
