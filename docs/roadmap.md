@@ -401,8 +401,9 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   obletnica naslednje leto se ne sproži, ker ni žive vrstice. **(c) Premik med gredami** = sprememba
   area FK (ne nov subjekt) — ritem naj se ohrani. **Detajl design** spada v
   `docs/m11/10-odprta-vprasanja.md` ob nadaljevanju M11; lasten branch ob obravnavi.
-- **FR-11 — Varnost prijave (OTP/email hardening).** 📝 **Dogovorjeno 2026-06-16, neimplementirano.
-  Lasten branch (`feat/auth-hardening`), ločena seja.** Varnostni stack (po vrsti): **(1) format
+- **FR-11 — Varnost prijave (OTP/email hardening).** ✅ **Implementirano 2026-06-16 na
+  `feat/auth-hardening`** (gl. dnevnik; čaka pregled + push). Odstopanje: rate-limit (#5) =
+  60 s resend cooldown (UX sloj); urne kapice ostajajo server-side (Supabase). Spec (po vrsti): **(1) format
   validacija** e-pošte (regex + osnovna pravila); **(2) tipkarska zaznava domene** (did-you-mean:
   `gmal.com`→`gmail.com`, `gmail.con`→`gmail.com`); **(3) DNS check** prek DNS-over-HTTPS (npr.
   `dns.google/resolve`): **MX → fallback A/AAAA** (RFC 5321 §5.1; CNAME se pri A-poizvedbi sledi
@@ -420,6 +421,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-16 — **FR-11: varnost prijave / OTP hardening (`feat/auth-hardening`).** Dva commita
+  (`9e54e4e`, `afbc4dd`). **Pure logika** (`features/auth/data/`): `email_validation.dart` =
+  format check (pragmatičen regex + RFC 5321 dolžinske meje) + `suggestEmailFix` did-you-mean prek
+  Damerau-Levenshtein (transpozicija = 1 → ujame `gmial`/`hotmial`) nad kuriranim seznamom domen
+  (vključno SI: siol.net/telemach.net/t-2.net/amis.net); prag 1, ali 2 za domene ≥9 znakov.
+  `email_domain_checker.dart` = DoH (`dns.google/resolve`) z injektiranim resolverjem (testabilno),
+  MX→A/AAAA fallback (RFC 5321 implicitni MX), **fail-open** — `DomainVerdict.missing` LE ob NXDOMAIN
+  ali NOERROR-brez-MX/A/AAAA, vse nejasno = `unknown`; pošlje le domeno (ne local dela). **Zaslon**
+  (`email_login_screen`): neveljaven format → napaka+predlog; typo → »Ste mislili …?« gate (tap
+  popravi, 2. poskus z istim potrdi); pred sendom DNS gate (blokira le `missing`); po sendu 60 s
+  resend cooldown (`Timer.periodic`, počiščen v dispose). Konstanti `kOtpResendCooldown`/
+  `kDnsCheckTimeout` v `config.dart`; i18n sl/en/de. **Testi:** 16 unit (validacija+checker) + 4
+  widget (format/typo/domain-block/cooldown); analyze čist, 186/186. **Odprto:** privacy policy
+  omemba DoH (domena→dns.google) ob bodoči objavi; opcijsko persistentne urne kapice (zdaj server-side).
 - 2026-06-16 — **FR-9: privzeto območje »Vrt« (`feat/vrt-area`).** Nov `AreaType.garden`, postavljen
   **prvi** v enumu (UI vrstni red = vrstni red deklaracije; reorder varen brez migracije, ker drift
   `textEnum` shranjuje ime in `remote_mappers` bere tolerantno po imenu). Ikona 🌻 + labela; i18n
