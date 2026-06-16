@@ -54,7 +54,7 @@
 | **M8** | Lokalna obvestila (plast A) | Opomniki + deep-link + zasloni 19–22 | `[x]` |
 | **M9** | Polish + monitoring + Android release | Sentry, ikona/splash, neskladja, Play test | `[~]` |
 | **M10** | *(po MVP)* iOS mejnik | macOS/oblačni build + iOS specifike | `[ ]` |
-| **M11** | *(po MVP / V2)* Pametni motor + FCM + percentili | glej `pametni-motor.md` | `[ ]` |
+| **M11** | *(po MVP / V2)* Pametni motor + FCM + percentili | glej `pametni-motor.md` | `[~]` |
 
 > Zgodnji mejniki (M0–M2) so razčlenjeni na podrobne korake. Kasnejši mejniki dobijo
 > podroben razrez korakov, ko do njih pridemo (da se izognemo prezgodnjemu načrtovanju).
@@ -370,6 +370,24 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-16 — **M11.16 (V2 agregati) + zaklep grantov + push i18n fix + pregled M11.**
+  **(1) M11.16 — V2 agregatne tabele + nočni cron** (migracija `0008`): štiri tabele
+  (`activity_recent/season/frequency`, `bucket_population`), `eligible_user` matview (anti-junk
+  X/N/M), `agg_event` pogled (COALESCE `task.agg_context` ali trenutni profil → H3/koš),
+  `agg_refresh_all()` (security definer, prazen `search_path`) + `pg_cron` (`30 2 * * *`), RLS
+  k-anonimnost (`distinct_users >= k_privacy()`), grant SELECT-only za anon/authenticated. Teče
+  tiho brez UI — zgodovina dokončanj se kopiči že od M11.2. *Commit:* `feat(db): V2 agregatne
+  tabele + nočni cron`. **(2) Zaklep grantov** (`0009`): dokončan namen 0007 — eksplicitni
+  granti na vseh klient-dostopnih M11 tabelah (reproducibilna migracija; živa baza je skrivala
+  manjkajoč grant). *Commit:* `fix(db): zakleni grante na M11 tabelah`. **(3) push i18n fix**
+  (M11.12 dokončanje): `_shared/push_i18n.ts` je imel prazen `kTitles {}` (generator ni bil
+  pognan po M11.13) → vsak push je padel na generičen fallback namesto lokaliziranega naslova
+  predloga. Regenerirano prek `tool/gen_push_i18n.dart` (201 naslovov, 67×sl/en/de); vseh 63
+  oddanih `messageKey` se razreši; Deno 96/96, deployano na živ Supabase. *Commit:* `fix(engine):
+  regeneriraj push_i18n naslove`. **(4) Pregled M11** (5 vzporednih agentov po fazah A–E):
+  potrjeno ujemanje dokumentacije in kode za M11.1–M11.16; M11.17–21 (ostanek faze E)
+  neimplementirano kot načrtovano (R6 v motorju je le forward-ref). Edina najdena vrzel = prazen
+  push i18n (popravljen zgoraj).
 - 2026-06-16 — **M11.14 follow-up — »Načrtuj« odpre obrazec + nav crash fix (on-device).**
   Med živo preverbo razkrita dva problema: **(1) UX** — »Načrtuj« je tiho ustvaril opravilo s
   predlaganim datumom brez izbire termina in brez vidne potrditve; zdaj odpre čarovnik Novo
@@ -414,6 +432,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   `supabase/functions/` dokumentira lokalni zagon + opozorilo, da `deno check` z root-a pade zaradi
   import-mapa v `smart-engine/deno.json` (config discovery, ne tipska napaka — tipe preverja
   `deno test`). Lokalno: 96/96 Deno zelenih. *Commit:* `test(engine): celovita test suite motorja v CI`
+- 2026-06-15 — **M11.13 + M11.13b — pas predlogov na Domov + zaslon Pretekli predlogi.**
+  **M11.13:** `SuggestionRepository` (`watchActive` z LEFT join na rastline/območja + filter
+  `status='new'`/valid/ne-deleted; `dismiss`/`markPlanned`/`markLogged`) + providerji;
+  `SuggestionBand` + kartica na Domov (max 3 po score), gumba Načrtuj/Opusti, ⋯ akcijski sheet
+  (»Že opravljeno« z mini-sheetom datuma → DONE task + `agg_context`; »Ne predlagaj več« =
+  dismiss forever; »Te rastline nimam več« = confirm + soft-delete subjekta), deep-link
+  highlight; i18n katalog `suggestions.*` (en/sl/de — 67 naslovov + akcije + disclaimer); widget
+  + repo testi. *Commiti:* `feat(suggestions): repozitorij + providerji predlogov`, `feat(i18n):
+  katalog sporočil predlogov`, `feat(home): pas pametnih predlogov z Načrtuj/Opusti`.
+  **M11.13b:** zaslon Pretekli predlogi (`watchHistory`, terminalni statusi s čipi, tap planned
+  → opravilo prek `task-view`, vstop ⋯ + Nastavitve, retencija 365 d v housekeepu); wireframe
+  `23-suggestion-history.html` (skica pred zaslonom); widget testi. *Commit:* `feat(suggestions):
+  zaslon preteklih predlogov z odzivi uporabnika`.
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
   jeziku telefona (`useDeviceLocale`), a je za **nepodprte** jezike padel nazaj na slovenščino. Zdaj
   `slang.yaml base_locale: en` → fallback = **angleščina** (univerzalno); SI/DE naprave še vedno
