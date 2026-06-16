@@ -365,6 +365,44 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   z Open-Meteo« opis); **v aplikaciji:** besedila na lokacijskem zaslonu/onboardingu in priming/privacy
   mikrocopy (i18n sl/en/de), ki obljubljajo ravnanje z lokacijo. Brez teh uskladitev se sprememba NE
   shipa — deklaracije morajo ustrezati dejanskemu vedenju.
+- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** 📝 **Dogovorjeno
+  2026-06-16, neimplementirano. Lasten branch (`feat/vrt-area`), ločena seja.** »Vrt« = primarna
+  v-tla vsajena celota ob hiši (kot majhna njiva) — najpogostejša oblika sajenja; **različen od
+  grede** (`bed` = dvignjene grede / manjši otočki). `AreaType` (`lawn/hedge/bed/tree/ornamental/
+  other`) **nima** `garden` → opravila »za cel vrt« nimajo kam. Sprememba: (1) `enum AreaType {
+  garden, lawn, hedge, bed, tree, ornamental, other }` — `garden` **PRVI** (UI vrstni red izhaja
+  iz `AreaType.values`; drift `textEnum` shranjuje **ime**, zato je reorder varen in **brez
+  migracije**); (2) i18n labela Vrt/Garden/Garten + ikona v `area_type_display.dart`; (3)
+  **auto-seed** privzeti »Vrt« za vsakega uporabnika ob prvem zagonu + **backfill obstoječim** ob
+  naslednjem zagonu (idempotentno, vzorec `seed_service`); **izbrisljiv** (kdor ima le grede/trato,
+  ga odstrani); (4) Supabase `area.type` **nima CHECK** omejitve → nova vrednost varna (tolerantni
+  parser obeh strani); (5) M11: `garden` postane veljaven engine subjekt (additive). **Prizadeti:**
+  `AreaType`, area seed/service, `areas_screen`/`area_form_screen`/`area_type_display`, area picker
+  v task entry, i18n sl/en/de. **DoD:** nov uporabnik vidi »Vrt« prvi v seznamu+pickerju; obstoječ
+  dobi backfill; izbris deluje; sync round-trip; analyze+testi zeleni.
+- **FR-10 — Motor (V2): rastline z menjavo/prekinitvami (kolobarjenje, premiki).** 📝 **Designerska
+  opomba, NI NUJNO, V2/motor (M11).** Kako pravila/opomniki ravnajo, ko je rastlina eno leto na
+  vrtu/gredi, drugo ne, potem morda spet (kolobarjenje), ali ko jo premakneš med gredami.
+  Podvprašanja: **(a) kontinuiteta zgodovine** — če `user_plant` soft-deletaš in naslednje leto
+  spet dodaš, je nova vrstica = izgubljen ritem/obletnica (R2/R3)? Morda rabi stabilen subjekt-ključ
+  čez sezone. **(b) Mirovanje pravil** — eligibility že preskoči neobstoječ subjekt (straža 5a), a
+  obletnica naslednje leto se ne sproži, ker ni žive vrstice. **(c) Premik med gredami** = sprememba
+  area FK (ne nov subjekt) — ritem naj se ohrani. **Detajl design** spada v
+  `docs/m11/10-odprta-vprasanja.md` ob nadaljevanju M11; lasten branch ob obravnavi.
+- **FR-11 — Varnost prijave (OTP/email hardening).** 📝 **Dogovorjeno 2026-06-16, neimplementirano.
+  Lasten branch (`feat/auth-hardening`), ločena seja.** Varnostni stack (po vrsti): **(1) format
+  validacija** e-pošte (regex + osnovna pravila); **(2) tipkarska zaznava domene** (did-you-mean:
+  `gmal.com`→`gmail.com`, `gmail.con`→`gmail.com`); **(3) DNS check** prek DNS-over-HTTPS (npr.
+  `dns.google/resolve`): **MX → fallback A/AAAA** (RFC 5321 §5.1; CNAME se pri A-poizvedbi sledi
+  sam), **block samo** ob NXDOMAIN / brez MX in A/AAAA, **fail-OPEN ob napaki poizvedbe** (nikoli
+  blokiraj zaradi DoH izpada/timeouta — le ob definitivnem negativnem); razkrije le **domeno** (ne
+  celega naslova); **(4) 60 s cooldown** med pošiljanji (zrcali Supabase server-side ~60 s + urne
+  kapice — uporabnik ne trči v strežniško napako); **(5) rate limit / omejitev poskusov** (UX sloj
+  nad Supabase enforcementom). **Omejitev:** DNS potrdi domeno, **ne nabiralnika** (napačen lokalni
+  del ujame šele OTP). **Prizadeti:** `AuthService.sendEmailOtp` + prijava/onboarding UI + i18n
+  napake sl/en/de; morda omemba DoH v privacy policy. **DoD:** napačen format/neobstoječa domena
+  zavrnjena (s fail-open na DNS napako), did-you-mean predlog deluje, cooldown odštevalnik, brez
+  regresije obstoječega OTP toka.
 
 ## Dnevnik napredka
 
