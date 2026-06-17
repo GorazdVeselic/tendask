@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
@@ -77,11 +79,19 @@ EmailDomainChecker emailDomainChecker(Ref ref) {
   final dio = ref.watch(dnsDioProvider);
   return EmailDomainChecker((name, type) async {
     try {
-      final res = await dio.get<Map<String, dynamic>>(
+      // Read the raw body and decode it ourselves rather than relying on Dio's
+      // content-type-gated auto-decode: dns.google currently answers with
+      // application/json, but if it ever switched to the RFC application/dns-json
+      // Dio would silently hand back a String and the check would become a no-op.
+      final res = await dio.get<String>(
         'https://dns.google/resolve',
         queryParameters: {'name': name, 'type': type},
+        options: Options(responseType: ResponseType.plain),
       );
-      return res.data;
+      final body = res.data;
+      if (body == null || body.isEmpty) return null;
+      final decoded = jsonDecode(body);
+      return decoded is Map<String, dynamic> ? decoded : null;
     } on Object {
       return null; // offline / timeout / bad body → fail open
     }

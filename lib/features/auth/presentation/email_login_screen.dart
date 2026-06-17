@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
@@ -147,12 +146,12 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       if (!mounted) return;
       _startResendCooldown();
       setState(() => _step = _Step.code);
-    } on AuthException catch (e) {
-      if (!mounted) return;
-      setState(() => _error = '${t.email_login.err_send}\n${e.message}');
     } on Object catch (e) {
       if (!mounted) return;
-      setState(() => _error = '${t.email_login.err_send}\n$e');
+      // Show only a generic message: the raw exception can echo the address or
+      // backend internals. Keep the detail in the log, not on screen.
+      debugPrint('OTP send failed: $e');
+      setState(() => _error = t.email_login.err_send);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
