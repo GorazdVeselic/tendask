@@ -15,49 +15,37 @@ enum DomainVerdict { exists, missing, unknown }
 typedef DohResolve =
     Future<Map<String, dynamic>?> Function(String name, String type);
 
-/// Checks whether an email domain can plausibly receive mail, using Google's
-/// DNS-over-HTTPS resolver. Privacy: only the bare *domain* is sent — never the
-/// local part, so the lookup can't reveal the full address.
+/// Checks whether an email domain exists, using Google's DNS-over-HTTPS
+/// resolver. Privacy: only the bare *domain* is sent — never the local part, so
+/// the lookup can't reveal the full address.
 ///
-/// Conservative by design: it returns [DomainVerdict.missing] ONLY for a
-/// definitive NXDOMAIN, or when MX, A and AAAA all resolve cleanly with no
-/// records (a domain that exists but cannot receive mail). Any inconclusive
-/// result is [DomainVerdict.unknown] → the caller proceeds (fail-open).
+/// Conservative and fail-open by design: returns [DomainVerdict.missing] ONLY
+/// for a definitive NXDOMAIN (the domain genuinely does not exist). A domain
+/// that resolves is [exists] even without an MX record — mail may still arrive
+/// via the A/AAAA fallback (RFC 5321 §5.1) or the address is simply unusual;
+/// catching "exists but can't receive mail" is left to the OTP send and the
+/// typo suggestion, not this gate. Any inconclusive lookup (offline, timeout,
+/// SERVFAIL) is [unknown] → the caller proceeds. This keeps the check from ever
+/// false-blocking a real address.
 class EmailDomainChecker {
   EmailDomainChecker(this._resolve);
 
   final DohResolve _resolve;
 
   Future<DomainVerdict> verify(String domain) async {
-    final mx = await _resolve(domain, 'MX');
-    if (mx == null) return DomainVerdict.unknown; // lookup failed → fail open
-    final mxStatus = _status(mx);
-    if (mxStatus == _nxdomain) return DomainVerdict.missing;
-    if (mxStatus != _noerror) return DomainVerdict.unknown; // SERVFAIL, etc.
-    if (_hasAnswer(mx)) return DomainVerdict.exists;
-
-    // No MX record: fall back to A/AAAA — RFC 5321 §5.1 treats an address record
-    // as an implicit MX. Each query must resolve cleanly to count as negative.
-    final a = await _resolve(domain, 'A');
-    final aVerdict = _addressVerdict(a);
-    if (aVerdict != null) return aVerdict; // exists or unknown (inconclusive)
-
-    final aaaa = await _resolve(domain, 'AAAA');
-    final aaaaVerdict = _addressVerdict(aaaa);
-    if (aaaaVerdict != null) return aaaaVerdict;
-
-    // NOERROR with no MX, A or AAAA — definitively cannot receive mail.
-    return DomainVerdict.missing;
-  }
-
-  /// exists (has records) / unknown (lookup inconclusive) / null = "clean but
-  /// empty, keep checking the next record type".
-  DomainVerdict? _addressVerdict(Map<String, dynamic>? res) {
-    if (res == null) return DomainVerdict.unknown;
-    final status = _status(res);
-    if (status == _noerror && _hasAnswer(res)) return DomainVerdict.exists;
-    if (status != _noerror && status != _nxdomain) return DomainVerdict.unknown;
-    return null;
+    // One MX query is enough: its Status alone tells us whether the domain
+    // exists. We don't inspect the records — a resolving domain is allowed
+    // through regardless of MX presence (fail open).
+    final res = await _resolve(domain, 'MX');
+    if (res == null) return DomainVerdict.unknown; // lookup failed → fail open
+    switch (_status(res)) {
+      case _nxdomain:
+        return DomainVerdict.missing; // domain does not exist
+      case _noerror:
+        return DomainVerdict.exists; // resolves (with or without MX records)
+      default:
+        return DomainVerdict.unknown; // SERVFAIL / refused / malformed
+    }
   }
 
   static const _noerror = 0;
@@ -67,23 +55,22 @@ class EmailDomainChecker {
     final s = res['Status'];
     return s is int ? s : null;
   }
-
-  bool _hasAnswer(Map<String, dynamic> res) {
-    final answer = res['Answer'];
-    return answer is List && answer.isNotEmpty;
-  }
 }
 
 /// Dedicated short-timeout Dio for the DoH lookup (independent of the weather
 /// client's longer budget): the check is a sign-in pre-flight and must stay snappy.
 @riverpod
-Dio dnsDio(Ref ref) => Dio(
-  BaseOptions(
-    connectTimeout: kDnsCheckTimeout,
-    receiveTimeout: kDnsCheckTimeout,
-    headers: const {'accept': 'application/dns-json'},
-  ),
-);
+Dio dnsDio(Ref ref) {
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: kDnsCheckTimeout,
+      receiveTimeout: kDnsCheckTimeout,
+      headers: const {'accept': 'application/dns-json'},
+    ),
+  );
+  ref.onDispose(dio.close);
+  return dio;
+}
 
 @riverpod
 EmailDomainChecker emailDomainChecker(Ref ref) {

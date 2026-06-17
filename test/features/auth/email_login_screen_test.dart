@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/auth/auth_service.dart';
+import 'package:tendask/core/sync/connectivity.dart';
 import 'package:tendask/features/auth/data/email_domain_checker.dart';
 import 'package:tendask/features/auth/presentation/email_login_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
@@ -44,6 +45,8 @@ Future<void> _pumpScreen(
           emailDomainCheckerProvider.overrideWith(
             (ref) => _checkerReturning(verdict),
           ),
+          // Deterministic "online" so the DNS gate runs (and no platform channel).
+          onlineStatusProvider.overrideWith((ref) => Stream.value(true)),
         ],
         child: const MaterialApp(home: EmailLoginScreen()),
       ),

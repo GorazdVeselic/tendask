@@ -7,6 +7,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
+import '../../../core/sync/connectivity.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
 import '../data/email_domain_checker.dart';
@@ -21,8 +22,8 @@ enum _Step { email, code }
 /// device's data, never resets it).
 ///
 /// Input hardening (FR-11): format validation, a "did you mean" domain-typo
-/// suggestion, a DNS-over-HTTPS existence check (fail-open), and a resend
-/// cooldown mirroring the server-side throttle.
+/// suggestion, a DNS-over-HTTPS existence check (fail-open, skipped offline),
+/// and a resend cooldown mirroring the server-side throttle.
 class EmailLoginScreen extends ConsumerStatefulWidget {
   const EmailLoginScreen({super.key});
 
@@ -81,6 +82,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     });
   }
 
+  /// Validates the entered email (format → typo gate → domain existence), then
+  /// sends the first code. Used by the email step's primary button.
   Future<void> _sendCode() async {
     final t = context.t;
     final email = _emailController.text.trim();
@@ -105,28 +108,41 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       return;
     }
 
+    // Domain existence (DoH). Skipped when we already know we're offline (the
+    // garden case): the lookup would just burn the timeout before sendEmailOtp
+    // fails anyway. Fail-open otherwise — only a definitive "missing" blocks.
+    final domain = emailDomain(email);
+    final knownOffline = ref.read(onlineStatusProvider).value == false;
+    if (domain != null && !knownOffline) {
+      setState(() {
+        _loading = true;
+        _error = null;
+        _suggestion = null;
+      });
+      final verdict = await ref.read(emailDomainCheckerProvider).verify(domain);
+      if (!mounted) return;
+      if (verdict == DomainVerdict.missing) {
+        setState(() {
+          _loading = false;
+          _error = t.email_login.err_email_domain;
+        });
+        return;
+      }
+    }
+    await _dispatchOtp(email);
+  }
+
+  /// Sends/resends the OTP and (re)starts the cooldown. No validation or DNS
+  /// gate — the address was already vetted by [_sendCode]; resend must never be
+  /// blocked by a flaky later lookup once a code is already on its way.
+  Future<void> _dispatchOtp(String email) async {
+    final t = context.t;
     setState(() {
       _loading = true;
       _error = null;
       _suggestion = null;
     });
     try {
-      // Domain existence (DoH). Fail-open: only a definitive "missing" blocks;
-      // offline/timeout/unknown proceeds so a flaky lookup can't stop sign-in.
-      final domain = emailDomain(email);
-      if (domain != null) {
-        final verdict = await ref
-            .read(emailDomainCheckerProvider)
-            .verify(domain);
-        if (!mounted) return;
-        if (verdict == DomainVerdict.missing) {
-          setState(() {
-            _loading = false;
-            _error = t.email_login.err_email_domain;
-          });
-          return;
-        }
-      }
       await ref.read(authServiceProvider).sendEmailOtp(email);
       if (!mounted) return;
       _startResendCooldown();
@@ -273,7 +289,9 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               if (_step == _Step.code) ...[
                 const SizedBox(height: 6),
                 TextButton(
-                  onPressed: canResend ? _sendCode : null,
+                  onPressed: canResend
+                      ? () => _dispatchOtp(_emailController.text.trim())
+                      : null,
                   child: Text(
                     _cooldownRemaining > 0
                         ? t.email_login.resend_in(seconds: _cooldownRemaining)
