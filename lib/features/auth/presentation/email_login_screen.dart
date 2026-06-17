@@ -33,6 +33,7 @@ class EmailLoginScreen extends ConsumerStatefulWidget {
 class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
   final _emailController = TextEditingController();
   final _codeController = TextEditingController();
+  final _codeFocus = FocusNode();
   _Step _step = _Step.email;
   bool _loading = false;
   String? _error;
@@ -53,6 +54,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     _cooldownTimer?.cancel();
     _emailController.dispose();
     _codeController.dispose();
+    _codeFocus.dispose();
     super.dispose();
   }
 
@@ -145,7 +147,15 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       await ref.read(authServiceProvider).sendEmailOtp(email);
       if (!mounted) return;
       _startResendCooldown();
+      // Dismiss the email (QWERTY) keyboard before showing the code field, then
+      // focus it next frame: switching steps in place keeps the keyboard open,
+      // and Android won't re-query the input type, so it stays QWERTY for the
+      // numeric code. Closing and reopening forces a fresh numeric keyboard.
+      FocusManager.instance.primaryFocus?.unfocus();
       setState(() => _step = _Step.code);
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _codeFocus.requestFocus();
+      });
     } on Object catch (e) {
       if (!mounted) return;
       // Show only a generic message: the raw exception can echo the address or
@@ -246,8 +256,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _codeController,
+                  focusNode: _codeFocus,
                   keyboardType: TextInputType.number,
-                  autofocus: true,
                   maxLength: 10,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(

@@ -123,4 +123,14 @@ void main() {
     expect(find.text(t.email_login.resend_in(seconds: 60)), findsOneWidget);
     expect(find.text(t.email_login.resend), findsNothing);
   });
+
+  testWidgets('code step uses a numeric keyboard', (tester) async {
+    await _pumpScreen(tester, verdict: DomainVerdict.exists);
+    await tester.enterText(find.byType(TextField), 'jan@firma123.si');
+    await tester.tap(find.text(t.email_login.send_code));
+    await _settleAsync(tester);
+
+    final codeField = tester.widget<TextField>(find.byType(TextField));
+    expect(codeField.keyboardType, TextInputType.number);
+  });
 }
