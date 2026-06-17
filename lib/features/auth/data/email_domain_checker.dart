@@ -61,7 +61,10 @@ class EmailDomainChecker {
 
 /// Dedicated short-timeout Dio for the DoH lookup (independent of the weather
 /// client's longer budget): the check is a sign-in pre-flight and must stay snappy.
-@riverpod
+/// keepAlive: the screen reads the checker one-shot (no listener), so an
+/// autoDispose Dio would be closed by ref.onDispose the instant the read returns —
+/// before the async lookup runs — killing every check. One long-lived client.
+@Riverpod(keepAlive: true)
 Dio dnsDio(Ref ref) {
   final dio = Dio(
     BaseOptions(
@@ -74,7 +77,7 @@ Dio dnsDio(Ref ref) {
   return dio;
 }
 
-@riverpod
+@Riverpod(keepAlive: true)
 EmailDomainChecker emailDomainChecker(Ref ref) {
   final dio = ref.watch(dnsDioProvider);
   return EmailDomainChecker((name, type) async {

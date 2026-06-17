@@ -10,24 +10,33 @@ part of 'email_domain_checker.dart';
 // ignore_for_file: type=lint, type=warning
 /// Dedicated short-timeout Dio for the DoH lookup (independent of the weather
 /// client's longer budget): the check is a sign-in pre-flight and must stay snappy.
+/// keepAlive: the screen reads the checker one-shot (no listener), so an
+/// autoDispose Dio would be closed by ref.onDispose the instant the read returns —
+/// before the async lookup runs — killing every check. One long-lived client.
 
 @ProviderFor(dnsDio)
 final dnsDioProvider = DnsDioProvider._();
 
 /// Dedicated short-timeout Dio for the DoH lookup (independent of the weather
 /// client's longer budget): the check is a sign-in pre-flight and must stay snappy.
+/// keepAlive: the screen reads the checker one-shot (no listener), so an
+/// autoDispose Dio would be closed by ref.onDispose the instant the read returns —
+/// before the async lookup runs — killing every check. One long-lived client.
 
 final class DnsDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
     with $Provider<Dio> {
   /// Dedicated short-timeout Dio for the DoH lookup (independent of the weather
   /// client's longer budget): the check is a sign-in pre-flight and must stay snappy.
+  /// keepAlive: the screen reads the checker one-shot (no listener), so an
+  /// autoDispose Dio would be closed by ref.onDispose the instant the read returns —
+  /// before the async lookup runs — killing every check. One long-lived client.
   DnsDioProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'dnsDioProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -54,7 +63,7 @@ final class DnsDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$dnsDioHash() => r'1686159161b711dc2e615df2cf292acf891bd5f7';
+String _$dnsDioHash() => r'8d657d352f3f9118288e8e52f1f1a8660555bc36';
 
 @ProviderFor(emailDomainChecker)
 final emailDomainCheckerProvider = EmailDomainCheckerProvider._();
@@ -73,7 +82,7 @@ final class EmailDomainCheckerProvider
         argument: null,
         retry: null,
         name: r'emailDomainCheckerProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -102,4 +111,4 @@ final class EmailDomainCheckerProvider
 }
 
 String _$emailDomainCheckerHash() =>
-    r'486418ef12a38c4d54b52f90bb4fdb99778e1539';
+    r'0b401701e9c10153ab3f410946ab3b2de2a2c1d1';
