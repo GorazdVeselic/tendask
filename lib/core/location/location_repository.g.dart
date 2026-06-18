@@ -101,16 +101,16 @@ final class LocationRepositoryProvider
 String _$locationRepositoryHash() =>
     r'4b6927e710ae6da1cb8731f58a227abde192fdb6';
 
-/// The garden location for the weather lookup: the stored device-local
-/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
-/// one. Reactive — weather re-fetches when the user picks a location.
+/// The garden location for the weather lookup: the centroid of the stored r7
+/// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
+/// weather re-fetches when the user picks or clears a location.
 
 @ProviderFor(gardenLocation)
 final gardenLocationProvider = GardenLocationProvider._();
 
-/// The garden location for the weather lookup: the stored device-local
-/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
-/// one. Reactive — weather re-fetches when the user picks a location.
+/// The garden location for the weather lookup: the centroid of the stored r7
+/// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
+/// weather re-fetches when the user picks or clears a location.
 
 final class GardenLocationProvider
     extends
@@ -120,9 +120,9 @@ final class GardenLocationProvider
           Stream<GardenCoords>
         >
     with $FutureModifier<GardenCoords>, $StreamProvider<GardenCoords> {
-  /// The garden location for the weather lookup: the stored device-local
-  /// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
-  /// one. Reactive — weather re-fetches when the user picks a location.
+  /// The garden location for the weather lookup: the centroid of the stored r7
+  /// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
+  /// weather re-fetches when the user picks or clears a location.
   GardenLocationProvider._()
     : super(
         from: null,
@@ -149,4 +149,4 @@ final class GardenLocationProvider
   }
 }
 
-String _$gardenLocationHash() => r'207ed7babddad27361e25e83c80fe72ce5d797a4';
+String _$gardenLocationHash() => r'5aa71f1d75e7f25134e9e56e03f4da806edb40c2';

@@ -11,8 +11,9 @@ import 'h3_cells.dart';
 
 part 'location_repository.g.dart';
 
-/// The garden location, split by privacy: raw coordinates stay device-local
-/// (for the weather lookup), only the derived H3 cells reach profile → cloud.
+/// The garden location. Privacy by design (FR-8): raw coordinates never leave —
+/// or are even stored on — the device; only the derived H3 cells reach profile
+/// → cloud, and the weather lookup uses the cell's centroid (see [cellCentroid]).
 class LocationRepository {
   LocationRepository(this._db, this._h3, {this._clock = const SystemClock()});
 
@@ -20,9 +21,10 @@ class LocationRepository {
   final H3 _h3;
   final Clock _clock;
 
-  /// Persists the garden location for [userId]. Coordinates go to the local-only
-  /// device_location table (never synced); the derived H3 cells upsert into
-  /// profile (pending → synced by the next push) without clobbering lang.
+  /// Persists the garden location for [userId]: derives the H3 cells on-device
+  /// and upserts them into profile (pending → synced by the next push), without
+  /// clobbering lang. The passed coordinates are used only to derive the cells
+  /// and are then discarded — never stored.
   Future<void> saveGardenLocation({
     required String userId,
     required double latitude,
@@ -31,18 +33,6 @@ class LocationRepository {
     final cells = deriveH3Cells(_h3, latitude, longitude);
     final now = _clock.now();
     await _db.transaction(() async {
-      // Singleton table: wipe first so a stray duplicate left by an older
-      // schema can't survive and crash the single-row read below.
-      await _db.delete(_db.deviceLocations).go();
-      await _db
-          .into(_db.deviceLocations)
-          .insert(
-            DeviceLocationsCompanion.insert(
-              latitude: latitude,
-              longitude: longitude,
-              updatedAt: now,
-            ),
-          );
       final exists = await (_db.select(
         _db.profiles,
       )..where((p) => p.userId.equals(userId))).getSingleOrNull();
@@ -75,50 +65,40 @@ class LocationRepository {
     });
   }
 
-  /// Removes the garden location: deletes the device-local coordinates and
-  /// clears the profile H3 cells (pending → push). Weather falls back to the
-  /// default region (gardenLocation emits the default when coordinates are null).
+  /// Removes the garden location: clears the profile H3 cells (pending → push).
+  /// Weather falls back to the default region (gardenLocation emits the default
+  /// when the cell is null).
   Future<void> clearGardenLocation(String userId) async {
     final now = _clock.now();
-    await _db.transaction(() async {
-      await _db.delete(_db.deviceLocations).go();
-      await (_db.update(
-        _db.profiles,
-      )..where((p) => p.userId.equals(userId))).write(
-        ProfilesCompanion(
-          h3R7: const Value(null),
-          h3R6: const Value(null),
-          h3R5: const Value(null),
-          updatedAt: Value(now),
-          syncStatus: const Value(kSyncPending),
-        ),
-      );
-    });
-  }
-
-  /// The stored garden coordinates for the weather lookup, or null if unset.
-  Future<GardenCoords?> gardenCoordinates() async {
-    final row = await _latestLocationQuery().getSingleOrNull();
-    if (row == null) return null;
-    return (latitude: row.latitude, longitude: row.longitude);
-  }
-
-  /// Reactive coordinates: emits whenever the stored location changes, so the
-  /// weather provider re-fetches after onboarding/settings set it.
-  Stream<GardenCoords?> watchGardenCoordinates() {
-    return _latestLocationQuery().watchSingleOrNull().map(
-      (row) => row == null
-          ? null
-          : (latitude: row.latitude, longitude: row.longitude),
+    await (_db.update(
+      _db.profiles,
+    )..where((p) => p.userId.equals(userId))).write(
+      ProfilesCompanion(
+        h3R7: const Value(null),
+        h3R6: const Value(null),
+        h3R5: const Value(null),
+        updatedAt: Value(now),
+        syncStatus: const Value(kSyncPending),
+      ),
     );
   }
 
-  /// Reads at most the newest row: tolerant of a stray duplicate left by an
-  /// older schema, so the single-row consumers never throw.
-  SimpleSelectStatement<$DeviceLocationsTable, DeviceLocation>
-  _latestLocationQuery() =>
-      _db.select(_db.deviceLocations)
-        ..orderBy([(t) => OrderingTerm.desc(t.updatedAt)])
+  /// The stored r7 cell (hex), or null if unset. The local db holds a single
+  /// profile row (cleared on account switch, re-owned in place on sign-in), so
+  /// reading the newest row is correct without scoping to a userId.
+  Future<String?> gardenCell() async =>
+      (await _latestProfileQuery().getSingleOrNull())?.h3R7;
+
+  /// Reactive r7 cell: emits whenever the profile changes (save / clear / pull),
+  /// so the weather provider re-derives the centroid.
+  Stream<String?> watchGardenCell() =>
+      _latestProfileQuery().watchSingleOrNull().map((p) => p?.h3R7);
+
+  /// Reads at most the newest profile row, so the single-row consumers never
+  /// throw even if a stray duplicate were ever present.
+  SimpleSelectStatement<$ProfilesTable, Profile> _latestProfileQuery() =>
+      _db.select(_db.profiles)
+        ..orderBy([(p) => OrderingTerm.desc(p.updatedAt)])
         ..limit(1);
 }
 
@@ -130,13 +110,15 @@ H3 h3(Ref ref) => const H3Factory().load();
 LocationRepository locationRepository(Ref ref) =>
     LocationRepository(ref.watch(databaseProvider), ref.watch(h3Provider));
 
-/// The garden location for the weather lookup: the stored device-local
-/// coordinates, or [kDefaultLatitude]/[kDefaultLongitude] until onboarding sets
-/// one. Reactive — weather re-fetches when the user picks a location.
+/// The garden location for the weather lookup: the centroid of the stored r7
+/// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
+/// weather re-fetches when the user picks or clears a location.
 @Riverpod(keepAlive: true)
-Stream<GardenCoords> gardenLocation(Ref ref) => ref
-    .watch(locationRepositoryProvider)
-    .watchGardenCoordinates()
-    .map(
-      (c) => c ?? (latitude: kDefaultLatitude, longitude: kDefaultLongitude),
-    );
+Stream<GardenCoords> gardenLocation(Ref ref) {
+  final h3 = ref.watch(h3Provider);
+  return ref.watch(locationRepositoryProvider).watchGardenCell().map(
+        (cell) =>
+            cellCentroid(h3, cell) ??
+            (latitude: kDefaultLatitude, longitude: kDefaultLongitude),
+      );
+}

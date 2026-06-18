@@ -9,7 +9,7 @@ import '../../../core/location/location_repository.dart';
 /// stay device-local and are never restored from the cloud, so this is the
 /// reliable "already set" signal (see BUG-002).
 Future<void> goToLocationOrHome(BuildContext context, WidgetRef ref) async {
-  final coords = await ref.read(locationRepositoryProvider).gardenCoordinates();
+  final cell = await ref.read(locationRepositoryProvider).gardenCell();
   if (!context.mounted) return;
-  context.go(coords != null ? '/home' : '/location');
+  context.go(cell != null ? '/home' : '/location');
 }

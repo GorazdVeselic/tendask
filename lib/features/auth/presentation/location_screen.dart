@@ -40,11 +40,9 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   }
 
   Future<void> _loadSetState() async {
-    final coords = await ref
-        .read(locationRepositoryProvider)
-        .gardenCoordinates();
+    final cell = await ref.read(locationRepositoryProvider).gardenCell();
     if (!mounted) return;
-    setState(() => _isSet = coords != null);
+    setState(() => _isSet = cell != null);
   }
 
   void _toast(String message) {

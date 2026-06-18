@@ -1,10 +1,10 @@
 /// App-wide tunable constants (CLAUDE.md §"Konstante in konfiguracija").
 library;
 
-/// Default garden location used for the weather snapshot until M7 wires the
-/// on-device H3 cell centroid as the source. Privacy: real coordinates are
-/// never stored; this is a fixed fallback, overridable via --dart-define for
-/// testing other regions. Default = Ljubljana. (Dart has no
+/// Default garden location for the weather snapshot until the user sets one;
+/// once set, weather uses the on-device H3 r7 cell centroid (FR-8). Privacy:
+/// real coordinates are never stored; this is a fixed fallback, overridable via
+/// --dart-define for testing other regions. Default = Ljubljana. (Dart has no
 /// `double.fromEnvironment`, so coordinates come in as strings.)
 const _latEnv = String.fromEnvironment('WEATHER_LAT');
 const _lonEnv = String.fromEnvironment('WEATHER_LON');
