@@ -1,7 +1,7 @@
 # Tendask — Politika zasebnosti / Privacy Policy / Datenschutzerklärung
 
 > **v1.1, 2026-06-18.** Velja za aplikacijo **Tendask** (Android).
-> **Objavljeno na:** https://tendask.netlify.app/ (Netlify, iz `privacy-policy.html`).
+> **Objavljeno na:** https://tendask.com/privacy (Cloudflare Pages, iz repo `../tendask_web`).
 > Ta URL je vpisan v Play Console (App content → Privacy policy).
 > **Datum uveljavitve:** 2026-06-18 · **Različica:** 1.1
 > _(v1.1: natančne koordinate se ne shranjujejo več niti lokalno; za vreme se pošlje le približno središče celice ~1 km — FR-8.)_

@@ -112,7 +112,7 @@ const kSentryDsn = String.fromEnvironment('SENTRY_DSN');
 
 /// Public privacy policy (GDPR). Shown as a tappable link on the sign-in screen
 /// and in Settings; same URL is submitted to Play Console.
-const kPrivacyPolicyUrl = 'https://tendask.netlify.app/';
+const kPrivacyPolicyUrl = 'https://tendask.com/privacy';
 
 /// Minimum gap between OTP code sends (FR-11). Mirrors Supabase's server-side
 /// ~60 s throttle so the resend button counts down locally instead of letting

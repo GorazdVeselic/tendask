@@ -54,7 +54,7 @@ Odgovori na vprašanja (vsi **NE**, razen kjer označeno):
 
 | Deklaracija | Odgovor |
 |---|---|
-| **Privacy policy URL** | `https://tendask.netlify.app/` |
+| **Privacy policy URL** | `https://tendask.com/privacy` |
 | **Ads** (oglasi) | **No, my app does not contain ads** |
 | **Data safety** | Izpolni po [`../legal/play-data-safety.md`](../legal/play-data-safety.md) |
 | **News app** | **No** |

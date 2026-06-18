@@ -45,7 +45,7 @@
   - Ikona 512 (`assets/icon-512.png`) + feature graphic (`assets/feature-graphic-1024x500.png`)
   - 6 telefonskih posnetkov (`assets/screenshots/play/01..06`)
   - Tablet/Chromebook posnetki: **preskočeno** (neobvezno za MVP)
-- [x] **Store settings**: kategorija **Lifestyle**, kontakt `gorazd@spletnakoda.si`, web `tendask.netlify.app`, oznake (do 5)
+- [x] **Store settings**: kategorija **Lifestyle**, kontakt `gorazd@spletnakoda.si`, web `tendask.com`, oznake (do 5)
 - [ ] **Prevodi listinga: SL + DE** (Manage translations; besedila v `store-listing.md`)
 
 ## App content (vse KONČANO ✅)
@@ -60,7 +60,7 @@
   - precise location = **NOT collected / NOT shared** (odznači v obrazcu)
   - crash logs + diagnostics = **Shared (Sentry)** + Required
   - ostalo = Collected / Optional · encrypted in transit = Yes
-  - deletion URL + privacy URL = `https://tendask.netlify.app/` (objavi privacy v1.1 pred oddajo)
+  - deletion URL + privacy URL = `https://tendask.com/privacy` (objavi privacy v1.1 pred oddajo)
 - [x] **Ads**: No · **Government**: No · **Financial features**: None · **Health**: No
 - [x] **Advertising ID**: No (preverjeno: `AD_ID` ni v merged manifestu, brez oglaševalskih dep)
 
