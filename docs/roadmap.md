@@ -418,6 +418,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   napake sl/en/de; morda omemba DoH v privacy policy. **DoD:** napačen format/neobstoječa domena
   zavrnjena (s fail-open na DNS napako), did-you-mean predlog deluje, cooldown odštevalnik, brez
   regresije obstoječega OTP toka.
+- **FR-12 — Oznaka kraja pri vremenu (reverzno geokodiranje centroida).** 📝 **Ideja
+  2026-06-18, parkirano za ločen PR.** Ob vremenu (in po želji ob izbiri lokacije) pokaži
+  **ime najbližjega kraja/vasi** — reverzno geokodiran centroid `cellToLatLng(profile.h3_r7)`.
+  **Zakaj:** po FR-8 lokacija nima oznake (le H3 celica); uporabnik ne vidi, za kateri kraj je
+  vreme. **Izvedba:** (1) reverzni geo-vir — Open-Meteo Geocoding je **samo naprej** (ime→koord),
+  zato rabi **nov vir** (Nominatim/OSM ali offline seznam SI/EU krajev); **odprto vprašanje +
+  glavna odločitev.** (2) **Cache oznake lokalno** (recompute le ob spremembi `h3_r7`), da ne
+  ugibamo vsakič in delamo offline. (3) majhna oznaka kraja na vremenski kartici. **Zasebnost:**
+  OK — pošljemo le centroid (~1 km, že tako gre Open-Meteo), rezultat je groba oznaka, ne
+  koordinate. **OBVEZNO če dodamo nov vir:** posodobi privacy policy + Play Data Safety (nov
+  tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
+  morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
+  znano oznako; brez novih shranjenih koordinat.
 
 ## Dnevnik napredka
 
