@@ -1,6 +1,8 @@
 import 'package:geolocator/geolocator.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
+import '../config.dart';
+
 part 'location_service.g.dart';
 
 /// Outcome of a one-shot device-location request. Models the permission states
@@ -57,11 +59,13 @@ class LocationService {
       final pos = await Geolocator.getCurrentPosition(
         locationSettings: const LocationSettings(
           accuracy: LocationAccuracy.medium,
+          timeLimit: kGpsTimeout,
         ),
       );
       return LocationCoords(pos.latitude, pos.longitude);
     } on Exception {
-      // Timeout / transient platform error — the garden may have no fix.
+      // Timeout (no fix within kGpsTimeout) or transient platform error — the
+      // garden may have no signal; the UI offers manual place entry instead.
       return const LocationUnavailable();
     }
   }

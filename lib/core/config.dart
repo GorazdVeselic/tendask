@@ -43,6 +43,12 @@ const kRecentPlantsLimit = 8;
 const kWeatherConnectTimeout = Duration(seconds: 10);
 const kWeatherReceiveTimeout = Duration(seconds: 20);
 
+/// Cap on a one-shot GPS fix. Without it `getCurrentPosition` waits indefinitely
+/// when no fix is available (indoors, weak signal) and the UI spinner never
+/// stops; on timeout geolocator throws and we degrade to "couldn't determine
+/// location" with manual place entry as the fallback.
+const kGpsTimeout = Duration(seconds: 15);
+
 /// Reverse geocoding (FR-12): turns the garden cell centroid into a nearby place
 /// name shown on the weather card. We send only the centroid (≤ ~1.4 km, the same
 /// approximate point already sent to Open-Meteo) — never raw coordinates. zoom 13
