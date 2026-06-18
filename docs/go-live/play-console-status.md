@@ -45,7 +45,7 @@
   - Ikona 512 (`assets/icon-512.png`) + feature graphic (`assets/feature-graphic-1024x500.png`)
   - 6 telefonskih posnetkov (`assets/screenshots/play/01..06`)
   - Tablet/Chromebook posnetki: **preskočeno** (neobvezno za MVP)
-- [x] **Store settings**: kategorija **Lifestyle**, kontakt `gorazd@spletnakoda.si`, web `tendask.com`, oznake (do 5)
+- [x] **Store settings**: kategorija **Lifestyle**, kontakt `info@tendask.com`, web `tendask.com`, oznake (do 5)
 - [ ] **Prevodi listinga: SL + DE** (Manage translations; besedila v `store-listing.md`)
 
 ## App content (vse KONČANO ✅)

@@ -4,6 +4,55 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ---
 
+## BUG-004 — Navigator `keyReservation` assertion (podvojen shell page key) ob tapu opravila iz zaslona nad shell-om
+
+- **Status:** delno razrešen na `feat/m11-smart-engine` (commit `b9e5b3f`, 2026-06-16 — dodana top-level sestra `/task/:id` `task-view`, M11 suggestion-history + plant-detail jo uporabljata); **na `main` ŠE NI popravljeno** — `plant_detail_screen.dart` še vedno potiska `task-detail` in je sprožljivo.
+- **Najden:** 2026-06-15 (Sentry, environment `development`, M11 e2e preverba)
+- **Resnost:** srednja — v **debug** buildu rdeč zaslon (crash); v **release** se assertion odstrani (`assert`-only), a podvojen page key vodi v napačno/neuspešno navigacijo. Testerji na release APK tega ne vidijo kot crash.
+- **Sentry issue:** `7dd1ff282b4a4463903016b5056885a5` (2026-06-15 19:35:10 UTC)
+
+### Napaka
+
+```
+AssertionError: 'package:flutter/src/widgets/navigator.dart': Failed assertion:
+line 4068 pos 18: '!keyReservation.contains(key)': is not true.
+  navigator.dart:4068  NavigatorState._debugCheckDuplicatedPageKeys.<fn>
+  navigator.dart:4134  NavigatorState._updatePages.<fn>
+  ...
+```
+
+`_debugCheckDuplicatedPageKeys` se izvaja samo znotraj `assert(...)` → **debug/profile-only crash** (zato `environment=development`).
+
+### Vzrok
+
+Zasloni, ki živijo **NAD** `StatefulShellRoute` (top-level rute: `/plant/:id`, M11 suggestion-history),
+so potiskali **shell-gnezdeno** ruto `/tasks/:id` (`task-detail`) prek `pushNamed('task-detail', …)`.
+Push gnezdene rute znova zgradi že priklopljeno shell stran → **dva `Page`-a z istim page keyem** v
+Navigatorju → `keyReservation` assertion.
+
+Originalni Sentry dogodek je bil sprožen prek M11 »Pretekli predlogi« (ni na `main`), a **isti vzorec
+živi na `main`** prek zgodovine opravil v podrobnostih rastline:
+
+- `lib/features/plants/presentation/plant_detail_screen.dart:216` — `_HistoryRow.onTap` → `context.pushNamed('task-detail', …)`
+- `/plant/:id` je top-level ruta (nad shell-om; `lib/app/router/app_router.dart:131`)
+- **Ponovitev na `main`:** odpri rastlino → tapni opravilo v njeni zgodovini → crash (debug).
+
+### Smer popravka (vzorec že potrjen na M11 branchu)
+
+Port commita `b9e5b3f` na `main` (ali počakaj na merge M11). Konkretno:
+
+- V `app_router.dart` dodaj top-level sestro `/task/:id` (`name: 'task-view'`), ki renderira isti
+  `TaskDetailScreen` full-screen (brez bottom nav).
+- Klicalci **nad shell-om** (`plant_detail_screen.dart`, M11 suggestion-history) → `pushNamed('task-view', …)`.
+- Klicalci **znotraj shell-a** (`tasks_screen` ipd.) ostanejo na `task-detail` (bottom nav ostane viden).
+
+### Verifikacija po popravku
+
+- `flutter analyze` čist; obstoječi widget testi (plant-detail / suggestion-history) na `task-view`.
+- Ročno na napravi (debug build): rastlina z zgodovino opravil → tapni opravilo → odpre se brez rdečega zaslona.
+
+---
+
 ## BUG-003 — gost ima »Odjava« + logout tiho izbriše nesinhronizirane podatke
 
 - **Status:** razrešen (2026-06-10) — »Odjava« skrita za gosta (`email != null`); »Izbriši« za gosta dobi besedilo »Izbriši vse podatke v tej napravi«. Prijavljeni je bil že zaščiten (flush pred `clearUserData`, prekine če offline).

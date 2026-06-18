@@ -30,11 +30,11 @@ changelog). Šele takrat ima upravičenost:
 
 1. Gradi: `flutter build appbundle --release --dart-define-from-file=dart_defines.json --obfuscate --split-debug-info=build/symbols`
 2. Naloži (potrebuje `sentry-cli` + `SENTRY_AUTH_TOKEN`, gitignored v `.env`):
-   `sentry-cli debug-files upload --org gorazd-veselic --project tendask build/symbols`
+   `sentry-cli debug-files upload --org tendask --project tendask build/symbols`
 3. `sentry_flutter` poskrbi za debug-id na dogodkih → Sentry zmapira.
 
 `sentry-cli` ni nameščen (👤, ob potrebi: `npm i -g @sentry/cli` ali `scoop install sentry-cli`).
-Sentry: org `gorazd-veselic`, projekt `tendask`.
+Sentry: org `tendask`, projekt `tendask`.
 
 ## Majhna izboljšava, ki JE smiselna zdaj (opcijsko)
 

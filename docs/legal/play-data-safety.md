@@ -26,7 +26,7 @@
 |---|---|---|
 | Does your app collect or share any of the required user data types? | **Yes** | Email, lokacija, diagnostika, vsebina. |
 | Is all of the user data encrypted in transit? | **Yes** | Vse prek HTTPS/TLS (Supabase, Open-Meteo, Sentry, Google). |
-| Do you provide a way for users to request that their data be deleted? | **Yes** | V aplikaciji: Nastavitve → izbris računa (kaskadno počisti oblak) + lokalni clear. Dodatno e-pošta `gorazd@spletnakoda.si`. |
+| Do you provide a way for users to request that their data be deleted? | **Yes** | V aplikaciji: Nastavitve → izbris računa (kaskadno počisti oblak) + lokalni clear. Dodatno e-pošta `info@tendask.com`. |
 
 ---
 

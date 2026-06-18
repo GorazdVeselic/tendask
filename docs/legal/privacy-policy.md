@@ -18,8 +18,8 @@
 
 ### 1. Upravljavec podatkov
 
-Upravljavec osebnih podatkov je **Gorazd Veselic** (fizična oseba).
-Kontakt za vprašanja o zasebnosti in uveljavljanje pravic: **gorazd@spletnakoda.si**.
+Upravljavec osebnih podatkov je **Tendask**.
+Kontakt za vprašanja o zasebnosti in uveljavljanje pravic: **info@tendask.com**.
 
 ### 2. Načelo: zasebnost po zasnovi
 
@@ -87,7 +87,7 @@ do ugovora obdelavi. V aplikaciji sta neposredno na voljo:
 - **Izbris računa** (Nastavitve → izbris računa) — nepovraten izbris oblačnih podatkov + počiščenje
   lokalne baze.
 
-Za ostale zahteve piši na **gorazd@spletnakoda.si**. Pritožbo lahko vložiš tudi pri Informacijskem
+Za ostale zahteve piši na **info@tendask.com**. Pritožbo lahko vložiš tudi pri Informacijskem
 pooblaščencu RS (`ip-rs.si`).
 
 ### 8. Otroci
@@ -105,8 +105,8 @@ strani. Veljavna je vedno zadnja objavljena različica z datumom uveljavitve.
 
 ### 1. Data controller
 
-The controller of personal data is **Gorazd Veselic** (a natural person).
-Contact for privacy questions and exercising your rights: **gorazd@spletnakoda.si**.
+The controller of personal data is **Tendask**.
+Contact for privacy questions and exercising your rights: **info@tendask.com**.
 
 ### 2. Principle: privacy by design
 
@@ -174,7 +174,7 @@ your data, and to object to processing. Directly available in the app:
 - **Account deletion** (Settings → delete account) — irreversible deletion of cloud data + wiping
   the local database.
 
-For other requests email **gorazd@spletnakoda.si**. You may also lodge a complaint with the Slovenian
+For other requests email **info@tendask.com**. You may also lodge a complaint with the Slovenian
 Information Commissioner (`ip-rs.si`) or your local supervisory authority.
 
 ### 8. Children
@@ -192,8 +192,7 @@ published version with its effective date always applies.
 
 ### 1. Verantwortlicher
 
-Verantwortlicher für die Verarbeitung personenbezogener Daten ist **Gorazd Veselic** (natürliche
-Person). Kontakt für Datenschutzfragen und die Ausübung Ihrer Rechte: **gorazd@spletnakoda.si**.
+Verantwortlicher für die Verarbeitung personenbezogener Daten ist **Tendask**. Kontakt für Datenschutzfragen und die Ausübung Ihrer Rechte: **info@tendask.com**.
 
 ### 2. Grundsatz: Datenschutz durch Technikgestaltung
 
@@ -265,7 +264,7 @@ verfügbar:
 - **Kontolöschung** (Einstellungen → Konto löschen) — unwiderrufliche Löschung der Cloud-Daten +
   Bereinigung der lokalen Datenbank.
 
-Für weitere Anfragen schreiben Sie an **gorazd@spletnakoda.si**. Sie können auch Beschwerde bei der
+Für weitere Anfragen schreiben Sie an **info@tendask.com**. Sie können auch Beschwerde bei der
 zuständigen Aufsichtsbehörde einlegen.
 
 ### 8. Kinder

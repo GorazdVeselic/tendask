@@ -67,7 +67,7 @@
   dodaj SL, DE prek »Manage translations«).
 - [ ] ⏳ 👤 Naloži **icon-512.png** + **feature-graphic-1024x500.png** + **posnetke zaslona**.
 - [ ] ⏳ 👤 **App category** = `House & Home` (alt: `Lifestyle`); tags = gardening/journal.
-- [ ] ⏳ 👤 Kontaktni email (javno) = isti kot v politiki (`gorazd@spletnakoda.si`).
+- [ ] ⏳ 👤 Kontaktni email (javno) = isti kot v politiki (`info@tendask.com`).
 
 ---
 
@@ -134,5 +134,5 @@
 | Build ukaz | `flutter build appbundle --release --dart-define-from-file=dart_defines.json` |
 | Upload-key SHA-1 (že reg. kot OAuth client) | `62:CF:B4:A0:F4:6A:54:B4:7B:99:6A:02:16:7A:72:A7:62:14:2C:F9` |
 | Privacy policy URL | `https://tendask.com/privacy` |
-| Developer name | Tendask · kontakt `gorazd@spletnakoda.si` |
+| Developer name | Tendask · kontakt `info@tendask.com` |
 | jarsigner (verify) | `C:\Program Files\Android\Android Studio\jbr\bin\jarsigner.exe` |

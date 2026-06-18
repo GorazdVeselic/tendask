@@ -52,7 +52,7 @@ const kWeatherReceiveTimeout = Duration(seconds: 20);
 const kNominatimReverseUrl = 'https://nominatim.openstreetmap.org/reverse';
 const kReverseGeoZoom = 12;
 const kReverseGeoUserAgent =
-    'Tendask/1.0 (+https://tendask.com; gorazd@spletnakoda.si)';
+    'Tendask/1.0 (+https://tendask.com; info@tendask.com)';
 
 /// Periodic background sync cadence while the app is running. Sync is
 /// incremental and light; the catalog (rarely changes) is pulled only on
