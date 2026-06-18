@@ -527,8 +527,8 @@ class Translations$location$en {
 	/// en: 'Search'
 	String get search => 'Search';
 
-	/// en: 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.'
-	String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
+	/// en: 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.'
+	String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.';
 
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
@@ -1699,7 +1699,7 @@ extension on Translations {
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
 			'location.place_note' => 'A village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
-			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.',
+			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.',
 			'location.kContinue' => 'Continue',
 			'location.set_gps' => 'Location set.',
 			'location.set_place' => ({required Object name}) => 'Location: ${name}',

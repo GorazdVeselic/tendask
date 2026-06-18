@@ -301,7 +301,7 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
 	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
-	@override String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.';
+	@override String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Tvoje natančne koordinate se ne shranijo — iz njih izračunamo le okvirno okolico in je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
 	@override String get set_gps => 'Lokacija je nastavljena.';
 	@override String set_place({required Object name}) => 'Lokacija: ${name}';
@@ -866,7 +866,7 @@ extension on TranslationsSl {
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
 			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
-			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.',
+			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Tvoje natančne koordinate se ne shranijo — iz njih izračunamo le okvirno okolico in je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
 			'location.set_gps' => 'Lokacija je nastavljena.',
 			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',

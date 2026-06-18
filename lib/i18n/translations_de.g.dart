@@ -299,7 +299,7 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
 	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
-	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.';
+	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Deine genauen Koordinaten werden nie gespeichert — wir verwenden sie nur, um die grobe Umgebung zu berechnen, und geben sie niemals an andere weiter.';
 	@override String get kContinue => 'Weiter';
 	@override String get set_gps => 'Standort festgelegt.';
 	@override String set_place({required Object name}) => 'Standort: ${name}';
@@ -860,7 +860,7 @@ extension on TranslationsDe {
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
 			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
-			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.',
+			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Deine genauen Koordinaten werden nie gespeichert — wir verwenden sie nur, um die grobe Umgebung zu berechnen, und geben sie niemals an andere weiter.',
 			'location.kContinue' => 'Weiter',
 			'location.set_gps' => 'Standort festgelegt.',
 			'location.set_place' => ({required Object name}) => 'Standort: ${name}',

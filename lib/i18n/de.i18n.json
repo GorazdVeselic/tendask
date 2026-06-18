@@ -140,7 +140,7 @@
     "place_hint": "Dorf, Stadt oder Adresse (z. B. Šentjur)",
     "place_note": "Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.",
     "search": "Suchen",
-    "privacy": "Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.",
+    "privacy": "Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Deine genauen Koordinaten werden nie gespeichert — wir verwenden sie nur, um die grobe Umgebung zu berechnen, und geben sie niemals an andere weiter.",
     "continue": "Weiter",
     "set_gps": "Standort festgelegt.",
     "set_place(name)": "Standort: $name",

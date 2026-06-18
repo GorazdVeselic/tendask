@@ -142,7 +142,7 @@
     "place_hint": "Vas, mesto ali naslov (npr. Šentjur)",
     "place_note": "Dovolj je vas ali mesto — natančen naslov ni potreben.",
     "search": "Poišči",
-    "privacy": "Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.",
+    "privacy": "Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Tvoje natančne koordinate se ne shranijo — iz njih izračunamo le okvirno okolico in je nikoli ne razkrijemo drugim.",
     "continue": "Nadaljuj",
     "set_gps": "Lokacija je nastavljena.",
     "set_place(name)": "Lokacija: $name",
