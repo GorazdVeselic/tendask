@@ -50,7 +50,7 @@ final class SyncCoordinatorProvider
   }
 }
 
-String _$syncCoordinatorHash() => r'cb03c8d7f0643b8f9eacfb727c95c2ee32c5755f';
+String _$syncCoordinatorHash() => r'fbbbcf861e59f19ede7f292d23cd3bb44fb19cbe';
 
 /// Wires the sync triggers (tech-stack §2): startup, reconnect, periodic, plus
 /// push-on-save. keepAlive — lives for the whole app session. Instantiate once

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
@@ -60,14 +58,14 @@ void main() {
     final router = GoRouter(
       initialLocation: '/',
       routes: [
-        GoRoute(path: '/', builder: (_, __) => _Trigger(syncFuture: syncFuture)),
+        GoRoute(path: '/', builder: (_, _) => _Trigger(syncFuture: syncFuture)),
         GoRoute(
           path: '/home',
-          builder: (_, __) => const Scaffold(body: Text('HOME')),
+          builder: (_, _) => const Scaffold(body: Text('HOME')),
         ),
         GoRoute(
           path: '/location',
-          builder: (_, __) => const Scaffold(body: Text('LOCATION')),
+          builder: (_, _) => const Scaffold(body: Text('LOCATION')),
         ),
       ],
     );
