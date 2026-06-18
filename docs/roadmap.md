@@ -418,16 +418,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   napake sl/en/de; morda omemba DoH v privacy policy. **DoD:** napačen format/neobstoječa domena
   zavrnjena (s fail-open na DNS napako), did-you-mean predlog deluje, cooldown odštevalnik, brez
   regresije obstoječega OTP toka.
-- **FR-12 — Oznaka kraja pri vremenu (reverzno geokodiranje centroida).** 📝 **Ideja
-  2026-06-18, parkirano za ločen PR.** Ob vremenu (in po želji ob izbiri lokacije) pokaži
-  **ime najbližjega kraja/vasi** — reverzno geokodiran centroid `cellToLatLng(profile.h3_r7)`.
-  **Zakaj:** po FR-8 lokacija nima oznake (le H3 celica); uporabnik ne vidi, za kateri kraj je
-  vreme. **Izvedba:** (1) reverzni geo-vir — Open-Meteo Geocoding je **samo naprej** (ime→koord),
-  zato rabi **nov vir** (Nominatim/OSM ali offline seznam SI/EU krajev); **odprto vprašanje +
-  glavna odločitev.** (2) **Cache oznake lokalno** (recompute le ob spremembi `h3_r7`), da ne
-  ugibamo vsakič in delamo offline. (3) majhna oznaka kraja na vremenski kartici. **Zasebnost:**
-  OK — pošljemo le centroid (~1 km, že tako gre Open-Meteo), rezultat je groba oznaka, ne
-  koordinate. **OBVEZNO če dodamo nov vir:** posodobi privacy policy + Play Data Safety (nov
+- **FR-12 — Oznaka kraja pri vremenu (reverzno geokodiranje centroida).** ✅ **Implementirano
+  2026-06-18 na `feat/fr12-place-label`** (gl. dnevnik). **Vir = OSM/Nominatim reverse** (odločitev
+  uporabnika; Open-Meteo Geocoding je samo naprej). Oznaka na vremenski kartici Domov; klic le ob
+  spremembi `h3_r7`, oznaka cacheana lokalno (offline pokaže zadnjo znano za isto celico). Nov tretji
+  ponudnik → privacy v1.2 + Play Data Safety usklajena. Spodaj prvotna spec. Ob vremenu (in po želji
+  ob izbiri lokacije) pokaži **ime najbližjega kraja/vasi** — reverzno geokodiran centroid
+  `cellToLatLng(profile.h3_r7)`. **Zakaj:** po FR-8 lokacija nima oznake (le H3 celica); uporabnik ne
+  vidi, za kateri kraj je vreme. **Izvedba:** (1) reverzni geo-vir — Open-Meteo Geocoding je **samo
+  naprej** (ime→koord), zato rabi **nov vir** (Nominatim/OSM ali offline seznam SI/EU krajev);
+  **odprto vprašanje + glavna odločitev.** (2) **Cache oznake lokalno** (recompute le ob spremembi
+  `h3_r7`), da ne ugibamo vsakič in delamo offline. (3) majhna oznaka kraja na vremenski kartici.
+  **Zasebnost:** OK — pošljemo le centroid (~1 km, že tako gre Open-Meteo), rezultat je groba oznaka,
+  ne koordinate. **OBVEZNO če dodamo nov vir:** posodobi privacy policy + Play Data Safety (nov
   tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
   morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
   znano oznako; brez novih shranjenih koordinat.
@@ -436,6 +439,21 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-18 — **FR-12: oznaka kraja pri vremenu (`feat/fr12-place-label`).** Vremenska kartica Domov
+  zdaj pokaže ime najbližjega kraja (📍), reverzno geokodirano iz centroida celice `h3_r7`. Vir =
+  **OSM/Nominatim reverse** (uporabnikova izbira; Open-Meteo geocoding je samo naprej). Koda (core/
+  location): `ReverseGeocodingClient` (tanek Dio klient + `pickPlaceName` izbira village/town/city iz
+  `address`; User-Agent po Nominatim usage policy), `PlaceLabelRepository` (cache v `local_flags`, ključ
+  `{cell,label,lang}`), `placeLabel(lang)` provider (cache-hit brez mreže / fetch+cache / offline →
+  zadnja znana oznaka **le za isto celico**, da premaknjen vrt ne kaže napačnega kraja); klic le ob
+  spremembi celice ali jezika. UI: `_PlaceHeader` (Icons.place_outlined, muted) na vrhu
+  `CurrentWeatherCard`; brez lokacije ni oznake (generično vreme). Testi: `pickPlaceName` parse +
+  cache repo + provider (hit/miss/offline/no-name) — **219/219 zelenih, analyze čist**. Pravno: nov
+  tretji ponudnik → privacy-policy `.md`+`.html` v1.2 (SL/EN/DE), play-data-safety v1.2 (approximate
+  location ostane Shared, doda se prejemnik OSM/Nominatim). **Ostane 👤:** redeploy privacy v1.2 na
+  tendask.com; on-device verifikacija (nastavi lokacijo → oznaka kraja na kartici). Pomislek glede
+  skale (parkiran): javni Nominatim ima usage policy (1 req/s, brez bulk) — nizko-volumski klic +
+  cache je znotraj politike; ob rasti volumna pot LocationIQ/self-host.
 - 2026-06-18 — **FR-8: lokacija prek centroida `h3_r7` (`feat/fr8-h3-centroid`).** Surove koordinate
   se ne hranijo več (niti device-local); vreme + post-sign-in routing bereta **centroid celice**
   `cellToLatLng(profile.h3_r7)`. Štirje code commiti: (1) `cellCentroid` helper + k-prefiks res

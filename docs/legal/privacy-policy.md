@@ -1,10 +1,11 @@
 # Tendask — Politika zasebnosti / Privacy Policy / Datenschutzerklärung
 
-> **v1.1, 2026-06-18.** Velja za aplikacijo **Tendask** (Android).
+> **v1.2, 2026-06-18.** Velja za aplikacijo **Tendask** (Android).
 > **Objavljeno na:** https://tendask.com/privacy (Cloudflare Pages, iz repo `../tendask_web`).
 > Ta URL je vpisan v Play Console (App content → Privacy policy).
-> **Datum uveljavitve:** 2026-06-18 · **Različica:** 1.1
+> **Datum uveljavitve:** 2026-06-18 · **Različica:** 1.2
 > _(v1.1: natančne koordinate se ne shranjujejo več niti lokalno; za vreme se pošlje le približno središče celice ~1 km — FR-8.)_
+> _(v1.2: za prikaz imena najbližjega kraja ob vremenu se isto približno središče celice pošlje storitvi OpenStreetMap/Nominatim — FR-12.)_
 >
 > _Opomba (ni del besedila politike): trije jeziki so v enem dokumentu zaradi lažjega pregleda
 > in vzdrževanja — ob gostovanju jih lahko razdeliš na tri strani (`/privacy`, `/privacy-en`,
@@ -59,6 +60,11 @@ središče celice** (~1 km natančnosti), nikoli tvoja točna lokacija (glej §5
   **približno središče tvoje celice** (~1 km), ne tvoje natančne lokacije; ob iskanju kraja pa
   vpisano ime kraja. Podatki se uporabijo le za odgovor in se pri nas ne hranijo; Open-Meteo je
   brezplačen in ne zahteva računa.
+- **OpenStreetMap / Nominatim** (ime kraja ob vremenu). Da ti ob vremenu pokažemo ime najbližjega
+  kraja, pošljemo storitvi le **približno središče tvoje celice** (~1 km, isto kot Open-Meteo),
+  nikoli natančne lokacije; v zameno dobimo grobo oznako (npr. ime vasi). Rezultat se shrani le
+  lokalno na napravi (da deluje brez povezave); storitev upravlja fundacija OpenStreetMap, je
+  brezplačna in ne zahteva računa.
 - **Sentry** (diagnostika napak). Lahko obdeluje podatke izven EU (npr. ZDA) na podlagi standardnih
   pogodbenih klavzul.
 - **Google** (prijava z Google računom — neobvezno). Ob prijavi poteka izmenjava prijavnega žetona.
@@ -142,6 +148,11 @@ the **approximate centre of your cell** (~1 km accuracy) is sent out — never y
   your cell** (~1 km), not your precise location; searching for a place sends the typed place name.
   Data is used only to answer the request and is not retained by us; Open-Meteo is free and requires
   no account.
+- **OpenStreetMap / Nominatim** (place name shown with the weather). To show the name of the nearest
+  place alongside the weather, we send the service only the **approximate centre of your cell**
+  (~1 km, the same point as Open-Meteo), never your precise location; in return we get a coarse label
+  (e.g. a village name). The result is stored only locally on the device (so it works offline); the
+  service is operated by the OpenStreetMap Foundation, is free and requires no account.
 - **Sentry** (error diagnostics). May process data outside the EU (e.g. the US) under Standard
   Contractual Clauses.
 - **Google** (Google sign-in — optional). Sign-in performs a token exchange.
@@ -225,6 +236,12 @@ gesendet, niemals Ihr genauer Standort (siehe §5).
   Mittelpunkt Ihrer Zelle** (~1 km) gesendet, nicht Ihr genauer Standort; bei der Ortssuche der
   eingegebene Ortsname. Die Daten dienen nur der Antwort und werden von uns nicht gespeichert;
   Open-Meteo ist kostenlos und erfordert kein Konto.
+- **OpenStreetMap / Nominatim** (Ortsname beim Wetter). Um Ihnen beim Wetter den Namen des nächsten
+  Ortes anzuzeigen, senden wir dem Dienst nur den **ungefähren Mittelpunkt Ihrer Zelle** (~1 km,
+  derselbe Punkt wie bei Open-Meteo), niemals Ihren genauen Standort; im Gegenzug erhalten wir eine
+  grobe Bezeichnung (z. B. einen Ortsnamen). Das Ergebnis wird nur lokal auf dem Gerät gespeichert
+  (damit es offline funktioniert); der Dienst wird von der OpenStreetMap Foundation betrieben, ist
+  kostenlos und erfordert kein Konto.
 - **Sentry** (Fehlerdiagnose). Kann Daten außerhalb der EU (z. B. USA) auf Grundlage von
   Standardvertragsklauseln verarbeiten.
 - **Google** (Google-Anmeldung — optional). Bei der Anmeldung erfolgt ein Token-Austausch.

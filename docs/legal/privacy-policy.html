@@ -76,7 +76,7 @@
     <button data-lang="en">English</button>
     <button data-lang="de">Deutsch</button>
   </div>
-  <p class="meta">Datum uveljavitve / Effective date / Datum des Inkrafttretens: 2026-06-18 · v1.1</p>
+  <p class="meta">Datum uveljavitve / Effective date / Datum des Inkrafttretens: 2026-06-18 · v1.2</p>
 
   <!-- ================= SLOVENŠČINA ================= -->
   <section class="lang active" id="sl">
@@ -126,6 +126,10 @@
         <li><strong>Open-Meteo</strong> (vreme in geokodiranje). Ob vremenu se pošlje le <strong>približno
         središče celice</strong> (~1 km), ne natančne lokacije; ob iskanju kraja vpisano ime kraja.
         Podatki se ne hranijo; brez računa.</li>
+        <li><strong>OpenStreetMap / Nominatim</strong> (ime kraja ob vremenu). Pošljemo le <strong>približno
+        središče celice</strong> (~1 km, isto kot Open-Meteo), nikoli natančne lokacije; v zameno dobimo
+        grobo oznako (npr. ime vasi). Rezultat se shrani le lokalno na napravi; storitev upravlja
+        fundacija OpenStreetMap; brez računa.</li>
         <li><strong>Sentry</strong> (diagnostika napak). Lahko obdeluje podatke izven EU (ZDA) na podlagi
         standardnih pogodbenih klavzul.</li>
         <li><strong>Google</strong> (prijava z Google računom — neobvezno). Izmenjava prijavnega žetona.</li>
@@ -212,6 +216,10 @@
         <li><strong>Open-Meteo</strong> (weather and geocoding). Fetching weather sends only the
         <strong>approximate centre of your cell</strong> (~1 km), not your precise location; searching a
         place sends the typed place name. Data is not retained; no account.</li>
+        <li><strong>OpenStreetMap / Nominatim</strong> (place name shown with the weather). We send only the
+        <strong>approximate centre of your cell</strong> (~1 km, the same point as Open-Meteo), never your
+        precise location; in return we get a coarse label (e.g. a village name). The result is stored only
+        locally on the device; operated by the OpenStreetMap Foundation; no account.</li>
         <li><strong>Sentry</strong> (error diagnostics). May process data outside the EU (US) under
         Standard Contractual Clauses.</li>
         <li><strong>Google</strong> (Google sign-in — optional). Performs a token exchange.</li>
@@ -303,6 +311,11 @@
         <li><strong>Open-Meteo</strong> (Wetter und Geokodierung). Beim Wetter wird nur der
         <strong>ungefähre Mittelpunkt Ihrer Zelle</strong> (~1 km) gesendet, nicht Ihr genauer Standort;
         bei der Ortssuche der eingegebene Ortsname. Die Daten werden nicht gespeichert; kein Konto.</li>
+        <li><strong>OpenStreetMap / Nominatim</strong> (Ortsname beim Wetter). Wir senden nur den
+        <strong>ungefähren Mittelpunkt Ihrer Zelle</strong> (~1 km, derselbe Punkt wie Open-Meteo), niemals
+        Ihren genauen Standort; im Gegenzug erhalten wir eine grobe Bezeichnung (z. B. einen Ortsnamen).
+        Das Ergebnis wird nur lokal auf dem Gerät gespeichert; betrieben von der OpenStreetMap Foundation;
+        kein Konto.</li>
         <li><strong>Sentry</strong> (Fehlerdiagnose). Kann Daten außerhalb der EU (USA) auf Grundlage von
         Standardvertragsklauseln verarbeiten.</li>
         <li><strong>Google</strong> (Google-Anmeldung — optional). Token-Austausch.</li>
