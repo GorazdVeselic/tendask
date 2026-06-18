@@ -482,6 +482,13 @@
     "home_unavailable": "Wetter derzeit nicht verfügbar.",
     "home_retry": "Zum Wiederholen tippen",
     "loading": "Wetter wird geladen…",
-    "updated_at(time)": "Aktualisiert $time"
+    "updated_at(time)": "Aktualisiert $time",
+    "m_humidity": "Luftfeuchte",
+    "m_wind": "Wind",
+    "m_precipitation": "Niederschlag",
+    "m_soil_temp": "Bodentemp.",
+    "m_et0": "ET₀",
+    "m_rain48h": "Regen 48 h",
+    "m_no_rain": "kein Regen"
   }
 }

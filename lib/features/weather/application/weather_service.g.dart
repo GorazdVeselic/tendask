@@ -99,3 +99,62 @@ final class CurrentWeatherProvider
 }
 
 String _$currentWeatherHash() => r'4a5e7d3d2e4a0038aa04874332d87c6b83cedbcc';
+
+/// Full weather snapshot for the dashboard detail sheet: every band (humidity,
+/// wind, soil temperature, ET₀, the 48 h rain look-back) for the garden
+/// location. Fetched on demand when the sheet opens — kept separate from the
+/// light [currentWeather] so opening Home stays fast. On a failed fetch
+/// (offline) it falls back to the last cached snapshot, so the sheet still
+/// shows what we have instead of going blank.
+
+@ProviderFor(weatherDetail)
+final weatherDetailProvider = WeatherDetailProvider._();
+
+/// Full weather snapshot for the dashboard detail sheet: every band (humidity,
+/// wind, soil temperature, ET₀, the 48 h rain look-back) for the garden
+/// location. Fetched on demand when the sheet opens — kept separate from the
+/// light [currentWeather] so opening Home stays fast. On a failed fetch
+/// (offline) it falls back to the last cached snapshot, so the sheet still
+/// shows what we have instead of going blank.
+
+final class WeatherDetailProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<WeatherSnapshot?>,
+          WeatherSnapshot?,
+          FutureOr<WeatherSnapshot?>
+        >
+    with $FutureModifier<WeatherSnapshot?>, $FutureProvider<WeatherSnapshot?> {
+  /// Full weather snapshot for the dashboard detail sheet: every band (humidity,
+  /// wind, soil temperature, ET₀, the 48 h rain look-back) for the garden
+  /// location. Fetched on demand when the sheet opens — kept separate from the
+  /// light [currentWeather] so opening Home stays fast. On a failed fetch
+  /// (offline) it falls back to the last cached snapshot, so the sheet still
+  /// shows what we have instead of going blank.
+  WeatherDetailProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'weatherDetailProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$weatherDetailHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<WeatherSnapshot?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<WeatherSnapshot?> create(Ref ref) {
+    return weatherDetail(ref);
+  }
+}
+
+String _$weatherDetailHash() => r'c759b3a94aa7fb28c28cf787d531d83abc57a18c';

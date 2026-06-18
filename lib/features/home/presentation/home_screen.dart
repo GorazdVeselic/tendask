@@ -18,6 +18,7 @@ import '../../../features/tasks/presentation/subject_labels.dart';
 import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
+import '../../../features/weather/presentation/weather_detail_sheet.dart';
 import '../../../i18n/translations.g.dart';
 
 class HomeScreen extends ConsumerWidget {
@@ -194,7 +195,15 @@ class _WeatherSection extends ConsumerWidget {
     if (snapshot != null) {
       final lang = LocaleSettings.currentLocale.languageCode;
       final placeLabel = ref.watch(placeLabelProvider(lang)).value;
-      return CurrentWeatherCard(snapshot: snapshot, placeLabel: placeLabel);
+      return CurrentWeatherCard(
+        snapshot: snapshot,
+        placeLabel: placeLabel,
+        onTap: () => showWeatherDetailSheet(
+          context,
+          initial: snapshot,
+          placeLabel: placeLabel,
+        ),
+      );
     }
     if (weather.isLoading) return const _WeatherLoadingCard();
     return InkWell(

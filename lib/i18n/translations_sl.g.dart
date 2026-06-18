@@ -746,6 +746,13 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get home_retry => 'Tapni za ponovni poskus';
 	@override String get loading => 'Nalagam vreme…';
 	@override String updated_at({required Object time}) => 'Osveženo ${time}';
+	@override String get m_humidity => 'Vlažnost';
+	@override String get m_wind => 'Veter';
+	@override String get m_precipitation => 'Padavine';
+	@override String get m_soil_temp => 'Temp. tal';
+	@override String get m_et0 => 'ET₀';
+	@override String get m_rain48h => 'Dež 48 h';
+	@override String get m_no_rain => 'brez dežja';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1178,6 +1185,13 @@ extension on TranslationsSl {
 			'weather.home_retry' => 'Tapni za ponovni poskus',
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
+			'weather.m_humidity' => 'Vlažnost',
+			'weather.m_wind' => 'Veter',
+			'weather.m_precipitation' => 'Padavine',
+			'weather.m_soil_temp' => 'Temp. tal',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Dež 48 h',
+			'weather.m_no_rain' => 'brez dežja',
 			_ => null,
 		};
 	}

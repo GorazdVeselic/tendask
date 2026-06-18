@@ -740,6 +740,13 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get home_retry => 'Zum Wiederholen tippen';
 	@override String get loading => 'Wetter wird geladen…';
 	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
+	@override String get m_humidity => 'Luftfeuchte';
+	@override String get m_wind => 'Wind';
+	@override String get m_precipitation => 'Niederschlag';
+	@override String get m_soil_temp => 'Bodentemp.';
+	@override String get m_et0 => 'ET₀';
+	@override String get m_rain48h => 'Regen 48 h';
+	@override String get m_no_rain => 'kein Regen';
 }
 
 /// The flat map containing all translations for locale <de>.
@@ -1172,6 +1179,13 @@ extension on TranslationsDe {
 			'weather.home_retry' => 'Zum Wiederholen tippen',
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
+			'weather.m_humidity' => 'Luftfeuchte',
+			'weather.m_wind' => 'Wind',
+			'weather.m_precipitation' => 'Niederschlag',
+			'weather.m_soil_temp' => 'Bodentemp.',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Regen 48 h',
+			'weather.m_no_rain' => 'kein Regen',
 			_ => null,
 		};
 	}

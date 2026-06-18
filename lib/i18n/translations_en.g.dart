@@ -1585,6 +1585,27 @@ class Translations$weather$en {
 
 	/// en: 'Updated $time'
 	String updated_at({required Object time}) => 'Updated ${time}';
+
+	/// en: 'Humidity'
+	String get m_humidity => 'Humidity';
+
+	/// en: 'Wind'
+	String get m_wind => 'Wind';
+
+	/// en: 'Precipitation'
+	String get m_precipitation => 'Precipitation';
+
+	/// en: 'Soil temp.'
+	String get m_soil_temp => 'Soil temp.';
+
+	/// en: 'ET₀'
+	String get m_et0 => 'ET₀';
+
+	/// en: 'Rain 48 h'
+	String get m_rain48h => 'Rain 48 h';
+
+	/// en: 'no rain'
+	String get m_no_rain => 'no rain';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -2017,6 +2038,13 @@ extension on Translations {
 			'weather.home_retry' => 'Tap to retry',
 			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
+			'weather.m_humidity' => 'Humidity',
+			'weather.m_wind' => 'Wind',
+			'weather.m_precipitation' => 'Precipitation',
+			'weather.m_soil_temp' => 'Soil temp.',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Rain 48 h',
+			'weather.m_no_rain' => 'no rain',
 			_ => null,
 		};
 	}

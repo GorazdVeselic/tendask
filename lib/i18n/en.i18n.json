@@ -482,6 +482,13 @@
     "home_unavailable": "Weather is currently unavailable.",
     "home_retry": "Tap to retry",
     "loading": "Loading weather…",
-    "updated_at(time)": "Updated $time"
+    "updated_at(time)": "Updated $time",
+    "m_humidity": "Humidity",
+    "m_wind": "Wind",
+    "m_precipitation": "Precipitation",
+    "m_soil_temp": "Soil temp.",
+    "m_et0": "ET₀",
+    "m_rain48h": "Rain 48 h",
+    "m_no_rain": "no rain"
   }
 }

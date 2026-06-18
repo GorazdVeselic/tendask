@@ -39,7 +39,7 @@ class WeatherSnapshotCard extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _conditionLabel(condition, t),
+                        weatherConditionLabel(condition, t),
                         style: theme.textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w700,
                         ),
@@ -91,10 +91,16 @@ class CurrentWeatherCard extends StatelessWidget {
     super.key,
     required this.snapshot,
     this.placeLabel,
+    this.onTap,
   });
 
   final WeatherSnapshot? snapshot;
   final String? placeLabel;
+
+  /// When set, the card becomes tappable (opens the weather detail sheet) and
+  /// shows a quiet affordance. Null on the offline card, which handles its own
+  /// retry tap.
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -145,60 +151,73 @@ class CurrentWeatherCard extends StatelessWidget {
 
     final condition = weatherConditionFromCode(snap.weatherCode);
     final stamp = _capturedLabel(snap.capturedAt);
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            if (placeLabel != null) ...[
-              _PlaceHeader(placeLabel!),
-              const SizedBox(height: 6),
-            ],
-            Row(
-              children: [
-                Text(
-                  weatherEmoji(condition),
-                  style: const TextStyle(fontSize: 28),
-                ),
-                const SizedBox(width: 12),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        _temp(snap.temperature),
-                        style: theme.textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      Text(
-                        _conditionLabel(condition, context.t),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: theme.textTheme.bodySmall?.copyWith(
-                          color: theme.colorScheme.onSurfaceVariant,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                if (snap.forecast.isNotEmpty)
-                  _ForecastStrip(snap.forecast, compact: true),
-              ],
-            ),
-            if (stamp != null) ...[
-              const SizedBox(height: 6),
+    final content = Padding(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          if (placeLabel != null) ...[
+            _PlaceHeader(placeLabel!),
+            const SizedBox(height: 6),
+          ],
+          Row(
+            children: [
               Text(
-                context.t.weather.updated_at(time: stamp),
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
+                weatherEmoji(condition),
+                style: const TextStyle(fontSize: 28),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      _temp(snap.temperature),
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Text(
+                      weatherConditionLabel(condition, context.t),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
                 ),
               ),
+              if (snap.forecast.isNotEmpty)
+                _ForecastStrip(snap.forecast, compact: true),
+              if (onTap != null) ...[
+                const SizedBox(width: 8),
+                Icon(
+                  Icons.unfold_more,
+                  size: 18,
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ],
             ],
+          ),
+          if (stamp != null) ...[
+            const SizedBox(height: 6),
+            Text(
+              context.t.weather.updated_at(time: stamp),
+              style: theme.textTheme.labelSmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
           ],
-        ),
+        ],
       ),
+    );
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: onTap == null
+          ? content
+          : InkWell(onTap: onTap, child: content),
     );
   }
 }
@@ -353,7 +372,7 @@ class _BandRow extends StatelessWidget {
   }
 }
 
-String _conditionLabel(WeatherCondition c, Translations t) => switch (c) {
+String weatherConditionLabel(WeatherCondition c, Translations t) => switch (c) {
   WeatherCondition.clear => t.weather.cond_clear,
   WeatherCondition.mainlyClear => t.weather.cond_mainly_clear,
   WeatherCondition.cloudy => t.weather.cond_cloudy,
