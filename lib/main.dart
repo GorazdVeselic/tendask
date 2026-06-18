@@ -114,7 +114,7 @@ Future<void> _bootstrap() async {
   // pull when signed in; catalog always) plus reconnect/periodic/push-on-save
   // triggers. Guests stay local (no session) — sync activates on sign-in.
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
-  container.read(syncCoordinatorProvider.notifier).start();
+  unawaited(container.read(syncCoordinatorProvider.notifier).start());
 
   // Local notifications (M8): init the plugin (timezone + plugin), needed to
   // resolve a cold-start deep-link below. The permission prompt stays deferred to

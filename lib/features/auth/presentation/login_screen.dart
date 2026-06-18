@@ -46,8 +46,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       if (!signedIn) return; // user dismissed the picker
       // start() claims the guest's local rows to this account, pushes them, and
       // pulls the account's existing data (a merge — sign-in keeps data).
-      ref.read(syncCoordinatorProvider.notifier).start();
-      await goToLocationOrHome(context, ref);
+      final syncFuture = ref.read(syncCoordinatorProvider.notifier).start();
+      await goToLocationOrHome(context, ref, syncFuture: syncFuture);
     } on Object {
       if (!mounted) return;
       ScaffoldMessenger.of(context)

@@ -185,8 +185,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       if (!mounted) return;
       // Session established — start() claims the guest's local rows to this
       // account, pushes them, and pulls the account's existing data (merge).
-      ref.read(syncCoordinatorProvider.notifier).start();
-      await goToLocationOrHome(context, ref);
+      final syncFuture = ref.read(syncCoordinatorProvider.notifier).start();
+      await goToLocationOrHome(context, ref, syncFuture: syncFuture);
     } on Object {
       if (!mounted) return;
       setState(() => _error = t.email_login.err_verify);

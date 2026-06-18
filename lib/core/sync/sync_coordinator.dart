@@ -84,8 +84,10 @@ class SyncCoordinator extends _$SyncCoordinator {
     }
   }
 
-  /// Runs the first cycle (with catalog). Call once after the bootstrap; the
+  /// Runs the first cycle (with catalog) and returns its future so a caller can
+  /// await the initial pull (e.g. post-sign-in routing needs the just-pulled
+  /// profile before deciding the route). Call once after the bootstrap; the
   /// reconnect/periodic/push-on-save triggers are wired in [build].
-  void start() =>
-      unawaited(ref.read(syncServiceProvider).sync(includeCatalog: true));
+  Future<void> start() =>
+      ref.read(syncServiceProvider).sync(includeCatalog: true);
 }
