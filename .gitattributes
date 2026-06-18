@@ -1,0 +1,3 @@
+# Git hooks must keep LF line endings so the `#!/bin/sh` shebang works when
+# executed by Git Bash on Windows (a CRLF shebang fails with "/bin/sh^M").
+hooks/** text eol=lf
