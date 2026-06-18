@@ -11,10 +11,6 @@ import 'h3_cells.dart';
 
 part 'location_repository.g.dart';
 
-/// A garden coordinate pair — stored device-local, used only for the weather
-/// lookup. Never synced.
-typedef GardenCoords = ({double latitude, double longitude});
-
 /// The garden location, split by privacy: raw coordinates stay device-local
 /// (for the weather lookup), only the derived H3 cells reach profile → cloud.
 class LocationRepository {
