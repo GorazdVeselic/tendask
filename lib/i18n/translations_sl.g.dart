@@ -314,6 +314,7 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get no_results => 'Za ta kraj ni zadetkov.';
 	@override String get screen_title => 'Lokacija vrta';
 	@override String get status_set => 'Lokacija je nastavljena';
+	@override String status_set_at({required Object name}) => 'Lokacija je nastavljena · ${name}';
 	@override String get status_unset => 'Lokacija še ni nastavljena';
 	@override String get clear => 'Odstrani lokacijo';
 	@override String get clear_confirm_title => 'Odstranim lokacijo?';
@@ -881,6 +882,7 @@ extension on TranslationsSl {
 			'location.no_results' => 'Za ta kraj ni zadetkov.',
 			'location.screen_title' => 'Lokacija vrta',
 			'location.status_set' => 'Lokacija je nastavljena',
+			'location.status_set_at' => ({required Object name}) => 'Lokacija je nastavljena · ${name}',
 			'location.status_unset' => 'Lokacija še ni nastavljena',
 			'location.clear' => 'Odstrani lokacijo',
 			'location.clear_confirm_title' => 'Odstranim lokacijo?',

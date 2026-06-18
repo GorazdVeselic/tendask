@@ -7,6 +7,7 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
+import '../../../core/location/place_label_repository.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
@@ -173,6 +174,15 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     // tap. From the onboarding/login flow (go): no back, a "Continue" button
     // advances to home.
     final fromSettings = context.canPop();
+    // The resolved place name for the current cell (same source as the weather
+    // card), shown in the status banner when set; null until resolved/offline.
+    final placeName = _isSet
+        ? ref
+              .watch(
+                placeLabelProvider(LocaleSettings.currentLocale.languageCode),
+              )
+              .value
+        : null;
 
     return Scaffold(
       appBar: fromSettings
@@ -196,6 +206,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                   children: [
                     _StatusBanner(
                       isSet: _isSet,
+                      placeName: placeName,
                       onClear: _isSet ? _clear : null,
                     ),
                     const SizedBox(height: 4),
@@ -283,9 +294,12 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
 /// Shows whether a garden location is already set, with an inline remove action
 /// when it is. Calm by design: set = green, unset = amber (attention, not error).
 class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.isSet, this.onClear});
+  const _StatusBanner({required this.isSet, this.placeName, this.onClear});
 
   final bool isSet;
+
+  /// The resolved place name, shown next to "set" when available.
+  final String? placeName;
   final VoidCallback? onClear;
 
   @override
@@ -294,6 +308,14 @@ class _StatusBanner extends StatelessWidget {
     final theme = Theme.of(context);
     final bg = isSet ? AppColors.soft : AppColors.warnSoft;
     final fg = isSet ? AppColors.green900 : AppColors.warn;
+    final String label;
+    if (!isSet) {
+      label = t.location.status_unset;
+    } else if (placeName != null) {
+      label = t.location.status_set_at(name: placeName!);
+    } else {
+      label = t.location.status_set;
+    }
     return Container(
       padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
       decoration: BoxDecoration(
@@ -310,7 +332,7 @@ class _StatusBanner extends StatelessWidget {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              isSet ? t.location.status_set : t.location.status_unset,
+              label,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: fg,
                 fontWeight: FontWeight.w600,

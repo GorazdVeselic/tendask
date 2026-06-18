@@ -155,6 +155,7 @@
     "no_results": "Za ta kraj ni zadetkov.",
     "screen_title": "Lokacija vrta",
     "status_set": "Lokacija je nastavljena",
+    "status_set_at": "Lokacija je nastavljena · $name",
     "status_unset": "Lokacija še ni nastavljena",
     "clear": "Odstrani lokacijo",
     "clear_confirm_title": "Odstranim lokacijo?",

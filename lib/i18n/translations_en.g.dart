@@ -566,6 +566,9 @@ class Translations$location$en {
 	/// en: 'Location is set'
 	String get status_set => 'Location is set';
 
+	/// en: 'Location is set · $name'
+	String status_set_at({required Object name}) => 'Location is set · ${name}';
+
 	/// en: 'Location not set yet'
 	String get status_unset => 'Location not set yet';
 
@@ -1718,6 +1721,7 @@ extension on Translations {
 			'location.no_results' => 'No matches for that place.',
 			'location.screen_title' => 'Garden location',
 			'location.status_set' => 'Location is set',
+			'location.status_set_at' => ({required Object name}) => 'Location is set · ${name}',
 			'location.status_unset' => 'Location not set yet',
 			'location.clear' => 'Remove location',
 			'location.clear_confirm_title' => 'Remove location?',

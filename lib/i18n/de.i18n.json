@@ -153,6 +153,7 @@
     "no_results": "Keine Treffer für diesen Ort.",
     "screen_title": "Gartenstandort",
     "status_set": "Standort ist festgelegt",
+    "status_set_at": "Standort ist festgelegt · $name",
     "status_unset": "Standort noch nicht festgelegt",
     "clear": "Standort entfernen",
     "clear_confirm_title": "Standort entfernen?",

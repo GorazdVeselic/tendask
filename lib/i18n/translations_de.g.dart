@@ -312,6 +312,7 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get no_results => 'Keine Treffer für diesen Ort.';
 	@override String get screen_title => 'Gartenstandort';
 	@override String get status_set => 'Standort ist festgelegt';
+	@override String status_set_at({required Object name}) => 'Standort ist festgelegt · ${name}';
 	@override String get status_unset => 'Standort noch nicht festgelegt';
 	@override String get clear => 'Standort entfernen';
 	@override String get clear_confirm_title => 'Standort entfernen?';
@@ -875,6 +876,7 @@ extension on TranslationsDe {
 			'location.no_results' => 'Keine Treffer für diesen Ort.',
 			'location.screen_title' => 'Gartenstandort',
 			'location.status_set' => 'Standort ist festgelegt',
+			'location.status_set_at' => ({required Object name}) => 'Standort ist festgelegt · ${name}',
 			'location.status_unset' => 'Standort noch nicht festgelegt',
 			'location.clear' => 'Standort entfernen',
 			'location.clear_confirm_title' => 'Standort entfernen?',

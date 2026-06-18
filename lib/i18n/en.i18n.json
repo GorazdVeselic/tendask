@@ -153,6 +153,7 @@
     "no_results": "No matches for that place.",
     "screen_title": "Garden location",
     "status_set": "Location is set",
+    "status_set_at": "Location is set · $name",
     "status_unset": "Location not set yet",
     "clear": "Remove location",
     "clear_confirm_title": "Remove location?",
