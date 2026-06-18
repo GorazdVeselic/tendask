@@ -101,6 +101,47 @@ final class LocationRepositoryProvider
 String _$locationRepositoryHash() =>
     r'4b6927e710ae6da1cb8731f58a227abde192fdb6';
 
+/// The stored r7 cell (hex), reactive — null until a location is set. Used both
+/// to derive the weather centroid and to key the place-label cache (FR-12).
+
+@ProviderFor(gardenCell)
+final gardenCellProvider = GardenCellProvider._();
+
+/// The stored r7 cell (hex), reactive — null until a location is set. Used both
+/// to derive the weather centroid and to key the place-label cache (FR-12).
+
+final class GardenCellProvider
+    extends $FunctionalProvider<AsyncValue<String?>, String?, Stream<String?>>
+    with $FutureModifier<String?>, $StreamProvider<String?> {
+  /// The stored r7 cell (hex), reactive — null until a location is set. Used both
+  /// to derive the weather centroid and to key the place-label cache (FR-12).
+  GardenCellProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'gardenCellProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$gardenCellHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<String?> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<String?> create(Ref ref) {
+    return gardenCell(ref);
+  }
+}
+
+String _$gardenCellHash() => r'c29ee5305c07382866105fa04a3aaf9dfe2e6075';
+
 /// The garden location for the weather lookup: the centroid of the stored r7
 /// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
 /// weather re-fetches when the user picks or clears a location.
@@ -149,4 +190,4 @@ final class GardenLocationProvider
   }
 }
 
-String _$gardenLocationHash() => r'5aa71f1d75e7f25134e9e56e03f4da806edb40c2';
+String _$gardenLocationHash() => r'd0fe15a035f7e9b569a6cfe148bf3136499e4afd';

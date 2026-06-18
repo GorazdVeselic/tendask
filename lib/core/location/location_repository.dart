@@ -110,6 +110,12 @@ H3 h3(Ref ref) => const H3Factory().load();
 LocationRepository locationRepository(Ref ref) =>
     LocationRepository(ref.watch(databaseProvider), ref.watch(h3Provider));
 
+/// The stored r7 cell (hex), reactive — null until a location is set. Used both
+/// to derive the weather centroid and to key the place-label cache (FR-12).
+@Riverpod(keepAlive: true)
+Stream<String?> gardenCell(Ref ref) =>
+    ref.watch(locationRepositoryProvider).watchGardenCell();
+
 /// The garden location for the weather lookup: the centroid of the stored r7
 /// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
 /// weather re-fetches when the user picks or clears a location.

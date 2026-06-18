@@ -84,11 +84,17 @@ class WeatherSnapshotCard extends StatelessWidget {
 }
 
 /// Compact live-weather card for the dashboard: current conditions + a short
-/// forecast strip. [snapshot] is null when offline → a quiet hint.
+/// forecast strip. [snapshot] is null when offline → a quiet hint. [placeLabel]
+/// is the nearby place name (FR-12), shown as a quiet context header when known.
 class CurrentWeatherCard extends StatelessWidget {
-  const CurrentWeatherCard({super.key, required this.snapshot});
+  const CurrentWeatherCard({
+    super.key,
+    required this.snapshot,
+    this.placeLabel,
+  });
 
   final WeatherSnapshot? snapshot;
+  final String? placeLabel;
 
   @override
   Widget build(BuildContext context) {
@@ -145,6 +151,10 @@ class CurrentWeatherCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            if (placeLabel != null) ...[
+              _PlaceHeader(placeLabel!),
+              const SizedBox(height: 6),
+            ],
             Row(
               children: [
                 Text(
@@ -189,6 +199,34 @@ class CurrentWeatherCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+/// Quiet "for which place" header on the weather card (FR-12): a small pin +
+/// the nearby place name, so the user knows which location the weather is for.
+class _PlaceHeader extends StatelessWidget {
+  const _PlaceHeader(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final muted = theme.colorScheme.onSurfaceVariant;
+    return Row(
+      children: [
+        Icon(Icons.place_outlined, size: 14, color: muted),
+        const SizedBox(width: 4),
+        Expanded(
+          child: Text(
+            label,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: theme.textTheme.labelMedium?.copyWith(color: muted),
+          ),
+        ),
+      ],
     );
   }
 }

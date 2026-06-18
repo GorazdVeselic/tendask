@@ -43,6 +43,17 @@ const kRecentPlantsLimit = 8;
 const kWeatherConnectTimeout = Duration(seconds: 10);
 const kWeatherReceiveTimeout = Duration(seconds: 20);
 
+/// Reverse geocoding (FR-12): turns the garden cell centroid into a nearby place
+/// name shown on the weather card. We send only the centroid (≤ ~1.4 km, the same
+/// approximate point already sent to Open-Meteo) — never raw coordinates. zoom 12
+/// targets the town/village level (a useful "for which place" label, not a street
+/// address). The User-Agent identifies the app per the OSM Nominatim usage policy
+/// (required); requests are rare (only when the cell changes) and cached locally.
+const kNominatimReverseUrl = 'https://nominatim.openstreetmap.org/reverse';
+const kReverseGeoZoom = 12;
+const kReverseGeoUserAgent =
+    'Tendask/1.0 (+https://tendask.com; gorazd@spletnakoda.si)';
+
 /// Periodic background sync cadence while the app is running. Sync is
 /// incremental and light; the catalog (rarely changes) is pulled only on
 /// startup/reconnect, not on every tick — keeps the garden device's data and
