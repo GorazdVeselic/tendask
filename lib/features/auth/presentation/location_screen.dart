@@ -24,6 +24,9 @@ class LocationScreen extends ConsumerStatefulWidget {
 
 class _LocationScreenState extends ConsumerState<LocationScreen> {
   final _searchController = TextEditingController();
+  // Lets us scroll the search card up to the top of the (keyboard-shrunk)
+  // viewport once results arrive, so the matches aren't hidden by the keyboard.
+  final _entryCardKey = GlobalKey();
   bool _loading = false;
   bool _isSet = false;
   String? _error;
@@ -103,12 +106,28 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
         _results = results;
         if (results.isEmpty) _error = t.location.no_results;
       });
+      if (results.isNotEmpty) _scrollEntryCardToTop();
     } on Object {
       if (!mounted) return;
       setState(() => _error = t.location.err_search);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
+  }
+
+  /// After matches render, align the search card to the top of the visible area
+  /// (the viewport is already shrunk above the keyboard) so the list shows.
+  void _scrollEntryCardToTop() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final ctx = _entryCardKey.currentContext;
+      if (ctx == null) return;
+      Scrollable.ensureVisible(
+        ctx,
+        alignment: 0,
+        duration: const Duration(milliseconds: 250),
+        curve: Curves.easeOut,
+      );
+    });
   }
 
   Future<void> _selectPlace(GeoPlace place) async {
@@ -213,6 +232,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     // Manual entry on top — typing a place name is the most
                     // universally understood action; GPS is the alternative.
                     _EnterPlaceCard(
+                      key: _entryCardKey,
                       controller: _searchController,
                       loading: _loading,
                       onSearch: _search,
@@ -350,6 +370,7 @@ class _PrivacyNote extends StatelessWidget {
 /// render inline below the field; tapping one saves it.
 class _EnterPlaceCard extends StatelessWidget {
   const _EnterPlaceCard({
+    super.key,
     required this.controller,
     required this.loading,
     required this.onSearch,
