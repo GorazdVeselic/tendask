@@ -76,7 +76,7 @@
     <button data-lang="en">English</button>
     <button data-lang="de">Deutsch</button>
   </div>
-  <p class="meta">Datum uveljavitve / Effective date / Datum des Inkrafttretens: 2026-06-09 · v1.0</p>
+  <p class="meta">Datum uveljavitve / Effective date / Datum des Inkrafttretens: 2026-06-18 · v1.1</p>
 
   <!-- ================= SLOVENŠČINA ================= -->
   <section class="lang active" id="sl">
@@ -90,10 +90,11 @@
       <p>Tendask je vrtnarska evidenčna aplikacija, ki deluje <strong>offline-first</strong> — tvoji
       podatki živijo najprej na napravi. V oblak (Supabase, strežniki v EU) se sinhronizirajo le, če
       se prijaviš z računom; brez prijave ostanejo izključno na napravi.</p>
-      <p><strong>Tvoje natančne lokacijske koordinate (GPS) nikoli ne zapustijo naprave za
-      shranjevanje.</strong> Iz koordinat na napravi izračunamo le približno celico (sistem H3,
-      ločljivost ~1 km) in v oblak shranimo <strong>samo to celico</strong>, nikoli surovih
-      koordinat. (Izjema je vremenska storitev — glej §5.)</p>
+      <p><strong>Tvoje natančne koordinate (GPS) se nikoli ne shranijo — niti na napravi.</strong>
+      Iz trenutne lokacije na napravi izračunamo le približno celico (sistem H3, ločljivost ~1 km) in
+      koordinate takoj zavržemo; v oblak shranimo <strong>samo to celico</strong>. Tudi za vreme se
+      navzven pošlje le <strong>približno središče celice</strong> (~1 km natančnosti), nikoli tvoja
+      točna lokacija (glej §5).</p>
     </article>
     <article>
       <h2><span class="num">3.</span>Kateri podatki se obdelujejo</h2>
@@ -103,7 +104,7 @@
         <li><strong>Vsebina vrta:</strong> opravila, območja, rastline, opombe, opomniki, nastavitve
         obvestil. Brez prijave samo na napravi; ob prijavi sinhronizacija v oblak.</li>
         <li><strong>Približna lokacija:</strong> celice H3 (≈ 1 km in širše), izpeljane na napravi.
-        Natančne koordinate so shranjene <strong>samo lokalno</strong> in se uporabljajo le za vreme.</li>
+        Natančne koordinate se <strong>ne shranjujejo</strong>; za vreme se uporabi le središče celice.</li>
         <li><strong>Diagnostični podatki (Sentry):</strong> ob napaki poročilo o napaki, sled klicev,
         različica aplikacije ter tip naprave/OS. Za stabilnost, ne identifikacijo.</li>
       </ul>
@@ -122,8 +123,9 @@
       <ul>
         <li><strong>Supabase</strong> (avtentikacija in baza), strežniki v <strong>EU (Frankfurt)</strong>.
         Shranjuje: e-pošto, celice H3, vsebino vrta, nastavitve obvestil. Koordinate se ne pošiljajo.</li>
-        <li><strong>Open-Meteo</strong> (vreme in geokodiranje). Ob vremenu se pošljejo <strong>natančne
-        koordinate</strong>, ob iskanju kraja vpisano ime kraja. Podatki se ne hranijo; brez računa.</li>
+        <li><strong>Open-Meteo</strong> (vreme in geokodiranje). Ob vremenu se pošlje le <strong>približno
+        središče celice</strong> (~1 km), ne natančne lokacije; ob iskanju kraja vpisano ime kraja.
+        Podatki se ne hranijo; brez računa.</li>
         <li><strong>Sentry</strong> (diagnostika napak). Lahko obdeluje podatke izven EU (ZDA) na podlagi
         standardnih pogodbenih klavzul.</li>
         <li><strong>Google</strong> (prijava z Google računom — neobvezno). Izmenjava prijavnega žetona.</li>
@@ -173,10 +175,11 @@
       <p>Tendask is a garden-logging app that is <strong>offline-first</strong> — your data lives on your
       device first. It is synced to the cloud (Supabase, servers in the EU) only if you sign in with an
       account; without an account it stays solely on your device.</p>
-      <p><strong>Your precise location coordinates (GPS) never leave the device for storage.</strong> From
-      the coordinates we compute only an approximate cell on-device (H3 system, ~1 km resolution) and
-      store <strong>only that cell</strong> in the cloud — never raw coordinates. (The weather service is
-      an exception — see §5.)</p>
+      <p><strong>Your precise coordinates (GPS) are never stored — not even on the device.</strong> From
+      your current location the app derives only an approximate cell on-device (H3 system, ~1 km
+      resolution) and immediately discards the coordinates; only that cell is stored in the cloud. Even
+      for weather, only the <strong>approximate centre of your cell</strong> (~1 km accuracy) is sent out
+      — never your exact location (see §5).</p>
     </article>
     <article>
       <h2><span class="num">3.</span>Data we process</h2>
@@ -186,7 +189,7 @@
         <li><strong>Garden content:</strong> tasks, areas, plants, notes, reminders, notification
         settings. Without an account this stays on the device; when signed in it syncs to the cloud.</li>
         <li><strong>Approximate location:</strong> H3 cells (≈ 1 km and coarser), derived on-device.
-        Precise coordinates are stored <strong>locally only</strong> and used solely for weather.</li>
+        Precise coordinates are <strong>not stored</strong>; weather uses only the cell centre.</li>
         <li><strong>Diagnostic data (Sentry):</strong> on an error, an error report, stack trace, app
         version and device/OS type. For stability, not identification.</li>
       </ul>
@@ -206,9 +209,9 @@
         <li><strong>Supabase</strong> (authentication and database), servers in the
         <strong>EU (Frankfurt)</strong>. Stores: email, H3 cells, garden content, notification settings.
         No coordinates are sent.</li>
-        <li><strong>Open-Meteo</strong> (weather and geocoding). Fetching weather sends <strong>precise
-        coordinates</strong>; searching a place sends the typed place name. Data is not retained; no
-        account.</li>
+        <li><strong>Open-Meteo</strong> (weather and geocoding). Fetching weather sends only the
+        <strong>approximate centre of your cell</strong> (~1 km), not your precise location; searching a
+        place sends the typed place name. Data is not retained; no account.</li>
         <li><strong>Sentry</strong> (error diagnostics). May process data outside the EU (US) under
         Standard Contractual Clauses.</li>
         <li><strong>Google</strong> (Google sign-in — optional). Performs a token exchange.</li>
@@ -259,10 +262,12 @@
       Daten liegen zuerst auf Ihrem Gerät. Eine Synchronisierung in die Cloud (Supabase, Server in der EU)
       erfolgt nur, wenn Sie sich mit einem Konto anmelden; ohne Konto bleiben sie ausschließlich auf dem
       Gerät.</p>
-      <p><strong>Ihre genauen Standortkoordinaten (GPS) verlassen das Gerät niemals zur
-      Speicherung.</strong> Aus den Koordinaten berechnen wir auf dem Gerät nur eine ungefähre Zelle
-      (H3-System, ~1 km Auflösung) und speichern <strong>nur diese Zelle</strong> in der Cloud — niemals
-      Rohkoordinaten. (Ausnahme: der Wetterdienst — siehe §5.)</p>
+      <p><strong>Ihre genauen Koordinaten (GPS) werden niemals gespeichert — auch nicht auf dem
+      Gerät.</strong> Aus Ihrem aktuellen Standort berechnet die App auf dem Gerät nur eine ungefähre
+      Zelle (H3-System, ~1 km Auflösung) und verwirft die Koordinaten sofort; in der Cloud wird
+      <strong>nur diese Zelle</strong> gespeichert. Auch für das Wetter wird nach außen nur der
+      <strong>ungefähre Mittelpunkt der Zelle</strong> (~1 km Genauigkeit) gesendet, niemals Ihr genauer
+      Standort (siehe §5).</p>
     </article>
     <article>
       <h2><span class="num">3.</span>Verarbeitete Daten</h2>
@@ -273,8 +278,8 @@
         Benachrichtigungseinstellungen. Ohne Konto nur auf dem Gerät; bei Anmeldung Synchronisierung in
         die Cloud.</li>
         <li><strong>Ungefährer Standort:</strong> H3-Zellen (≈ 1 km und gröber), auf dem Gerät abgeleitet.
-        Genaue Koordinaten werden <strong>nur lokal</strong> gespeichert und ausschließlich für das Wetter
-        verwendet.</li>
+        Genaue Koordinaten werden <strong>nicht gespeichert</strong>; für das Wetter wird nur der
+        Zellenmittelpunkt verwendet.</li>
         <li><strong>Diagnosedaten (Sentry):</strong> bei einem Fehler ein Fehlerbericht, Stacktrace,
         App-Version sowie Geräte-/OS-Typ. Für Stabilität, nicht Identifizierung.</li>
       </ul>
@@ -295,9 +300,9 @@
         <li><strong>Supabase</strong> (Authentifizierung und Datenbank), Server in der
         <strong>EU (Frankfurt)</strong>. Speichert: E-Mail, H3-Zellen, Garteninhalte,
         Benachrichtigungseinstellungen. Es werden keine Koordinaten gesendet.</li>
-        <li><strong>Open-Meteo</strong> (Wetter und Geokodierung). Beim Wetter werden <strong>genaue
-        Koordinaten</strong> gesendet, bei der Ortssuche der eingegebene Ortsname. Die Daten werden nicht
-        gespeichert; kein Konto.</li>
+        <li><strong>Open-Meteo</strong> (Wetter und Geokodierung). Beim Wetter wird nur der
+        <strong>ungefähre Mittelpunkt Ihrer Zelle</strong> (~1 km) gesendet, nicht Ihr genauer Standort;
+        bei der Ortssuche der eingegebene Ortsname. Die Daten werden nicht gespeichert; kein Konto.</li>
         <li><strong>Sentry</strong> (Fehlerdiagnose). Kann Daten außerhalb der EU (USA) auf Grundlage von
         Standardvertragsklauseln verarbeiten.</li>
         <li><strong>Google</strong> (Google-Anmeldung — optional). Token-Austausch.</li>

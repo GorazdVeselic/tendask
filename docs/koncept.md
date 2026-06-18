@@ -188,11 +188,14 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 ### Lokacija & profil
 - **Ena sama lokacija = lastnost uporabnikovega profila.** Iz nje izhajata lokalno
   vreme in (V2) **H3-celica**. Vsa območja podedujejo to lokacijo.
-- v1: shranimo uporabnikovo lokacijo (za vreme). H3 izpeljemo kasneje.
+- **FR-8 (2026-06-18):** ob izbiri lokacije iz trenutnih koordinat izpeljemo le
+  **H3-celico (r7/r6/r5)** in koordinate **takoj zavržemo** — surovih koordinat ne
+  hranimo niti na napravi. Vreme bere **centroid celice** (`cellToLatLng(profile.h3_r7)`),
+  ne surove točke; r7 rob ~1,2 km je pod ločljivostjo Open-Meteo mreže (sklep BUG-002).
 - V2 H3-resolucija (popravljeno 8. krog): **res-7** (~5 km², vas/soseska) je
   **najfinejša prikazana** raven. **res-8** (~0,7 km²) je **preveč granularno /
   identificirajoče → opuščeno** (prej napačno zapisano kot "adaptivno navzdol na res-8").
-  Točko lahko hranimo natančno (zasebno, na napravi), a navzven nikoli pod res-7.
+  Navzven nikoli pod res-7; po FR-8 tudi za vreme ven gre le centroid r7.
   Za iskanje sosedov/opravil v širši okolici **agregiramo NAVZGOR** na starševski
   **res-6** (~36 km²) in **res-5** (~252 km²), ko je gostota pri res-7 premajhna
   → cold-start rešujemo z roll-upom v grobejše celice, ne s prefino delitvijo.
@@ -337,8 +340,9 @@ SUBJEKT  = rastlina ALI območje   (M:N — POPRAVEK 2026-06-03, glej §7.15)
 - **Prenova (2026-06-08, wireframe `16b-location.html`):** zaslon ima **dva vstopa** — iz Nastavitev
   (back gumb, izbira se **samodejno shrani** + toast, brez spodnjega gumba) in iz onboarding/prijave
   (brez back, gumb »Nadaljuj« → Domov). Zgoraj **statusni pas** pokaže, ali je lokacija že nastavljena.
-  Gumb **»Odstrani lokacijo«** (le ko je nastavljena) s potrditvijo počisti koordinate (device-local) +
-  H3 celice v profilu → vreme pade na privzeto območje (`clearGardenLocation`).
+  Gumb **»Odstrani lokacijo«** (le ko je nastavljena) s potrditvijo počisti H3 celice v profilu →
+  vreme pade na privzeto območje (`clearGardenLocation`). **FR-8:** surovih koordinat ni več (ne
+  device-local); »nastavljena« = `profile.h3_r7` ni null, vreme bere centroid te celice.
 
 ### Onboarding
 - 3–4 drsniki (Dobrodošel · Hitro beleženje · Opomniki+vreme · (V2) Okolica) z

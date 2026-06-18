@@ -347,8 +347,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   uporabi centroid celice (`cellToLatLng`), ne koordinat. **Faznost:** MVP = lokalni hibrid + kompaktiranje
   blob-a; shared cloud `weather_observation` + cross-user dedup + cron = V2 (skala). Posledica: posodobi
   `koncept.md` §7.9/§7.10 (frozen → hibrid) ob implementaciji. Opozorilo: Open-Meteo pri 10k = komercialna raba.
-- **FR-8 — Lokacija prek centroida `h3_r7` namesto surovih koordinat.** 📝 **Potrjeno z uporabnikom
-  2026-06-12, PREDNOSTNO parkirano (po M11.7 ali po M11 fazi B).** Surove GPS koordinate danes živijo
+- **FR-8 — Lokacija prek centroida `h3_r7` namesto surovih koordinat.** ✅ **Implementirano
+  2026-06-18 na `feat/fr8-h3-centroid`** (gl. dnevnik). Vreme + routing bereta centroid celice;
+  `device_location` tabela odstranjena (drift v9); dovoljenje COARSE-only; pravni/Play/i18n osnutki
+  usklajeni. Ostane 👤: Play Data Safety obrazec + redeploy privacy v1.1. Spodaj prvotna spec. Surove GPS koordinate danes živijo
   device-local (`device_location`) samo zato, da vreme in post-sign-in usmerjanje dobita točko — ampak
   r7 celica ima rob ~1,2 km (centroid ≤ ~1,4 km od vrta), kar je **pod ločljivostjo Open-Meteo mreže**
   (1–11 km), in ClimateService (M11.3) centroid že uporablja. Sprememba: (1) vreme (dashboard +
@@ -421,6 +423,21 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-18 — **FR-8: lokacija prek centroida `h3_r7` (`feat/fr8-h3-centroid`).** Surove koordinate
+  se ne hranijo več (niti device-local); vreme + post-sign-in routing bereta **centroid celice**
+  `cellToLatLng(profile.h3_r7)`. Štirje code commiti: (1) `cellCentroid` helper + k-prefiks res
+  konstante (`h3_cells.dart`, uporablja `cellToGeo` — ne `cellToLatLng`, h3_common 0.7.0 API); (2)
+  koordinatno-prosti `LocationRepository` + centroid `gardenLocation` provider, ki bere **eno
+  profilno vrstico brez userId filtra** (lokalna baza ima vedno eno — izogne se ne-reaktivnemu
+  `authServiceProvider.userId`); (3) routing počaka na **prvi pull** (5 s timeout + fallback na
+  lokalno celico), ker `clearUserData` ob odjavi izbriše profil → `start()` zdaj vrne future
+  (BUG-002 fix); (4) drop `device_location` (drift v8→v9, v6 createTable → raw SQL), `ACCESS_FINE_LOCATION`
+  odstranjen (COARSE zadošča). Testi: h3_cells (fake H3 — FFI se ne naloži v host testu), location_repo,
+  post_sign_in_navigation (5 scenarijev), migration v8→v9; **203/203 zelenih, analyze čist.** Plus
+  doc/pravno (commit 5): privacy-policy `.md`+`.html` v1.1 (SL/EN/DE — koordinate se ne shranijo,
+  Open-Meteo dobi centroid), play-data-safety v1.1 (precise→ni zbran, approximate→Shared), koncept
+  §7.7/§7.10, tech-stack §5, play-console-status. **Ostane 👤:** Play Data Safety obrazec + redeploy
+  privacy v1.1 na netlify; on-device verifikacija (odjava→prijava ne pokaže lokacije).
 - 2026-06-16 — **FR-11: varnost prijave / OTP hardening (`feat/auth-hardening`).** Dva commita
   (`9e54e4e`, `afbc4dd`). **Pure logika** (`features/auth/data/`): `email_validation.dart` =
   format check (pragmatičen regex + RFC 5321 dolžinske meje) + `suggestEmailFix` did-you-mean prek

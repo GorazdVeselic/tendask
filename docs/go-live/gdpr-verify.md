@@ -18,7 +18,8 @@
 3. **Preveri vsebino JSON:**
    - ✅ vsebuje: `profile`, `area`, `user_plant`, `task` (+ `task_subject`/`reminder`/`note`/
      `supply`/`recipe`/`task_supply`).
-   - ✅ **NE vsebuje** `device_location` (surovih koordinat) niti internega `sync_status`.
+   - ✅ **NE vsebuje** surovih koordinat (od FR-8 se sploh ne hranijo — tabela `device_location`
+     odstranjena; le H3 celice v `profile`) niti internega `sync_status`.
 4. Pri gostu (brez prijave): izvoz dela lokalno (ni oblačnega računa).
 
 ## B) Izbris računa (RPC počisti oblak)

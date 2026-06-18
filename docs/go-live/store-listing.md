@@ -71,7 +71,7 @@ Deluje brez signala:
 Tendask je zasnovan »offline-first« – deluje tudi sredi vrta brez povezave. Podatki so najprej na tvoji napravi; če se prijaviš, se varno sinhronizirajo v oblak, da jih ne izgubiš ob menjavi telefona.
 
 Zasebnost po zasnovi:
-Tvoje natančne koordinate nikoli ne zapustijo naprave za shranjevanje – za vreme uporabljamo le približno območje. Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
+Tvoje natančne koordinate se nikoli ne shranijo – za vreme uporabljamo le približno območje (~1 km). Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
 Politika zasebnosti: https://tendask.netlify.app/
 
 Brezplačno in brez oglasov.

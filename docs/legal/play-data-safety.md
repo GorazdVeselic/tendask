@@ -1,9 +1,14 @@
 # Tendask — Play Console »Data Safety« mapiranje
 
-> **Osnutek za pregled (2026-06-09).** Pripravljeni odgovori za Play Console → App content →
-> **Data safety** obrazec. Vsaka vrstica = en podatkovni tip v Googlovem obrazcu, z razlago, zakaj
-> tak odgovor. **Vir resnice za dejstva = `privacy-policy.md` + koda** (Open-Meteo dobi koordinate;
-> v oblak gre le H3; Supabase EU; Sentry diagnostika; Google/Resend).
+> **Osnutek za pregled (2026-06-18, v1.1 — FR-8).** Pripravljeni odgovori za Play Console →
+> App content → **Data safety** obrazec. Vsaka vrstica = en podatkovni tip v Googlovem obrazcu, z
+> razlago, zakaj tak odgovor. **Vir resnice za dejstva = `privacy-policy.md` + koda** (Open-Meteo
+> dobi le **približno središče celice ~1 km**, ne natančnih koordinat; surove koordinate se nikoli
+> ne shranijo; v oblak gre le H3; Supabase EU; Sentry diagnostika; Google/Resend).
+>
+> **🔁 Sprememba glede na v1.0 (👤 popravi v konzoli):** **Precise location** ni več zbran/deljen
+> (app zahteva le COARSE dovoljenje, surovih koordinat ne hrani); **Approximate location** postane
+> _Shared_ (centroid celice → Open-Meteo).
 >
 > Legenda stolpcev (kot v obrazcu): **Collected** = podatek zapusti napravo (na naš strežnik / se
 > hrani) · **Shared** = preneseno tretji osebi · **Ephemeral** = obdelan le v pomnilniku za zahtevo,
@@ -27,13 +32,13 @@
 
 | Tip | Collected | Shared | Ephemeral | Required/Optional | Namen (purposes) | Pojasnilo |
 |---|---|---|---|---|---|---|
-| **Approximate location** | **Yes** | No | No | **Optional** | App functionality | V oblak (Supabase, EU) shranimo le celico **H3 (~1 km)**, ne koordinat. Le ob prijavi + dovoljenju za lokacijo. |
-| **Precise location** | **Yes** | **Yes** | **Yes** | **Optional** | App functionality | Natančne koordinate gredo **samo Open-Meteo** za vreme; **ne shranimo jih** (ne lokalno za prenos, ne v oblak). Zato shared+ephemeral. |
+| **Approximate location** | **Yes** | **Yes** | No | **Optional** | App functionality | V oblak (Supabase, EU) shranimo le celico **H3 (~1 km)**, ne koordinat (zato Collected, ne Ephemeral). Za vreme se **središče celice** (~1 km) pošlje Open-Meteo → zato **Shared**. Le ob prijavi/dovoljenju. |
+| **Precise location** | **No** | **No** | — | — | — | App zahteva le **COARSE** dovoljenje in surovih koordinat nikoli ne hrani niti ne pošlje (vreme dobi le centroid celice). Natančne lokacije torej ne zbiramo. |
 
-> ⚠️ **Edina prava presoja v tem obrazcu = precise location.** Koordinate ne zapustijo naprave za
-> _shranjevanje_, a se _pošljejo_ Open-Meteo ob vsakem vremenskem klicu. Pošteno (in skladno z
-> Googlovo definicijo »collected« = zapusti napravo) je to prijaviti kot **Collected: Yes, Shared:
-> Yes (Open-Meteo), Processed ephemerally: Yes**. Tako se ujema s politiko zasebnosti §2/§5.
+> ⚠️ **Po FR-8 je to poštena slika:** app nima več `ACCESS_FINE_LOCATION`, surovih GPS koordinat
+> ne shrani (niti lokalno) in navzven pošlje le **približno središče celice** (~1 km). Zato je
+> **precise location = ne zbrano**, **approximate location = Collected (H3 v Supabase) + Shared
+> (centroid → Open-Meteo)**. Ujema se s politiko zasebnosti §2/§3/§5.
 
 ### Personal info
 
@@ -71,12 +76,13 @@
 ## 4. Povzetek za hitro izpolnjevanje
 
 - **Email, User IDs** → collected, NOT shared, optional, account management.
-- **Approximate location** → collected (H3), NOT shared, optional, app functionality.
-- **Precise location** → collected + **shared (Open-Meteo)** + **ephemeral**, optional, app functionality.
+- **Approximate location** → collected (H3) + **shared (Open-Meteo centroid)**, optional, app functionality.
+- **Precise location** → **NOT collected, NOT shared** (le COARSE dovoljenje; surovih koordinat ne hranimo).
 - **Crash logs + Diagnostics** → collected + **shared (Sentry)**, required, analytics.
 - **Vrtna vsebina** → collected (Other UGC), NOT shared, optional, app functionality.
 - **Encryption in transit: Yes · Deletion available: Yes.**
 
-> Tretje osebe, ki prejmejo podatke (za »shared«): **Open-Meteo** (precise location), **Sentry**
-> (crash/diagnostics). **Supabase** in **Resend** sta _obdelovalca_ v našem imenu (hramba/dostava),
-> ne »sharing« v Googlovem pomenu — Supabase shranjuje, zato so tipi »collected«.
+> Tretje osebe, ki prejmejo podatke (za »shared«): **Open-Meteo** (approximate location — centroid
+> celice), **Sentry** (crash/diagnostics). **Supabase** in **Resend** sta _obdelovalca_ v našem
+> imenu (hramba/dostava), ne »sharing« v Googlovem pomenu — Supabase shranjuje, zato so tipi
+> »collected«.

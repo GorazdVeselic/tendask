@@ -106,6 +106,10 @@ Vsaka uporabniška vrstica (`area`, `user_plant`, `task`, `task_reminder`, `note
 
 - `h3_flutter`: iz GPS koordinat izračunaj **celico res-7**, izpelji res-6 in res-5.
 - Shrani **samo celice** (`profile.h3_r7/r6/r5`), **nikoli surovih koordinat**.
+- **FR-8 (2026-06-18):** koordinate se po izpeljavi celice **takoj zavržejo** — ne shranijo se niti
+  device-local (tabela `device_location` odstranjena, drift v9). **Vreme** (dashboard + posnetek ob ✓)
+  in usmerjanje po prijavi berejo **centroid celice** `cellToLatLng(profile.h3_r7)`, ne surove točke;
+  dovoljenje je **COARSE-only** (r7 ~1,2 km zadošča). Open-Meteo torej dobi le približek, ne natančne lokacije.
 - **Grob klimatski koš** (`profile.climate_bucket`, višina×temp. pas) prav tako izračunan na
   napravi (višina iz Open-Meteo `elevation`); shrani le pas, ne višine — fallback za V2 cold-start.
 - V2 roll-up = navaden `GROUP BY` v Postgres (brez `h3-pg` razširitve). Glej §7.14.
