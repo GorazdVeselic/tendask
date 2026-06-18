@@ -8,6 +8,8 @@ import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/section_label.dart';
+import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Onboarding location step (wireframe 16). GPS via geolocator, or type a place
@@ -45,11 +47,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     setState(() => _isSet = cell != null);
   }
 
-  void _toast(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message), behavior: SnackBarBehavior.floating),
-    );
-  }
+  void _toast(String message) => showTopToast(context, message);
 
   Future<void> _save(double latitude, double longitude) async {
     final userId = ref.read(authServiceProvider).userId;
@@ -212,66 +210,23 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 24),
-                    SizedBox(
-                      height: 52,
-                      child: FilledButton.icon(
-                        onPressed: _loading ? null : _useGps,
-                        icon: const Icon(Icons.my_location, size: 20),
-                        label: Text(t.location.use_gps),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      children: [
-                        const Expanded(child: Divider()),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 12),
-                          child: Text(
-                            t.location.or_enter,
-                            style: theme.textTheme.bodySmall?.copyWith(
-                              color: cs.onSurfaceVariant,
-                            ),
-                          ),
-                        ),
-                        const Expanded(child: Divider()),
-                      ],
-                    ),
-                    const SizedBox(height: 12),
-                    TextField(
+                    // Manual entry on top — typing a place name is the most
+                    // universally understood action; GPS is the alternative.
+                    _EnterPlaceCard(
                       controller: _searchController,
-                      textInputAction: TextInputAction.search,
-                      decoration: InputDecoration(
-                        hintText: t.location.place_hint,
-                        suffixIcon: IconButton(
-                          icon: const Icon(Icons.search),
-                          onPressed: _loading ? null : _search,
-                        ),
-                      ),
-                      onSubmitted: (_) => _loading ? null : _search(),
+                      loading: _loading,
+                      onSearch: _search,
+                      results: _results,
+                      onSelect: _selectPlace,
                     ),
-                    const SizedBox(height: 6),
-                    Text(
-                      t.location.place_note,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
+                    const SizedBox(height: 14),
+                    const _OrDivider(),
+                    const SizedBox(height: 14),
+                    _GpsCard(loading: _loading, onTap: _useGps),
                     if (_loading) ...[
                       const SizedBox(height: 16),
                       const Center(child: CircularProgressIndicator()),
                     ],
-                    for (final place in _results)
-                      ListTile(
-                        leading: const Icon(Icons.place_outlined),
-                        title: Text(place.name),
-                        subtitle: Text(
-                          [
-                            place.admin1,
-                            place.country,
-                          ].whereType<String>().join(', '),
-                        ),
-                        onTap: () => _selectPlace(place),
-                      ),
                     if (_error != null) ...[
                       const SizedBox(height: 12),
                       Text(
@@ -387,6 +342,164 @@ class _PrivacyNote extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+/// Primary option: type a place name (Open-Meteo geocoding). Geocoded matches
+/// render inline below the field; tapping one saves it.
+class _EnterPlaceCard extends StatelessWidget {
+  const _EnterPlaceCard({
+    required this.controller,
+    required this.loading,
+    required this.onSearch,
+    required this.results,
+    required this.onSelect,
+  });
+
+  final TextEditingController controller;
+  final bool loading;
+  final VoidCallback onSearch;
+  final List<GeoPlace> results;
+  final ValueChanged<GeoPlace> onSelect;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return Container(
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        color: cs.surface,
+        border: Border.all(color: cs.primary, width: 1.5),
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          FieldLabel(t.location.enter_place),
+          TextField(
+            controller: controller,
+            textInputAction: TextInputAction.search,
+            decoration: InputDecoration(
+              hintText: t.location.place_hint,
+              suffixIcon: IconButton(
+                icon: const Icon(Icons.search),
+                onPressed: loading ? null : onSearch,
+              ),
+            ),
+            onSubmitted: (_) => loading ? null : onSearch(),
+          ),
+          const SizedBox(height: 6),
+          Text(
+            t.location.place_note,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: cs.onSurfaceVariant,
+            ),
+          ),
+          for (final place in results)
+            ListTile(
+              contentPadding: EdgeInsets.zero,
+              leading: const Icon(Icons.place_outlined),
+              title: Text(place.name),
+              subtitle: Text(
+                [place.admin1, place.country].whereType<String>().join(', '),
+              ),
+              onTap: () => onSelect(place),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Alternative option: let the device GPS fill in the location.
+class _GpsCard extends StatelessWidget {
+  const _GpsCard({required this.loading, required this.onTap});
+
+  final bool loading;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final cs = theme.colorScheme;
+    return Material(
+      color: cs.surface,
+      borderRadius: BorderRadius.circular(16),
+      child: InkWell(
+        borderRadius: BorderRadius.circular(16),
+        onTap: loading ? null : onTap,
+        child: Container(
+          padding: const EdgeInsets.all(14),
+          decoration: BoxDecoration(
+            border: Border.all(color: cs.outlineVariant),
+            borderRadius: BorderRadius.circular(16),
+          ),
+          child: Row(
+            children: [
+              Container(
+                width: 46,
+                height: 46,
+                decoration: BoxDecoration(
+                  color: cs.surfaceContainerHighest,
+                  borderRadius: BorderRadius.circular(14),
+                ),
+                child: Icon(Icons.my_location, color: cs.primary),
+              ),
+              const SizedBox(width: 13),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      t.location.use_gps,
+                      style: theme.textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    const SizedBox(height: 2),
+                    Text(
+                      t.location.gps_sub,
+                      style: theme.textTheme.bodySmall?.copyWith(
+                        color: cs.onSurfaceVariant,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+/// A centred "or" between the two location options.
+class _OrDivider extends StatelessWidget {
+  const _OrDivider();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      children: [
+        const Expanded(child: Divider()),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Text(
+            context.t.location.or,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ),
+        const Expanded(child: Divider()),
+      ],
     );
   }
 }

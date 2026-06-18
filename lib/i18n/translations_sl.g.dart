@@ -297,11 +297,13 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get title => 'Kje vrtnariš?';
 	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
 	@override String get use_gps => 'Uporabi mojo lokacijo';
-	@override String get or_enter => 'ali vpiši kraj';
+	@override String get enter_place => 'Vpiši kraj';
+	@override String get or => 'ali';
+	@override String get gps_sub => 'Samodejno z GPS naprave';
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
 	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
-	@override String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Tvoje natančne koordinate se ne shranijo — iz njih izračunamo le okvirno okolico in je nikoli ne razkrijemo drugim.';
+	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
 	@override String get set_gps => 'Lokacija je nastavljena.';
 	@override String set_place({required Object name}) => 'Lokacija: ${name}';
@@ -862,11 +864,13 @@ extension on TranslationsSl {
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
-			'location.or_enter' => 'ali vpiši kraj',
+			'location.enter_place' => 'Vpiši kraj',
+			'location.or' => 'ali',
+			'location.gps_sub' => 'Samodejno z GPS naprave',
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
 			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
-			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Tvoje natančne koordinate se ne shranijo — iz njih izračunamo le okvirno okolico in je nikoli ne razkrijemo drugim.',
+			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
 			'location.set_gps' => 'Lokacija je nastavljena.',
 			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',

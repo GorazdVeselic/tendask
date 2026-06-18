@@ -295,11 +295,13 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get title => 'Wo gärtnerst du?';
 	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
 	@override String get use_gps => 'Meinen Standort verwenden';
-	@override String get or_enter => 'oder Ort eingeben';
+	@override String get enter_place => 'Ort eingeben';
+	@override String get or => 'oder';
+	@override String get gps_sub => 'Automatisch per Geräte-GPS';
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
 	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
-	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Deine genauen Koordinaten werden nie gespeichert — wir verwenden sie nur, um die grobe Umgebung zu berechnen, und geben sie niemals an andere weiter.';
+	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
 	@override String get set_gps => 'Standort festgelegt.';
 	@override String set_place({required Object name}) => 'Standort: ${name}';
@@ -856,11 +858,13 @@ extension on TranslationsDe {
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
-			'location.or_enter' => 'oder Ort eingeben',
+			'location.enter_place' => 'Ort eingeben',
+			'location.or' => 'oder',
+			'location.gps_sub' => 'Automatisch per Geräte-GPS',
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
 			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
-			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Deine genauen Koordinaten werden nie gespeichert — wir verwenden sie nur, um die grobe Umgebung zu berechnen, und geben sie niemals an andere weiter.',
+			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
 			'location.set_gps' => 'Standort festgelegt.',
 			'location.set_place' => ({required Object name}) => 'Standort: ${name}',

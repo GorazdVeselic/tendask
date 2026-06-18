@@ -515,8 +515,14 @@ class Translations$location$en {
 	/// en: 'Use my location'
 	String get use_gps => 'Use my location';
 
-	/// en: 'or enter a place'
-	String get or_enter => 'or enter a place';
+	/// en: 'Enter a place'
+	String get enter_place => 'Enter a place';
+
+	/// en: 'or'
+	String get or => 'or';
+
+	/// en: 'Automatically via device GPS'
+	String get gps_sub => 'Automatically via device GPS';
 
 	/// en: 'Village, town or address (e.g. Šentjur)'
 	String get place_hint => 'Village, town or address (e.g. Šentjur)';
@@ -527,8 +533,8 @@ class Translations$location$en {
 	/// en: 'Search'
 	String get search => 'Search';
 
-	/// en: 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.'
-	String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.';
+	/// en: 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.'
+	String get privacy => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.';
 
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
@@ -1695,11 +1701,13 @@ extension on Translations {
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',
-			'location.or_enter' => 'or enter a place',
+			'location.enter_place' => 'Enter a place',
+			'location.or' => 'or',
+			'location.gps_sub' => 'Automatically via device GPS',
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
 			'location.place_note' => 'A village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
-			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact coordinates are never stored — we only use them to compute the rough surroundings, and never reveal it to others.',
+			'location.privacy' => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',
 			'location.set_gps' => 'Location set.',
 			'location.set_place' => ({required Object name}) => 'Location: ${name}',

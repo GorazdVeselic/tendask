@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lokacija — predlog (A vrh + B možnosti)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  body { padding: 36px 24px 80px; }
+  .page-head { max-width: 760px; margin: 0 auto 28px; text-align:center; }
+  .page-head h1 { font-size: 24px; letter-spacing: -.4px; }
+  .page-head p { font-size: 14px; color: var(--muted); margin-top: 8px; line-height: 1.6; }
+  .gallery { display:flex; flex-wrap:wrap; gap:44px; justify-content:center; align-items:flex-start; }
+  .col { width:390px; }
+  .cap { text-align:center; margin-bottom:14px; }
+  .cap .n { font-size:15px; font-weight:700; }
+  .cap .d { font-size:12.5px; color:var(--muted); margin-top:3px; line-height:1.5; }
+
+  .loc { flex:1; display:flex; flex-direction:column; padding:6px 24px 22px; overflow:hidden; }
+  .loc .art { width:74px;height:74px;border-radius:24px;background:var(--accent-soft);display:grid;place-items:center;margin:6px auto 12px; }
+  .loc h1 { font-size:22px; text-align:center; letter-spacing:-.3px; }
+  .loc .why { font-size:13.5px; color:var(--muted); text-align:center; margin-top:9px; line-height:1.55; }
+  .loc .helper { font-size:12px; color:var(--muted); margin-top:7px; line-height:1.5; }
+
+  .locchip { display:flex; align-items:center; gap:8px; background:var(--accent-soft); border:1px solid #cde6d2;
+             color:var(--accent-900); border-radius:12px; padding:10px 12px; font-size:13px; font-weight:600; }
+  .locchip .rm { margin-left:auto; color:#b3261e; font-weight:600; font-size:12.5px; background:none; border:none; cursor:pointer; }
+
+  /* enak videz kot showTopToast (core/widgets/top_toast.dart): poln-širinski
+     temni zaobljeni pravokotnik z info ikono levo, ne sredinska pilula */
+  .toast-top { position:absolute; left:16px; right:16px; top:52px; z-index:70;
+               background:#11211a; color:#fff; border-radius:12px; box-shadow:var(--shadow);
+               display:flex; align-items:center; gap:10px; padding:12px 16px; font-size:14px; font-weight:600; }
+  .toast-top .ti { font-size:18px; }
+
+  .divider-or { display:flex; align-items:center; gap:12px; color:var(--muted); font-size:12.5px; }
+  .divider-or::before, .divider-or::after { content:""; height:1px; background:var(--line); flex:1; }
+
+  .fieldlabel { font-size:12.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
+
+  .search { position:relative; }
+  .search .input { padding-right:48px; background:#f6f8f6; }
+  .search .input.focus { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); background:#fff; }
+  .search .sicon { position:absolute; right:6px; top:6px; bottom:6px; width:40px; border-radius:10px;
+                   display:grid; place-items:center; color:var(--accent); font-size:18px; background:transparent; border:none; cursor:pointer; }
+
+  .optcard { border:1.5px solid var(--line); border-radius:16px; padding:14px; }
+  .optcard.primary { border-color:var(--accent); box-shadow:0 0 0 3px var(--accent-soft); }
+  .gpsopt { display:flex; align-items:center; gap:13px; cursor:pointer; }
+  .gpsopt .ic { width:46px;height:46px;border-radius:14px;background:var(--accent-soft);display:grid;place-items:center;font-size:22px;flex:0 0 46px; }
+  .gpsopt .t1{font-size:15px;font-weight:700;} .gpsopt .t2{font-size:12px;color:var(--muted);margin-top:2px;}
+  .gpsopt .chev{margin-left:auto;color:var(--muted);font-size:20px;}
+
+  .priv { display:flex; gap:10px; background:var(--info-soft); border:1px solid #cfe0f0; border-radius:14px; padding:11px 13px; margin-top:16px; }
+  .priv .i{ font-size:17px; } .priv .t{ font-size:12.5px; color:#1f4e79; line-height:1.5; }
+
+  .spacer { flex:1; min-height:14px; }
+</style>
+</head>
+<body>
+
+<div class="page-head">
+  <h1>Lokacija vrta — predlog za implementacijo</h1>
+  <p>Vrh kot v A (trak + ikona + naslov + opis), določitev kot v B (dve kartici: vpiši kraj / GPS),
+     spodaj polni opis zasebnosti. Dve stanji: status<b>ni trak je stalen</b>, toast je <b>kratkotrajen</b>
+     in se po ~2 s umakne — pod njim ostane trak.</p>
+</div>
+
+<div class="gallery">
+
+  <!-- ============ STANJE 1 — stalno (brez toasta) ============ -->
+  <div class="col">
+    <div class="cap">
+      <div class="n">Običajno stanje</div>
+      <div class="d">Statusni trak je <b>stalno viden</b> in pove, ali lokacijo imamo. Toasta ni.</div>
+    </div>
+    <div class="phone">
+      <div class="phone__notch"></div>
+      <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+
+      <div class="loc">
+        <div class="locchip">
+          <span>✅</span><span>Lokacija je nastavljena · <b>Šentjur</b></span>
+          <button class="rm">Odstrani</button>
+        </div>
+
+        <div class="art">
+          <svg width="42" height="42" viewBox="0 0 64 64"><path d="M32 4 C20 4 11 13 11 25 C11 41 32 60 32 60 C32 60 53 41 53 25 C53 13 44 4 32 4 Z" fill="#2e7d32"/><circle cx="32" cy="25" r="8" fill="#fff"/></svg>
+        </div>
+        <h1>Kje vrtnariš?</h1>
+        <div class="why">Lokacijo potrebujemo za <b>lokalno vremensko napoved</b> in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v <b>podobnem podnebju</b>.</div>
+
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
+          <div class="optcard primary">
+            <div class="fieldlabel" style="margin-bottom:9px;">Vpiši kraj</div>
+            <div class="search">
+              <input class="input" placeholder="Vas, mesto ali naslov (npr. Šentjur)">
+              <button class="sicon">🔍</button>
+            </div>
+            <div class="helper">Najpreprosteje — dovolj je ime vasi ali mesta.</div>
+          </div>
+
+          <div class="divider-or">ali</div>
+
+          <div class="optcard">
+            <div class="gpsopt">
+              <div class="ic">📡</div>
+              <div>
+                <div class="t1">Uporabi mojo lokacijo</div>
+                <div class="t2">Samodejno z GPS naprave</div>
+              </div>
+              <div class="chev">›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="priv"><span class="i">🔒</span>
+          <div class="t"><b>Natančne lokacije nikoli ne shranjujemo.</b> Shranimo samo <b>približno okolico</b> (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.</div>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn">Nadaljuj</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ STANJE 2 — trenutek shranjevanja (toast) ============ -->
+  <div class="col">
+    <div class="cap">
+      <div class="n">Trenutek shranjevanja</div>
+      <div class="d">Toast <b>~2 s</b> potrdi izbiro, nato izgine — trak pod njim ostane.</div>
+    </div>
+    <div class="phone">
+      <div class="phone__notch"></div>
+      <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+      <div class="toast-top"><span class="ti">ⓘ</span><span>Lokacija: Šentjur</span></div>
+
+      <div class="loc">
+        <div class="locchip">
+          <span>✅</span><span>Lokacija je nastavljena · <b>Šentjur</b></span>
+          <button class="rm">Odstrani</button>
+        </div>
+
+        <div class="art">
+          <svg width="42" height="42" viewBox="0 0 64 64"><path d="M32 4 C20 4 11 13 11 25 C11 41 32 60 32 60 C32 60 53 41 53 25 C53 13 44 4 32 4 Z" fill="#2e7d32"/><circle cx="32" cy="25" r="8" fill="#fff"/></svg>
+        </div>
+        <h1>Kje vrtnariš?</h1>
+        <div class="why">Lokacijo potrebujemo za <b>lokalno vremensko napoved</b> in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v <b>podobnem podnebju</b>.</div>
+
+        <div style="margin-top:18px;display:flex;flex-direction:column;gap:12px;">
+          <div class="optcard primary">
+            <div class="fieldlabel" style="margin-bottom:9px;">Vpiši kraj</div>
+            <div class="search">
+              <input class="input" placeholder="Vas, mesto ali naslov (npr. Šentjur)">
+              <button class="sicon">🔍</button>
+            </div>
+            <div class="helper">Najpreprosteje — dovolj je ime vasi ali mesta.</div>
+          </div>
+
+          <div class="divider-or">ali</div>
+
+          <div class="optcard">
+            <div class="gpsopt">
+              <div class="ic">📡</div>
+              <div>
+                <div class="t1">Uporabi mojo lokacijo</div>
+                <div class="t2">Samodejno z GPS naprave</div>
+              </div>
+              <div class="chev">›</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="priv"><span class="i">🔒</span>
+          <div class="t"><b>Natančne lokacije nikoli ne shranjujemo.</b> Shranimo samo <b>približno okolico</b> (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.</div>
+        </div>
+
+        <div class="spacer"></div>
+        <button class="btn">Nadaljuj</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+</body>
+</html>
