@@ -42,15 +42,24 @@ class _StubClient implements OpenMeteoClient {
   }) => fetch(latitude: latitude, longitude: longitude);
 }
 
-/// In-memory cache standing in for the local_flag-backed repository.
+/// In-memory cache standing in for the local_flag-backed repository, with the
+/// two independent slots (light dashboard snapshot + full detail snapshot).
 class _FakeCache implements WeatherCacheRepository {
   WeatherSnapshot? stored;
+  WeatherSnapshot? storedFull;
 
   @override
-  Future<WeatherSnapshot?> load() async => stored;
+  Future<WeatherSnapshot?> load({bool full = false}) async =>
+      full ? storedFull : stored;
 
   @override
-  Future<void> save(WeatherSnapshot snapshot) async => stored = snapshot;
+  Future<void> save(WeatherSnapshot snapshot, {bool full = false}) async {
+    if (full) {
+      storedFull = snapshot;
+    } else {
+      stored = snapshot;
+    }
+  }
 }
 
 WeatherService _service(
@@ -187,6 +196,60 @@ void main() {
 
       final result = await service.captureCached(latitude: 46, longitude: 14.5);
       expect(result, isNull);
+    });
+  });
+
+  group('WeatherService.captureCachedFull', () {
+    test('caches in its own slot and re-fetches after the TTL', () async {
+      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+      final cache = _FakeCache();
+      final client = _StubClient()..next = _respWithTemp(20);
+      final service = _service(client, clock, cache: cache);
+
+      final first = await service.captureCachedFull(
+        latitude: 46,
+        longitude: 14.5,
+      );
+      expect(first?.temperature, 20);
+      expect(client.calls, 1);
+      // Stored in the full slot, leaving the light slot untouched.
+      expect(cache.storedFull?.temperature, 20);
+      expect(cache.stored, isNull);
+
+      // Within TTL → served from cache, no new fetch.
+      clock.advance(const Duration(minutes: 10));
+      client.next = _respWithTemp(25);
+      final cached = await service.captureCachedFull(
+        latitude: 46,
+        longitude: 14.5,
+      );
+      expect(cached?.temperature, 20);
+      expect(client.calls, 1);
+
+      // Past TTL → re-fetch.
+      clock.advance(const Duration(minutes: 25));
+      final fresh = await service.captureCachedFull(
+        latitude: 46,
+        longitude: 14.5,
+      );
+      expect(fresh?.temperature, 25);
+      expect(client.calls, 2);
+    });
+
+    test('falls back to the last full snapshot when a re-fetch fails', () async {
+      final clock = _FakeClock(DateTime.utc(2026, 6, 4, 12));
+      final client = _StubClient()..next = _respWithTemp(20);
+      final service = _service(client, clock);
+
+      await service.captureCachedFull(latitude: 46, longitude: 14.5);
+
+      clock.advance(const Duration(minutes: 40));
+      client.next = null; // offline
+      final degraded = await service.captureCachedFull(
+        latitude: 46,
+        longitude: 14.5,
+      );
+      expect(degraded?.temperature, 20);
     });
   });
 }
