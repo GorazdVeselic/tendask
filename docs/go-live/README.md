@@ -10,7 +10,7 @@
 > [`sentry-symbols.md`](sentry-symbols.md) · [`assets/`](assets/) ·
 > [`../legal/privacy-policy.md`](../legal/privacy-policy.md) ·
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md).
-> **Politika zasebnosti (živa):** https://tendask.netlify.app/
+> **Politika zasebnosti (živa):** https://tendask.com/privacy
 
 ---
 
@@ -34,7 +34,7 @@
 
 - [x] ✅ 🤖 **Podpisan AAB** zgrajen + verjeven: `build/app/outputs/bundle/release/app-release.aab`
   (CN=Gorazd Veselič, v `1.0.0+1`, kanal beta). *Ni v repo — build artefakt.*
-- [x] ✅ 🤖 **Politika zasebnosti** (SL/EN/DE) objavljena: https://tendask.netlify.app/
+- [x] ✅ 🤖 **Politika zasebnosti** (SL/EN/DE) objavljena: https://tendask.com/privacy
 - [x] ✅ 🤖 **Data Safety mapiranje**: [`../legal/play-data-safety.md`](../legal/play-data-safety.md)
 - [x] ✅ 🤖 **Store listing besedila** (SL/EN/DE): [`store-listing.md`](store-listing.md)
 - [x] ✅ 🤖 **Content rating + target audience odgovori**: [`content-rating.md`](content-rating.md)
@@ -45,7 +45,7 @@
 - [x] ✅ 🤖 `targetSdkVersion` = `flutter.targetSdkVersion` (Flutterjev privzeti, pri tem skladu
   ≥34 — AAB se je uspešno zgradil). Ustreza Play minimumu; če bi bil prenizek, Play to javi ob uploadu.
 - [x] ✅ 🤖 **In-app povezava do politike zasebnosti** (`url_launcher`) — prijava (pod pravnim
-  besedilom) + Nastavitve → »Privacy policy« → odpre `https://tendask.netlify.app/`.
+  besedilom) + Nastavitve → »Privacy policy« → odpre `https://tendask.com/privacy`.
 - [x] ✅ 🤖 **Release-readiness pregled** (0 blokerjev) → popravljen `android:allowBackup="false"`
   (zasebnost: lokalna DB se ne kopira v Drive). Release notes pripravljene.
 
@@ -67,13 +67,13 @@
   dodaj SL, DE prek »Manage translations«).
 - [ ] ⏳ 👤 Naloži **icon-512.png** + **feature-graphic-1024x500.png** + **posnetke zaslona**.
 - [ ] ⏳ 👤 **App category** = `House & Home` (alt: `Lifestyle`); tags = gardening/journal.
-- [ ] ⏳ 👤 Kontaktni email (javno) = isti kot v politiki (`gorazd@spletnakoda.si`).
+- [ ] ⏳ 👤 Kontaktni email (javno) = isti kot v politiki (`info@tendask.com`).
 
 ---
 
 ## Faza 4 — App content (deklaracije — obvezne za objavo)
 
-- [ ] ⏳ 👤 **Privacy policy URL** = `https://tendask.netlify.app/`
+- [ ] ⏳ 👤 **Privacy policy URL** = `https://tendask.com/privacy`
 - [ ] ⏳ 👤 **Data safety** — izpolni po [`../legal/play-data-safety.md`](../legal/play-data-safety.md)
   (pozor: *precise location* = Collected+Shared(Open-Meteo)+Ephemeral).
 - [ ] ⏳ 👤 **Content rating** (IARC vprašalnik) — odgovori iz [`content-rating.md`](content-rating.md).
@@ -133,6 +133,6 @@
 | AAB | `build/app/outputs/bundle/release/app-release.aab` |
 | Build ukaz | `flutter build appbundle --release --dart-define-from-file=dart_defines.json` |
 | Upload-key SHA-1 (že reg. kot OAuth client) | `62:CF:B4:A0:F4:6A:54:B4:7B:99:6A:02:16:7A:72:A7:62:14:2C:F9` |
-| Privacy policy URL | `https://tendask.netlify.app/` |
-| Developer name | Tendask · kontakt `gorazd@spletnakoda.si` |
+| Privacy policy URL | `https://tendask.com/privacy` |
+| Developer name | Tendask · kontakt `info@tendask.com` |
 | jarsigner (verify) | `C:\Program Files\Android\Android Studio\jbr\bin\jarsigner.exe` |

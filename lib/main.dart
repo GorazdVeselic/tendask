@@ -17,6 +17,8 @@ import 'core/location/location_repository.dart';
 import 'core/notifications/fcm_handler.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
+import 'features/areas/application/areas_providers.dart';
+import 'features/areas/data/garden_seed_service.dart';
 import 'features/notifications/application/fcm_token_service.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
@@ -45,6 +47,13 @@ void main() async {
 
 Future<void> _bootstrap() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Log the active backend so a debug run can't silently hit the wrong one
+  // (staging vs production). debugPrint is stripped from release builds.
+  debugPrint(
+    'ENV: $kEnvLabel'
+    '${kSupabaseUrl.isEmpty ? '' : ' — SUPABASE_URL=$kSupabaseUrl'}',
+  );
 
   // Pure-Dart sentry has no automatic Flutter integration, so forward framework
   // and platform-dispatcher errors to it (only when configured).
@@ -96,11 +105,32 @@ Future<void> _bootstrap() async {
       .getLang(userId);
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
+  // Seed the default "garden" area once per device (FR-9), named in the now-set
+  // language. Runs before sync so the first cycle pushes it; offline-safe (a
+  // pure local write). One-shot via a local flag — a deleted garden stays gone.
+  //
+  // Unlike the catalog seed, the default garden is NOT essential to booting: a
+  // DB hiccup here must never black-screen the app. Degrade gracefully — on
+  // failure the flag stays unset (transaction rolled back), so a later launch
+  // retries.
+  try {
+    await GardenSeedService(
+      container.read(databaseProvider),
+      container.read(areasRepositoryProvider),
+      container.read(localPrefsProvider),
+    ).seedDefaultIfNeeded(userId: userId, name: t.areas.default_garden_name);
+  } catch (error, stack) {
+    debugPrint('Default garden seed failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
+
   // Start the background sync coordinator: a first cycle now (claim + push +
   // pull when signed in; catalog always) plus reconnect/periodic/push-on-save
   // triggers. Guests stay local (no session) — sync activates on sign-in.
   // Fire-and-forget — never blocks first paint; offline retries on a later trigger.
-  container.read(syncCoordinatorProvider.notifier).start();
+  unawaited(container.read(syncCoordinatorProvider.notifier).start());
 
   // FCM token mirror (M11.6): once signed in + notifications granted it stores
   // the registration token in the profile (the smart engine's push target).

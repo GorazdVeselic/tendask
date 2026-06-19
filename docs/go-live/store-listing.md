@@ -35,8 +35,8 @@ Works without a signal:
 Tendask is built offline-first – it works even in the middle of the garden with no connection. Your data lives on your device first; if you sign in, it syncs securely to the cloud so you never lose it when changing phones.
 
 Privacy by design:
-Your precise coordinates never leave the device for storage – we use only an approximate area for weather. You can export your data or delete your account at any time.
-Privacy policy: https://tendask.netlify.app/
+Your precise coordinates are never stored – we use only an approximate area (~1 km) for weather. You can export your data or delete your account at any time.
+Privacy policy: https://tendask.com/privacy
 
 Free, with no ads.
 ```
@@ -71,8 +71,8 @@ Deluje brez signala:
 Tendask je zasnovan »offline-first« – deluje tudi sredi vrta brez povezave. Podatki so najprej na tvoji napravi; če se prijaviš, se varno sinhronizirajo v oblak, da jih ne izgubiš ob menjavi telefona.
 
 Zasebnost po zasnovi:
-Tvoje natančne koordinate nikoli ne zapustijo naprave za shranjevanje – za vreme uporabljamo le približno območje. Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
-Politika zasebnosti: https://tendask.netlify.app/
+Tvoje natančne koordinate se nikoli ne shranijo – za vreme uporabljamo le približno območje (~1 km). Kadar koli lahko izvoziš svoje podatke ali izbrišeš račun.
+Politika zasebnosti: https://tendask.com/privacy
 
 Brezplačno in brez oglasov.
 ```
@@ -107,8 +107,8 @@ Funktioniert ohne Signal:
 Tendask ist offline-first konzipiert – es funktioniert auch mitten im Garten ohne Verbindung. Deine Daten liegen zuerst auf dem Gerät; meldest du dich an, werden sie sicher in die Cloud synchronisiert, damit du sie beim Gerätewechsel nicht verlierst.
 
 Datenschutz durch Technikgestaltung:
-Deine genauen Koordinaten verlassen das Gerät niemals zur Speicherung – für das Wetter nutzen wir nur einen ungefähren Bereich. Du kannst deine Daten jederzeit exportieren oder dein Konto löschen.
-Datenschutzerklärung: https://tendask.netlify.app/
+Deine genauen Koordinaten werden nie gespeichert – für das Wetter nutzen wir nur einen ungefähren Bereich (~1 km). Du kannst deine Daten jederzeit exportieren oder dein Konto löschen.
+Datenschutzerklärung: https://tendask.com/privacy
 
 Kostenlos und ohne Werbung.
 ```

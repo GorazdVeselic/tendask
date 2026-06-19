@@ -284,6 +284,9 @@ class _Translations$email_login$sl extends Translations$email_login$en {
 	@override String get err_code => 'Vpiši kodo iz e-pošte.';
 	@override String get err_send => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.';
 	@override String get err_verify => 'Koda ni pravilna ali je potekla. Poskusi znova.';
+	@override String get err_email_domain => 'Domene tega e-naslova ne najdemo. Preveri naslov.';
+	@override String did_you_mean({required Object suggestion}) => 'Ste mislili ${suggestion}?';
+	@override String resend_in({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)';
 }
 
 // Path: location
@@ -296,11 +299,13 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get title => 'Kje vrtnariš?';
 	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
 	@override String get use_gps => 'Uporabi mojo lokacijo';
-	@override String get or_enter => 'ali vpiši kraj';
+	@override String get enter_place => 'Vpiši kraj';
+	@override String get or => 'ali';
+	@override String get gps_sub => 'Samodejno z GPS naprave';
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
 	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
-	@override String get privacy => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.';
+	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
 	@override String get set_gps => 'Lokacija je nastavljena.';
 	@override String set_place({required Object name}) => 'Lokacija: ${name}';
@@ -311,6 +316,7 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get no_results => 'Za ta kraj ni zadetkov.';
 	@override String get screen_title => 'Lokacija vrta';
 	@override String get status_set => 'Lokacija je nastavljena';
+	@override String status_set_at({required Object name}) => 'Lokacija je nastavljena · ${name}';
 	@override String get status_unset => 'Lokacija še ni nastavljena';
 	@override String get clear => 'Odstrani lokacijo';
 	@override String get clear_confirm_title => 'Odstranim lokacijo?';
@@ -588,12 +594,14 @@ class _Translations$areas$sl extends Translations$areas$en {
 	@override String get subtitle => 'rastline in trate';
 	@override String get unassigned => 'Brez območja';
 	@override String get last_prefix => 'zadnje:';
+	@override String get type_garden => 'Vrt';
 	@override String get type_lawn => 'Trata';
 	@override String get type_hedge => 'Živa meja';
 	@override String get type_bed => 'Gredica';
 	@override String get type_tree => 'Sadno drevje';
 	@override String get type_ornamental => 'Okrasno';
 	@override String get type_other => 'Drugo';
+	@override String get default_garden_name => 'Vrt';
 	@override String get history_title => 'Zgodovina opravil';
 	@override String get history_empty => 'Na tem območju še ni opravil.';
 	@override String get plants_section => 'Rastline';
@@ -742,6 +750,13 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get home_retry => 'Tapni za ponovni poskus';
 	@override String get loading => 'Nalagam vreme…';
 	@override String updated_at({required Object time}) => 'Osveženo ${time}';
+	@override String get m_humidity => 'Vlažnost';
+	@override String get m_wind => 'Veter';
+	@override String get m_precipitation => 'Padavine';
+	@override String get m_soil_temp => 'Temp. tal';
+	@override String get m_et0 => 'ET₀';
+	@override String get m_rain48h => 'Dež 48 h';
+	@override String get m_no_rain => 'brez dežja';
 }
 
 // Path: suggestions
@@ -1941,14 +1956,19 @@ extension on TranslationsSl {
 			'email_login.err_code' => 'Vpiši kodo iz e-pošte.',
 			'email_login.err_send' => 'Kode ni bilo mogoče poslati. Preveri povezavo in poskusi znova.',
 			'email_login.err_verify' => 'Koda ni pravilna ali je potekla. Poskusi znova.',
+			'email_login.err_email_domain' => 'Domene tega e-naslova ne najdemo. Preveri naslov.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Ste mislili ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
-			'location.or_enter' => 'ali vpiši kraj',
+			'location.enter_place' => 'Vpiši kraj',
+			'location.or' => 'ali',
+			'location.gps_sub' => 'Samodejno z GPS naprave',
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
 			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
-			'location.privacy' => 'Tvojo lokacijo uporabimo le za približno določitev tvoje okolice (širše območje nekaj kilometrov). Natančna lokacija je shranjena le na tvoji napravi — pri nas hranimo samo okvirno okolico in je nikoli ne razkrijemo drugim.',
+			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
 			'location.set_gps' => 'Lokacija je nastavljena.',
 			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',
@@ -1959,6 +1979,7 @@ extension on TranslationsSl {
 			'location.no_results' => 'Za ta kraj ni zadetkov.',
 			'location.screen_title' => 'Lokacija vrta',
 			'location.status_set' => 'Lokacija je nastavljena',
+			'location.status_set_at' => ({required Object name}) => 'Lokacija je nastavljena · ${name}',
 			'location.status_unset' => 'Lokacija še ni nastavljena',
 			'location.clear' => 'Odstrani lokacijo',
 			'location.clear_confirm_title' => 'Odstranim lokacijo?',
@@ -2136,12 +2157,14 @@ extension on TranslationsSl {
 			'areas.subtitle' => 'rastline in trate',
 			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
+			'areas.type_garden' => 'Vrt',
 			'areas.type_lawn' => 'Trata',
 			'areas.type_hedge' => 'Živa meja',
 			'areas.type_bed' => 'Gredica',
 			'areas.type_tree' => 'Sadno drevje',
 			'areas.type_ornamental' => 'Okrasno',
 			'areas.type_other' => 'Drugo',
+			'areas.default_garden_name' => 'Vrt',
 			'areas.history_title' => 'Zgodovina opravil',
 			'areas.history_empty' => 'Na tem območju še ni opravil.',
 			'areas.plants_section' => 'Rastline',
@@ -2254,6 +2277,13 @@ extension on TranslationsSl {
 			'weather.home_retry' => 'Tapni za ponovni poskus',
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
+			'weather.m_humidity' => 'Vlažnost',
+			'weather.m_wind' => 'Veter',
+			'weather.m_precipitation' => 'Padavine',
+			'weather.m_soil_temp' => 'Temp. tal',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Dež 48 h',
+			'weather.m_no_rain' => 'brez dežja',
 			'suggestions.actions.plan' => 'Načrtuj',
 			'suggestions.actions.dismiss' => 'Preskoči',
 			'suggestions.actions.already_done' => 'Že opravljeno',
@@ -2334,6 +2364,8 @@ extension on TranslationsSl {
 			'suggestions.berries.prune_winter.body' => 'Obreži {subject} v mirovanju — do približno {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Spomladansko gnojenje',
 			'suggestions.berries.fertilize_spring.body' => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Zastiranje',
 			'suggestions.berries.mulch.body' => 'Zastri {subject} za hladne in vlažne korenine — do približno {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Zimsko škropljenje',
@@ -2349,8 +2381,6 @@ extension on TranslationsSl {
 			'suggestions.vegetable.transplant.title' => 'Presaditev',
 			'suggestions.vegetable.transplant.body' => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Neposredna setev',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Dognojevanje',
 			'suggestions.vegetable.fertilize_season.body' => 'Med rastno dobo pognoji {subject}.',

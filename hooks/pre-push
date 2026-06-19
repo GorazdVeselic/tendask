@@ -1,0 +1,22 @@
+#!/bin/sh
+# Pre-push gate — block pushing code that fails static analysis or tests.
+# Added after CI broke twice on main from pushing unverified code: a full
+# `flutter analyze` (whole project, not just lib/) plus `flutter test` here
+# catch compile/lint/test regressions before they ever reach the remote.
+#
+# Emergency bypass (use sparingly, never habitually): git push --no-verify
+set -e
+
+if ! command -v flutter >/dev/null 2>&1; then
+  echo "[pre-push] ERROR: 'flutter' not found on PATH; cannot verify — aborting push." >&2
+  echo "[pre-push] Fix your PATH, or bypass this once with: git push --no-verify" >&2
+  exit 1
+fi
+
+echo "[pre-push] flutter analyze (whole project)…"
+flutter analyze
+
+echo "[pre-push] flutter test…"
+flutter test
+
+echo "[pre-push] OK — analyze + tests passed; allowing push."

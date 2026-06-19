@@ -6,11 +6,11 @@
     <!-- connectivity_plus: read the network interface state (online/offline). -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <!-- geolocator (M7): one-shot location at onboarding to derive the H3 cell
-         on-device. Coarse suffices (we only need the ~km-wide neighbourhood);
-         fine is offered for a better GPS fix when the user grants it. Raw
-         coordinates never leave the device — only H3 cells sync. -->
+         on-device. Coarse only — we just need the ~km-wide neighbourhood (r7
+         cell, ~1.2 km edge); fine precision is unnecessary (FR-8). Raw
+         coordinates are never stored or synced — only the H3 cells sync, and
+         weather uses the cell centroid. -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <!-- Local task reminders (M8). POST_NOTIFICATIONS is a runtime prompt on
          Android 13+, requested from the priming screen (21). RECEIVE_BOOT_COMPLETED
          lets the plugin reschedule pending reminders after a reboot.

@@ -45,7 +45,7 @@
   - Ikona 512 (`assets/icon-512.png`) + feature graphic (`assets/feature-graphic-1024x500.png`)
   - 6 telefonskih posnetkov (`assets/screenshots/play/01..06`)
   - Tablet/Chromebook posnetki: **preskočeno** (neobvezno za MVP)
-- [x] **Store settings**: kategorija **Lifestyle**, kontakt `gorazd@spletnakoda.si`, web `tendask.netlify.app`, oznake (do 5)
+- [x] **Store settings**: kategorija **Lifestyle**, kontakt `info@tendask.com`, web `tendask.com`, oznake (do 5)
 - [ ] **Prevodi listinga: SL + DE** (Manage translations; besedila v `store-listing.md`)
 
 ## App content (vse KONČANO ✅)
@@ -53,11 +53,14 @@
 - [x] **App access**: Ne (brez prijave — gostovski način; preverjeno `auth_service`/`login_screen._continueAsGuest`)
 - [x] **Content rating (IARC)**: vse No → **Everyone / PEGI 3 / USK 0**
 - [x] **Target audience**: 16-17 + 18+ · appealing-to-children = No
-- [x] **Data safety**: 7 tipov (approx+precise location, email, user IDs, crash logs, diagnostics, other UGC)
-  - precise location = Collected + **Shared (Open-Meteo)** + Ephemeral
+- [~] **Data safety** — ⚠️ **POSODOBITI po FR-8 (👤):** precise location ni več zbran/deljen
+  (app je coarse-only, surovih koordinat ne hrani); approximate location postane **Shared (Open-Meteo
+  centroid)**. Glej `docs/legal/play-data-safety.md` v1.1.
+  - approximate location = Collected (H3 v Supabase) + **Shared (Open-Meteo centroid)** + Optional
+  - precise location = **NOT collected / NOT shared** (odznači v obrazcu)
   - crash logs + diagnostics = **Shared (Sentry)** + Required
   - ostalo = Collected / Optional · encrypted in transit = Yes
-  - deletion URL + privacy URL = `https://tendask.netlify.app/`
+  - deletion URL + privacy URL = `https://tendask.com/privacy` (objavi privacy v1.1 pred oddajo)
 - [x] **Ads**: No · **Government**: No · **Financial features**: None · **Health**: No
 - [x] **Advertising ID**: No (preverjeno: `AD_ID` ni v merged manifestu, brez oglaševalskih dep)
 
@@ -82,7 +85,8 @@
 
 Podrobnosti + smer popravka: [`../bugreport.md`](../bugreport.md).
 
-- [ ] **BUG-002** — po prijavi (in logout→login) app vedno vpraša za lokacijo (brezpogojni `go('/location')`)
+- [~] **BUG-002** — po prijavi (in logout→login) app vedno vpraša za lokacijo. **Popravljeno v kodi z
+  FR-8** (routing bere `profile.h3_r7` + počaka na prvi pull); čaka on-device potrditev.
 - [ ] **BUG-003** — gost ima »Odjava« + logout tiho briše nesinhronizirane podatke (možna izguba podatkov)
 - [ ] Prijava za **produkcijski dostop** → objava globalno (vse države)
 

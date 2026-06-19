@@ -257,7 +257,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 - [x] **9.4 — Android release.** Keystore (👤), podpisan release build, `--dart-define` produkcijski ključi. release build podpisan z upload keystorom (`build.gradle.kts` bere `key.properties`, fallback na debug za dev). AAB potrjen (CN=Gorazd Veselič). *Commit:* `chore: Android release konfiguracija` (`2a8e72b`)
 - [x] **9.6 — Razširitev kataloga rastlin (PRED RELEASOM, pred 9.5).** ~34 → **128 vrst** čez **12 kategorij** (lawn, fruit_tree, berries, vegetable, herbs, perennial, shrub, climber, bulb, conifer, hedge, houseplant). Metoda (z uporabnikom): **kuracija (SL/EN/DE ljudska imena, pogovorna) + GBIF preverba znanstvenih imen** (match API — vsa veljavna) + **Wikidata navzkrižna preverba SL imen** (batch SPARQL — potrdila imena; popravljen `hibiscus`→`sirski oslez`). Povezava rastlina→opravila prek **kategorije** (razširjena `categoryMatrix`, 93 vrstic). Vir: `lib/data/seed/catalog_seed.dart` → `tool/gen_catalog_sql.dart` → `supabase/seed/catalog.sql`. **Reseed (pre-release okno):** oblak posodobljen prek `apply_catalog.py` (128 plant, 93 matrika; počiščene osirotele `ornamental`/`container` matrika vrstice); naprava pull-a ob zagonu + bundlan seed (offline prvi zagon) = 128. Brez podvojenih id-jev, 151/151 testov, analyze čist. **On-device potrjeno: vseh 128 vrst prisotnih (pull + bundlan offline seed za prvi zagon brez signala).** *Commit:* `feat: razširjen katalog rastlin (128 vrst, GBIF/Wikidata preverba)`
 - [x] **9.7 — GDPR: izvoz podatkov + izbris računa.** Dva placeholderja v Nastavitvah (`export_data`, `delete_account`) sta zdaj »coming soon«; pred internim testom naredi dejansko. **Izvoz:** zberi vse uporabnikove drift vrstice (profile, area, user_plant, task + task_subject/reminder/note/task_supply) → JSON datoteka → `share`/shrani; brez koordinat (samo H3 celice). **Izbris računa:** potrditveni dialog (`showConfirmDialog destructive`) → Supabase brisanje računa (`ON DELETE CASCADE` počisti oblak) → lokalni `clearUserData` → nazaj na onboarding. Anon gost: lokalni izvoz + lokalni clear (ni oblačnega računa). *Commit:* `feat: GDPR izvoz + izbris računa`. **Opomba:** enote (°C/°F) namerno opuščene — MVP je metričen (SL/EU trg); »Območja« povezava odstranjena iz Nastavitev (podvojena z Vrt zavihkom).
-- [~] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).** **Priprava ✅ (2026-06-09):** podpisan AAB zgrajen+verjeven (CN=Gorazd Veselič); politika zasebnosti SL/EN/DE objavljena (`https://tendask.netlify.app/`); Data Safety mapirano; go-live plan + store listing (**EN default**, SL+DE prevoda) + content rating + grafika (icon-512, feature-graphic) v `docs/go-live/`. **Play razvijalski račun ustvarjen** (osebni, »Tendask«, `exogenus@gmail.com`) — **čaka Googlovo preverjanje identitete** (blokira create-app). Ostane 👤: konzolni koraki po odobritvi + posnetki zaslona; odloženo Sentry debug symbols upload.
+- [~] **9.5 — 👤 Play interni test.** Naloži na Play Console interni track. **Predpogoj: 9.6 (poln katalog).** **Priprava ✅ (2026-06-09):** podpisan AAB zgrajen+verjeven (CN=Gorazd Veselič); politika zasebnosti SL/EN/DE objavljena (`https://tendask.com/privacy`); Data Safety mapirano; go-live plan + store listing (**EN default**, SL+DE prevoda) + content rating + grafika (icon-512, feature-graphic) v `docs/go-live/`. **Play razvijalski račun ustvarjen** (osebni, »Tendask«, `exogenus@gmail.com`) — **čaka Googlovo preverjanje identitete** (blokira create-app). Ostane 👤: konzolni koraki po odobritvi + posnetki zaslona; odloženo Sentry debug symbols upload.
 - [x] **9.9 — Odpornost vremena na izpad/počasen Open-Meteo.** Sproženo z reprodukcije: ob izpadu Open-Meteo (502 + odzivi 40+ s — preverjeno na napravi) je dashboard ostal s prazno kartico, loader pa ni povedal, kaj dela. (1) `kWeatherStaleTtl` 2 h → **48 h** (`config.dart`): odpiranje naslednje jutro pokaže včerajšnji posnetek namesto prazne kartice; čez 48 h pošteno »ni na voljo« (napovedni pas bi bil sicer večinoma pretekli dnevi). (2) `CurrentWeatherCard` doda tih žig **»Osveženo ob X«** (nov i18n `weather.updated_at`), a le ko je posnetek star (> `kWeatherCacheTtl`); svež ostane čist. (3) Med osveževanjem se star posnetek ne skrije za spinner — prek `weather.value` (riverpod 3.x ohrani prejšnjo vrednost ob reload), spinner le ob **prvem** nalaganju; loader dobi besedilo **»Nalagam vreme…«** (`weather.loading`). (4) Dashboard uporabi nov **lažji** zahtevek `OpenMeteoClient.fetchCurrent()` (samo trenutni pogoji + 3-dnevna napoved, brez `hourly` soil/precip in `et0` — najtežja dela payloada; `capture(full: false)`); težki tri-pasni posnetek (§7.10 detajl opravila) ostane poln prek `fetch()`. analyze čist; vremenski testi 17/17 (posodobljen stale prag 49 h, dodan »dan star posnetek offline«). *Commit:* `feat(weather): odpornost dashboarda na izpad Open-Meteo`
 - [x] **9.8 — UI polish + začasni izklop sredstev.** Manjši UX popravki pred releasom (z uporabnikom, wireframe-driven): izklop debug pasu; jezikovni `SegmentedButton` brez kljukice (popravek preloma dolgih endonimov); **Domov** — opravila kažejo rastlino-subjekt (🪴, kot zaslon Opravila) + zamujena opravila v **strnjenem rdečem pasu**, ki se ob kliku razširi v seznam na mestu (prej zamujena na Domov niso bila prikazana); **prenova zaslona Lokacija** — iz Nastavitev (push) back + samodejno shranjevanje + toast brez spodnjega gumba, iz onboardinga (go) gumb »Nadaljuj«; statusni pas (nastavljeno/ni) + gumb **»Odstrani lokacijo«** s potrditvijo (`clearGardenLocation` počisti koordinate + H3 celice → vreme pade na privzeto območje); **Vrt** — obrnjena hierarhija (območje = naslov skupine, rastline = kartice pod njim, prej je bilo območje bolj zamaknjeno kot rastline). **Sredstva (supplies) začasno skrita** prek nove konstante `kSuppliesEnabled=false` (`core/config.dart`): preskočen korak »Sredstva« v čarovniku + skrita sekcija »Vrt/zaloge« v Nastavitvah; koda ostane za kasnejšo vključitev. Novi wireframi `16b-location`, `01b-home-overdue-{collapsed,expanded}`, `vrt_v5`. analyze čist, 157/157. *Commiti:* `chore(i18n): ključi za lokacijo in zamujena opravila`, `feat(location): status, brisanje in kontekstni gumb`, `feat(home): rastlina ob opravilu + pas zamujenih`, `refactor(garden): hierarhija območje kot naslov, rastline kartice`, `chore(ui): debug pas, jezikovni gumb, skrij sredstva (kSuppliesEnabled)`, `docs(wireframes): lokacija, zamujena, vrt (v5)`
 
@@ -347,8 +347,10 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   uporabi centroid celice (`cellToLatLng`), ne koordinat. **Faznost:** MVP = lokalni hibrid + kompaktiranje
   blob-a; shared cloud `weather_observation` + cross-user dedup + cron = V2 (skala). Posledica: posodobi
   `koncept.md` §7.9/§7.10 (frozen → hibrid) ob implementaciji. Opozorilo: Open-Meteo pri 10k = komercialna raba.
-- **FR-8 — Lokacija prek centroida `h3_r7` namesto surovih koordinat.** 📝 **Potrjeno z uporabnikom
-  2026-06-12, PREDNOSTNO parkirano (po M11.7 ali po M11 fazi B).** Surove GPS koordinate danes živijo
+- **FR-8 — Lokacija prek centroida `h3_r7` namesto surovih koordinat.** ✅ **Implementirano
+  2026-06-18 na `feat/fr8-h3-centroid`** (gl. dnevnik). Vreme + routing bereta centroid celice;
+  `device_location` tabela odstranjena (drift v9); dovoljenje COARSE-only; pravni/Play/i18n osnutki
+  usklajeni. Ostane 👤: Play Data Safety obrazec + redeploy privacy v1.1. Spodaj prvotna spec. Surove GPS koordinate danes živijo
   device-local (`device_location`) samo zato, da vreme in post-sign-in usmerjanje dobita točko — ampak
   r7 celica ima rob ~1,2 km (centroid ≤ ~1,4 km od vrta), kar je **pod ločljivostjo Open-Meteo mreže**
   (1–11 km), in ClimateService (M11.3) centroid že uporablja. Sprememba: (1) vreme (dashboard +
@@ -360,11 +362,78 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   spremeni, kateri podatek zapusti napravo (ne več točne koordinate, samo centroid celice):**
   `koncept.md` (lokacija/zasebnost, sklep BUG-002) + `tech-stack.md` §2; **pravno:** politika zasebnosti
   (`docs/legal/privacy-policy.md` + `.html` — SL/EN/DE, opis kaj se pošlje Open-Meteo) → ponovna objava
-  na spletni strani (`tendask.netlify.app`, kasneje tendask.com); **Play Data Safety**
+  na spletni strani (`tendask.com`, Cloudflare Pages); **Play Data Safety**
   (`docs/legal/play-data-safety.md` + 👤 obrazec v konzoli: precise location → approximate, »Shared
   z Open-Meteo« opis); **v aplikaciji:** besedila na lokacijskem zaslonu/onboardingu in priming/privacy
   mikrocopy (i18n sl/en/de), ki obljubljajo ravnanje z lokacijo. Brez teh uskladitev se sprememba NE
   shipa — deklaracije morajo ustrezati dejanskemu vedenju.
+- **FR-9 — Privzeto območje »Vrt« (nov `AreaType.garden`, auto-seed).** ✅ **Implementirano
+  2026-06-16 na `feat/vrt-area` (gl. dnevnik). Migracija `0010` (CHECK z `garden`) APLICIRANA na
+  živi DB 2026-06-16 prek poolerja (preverjeno: `area_type_check` zdaj vsebuje `garden`); ledger
+  vnos za 0010 pride ob merge brancha (SQL idempotenten). **On-device verificirano** (SM A536B,
+  debug): seed ustvaril »Vrt« (type=garden, user=local, pending), flag postavljen, app brez crasha
+  (logcat čist). ZAKLJUČENO; preostane le push brancha + PR.**
+  Odstopanji od načrta: (a) seeded flag NI v profile (synced),
+  ampak v lokalnih prefs (`local_flags`) — synced stolpec bi zahteval migracijo profila na deljenem
+  živem Supabase; lokalni flag se temu izogne (cena: multi-device re-seed edge, MVP enouporabniško
+  sprejemljivo). (b) **Opomba (4) spodaj je bila NAPAČNA: `area.type` IMA `area_type_check`** (0001),
+  ki ni vključeval `garden` → seedani »Vrt« bi ob pushu sprožil 23514 in fail-fast push bi zaklenil
+  cel sync. Popravljeno z migracijo `0010_area_type_add_garden.sql` (drop+add CHECK z `garden`,
+  expand-safe, idempotentno; oštevilčeno 0010, ker živi DB že ima 0005–0009 iz M11). **Sekvenca:
+  migracijo `0010` aplicirati na živi DB PRED kakršnim koli FR-9 buildom, ki sinhronizira.** »Vrt« = primarna
+  v-tla vsajena celota ob hiši (kot majhna njiva) — najpogostejša oblika sajenja; **različen od
+  grede** (`bed` = dvignjene grede / manjši otočki). `AreaType` (`lawn/hedge/bed/tree/ornamental/
+  other`) **nima** `garden` → opravila »za cel vrt« nimajo kam. Sprememba: (1) `enum AreaType {
+  garden, lawn, hedge, bed, tree, ornamental, other }` — `garden` **PRVI** (UI vrstni red izhaja
+  iz `AreaType.values`; drift `textEnum` shranjuje **ime**, zato je reorder varen in **brez
+  migracije**); (2) i18n labela Vrt/Garden/Garten + ikona v `area_type_display.dart`; (3)
+  **auto-seed** privzeti »Vrt« za vsakega uporabnika ob prvem zagonu + **backfill obstoječim** ob
+  naslednjem zagonu (idempotentno, vzorec `seed_service`); **izbrisljiv** (kdor ima le grede/trato,
+  ga odstrani); (4) Supabase `area.type` **nima CHECK** omejitve → nova vrednost varna (tolerantni
+  parser obeh strani); (5) M11: `garden` postane veljaven engine subjekt (additive). **Prizadeti:**
+  `AreaType`, area seed/service, `areas_screen`/`area_form_screen`/`area_type_display`, area picker
+  v task entry, i18n sl/en/de. **DoD:** nov uporabnik vidi »Vrt« prvi v seznamu+pickerju; obstoječ
+  dobi backfill; izbris deluje; sync round-trip; analyze+testi zeleni.
+- **FR-10 — Motor (V2): rastline z menjavo/prekinitvami (kolobarjenje, premiki).** 📝 **Designerska
+  opomba, NI NUJNO, V2/motor (M11).** Kako pravila/opomniki ravnajo, ko je rastlina eno leto na
+  vrtu/gredi, drugo ne, potem morda spet (kolobarjenje), ali ko jo premakneš med gredami.
+  Podvprašanja: **(a) kontinuiteta zgodovine** — če `user_plant` soft-deletaš in naslednje leto
+  spet dodaš, je nova vrstica = izgubljen ritem/obletnica (R2/R3)? Morda rabi stabilen subjekt-ključ
+  čez sezone. **(b) Mirovanje pravil** — eligibility že preskoči neobstoječ subjekt (straža 5a), a
+  obletnica naslednje leto se ne sproži, ker ni žive vrstice. **(c) Premik med gredami** = sprememba
+  area FK (ne nov subjekt) — ritem naj se ohrani. **Detajl design** spada v
+  `docs/m11/10-odprta-vprasanja.md` ob nadaljevanju M11; lasten branch ob obravnavi.
+- **FR-11 — Varnost prijave (OTP/email hardening).** ✅ **Implementirano 2026-06-16 na
+  `feat/auth-hardening`** (gl. dnevnik; čaka pregled + push). Odstopanje: rate-limit (#5) =
+  60 s resend cooldown (UX sloj); urne kapice ostajajo server-side (Supabase). Spec (po vrsti): **(1) format
+  validacija** e-pošte (regex + osnovna pravila); **(2) tipkarska zaznava domene** (did-you-mean:
+  `gmal.com`→`gmail.com`, `gmail.con`→`gmail.com`); **(3) DNS check** prek DNS-over-HTTPS (npr.
+  `dns.google/resolve`): **MX → fallback A/AAAA** (RFC 5321 §5.1; CNAME se pri A-poizvedbi sledi
+  sam), **block samo** ob NXDOMAIN / brez MX in A/AAAA, **fail-OPEN ob napaki poizvedbe** (nikoli
+  blokiraj zaradi DoH izpada/timeouta — le ob definitivnem negativnem); razkrije le **domeno** (ne
+  celega naslova); **(4) 60 s cooldown** med pošiljanji (zrcali Supabase server-side ~60 s + urne
+  kapice — uporabnik ne trči v strežniško napako); **(5) rate limit / omejitev poskusov** (UX sloj
+  nad Supabase enforcementom). **Omejitev:** DNS potrdi domeno, **ne nabiralnika** (napačen lokalni
+  del ujame šele OTP). **Prizadeti:** `AuthService.sendEmailOtp` + prijava/onboarding UI + i18n
+  napake sl/en/de; morda omemba DoH v privacy policy. **DoD:** napačen format/neobstoječa domena
+  zavrnjena (s fail-open na DNS napako), did-you-mean predlog deluje, cooldown odštevalnik, brez
+  regresije obstoječega OTP toka.
+- **FR-12 — Oznaka kraja pri vremenu (reverzno geokodiranje centroida).** ✅ **Implementirano
+  2026-06-18 na `feat/fr12-place-label`** (gl. dnevnik). **Vir = OSM/Nominatim reverse** (odločitev
+  uporabnika; Open-Meteo Geocoding je samo naprej). Oznaka na vremenski kartici Domov; klic le ob
+  spremembi `h3_r7`, oznaka cacheana lokalno (offline pokaže zadnjo znano za isto celico). Nov tretji
+  ponudnik → privacy v1.2 + Play Data Safety usklajena. Spodaj prvotna spec. Ob vremenu (in po želji
+  ob izbiri lokacije) pokaži **ime najbližjega kraja/vasi** — reverzno geokodiran centroid
+  `cellToLatLng(profile.h3_r7)`. **Zakaj:** po FR-8 lokacija nima oznake (le H3 celica); uporabnik ne
+  vidi, za kateri kraj je vreme. **Izvedba:** (1) reverzni geo-vir — Open-Meteo Geocoding je **samo
+  naprej** (ime→koord), zato rabi **nov vir** (Nominatim/OSM ali offline seznam SI/EU krajev);
+  **odprto vprašanje + glavna odločitev.** (2) **Cache oznake lokalno** (recompute le ob spremembi
+  `h3_r7`), da ne ugibamo vsakič in delamo offline. (3) majhna oznaka kraja na vremenski kartici.
+  **Zasebnost:** OK — pošljemo le centroid (~1 km, že tako gre Open-Meteo), rezultat je groba oznaka,
+  ne koordinate. **OBVEZNO če dodamo nov vir:** posodobi privacy policy + Play Data Safety (nov
+  tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
+  morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
+  znano oznako; brez novih shranjenih koordinat.
 
 ## Dnevnik napredka
 
@@ -445,6 +514,75 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   → opravilo prek `task-view`, vstop ⋯ + Nastavitve, retencija 365 d v housekeepu); wireframe
   `23-suggestion-history.html` (skica pred zaslonom); widget testi. *Commit:* `feat(suggestions):
   zaslon preteklih predlogov z odzivi uporabnika`.
+- 2026-06-18 — **FR-12: oznaka kraja pri vremenu (`feat/fr12-place-label`).** Vremenska kartica Domov
+  zdaj pokaže ime najbližjega kraja (📍), reverzno geokodirano iz centroida celice `h3_r7`. Vir =
+  **OSM/Nominatim reverse** (uporabnikova izbira; Open-Meteo geocoding je samo naprej). Koda (core/
+  location): `ReverseGeocodingClient` (tanek Dio klient + `pickPlaceName` izbira village/town/city iz
+  `address`; User-Agent po Nominatim usage policy), `PlaceLabelRepository` (cache v `local_flags`, ključ
+  `{cell,label,lang}`), `placeLabel(lang)` provider (cache-hit brez mreže / fetch+cache / offline →
+  zadnja znana oznaka **le za isto celico**, da premaknjen vrt ne kaže napačnega kraja); klic le ob
+  spremembi celice ali jezika. UI: `_PlaceHeader` (Icons.place_outlined, muted) na vrhu
+  `CurrentWeatherCard`; brez lokacije ni oznake (generično vreme). Testi: `pickPlaceName` parse +
+  cache repo + provider (hit/miss/offline/no-name) — **219/219 zelenih, analyze čist**. Pravno: nov
+  tretji ponudnik → privacy-policy `.md`+`.html` v1.2 (SL/EN/DE), play-data-safety v1.2 (approximate
+  location ostane Shared, doda se prejemnik OSM/Nominatim). **Ostane 👤:** redeploy privacy v1.2 na
+  tendask.com; on-device verifikacija (nastavi lokacijo → oznaka kraja na kartici). Pomislek glede
+  skale (parkiran): javni Nominatim ima usage policy (1 req/s, brez bulk) — nizko-volumski klic +
+  cache je znotraj politike; ob rasti volumna pot LocationIQ/self-host.
+- 2026-06-18 — **FR-8: lokacija prek centroida `h3_r7` (`feat/fr8-h3-centroid`).** Surove koordinate
+  se ne hranijo več (niti device-local); vreme + post-sign-in routing bereta **centroid celice**
+  `cellToLatLng(profile.h3_r7)`. Štirje code commiti: (1) `cellCentroid` helper + k-prefiks res
+  konstante (`h3_cells.dart`, uporablja `cellToGeo` — ne `cellToLatLng`, h3_common 0.7.0 API); (2)
+  koordinatno-prosti `LocationRepository` + centroid `gardenLocation` provider, ki bere **eno
+  profilno vrstico brez userId filtra** (lokalna baza ima vedno eno — izogne se ne-reaktivnemu
+  `authServiceProvider.userId`); (3) routing počaka na **prvi pull** (5 s timeout + fallback na
+  lokalno celico), ker `clearUserData` ob odjavi izbriše profil → `start()` zdaj vrne future
+  (BUG-002 fix); (4) drop `device_location` (drift v8→v9, v6 createTable → raw SQL), `ACCESS_FINE_LOCATION`
+  odstranjen (COARSE zadošča). Testi: h3_cells (fake H3 — FFI se ne naloži v host testu), location_repo,
+  post_sign_in_navigation (5 scenarijev), migration v8→v9; **203/203 zelenih, analyze čist.** Plus
+  doc/pravno (commit 5): privacy-policy `.md`+`.html` v1.1 (SL/EN/DE — koordinate se ne shranijo,
+  Open-Meteo dobi centroid), play-data-safety v1.1 (precise→ni zbran, approximate→Shared), koncept
+  §7.7/§7.10, tech-stack §5, play-console-status. **Ostane 👤:** Play Data Safety obrazec + redeploy
+  privacy v1.1 na netlify; on-device verifikacija (odjava→prijava ne pokaže lokacije).
+- 2026-06-16 — **FR-11: varnost prijave / OTP hardening (`feat/auth-hardening`).** Dva commita
+  (`9e54e4e`, `afbc4dd`). **Pure logika** (`features/auth/data/`): `email_validation.dart` =
+  format check (pragmatičen regex + RFC 5321 dolžinske meje) + `suggestEmailFix` did-you-mean prek
+  Damerau-Levenshtein (transpozicija = 1 → ujame `gmial`/`hotmial`) nad kuriranim seznamom domen
+  (vključno SI: siol.net/telemach.net/t-2.net/amis.net); prag 1, ali 2 za domene ≥9 znakov.
+  `email_domain_checker.dart` = DoH (`dns.google/resolve`) z injektiranim resolverjem (testabilno),
+  MX→A/AAAA fallback (RFC 5321 implicitni MX), **fail-open** — `DomainVerdict.missing` LE ob NXDOMAIN
+  ali NOERROR-brez-MX/A/AAAA, vse nejasno = `unknown`; pošlje le domeno (ne local dela). **Zaslon**
+  (`email_login_screen`): neveljaven format → napaka+predlog; typo → »Ste mislili …?« gate (tap
+  popravi, 2. poskus z istim potrdi); pred sendom DNS gate (blokira le `missing`); po sendu 60 s
+  resend cooldown (`Timer.periodic`, počiščen v dispose). Konstanti `kOtpResendCooldown`/
+  `kDnsCheckTimeout` v `config.dart`; i18n sl/en/de. **Testi:** 16 unit (validacija+checker) + 4
+  widget (format/typo/domain-block/cooldown); analyze čist, 186/186. **Odprto:** privacy policy
+  omemba DoH (domena→dns.google) ob bodoči objavi; opcijsko persistentne urne kapice (zdaj server-side).
+- 2026-06-16 — **FR-9: privzeto območje »Vrt« (`feat/vrt-area`).** Nov `AreaType.garden`, postavljen
+  **prvi** v enumu (UI vrstni red = vrstni red deklaracije; reorder varen brez migracije, ker drift
+  `textEnum` shranjuje ime in `remote_mappers` bere tolerantno po imenu). Ikona 🌻 + labela; i18n
+  `type_garden` + `default_garden_name` (Vrt/Garden/Garten) v sl/en/de. **Auto-seed** privzetega
+  »Vrta« ob zagonu prek novega `GardenSeedService` (`features/areas/data/`): območje + enkratni flag
+  atomarno v transakciji (rollback ob napaki → ni dvojnega seeda); hook v `main.dart` po nastavitvi
+  jezika, pred syncom, ovit v `try/catch` (seed ni esencialen za boot). **Seeded flag v lokalnih
+  prefs** (`local_flags`, vzorec `onboardingSeen`), NE »if missing« → **izbris drži**. Odstopanje od
+  načrta (flag v profile/synced) zaradi deljenega živega Supabase + vzporednih M11 migracij — gl.
+  FR-9 backlog opombo. Picker vrstni red: `watchAll()` zdaj sortira po `(AreaType.index, name)` —
+  garden prvi povsod (ne le v seznamu, tudi task-entry picker), v vseh jezikih (prej po imenu →
+  »Vrt« v sl proti koncu). Testi: seed enkrat / ne po izbrisu + widget »garden prvi« + watchAll
+  vrstni red; 165/165 zeleni, analyze čist. **Večagentni code+security pregled je odkril BLOCKER:**
+  živi Supabase `area_type_check` (0001) ni vključeval `garden` → seedani »Vrt« bi ob pushu sprožil
+  23514 in fail-fast push bi zaklenil cel sync prijavljenega uporabnika. Popravljeno z migracijo
+  `0010_area_type_add_garden.sql` (živi ledger ima 0005–0009 iz M11, zato 0010). **Aplicirano na
+  živi DB 2026-06-16** prek poolerja (`db push` blokiran zaradi branch divergence — remote ima
+  0005–0009, ki jih ta branch nima kot datoteke; direkten SQL kot `apply_catalog.py`; preverjeno z
+  `pg_get_constraintdef`). **On-device verificirano** (SM A536B, debug): seed ustvaril »Vrt«
+  (type=garden, user=local, pending), flag `default_garden_seeded=true`, app brez crasha (logcat
+  čist). Tudi **varnostni popravek:** `android/app/google-services.json` dodan v `.gitignore`
+  (vsebuje projektne ključe; ni bil sledjen ne v zgodovini, a tudi ne ignoriran → zdaj ignoriran).
+  *Commiti:* `feat(areas): dodaj AreaType.garden...` (`e6c80cc`) + `feat(areas): auto-seed
+  privzetega »Vrt« območja...` (`316f5b2`) + `fix(areas): picker uredi po AreaType...` (`5241d64`) +
+  `fix(db): razširi area_type_check...` (`bd41913`) + roadmap (`0e04815`, `99738d6`).
 - 2026-06-09 — **i18n: `base_locale` sl → en (privzeti/fallback + Play default).** App že sledi
   jeziku telefona (`useDeviceLocale`), a je za **nepodprte** jezike padel nazaj na slovenščino. Zdaj
   `slang.yaml base_locale: en` → fallback = **angleščina** (univerzalno); SI/DE naprave še vedno
@@ -455,7 +593,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   `docs/go-live/*` (EN default). *Commit:* `chore(i18n): base_locale en (default/fallback) + go-live EN default`
 - 2026-06-09 — **9.5 priprava: politika zasebnosti + Data Safety + go-live materiali.** Politika
   zasebnosti (SL/EN/DE, `docs/legal/privacy-policy.md` + `.html`) **objavljena na
-  `https://tendask.netlify.app/`** (Netlify); Data Safety mapiranje (`docs/legal/play-data-safety.md`,
+  `https://tendask.com/privacy`** (Cloudflare Pages); Data Safety mapiranje (`docs/legal/play-data-safety.md`,
   ključ: precise location = Collected+Shared(Open-Meteo)+Ephemeral); svež podpisan AAB zgrajen+verjeven
   (CN=Gorazd Veselič); go-live plan + store listing + content rating + grafika (icon-512,
   feature-graphic 1024×500) v `docs/go-live/`. Play razvijalski račun ustvarjen (osebni, »Tendask«) —

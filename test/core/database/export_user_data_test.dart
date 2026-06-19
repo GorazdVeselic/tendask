@@ -62,16 +62,6 @@ void main() {
             updatedAt: t0,
           ),
         );
-    // Device-local raw coordinates — must NOT appear in the export.
-    await db
-        .into(db.deviceLocations)
-        .insert(
-          DeviceLocationsCompanion.insert(
-            latitude: 46.0512,
-            longitude: 14.5051,
-            updatedAt: t0,
-          ),
-        );
   }
 
   group('exportUserData', () {
@@ -111,11 +101,12 @@ void main() {
       await seed();
       final export = await db.exportUserData();
 
-      // No device_location section, and the coordinate values appear nowhere.
+      // Raw coordinates are never stored (FR-8): no device_location section and
+      // no latitude/longitude anywhere — only the derived H3 cells in profile.
       expect(export.containsKey('device_location'), isFalse);
       final dump = export.toString();
-      expect(dump.contains('46.0512'), isFalse);
-      expect(dump.contains('14.5051'), isFalse);
+      expect(dump.contains('latitude'), isFalse);
+      expect(dump.contains('longitude'), isFalse);
     });
   });
 }

@@ -19,22 +19,6 @@ class SyncCursors extends Table {
   Set<Column> get primaryKey => {name};
 }
 
-/// The garden's raw coordinates, kept device-local for the weather lookup.
-/// Privacy by design: coordinates NEVER leave the device — only the derived H3
-/// cells sync (to profile). Single-row table (id fixed to 0 → upsert).
-class DeviceLocations extends Table {
-  @override
-  String get tableName => 'device_location';
-
-  IntColumn get id => integer().withDefault(const Constant(0))();
-  RealColumn get latitude => real()();
-  RealColumn get longitude => real()();
-  DateTimeColumn get updatedAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {id};
-}
-
 /// Device-local key/value flags — onboarding-seen now, later notification
 /// priming / location prompt. Per-device UI state, never synced.
 class LocalFlags extends Table {

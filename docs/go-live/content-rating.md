@@ -8,7 +8,7 @@
 
 ## 1. Content rating — IARC vprašalnik
 
-**E-poštni naslov** (za IARC potrdilo): `gorazd@spletnakoda.si`
+**E-poštni naslov** (za IARC potrdilo): `info@tendask.com`
 
 **Kategorija aplikacije:** **Reference, News, or Educational** ni pravi; izberi
 **»Utility, Productivity, Communication, or Other«** (Tendask = orodje/produktivnost, ni igra).
@@ -54,14 +54,14 @@ Odgovori na vprašanja (vsi **NE**, razen kjer označeno):
 
 | Deklaracija | Odgovor |
 |---|---|
-| **Privacy policy URL** | `https://tendask.netlify.app/` |
+| **Privacy policy URL** | `https://tendask.com/privacy` |
 | **Ads** (oglasi) | **No, my app does not contain ads** |
 | **Data safety** | Izpolni po [`../legal/play-data-safety.md`](../legal/play-data-safety.md) |
 | **News app** | **No** |
 | **COVID-19 contact tracing/status** | **No** |
 | **Government app** | **No** |
 | **Financial features** | **None** |
-| **Data deletion** | Da — v aplikaciji (Nastavitve → izbris računa) + email `gorazd@spletnakoda.si` |
+| **Data deletion** | Da — v aplikaciji (Nastavitve → izbris računa) + email `info@tendask.com` |
 
 ---
 

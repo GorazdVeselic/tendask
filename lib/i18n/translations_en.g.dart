@@ -491,6 +491,15 @@ class Translations$email_login$en {
 
 	/// en: 'The code is wrong or has expired. Try again.'
 	String get err_verify => 'The code is wrong or has expired. Try again.';
+
+	/// en: 'We can't find that email's domain. Check the address.'
+	String get err_email_domain => 'We can\'t find that email\'s domain. Check the address.';
+
+	/// en: 'Did you mean $suggestion?'
+	String did_you_mean({required Object suggestion}) => 'Did you mean ${suggestion}?';
+
+	/// en: 'Send a new code ($seconds s)'
+	String resend_in({required Object seconds}) => 'Send a new code (${seconds} s)';
 }
 
 // Path: location
@@ -510,8 +519,14 @@ class Translations$location$en {
 	/// en: 'Use my location'
 	String get use_gps => 'Use my location';
 
-	/// en: 'or enter a place'
-	String get or_enter => 'or enter a place';
+	/// en: 'Enter a place'
+	String get enter_place => 'Enter a place';
+
+	/// en: 'or'
+	String get or => 'or';
+
+	/// en: 'Automatically via device GPS'
+	String get gps_sub => 'Automatically via device GPS';
 
 	/// en: 'Village, town or address (e.g. Šentjur)'
 	String get place_hint => 'Village, town or address (e.g. Šentjur)';
@@ -522,8 +537,8 @@ class Translations$location$en {
 	/// en: 'Search'
 	String get search => 'Search';
 
-	/// en: 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.'
-	String get privacy => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.';
+	/// en: 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.'
+	String get privacy => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.';
 
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
@@ -554,6 +569,9 @@ class Translations$location$en {
 
 	/// en: 'Location is set'
 	String get status_set => 'Location is set';
+
+	/// en: 'Location is set · $name'
+	String status_set_at({required Object name}) => 'Location is set · ${name}';
 
 	/// en: 'Location not set yet'
 	String get status_unset => 'Location not set yet';
@@ -1182,6 +1200,9 @@ class Translations$areas$en {
 	/// en: 'last:'
 	String get last_prefix => 'last:';
 
+	/// en: 'Garden'
+	String get type_garden => 'Garden';
+
 	/// en: 'Lawn'
 	String get type_lawn => 'Lawn';
 
@@ -1199,6 +1220,9 @@ class Translations$areas$en {
 
 	/// en: 'Other'
 	String get type_other => 'Other';
+
+	/// en: 'Garden'
+	String get default_garden_name => 'Garden';
 
 	/// en: 'Task history'
 	String get history_title => 'Task history';
@@ -1571,6 +1595,27 @@ class Translations$weather$en {
 
 	/// en: 'Updated $time'
 	String updated_at({required Object time}) => 'Updated ${time}';
+
+	/// en: 'Humidity'
+	String get m_humidity => 'Humidity';
+
+	/// en: 'Wind'
+	String get m_wind => 'Wind';
+
+	/// en: 'Precipitation'
+	String get m_precipitation => 'Precipitation';
+
+	/// en: 'Soil temp.'
+	String get m_soil_temp => 'Soil temp.';
+
+	/// en: 'ET₀'
+	String get m_et0 => 'ET₀';
+
+	/// en: 'Rain 48 h'
+	String get m_rain48h => 'Rain 48 h';
+
+	/// en: 'no rain'
+	String get m_no_rain => 'no rain';
 }
 
 // Path: suggestions
@@ -3084,14 +3129,19 @@ extension on Translations {
 			'email_login.err_code' => 'Enter the code from the email.',
 			'email_login.err_send' => 'Couldn\'t send the code. Check your connection and try again.',
 			'email_login.err_verify' => 'The code is wrong or has expired. Try again.',
+			'email_login.err_email_domain' => 'We can\'t find that email\'s domain. Check the address.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Did you mean ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',
-			'location.or_enter' => 'or enter a place',
+			'location.enter_place' => 'Enter a place',
+			'location.or' => 'or',
+			'location.gps_sub' => 'Automatically via device GPS',
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
 			'location.place_note' => 'A village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
-			'location.privacy' => 'We use your location only to roughly determine your surroundings (an area of a few kilometres). Your exact location stays on your device — we keep only the rough surroundings and never reveal it to others.',
+			'location.privacy' => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',
 			'location.set_gps' => 'Location set.',
 			'location.set_place' => ({required Object name}) => 'Location: ${name}',
@@ -3102,6 +3152,7 @@ extension on Translations {
 			'location.no_results' => 'No matches for that place.',
 			'location.screen_title' => 'Garden location',
 			'location.status_set' => 'Location is set',
+			'location.status_set_at' => ({required Object name}) => 'Location is set · ${name}',
 			'location.status_unset' => 'Location not set yet',
 			'location.clear' => 'Remove location',
 			'location.clear_confirm_title' => 'Remove location?',
@@ -3279,12 +3330,14 @@ extension on Translations {
 			'areas.subtitle' => 'plants and lawns',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
+			'areas.type_garden' => 'Garden',
 			'areas.type_lawn' => 'Lawn',
 			'areas.type_hedge' => 'Hedge',
 			'areas.type_bed' => 'Bed',
 			'areas.type_tree' => 'Fruit tree',
 			'areas.type_ornamental' => 'Ornamental',
 			'areas.type_other' => 'Other',
+			'areas.default_garden_name' => 'Garden',
 			'areas.history_title' => 'Task history',
 			'areas.history_empty' => 'No tasks in this area yet.',
 			'areas.plants_section' => 'Plants',
@@ -3397,6 +3450,13 @@ extension on Translations {
 			'weather.home_retry' => 'Tap to retry',
 			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
+			'weather.m_humidity' => 'Humidity',
+			'weather.m_wind' => 'Wind',
+			'weather.m_precipitation' => 'Precipitation',
+			'weather.m_soil_temp' => 'Soil temp.',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Rain 48 h',
+			'weather.m_no_rain' => 'no rain',
 			'suggestions.actions.plan' => 'Plan',
 			'suggestions.actions.dismiss' => 'Skip',
 			'suggestions.actions.already_done' => 'Already done',
@@ -3477,6 +3537,8 @@ extension on Translations {
 			'suggestions.berries.prune_winter.body' => 'Prune {subject} while dormant — by about {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Spring feed',
 			'suggestions.berries.fertilize_spring.body' => 'Feed {subject} as growth starts — by about {window_end_date}.',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Mulch',
 			'suggestions.berries.mulch.body' => 'Mulch {subject} to keep roots cool and moist — by about {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Dormant spray',
@@ -3492,8 +3554,6 @@ extension on Translations {
 			'suggestions.vegetable.transplant.title' => 'Transplant',
 			'suggestions.vegetable.transplant.body' => 'Move {subject} to its final spot after frost — around {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Direct sow',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Feed',
 			'suggestions.vegetable.fertilize_season.body' => 'Give {subject} a feed during the growing season.',

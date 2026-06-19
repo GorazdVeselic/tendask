@@ -35,15 +35,6 @@ void main() {
           ),
         );
     await db
-        .into(db.deviceLocations)
-        .insert(
-          DeviceLocationsCompanion.insert(
-            latitude: 46.0,
-            longitude: 14.5,
-            updatedAt: t0,
-          ),
-        );
-    await db
         .into(db.syncCursors)
         .insert(SyncCursorsCompanion.insert(name: 'pull', lastPulledAt: t0));
     await db
@@ -71,7 +62,6 @@ void main() {
 
       expect(await count(db.areas), 0);
       expect(await count(db.tasks), 0);
-      expect(await count(db.deviceLocations), 0); // coordinates gone on reset
       expect(await count(db.syncCursors), 0); // forces a full pull next sign-in
       expect(await count(db.taskTypes), 1); // catalog is public, kept
     });

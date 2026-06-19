@@ -128,25 +128,16 @@ void main() {
   });
 
   test(
-    'never pushes device_location — raw coordinates stay on the device',
+    'pushes only the owned synced tables (raw coordinates never existed)',
     () async {
-      // Privacy by design (CLAUDE.md §2): only derived H3 cells (in profile) sync;
-      // the raw lat/lon in device_location must never reach the cloud.
-      await db
-          .into(db.deviceLocations)
-          .insert(
-            DeviceLocationsCompanion.insert(
-              latitude: 46.05,
-              longitude: 14.5,
-              updatedAt: t0,
-            ),
-          );
+      // Privacy by design (CLAUDE.md §2): only the derived H3 cells (in profile)
+      // sync. Since FR-8 raw coordinates are never stored at all, so the push can
+      // only ever carry the whitelisted synced tables.
       await insertArea('a1'); // a pending owned row so the push actually runs
 
       await service.push();
 
-      expect(upsert.calls, isNot(contains('device_location')));
-      expect(upsert.calls, ['area']); // only the owned table, never coordinates
+      expect(upsert.calls, ['area']); // only the owned table
     },
   );
 

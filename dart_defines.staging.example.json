@@ -1,0 +1,6 @@
+{
+  "SUPABASE_URL": "https://api-staging.YOUR-DOMAIN",
+  "SUPABASE_PUBLISHABLE_KEY": "sb_publishable_...",
+  "GOOGLE_SERVER_CLIENT_ID": "YOUR_GOOGLE_SERVER_CLIENT_ID.apps.googleusercontent.com",
+  "SENTRY_DSN": ""
+}

@@ -1,11 +1,16 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/config.dart';
+import '../../../core/sync/connectivity.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
+import '../data/email_domain_checker.dart';
+import '../data/email_validation.dart';
 import 'post_sign_in_navigation.dart';
 
 enum _Step { email, code }
@@ -14,6 +19,10 @@ enum _Step { email, code }
 /// the account if new, else signs into the existing one. The guest's local rows
 /// are then claimed to this account and synced (a merge — signing in keeps the
 /// device's data, never resets it).
+///
+/// Input hardening (FR-11): format validation, a "did you mean" domain-typo
+/// suggestion, a DNS-over-HTTPS existence check (fail-open, skipped offline),
+/// and a resend cooldown mirroring the server-side throttle.
 class EmailLoginScreen extends ConsumerStatefulWidget {
   const EmailLoginScreen({super.key});
 
@@ -24,41 +33,135 @@ class EmailLoginScreen extends ConsumerStatefulWidget {
 class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
   final _emailController = TextEditingController();
   final _codeController = TextEditingController();
+  final _codeFocus = FocusNode();
   _Step _step = _Step.email;
   bool _loading = false;
   String? _error;
 
+  /// A pending domain-typo suggestion (full corrected address) shown under the
+  /// field; tapping it applies the fix.
+  String? _suggestion;
+
+  /// The exact email the user re-confirmed despite a suggestion, so a second
+  /// send goes through instead of looping on the same "did you mean?" hint.
+  String? _confirmedEmail;
+
+  Timer? _cooldownTimer;
+  int _cooldownRemaining = 0;
+
   @override
   void dispose() {
+    _cooldownTimer?.cancel();
     _emailController.dispose();
     _codeController.dispose();
+    _codeFocus.dispose();
     super.dispose();
   }
 
-  bool _looksLikeEmail(String s) =>
-      s.contains('@') && s.contains('.') && !s.endsWith('.');
+  void _applySuggestion(String suggestion) {
+    _emailController.value = TextEditingValue(
+      text: suggestion,
+      selection: TextSelection.collapsed(offset: suggestion.length),
+    );
+    setState(() {
+      _suggestion = null;
+      _confirmedEmail = null;
+      _error = null;
+    });
+  }
 
+  void _startResendCooldown() {
+    _cooldownTimer?.cancel();
+    _cooldownRemaining = kOtpResendCooldown.inSeconds;
+    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
+      setState(() => _cooldownRemaining--);
+      if (_cooldownRemaining <= 0) timer.cancel();
+    });
+  }
+
+  /// Validates the entered email (format → typo gate → domain existence), then
+  /// sends the first code. Used by the email step's primary button.
   Future<void> _sendCode() async {
     final t = context.t;
     final email = _emailController.text.trim();
-    if (!_looksLikeEmail(email)) {
-      setState(() => _error = t.email_login.err_email);
+
+    if (!isValidEmailFormat(email)) {
+      setState(() {
+        _error = t.email_login.err_email;
+        _suggestion = suggestEmailFix(email);
+      });
       return;
     }
+
+    // Did-you-mean gate: surface a likely typo once; re-sending the same address
+    // confirms the user meant it (an unusual but real domain is never blocked).
+    final fix = suggestEmailFix(email);
+    if (fix != null && _confirmedEmail != email) {
+      setState(() {
+        _suggestion = fix;
+        _confirmedEmail = email;
+        _error = null;
+      });
+      return;
+    }
+
+    // Domain existence (DoH). Skipped when we already know we're offline (the
+    // garden case): the lookup would just burn the timeout before sendEmailOtp
+    // fails anyway. Fail-open otherwise — only a definitive "missing" blocks.
+    final domain = emailDomain(email);
+    final knownOffline = ref.read(onlineStatusProvider).value == false;
+    if (domain != null && !knownOffline) {
+      setState(() {
+        _loading = true;
+        _error = null;
+        _suggestion = null;
+      });
+      final verdict = await ref.read(emailDomainCheckerProvider).verify(domain);
+      if (!mounted) return;
+      if (verdict == DomainVerdict.missing) {
+        setState(() {
+          _loading = false;
+          _error = t.email_login.err_email_domain;
+        });
+        return;
+      }
+    }
+    await _dispatchOtp(email);
+  }
+
+  /// Sends/resends the OTP and (re)starts the cooldown. No validation or DNS
+  /// gate — the address was already vetted by [_sendCode]; resend must never be
+  /// blocked by a flaky later lookup once a code is already on its way.
+  Future<void> _dispatchOtp(String email) async {
+    final t = context.t;
     setState(() {
       _loading = true;
       _error = null;
+      _suggestion = null;
     });
     try {
       await ref.read(authServiceProvider).sendEmailOtp(email);
       if (!mounted) return;
+      _startResendCooldown();
+      // Dismiss the email (QWERTY) keyboard before showing the code field, then
+      // focus it next frame: switching steps in place keeps the keyboard open,
+      // and Android won't re-query the input type, so it stays QWERTY for the
+      // numeric code. Closing and reopening forces a fresh numeric keyboard.
+      FocusManager.instance.primaryFocus?.unfocus();
       setState(() => _step = _Step.code);
-    } on AuthException catch (e) {
-      if (!mounted) return;
-      setState(() => _error = '${t.email_login.err_send}\n${e.message}');
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _codeFocus.requestFocus();
+      });
     } on Object catch (e) {
       if (!mounted) return;
-      setState(() => _error = '${t.email_login.err_send}\n$e');
+      // Show only a generic message: the raw exception can echo the address or
+      // backend internals. Keep the detail in the log, not on screen.
+      debugPrint('OTP send failed: $e');
+      setState(() => _error = t.email_login.err_send);
     } finally {
       if (mounted) setState(() => _loading = false);
     }
@@ -82,8 +185,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
       if (!mounted) return;
       // Session established — start() claims the guest's local rows to this
       // account, pushes them, and pulls the account's existing data (merge).
-      ref.read(syncCoordinatorProvider.notifier).start();
-      await goToLocationOrHome(context, ref);
+      final syncFuture = ref.read(syncCoordinatorProvider.notifier).start();
+      await goToLocationOrHome(context, ref, syncFuture: syncFuture);
     } on Object {
       if (!mounted) return;
       setState(() => _error = t.email_login.err_verify);
@@ -97,6 +200,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     final t = context.t;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
+    final canResend = !_loading && _cooldownRemaining <= 0;
 
     return Scaffold(
       appBar: AppBar(title: Text(t.email_login.title)),
@@ -125,6 +229,23 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                   ),
                   onSubmitted: (_) => _loading ? null : _sendCode(),
                 ),
+                if (_suggestion != null) ...[
+                  const SizedBox(height: 8),
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () => _applySuggestion(_suggestion!),
+                      style: TextButton.styleFrom(
+                        padding: EdgeInsets.zero,
+                        minimumSize: Size.zero,
+                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                      ),
+                      child: Text(
+                        t.email_login.did_you_mean(suggestion: _suggestion!),
+                      ),
+                    ),
+                  ),
+                ],
               ] else ...[
                 Text(
                   t.email_login.code_sent(email: _emailController.text.trim()),
@@ -135,8 +256,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                 const SizedBox(height: 20),
                 TextField(
                   controller: _codeController,
+                  focusNode: _codeFocus,
                   keyboardType: TextInputType.number,
-                  autofocus: true,
                   maxLength: 10,
                   inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   decoration: InputDecoration(
@@ -177,8 +298,14 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
               if (_step == _Step.code) ...[
                 const SizedBox(height: 6),
                 TextButton(
-                  onPressed: _loading ? null : _sendCode,
-                  child: Text(t.email_login.resend),
+                  onPressed: canResend
+                      ? () => _dispatchOtp(_emailController.text.trim())
+                      : null,
+                  child: Text(
+                    _cooldownRemaining > 0
+                        ? t.email_login.resend_in(seconds: _cooldownRemaining)
+                        : t.email_login.resend,
+                  ),
                 ),
               ],
             ],

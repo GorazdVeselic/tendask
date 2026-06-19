@@ -1,10 +1,10 @@
 /// App-wide tunable constants (CLAUDE.md §"Konstante in konfiguracija").
 library;
 
-/// Default garden location used for the weather snapshot until M7 wires the
-/// on-device H3 cell centroid as the source. Privacy: real coordinates are
-/// never stored; this is a fixed fallback, overridable via --dart-define for
-/// testing other regions. Default = Ljubljana. (Dart has no
+/// Default garden location for the weather snapshot until the user sets one;
+/// once set, weather uses the on-device H3 r7 cell centroid (FR-8). Privacy:
+/// real coordinates are never stored; this is a fixed fallback, overridable via
+/// --dart-define for testing other regions. Default = Ljubljana. (Dart has no
 /// `double.fromEnvironment`, so coordinates come in as strings.)
 const _latEnv = String.fromEnvironment('WEATHER_LAT');
 const _lonEnv = String.fromEnvironment('WEATHER_LON');
@@ -57,6 +57,25 @@ const kRecentPlantsLimit = 8;
 const kWeatherConnectTimeout = Duration(seconds: 10);
 const kWeatherReceiveTimeout = Duration(seconds: 20);
 
+/// Cap on a one-shot GPS fix. Without it `getCurrentPosition` waits indefinitely
+/// when no fix is available (indoors, weak signal) and the UI spinner never
+/// stops; on timeout geolocator throws and we degrade to "couldn't determine
+/// location" with manual place entry as the fallback.
+const kGpsTimeout = Duration(seconds: 15);
+
+/// Reverse geocoding (FR-12): turns the garden cell centroid into a nearby place
+/// name shown on the weather card. We send only the centroid (≤ ~1.4 km, the same
+/// approximate point already sent to Open-Meteo) — never raw coordinates. zoom 13
+/// targets the village/suburb level so rural cells resolve to the actual village
+/// (not its municipality); city cells still read as the city, since pickPlaceName
+/// prefers `city` over a suburb. The User-Agent identifies the app per the OSM
+/// Nominatim usage policy (required); requests are rare (only when the cell
+/// changes) and cached locally.
+const kNominatimReverseUrl = 'https://nominatim.openstreetmap.org/reverse';
+const kReverseGeoZoom = 13;
+const kReverseGeoUserAgent =
+    'Tendask/1.0 (+https://tendask.com; info@tendask.com)';
+
 /// Periodic background sync cadence while the app is running. Sync is
 /// incremental and light; the catalog (rarely changes) is pulled only on
 /// startup/reconnect, not on every tick — keeps the garden device's data and
@@ -102,6 +121,15 @@ const kSupabasePublishableKey = String.fromEnvironment(
   'SUPABASE_PUBLISHABLE_KEY',
 );
 
+/// Human-readable backend environment, derived from [kSupabaseUrl] and logged
+/// once at boot so a debug session can never silently target the wrong backend.
+/// Staging URLs carry the `staging` host segment; everything else is production
+/// (and an empty URL means fully offline).
+String get kEnvLabel {
+  if (kSupabaseUrl.isEmpty) return 'offline (no backend)';
+  return kSupabaseUrl.contains('staging') ? 'staging' : 'production';
+}
+
 /// Google OAuth **Web** client id (serverClientId for native Google sign-in,
 /// M7.4). Arrives via --dart-define (see dart_defines.json). Empty → the Google
 /// button stays disabled (the rest of the app, incl. email sign-in, still works).
@@ -127,4 +155,15 @@ const kSentryDsn = String.fromEnvironment('SENTRY_DSN');
 
 /// Public privacy policy (GDPR). Shown as a tappable link on the sign-in screen
 /// and in Settings; same URL is submitted to Play Console.
-const kPrivacyPolicyUrl = 'https://tendask.netlify.app/';
+const kPrivacyPolicyUrl = 'https://tendask.com/privacy';
+
+/// Minimum gap between OTP code sends (FR-11). Mirrors Supabase's server-side
+/// ~60 s throttle so the resend button counts down locally instead of letting
+/// the user hit a server error. UX rate-limit only; the hard cap stays server-side.
+const kOtpResendCooldown = Duration(seconds: 60);
+
+/// Timeout for the DNS-over-HTTPS domain-existence check (FR-11). Deliberately
+/// short: it runs before sending the OTP, and a slow/failed lookup must fail
+/// OPEN (proceed) rather than make sign-in feel stuck — only a definitive
+/// "domain does not exist" blocks.
+const kDnsCheckTimeout = Duration(seconds: 3);

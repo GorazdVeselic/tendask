@@ -282,6 +282,9 @@ class _Translations$email_login$de extends Translations$email_login$en {
 	@override String get err_code => 'Gib den Code aus der E-Mail ein.';
 	@override String get err_send => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.';
 	@override String get err_verify => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.';
+	@override String get err_email_domain => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.';
+	@override String did_you_mean({required Object suggestion}) => 'Meintest du ${suggestion}?';
+	@override String resend_in({required Object seconds}) => 'Neuen Code senden (${seconds} s)';
 }
 
 // Path: location
@@ -294,11 +297,13 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get title => 'Wo gärtnerst du?';
 	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
 	@override String get use_gps => 'Meinen Standort verwenden';
-	@override String get or_enter => 'oder Ort eingeben';
+	@override String get enter_place => 'Ort eingeben';
+	@override String get or => 'oder';
+	@override String get gps_sub => 'Automatisch per Geräte-GPS';
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
 	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
-	@override String get privacy => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.';
+	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
 	@override String get set_gps => 'Standort festgelegt.';
 	@override String set_place({required Object name}) => 'Standort: ${name}';
@@ -309,6 +314,7 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get no_results => 'Keine Treffer für diesen Ort.';
 	@override String get screen_title => 'Gartenstandort';
 	@override String get status_set => 'Standort ist festgelegt';
+	@override String status_set_at({required Object name}) => 'Standort ist festgelegt · ${name}';
 	@override String get status_unset => 'Standort noch nicht festgelegt';
 	@override String get clear => 'Standort entfernen';
 	@override String get clear_confirm_title => 'Standort entfernen?';
@@ -582,12 +588,14 @@ class _Translations$areas$de extends Translations$areas$en {
 	@override String get subtitle => 'Pflanzen und Rasen';
 	@override String get unassigned => 'Ohne Bereich';
 	@override String get last_prefix => 'zuletzt:';
+	@override String get type_garden => 'Garten';
 	@override String get type_lawn => 'Rasen';
 	@override String get type_hedge => 'Hecke';
 	@override String get type_bed => 'Beet';
 	@override String get type_tree => 'Obstbaum';
 	@override String get type_ornamental => 'Zierpflanzen';
 	@override String get type_other => 'Sonstiges';
+	@override String get default_garden_name => 'Garten';
 	@override String get history_title => 'Aufgabenverlauf';
 	@override String get history_empty => 'Noch keine Aufgaben in diesem Bereich.';
 	@override String get plants_section => 'Pflanzen';
@@ -736,6 +744,13 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get home_retry => 'Zum Wiederholen tippen';
 	@override String get loading => 'Wetter wird geladen…';
 	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
+	@override String get m_humidity => 'Luftfeuchte';
+	@override String get m_wind => 'Wind';
+	@override String get m_precipitation => 'Niederschlag';
+	@override String get m_soil_temp => 'Bodentemp.';
+	@override String get m_et0 => 'ET₀';
+	@override String get m_rain48h => 'Regen 48 h';
+	@override String get m_no_rain => 'kein Regen';
 }
 
 // Path: suggestions
@@ -1935,14 +1950,19 @@ extension on TranslationsDe {
 			'email_login.err_code' => 'Gib den Code aus der E-Mail ein.',
 			'email_login.err_send' => 'Code konnte nicht gesendet werden. Prüfe deine Verbindung und versuche es erneut.',
 			'email_login.err_verify' => 'Der Code ist falsch oder abgelaufen. Versuche es erneut.',
+			'email_login.err_email_domain' => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.',
+			'email_login.did_you_mean' => ({required Object suggestion}) => 'Meintest du ${suggestion}?',
+			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
-			'location.or_enter' => 'oder Ort eingeben',
+			'location.enter_place' => 'Ort eingeben',
+			'location.or' => 'oder',
+			'location.gps_sub' => 'Automatisch per Geräte-GPS',
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
 			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
-			'location.privacy' => 'Wir nutzen deinen Standort nur, um deine Umgebung grob zu bestimmen (ein Bereich von wenigen Kilometern). Dein genauer Standort bleibt auf deinem Gerät — wir speichern nur die grobe Umgebung und geben sie niemals an andere weiter.',
+			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
 			'location.set_gps' => 'Standort festgelegt.',
 			'location.set_place' => ({required Object name}) => 'Standort: ${name}',
@@ -1953,6 +1973,7 @@ extension on TranslationsDe {
 			'location.no_results' => 'Keine Treffer für diesen Ort.',
 			'location.screen_title' => 'Gartenstandort',
 			'location.status_set' => 'Standort ist festgelegt',
+			'location.status_set_at' => ({required Object name}) => 'Standort ist festgelegt · ${name}',
 			'location.status_unset' => 'Standort noch nicht festgelegt',
 			'location.clear' => 'Standort entfernen',
 			'location.clear_confirm_title' => 'Standort entfernen?',
@@ -2130,12 +2151,14 @@ extension on TranslationsDe {
 			'areas.subtitle' => 'Pflanzen und Rasen',
 			'areas.unassigned' => 'Ohne Bereich',
 			'areas.last_prefix' => 'zuletzt:',
+			'areas.type_garden' => 'Garten',
 			'areas.type_lawn' => 'Rasen',
 			'areas.type_hedge' => 'Hecke',
 			'areas.type_bed' => 'Beet',
 			'areas.type_tree' => 'Obstbaum',
 			'areas.type_ornamental' => 'Zierpflanzen',
 			'areas.type_other' => 'Sonstiges',
+			'areas.default_garden_name' => 'Garten',
 			'areas.history_title' => 'Aufgabenverlauf',
 			'areas.history_empty' => 'Noch keine Aufgaben in diesem Bereich.',
 			'areas.plants_section' => 'Pflanzen',
@@ -2248,6 +2271,13 @@ extension on TranslationsDe {
 			'weather.home_retry' => 'Zum Wiederholen tippen',
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
+			'weather.m_humidity' => 'Luftfeuchte',
+			'weather.m_wind' => 'Wind',
+			'weather.m_precipitation' => 'Niederschlag',
+			'weather.m_soil_temp' => 'Bodentemp.',
+			'weather.m_et0' => 'ET₀',
+			'weather.m_rain48h' => 'Regen 48 h',
+			'weather.m_no_rain' => 'kein Regen',
 			'suggestions.actions.plan' => 'Einplanen',
 			'suggestions.actions.dismiss' => 'Überspringen',
 			'suggestions.actions.already_done' => 'Schon erledigt',
@@ -2328,6 +2358,8 @@ extension on TranslationsDe {
 			'suggestions.berries.prune_winter.body' => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Frühjahrsdüngung',
 			'suggestions.berries.fertilize_spring.body' => 'Dünge {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.',
+			_ => null,
+		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Mulchen',
 			'suggestions.berries.mulch.body' => 'Mulche {subject} für kühle, feuchte Wurzeln — bis etwa {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Winterspritzung',
@@ -2343,8 +2375,6 @@ extension on TranslationsDe {
 			'suggestions.vegetable.transplant.title' => 'Umpflanzen',
 			'suggestions.vegetable.transplant.body' => 'Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}.',
 			'suggestions.vegetable.sow_direct.title' => 'Direktsaat',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.vegetable.sow_direct.body' => 'Säe {subject} direkt ins Freie, sobald es mild wird — Zeitfenster bis ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Düngen',
 			'suggestions.vegetable.fertilize_season.body' => 'Dünge {subject} während der Wachstumszeit.',

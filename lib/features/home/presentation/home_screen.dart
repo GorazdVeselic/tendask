@@ -10,6 +10,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/location/place_label_repository.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/areas/application/areas_providers.dart';
@@ -20,6 +21,7 @@ import '../../../features/tasks/presentation/subject_labels.dart';
 import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
+import '../../../features/weather/presentation/weather_detail_sheet.dart';
 import '../../../i18n/translations.g.dart';
 
 class HomeScreen extends ConsumerStatefulWidget {
@@ -241,7 +243,19 @@ class _WeatherSection extends ConsumerWidget {
     // Keep the last snapshot visible while a refresh is in flight — the spinner
     // is only for the very first load, when there is nothing to show yet.
     final snapshot = weather.value;
-    if (snapshot != null) return CurrentWeatherCard(snapshot: snapshot);
+    if (snapshot != null) {
+      final lang = LocaleSettings.currentLocale.languageCode;
+      final placeLabel = ref.watch(placeLabelProvider(lang)).value;
+      return CurrentWeatherCard(
+        snapshot: snapshot,
+        placeLabel: placeLabel,
+        onTap: () => showWeatherDetailSheet(
+          context,
+          initial: snapshot,
+          placeLabel: placeLabel,
+        ),
+      );
+    }
     if (weather.isLoading) return const _WeatherLoadingCard();
     return InkWell(
       borderRadius: BorderRadius.circular(12),

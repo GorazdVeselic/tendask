@@ -227,5 +227,15 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       builder: (context, state) =>
           EntryScreen(taskId: state.pathParameters['id']),
     ),
+    // Top-level twin of the shell '/tasks/:id' (task-detail) for callers ABOVE
+    // the shell (e.g. plant-detail): pushing the nested route from above would
+    // rebuild the shell page and duplicate its page key (Navigator assertion).
+    // Path is singular ('/task/:id') to avoid colliding with '/tasks/:id'.
+    GoRoute(
+      path: '/task/:id',
+      name: 'task-view',
+      builder: (context, state) =>
+          TaskDetailScreen(id: state.pathParameters['id']!),
+    ),
   ],
 );

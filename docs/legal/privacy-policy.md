@@ -1,9 +1,11 @@
 # Tendask — Politika zasebnosti / Privacy Policy / Datenschutzerklärung
 
-> **v1, 2026-06-09.** Velja za aplikacijo **Tendask** (Android).
-> **Objavljeno na:** https://tendask.netlify.app/ (Netlify, iz `privacy-policy.html`).
+> **v1.2, 2026-06-18.** Velja za aplikacijo **Tendask** (Android).
+> **Objavljeno na:** https://tendask.com/privacy (Cloudflare Pages, iz repo `../tendask_web`).
 > Ta URL je vpisan v Play Console (App content → Privacy policy).
-> **Datum uveljavitve:** 2026-06-09 · **Različica:** 1.0
+> **Datum uveljavitve:** 2026-06-18 · **Različica:** 1.2
+> _(v1.1: natančne koordinate se ne shranjujejo več niti lokalno; za vreme se pošlje le približno središče celice ~1 km — FR-8.)_
+> _(v1.2: za prikaz imena najbližjega kraja ob vremenu se isto približno središče celice pošlje storitvi OpenStreetMap/Nominatim — FR-12.)_
 >
 > _Opomba (ni del besedila politike): trije jeziki so v enem dokumentu zaradi lažjega pregleda
 > in vzdrževanja — ob gostovanju jih lahko razdeliš na tri strani (`/privacy`, `/privacy-en`,
@@ -16,8 +18,8 @@
 
 ### 1. Upravljavec podatkov
 
-Upravljavec osebnih podatkov je **Gorazd Veselic** (fizična oseba).
-Kontakt za vprašanja o zasebnosti in uveljavljanje pravic: **gorazd@spletnakoda.si**.
+Upravljavec osebnih podatkov je **Tendask**.
+Kontakt za vprašanja o zasebnosti in uveljavljanje pravic: **info@tendask.com**.
 
 ### 2. Načelo: zasebnost po zasnovi
 
@@ -25,9 +27,10 @@ Tendask je vrtnarska evidenčna aplikacija, ki deluje **offline-first** — tvoj
 najprej na napravi. V oblak (Supabase, strežniki v EU) se sinhronizirajo le, če se prijaviš z
 računom; brez prijave ostanejo izključno na napravi.
 
-**Tvoje natančne lokacijske koordinate (GPS) nikoli ne zapustijo naprave za shranjevanje.**
-Iz koordinat na napravi izračunamo le približno celico (sistem H3, ločljivost ~1 km) in v oblak
-shranimo **samo to celico**, nikoli surovih koordinat. (Izjema je vremenska storitev — glej §5.)
+**Tvoje natančne koordinate (GPS) se nikoli ne shranijo — niti na napravi.** Iz trenutne lokacije
+na napravi izračunamo le približno celico (sistem H3, ločljivost ~1 km) in koordinate takoj
+zavržemo; v oblak shranimo **samo to celico**. Tudi za vreme se navzven pošlje le **približno
+središče celice** (~1 km natančnosti), nikoli tvoja točna lokacija (glej §5).
 
 ### 3. Kateri podatki se obdelujejo
 
@@ -36,7 +39,7 @@ shranimo **samo to celico**, nikoli surovih koordinat. (Izjema je vremenska stor
 - **Vsebina vrta:** opravila, območja, rastline, opombe, opomniki, nastavitve obvestil. Brez
   prijave so samo na napravi; ob prijavi se sinhronizirajo v oblak.
 - **Približna lokacija:** celice H3 (≈ 1 km in širše), izpeljane na napravi. Natančne koordinate
-  so shranjene **samo lokalno** in se uporabljajo le za vreme.
+  se **ne shranjujejo**; za vreme se uporabi le središče celice.
 - **Diagnostični podatki (Sentry):** ob napaki/sesutju poročilo o napaki, sled klicev, različica
   aplikacije ter tip naprave/OS. Namenjeni stabilnosti, ne identifikaciji.
 
@@ -53,9 +56,15 @@ shranimo **samo to celico**, nikoli surovih koordinat. (Izjema je vremenska stor
 
 - **Supabase** (zaledje — avtentikacija in baza). Strežniki v **EU (Frankfurt)**. Shranjuje:
   e-pošto, celice H3, vsebino vrta, nastavitve obvestil. Koordinate se ne pošiljajo.
-- **Open-Meteo** (vreme in geokodiranje). Ob pridobivanju vremena se na storitev **pošljejo
-  natančne koordinate**, ob iskanju kraja pa vpisano ime kraja. Podatki se uporabijo le za odgovor
-  in se pri nas ne hranijo; Open-Meteo je brezplačen in ne zahteva računa.
+- **Open-Meteo** (vreme in geokodiranje). Ob pridobivanju vremena se na storitev pošlje le
+  **približno središče tvoje celice** (~1 km), ne tvoje natančne lokacije; ob iskanju kraja pa
+  vpisano ime kraja. Podatki se uporabijo le za odgovor in se pri nas ne hranijo; Open-Meteo je
+  brezplačen in ne zahteva računa.
+- **OpenStreetMap / Nominatim** (ime kraja ob vremenu). Da ti ob vremenu pokažemo ime najbližjega
+  kraja, pošljemo storitvi le **približno središče tvoje celice** (~1 km, isto kot Open-Meteo),
+  nikoli natančne lokacije; v zameno dobimo grobo oznako (npr. ime vasi). Rezultat se shrani le
+  lokalno na napravi (da deluje brez povezave); storitev upravlja fundacija OpenStreetMap, je
+  brezplačna in ne zahteva računa.
 - **Sentry** (diagnostika napak). Lahko obdeluje podatke izven EU (npr. ZDA) na podlagi standardnih
   pogodbenih klavzul.
 - **Google** (prijava z Google računom — neobvezno). Ob prijavi poteka izmenjava prijavnega žetona.
@@ -78,7 +87,7 @@ do ugovora obdelavi. V aplikaciji sta neposredno na voljo:
 - **Izbris računa** (Nastavitve → izbris računa) — nepovraten izbris oblačnih podatkov + počiščenje
   lokalne baze.
 
-Za ostale zahteve piši na **gorazd@spletnakoda.si**. Pritožbo lahko vložiš tudi pri Informacijskem
+Za ostale zahteve piši na **info@tendask.com**. Pritožbo lahko vložiš tudi pri Informacijskem
 pooblaščencu RS (`ip-rs.si`).
 
 ### 8. Otroci
@@ -96,8 +105,8 @@ strani. Veljavna je vedno zadnja objavljena različica z datumom uveljavitve.
 
 ### 1. Data controller
 
-The controller of personal data is **Gorazd Veselic** (a natural person).
-Contact for privacy questions and exercising your rights: **gorazd@spletnakoda.si**.
+The controller of personal data is **Tendask**.
+Contact for privacy questions and exercising your rights: **info@tendask.com**.
 
 ### 2. Principle: privacy by design
 
@@ -105,9 +114,11 @@ Tendask is a garden-logging app that is **offline-first** — your data lives on
 It is synced to the cloud (Supabase, servers in the EU) only if you sign in with an account; without
 an account it stays solely on your device.
 
-**Your precise location coordinates (GPS) never leave the device for storage.** From the coordinates
-we compute only an approximate cell on-device (H3 system, ~1 km resolution) and store **only that
-cell** in the cloud — never raw coordinates. (The weather service is an exception — see §5.)
+**Your precise coordinates (GPS) are never stored — not even on the device.** From your current
+location the app derives only an approximate cell on-device (H3 system, ~1 km resolution) and
+immediately discards the coordinates; only that cell is stored in the cloud. Even for weather, only
+the **approximate centre of your cell** (~1 km accuracy) is sent out — never your exact location
+(see §5).
 
 ### 3. Data we process
 
@@ -116,7 +127,7 @@ cell** in the cloud — never raw coordinates. (The weather service is an except
 - **Garden content:** tasks, areas, plants, notes, reminders, notification settings. Without an
   account this stays on the device; when signed in it syncs to the cloud.
 - **Approximate location:** H3 cells (≈ 1 km and coarser), derived on-device. Precise coordinates
-  are stored **locally only** and used solely for weather.
+  are **not stored**; weather uses only the cell centre.
 - **Diagnostic data (Sentry):** on an error/crash, an error report, stack trace, app version and
   device/OS type. Used for stability, not identification.
 
@@ -133,9 +144,15 @@ cell** in the cloud — never raw coordinates. (The weather service is an except
 
 - **Supabase** (backend — authentication and database). Servers in the **EU (Frankfurt)**. Stores:
   email, H3 cells, garden content, notification settings. No coordinates are sent.
-- **Open-Meteo** (weather and geocoding). Fetching weather **sends precise coordinates** to the
-  service; searching for a place sends the typed place name. Data is used only to answer the request
-  and is not retained by us; Open-Meteo is free and requires no account.
+- **Open-Meteo** (weather and geocoding). Fetching weather sends only the **approximate centre of
+  your cell** (~1 km), not your precise location; searching for a place sends the typed place name.
+  Data is used only to answer the request and is not retained by us; Open-Meteo is free and requires
+  no account.
+- **OpenStreetMap / Nominatim** (place name shown with the weather). To show the name of the nearest
+  place alongside the weather, we send the service only the **approximate centre of your cell**
+  (~1 km, the same point as Open-Meteo), never your precise location; in return we get a coarse label
+  (e.g. a village name). The result is stored only locally on the device (so it works offline); the
+  service is operated by the OpenStreetMap Foundation, is free and requires no account.
 - **Sentry** (error diagnostics). May process data outside the EU (e.g. the US) under Standard
   Contractual Clauses.
 - **Google** (Google sign-in — optional). Sign-in performs a token exchange.
@@ -157,7 +174,7 @@ your data, and to object to processing. Directly available in the app:
 - **Account deletion** (Settings → delete account) — irreversible deletion of cloud data + wiping
   the local database.
 
-For other requests email **gorazd@spletnakoda.si**. You may also lodge a complaint with the Slovenian
+For other requests email **info@tendask.com**. You may also lodge a complaint with the Slovenian
 Information Commissioner (`ip-rs.si`) or your local supervisory authority.
 
 ### 8. Children
@@ -175,8 +192,7 @@ published version with its effective date always applies.
 
 ### 1. Verantwortlicher
 
-Verantwortlicher für die Verarbeitung personenbezogener Daten ist **Gorazd Veselic** (natürliche
-Person). Kontakt für Datenschutzfragen und die Ausübung Ihrer Rechte: **gorazd@spletnakoda.si**.
+Verantwortlicher für die Verarbeitung personenbezogener Daten ist **Tendask**. Kontakt für Datenschutzfragen und die Ausübung Ihrer Rechte: **info@tendask.com**.
 
 ### 2. Grundsatz: Datenschutz durch Technikgestaltung
 
@@ -184,10 +200,11 @@ Tendask ist eine App zur Gartendokumentation und arbeitet **offline-first** — 
 zuerst auf Ihrem Gerät. Eine Synchronisierung in die Cloud (Supabase, Server in der EU) erfolgt nur,
 wenn Sie sich mit einem Konto anmelden; ohne Konto bleiben sie ausschließlich auf dem Gerät.
 
-**Ihre genauen Standortkoordinaten (GPS) verlassen das Gerät niemals zur Speicherung.** Aus den
-Koordinaten berechnen wir auf dem Gerät nur eine ungefähre Zelle (H3-System, ~1 km Auflösung) und
-speichern **nur diese Zelle** in der Cloud — niemals Rohkoordinaten. (Ausnahme: der Wetterdienst —
-siehe §5.)
+**Ihre genauen Koordinaten (GPS) werden niemals gespeichert — auch nicht auf dem Gerät.** Aus Ihrem
+aktuellen Standort berechnet die App auf dem Gerät nur eine ungefähre Zelle (H3-System, ~1 km
+Auflösung) und verwirft die Koordinaten sofort; in der Cloud wird **nur diese Zelle** gespeichert.
+Auch für das Wetter wird nach außen nur der **ungefähre Mittelpunkt der Zelle** (~1 km Genauigkeit)
+gesendet, niemals Ihr genauer Standort (siehe §5).
 
 ### 3. Verarbeitete Daten
 
@@ -196,7 +213,7 @@ siehe §5.)
 - **Garteninhalte:** Aufgaben, Bereiche, Pflanzen, Notizen, Erinnerungen, Benachrichtigungs-
   einstellungen. Ohne Konto nur auf dem Gerät; bei Anmeldung Synchronisierung in die Cloud.
 - **Ungefährer Standort:** H3-Zellen (≈ 1 km und gröber), auf dem Gerät abgeleitet. Genaue
-  Koordinaten werden **nur lokal** gespeichert und ausschließlich für das Wetter verwendet.
+  Koordinaten werden **nicht gespeichert**; für das Wetter wird nur der Zellenmittelpunkt verwendet.
 - **Diagnosedaten (Sentry):** bei einem Fehler/Absturz ein Fehlerbericht, Stacktrace, App-Version
   sowie Geräte-/OS-Typ. Dienen der Stabilität, nicht der Identifizierung.
 
@@ -214,9 +231,16 @@ siehe §5.)
 - **Supabase** (Backend — Authentifizierung und Datenbank). Server in der **EU (Frankfurt)**.
   Speichert: E-Mail, H3-Zellen, Garteninhalte, Benachrichtigungseinstellungen. Es werden keine
   Koordinaten gesendet.
-- **Open-Meteo** (Wetter und Geokodierung). Beim Abruf des Wetters werden **genaue Koordinaten** an
-  den Dienst gesendet, bei der Ortssuche der eingegebene Ortsname. Die Daten dienen nur der Antwort
-  und werden von uns nicht gespeichert; Open-Meteo ist kostenlos und erfordert kein Konto.
+- **Open-Meteo** (Wetter und Geokodierung). Beim Abruf des Wetters wird nur der **ungefähre
+  Mittelpunkt Ihrer Zelle** (~1 km) gesendet, nicht Ihr genauer Standort; bei der Ortssuche der
+  eingegebene Ortsname. Die Daten dienen nur der Antwort und werden von uns nicht gespeichert;
+  Open-Meteo ist kostenlos und erfordert kein Konto.
+- **OpenStreetMap / Nominatim** (Ortsname beim Wetter). Um Ihnen beim Wetter den Namen des nächsten
+  Ortes anzuzeigen, senden wir dem Dienst nur den **ungefähren Mittelpunkt Ihrer Zelle** (~1 km,
+  derselbe Punkt wie bei Open-Meteo), niemals Ihren genauen Standort; im Gegenzug erhalten wir eine
+  grobe Bezeichnung (z. B. einen Ortsnamen). Das Ergebnis wird nur lokal auf dem Gerät gespeichert
+  (damit es offline funktioniert); der Dienst wird von der OpenStreetMap Foundation betrieben, ist
+  kostenlos und erfordert kein Konto.
 - **Sentry** (Fehlerdiagnose). Kann Daten außerhalb der EU (z. B. USA) auf Grundlage von
   Standardvertragsklauseln verarbeiten.
 - **Google** (Google-Anmeldung — optional). Bei der Anmeldung erfolgt ein Token-Austausch.
@@ -240,7 +264,7 @@ verfügbar:
 - **Kontolöschung** (Einstellungen → Konto löschen) — unwiderrufliche Löschung der Cloud-Daten +
   Bereinigung der lokalen Datenbank.
 
-Für weitere Anfragen schreiben Sie an **gorazd@spletnakoda.si**. Sie können auch Beschwerde bei der
+Für weitere Anfragen schreiben Sie an **info@tendask.com**. Sie können auch Beschwerde bei der
 zuständigen Aufsichtsbehörde einlegen.
 
 ### 8. Kinder

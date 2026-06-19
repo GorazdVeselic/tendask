@@ -37,7 +37,6 @@ part 'app_database.g.dart';
     SuggestionLogs,
     // local-only (never synced)
     SyncCursors,
-    DeviceLocations,
     LocalFlags,
   ],
 )
@@ -48,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -70,7 +69,6 @@ class AppDatabase extends _$AppDatabase {
         supplies,
         areas,
         profiles,
-        deviceLocations,
         syncCursors,
       ]) {
         await delete(table).go();
@@ -79,15 +77,12 @@ class AppDatabase extends _$AppDatabase {
     });
   }
 
-  /// Collects all of the user's rows into a JSON-serializable map for GDPR
-  /// export. Excludes device-local-only tables: device_location holds the raw
-  /// garden coordinates, which must never leave the device (only the derived H3
-  /// cells in profile are exported); local_flag/sync_cursor are internal. The
-  /// public catalog is omitted (not user data). sync_status is stripped — an
-  /// internal sync detail, not user content. The FCM token is stripped too: a
-  /// technical device identifier, not user content (nulled on sign-out anyway).
-  /// suggestion_log is a server-side derivative of the same decisions — not
-  /// exported.
+  /// export. Raw coordinates are never stored (FR-8) — only the derived H3 cells
+  /// in profile are exported. Excludes device-local-only tables (local_flag/
+  /// sync_cursor are internal); the public catalog is omitted (not user data).
+  /// sync_status and the FCM token are stripped — an internal sync detail / a
+  /// technical device identifier, not user content. suggestion_log is a
+  /// server-side derivative of the same decisions — not exported.
   Future<Map<String, dynamic>> exportUserData() async {
     List<Map<String, dynamic>> rows<D extends DataClass>(
       List<D> data,
@@ -143,10 +138,17 @@ class AppDatabase extends _$AppDatabase {
       if (from < 5) {
         await m.createTable(syncCursors);
       }
-      // v6: device_location holds the garden's raw coordinates device-local
-      // for weather (M7.1b); only the derived H3 cells sync to profile.
+      // v6: device_location held the garden's raw coordinates device-local for
+      // weather (M7.1b). Created via raw SQL because the drift table was dropped
+      // in v9 (FR-8) — an old DB must still pass through this step before v9
+      // drops it. DDL matches the former generated schema.
       if (from < 6) {
-        await m.createTable(deviceLocations);
+        await customStatement(
+          'CREATE TABLE IF NOT EXISTS device_location ('
+          'id INTEGER NOT NULL DEFAULT 0 PRIMARY KEY, '
+          'latitude REAL NOT NULL, longitude REAL NOT NULL, '
+          'updated_at INTEGER NOT NULL)',
+        );
       }
       // v7: local_flag holds device-local UI flags (onboarding seen, M7.2).
       if (from < 7) {
@@ -156,10 +158,16 @@ class AppDatabase extends _$AppDatabase {
       if (from < 8) {
         await m.addColumn(profiles, profiles.notificationSettings);
       }
-      // v9: smart engine (M11.2) — climate/FCM profile fields, frozen
-      // agg_context snapshot on task, task_type.seasonal flag, suggestion
-      // tables. Mirrors Supabase migration 0005.
+      // v9: drop device_location — raw coordinates are no longer stored; weather
+      // uses the H3 r7 cell centroid (FR-8). Device-local only, never synced, so
+      // no Supabase impact.
       if (from < 9) {
+        await customStatement('DROP TABLE IF EXISTS device_location');
+      }
+      // v10: smart engine (M11.2) — climate/FCM profile fields, frozen
+      // agg_context snapshot on task, task_type.seasonal flag, suggestion
+      // tables. Mirrors Supabase migration 0006.
+      if (from < 10) {
         await m.addColumn(profiles, profiles.timezone);
         await m.addColumn(profiles, profiles.climateBucket);
         await m.addColumn(profiles, profiles.climateProfile);
@@ -175,10 +183,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(suggestions);
         await m.createTable(suggestionLogs);
       }
-      // v10: plant_task_rule catalog (M11.4) — seeded by SeedService on the
+      // v11: plant_task_rule catalog (M11.4) — seeded by SeedService on the
       // next startup (it backfills any empty catalog table), pulled by
       // catalog sync afterwards.
-      if (from < 10) {
+      if (from < 11) {
         await m.createTable(plantTaskRules);
       }
     },

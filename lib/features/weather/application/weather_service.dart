@@ -89,6 +89,29 @@ class WeatherService {
     }
     return null;
   }
+
+  /// Cached full snapshot for the dashboard detail sheet. Same fresh/stale
+  /// policy as [captureCached] but pulls every band and uses its own cache slot,
+  /// so reopening the sheet within [_freshTtl] does not re-hit Open-Meteo.
+  Future<WeatherSnapshot?> captureCachedFull({
+    required double latitude,
+    required double longitude,
+  }) async {
+    final cached = await _cache.load(full: true);
+    final now = _clock.now();
+    if (cached != null && now.difference(cached.capturedAt) < _freshTtl) {
+      return cached;
+    }
+    final fresh = await capture(latitude: latitude, longitude: longitude);
+    if (fresh != null) {
+      await _cache.save(fresh, full: true);
+      return fresh;
+    }
+    if (cached != null && now.difference(cached.capturedAt) < _staleTtl) {
+      return cached;
+    }
+    return null;
+  }
 }
 
 // keepAlive so the service (and its cache reads) survive between visits to Home.
@@ -107,4 +130,18 @@ Future<WeatherSnapshot?> currentWeather(Ref ref) async {
   return ref
       .watch(weatherServiceProvider)
       .captureCached(latitude: loc.latitude, longitude: loc.longitude);
+}
+
+/// Full weather snapshot for the dashboard detail sheet: every band (humidity,
+/// wind, soil temperature, ET₀, the 48 h rain look-back) for the garden
+/// location. Kept separate from the light [currentWeather] so opening Home stays
+/// fast, and cached for [kWeatherCacheTtl] so reopening the sheet does not re-hit
+/// Open-Meteo. Offline falls back to the last cached snapshot (else null, and
+/// the sheet keeps showing the light snapshot it opened with).
+@riverpod
+Future<WeatherSnapshot?> weatherDetail(Ref ref) async {
+  final loc = await ref.watch(gardenLocationProvider.future);
+  return ref
+      .watch(weatherServiceProvider)
+      .captureCachedFull(latitude: loc.latitude, longitude: loc.longitude);
 }
