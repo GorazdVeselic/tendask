@@ -11,7 +11,7 @@ create extension if not exists pg_cron;
 
 -- In-flight marker: when a user was last handed to the Edge Function. Lets an
 -- overlapping cron tick skip users whose run has not finished yet (additive to
--- engine_run from 0005).
+-- engine_run from 0006).
 alter table engine_run add column if not exists last_dispatched_at timestamptz;
 
 -- Dispatcher: every 30 min, pick users whose LOCAL time is 07:00–12:00 and

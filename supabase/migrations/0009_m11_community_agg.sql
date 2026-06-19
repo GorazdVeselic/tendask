@@ -1,21 +1,21 @@
 -- ============================================================
--- 0008_m11_community_agg.sql — community aggregates (V2 / Faza E).
+-- 0009_m11_community_agg.sql — community aggregates (V2 / Faza E).
 -- docs/m11/04 §4.4–4.6. Additive-only (CLAUDE.md).
 --
 -- Four public-read aggregate tables (k-anonymous RLS, NO user_id ever stored),
 -- the service-only eligible_user matview + agg_event view, and the nightly
 -- agg_refresh_all() cron. Every writer is the cron (security definer); clients
--- only ever read, gated by k_privacy() (from 0005).
+-- only ever read, gated by k_privacy() (from 0006).
 --
 -- Two deliberate deltas from docs/m11/04 (both follow the hardening this project
--- already committed to in 0006/0007, not the doc's verbatim §4.6 SQL):
+-- already committed to in 0007/0008, not the doc's verbatim §4.6 SQL):
 --   * agg_refresh_all() uses `set search_path = ''` + schema-qualified objects
 --     (the doc wrote `public`) so a planted object in a writable schema can't
 --     shadow profile/app_config/aggregate tables in a security-definer body.
 --   * Explicit GRANT SELECT on the four read tables: RLS gates rows, grants gate
---     table access — PostgREST needs BOTH (0007 §2b convention).
--- The migration filename is 0008 because 0006/0007 are already taken (the doc
--- still calls it "0006_m11_community_agg" — same content, different number).
+--     table access — PostgREST needs BOTH (0008 §2b convention).
+-- The migration filename is 0009 because 0007/0008 are already taken (the doc
+-- still calls it "0007_m11_community_agg" — same content, different number).
 -- ============================================================
 
 -- ----- 4.4 aggregate tables ------------------------------------------------
@@ -85,7 +85,7 @@ create policy bucket_population_read on bucket_population
 -- Grants: read-only for clients (the cron writes via the service role, which
 -- bypasses grants). Revoke the Supabase default ALL grant first, then grant
 -- exactly SELECT — RLS gates rows, grants gate table access, and the new tables
--- must not be writable at the grant level (0007 §2b deterministic-API convention).
+-- must not be writable at the grant level (0008 §2b deterministic-API convention).
 revoke all on activity_recent, activity_season, activity_frequency, bucket_population
   from anon, authenticated;
 grant select on activity_recent, activity_season, activity_frequency, bucket_population
@@ -267,11 +267,11 @@ $$;
 
 -- Server-only: the cron runs as the function owner. Revoke the default PUBLIC
 -- grant so no anon/authenticated user can trigger a full refresh via PostgREST
--- RPC (matches engine_dispatch() in 0006).
+-- RPC (matches engine_dispatch() in 0007).
 revoke execute on function public.agg_refresh_all() from public;
 
 -- Idempotent (re)schedule: drop any existing job of this name first so a replay
--- against the shared live DB cannot duplicate or error (0006 convention).
+-- against the shared live DB cannot duplicate or error (0007 convention).
 select cron.unschedule(jobid) from cron.job where jobname = 'agg-nightly';
 
 select cron.schedule('agg-nightly', '30 2 * * *', $$select public.agg_refresh_all()$$);

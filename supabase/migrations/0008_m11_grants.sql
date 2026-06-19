@@ -1,7 +1,7 @@
 -- ============================================================
--- 0007_m11_grants.sql — table grants for the M11 engine tables + harden
+-- 0008_m11_grants.sql — table grants for the M11 engine tables + harden
 -- k_privacy() search_path. Additive-only, idempotent (re-granting and
--- create-or-replace are no-ops). 0005 enabled RLS and created policies but
+-- create-or-replace are no-ops). 0006 enabled RLS and created policies but
 -- granted nothing; PostgREST needs BOTH — RLS gates rows, grants gate table
 -- access (see 0002 §2b). Explicit grants keep the API deterministic instead of
 -- relying on default privileges (the convention this project committed to).
@@ -13,7 +13,7 @@ grant select on plant_task_rule to anon, authenticated;
 
 -- suggestion: client pulls and pushes status changes via upsert (insert+update).
 -- No delete — the client soft-deletes (deleted = true via update), matching the
--- select/insert/update-only policies in 0005 (no delete policy on purpose).
+-- select/insert/update-only policies in 0006 (no delete policy on purpose).
 grant select, insert, update on suggestion to authenticated;
 
 -- suggestion_log: read-only mirror of engine guard state (server is the only
@@ -25,7 +25,7 @@ grant select on suggestion_log to authenticated;
 
 -- ============================================================
 -- Pin search_path on the security-definer helper to match delete_account()
--- (0004) and engine_dispatch() (0006); 0005 left it as 'public'. Schema-qualify
+-- (0004) and engine_dispatch() (0007); 0006 left it as 'public'. Schema-qualify
 -- the read so an empty search_path resolves. The function exists on the live DB
 -- already, so harden it now rather than waiting for its first caller (M11.16).
 -- ============================================================

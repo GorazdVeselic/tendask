@@ -1,5 +1,5 @@
 -- ============================================================
--- 0005_m11_smart_engine.sql — smart suggestion engine (M11).
+-- 0006_m11_smart_engine.sql — smart suggestion engine (M11).
 -- Additive-only. Spec: docs/m11/04-supabase-shema.md §4.1–4.3.
 -- ============================================================
 
@@ -162,7 +162,7 @@ insert into app_config (key, value) values
   ('frost_defaults',    '{"last_frost_doy": 110, "first_frost_doy": 293}'),
   ('engine_endpoint',   '{"url": "https://jlmkkeijmmnwkizutvkg.functions.supabase.co/smart-engine"}');
 
--- Helper for RLS gates on V2 aggregate tables (0006).
+-- Helper for RLS gates on V2 aggregate tables (0007).
 create or replace function k_privacy() returns int
 language sql stable security definer set search_path = public as
 $$ select (value)::int from app_config where key = 'k_privacy' $$;
