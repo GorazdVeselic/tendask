@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-13**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-19**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -20,9 +20,10 @@
 - `1.0.0+1` (vc1) — interni test (prva izdaja)
 - `1.0.0+2` (vc2) — porabljen na Play (interni test, BUG-002/003 fix + allowBackup/i18n)
 - `1.0.0+3` (vc3) — **že naložen v Play Console**
-- `1.0.0+4` (vc4) — **zgrajen 2026-06-13 za ZAPRTI test**, iz veje `main` (M0–M9; brez M11/FCM/pametnega motorja).
-  AAB: `build/app/outputs/bundle/release/app-release.aab` (66,5 MB, upload-key podpisan, dart-defines = živi Supabase).
-  Naslednji versionCode mora biti `+5` ali več.
+- `1.0.0+4` (vc4) — zgrajen 2026-06-13 za zaprti test, a **ZASTAREL**: ne vsebuje BUG-004 popravka
+  (2026-06-18) ne FR-12 lokacijske prenove. Ne nalagaj ga; arhiviran.
+- `1.0.0+5` (vc5) — **TODO: svež build iz `main`** za zaprti test (vsi bugi razrešeni, FR-8 + FR-12 notri).
+  Pred buildom dvigni `pubspec.yaml` z `+4` → `+5`, nato `flutter build appbundle --release` (živi dart-defines).
 
 ## Interni test
 
@@ -32,8 +33,8 @@
 
 ## Zaprti test (gate za produkcijo)
 
-- [x] **AAB `1.0.0+4` zgrajen** iz `main` (2026-06-13) — čaka 👤 upload v Closed testing track
-- [ ] 👤 Upload `app-release.aab` (vc4) → Closed testing → Create new release → rollout
+- [ ] 👤 **Zgradi svež `1.0.0+5`** iz `main` (vc4 je zastarel — glej VersionCode zgodovino)
+- [ ] 👤 Upload `app-release.aab` (vc5) → Closed testing → Create new release → rollout
 - [ ] Dodaj **≥12 testerjev** (e-poštni seznam) + namesti prek opt-in povezave
 - [ ] Preveri release build na napravi — posebej **prijava** (e-koda + Google)
 - [ ] 14-dnevni števec teče šele z ≥12 vključenimi testerji
@@ -81,13 +82,15 @@
       — zbrati testerje. **Vabilo pripravljeno:** `tester-invite.md` (SL/EN) + `assets/tester-preview.png`.
       Opomba: interni test nima časovne zahteve; 14-dnevni števec teče šele v ZAPRTEM testu z ≥12 vključenimi testerji.
 
-## Najdeni bugi med testom (popraviti PRED zaprtim testom)
+## Najdeni bugi med testom — vsi razrešeni na `main` ✅
 
 Podrobnosti + smer popravka: [`../bugreport.md`](../bugreport.md).
 
-- [~] **BUG-002** — po prijavi (in logout→login) app vedno vpraša za lokacijo. **Popravljeno v kodi z
-  FR-8** (routing bere `profile.h3_r7` + počaka na prvi pull); čaka on-device potrditev.
-- [ ] **BUG-003** — gost ima »Odjava« + logout tiho briše nesinhronizirane podatke (možna izguba podatkov)
+- [x] **BUG-001** — Riverpod `gardenLocation` dispose med loadingom (razrešen 2026-06-08, keepAlive)
+- [x] **BUG-002** — po prijavi vedno vpraša za lokacijo (razrešen 2026-06-10, FR-8 routing)
+- [x] **BUG-003** — gostov »Odjava« tiho briše nesinhronizirane podatke (razrešen 2026-06-10)
+- [x] **BUG-004** — navigator key assertion ob tapu opravila iz zgodovine rastline (razrešen 2026-06-18, top-level `task-view`)
+- [ ] On-device dimni test na release `vc5`: **prijava (e-koda + Google)** + ponovitev BUG-004
 - [ ] Prijava za **produkcijski dostop** → objava globalno (vse države)
 
 ## Odloženo (🤖)
