@@ -6,6 +6,11 @@
 # `flutter screenshot` saves flutter_NN.png in the repo root by default
 /flutter_*.png
 
+# Local-only working docs (runbooks, session handoffs) — durable state lives in
+# memory/CLAUDE.md/roadmap, not here. `*.local.md` is the convention for these.
+*.local.md
+/docs/m11/handoff-next-session.md
+
 # Local secrets — nikoli v repo (CLAUDE.md). Predloge (*.example.json) SMEJO v git.
 /dart_defines.json
 /dart_defines.staging.json
