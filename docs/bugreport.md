@@ -6,7 +6,7 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ## BUG-004 — Navigator `keyReservation` assertion (podvojen shell page key) ob tapu opravila iz zaslona nad shell-om
 
-- **Status:** delno razrešen na `feat/m11-smart-engine` (commit `b9e5b3f`, 2026-06-16 — dodana top-level sestra `/task/:id` `task-view`, M11 suggestion-history + plant-detail jo uporabljata); **na `main` ŠE NI popravljeno** — `plant_detail_screen.dart` še vedno potiska `task-detail` in je sprožljivo.
+- **Status:** ✅ razrešen na `main` 2026-06-18 — portan M11 vzorec: dodana top-level sestra `/task/:id` (`task-view`) v `app_router.dart`; `plant_detail_screen.dart` (`_HistoryRow.onTap`) zdaj potiska `task-view` namesto `task-detail`. Regresijski test `test/app/task_view_route_test.dart` (task-view se odpre nad shell-om brez podvojenega ključa); 222/222, analyze čist. Klicalci znotraj shell-a (home/journal/tasks) ostajajo na `task-detail`. (Prej: delno razrešen na `feat/m11-smart-engine` commit `b9e5b3f`.)
 - **Najden:** 2026-06-15 (Sentry, environment `development`, M11 e2e preverba)
 - **Resnost:** srednja — v **debug** buildu rdeč zaslon (crash); v **release** se assertion odstrani (`assert`-only), a podvojen page key vodi v napačno/neuspešno navigacijo. Testerji na release APK tega ne vidijo kot crash.
 - **Sentry issue:** `7dd1ff282b4a4463903016b5056885a5` (2026-06-15 19:35:10 UTC)

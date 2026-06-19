@@ -213,8 +213,11 @@ class _HistoryRow extends StatelessWidget {
         ),
       ),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+      // 'task-view' (top-level), not the shell-nested 'task-detail': plant-detail
+      // lives above the shell, so pushing the nested route would duplicate the
+      // shell page key (BUG-004).
       onTap: () =>
-          context.pushNamed('task-detail', pathParameters: {'id': task.id}),
+          context.pushNamed('task-view', pathParameters: {'id': task.id}),
     );
   }
 }
