@@ -3,7 +3,7 @@
 > Za zbiranje ≥12 testerjev za 14-dnevni zaprti test pred objavo na Google Play.
 > **Pripni sliko:** `docs/go-live/assets/tester-preview.png`.
 > **Povezavi vstavi, ko je zaprti test nastavljen** (Play Console generira opt-in povezavo):
-> `[OPT-IN POVEZAVA]` = pridružitev testu · `[PLAY POVEZAVA]` = prenos iz Trgovine Play.
+> `https://play.google.com/apps/testing/app.tendask` = pridružitev testu · `https://play.google.com/store/apps/details?id=app.tendask` = prenos iz Trgovine Play.
 
 ---
 
@@ -67,3 +67,70 @@ Are you in? If so, just reply with your **Gmail address** and I'll send you the 
 [Your name]
 
 *P.S. Privacy matters to me: the app never stores your precise location (it's only used for weather), I don't sell any data, and you can leave the test anytime via the Play Store.*
+
+---
+
+## 🇸🇮 Drugo sporočilo — povezavi za test (potrjenim testerjem)
+
+> Pošlješ tistim, ki so že odgovorili z Gmailom in si jih dodal v Play Console.
+> Mailmeteor: stolpec `{{ime}}` za personalizacijo. Vstavi povezavi iz Play Console
+> (Preizkuševalci → »Kopiraj povezavo«): `https://play.google.com/apps/testing/app.tendask` (pridružitev) in
+> `https://play.google.com/store/apps/details?id=app.tendask` (prenos iz Trgovine Play).
+
+**Naslov:** Tendask je pripravljen za test — povezavi sta tukaj 🌱
+
+Živjo {{ime}},
+
+hvala, da si pripravljen-a pomagati pri testiranju Tendaska! 🙏 Testna različica je zdaj na voljo prek Google Play. Spodaj sta povezavi — odpri ju **na Android telefonu**, ki ima prijavljen tisti Gmail, ki si mi ga poslal-a.
+
+**1. Najprej se pridruži testu:**
+https://play.google.com/apps/testing/app.tendask
+→ klikni **»Postani preizkuševalec«** (Become a tester).
+
+**2. Nato namesti aplikacijo iz Trgovine Play:**
+https://play.google.com/store/apps/details?id=app.tendask
+→ namesti Tendask kot vsako drugo aplikacijo. (Če piše, da različica še ni na voljo, počakaj nekaj minut po 1. koraku in osveži.)
+
+Prosim, če:
+- aplikacijo **občasno odpreš** v naslednjih ~2 tednih (ni treba vsak dan),
+- **ostaneš v testu vsaj 14 dni** (ne izstopiš iz testa),
+- mi **poveš**, če opaziš kakšno napako ali imaš predlog — vsak vtis je dobrodošel!
+
+Na kratko o aplikaciji: zabeležiš vrtna opravila (posadil, pokosil, zalil, pognojil …), ob vsakem se shrani vreme, nastaviš opomnike in imaš pregled vrta po območjih in rastlinah. Deluje brez signala, je brezplačna in brez oglasov. Več na https://tendask.com.
+
+Najlepša hvala za pomoč — brez vsaj 12 testerjev aplikacije ne morem objaviti. 🌿
+
+Gorazd Veselič
+
+*P.S. Zasebnost: aplikacija tvoje točne lokacije ne shrani (uporabi jo le za vreme), podatkov ne prodajam, iz testa pa lahko kadar koli izstopiš.*
+
+---
+
+## 🇬🇧 Second message — test links (to confirmed testers)
+
+**Subject:** Tendask is ready to test — here are your links 🌱
+
+Hi {{ime}},
+
+thank you for agreeing to help test Tendask! 🙏 The test build is now available via Google Play. Below are two links — open them **on your Android phone**, signed in with the Gmail you sent me.
+
+**1. First, join the test:**
+https://play.google.com/apps/testing/app.tendask
+→ tap **"Become a tester"**.
+
+**2. Then install the app from the Play Store:**
+https://play.google.com/store/apps/details?id=app.tendask
+→ install Tendask like any other app. (If it says the version isn't available yet, wait a few minutes after step 1 and refresh.)
+
+I'd be grateful if you:
+- **open it now and then** over the next ~2 weeks (not every day),
+- **stay in the test for at least 14 days** (don't opt out),
+- **tell me** if you spot anything odd or have a suggestion — very welcome!
+
+In short: log your garden tasks (planted, mowed, watered, fertilised …), the weather is saved with each, set reminders, and keep an overview by areas and plants. Works offline, free, no ads. More at https://tendask.com.
+
+Thank you so much — without at least 12 testers I can't publish the app. 🌿
+
+Gorazd Veselič
+
+*P.S. Privacy: the app never stores your precise location (only used for weather), I don't sell any data, and you can leave the test anytime.*

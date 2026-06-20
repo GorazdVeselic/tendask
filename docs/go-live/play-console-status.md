@@ -35,10 +35,11 @@
 
 - [x] 👤 **Zgrajen svež `1.0.0+5`** iz `main` (vc4 je bil zastarel — glej VersionCode zgodovino)
 - [x] 👤 **AAB `vc5` naložen** v Closed testing
-- [ ] 👤 Potrdi rollout + počakaj Googlov pregled zaprtega builda
-- [ ] Dodaj **≥12 testerjev** (e-poštni seznam) + namesti prek opt-in povezave
-- [ ] Preveri release build na napravi — posebej **prijava** (e-koda + Google)
-- [ ] 14-dnevni števec teče šele z ≥12 vključenimi testerji
+- [x] 👤 **Rollout potrjen + spremembe poslane v pregled (2026-06-20)** — status »v pregledu« (Data Safety, testerji, države). Čaka Googlovo odobritev (zaprti pregled je krajši).
+- [~] **Testerji povabljeni: 48** (2 vala; `testers.md`/`testers.csv`, gitignored). Razposlano prek **Mailmeteor**. Val 1 (30): 10 že potrdilo; val 2 (18): FB skupine (Vrtičkarije, Popolna trata) + znanci. Opt-in (»Postani preizkuševalec«) je obvezen za prenos IN šteje za gate.
+- [x] **Prijava (e-koda + Google) na release vc5 dela** — on-device potrjeno 2026-06-20.
+- [ ] **≥12 dejansko opted-in × 14 dni** — števec teče šele takrat (spremljaj v Play Console).
+- Opomba: opt-in povezava (`https://play.google.com/apps/testing/app.tendask`) bo polno delovala šele po odobritvi izdaje; nov tester rabi ~ure za aktivacijo.
 
 ## Store presence
 
@@ -55,22 +56,23 @@
 - [x] **App access**: Ne (brez prijave — gostovski način; preverjeno `auth_service`/`login_screen._continueAsGuest`)
 - [x] **Content rating (IARC)**: vse No → **Everyone / PEGI 3 / USK 0**
 - [x] **Target audience**: 16-17 + 18+ · appealing-to-children = No
-- [~] **Data safety** — ⚠️ **POSODOBITI po FR-8 (👤):** precise location ni več zbran/deljen
-  (app je coarse-only, surovih koordinat ne hrani); approximate location postane **Shared (Open-Meteo
-  centroid)**. Glej `docs/legal/play-data-safety.md` v1.1.
-  - approximate location = Collected (H3 v Supabase) + **Shared (Open-Meteo centroid)** + Optional
-  - precise location = **NOT collected / NOT shared** (odznači v obrazcu)
+- [x] **Data safety — POSODOBLJENO po FR-8 (2026-06-20):** precise location **odznačena** na seznamu vrst
+  (ni zbrana/deljena; app je coarse-only, surovih koordinat ne hrani); approximate location = **Collected
+  (H3 v Supabase) + Shared (Open-Meteo centroid) + Optional + App functionality**. Glej `docs/legal/play-data-safety.md` v1.1.
+  - precise location = **NOT collected / NOT shared** (gotcha: odznači jo na SEZNAMU vrst, ne v dialogu — prazen dialog Play ne shrani)
   - crash logs + diagnostics = **Shared (Sentry)** + Required
   - ostalo = Collected / Optional · encrypted in transit = Yes
-  - deletion URL + privacy URL = `https://tendask.com/privacy` (objavi privacy v1.1 pred oddajo)
+  - privacy URL = `https://tendask.com/privacy` · **deletion URL = `https://tendask.com/delete-account`**
+    (Google je 404 blokiral pregled; stran v izdelavi v `tendask_web`, brief = `tendask_web/tmp/delete-account-brief.md`)
 - [x] **Ads**: No · **Government**: No · **Financial features**: None · **Health**: No
 - [x] **Advertising ID**: No (preverjeno: `AD_ID` ni v merged manifestu, brez oglaševalskih dep)
 
 ## Objava
 
-- [ ] Spremembe poslane v pregled (čaka pred-submisijska »hitra preverjanja«; gumb se odklene po njih)
-  - Opomba: ta minutna preverjanja ≠ 14-dnevni zaprti test.
-- [ ] Managed publishing — trenutno **OFF** (auto-publish ob odobritvi)
+- [x] **Spremembe poslane v pregled (2026-06-20)** — status »v pregledu«. Predtem rešena 2 blocker-ja:
+  (1) feedback email typo `info@tehdask.com` → `info@tendask.com`; (2) deletion URL 404 → kaže na `/delete-account`.
+  - Opomba: zaprti-test pregled je krajši; 14-dnevni števec je ločen.
+- [x] Managed publishing — **OFF** (auto-publish ob odobritvi)
 
 ## Po objavi / gate-i do produkcije
 
@@ -91,7 +93,7 @@ Podrobnosti + smer popravka: [`../bugreport.md`](../bugreport.md).
 - [x] **BUG-002** — po prijavi vedno vpraša za lokacijo (razrešen 2026-06-10, FR-8 routing)
 - [x] **BUG-003** — gostov »Odjava« tiho briše nesinhronizirane podatke (razrešen 2026-06-10)
 - [x] **BUG-004** — navigator key assertion ob tapu opravila iz zgodovine rastline (razrešen 2026-06-18, top-level `task-view`)
-- [ ] On-device dimni test na release `vc5`: **prijava (e-koda + Google)** + ponovitev BUG-004
+- [~] On-device dimni test na release `vc5`: **prijava (e-koda + Google) ✅ dela (2026-06-20)**; GDPR izvoz ✅ potrjen (schema_version 9, samo H3 celice, brez surovih koordinat); ostane ponovitev BUG-004 + vreme/opomnik/offline
 - [ ] Prijava za **produkcijski dostop** → objava globalno (vse države)
 
 ## Odloženo (🤖)
@@ -101,5 +103,5 @@ Podrobnosti + smer popravka: [`../bugreport.md`](../bugreport.md).
 ## Povezan projekt
 
 - `../../../tendask_web/` — predstavitvena stran + e-pošta na `tendask.com` / `tendask.app` (ločena seja).
-  Tja bo kasneje smiselno preseliti politiko zasebnosti + dodati namensko stran za izbris računa
-  (`/delete-account`) in posodobiti deletion URL v Data Safety.
+  Privacy je tam že (`tendask.com/privacy`). **V IZDELAVI: namenska `/delete-account` stran** (brief
+  `tendask_web/tmp/delete-account-brief.md`) — nujno za Data Safety deletion URL; Google je brez nje 404-blokiral pregled.
