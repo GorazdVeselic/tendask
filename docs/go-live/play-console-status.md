@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-19**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-20**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -22,8 +22,8 @@
 - `1.0.0+3` (vc3) — **že naložen v Play Console**
 - `1.0.0+4` (vc4) — zgrajen 2026-06-13 za zaprti test, a **ZASTAREL**: ne vsebuje BUG-004 popravka
   (2026-06-18) ne FR-12 lokacijske prenove. Ne nalagaj ga; arhiviran.
-- `1.0.0+5` (vc5) — **TODO: svež build iz `main`** za zaprti test (vsi bugi razrešeni, FR-8 + FR-12 notri).
-  Pred buildom dvigni `pubspec.yaml` z `+4` → `+5`, nato `flutter build appbundle --release` (živi dart-defines).
+- `1.0.0+5` (vc5) — **zgrajen iz `main` in naložen v Closed testing** (vsi bugi razrešeni, FR-8 + FR-12 notri).
+  Bump `pubspec +4 → +5`: commit `8410106`. To je aktualni zaprti build.
 
 ## Interni test
 
@@ -33,8 +33,9 @@
 
 ## Zaprti test (gate za produkcijo)
 
-- [ ] 👤 **Zgradi svež `1.0.0+5`** iz `main` (vc4 je zastarel — glej VersionCode zgodovino)
-- [ ] 👤 Upload `app-release.aab` (vc5) → Closed testing → Create new release → rollout
+- [x] 👤 **Zgrajen svež `1.0.0+5`** iz `main` (vc4 je bil zastarel — glej VersionCode zgodovino)
+- [x] 👤 **AAB `vc5` naložen** v Closed testing
+- [ ] 👤 Potrdi rollout + počakaj Googlov pregled zaprtega builda
 - [ ] Dodaj **≥12 testerjev** (e-poštni seznam) + namesti prek opt-in povezave
 - [ ] Preveri release build na napravi — posebej **prijava** (e-koda + Google)
 - [ ] 14-dnevni števec teče šele z ≥12 vključenimi testerji
