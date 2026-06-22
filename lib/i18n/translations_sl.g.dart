@@ -109,6 +109,12 @@ class _Translations$home$sl extends Translations$home$en {
 		few: '${n} zamujena opravila',
 		other: '${n} zamujenih opravil',
 	);
+	@override String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '1 prihajajoče opravilo',
+		two: '${n} prihajajoči opravili',
+		few: '${n} prihajajoča opravila',
+		other: '${n} prihajajočih opravil',
+	);
 }
 
 // Path: common
@@ -774,6 +780,7 @@ extension on TranslationsSl {
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 zamujeno opravilo', two: '${n} zamujeni opravili', few: '${n} zamujena opravila', other: '${n} zamujenih opravil', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 prihajajoče opravilo', two: '${n} prihajajoči opravili', few: '${n} prihajajoča opravila', other: '${n} prihajajočih opravil', ), 
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',

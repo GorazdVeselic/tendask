@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
 import '../../../core/catalog_labels.dart';
+import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
@@ -121,6 +122,17 @@ class _HomeBody extends ConsumerWidget {
       _ => <Task>[],
     };
 
+    // Pending tasks due after today, within the upcoming window — a calm summary.
+    final upcomingTasks = switch (pending) {
+      AsyncData(:final value) => value.where((t) {
+        final day = startOfDay(t.date.toLocal());
+        final today = startOfDay(now);
+        return day.isAfter(today) &&
+            !day.isAfter(today.add(const Duration(days: kUpcomingWindowDays)));
+      }).toList(),
+      _ => <Task>[],
+    };
+
     final recentTasks = switch (completed) {
       AsyncData(:final value) => value.take(3).toList(),
       _ => <Task>[],
@@ -139,11 +151,31 @@ class _HomeBody extends ConsumerWidget {
             const _WeatherSection(),
             const SizedBox(height: 16),
             if (overdueTasks.isNotEmpty) ...[
-              _OverdueBanner(
+              _TaskBanner(
+                label: t.home.overdue_banner(n: overdueTasks.length),
+                icon: Icons.warning_amber_rounded,
+                background: AppColors.terracottaSoft,
+                foreground: AppColors.onTerracottaSoft,
                 tasks: overdueTasks,
                 catalog: catalog,
                 now: now,
                 subjectLabels: subjectLabels,
+                isOverdue: true,
+              ),
+              const SizedBox(height: 16),
+            ],
+            if (upcomingTasks.isNotEmpty) ...[
+              _TaskBanner(
+                label: t.home.upcoming_banner(n: upcomingTasks.length),
+                icon: Icons.event_outlined,
+                background: AppColors.soft,
+                foreground: AppColors.green900,
+                tasks: upcomingTasks,
+                catalog: catalog,
+                now: now,
+                subjectLabels: subjectLabels,
+                reminderTaskIds: reminderTaskIds,
+                isUpcoming: true,
               ),
               const SizedBox(height: 16),
             ],
@@ -275,6 +307,8 @@ class _TaskList extends StatelessWidget {
     this.reminderTaskIds = const {},
     this.subjectLabels = const {},
     this.isOverdue = false,
+    this.isUpcoming = false,
+    this.topAttached = false,
   });
 
   final List<Task> tasks;
@@ -283,10 +317,22 @@ class _TaskList extends StatelessWidget {
   final Set<String> reminderTaskIds;
   final Map<String, String> subjectLabels;
   final bool isOverdue;
+  final bool isUpcoming;
+
+  /// When true, the card sits flush under a banner header: square top corners,
+  /// no margin/shadow, so header + list read as one continuous block.
+  final bool topAttached;
 
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: topAttached ? EdgeInsets.zero : null,
+      elevation: topAttached ? 0 : null,
+      shape: topAttached
+          ? const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(bottom: Radius.circular(12)),
+            )
+          : null,
       clipBehavior: Clip.antiAlias,
       child: Column(
         children: [
@@ -306,6 +352,7 @@ class _TaskList extends StatelessWidget {
                 hasReminder: reminderTaskIds.contains(tasks[i].id),
                 subjectLabel: subjectLabels[tasks[i].id],
                 isOverdue: isOverdue,
+                isUpcoming: isUpcoming,
               ),
             ),
           ],
@@ -323,6 +370,7 @@ class _TaskTile extends StatelessWidget {
     this.hasReminder = false,
     this.subjectLabel,
     this.isOverdue = false,
+    this.isUpcoming = false,
   });
 
   final Task task;
@@ -331,6 +379,7 @@ class _TaskTile extends StatelessWidget {
   final bool hasReminder;
   final String? subjectLabel;
   final bool isOverdue;
+  final bool isUpcoming;
 
   @override
   Widget build(BuildContext context) {
@@ -341,9 +390,12 @@ class _TaskTile extends StatelessWidget {
         : task.taskTypeId;
     final icon = taskType?.icon ?? '📋';
     final isDone = task.status == TaskStatus.done;
-    // Done tasks show their (calendar-correct) date; waiting tasks show the time.
+    // Done tasks show their (calendar-correct) date; upcoming tasks span several
+    // days so they show the day; today's waiting tasks show the time.
     final trailingText = isDone
         ? _relative(task.date, now, t)
+        : isUpcoming
+        ? _futureLabel(task.date, now, t)
         : formatHm(task.date.toLocal());
     final overdueDays = startOfDay(
       now,
@@ -410,39 +462,60 @@ class _TaskTile extends StatelessWidget {
     if (days == 1) return t.common.yesterday;
     return formatDmy(date.toLocal());
   }
+
+  /// Forward calendar-day label for upcoming tasks: "tomorrow", else a short date.
+  static String _futureLabel(DateTime date, DateTime now, Translations t) {
+    final days = startOfDay(date.toLocal()).difference(startOfDay(now)).inDays;
+    if (days == 1) return t.tasks_list.status_tomorrow;
+    return formatDm(date.toLocal());
+  }
 }
 
-/// Collapsible overdue summary: a quiet red bar showing the count; tapping it
-/// expands the list of overdue tasks in place (no jump to another screen).
-class _OverdueBanner extends StatefulWidget {
-  const _OverdueBanner({
+/// Collapsible task summary: a quiet colored bar showing a count; tapping it
+/// expands the task list in place (no jump to another screen). Drives both the
+/// overdue (terracotta) and upcoming (green) summaries on Home.
+class _TaskBanner extends StatefulWidget {
+  const _TaskBanner({
+    required this.label,
+    required this.icon,
+    required this.background,
+    required this.foreground,
     required this.tasks,
     required this.catalog,
     required this.now,
     required this.subjectLabels,
+    this.reminderTaskIds = const {},
+    this.isOverdue = false,
+    this.isUpcoming = false,
   });
 
+  final String label;
+  final IconData icon;
+  final Color background;
+  final Color foreground;
   final List<Task> tasks;
   final Map<String, TaskType> catalog;
   final DateTime now;
   final Map<String, String> subjectLabels;
+  final Set<String> reminderTaskIds;
+  final bool isOverdue;
+  final bool isUpcoming;
 
   @override
-  State<_OverdueBanner> createState() => _OverdueBannerState();
+  State<_TaskBanner> createState() => _TaskBannerState();
 }
 
-class _OverdueBannerState extends State<_OverdueBanner> {
+class _TaskBannerState extends State<_TaskBanner> {
   bool _expanded = false;
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     final theme = Theme.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         Material(
-          color: AppColors.terracottaSoft,
+          color: widget.background,
           borderRadius: BorderRadius.vertical(
             top: const Radius.circular(12),
             bottom: Radius.circular(_expanded ? 0 : 12),
@@ -454,17 +527,13 @@ class _OverdueBannerState extends State<_OverdueBanner> {
               padding: const EdgeInsets.fromLTRB(14, 12, 12, 12),
               child: Row(
                 children: [
-                  const Icon(
-                    Icons.warning_amber_rounded,
-                    size: 18,
-                    color: AppColors.onTerracottaSoft,
-                  ),
+                  Icon(widget.icon, size: 18, color: widget.foreground),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
-                      t.home.overdue_banner(n: widget.tasks.length),
+                      widget.label,
                       style: theme.textTheme.bodyMedium?.copyWith(
-                        color: AppColors.onTerracottaSoft,
+                        color: widget.foreground,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
@@ -472,10 +541,7 @@ class _OverdueBannerState extends State<_OverdueBanner> {
                   AnimatedRotation(
                     turns: _expanded ? 0.5 : 0,
                     duration: const Duration(milliseconds: 180),
-                    child: const Icon(
-                      Icons.expand_more,
-                      color: AppColors.onTerracottaSoft,
-                    ),
+                    child: Icon(Icons.expand_more, color: widget.foreground),
                   ),
                 ],
               ),
@@ -488,7 +554,10 @@ class _OverdueBannerState extends State<_OverdueBanner> {
             catalog: widget.catalog,
             now: widget.now,
             subjectLabels: widget.subjectLabels,
-            isOverdue: true,
+            reminderTaskIds: widget.reminderTaskIds,
+            isOverdue: widget.isOverdue,
+            isUpcoming: widget.isUpcoming,
+            topAttached: true,
           ),
       ],
     );
