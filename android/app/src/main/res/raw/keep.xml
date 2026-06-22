@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The notification status-bar icon is referenced only by a runtime string
+     from Dart (AndroidInitializationSettings('ic_stat_notify')), so the R8
+     resource shrinker can't see it and strips it from release builds, making
+     flutter_local_notifications throw invalid_icon at init. Keep it explicitly. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_stat_notify" />
