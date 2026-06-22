@@ -10,8 +10,9 @@ import '../../../../i18n/translations.g.dart';
 import '../../application/tasks_providers.dart';
 
 /// Wraps a task row in the shared reveal-swipe with status-appropriate actions:
-/// waiting → complete / +1 day, done → reopen / delete. Used by the tasks list,
-/// the home dashboard and the journal so the gesture is identical everywhere.
+/// swipe left → status (waiting: complete / +1 day, done: reopen); swipe right →
+/// delete (confirmed). Used by the tasks list, the home dashboard and the
+/// journal so the gesture is identical everywhere.
 class TaskSwipe extends ConsumerWidget {
   const TaskSwipe({required this.task, required this.child, super.key});
 
@@ -35,13 +36,19 @@ class TaskSwipe extends ConsumerWidget {
               context,
               () => unawaited(repo.revertToWaiting(task.id)),
             ),
-            deleteSwipe(
-              context,
-              title: t.tasks_list.delete_confirm_title,
-              body: t.tasks_list.delete_confirm_body,
-              onConfirmed: () => repo.softDelete(task.id),
-            ),
           ];
-    return SwipeRow(itemKey: task.id, actions: actions, child: child);
+    return SwipeRow(
+      itemKey: task.id,
+      actions: actions,
+      startActions: [
+        deleteSwipe(
+          context,
+          title: t.tasks_list.delete_confirm_title,
+          body: t.tasks_list.delete_confirm_body,
+          onConfirmed: () => repo.softDelete(task.id),
+        ),
+      ],
+      child: child,
+    );
   }
 }

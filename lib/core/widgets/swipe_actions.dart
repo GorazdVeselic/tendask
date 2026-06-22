@@ -66,25 +66,35 @@ class SwipeColors extends ThemeExtension<SwipeColors> {
   }
 }
 
-/// Wraps [child] in a reveal-swipe row: swiping left reveals [actions]; tapping
-/// a button runs it. Build the actions with the helpers below so colours, icons
-/// and labels stay identical on every screen (tasks, journal, garden).
+/// Wraps [child] in a reveal-swipe row: swiping left reveals [actions], swiping
+/// right reveals [startActions]; tapping a button runs it. Build the actions
+/// with the helpers below so colours, icons and labels stay identical on every
+/// screen (tasks, journal, garden).
 class SwipeRow extends StatelessWidget {
   const SwipeRow({
     required this.itemKey,
     required this.actions,
+    this.startActions = const [],
     required this.child,
     super.key,
   });
 
   final String itemKey;
   final List<SlidableAction> actions;
+  final List<SlidableAction> startActions;
   final Widget child;
 
   @override
   Widget build(BuildContext context) {
     return Slidable(
       key: ValueKey(itemKey),
+      startActionPane: startActions.isEmpty
+          ? null
+          : ActionPane(
+              motion: const DrawerMotion(),
+              extentRatio: startActions.length >= 2 ? 0.5 : 0.28,
+              children: startActions,
+            ),
       endActionPane: ActionPane(
         motion: const DrawerMotion(),
         extentRatio: actions.length >= 2 ? 0.5 : 0.28,
