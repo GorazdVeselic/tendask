@@ -130,6 +130,12 @@ class Translations$home$en {
 		one: '1 overdue task',
 		other: '${n} overdue tasks',
 	);
+
+	/// en: '(one) {1 upcoming task} (other) {$n upcoming tasks}'
+	String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '1 upcoming task',
+		other: '${n} upcoming tasks',
+	);
 }
 
 // Path: common
@@ -1627,6 +1633,7 @@ extension on Translations {
 			'home.no_tasks_today' => 'No tasks planned for today.',
 			'home.no_recent' => 'No completed tasks yet.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 overdue task', other: '${n} overdue tasks', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 upcoming task', other: '${n} upcoming tasks', ), 
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
 			'common.load_error' => 'Couldn\'t load data.',

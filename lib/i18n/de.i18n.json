@@ -17,6 +17,10 @@
     "overdue_banner(n)": {
       "one": "1 überfällige Aufgabe",
       "other": "$n überfällige Aufgaben"
+    },
+    "upcoming_banner(n)": {
+      "one": "1 anstehende Aufgabe",
+      "other": "$n anstehende Aufgaben"
     }
   },
   "common": {

@@ -107,6 +107,10 @@ class _Translations$home$de extends Translations$home$en {
 		one: '1 überfällige Aufgabe',
 		other: '${n} überfällige Aufgaben',
 	);
+	@override String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '1 anstehende Aufgabe',
+		other: '${n} anstehende Aufgaben',
+	);
 }
 
 // Path: common
@@ -768,6 +772,7 @@ extension on TranslationsDe {
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 überfällige Aufgabe', other: '${n} überfällige Aufgaben', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 anstehende Aufgabe', other: '${n} anstehende Aufgaben', ), 
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
 			'common.load_error' => 'Daten konnten nicht geladen werden.',

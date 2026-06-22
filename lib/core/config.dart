@@ -33,6 +33,11 @@ const kWeatherStaleTtl = Duration(hours: 48);
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;
 
+/// Forward window (in days) for the Home "upcoming tasks" summary banner: pending
+/// tasks due after today and within this many days are summarized in a collapsible
+/// bar above the today list. 7 mirrors the "this week" grouping in the task list.
+const kUpcomingWindowDays = 7;
+
 /// Max species shown in the "Frequent" row of the plant-add screen — the
 /// most recently used catalog species, so common picks stay one tap away.
 const kRecentPlantsLimit = 8;

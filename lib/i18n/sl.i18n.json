@@ -19,6 +19,12 @@
       "two": "$n zamujeni opravili",
       "few": "$n zamujena opravila",
       "other": "$n zamujenih opravil"
+    },
+    "upcoming_banner(n)": {
+      "one": "1 prihajajoče opravilo",
+      "two": "$n prihajajoči opravili",
+      "few": "$n prihajajoča opravila",
+      "other": "$n prihajajočih opravil"
     }
   },
   "common": {
