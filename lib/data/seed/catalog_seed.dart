@@ -423,6 +423,72 @@ abstract final class CatalogSeed {
       scientificName: 'Diospyros kaki',
     ),
 
+    // --- Citrus (agrumi — lončnice, prezimovanje) ---------------------------
+    PlantSeed(
+      id: 'lemon',
+      sl: 'limona',
+      en: 'lemon',
+      de: 'Zitrone',
+      icon: '🍋',
+      category: 'citrus',
+      scientificName: 'Citrus × limon',
+    ),
+    // id 'lime' is taken by the liming task type — suffix to avoid slug clash
+    PlantSeed(
+      id: 'lime_fruit',
+      sl: 'limeta',
+      en: 'lime',
+      de: 'Limette',
+      icon: '🍋',
+      category: 'citrus',
+      scientificName: 'Citrus × latifolia',
+    ),
+    PlantSeed(
+      id: 'mandarin',
+      sl: 'mandarina',
+      en: 'mandarin',
+      de: 'Mandarine',
+      icon: '🍊',
+      category: 'citrus',
+      scientificName: 'Citrus reticulata',
+    ),
+    PlantSeed(
+      id: 'orange',
+      sl: 'pomaranča',
+      en: 'orange',
+      de: 'Orange',
+      icon: '🍊',
+      category: 'citrus',
+      scientificName: 'Citrus × sinensis',
+    ),
+    PlantSeed(
+      id: 'grapefruit',
+      sl: 'grenivka',
+      en: 'grapefruit',
+      de: 'Grapefruit',
+      icon: '🍊',
+      category: 'citrus',
+      scientificName: 'Citrus × paradisi',
+    ),
+    PlantSeed(
+      id: 'kumquat',
+      sl: 'kumkvat',
+      en: 'kumquat',
+      de: 'Kumquat',
+      icon: '🟠',
+      category: 'citrus',
+      scientificName: 'Citrus japonica',
+    ),
+    PlantSeed(
+      id: 'calamondin',
+      sl: 'kalamondin',
+      en: 'calamondin',
+      de: 'Kalamondine',
+      icon: '🍊',
+      category: 'citrus',
+      scientificName: 'Citrus × microcarpa',
+    ),
+
     // --- Berries (jagodičevje) ----------------------------------------------
     PlantSeed(
       id: 'raspberry',
@@ -777,6 +843,15 @@ abstract final class CatalogSeed {
       category: 'vegetable',
       scientificName: 'Brassica oleracea var. gemmifera',
     ),
+    PlantSeed(
+      id: 'purslane',
+      sl: 'navadni tolščak',
+      en: 'purslane',
+      de: 'Portulak',
+      icon: '🌿',
+      category: 'vegetable',
+      scientificName: 'Portulaca oleracea',
+    ),
 
     // --- Herbs (zelišča) ----------------------------------------------------
     PlantSeed(
@@ -1059,6 +1134,33 @@ abstract final class CatalogSeed {
       icon: '🤍',
       category: 'perennial',
       scientificName: 'Convallaria majalis',
+    ),
+    PlantSeed(
+      id: 'carnation',
+      sl: 'nagelj',
+      en: 'carnation',
+      de: 'Nelke',
+      icon: '🌸',
+      category: 'perennial',
+      scientificName: 'Dianthus caryophyllus',
+    ),
+    PlantSeed(
+      id: 'borage',
+      sl: 'boreč',
+      en: 'borage',
+      de: 'Borretsch',
+      icon: '🌼',
+      category: 'perennial',
+      scientificName: 'Borago officinalis',
+    ),
+    PlantSeed(
+      id: 'moss_rose',
+      sl: 'vrtni portulak',
+      en: 'moss rose',
+      de: 'Portulakröschen',
+      icon: '🌺',
+      category: 'perennial',
+      scientificName: 'Portulaca grandiflora',
     ),
 
     // --- Ornamental shrubs (okrasno grmovje) --------------------------------
@@ -1505,6 +1607,10 @@ abstract final class CatalogSeed {
     ('fruit_tree', 'thin_fruit'), ('fruit_tree', 'treat'),
     ('fruit_tree', 'fertilize'), ('fruit_tree', 'harvest'),
     ('fruit_tree', 'water'), ('fruit_tree', 'mulch'),
+    // citrus (potted; overwinter + repot instead of graft/thin_fruit)
+    ('citrus', 'prune'), ('citrus', 'treat'), ('citrus', 'fertilize'),
+    ('citrus', 'harvest'), ('citrus', 'water'), ('citrus', 'repot'),
+    ('citrus', 'overwinter'),
     // berries
     ('berries', 'prune'), ('berries', 'treat'), ('berries', 'fertilize'),
     ('berries', 'harvest'), ('berries', 'water'), ('berries', 'mulch'),
