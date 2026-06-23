@@ -1,9 +1,10 @@
+import '../../../core/config.dart';
 import '../../../core/date_format.dart';
 
 /// Local wall-clock time a reminder should fire, from the task's local date.
 ///
-/// Day-based offsets (>= 1440 min) carrying a time-of-day fire N whole days
-/// before the task date at that time (e.g. "1 day before at 18:00"). Sub-day
+/// Day-based offsets (>= [kMinutesPerDay]) carrying a time-of-day fire N whole
+/// days before the task date at that time (e.g. "1 day before at 18:00"). Sub-day
 /// offsets (and day-based without a time) fire [offsetMinutes] before the task's
 /// own time. Pure — the caller compares against a [Clock] to skip past times.
 DateTime reminderFireTime({
@@ -11,10 +12,10 @@ DateTime reminderFireTime({
   required int offsetMinutes,
   String? reminderTime,
 }) {
-  if (offsetMinutes >= 1440 && reminderTime != null) {
+  if (offsetMinutes >= kMinutesPerDay && reminderTime != null) {
     final base = startOfDay(
       taskDateLocal,
-    ).subtract(Duration(days: offsetMinutes ~/ 1440));
+    ).subtract(Duration(days: offsetMinutes ~/ kMinutesPerDay));
     final (h, m) = _parseHm(reminderTime);
     return DateTime(base.year, base.month, base.day, h, m);
   }

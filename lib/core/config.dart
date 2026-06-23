@@ -82,6 +82,15 @@ const kPushDebounce = Duration(seconds: 2);
 /// reschedules OS notifications after this delay, coalescing rapid edits.
 const kReminderDebounce = Duration(milliseconds: 800);
 
+/// Minutes in a day — day-based reminder offsets (>= this) fire N whole days
+/// before the task at a chosen time of day.
+const kMinutesPerDay = 1440;
+
+/// Reminder offset presets (minutes before the task) offered when adding a
+/// reminder: at-event, 10 min, 1 hour, 1 day, 2 days. Single source of truth;
+/// the settings screen offers a subset of these.
+const kReminderOffsetPresets = [0, 10, 60, kMinutesPerDay, 2 * kMinutesPerDay];
+
 /// Default reminder offset (minutes before the task) prefilled when adding a new
 /// reminder. 0 = at the time of the event. User-overridable in notification settings.
 const kDefaultReminderOffset = 0;

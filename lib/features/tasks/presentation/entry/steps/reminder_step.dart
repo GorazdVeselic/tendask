@@ -12,17 +12,21 @@ import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../data/tasks_repository.dart';
 
+/// Base label for a reminder offset, e.g. "1 day before" (without a time of day).
+String reminderOffsetLabel(int offsetMinutes, Translations t) =>
+    switch (offsetMinutes) {
+      0 => t.entry.rem_event,
+      10 => t.entry.rem_10min,
+      60 => t.entry.rem_1hour,
+      1440 => t.entry.rem_1day,
+      2880 => t.entry.rem_2day,
+      _ => t.entry.rem_event,
+    };
+
 /// Human label for a reminder spec, e.g. "1 dan prej ob 18:00".
 String reminderLabel(ReminderSpec r, Translations t) {
-  final base = switch (r.offsetMinutes) {
-    0 => t.entry.rem_event,
-    10 => t.entry.rem_10min,
-    60 => t.entry.rem_1hour,
-    1440 => t.entry.rem_1day,
-    2880 => t.entry.rem_2day,
-    _ => t.entry.rem_event,
-  };
-  if (r.offsetMinutes >= 1440 && r.time != null) {
+  final base = reminderOffsetLabel(r.offsetMinutes, t);
+  if (r.offsetMinutes >= kMinutesPerDay && r.time != null) {
     return '$base ${t.entry.rem_at(t: r.time!)}';
   }
   return base;
@@ -184,9 +188,6 @@ Future<ReminderSpec?> showReminderEditSheet(
   );
 }
 
-/// Offset presets in minutes; day-based offsets (>= 1440) carry a time of day.
-const _offsets = [0, 10, 60, 1440, 2880];
-
 /// Sentinel radio value for the "custom offset" row.
 const _kCustomOffset = -1;
 
@@ -197,7 +198,7 @@ enum _CustomUnit { minutes, hours, days }
 int _unitMinutes(_CustomUnit u) => switch (u) {
   _CustomUnit.minutes => 1,
   _CustomUnit.hours => 60,
-  _CustomUnit.days => 1440,
+  _CustomUnit.days => kMinutesPerDay,
 };
 
 class _ReminderEditSheet extends StatefulWidget {
@@ -215,7 +216,7 @@ class _ReminderEditSheet extends StatefulWidget {
 }
 
 class _ReminderEditSheetState extends State<_ReminderEditSheet> {
-  late int _offset = _offsets.contains(widget.initialOffset)
+  late int _offset = kReminderOffsetPresets.contains(widget.initialOffset)
       ? widget.initialOffset
       : kDefaultReminderOffset;
   TimeOfDay _time = const TimeOfDay(hour: 18, minute: 0);
@@ -239,7 +240,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
   /// Day-based offsets carry a time of day. For custom offsets the unit decides
   /// (days = day-based), so minutes/hours never hit the day-rounding path.
   bool get _isDayBased =>
-      _custom ? _customUnit == _CustomUnit.days : _offset >= 1440;
+      _custom ? _customUnit == _CustomUnit.days : _offset >= kMinutesPerDay;
 
   /// An exact duplicate of an already-added reminder (same offset and time).
   bool _isTaken(int offset, String? time) =>
@@ -247,16 +248,8 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
 
   /// A non-day-based offset has no time, so once added it can only repeat —
   /// disable it. Day-based offsets vary by time, so they stay selectable.
-  bool _offsetTaken(int offset) => offset < 1440 && _isTaken(offset, null);
-
-  String _label(int offset, Translations t) => switch (offset) {
-    0 => t.entry.rem_event,
-    10 => t.entry.rem_10min,
-    60 => t.entry.rem_1hour,
-    1440 => t.entry.rem_1day,
-    2880 => t.entry.rem_2day,
-    _ => t.entry.rem_event,
-  };
+  bool _offsetTaken(int offset) =>
+      offset < kMinutesPerDay && _isTaken(offset, null);
 
   String get _timeText =>
       '${_time.hour.toString().padLeft(2, '0')}:'
@@ -272,7 +265,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
   String _preview(Translations t) {
     final base = _custom
         ? '$_customValue ${_unitLabel(t)} ${t.entry.rem_before}'
-        : _label(_offset, t);
+        : reminderOffsetLabel(_offset, t);
     return _isDayBased ? '$base ${t.entry.rem_at(t: _timeText)}' : base;
   }
 
@@ -325,11 +318,11 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                 }),
                 child: Column(
                   children: [
-                    for (final offset in _offsets)
+                    for (final offset in kReminderOffsetPresets)
                       RadioListTile<int>(
                         value: offset,
                         enabled: !_offsetTaken(offset),
-                        title: Text(_label(offset, t)),
+                        title: Text(reminderOffsetLabel(offset, t)),
                         subtitle: _offsetTaken(offset)
                             ? Text(
                                 t.entry.rem_added,
