@@ -1,6 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
+import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/notifications/notification_settings.dart';
 import 'package:tendask/features/settings/data/profile_repository.dart';
@@ -57,7 +58,7 @@ void main() {
   test('notificationSettings returns defaults on an empty profile', () async {
     final s = await repo.notificationSettings(userId);
     expect(s.taskRemindersEnabled, true);
-    expect(s.defaultReminderOffset, isNot(0));
+    expect(s.defaultReminderOffset, kDefaultReminderOffset);
   });
 
   test(

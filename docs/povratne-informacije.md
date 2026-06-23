@@ -182,7 +182,11 @@ Za **opravljena/retrospektivna** opravila opomnik pravilno ne nastane. Majhna ko
 je status načrtovan/prihodnji, predizpolni **en** privzeti opomnik (toggle vklopljen, odstranljiv).
 Rabi odločitev: default-on vs. eksplicitno vklopljeno.
 
-**Odločitev:** _(odprto — potrebna odločitev: avtomatski privzeti opomnik za načrtovana opravila DA/NE)_
+**Odločitev (2026-06-23):** privzeti zamik opomnika spremenjen z »1 dan prej« (1440) na **»ob
+dogodku« (0)** — `kDefaultReminderOffset = 0`. Ko uporabnik doda opomnik, je »ob dogodku« že
+predizbran; vse ostale možnosti (1 h, 1 dan …) ostanejo na voljo. **Samodejnega dodajanja** opomnika
+zaenkrat NE — opravilo še vedno dobi opomnik šele ob »+ Dodaj« (ohrani tok dovoljenj + ne moti
+opravljenih opravil).
 
 ---
 

@@ -14,7 +14,7 @@ import '../../settings/application/profile_providers.dart';
 
 /// Default reminder offsets offered in settings — a subset of the reminder
 /// sheet presets so the prefilled value always matches a selectable option.
-const _offsetChoices = [0, 60, kDefaultReminderOffset];
+const _offsetChoices = [0, 60, 1440];
 
 String _quietHoursRange() {
   String hh(int h) => '${h.toString().padLeft(2, '0')}:00';

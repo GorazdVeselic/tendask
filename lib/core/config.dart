@@ -83,8 +83,8 @@ const kPushDebounce = Duration(seconds: 2);
 const kReminderDebounce = Duration(milliseconds: 800);
 
 /// Default reminder offset (minutes before the task) prefilled when adding a new
-/// reminder. 1440 = one day before. User-overridable in notification settings.
-const kDefaultReminderOffset = 1440;
+/// reminder. 0 = at the time of the event. User-overridable in notification settings.
+const kDefaultReminderOffset = 0;
 
 /// Quiet-hours window shown in notification settings (display only in MVP). It
 /// is stored as a device-local preference and governs the future weather/
