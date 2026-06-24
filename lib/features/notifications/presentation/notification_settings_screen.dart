@@ -11,6 +11,7 @@ import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
+import 'widgets/reminder_sound_banner.dart';
 
 /// Default reminder offsets offered in settings — a subset of the reminder
 /// sheet presets so the prefilled value always matches a selectable option.
@@ -75,6 +76,9 @@ class _Body extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
       children: [
+        // Shown only when reminders would be silent (volume 0 / silent mode).
+        const ReminderSoundBanner(),
+
         // Types — only task reminders are live; the rest await FCM.
         SectionLabel(t.notif_settings.section_types),
         Card(

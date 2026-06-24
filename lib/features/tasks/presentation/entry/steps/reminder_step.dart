@@ -9,6 +9,7 @@ import '../../../../../core/widgets/section_label.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../notifications/presentation/notification_priming_sheet.dart';
+import '../../../../notifications/presentation/widgets/reminder_sound_banner.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../data/tasks_repository.dart';
 
@@ -122,6 +123,8 @@ class ReminderStepBody extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
+        // Shown only when reminders would be silent (volume 0 / silent mode).
+        const ReminderSoundBanner(),
         Card(
           child: Column(
             children: [

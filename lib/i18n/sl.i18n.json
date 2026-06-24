@@ -78,6 +78,11 @@
     "system_permission_on": "naprava: dovoljeno",
     "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve"
   },
+  "reminder_sound": {
+    "silent_volume": "Opomniki bodo tihi — glasnost obvestil je na 0.",
+    "silent_mode": "Opomniki bodo tihi — telefon je na tihem načinu.",
+    "enable": "Vklopi zvok"
+  },
   "notif_preview": {
     "title": "Videz obvestil",
     "date": "torek, 1. junij",

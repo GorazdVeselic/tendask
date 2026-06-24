@@ -47,6 +47,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
 	@override late final _Translations$notif_priming$de notif_priming = _Translations$notif_priming$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
+	@override late final _Translations$reminder_sound$de reminder_sound = _Translations$reminder_sound$de._(_root);
 	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
@@ -197,6 +198,18 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get system_permission => 'Systemberechtigung';
 	@override String get system_permission_on => 'Gerät: erlaubt';
 	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
+}
+
+// Path: reminder_sound
+class _Translations$reminder_sound$de extends Translations$reminder_sound$en {
+	_Translations$reminder_sound$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get silent_volume => 'Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.';
+	@override String get silent_mode => 'Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.';
+	@override String get enable => 'Ton einschalten';
 }
 
 // Path: notif_preview
@@ -814,6 +827,9 @@ extension on TranslationsDe {
 			'notif_settings.system_permission' => 'Systemberechtigung',
 			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
 			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
+			'reminder_sound.silent_volume' => 'Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.',
+			'reminder_sound.silent_mode' => 'Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.',
+			'reminder_sound.enable' => 'Ton einschalten',
 			'notif_preview.title' => 'Benachrichtigungen — Vorschau',
 			'notif_preview.date' => 'Dienstag, 1. Juni',
 			'notif_preview.rem_now' => 'jetzt',

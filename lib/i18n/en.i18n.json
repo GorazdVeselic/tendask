@@ -74,6 +74,11 @@
     "system_permission_on": "device: allowed",
     "system_permission_off": "exact reminders not allowed — tap for settings"
   },
+  "reminder_sound": {
+    "silent_volume": "Reminders will be silent — notification volume is at 0.",
+    "silent_mode": "Reminders will be silent — the phone is in silent mode.",
+    "enable": "Turn on sound"
+  },
   "notif_preview": {
     "title": "Notification appearance",
     "date": "Tuesday, 1 June",

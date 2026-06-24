@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import 'widgets/reminder_sound_banner.dart';
 
 /// Pre-permission priming sheet (wireframe 21). Shown the first time the user
 /// adds a reminder, before the OS permission dialog — explains why and lets them
@@ -88,6 +89,8 @@ class _NotificationPrimingSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            // Shown only when reminders would be silent (volume 0 / silent mode).
+            const ReminderSoundBanner(),
             SizedBox(
               height: 48,
               child: FilledButton(

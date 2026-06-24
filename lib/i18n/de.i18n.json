@@ -74,6 +74,11 @@
     "system_permission_on": "Gerät: erlaubt",
     "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen"
   },
+  "reminder_sound": {
+    "silent_volume": "Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.",
+    "silent_mode": "Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.",
+    "enable": "Ton einschalten"
+  },
   "notif_preview": {
     "title": "Benachrichtigungen — Vorschau",
     "date": "Dienstag, 1. Juni",

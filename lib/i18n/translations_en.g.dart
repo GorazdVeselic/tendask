@@ -48,6 +48,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$notifications$en notifications = Translations$notifications$en.internal(_root);
 	late final Translations$notif_priming$en notif_priming = Translations$notif_priming$en.internal(_root);
 	late final Translations$notif_settings$en notif_settings = Translations$notif_settings$en.internal(_root);
+	late final Translations$reminder_sound$en reminder_sound = Translations$reminder_sound$en.internal(_root);
 	late final Translations$notif_preview$en notif_preview = Translations$notif_preview$en.internal(_root);
 	late final Translations$onboarding$en onboarding = Translations$onboarding$en.internal(_root);
 	late final Translations$auth$en auth = Translations$auth$en.internal(_root);
@@ -304,6 +305,24 @@ class Translations$notif_settings$en {
 
 	/// en: 'exact reminders not allowed — tap for settings'
 	String get system_permission_off => 'exact reminders not allowed — tap for settings';
+}
+
+// Path: reminder_sound
+class Translations$reminder_sound$en {
+	Translations$reminder_sound$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Reminders will be silent — notification volume is at 0.'
+	String get silent_volume => 'Reminders will be silent — notification volume is at 0.';
+
+	/// en: 'Reminders will be silent — the phone is in silent mode.'
+	String get silent_mode => 'Reminders will be silent — the phone is in silent mode.';
+
+	/// en: 'Turn on sound'
+	String get enable => 'Turn on sound';
 }
 
 // Path: notif_preview
@@ -1675,6 +1694,9 @@ extension on Translations {
 			'notif_settings.system_permission' => 'System permission',
 			'notif_settings.system_permission_on' => 'device: allowed',
 			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
+			'reminder_sound.silent_volume' => 'Reminders will be silent — notification volume is at 0.',
+			'reminder_sound.silent_mode' => 'Reminders will be silent — the phone is in silent mode.',
+			'reminder_sound.enable' => 'Turn on sound',
 			'notif_preview.title' => 'Notification appearance',
 			'notif_preview.date' => 'Tuesday, 1 June',
 			'notif_preview.rem_now' => 'now',

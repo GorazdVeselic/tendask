@@ -47,6 +47,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$notifications$sl notifications = _Translations$notifications$sl._(_root);
 	@override late final _Translations$notif_priming$sl notif_priming = _Translations$notif_priming$sl._(_root);
 	@override late final _Translations$notif_settings$sl notif_settings = _Translations$notif_settings$sl._(_root);
+	@override late final _Translations$reminder_sound$sl reminder_sound = _Translations$reminder_sound$sl._(_root);
 	@override late final _Translations$notif_preview$sl notif_preview = _Translations$notif_preview$sl._(_root);
 	@override late final _Translations$onboarding$sl onboarding = _Translations$onboarding$sl._(_root);
 	@override late final _Translations$auth$sl auth = _Translations$auth$sl._(_root);
@@ -201,6 +202,18 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get system_permission => 'Sistemsko dovoljenje';
 	@override String get system_permission_on => 'naprava: dovoljeno';
 	@override String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
+}
+
+// Path: reminder_sound
+class _Translations$reminder_sound$sl extends Translations$reminder_sound$en {
+	_Translations$reminder_sound$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get silent_volume => 'Opomniki bodo tihi — glasnost obvestil je na 0.';
+	@override String get silent_mode => 'Opomniki bodo tihi — telefon je na tihem načinu.';
+	@override String get enable => 'Vklopi zvok';
 }
 
 // Path: notif_preview
@@ -822,6 +835,9 @@ extension on TranslationsSl {
 			'notif_settings.system_permission' => 'Sistemsko dovoljenje',
 			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
 			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
+			'reminder_sound.silent_volume' => 'Opomniki bodo tihi — glasnost obvestil je na 0.',
+			'reminder_sound.silent_mode' => 'Opomniki bodo tihi — telefon je na tihem načinu.',
+			'reminder_sound.enable' => 'Vklopi zvok',
 			'notif_preview.title' => 'Videz obvestil',
 			'notif_preview.date' => 'torek, 1. junij',
 			'notif_preview.rem_now' => 'zdaj',
