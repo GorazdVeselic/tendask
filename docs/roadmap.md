@@ -434,11 +434,26 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
   morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
   znano oznako; brez novih shranjenih koordinat.
+- **FR-13 — Indikator okolja (STAGING/OFFLINE) v aplikaciji.** Predlog (2026-06-24, ni implementiran).
+  Hitro vizualno ločiti, kam je build povezan (prod Play vs. lokalni staging Docker). Kotni `Banner`
+  prek `MaterialApp.builder`, viden samo ko `kEnvLabel != 'production'` → prod/Play nikoli ne pokaže.
+  Polna spec: [`docs/feature-requests/env-banner.md`](feature-requests/env-banner.md).
 
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-24 — **Opozorilo »opomniki bodo tihi« + verifikacija 0011 + FR-13 (na `main`).** (1) Nov
+  reaktivni banner `ReminderSoundBanner` (`core/notifications/reminder_audio.dart` + Android EventChannel/
+  BroadcastReceiver) opozori, ko obvestila ne bodo zvenela (glasnost obvestil 0 ali tih profil). **Diagnoza
+  pri uporabniku:** »ni zvoka« = `STREAM_NOTIFICATION` glasnost na 0 (Samsung ima ločen drsnik), **NE bug** —
+  kanal (HIGH+zvok), točni alarm in vibracija delujejo (potrjeno prek `adb dumpsys audio/alarm/notification`).
+  Gumb »Vklopi zvok« dvigne glasnost (`ADJUST_RAISE`) + pokaže sistemski drsnik; banner izgine **takoj**
+  (live stream prek `VOLUME_CHANGED`/`RINGER_MODE_CHANGED`). Topla amber paleta (`AppColors.warnSoft`) za
+  vidnost na temni temi. Tri površine: nastavitve opomnikov, priming sheet, korak opomnika ob vnosu opravila.
+  analyze čist, `compileDebugKotlin` ✅, testi 232 + 10 novih. (2) Migracija `0011` (created_at/
+  server_inserted_at) verificirana na **PROD + staging** (ledger + dejanski stolpci 14/14). (3) **FR-13**
+  (indikator okolja) napisan kot feature request (`docs/feature-requests/env-banner.md`), ni implementiran.
 - 2026-06-18 — **FR-12: oznaka kraja pri vremenu (`feat/fr12-place-label`).** Vremenska kartica Domov
   zdaj pokaže ime najbližjega kraja (📍), reverzno geokodirano iz centroida celice `h3_r7`. Vir =
   **OSM/Nominatim reverse** (uporabnikova izbira; Open-Meteo geocoding je samo naprej). Koda (core/
