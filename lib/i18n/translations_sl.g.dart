@@ -494,6 +494,7 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get subject_title => 'Za kaj?';
 	@override String get subject_search_hint => 'Išči rastlino…';
 	@override String get subject_plants => 'Rastline';
+	@override String get subject_less_likely => 'Manj verjetno za to opravilo';
 	@override String get subject_add_plant => 'Dodaj rastlino';
 	@override String get subject_add_area => 'Dodaj območje';
 	@override String get subject_from_catalog => 'Dodaj iz kataloga';
@@ -1044,6 +1045,7 @@ extension on TranslationsSl {
 			'entry.subject_title' => 'Za kaj?',
 			'entry.subject_search_hint' => 'Išči rastlino…',
 			'entry.subject_plants' => 'Rastline',
+			'entry.subject_less_likely' => 'Manj verjetno za to opravilo',
 			'entry.subject_add_plant' => 'Dodaj rastlino',
 			'entry.subject_add_area' => 'Dodaj območje',
 			'entry.subject_from_catalog' => 'Dodaj iz kataloga',

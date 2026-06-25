@@ -358,6 +358,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   onRepeatLast: _isEdit ? null : _repeatLast,
                 ),
                 SubjectStepBody(
+                  taskTypeId: _taskTypeId,
                   plantIds: _plantIds,
                   areaIds: _areaIds,
                   onTogglePlant: (id, sel) => setState(

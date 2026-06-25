@@ -121,6 +121,10 @@ void main() {
                 (ref) => Stream.value(<String, Plant>{}),
               ),
               plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
+              // Empty matrix → no T3 soft sort; keeps this flow test focused.
+              taskTypeCategoriesProvider.overrideWith(
+                (ref) => Stream.value(<String, Set<String>>{}),
+              ),
               suppliesListProvider.overrideWith(
                 (ref) => Stream.value(<Supply>[]),
               ),

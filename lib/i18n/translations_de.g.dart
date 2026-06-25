@@ -486,6 +486,7 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get subject_title => 'Wofür?';
 	@override String get subject_search_hint => 'Pflanze suchen…';
 	@override String get subject_plants => 'Pflanzen';
+	@override String get subject_less_likely => 'Weniger wahrscheinlich für diese Aufgabe';
 	@override String get subject_add_plant => 'Pflanze hinzufügen';
 	@override String get subject_add_area => 'Bereich hinzufügen';
 	@override String get subject_from_catalog => 'Aus Katalog hinzufügen';
@@ -1036,6 +1037,7 @@ extension on TranslationsDe {
 			'entry.subject_title' => 'Wofür?',
 			'entry.subject_search_hint' => 'Pflanze suchen…',
 			'entry.subject_plants' => 'Pflanzen',
+			'entry.subject_less_likely' => 'Weniger wahrscheinlich für diese Aufgabe',
 			'entry.subject_add_plant' => 'Pflanze hinzufügen',
 			'entry.subject_add_area' => 'Bereich hinzufügen',
 			'entry.subject_from_catalog' => 'Aus Katalog hinzufügen',

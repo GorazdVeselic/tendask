@@ -940,6 +940,9 @@ class Translations$entry$en {
 	/// en: 'Plants'
 	String get subject_plants => 'Plants';
 
+	/// en: 'Less likely for this task'
+	String get subject_less_likely => 'Less likely for this task';
+
 	/// en: 'Add plant'
 	String get subject_add_plant => 'Add plant';
 
@@ -1955,6 +1958,7 @@ extension on Translations {
 			'entry.subject_title' => 'For what?',
 			'entry.subject_search_hint' => 'Search plant…',
 			'entry.subject_plants' => 'Plants',
+			'entry.subject_less_likely' => 'Less likely for this task',
 			'entry.subject_add_plant' => 'Add plant',
 			'entry.subject_add_area' => 'Add area',
 			'entry.subject_from_catalog' => 'Add from catalog',

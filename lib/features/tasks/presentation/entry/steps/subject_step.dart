@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/catalog_labels.dart';
+import '../../../../../core/catalog_relevance.dart';
 import '../../../../../core/catalog_sort.dart';
 import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
@@ -25,12 +26,15 @@ import '../../../../plants/presentation/widgets/plant_select_row.dart';
 class SubjectStepBody extends ConsumerStatefulWidget {
   const SubjectStepBody({
     super.key,
+    required this.taskTypeId,
     required this.plantIds,
     required this.areaIds,
     required this.onTogglePlant,
     required this.onToggleArea,
   });
 
+  /// Type chosen in step 1; drives the soft lift of relevant plants (T3).
+  final String? taskTypeId;
   final Set<String> plantIds;
   final Set<String> areaIds;
   final void Function(String id, bool selected) onTogglePlant;
@@ -106,6 +110,16 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
       return cat != null && coarsePlantCategory(cat) == _category;
     }
 
+    // T3: plant categories the chosen task type applies to (see
+    // isCategoryRelevant for the empty/unknown rules).
+    final relevantCategories =
+        ref.watch(taskTypeCategoriesProvider).asData?.value[widget.taskTypeId] ??
+        const <String>{};
+    bool isRelevant(String? plantId) => isCategoryRelevant(
+      relevantCategories,
+      plantId != null ? catalog[plantId]?.category : null,
+    );
+
     final plants = sortedByLabel(
       userPlants.values
           .where((p) => inCategory(p.plantId))
@@ -116,12 +130,16 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
           ),
       (p) => userPlantLabel(p, catalog),
     );
+    // Stable partition: relevant plants first, the rest under a muted divider.
+    final plantsRelevant = plants.where((p) => isRelevant(p.plantId)).toList();
+    final plantsOther = plants.where((p) => !isRelevant(p.plantId)).toList();
+    final softSplit = plantsRelevant.isNotEmpty && plantsOther.isNotEmpty;
     final areaList = areas.values.toList();
     final ownedPlantIds = {
       for (final p in userPlants.values)
         if (p.plantId != null) p.plantId,
     };
-    final catalogMatches = normQuery.isEmpty
+    final catalogMatchesSorted = normQuery.isEmpty
         ? <Plant>[]
         : sortedByLabel(
             catalogList.where(
@@ -132,6 +150,11 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
             ),
             (p) => catalogLabel(p.labels),
           );
+    // Relevant species first (T3), alphabetical within each group.
+    final catalogMatches = [
+      ...catalogMatchesSorted.where((p) => isRelevant(p.id)),
+      ...catalogMatchesSorted.where((p) => !isRelevant(p.id)),
+    ];
 
     // Areas of the selected plants — shown as context, not a co-equal subject.
     final selectedAreaNames = <String>{
@@ -142,6 +165,15 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
         p.areaId != null && areas[p.areaId] != null
         ? '🪴 ${areas[p.areaId]!.name}'
         : null;
+
+    Widget plantRow(UserPlant p) => PlantSelectRow(
+      icon: userPlantIcon(p, catalog),
+      title: userPlantLabel(p, catalog),
+      subtitle: areaSubtitle(p),
+      selected: widget.plantIds.contains(p.id),
+      onTap: () =>
+          widget.onTogglePlant(p.id, !widget.plantIds.contains(p.id)),
+    );
 
     // Only offer category chips the user actually has plants in — an empty
     // category would just return nothing.
@@ -227,17 +259,13 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                     onChanged: (v) => setState(() => _query = v),
                   ),
                 ),
-              for (final p in plants)
-                PlantSelectRow(
-                  icon: userPlantIcon(p, catalog),
-                  title: userPlantLabel(p, catalog),
-                  subtitle: areaSubtitle(p),
-                  selected: widget.plantIds.contains(p.id),
-                  onTap: () => widget.onTogglePlant(
-                    p.id,
-                    !widget.plantIds.contains(p.id),
-                  ),
+              for (final p in plantsRelevant) plantRow(p),
+              if (softSplit)
+                SectionLabel(
+                  t.entry.subject_less_likely,
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
                 ),
+              for (final p in plantsOther) plantRow(p),
               if (selectedAreaNames.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),

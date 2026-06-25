@@ -17,7 +17,7 @@
 |---|----------|:-----------:|:--------:|-------------|
 | T6 | Seznam rastlin ni urejen | **hiter** | srednja | ✅ **NAREJENO** (2026-06-25) — abecedno, locale-aware (č/š/ž, ä/ö/ü) |
 | T7 | Telefon naj obvesti o opravilu | **hiter** | **visoka** | **Naredi** — privzeti opomnik za *načrtovana* opravila (odločitev: default-on?) |
-| T3 | Opravila vezana na entiteto | srednji | visoka | **Naredi mehko** — podatek (`categoryMatrix`) že obstaja, le ožičiti; brez trdega blokiranja |
+| T3 | Opravila vezana na entiteto | srednji | visoka | ✅ **NAREJENO** (2026-06-25) — mehki dvig rastlin po izbranem tipu (`category_task_type`), brez blokiranja |
 | T4 | Rastline vezane na tip območja | srednji | srednja | Mehka prioritizacija, ne blokiranje; nižja prioriteta od T3 |
 | T1 | Avtomatska opravila + napoved pobiranja | **zelo velik** | visoka | **Že planirano = M11** (pametni motor); pobiranje le kjer obstaja pravilo |
 | T2 | Predlog naslednje rastline (kolobarjenje) | velik | srednja | **Že zabeleženo = FR-10** (V2/motor) |
@@ -99,7 +99,18 @@ offline katalog je lahko nepopoln; preveč tog filter zapre legitimne robne prim
 izbiri subjekta), uporabi `categoryMatrix`, da **relevantne tipe dvigneš na vrh / nepovezane
 zatreš**, ne pa popolnoma skriješ. Srednji trud, dobra vrednost. Izogni se rigidnemu blokiranju.
 
-**Odločitev:** _(odprto — potrebna odločitev o vrstnem redu korakov vs. mehkem sortiranju)_
+**Odločitev (2026-06-25): NAREJENO — mehki dvig, brez spremembe vrstnega reda korakov.**
+Mapping subjekt↔tip je dvosmeren: ker je tip izbran v koraku 1, v koraku 2 (subjekt) **rastline
+z ujemajočo kategorijo dvignemo na vrh**, ostale pa **zatremo pod medlo oznako »manj verjetno«**
+(`SectionLabel`), nikoli ne skrijemo. Vir je drift tabela `category_task_type` (pull iz oblaka +
+offline seed) prek novega `taskTypeCategoriesProvider` — ne seed konstanta. Pravilo relevance je
+v čisti funkciji `lib/core/catalog_relevance.dart` (`isCategoryRelevant`): prazna matrika (ni tipa
+/ tip brez vnosa) → vse relevantno; **neznana kategorija (lastna rastlina / nenaložen katalog) →
+ostane relevantna** (neznano ≠ nepovezano — ne zatremo legitimnih robnih primerov). Soft-split se
+prikaže le, ko sta obe skupini neprazni. Enako prerazporejeni so zadetki iskanja iz kataloga
+(brez ločnice). **Območja namerno izven obsega** — matrika modelira kategorije rastlin, ne tipov
+območij (to je bližje T4). Pokrito s 4 unit testi (`catalog_relevance_test.dart`) + obstoječi
+widget test toka. analyze čist, 256/256.
 
 ---
 

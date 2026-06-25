@@ -27,3 +27,19 @@ final plantsMapProvider = StreamProvider<Map<String, Plant>>((ref) {
       .watch()
       .map((list) => {for (final p in list) p.id: p});
 });
+
+/// Maps a task type id to the set of plant categories it applies to
+/// (category_task_type). A type absent from the map (or with an empty set) has
+/// no known restriction — callers treat that as "applies to all".
+final taskTypeCategoriesProvider = StreamProvider<Map<String, Set<String>>>((
+  ref,
+) {
+  final db = ref.watch(databaseProvider);
+  return db.select(db.categoryTaskTypes).watch().map((rows) {
+    final out = <String, Set<String>>{};
+    for (final r in rows) {
+      (out[r.taskTypeId] ??= <String>{}).add(r.category);
+    }
+    return out;
+  });
+});
