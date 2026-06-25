@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry/sentry.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -32,13 +33,24 @@ void main() async {
     await _bootstrap();
     return;
   }
-  await Sentry.init((options) {
-    options.dsn = kSentryDsn;
-    options.environment = kReleaseMode ? 'production' : 'development';
-  });
   // runZonedGuarded captures uncaught async errors during the whole run;
-  // framework + platform errors are forwarded from inside _bootstrap.
-  await runZonedGuarded(_bootstrap, (error, stack) {
+  // framework + platform errors are forwarded from inside _bootstrap. Binding +
+  // Sentry init run INSIDE the zone, before _bootstrap, so they share the zone
+  // that later calls runApp (a different zone triggers Flutter's mismatch error).
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Tag every event with the build that produced it (e.g. invalid_icon was a
+    // vc5-only bug) — the pure-Dart SDK does not auto-detect the release, so we
+    // read it from the installed package: "app.tendask@1.0.0+6".
+    final info = await PackageInfo.fromPlatform();
+    await Sentry.init((options) {
+      options.dsn = kSentryDsn;
+      options.environment = kReleaseMode ? 'production' : 'development';
+      options.release =
+          '${info.packageName}@${info.version}+${info.buildNumber}';
+    });
+    await _bootstrap();
+  }, (error, stack) {
     unawaited(Sentry.captureException(error, stackTrace: stack));
   });
 }
