@@ -60,6 +60,20 @@ android {
             }
         }
     }
+
+    // The notification status-bar icon (ic_stat_notify) exists only as density-
+    // qualified PNGs. With AAB density splitting (default on) Play delivers a
+    // per-device split that can omit the icon's bucket, so
+    // flutter_local_notifications throws invalid_icon at init on those configs
+    // (e.g. Play pre-launch x86 emulators) — even though R8 keeps it (keep.xml).
+    // Ship every density to every device, like a universal APK, so the icon
+    // always resolves. The extra resources are a few hundred KB — negligible
+    // against the native libraries.
+    bundle {
+        density {
+            enableSplit = false
+        }
+    }
 }
 
 kotlin {
