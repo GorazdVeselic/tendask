@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/catalog_labels.dart';
+import '../../../../../core/catalog_sort.dart';
 import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
 import '../../../../../core/plant_category.dart';
@@ -105,14 +106,16 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
       return cat != null && coarsePlantCategory(cat) == _category;
     }
 
-    final plants = userPlants.values
-        .where((p) => inCategory(p.plantId))
-        .where(
-          (p) =>
-              normQuery.isEmpty ||
-              userPlantLabel(p, catalog).toLowerCase().contains(normQuery),
-        )
-        .toList();
+    final plants = sortedByLabel(
+      userPlants.values
+          .where((p) => inCategory(p.plantId))
+          .where(
+            (p) =>
+                normQuery.isEmpty ||
+                userPlantLabel(p, catalog).toLowerCase().contains(normQuery),
+          ),
+      (p) => userPlantLabel(p, catalog),
+    );
     final areaList = areas.values.toList();
     final ownedPlantIds = {
       for (final p in userPlants.values)
@@ -120,14 +123,15 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
     };
     final catalogMatches = normQuery.isEmpty
         ? <Plant>[]
-        : catalogList
-              .where(
-                (p) =>
-                    !ownedPlantIds.contains(p.id) &&
-                    inCategory(p.id) &&
-                    plantMatchesQuery(p, normQuery),
-              )
-              .toList();
+        : sortedByLabel(
+            catalogList.where(
+              (p) =>
+                  !ownedPlantIds.contains(p.id) &&
+                  inCategory(p.id) &&
+                  plantMatchesQuery(p, normQuery),
+            ),
+            (p) => catalogLabel(p.labels),
+          );
 
     // Areas of the selected plants — shown as context, not a co-equal subject.
     final selectedAreaNames = <String>{

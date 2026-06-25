@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
+import '../../../core/catalog_sort.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/plant_category.dart';
@@ -169,14 +170,16 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     final normQuery = _query.trim().toLowerCase();
     final results = plants == null
         ? const <Plant>[]
-        : plants
-              .where(
-                (p) =>
-                    _category == 'all' ||
-                    coarsePlantCategory(p.category) == _category,
-              )
-              .where((p) => plantMatchesQuery(p, normQuery))
-              .toList();
+        : sortedByLabel(
+            plants
+                .where(
+                  (p) =>
+                      _category == 'all' ||
+                      coarsePlantCategory(p.category) == _category,
+                )
+                .where((p) => plantMatchesQuery(p, normQuery)),
+            (p) => catalogLabel(p.labels),
+          );
     // Members = added this session, plus (in garden mode) every plant already
     // in the current target bucket — a real area OR "no area" (null) — so the
     // footer, counter, ✓ and remove cover the bucket's whole contents.

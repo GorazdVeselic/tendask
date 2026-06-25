@@ -15,7 +15,7 @@
 
 | # | Opažanje | Ocena truda | Vrednost | Priporočilo |
 |---|----------|:-----------:|:--------:|-------------|
-| T6 | Seznam rastlin ni urejen | **hiter** | srednja | **Naredi** — abecedno (locale-aware) znotraj skupin |
+| T6 | Seznam rastlin ni urejen | **hiter** | srednja | ✅ **NAREJENO** (2026-06-25) — abecedno, locale-aware (č/š/ž, ä/ö/ü) |
 | T7 | Telefon naj obvesti o opravilu | **hiter** | **visoka** | **Naredi** — privzeti opomnik za *načrtovana* opravila (odločitev: default-on?) |
 | T3 | Opravila vezana na entiteto | srednji | visoka | **Naredi mehko** — podatek (`categoryMatrix`) že obstaja, le ožičiti; brez trdega blokiranja |
 | T4 | Rastline vezane na tip območja | srednji | srednja | Mehka prioritizacija, ne blokiranje; nižja prioriteta od T3 |
@@ -159,7 +159,13 @@ sekcija »pogosto« ostane na vrhu.
 **Priporočilo:** naredi. Pozor na **locale-aware** sortiranje (slovenski č/š/ž, nemški ä/ö/ü) — ne
 goli `String.compareTo`, ampak ustrezna kolacija; ime beri prek `catalogLabel()`.
 
-**Odločitev:** _(odprto — predlagam: naredi v naslednji rundi polish)_
+**Odločitev (2026-06-25): NAREJENO.** Nov skupni helper `lib/core/catalog_sort.dart`
+(`compareCatalogLabels` + decorate-sort `sortedByLabel`) s kolacijo, kjer slovenski č/š/ž sedijo kot
+ločene črke tik za c/s/z, nemški ä/ö/ü/ß pa se zložijo na osnovno črko (DIN 5007-1). Uporabljeno na 4
+mestih: `plant_picker_screen`, `garden_plant_add_screen`, `subject_step` (katalog matches + lastne
+rastline). Razvrščanje je po **lokaliziranem** imenu (`catalogLabel`/`userPlantLabel`); sekcije
+»pogosto/nedavno« ostanejo recency-ordered. 6 unit testov, analyze čist. _Vrstni red kategorijskih
+chipov in »znotraj skupin« ni potreben — seznam je ploščat, filtriran z izbranim chipom._
 
 ---
 
