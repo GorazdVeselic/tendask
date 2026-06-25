@@ -91,4 +91,12 @@ void main() {
     expect(a2.userId, 'uid-other');
     expect(a2.syncStatus, kSyncSynced);
   });
+
+  test('skips the pending default garden, claims other guest areas', () async {
+    await insertArea('g1', kLocalUserId); // default garden awaiting reconcile
+    await insertArea('a2', kLocalUserId); // a normal guest area
+    await claimLocalRows(db, 'uid-1', skipAreaId: 'g1');
+    expect((await area('g1')).userId, kLocalUserId, reason: 'left local');
+    expect((await area('a2')).userId, 'uid-1', reason: 'claimed as usual');
+  });
 }

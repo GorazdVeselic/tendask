@@ -92,8 +92,10 @@ Future<void> _bootstrap() async {
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
   // Seed the default "garden" area once per device (FR-9), named in the now-set
-  // language. Runs before sync so the first cycle pushes it; offline-safe (a
-  // pure local write). One-shot via a local flag — a deleted garden stays gone.
+  // language. Offline-safe (a pure local write) — it is created owned by `local`
+  // and settled on sign-in by reconcileDefaultGarden, so the first cloud sync
+  // never pushes a duplicate. One-shot via a local flag (a deleted garden stays
+  // gone); the per-account guard that survives reinstall lives in the profile.
   //
   // Unlike the catalog seed, the default garden is NOT essential to booting: a
   // DB hiccup here must never black-screen the app. Degrade gracefully — on
@@ -104,7 +106,7 @@ Future<void> _bootstrap() async {
       container.read(databaseProvider),
       container.read(areasRepositoryProvider),
       container.read(localPrefsProvider),
-    ).seedDefaultIfNeeded(userId: userId, name: t.areas.default_garden_name);
+    ).seedDefaultIfNeeded(name: t.areas.default_garden_name);
   } catch (error, stack) {
     debugPrint('Default garden seed failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {

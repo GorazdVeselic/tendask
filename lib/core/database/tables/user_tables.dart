@@ -19,6 +19,11 @@ class Profiles extends Table {
   TextColumn get lang => text().nullable()();
   // Notification preferences (screen 22), stored as JSON text → Supabase jsonb.
   TextColumn get notificationSettings => text().nullable()();
+  // True once this account has been given its default "garden" area (FR-9).
+  // Per-account (synced) so the one-shot survives a reinstall — a device-local
+  // flag would re-seed and push a duplicate on every fresh install + sign-in.
+  BoolColumn get defaultGardenSeeded =>
+      boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
       text().withDefault(const Constant(kSyncPending))();

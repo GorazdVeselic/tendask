@@ -22,8 +22,15 @@ void main() {
     return rows.isNotEmpty;
   }
 
-  test('schema version is 9', () {
-    expect(db.schemaVersion, 9);
+  Future<bool> columnExists(String table, String column) async {
+    final rows = await db
+        .customSelect('PRAGMA table_info($table)')
+        .get();
+    return rows.any((r) => r.data['name'] == column);
+  }
+
+  test('schema version is 10', () {
+    expect(db.schemaVersion, 10);
   });
 
   test('current schema has no device_location, keeps the user tables', () async {
@@ -31,6 +38,10 @@ void main() {
     expect(await tableExists('profile'), isTrue);
     expect(await tableExists('area'), isTrue);
     expect(await tableExists('task'), isTrue);
+  });
+
+  test('v10: profile carries the per-account default_garden_seeded flag', () async {
+    expect(await columnExists('profile', 'default_garden_seeded'), isTrue);
   });
 
   test('dropping device_location is idempotent (v9 step is safe to re-run)',

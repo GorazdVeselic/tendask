@@ -48,4 +48,4 @@ final class SyncServiceProvider
   }
 }
 
-String _$syncServiceHash() => r'452067c691d73eed58616594ad411b19d96ad839';
+String _$syncServiceHash() => r'10a82a6692cc208e15326ffe1d6024039c6b33de';

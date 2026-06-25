@@ -44,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 9;
+  int get schemaVersion => 10;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -154,6 +154,12 @@ class AppDatabase extends _$AppDatabase {
       // no Supabase impact.
       if (from < 9) {
         await customStatement('DROP TABLE IF EXISTS device_location');
+      }
+      // v10: profile.default_garden_seeded — the default-garden one-shot moves
+      // from a device-local flag to the synced profile, so a reinstall no longer
+      // re-seeds and pushes a duplicate (mirrors Supabase 0012).
+      if (from < 10) {
+        await m.addColumn(profiles, profiles.defaultGardenSeeded);
       }
     },
   );

@@ -1490,6 +1490,20 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         type: DriftSqlType.string,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _defaultGardenSeededMeta =
+      const VerificationMeta('defaultGardenSeeded');
+  @override
+  late final GeneratedColumn<bool> defaultGardenSeeded = GeneratedColumn<bool>(
+    'default_garden_seeded',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("default_garden_seeded" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -1521,6 +1535,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     h3R5,
     lang,
     notificationSettings,
+    defaultGardenSeeded,
     updatedAt,
     syncStatus,
   ];
@@ -1577,6 +1592,15 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('default_garden_seeded')) {
+      context.handle(
+        _defaultGardenSeededMeta,
+        defaultGardenSeeded.isAcceptableOrUnknown(
+          data['default_garden_seeded']!,
+          _defaultGardenSeededMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -1624,6 +1648,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.string,
         data['${effectivePrefix}notification_settings'],
       ),
+      defaultGardenSeeded: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}default_garden_seeded'],
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -1648,6 +1676,7 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? h3R5;
   final String? lang;
   final String? notificationSettings;
+  final bool defaultGardenSeeded;
   final DateTime updatedAt;
   final String syncStatus;
   const Profile({
@@ -1657,6 +1686,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.h3R5,
     this.lang,
     this.notificationSettings,
+    required this.defaultGardenSeeded,
     required this.updatedAt,
     required this.syncStatus,
   });
@@ -1679,6 +1709,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || notificationSettings != null) {
       map['notification_settings'] = Variable<String>(notificationSettings);
     }
+    map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
@@ -1694,6 +1725,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: notificationSettings == null && nullToAbsent
           ? const Value.absent()
           : Value(notificationSettings),
+      defaultGardenSeeded: Value(defaultGardenSeeded),
       updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
     );
@@ -1713,6 +1745,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: serializer.fromJson<String?>(
         json['notificationSettings'],
       ),
+      defaultGardenSeeded: serializer.fromJson<bool>(
+        json['defaultGardenSeeded'],
+      ),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
@@ -1727,6 +1762,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'h3R5': serializer.toJson<String?>(h3R5),
       'lang': serializer.toJson<String?>(lang),
       'notificationSettings': serializer.toJson<String?>(notificationSettings),
+      'defaultGardenSeeded': serializer.toJson<bool>(defaultGardenSeeded),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
@@ -1739,6 +1775,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<String?> h3R5 = const Value.absent(),
     Value<String?> lang = const Value.absent(),
     Value<String?> notificationSettings = const Value.absent(),
+    bool? defaultGardenSeeded,
     DateTime? updatedAt,
     String? syncStatus,
   }) => Profile(
@@ -1750,6 +1787,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     notificationSettings: notificationSettings.present
         ? notificationSettings.value
         : this.notificationSettings,
+    defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
     updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
   );
@@ -1763,6 +1801,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       notificationSettings: data.notificationSettings.present
           ? data.notificationSettings.value
           : this.notificationSettings,
+      defaultGardenSeeded: data.defaultGardenSeeded.present
+          ? data.defaultGardenSeeded.value
+          : this.defaultGardenSeeded,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -1779,6 +1820,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
+          ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
@@ -1793,6 +1835,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     h3R5,
     lang,
     notificationSettings,
+    defaultGardenSeeded,
     updatedAt,
     syncStatus,
   );
@@ -1806,6 +1849,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.h3R5 == this.h3R5 &&
           other.lang == this.lang &&
           other.notificationSettings == this.notificationSettings &&
+          other.defaultGardenSeeded == this.defaultGardenSeeded &&
           other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus);
 }
@@ -1817,6 +1861,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String?> h3R5;
   final Value<String?> lang;
   final Value<String?> notificationSettings;
+  final Value<bool> defaultGardenSeeded;
   final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
@@ -1827,6 +1872,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
+    this.defaultGardenSeeded = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1838,6 +1884,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.h3R5 = const Value.absent(),
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
+    this.defaultGardenSeeded = const Value.absent(),
     required DateTime updatedAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1850,6 +1897,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? h3R5,
     Expression<String>? lang,
     Expression<String>? notificationSettings,
+    Expression<bool>? defaultGardenSeeded,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
@@ -1862,6 +1910,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (lang != null) 'lang': lang,
       if (notificationSettings != null)
         'notification_settings': notificationSettings,
+      if (defaultGardenSeeded != null)
+        'default_garden_seeded': defaultGardenSeeded,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
@@ -1875,6 +1925,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String?>? h3R5,
     Value<String?>? lang,
     Value<String?>? notificationSettings,
+    Value<bool>? defaultGardenSeeded,
     Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<int>? rowid,
@@ -1886,6 +1937,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       h3R5: h3R5 ?? this.h3R5,
       lang: lang ?? this.lang,
       notificationSettings: notificationSettings ?? this.notificationSettings,
+      defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
@@ -1915,6 +1967,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
         notificationSettings.value,
       );
     }
+    if (defaultGardenSeeded.present) {
+      map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1936,6 +1991,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('h3R5: $h3R5, ')
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
+          ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
@@ -8811,6 +8867,7 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String?> h3R5,
       Value<String?> lang,
       Value<String?> notificationSettings,
+      Value<bool> defaultGardenSeeded,
       required DateTime updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -8823,6 +8880,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String?> h3R5,
       Value<String?> lang,
       Value<String?> notificationSettings,
+      Value<bool> defaultGardenSeeded,
       Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -8864,6 +8922,11 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<String> get notificationSettings => $composableBuilder(
     column: $table.notificationSettings,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -8917,6 +8980,11 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -8954,6 +9022,11 @@ class $$ProfilesTableAnnotationComposer
 
   GeneratedColumn<String> get notificationSettings => $composableBuilder(
     column: $table.notificationSettings,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
     builder: (column) => column,
   );
 
@@ -9000,6 +9073,7 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
+                Value<bool> defaultGardenSeeded = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9010,6 +9084,7 @@ class $$ProfilesTableTableManager
                 h3R5: h3R5,
                 lang: lang,
                 notificationSettings: notificationSettings,
+                defaultGardenSeeded: defaultGardenSeeded,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -9022,6 +9097,7 @@ class $$ProfilesTableTableManager
                 Value<String?> h3R5 = const Value.absent(),
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
+                Value<bool> defaultGardenSeeded = const Value.absent(),
                 required DateTime updatedAt,
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9032,6 +9108,7 @@ class $$ProfilesTableTableManager
                 h3R5: h3R5,
                 lang: lang,
                 notificationSettings: notificationSettings,
+                defaultGardenSeeded: defaultGardenSeeded,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,

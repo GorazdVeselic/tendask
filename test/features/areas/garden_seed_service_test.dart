@@ -1,6 +1,7 @@
 import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
+import 'package:tendask/core/auth/auth_service.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/local_prefs/local_prefs.dart';
@@ -20,7 +21,6 @@ void main() {
   late LocalPrefsRepository prefs;
   late GardenSeedService seed;
 
-  const userId = 'user-1';
   final t0 = DateTime.utc(2026, 6, 16, 8);
 
   setUp(() {
@@ -32,33 +32,36 @@ void main() {
 
   tearDown(() async => db.close());
 
-  test('seeds the default garden once, as a garden-type area', () async {
-    await seed.seedDefaultIfNeeded(userId: userId, name: 'Vrt');
+  test('seeds the default garden once, owned by local until reconcile', () async {
+    await seed.seedDefaultIfNeeded(name: 'Vrt');
 
     final all = await areas.watchAll().first;
     expect(all, hasLength(1));
     expect(all.single.name, 'Vrt');
     expect(all.single.type, AreaType.garden);
-    expect(all.single.userId, userId);
+    // Stays local-owned so push never uploads it before reconcile.
+    expect(all.single.userId, kLocalUserId);
     expect(await prefs.defaultGardenSeeded(), isTrue);
+    // The pending-reconcile id points at the seeded garden.
+    expect(await prefs.defaultGardenLocalId(), all.single.id);
   });
 
   test('does not seed again on a later launch (flag already set)', () async {
-    await seed.seedDefaultIfNeeded(userId: userId, name: 'Vrt');
-    await seed.seedDefaultIfNeeded(userId: userId, name: 'Vrt');
+    await seed.seedDefaultIfNeeded(name: 'Vrt');
+    await seed.seedDefaultIfNeeded(name: 'Vrt');
 
     expect(await areas.watchAll().first, hasLength(1));
   });
 
   test('a deleted garden is not resurrected on the next launch', () async {
-    await seed.seedDefaultIfNeeded(userId: userId, name: 'Vrt');
+    await seed.seedDefaultIfNeeded(name: 'Vrt');
     final garden = (await areas.watchAll().first).single;
 
     // User removes the garden (they only keep beds/lawns).
     await areas.softDelete(garden.id);
 
     // Next launch must respect the deletion — the one-shot flag prevents re-seed.
-    await seed.seedDefaultIfNeeded(userId: userId, name: 'Vrt');
+    await seed.seedDefaultIfNeeded(name: 'Vrt');
 
     expect(
       await areas.watchAll().first,

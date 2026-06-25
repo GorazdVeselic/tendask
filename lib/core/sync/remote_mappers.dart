@@ -28,6 +28,7 @@ Map<String, dynamic> profileToRemote(Profile r) => {
   'h3_r5': r.h3R5,
   'lang': r.lang,
   'notification_settings': _jsonb(r.notificationSettings),
+  'default_garden_seeded': r.defaultGardenSeeded,
   'updated_at': _ts(r.updatedAt),
 };
 
@@ -165,6 +166,7 @@ ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
       h3R5: Value(r['h3_r5'] as String?),
       lang: Value(r['lang'] as String?),
       notificationSettings: Value(_text(r['notification_settings'])),
+      defaultGardenSeeded: Value(r['default_garden_seeded'] as bool? ?? false),
       updatedAt: Value(_dt(r['updated_at'])),
       syncStatus: const Value(kSyncSynced),
     );

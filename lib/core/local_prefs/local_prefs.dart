@@ -7,6 +7,7 @@ part 'local_prefs.g.dart';
 
 const _kOnboardingSeen = 'onboarding_seen';
 const _kDefaultGardenSeeded = 'default_garden_seeded';
+const _kDefaultGardenLocalId = 'default_garden_local_id';
 const _kThemeMode = 'theme_mode';
 const _kThemePalette = 'theme_palette';
 
@@ -43,6 +44,9 @@ class LocalPrefsRepository {
         LocalFlagsCompanion.insert(key: key, value: value),
       );
 
+  Future<void> _clear(String key) =>
+      (_db.delete(_db.localFlags)..where((f) => f.key.equals(key))).go();
+
   /// The user's chosen theme mode ('system' | 'light' | 'dark'), or null if the
   /// user never changed it (defaults to following the system).
   Future<String?> themeMode() => _getString(_kThemeMode);
@@ -60,13 +64,24 @@ class LocalPrefsRepository {
 
   Future<void> setOnboardingSeen() => _setFlag(_kOnboardingSeen, true);
 
-  /// Whether the default "garden" area has already been seeded once (FR-9).
-  /// Device-local so deletion sticks: we seed exactly once, never "if missing"
-  /// (which would resurrect a garden the user deleted on the next launch).
+  /// Whether this device has already seeded its one-shot default "garden" area
+  /// (FR-9). Device-local so a deletion sticks within an install; the *account*
+  /// guard that survives reinstall is profile.default_garden_seeded (synced).
   Future<bool> defaultGardenSeeded() => _getFlag(_kDefaultGardenSeeded);
 
-  Future<void> setDefaultGardenSeeded() =>
-      _setFlag(_kDefaultGardenSeeded, true);
+  Future<void> setDefaultGardenSeeded() => _setFlag(_kDefaultGardenSeeded, true);
+
+  /// Id of the locally-seeded default garden while it still awaits reconcile
+  /// (it stays owned by `local` so push never uploads it). On sign-in the
+  /// reconcile either adopts it (new account) or hard-deletes it (the account
+  /// already has its default — drop the duplicate before it ever syncs), then
+  /// clears this. Null once reconciled or for a never-seeded device.
+  Future<String?> defaultGardenLocalId() => _getString(_kDefaultGardenLocalId);
+
+  Future<void> setDefaultGardenLocalId(String id) =>
+      _setString(_kDefaultGardenLocalId, id);
+
+  Future<void> clearDefaultGardenLocalId() => _clear(_kDefaultGardenLocalId);
 }
 
 @riverpod

@@ -85,6 +85,7 @@ void main() {
         h3R6: null,
         h3R5: null,
         lang: 'sl',
+        defaultGardenSeeded: false,
         updatedAt: t0,
         syncStatus: kSyncPending,
       ),
@@ -96,6 +97,7 @@ void main() {
       'h3_r5': null,
       'lang': 'sl',
       'notification_settings': null,
+      'default_garden_seeded': false,
       'updated_at': '2026-06-05T10:00:00.000Z',
     });
     expect(map.containsKey('deleted'), isFalse);
@@ -111,6 +113,7 @@ void main() {
         h3R5: null,
         lang: null,
         notificationSettings: json,
+        defaultGardenSeeded: false,
         updatedAt: t0,
         syncStatus: kSyncPending,
       ),
