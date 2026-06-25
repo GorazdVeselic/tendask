@@ -7,6 +7,8 @@ import 'package:sentry/sentry.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
+import 'app/theme/theme_mode_controller.dart';
+import 'app/theme/theme_palette_controller.dart';
 import 'core/auth/auth_service.dart';
 import 'core/config.dart';
 import 'core/database/database_provider.dart';
@@ -153,6 +155,11 @@ Future<void> _bootstrap() async {
   } else {
     target = '/home';
   }
+
+  // Resolve the saved theme mode + colour palette before first paint so the app
+  // opens in the chosen theme without a flash (same container backs runApp).
+  await container.read(themeModeControllerProvider.future);
+  await container.read(themePaletteControllerProvider.future);
 
   // Start on the branded splash (M9.2), which routes to [target] after a brief
   // readable delay.

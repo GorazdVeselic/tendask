@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/theme/app_colors.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
@@ -94,6 +93,7 @@ class _HomeBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
+    final cs = Theme.of(context).colorScheme;
     final reminderTaskIds =
         ref.watch(taskIdsWithRemindersProvider).asData?.value ?? const {};
     final subjectLabels = subjectLabelsByTask(
@@ -154,8 +154,8 @@ class _HomeBody extends ConsumerWidget {
               _TaskBanner(
                 label: t.home.overdue_banner(n: overdueTasks.length),
                 icon: Icons.warning_amber_rounded,
-                background: AppColors.terracottaSoft,
-                foreground: AppColors.onTerracottaSoft,
+                background: cs.errorContainer,
+                foreground: cs.onErrorContainer,
                 tasks: overdueTasks,
                 catalog: catalog,
                 now: now,
@@ -168,8 +168,8 @@ class _HomeBody extends ConsumerWidget {
               _TaskBanner(
                 label: t.home.upcoming_banner(n: upcomingTasks.length),
                 icon: Icons.event_outlined,
-                background: AppColors.soft,
-                foreground: AppColors.green900,
+                background: cs.primaryContainer,
+                foreground: cs.onPrimaryContainer,
                 tasks: upcomingTasks,
                 catalog: catalog,
                 now: now,

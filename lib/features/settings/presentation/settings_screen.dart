@@ -194,6 +194,17 @@ class SettingsScreen extends ConsumerWidget {
               style: const ButtonStyle(visualDensity: VisualDensity.compact),
             ),
 
+            // Appearance — theme mode + colour palette (screen 12b), device-local.
+            SectionLabel(t.settings.section_appearance),
+            Card(
+              child: ListTile(
+                leading: const Text('🎨', style: TextStyle(fontSize: 22)),
+                title: Text(t.settings.appearance_placeholder),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('appearance'),
+              ),
+            ),
+
             // Notifications — screen 22 (M8.4)
             SectionLabel(t.settings.section_notifications),
             Card(

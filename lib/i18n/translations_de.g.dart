@@ -66,6 +66,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
+	@override late final _Translations$appearance$de appearance = _Translations$appearance$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
 }
 
@@ -705,6 +706,11 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get section_location => 'Standort';
 	@override String get location_placeholder => 'Wetter-Standort';
 	@override String get section_language => 'Sprache';
+	@override String get section_appearance => 'Darstellung';
+	@override String get appearance_placeholder => 'Thema & Farben';
+	@override String get theme_system => 'System';
+	@override String get theme_light => 'Hell';
+	@override String get theme_dark => 'Dunkel';
 	@override String get section_notifications => 'Benachrichtigungen';
 	@override String get notifications_placeholder => 'Benachrichtigungen und Erinnerungen';
 	@override String get section_garden => 'Garten';
@@ -730,6 +736,36 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get delete_data_confirm => 'Löschen';
 	@override String get section_about => 'Über';
 	@override String get privacy_policy => 'Datenschutzerklärung';
+}
+
+// Path: appearance
+class _Translations$appearance$de extends Translations$appearance$en {
+	_Translations$appearance$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get mode_label => 'Modus';
+	@override String get mode_help => '„System“ wechselt automatisch zwischen Hell und Dunkel, passend zu deinem Telefon.';
+	@override String get follows_system_light => 'Folgt dem Telefon · aktuell hell';
+	@override String get follows_system_dark => 'Folgt dem Telefon · aktuell dunkel';
+	@override String get palette_label => 'Farbthema';
+	@override String get preview_label => 'Vorschau';
+	@override String get default_badge => 'Standard';
+	@override String get reset => 'Auf Standard zurücksetzen';
+	@override String get applies_immediately => 'Änderungen gelten sofort. Sie betreffen nur dieses Gerät.';
+	@override String get palette_green => 'Grün';
+	@override String get palette_lavender => 'Lavendel';
+	@override String get palette_ocean => 'Ozean';
+	@override String get palette_clay => 'Terrakotta';
+	@override String get palette_berry => 'Heidelbeere';
+	@override String get palette_nebo => 'Himmel';
+	@override String get preview_appbar => 'Start';
+	@override String get preview_task => 'Gießen · Tomate';
+	@override String get preview_task_sub => 'heute · Hecke';
+	@override String get preview_action => 'Erledigt';
+	@override String get preview_chip => '✓ Obstbäume';
+	@override String get preview_swipe => 'Basilikum';
 }
 
 // Path: weather
@@ -1157,6 +1193,11 @@ extension on TranslationsDe {
 			'settings.section_location' => 'Standort',
 			'settings.location_placeholder' => 'Wetter-Standort',
 			'settings.section_language' => 'Sprache',
+			'settings.section_appearance' => 'Darstellung',
+			'settings.appearance_placeholder' => 'Thema & Farben',
+			'settings.theme_system' => 'System',
+			'settings.theme_light' => 'Hell',
+			'settings.theme_dark' => 'Dunkel',
 			'settings.section_notifications' => 'Benachrichtigungen',
 			'settings.notifications_placeholder' => 'Benachrichtigungen und Erinnerungen',
 			'settings.section_garden' => 'Garten',
@@ -1182,6 +1223,27 @@ extension on TranslationsDe {
 			'settings.delete_data_confirm' => 'Löschen',
 			'settings.section_about' => 'Über',
 			'settings.privacy_policy' => 'Datenschutzerklärung',
+			'appearance.mode_label' => 'Modus',
+			'appearance.mode_help' => '„System“ wechselt automatisch zwischen Hell und Dunkel, passend zu deinem Telefon.',
+			'appearance.follows_system_light' => 'Folgt dem Telefon · aktuell hell',
+			'appearance.follows_system_dark' => 'Folgt dem Telefon · aktuell dunkel',
+			'appearance.palette_label' => 'Farbthema',
+			'appearance.preview_label' => 'Vorschau',
+			'appearance.default_badge' => 'Standard',
+			'appearance.reset' => 'Auf Standard zurücksetzen',
+			'appearance.applies_immediately' => 'Änderungen gelten sofort. Sie betreffen nur dieses Gerät.',
+			'appearance.palette_green' => 'Grün',
+			'appearance.palette_lavender' => 'Lavendel',
+			'appearance.palette_ocean' => 'Ozean',
+			'appearance.palette_clay' => 'Terrakotta',
+			'appearance.palette_berry' => 'Heidelbeere',
+			'appearance.palette_nebo' => 'Himmel',
+			'appearance.preview_appbar' => 'Start',
+			'appearance.preview_task' => 'Gießen · Tomate',
+			'appearance.preview_task_sub' => 'heute · Hecke',
+			'appearance.preview_action' => 'Erledigt',
+			'appearance.preview_chip' => '✓ Obstbäume',
+			'appearance.preview_swipe' => 'Basilikum',
 			'weather.cond_clear' => 'Klar',
 			'weather.cond_mainly_clear' => 'Überwiegend klar',
 			'weather.cond_cloudy' => 'Bewölkt',

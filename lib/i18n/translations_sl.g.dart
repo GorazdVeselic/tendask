@@ -66,6 +66,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plants$sl plants = _Translations$plants$sl._(_root);
 	@override late final _Translations$supplies$sl supplies = _Translations$supplies$sl._(_root);
 	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
+	@override late final _Translations$appearance$sl appearance = _Translations$appearance$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
 }
 
@@ -713,6 +714,11 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get section_location => 'Lokacija';
 	@override String get location_placeholder => 'Lokacija za vreme';
 	@override String get section_language => 'Jezik';
+	@override String get section_appearance => 'Videz';
+	@override String get appearance_placeholder => 'Tema in barve';
+	@override String get theme_system => 'Sistemsko';
+	@override String get theme_light => 'Svetlo';
+	@override String get theme_dark => 'Temno';
 	@override String get section_notifications => 'Obvestila';
 	@override String get notifications_placeholder => 'Obvestila in opomniki';
 	@override String get section_garden => 'Vrt';
@@ -738,6 +744,36 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get delete_data_confirm => 'Izbriši';
 	@override String get section_about => 'O aplikaciji';
 	@override String get privacy_policy => 'Politika zasebnosti';
+}
+
+// Path: appearance
+class _Translations$appearance$sl extends Translations$appearance$en {
+	_Translations$appearance$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get mode_label => 'Način';
+	@override String get mode_help => '»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.';
+	@override String get follows_system_light => 'Sledi telefonu · trenutno svetlo';
+	@override String get follows_system_dark => 'Sledi telefonu · trenutno temno';
+	@override String get palette_label => 'Barvna tema';
+	@override String get preview_label => 'Predogled';
+	@override String get default_badge => 'Privzeto';
+	@override String get reset => 'Ponastavi na privzeto';
+	@override String get applies_immediately => 'Sprememba se uveljavi takoj. Velja samo za to napravo.';
+	@override String get palette_green => 'Zelena';
+	@override String get palette_lavender => 'Sivka';
+	@override String get palette_ocean => 'Ocean';
+	@override String get palette_clay => 'Terakota';
+	@override String get palette_berry => 'Borovnica';
+	@override String get palette_nebo => 'Nebo';
+	@override String get preview_appbar => 'Domov';
+	@override String get preview_task => 'Zalivanje · Paradižnik';
+	@override String get preview_task_sub => 'danes · živa meja';
+	@override String get preview_action => 'Opravi';
+	@override String get preview_chip => '✓ Sadno drevje';
+	@override String get preview_swipe => 'Bazilika';
 }
 
 // Path: weather
@@ -1165,6 +1201,11 @@ extension on TranslationsSl {
 			'settings.section_location' => 'Lokacija',
 			'settings.location_placeholder' => 'Lokacija za vreme',
 			'settings.section_language' => 'Jezik',
+			'settings.section_appearance' => 'Videz',
+			'settings.appearance_placeholder' => 'Tema in barve',
+			'settings.theme_system' => 'Sistemsko',
+			'settings.theme_light' => 'Svetlo',
+			'settings.theme_dark' => 'Temno',
 			'settings.section_notifications' => 'Obvestila',
 			'settings.notifications_placeholder' => 'Obvestila in opomniki',
 			'settings.section_garden' => 'Vrt',
@@ -1190,6 +1231,27 @@ extension on TranslationsSl {
 			'settings.delete_data_confirm' => 'Izbriši',
 			'settings.section_about' => 'O aplikaciji',
 			'settings.privacy_policy' => 'Politika zasebnosti',
+			'appearance.mode_label' => 'Način',
+			'appearance.mode_help' => '»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.',
+			'appearance.follows_system_light' => 'Sledi telefonu · trenutno svetlo',
+			'appearance.follows_system_dark' => 'Sledi telefonu · trenutno temno',
+			'appearance.palette_label' => 'Barvna tema',
+			'appearance.preview_label' => 'Predogled',
+			'appearance.default_badge' => 'Privzeto',
+			'appearance.reset' => 'Ponastavi na privzeto',
+			'appearance.applies_immediately' => 'Sprememba se uveljavi takoj. Velja samo za to napravo.',
+			'appearance.palette_green' => 'Zelena',
+			'appearance.palette_lavender' => 'Sivka',
+			'appearance.palette_ocean' => 'Ocean',
+			'appearance.palette_clay' => 'Terakota',
+			'appearance.palette_berry' => 'Borovnica',
+			'appearance.palette_nebo' => 'Nebo',
+			'appearance.preview_appbar' => 'Domov',
+			'appearance.preview_task' => 'Zalivanje · Paradižnik',
+			'appearance.preview_task_sub' => 'danes · živa meja',
+			'appearance.preview_action' => 'Opravi',
+			'appearance.preview_chip' => '✓ Sadno drevje',
+			'appearance.preview_swipe' => 'Bazilika',
 			'weather.cond_clear' => 'Jasno',
 			'weather.cond_mainly_clear' => 'Pretežno jasno',
 			'weather.cond_cloudy' => 'Oblačno',

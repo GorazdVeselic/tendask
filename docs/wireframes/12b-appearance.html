@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Tendask — Nastavitve / Videz (tema)</title>
+<style>
+/* ─────────────────────────────────────────────────────────────────────────
+   Wireframe: Nastavitve → Videz. Dve odločitvi: NAČIN (sistemsko/svetlo/temno)
+   + BARVNA TEMA (5 palet). Privzeto = Zelena. Uveljavi se takoj (device-local).
+   Interaktivno: tap teme prebarva cel zaslon; način sledi telefonu (sistemsko).
+   Tokeni: lib/app/theme/app_colors.dart (en vir; warn fiksen čez teme).
+   ───────────────────────────────────────────────────────────────────────── */
+
+:root{--warn:#B46B00;--warn-soft:#FFF4E0;--warn-on:#1D2823;--pill:999px;
+  --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Plus Jakarta Sans",sans-serif;}
+
+/* palette vars apply to ANY element carrying the attrs (frame + mini-previews) */
+[data-theme="green"][data-mode="light"]{--bg:#ECEEF0;--surface:#FFFFFF;--on-surface:#1D2823;--surface-high:#E8F3EA;--on-surface-var:#6B7770;--outline:#E4E8E5;--outline-variant:#D4DAD6;--primary:#2E7D32;--on-primary:#FFFFFF;--primary-container:#E8F3EA;--on-primary-container:#205A28;--secondary:#E0A82E;--on-secondary:#1D2823;--error:#B0473B;--on-error:#FFFFFF;}
+[data-theme="green"][data-mode="dark"]{--bg:#14241A;--surface:#1A2E1C;--on-surface:#FFFFFF;--surface-high:#24432A;--on-surface-var:#A8B5AC;--outline:#3A4E3C;--outline-variant:#3A4E3C;--primary:#3A9A57;--on-primary:#FFFFFF;--primary-container:#24432A;--on-primary-container:#BCEAC2;--secondary:#E0A82E;--on-secondary:#1D2823;--error:#C25A4D;--on-error:#1D2823;}
+
+[data-theme="lavender"][data-mode="light"]{--bg:#EEEDF4;--surface:#FFFFFF;--on-surface:#211F2B;--surface-high:#ECE9FA;--on-surface-var:#6E6A82;--outline:#E5E2EE;--outline-variant:#D8D4E6;--primary:#6A5AD0;--on-primary:#FFFFFF;--primary-container:#E7E2FB;--on-primary-container:#352A75;--secondary:#D9A441;--on-secondary:#2B2640;--error:#B0473B;--on-error:#FFFFFF;}
+[data-theme="lavender"][data-mode="dark"]{--bg:#161426;--surface:#1E1B2E;--on-surface:#FFFFFF;--surface-high:#2E2A4A;--on-surface-var:#ABA6C0;--outline:#3E3A52;--outline-variant:#3E3A52;--primary:#A99CEC;--on-primary:#241C46;--primary-container:#2E2A4A;--on-primary-container:#DCD4F7;--secondary:#E0B45A;--on-secondary:#2B2640;--error:#D2685F;--on-error:#1D1622;}
+
+[data-theme="ocean"][data-mode="light"]{--bg:#EAEFF0;--surface:#FFFFFF;--on-surface:#182426;--surface-high:#E0F0F2;--on-surface-var:#5E7378;--outline:#DCE8EA;--outline-variant:#CBDCDE;--primary:#1E7E8C;--on-primary:#FFFFFF;--primary-container:#D4EDF1;--on-primary-container:#0A4751;--secondary:#E5774E;--on-secondary:#FFFFFF;--error:#B0473B;--on-error:#FFFFFF;}
+[data-theme="ocean"][data-mode="dark"]{--bg:#0F2326;--surface:#122A2E;--on-surface:#FFFFFF;--surface-high:#1B4248;--on-surface-var:#9FB6BB;--outline:#2F4A4F;--outline-variant:#2F4A4F;--primary:#4FB8C6;--on-primary:#06343B;--primary-container:#1B4248;--on-primary-container:#B3E5ED;--secondary:#EE9170;--on-secondary:#3A1A0E;--error:#D2685F;--on-error:#1D1622;}
+
+[data-theme="clay"][data-mode="light"]{--bg:#F0ECE8;--surface:#FFFFFF;--on-surface:#2A211B;--surface-high:#F4E9E1;--on-surface-var:#786A5F;--outline:#EBE2DA;--outline-variant:#DCCFC3;--primary:#B5623F;--on-primary:#FFFFFF;--primary-container:#F4E0D4;--on-primary-container:#5E3318;--secondary:#7B8B3B;--on-secondary:#FFFFFF;--error:#A3303C;--on-error:#FFFFFF;}
+[data-theme="clay"][data-mode="dark"]{--bg:#221B15;--surface:#2A211B;--on-surface:#FFFFFF;--surface-high:#3E2D22;--on-surface-var:#BCA99A;--outline:#45382E;--outline-variant:#45382E;--primary:#D89067;--on-primary:#3A1C0C;--primary-container:#3E2D22;--on-primary-container:#F2CBAE;--secondary:#A9BB63;--on-secondary:#28310E;--error:#D9737A;--on-error:#2A0E12;}
+
+[data-theme="berry"][data-mode="light"]{--bg:#F0EBEF;--surface:#FFFFFF;--on-surface:#271E25;--surface-high:#F4E6EF;--on-surface-var:#756575;--outline:#ECE0E8;--outline-variant:#DDCDD8;--primary:#8A3D72;--on-primary:#FFFFFF;--primary-container:#F3DCEC;--on-primary-container:#551446;--secondary:#4F9D6E;--on-secondary:#FFFFFF;--error:#B0473B;--on-error:#FFFFFF;}
+[data-theme="berry"][data-mode="dark"]{--bg:#221A20;--surface:#281E26;--on-surface:#FFFFFF;--surface-high:#3E2C39;--on-surface-var:#C0A9BC;--outline:#463A44;--outline-variant:#463A44;--primary:#CA82B2;--on-primary:#45123A;--primary-container:#3E2C39;--on-primary-container:#F2C4E2;--secondary:#6FC495;--on-secondary:#0C3320;--error:#D2685F;--on-error:#1D1622;}
+
+/* ===== NEBO (sky blue) ===== */
+[data-theme="nebo"][data-mode="light"]{--bg:#EAEDF2;--surface:#FFFFFF;--on-surface:#1A2230;--surface-high:#E5EBF8;--on-surface-var:#5E6675;--outline:#DFE3EC;--outline-variant:#CFD6E4;--primary:#2E6BD6;--on-primary:#FFFFFF;--primary-container:#DCE7FB;--on-primary-container:#123A7A;--secondary:#E5774E;--on-secondary:#FFFFFF;--error:#B0473B;--on-error:#FFFFFF;}
+[data-theme="nebo"][data-mode="dark"]{--bg:#10141F;--surface:#161C28;--on-surface:#FFFFFF;--surface-high:#243353;--on-surface-var:#A6B0C2;--outline:#34405A;--outline-variant:#34405A;--primary:#7BA8F0;--on-primary:#0E2348;--primary-container:#1E2E50;--on-primary-container:#CFE0FB;--secondary:#EE9170;--on-secondary:#3A1A0E;--error:#D2685F;--on-error:#1D1622;}
+
+*{box-sizing:border-box}
+body{margin:0;font-family:var(--font);background:#d9dde1;-webkit-font-smoothing:antialiased;
+  display:flex;flex-direction:column;align-items:center;padding:24px 12px 60px;gap:14px}
+.cap{font-size:13px;color:#3a463f;max-width:380px;text-align:center;line-height:1.45}
+
+.frame{width:370px;background:var(--bg);border:11px solid #0e0e0e;border-radius:42px;overflow:hidden;
+  box-shadow:0 14px 44px rgba(0,0,0,.32);color:var(--on-surface)}
+.statusbar{display:flex;justify-content:space-between;font-size:12px;font-weight:600;padding:10px 22px 4px}
+.appbar{background:var(--surface);border-bottom:1px solid var(--outline);display:flex;align-items:center;gap:12px;padding:12px 16px}
+.appbar .ttl{font-weight:700;font-size:17px;flex:1;text-align:center}
+.content{padding:16px;max-height:660px;overflow:auto}
+
+.seclabel{font-size:11px;letter-spacing:.8px;text-transform:uppercase;color:var(--on-surface-var);font-weight:700;margin:18px 2px 9px}
+.seclabel:first-child{margin-top:2px}
+.help{font-size:12px;color:var(--on-surface-var);margin:8px 2px 0;line-height:1.45}
+
+/* mode segmented */
+.seg{display:flex;border:1px solid var(--outline-variant);border-radius:14px;overflow:hidden;background:var(--surface)}
+.seg button{flex:1;border:none;background:transparent;color:var(--on-surface);padding:11px 6px;font-size:13px;
+  font-weight:600;cursor:pointer;font-family:inherit;display:flex;flex-direction:column;align-items:center;gap:3px}
+.seg button .ic{font-size:17px}
+.seg button.sel{background:var(--primary);color:var(--on-primary)}
+.seg button+button{border-left:1px solid var(--outline-variant)}
+.sysrow{display:flex;align-items:center;gap:8px;margin-top:8px}
+.statuschip{display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:600;
+  background:var(--surface-high);color:var(--on-surface-var);border-radius:var(--pill);padding:4px 10px}
+
+/* theme cards */
+.featured{display:flex;align-items:center;gap:13px;background:var(--surface);border:2px solid var(--outline);
+  border-radius:16px;padding:12px;cursor:pointer;position:relative}
+.featured.sel{border-color:var(--primary)}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
+.tcard{background:var(--surface);border:2px solid var(--outline);border-radius:16px;padding:10px;cursor:pointer;position:relative}
+.tcard.sel{border-color:var(--primary)}
+.tname{font-size:13px;font-weight:600;margin-top:8px;display:flex;align-items:center;gap:6px}
+.check{position:absolute;top:8px;right:8px;width:22px;height:22px;border-radius:50%;background:var(--primary);
+  color:var(--on-primary);display:none;align-items:center;justify-content:center;font-size:13px;
+  box-shadow:0 1px 3px rgba(0,0,0,.3);z-index:2}
+.sel .check{display:flex}
+.badge{font-size:10px;font-weight:700;background:var(--secondary);color:var(--on-secondary);border-radius:var(--pill);padding:2px 8px}
+
+/* mini preview inside a card (uses its OWN theme via data-theme/data-mode) */
+.mini{border-radius:10px;overflow:hidden;background:var(--bg);border:1px solid var(--outline-variant);flex:none}
+.featured .mini{width:96px;height:62px}
+.tcard .mini{width:100%;height:50px}
+.m-bar{height:34%;background:var(--primary);display:flex;align-items:center;padding:0 7px;gap:5px}
+.m-dot{width:8px;height:8px;border-radius:50%;background:var(--on-primary);opacity:.9}
+.m-body{height:66%;background:var(--surface);padding:6px 7px;display:flex;align-items:center;gap:6px}
+.m-chip{width:22px;height:9px;border-radius:var(--pill);background:var(--secondary)}
+.m-pill{height:9px;border-radius:var(--pill);background:var(--on-surface);opacity:.28;flex:1}
+
+.featured .ftx{flex:1}
+.reset{background:transparent;border:none;color:var(--primary);font-weight:600;font-size:13px;
+  cursor:pointer;font-family:inherit;margin-top:10px;padding:4px 2px;display:none}
+.reset.show{display:inline-block}
+
+/* live preview panel */
+.preview{background:var(--surface-high);border-radius:16px;padding:12px;margin-top:4px}
+.pv-app{background:var(--primary);color:var(--on-primary);border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;display:flex;align-items:center;gap:8px}
+.pv-card{background:var(--surface);border:1px solid var(--outline);border-radius:12px;padding:11px;margin-top:9px}
+.pv-card .t{font-size:13px;font-weight:600}
+.pv-card .s{font-size:12px;color:var(--on-surface-var);margin-top:2px}
+.pv-row{display:flex;align-items:center;gap:8px;margin-top:10px;flex-wrap:wrap}
+.pv-btn{background:var(--primary);color:var(--on-primary);border:none;border-radius:var(--pill);padding:8px 14px;font-size:12px;font-weight:600}
+.pv-chip{background:var(--primary-container);color:var(--on-primary-container);border-radius:var(--pill);padding:6px 11px;font-size:12px;font-weight:600}
+.pv-toggle{width:38px;height:22px;border-radius:var(--pill);background:var(--primary);position:relative;margin-left:auto}
+.pv-toggle::after{content:"";position:absolute;top:2px;left:18px;width:18px;height:18px;border-radius:50%;background:#fff}
+.pv-swipe{display:flex;border-radius:10px;overflow:hidden;margin-top:9px;border:1px solid var(--outline)}
+.pv-swipe .a{width:46px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.pv-swipe .done{background:var(--primary);color:var(--on-primary)}
+.pv-swipe .del{background:var(--error);color:var(--on-error)}
+.pv-swipe .bd{flex:1;background:var(--surface);padding:10px;font-size:12px;display:flex;gap:8px;align-items:center}
+
+.foot{font-size:12px;color:var(--on-surface-var);margin:14px 2px 4px;line-height:1.45}
+</style>
+</head>
+<body>
+
+<div class="cap"><b>Nastavitve → Videz.</b> Tap teme prebarva cel zaslon (uveljavi se takoj). »Sistemsko« sledi
+nastavitvi telefona (prek <code>prefers-color-scheme</code> — preklopi temo OS, da vidiš učinek).</div>
+
+<div class="frame" data-theme="green" data-mode="light" id="frame">
+  <div class="statusbar"><span>9:41</span><span>📶 🔋</span></div>
+  <div class="appbar"><span>‹</span><span class="ttl">Videz</span><span style="width:10px"></span></div>
+  <div class="content">
+
+    <!-- ── NAČIN ── -->
+    <div class="seclabel">Način</div>
+    <div class="seg" id="modeSeg">
+      <button data-mode-set="system" class="sel"><span class="ic">📱</span>Sistemsko</button>
+      <button data-mode-set="light"><span class="ic">☀️</span>Svetlo</button>
+      <button data-mode-set="dark"><span class="ic">🌙</span>Temno</button>
+    </div>
+    <div class="sysrow" id="sysRow">
+      <span class="statuschip">⚙️ Sledi telefonu · trenutno: <b id="sysNow">svetlo</b></span>
+    </div>
+    <div class="help">»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.</div>
+
+    <!-- ── BARVNA TEMA ── -->
+    <div class="seclabel">Barvna tema</div>
+
+    <div class="grid" id="grid">
+      <div class="tcard sel" data-theme-set="green">
+        <div class="mini" data-theme="green" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Zelena <span class="badge">Privzeto</span> <span class="check">✓</span></div>
+      </div>
+      <div class="tcard" data-theme-set="lavender">
+        <div class="mini" data-theme="lavender" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Sivka <span class="check">✓</span></div>
+      </div>
+      <div class="tcard" data-theme-set="ocean">
+        <div class="mini" data-theme="ocean" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Ocean <span class="check">✓</span></div>
+      </div>
+      <div class="tcard" data-theme-set="clay">
+        <div class="mini" data-theme="clay" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Terakota <span class="check">✓</span></div>
+      </div>
+      <div class="tcard" data-theme-set="berry">
+        <div class="mini" data-theme="berry" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Borovnica <span class="check">✓</span></div>
+      </div>
+      <div class="tcard" data-theme-set="nebo">
+        <div class="mini" data-theme="nebo" data-mode="light"><div class="m-bar"><span class="m-dot"></span></div><div class="m-body"><span class="m-chip"></span><span class="m-pill"></span></div></div>
+        <div class="tname">Nebo <span class="check">✓</span></div>
+      </div>
+    </div>
+
+    <button class="reset" id="reset">↺ Ponastavi na privzeto (Zelena)</button>
+
+    <!-- ── PREDOGLED ── -->
+    <div class="seclabel">Predogled</div>
+    <div class="preview">
+      <div class="pv-app"><span>‹</span><span>Domov</span></div>
+      <div class="pv-card">
+        <div class="t">Zalivanje · Paradižnik</div>
+        <div class="s">danes · živa meja</div>
+        <div class="pv-row">
+          <button class="pv-btn">Opravi</button>
+          <span class="pv-chip">✓ Sadno drevje</span>
+          <span class="pv-toggle"></span>
+        </div>
+      </div>
+      <div class="pv-swipe"><div class="a done">✓</div><div class="bd"><span>🌿</span><span>Bazilika</span></div><div class="a del">🗑</div></div>
+    </div>
+
+    <div class="foot">Sprememba se uveljavi takoj. Velja samo za to napravo.</div>
+  </div>
+</div>
+
+<script>
+  const frame=document.getElementById('frame');
+  const sysNow=document.getElementById('sysNow');
+  const sysRow=document.getElementById('sysRow');
+  const reset=document.getElementById('reset');
+  let mode='system', theme='green';
+
+  const mq=window.matchMedia('(prefers-color-scheme: dark)');
+  function resolved(){ return mode==='system' ? (mq.matches?'dark':'light') : mode; }
+
+  function apply(){
+    const r=resolved();
+    frame.setAttribute('data-theme',theme);
+    frame.setAttribute('data-mode',r);
+    // mini previews follow the resolved light/dark, but keep their own colour theme
+    document.querySelectorAll('.mini').forEach(m=>m.setAttribute('data-mode',r));
+    sysRow.style.display = mode==='system' ? 'flex':'none';
+    sysNow.textContent = mq.matches?'temno':'svetlo';
+    reset.classList.toggle('show', theme!=='green');
+  }
+
+  document.querySelectorAll('[data-mode-set]').forEach(b=>b.addEventListener('click',()=>{
+    document.querySelectorAll('[data-mode-set]').forEach(x=>x.classList.remove('sel'));
+    b.classList.add('sel'); mode=b.dataset.modeSet; apply();
+  }));
+  document.querySelectorAll('[data-theme-set]').forEach(c=>c.addEventListener('click',()=>{
+    document.querySelectorAll('[data-theme-set]').forEach(x=>x.classList.remove('sel'));
+    c.classList.add('sel'); theme=c.dataset.themeSet; apply();
+  }));
+  reset.addEventListener('click',()=>{
+    theme='green';
+    document.querySelectorAll('[data-theme-set]').forEach(x=>x.classList.toggle('sel',x.dataset.themeSet==='green'));
+    apply();
+  });
+  mq.addEventListener('change',apply);
+  apply();
+</script>
+</body>
+</html>

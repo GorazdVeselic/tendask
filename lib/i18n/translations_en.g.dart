@@ -67,6 +67,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$plants$en plants = Translations$plants$en.internal(_root);
 	late final Translations$supplies$en supplies = Translations$supplies$en.internal(_root);
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
+	late final Translations$appearance$en appearance = Translations$appearance$en.internal(_root);
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
 }
 
@@ -1473,6 +1474,21 @@ class Translations$settings$en {
 	/// en: 'Language'
 	String get section_language => 'Language';
 
+	/// en: 'Appearance'
+	String get section_appearance => 'Appearance';
+
+	/// en: 'Theme & colours'
+	String get appearance_placeholder => 'Theme & colours';
+
+	/// en: 'System'
+	String get theme_system => 'System';
+
+	/// en: 'Light'
+	String get theme_light => 'Light';
+
+	/// en: 'Dark'
+	String get theme_dark => 'Dark';
+
 	/// en: 'Notifications'
 	String get section_notifications => 'Notifications';
 
@@ -1547,6 +1563,78 @@ class Translations$settings$en {
 
 	/// en: 'Privacy policy'
 	String get privacy_policy => 'Privacy policy';
+}
+
+// Path: appearance
+class Translations$appearance$en {
+	Translations$appearance$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Mode'
+	String get mode_label => 'Mode';
+
+	/// en: '“System” automatically switches between light and dark to match your phone.'
+	String get mode_help => '“System” automatically switches between light and dark to match your phone.';
+
+	/// en: 'Follows phone · currently light'
+	String get follows_system_light => 'Follows phone · currently light';
+
+	/// en: 'Follows phone · currently dark'
+	String get follows_system_dark => 'Follows phone · currently dark';
+
+	/// en: 'Colour theme'
+	String get palette_label => 'Colour theme';
+
+	/// en: 'Preview'
+	String get preview_label => 'Preview';
+
+	/// en: 'Default'
+	String get default_badge => 'Default';
+
+	/// en: 'Reset to default'
+	String get reset => 'Reset to default';
+
+	/// en: 'Changes apply instantly. They affect this device only.'
+	String get applies_immediately => 'Changes apply instantly. They affect this device only.';
+
+	/// en: 'Green'
+	String get palette_green => 'Green';
+
+	/// en: 'Lavender'
+	String get palette_lavender => 'Lavender';
+
+	/// en: 'Ocean'
+	String get palette_ocean => 'Ocean';
+
+	/// en: 'Terracotta'
+	String get palette_clay => 'Terracotta';
+
+	/// en: 'Blueberry'
+	String get palette_berry => 'Blueberry';
+
+	/// en: 'Sky'
+	String get palette_nebo => 'Sky';
+
+	/// en: 'Home'
+	String get preview_appbar => 'Home';
+
+	/// en: 'Watering · Tomato'
+	String get preview_task => 'Watering · Tomato';
+
+	/// en: 'today · hedge'
+	String get preview_task_sub => 'today · hedge';
+
+	/// en: 'Done'
+	String get preview_action => 'Done';
+
+	/// en: '✓ Fruit trees'
+	String get preview_chip => '✓ Fruit trees';
+
+	/// en: 'Basil'
+	String get preview_swipe => 'Basil';
 }
 
 // Path: weather
@@ -2024,6 +2112,11 @@ extension on Translations {
 			'settings.section_location' => 'Location',
 			'settings.location_placeholder' => 'Weather location',
 			'settings.section_language' => 'Language',
+			'settings.section_appearance' => 'Appearance',
+			'settings.appearance_placeholder' => 'Theme & colours',
+			'settings.theme_system' => 'System',
+			'settings.theme_light' => 'Light',
+			'settings.theme_dark' => 'Dark',
 			'settings.section_notifications' => 'Notifications',
 			'settings.notifications_placeholder' => 'Notifications and reminders',
 			'settings.section_garden' => 'Garden',
@@ -2049,6 +2142,27 @@ extension on Translations {
 			'settings.delete_data_confirm' => 'Delete',
 			'settings.section_about' => 'About',
 			'settings.privacy_policy' => 'Privacy policy',
+			'appearance.mode_label' => 'Mode',
+			'appearance.mode_help' => '“System” automatically switches between light and dark to match your phone.',
+			'appearance.follows_system_light' => 'Follows phone · currently light',
+			'appearance.follows_system_dark' => 'Follows phone · currently dark',
+			'appearance.palette_label' => 'Colour theme',
+			'appearance.preview_label' => 'Preview',
+			'appearance.default_badge' => 'Default',
+			'appearance.reset' => 'Reset to default',
+			'appearance.applies_immediately' => 'Changes apply instantly. They affect this device only.',
+			'appearance.palette_green' => 'Green',
+			'appearance.palette_lavender' => 'Lavender',
+			'appearance.palette_ocean' => 'Ocean',
+			'appearance.palette_clay' => 'Terracotta',
+			'appearance.palette_berry' => 'Blueberry',
+			'appearance.palette_nebo' => 'Sky',
+			'appearance.preview_appbar' => 'Home',
+			'appearance.preview_task' => 'Watering · Tomato',
+			'appearance.preview_task_sub' => 'today · hedge',
+			'appearance.preview_action' => 'Done',
+			'appearance.preview_chip' => '✓ Fruit trees',
+			'appearance.preview_swipe' => 'Basil',
 			'weather.cond_clear' => 'Clear',
 			'weather.cond_mainly_clear' => 'Mostly clear',
 			'weather.cond_cloudy' => 'Cloudy',

@@ -16,6 +16,7 @@ import '../../features/plants/presentation/garden_plant_add_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
+import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/supplies/presentation/supplies_screen.dart';
@@ -149,6 +150,11 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       path: '/settings',
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/appearance',
+      name: 'appearance',
+      builder: (context, state) => const AppearanceScreen(),
     ),
     GoRoute(
       path: '/notification-settings',

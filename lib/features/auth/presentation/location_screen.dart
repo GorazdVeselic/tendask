@@ -306,8 +306,10 @@ class _StatusBanner extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final bg = isSet ? AppColors.soft : AppColors.warnSoft;
-    final fg = isSet ? AppColors.green900 : AppColors.warn;
+    // Set = palette primary-container (follows the colour theme); unset = the
+    // fixed warn tone (attention, not error, and constant across all palettes).
+    final bg = isSet ? theme.colorScheme.primaryContainer : AppColors.warnSoft;
+    final fg = isSet ? theme.colorScheme.onPrimaryContainer : AppColors.warn;
     final String label;
     if (!isSet) {
       label = t.location.status_unset;
