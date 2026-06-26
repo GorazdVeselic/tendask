@@ -139,18 +139,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   label: Text(t.auth.continue_email),
                 ),
               ),
-              const SizedBox(height: 6),
-              TextButton(
-                onPressed: busy ? null : _continueAsGuest,
-                child: Text(
-                  t.auth.guest,
-                  style: const TextStyle(decoration: TextDecoration.underline),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 52,
+                child: OutlinedButton(
+                  onPressed: busy ? null : _continueAsGuest,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: cs.onSurfaceVariant,
+                  ),
+                  child: Text(t.auth.guest),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 t.auth.guest_warning,
-                style: theme.textTheme.bodySmall?.copyWith(color: cs.error),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),
