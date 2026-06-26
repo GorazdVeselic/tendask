@@ -1369,6 +1369,9 @@ class Translations$plants$en {
 	/// en: 'Frequent'
 	String get frequent => 'Frequent';
 
+	/// en: 'Less likely for this area'
+	String get less_likely => 'Less likely for this area';
+
 	/// en: 'Undo'
 	String get undo => 'Undo';
 
@@ -2086,6 +2089,7 @@ extension on Translations {
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
 			'plants.add_title' => 'Add plants',
 			'plants.frequent' => 'Frequent',
+			'plants.less_likely' => 'Less likely for this area',
 			'plants.undo' => 'Undo',
 			'plants.done' => 'Done',
 			'plants.add_to_label' => 'Add to',

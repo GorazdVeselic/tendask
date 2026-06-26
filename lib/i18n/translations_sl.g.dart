@@ -667,6 +667,7 @@ class _Translations$plants$sl extends Translations$plants$en {
 	@override String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
 	@override String get add_title => 'Dodaj rastline';
 	@override String get frequent => 'Pogosto';
+	@override String get less_likely => 'Manj verjetno za to območje';
 	@override String get undo => 'Razveljavi';
 	@override String get done => 'Končano';
 	@override String get add_to_label => 'Kam dodajam';
@@ -1173,6 +1174,7 @@ extension on TranslationsSl {
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
 			'plants.add_title' => 'Dodaj rastline',
 			'plants.frequent' => 'Pogosto',
+			'plants.less_likely' => 'Manj verjetno za to območje',
 			'plants.undo' => 'Razveljavi',
 			'plants.done' => 'Končano',
 			'plants.add_to_label' => 'Kam dodajam',

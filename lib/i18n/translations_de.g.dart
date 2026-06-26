@@ -659,6 +659,7 @@ class _Translations$plants$de extends Translations$plants$en {
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
 	@override String get add_title => 'Pflanzen hinzufügen';
 	@override String get frequent => 'Häufig';
+	@override String get less_likely => 'Weniger wahrscheinlich für diesen Bereich';
 	@override String get undo => 'Rückgängig';
 	@override String get done => 'Fertig';
 	@override String get add_to_label => 'Hinzufügen zu';
@@ -1165,6 +1166,7 @@ extension on TranslationsDe {
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
 			'plants.add_title' => 'Pflanzen hinzufügen',
 			'plants.frequent' => 'Häufig',
+			'plants.less_likely' => 'Weniger wahrscheinlich für diesen Bereich',
 			'plants.undo' => 'Rückgängig',
 			'plants.done' => 'Fertig',
 			'plants.add_to_label' => 'Hinzufügen zu',

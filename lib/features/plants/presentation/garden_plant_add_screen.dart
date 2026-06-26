@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/area_plant_relevance.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
+import '../../../core/catalog_relevance.dart';
 import '../../../core/catalog_sort.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -180,6 +182,22 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                 .where((p) => plantMatchesQuery(p, normQuery)),
             (p) => catalogLabel(p.labels),
           );
+    // T4: lift plants that fit the target area's type, demote the rest under a
+    // muted divider (you don't plant a tree in a raised bed). No target / garden
+    // / other → empty set → everything relevant, no split. Unknown categories
+    // stay relevant (see isCategoryRelevant).
+    final areasMap = ref.watch(areasMapProvider).asData?.value ?? const {};
+    final relevantCats = relevantPlantCategories(
+      _targetAreaId != null ? areasMap[_targetAreaId]?.type : null,
+    );
+    final resultsRelevant = results
+        .where((p) => isCategoryRelevant(relevantCats, p.category))
+        .toList();
+    final resultsOther = results
+        .where((p) => !isCategoryRelevant(relevantCats, p.category))
+        .toList();
+    final softSplit = resultsRelevant.isNotEmpty && resultsOther.isNotEmpty;
+    final firstRows = softSplit ? resultsRelevant : results;
     // Members = added this session, plus (in garden mode) every plant already
     // in the current target bucket — a real area OR "no area" (null) — so the
     // footer, counter, ✓ and remove cover the bucket's whole contents.
@@ -211,7 +229,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
           if (!widget.args.subjectMode)
             _AreaBar(
               areaId: _targetAreaId,
-              areas: ref.watch(areasMapProvider).asData?.value ?? const {},
+              areas: areasMap,
               onTap: _changeTarget,
             ),
           Expanded(
@@ -309,26 +327,36 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                         ),
                       ),
                       SliverPadding(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                        sliver: SliverList.separated(
-                          itemCount: results.length,
-                          itemBuilder: (_, i) => PlantSelectRow(
-                            icon: results[i].icon ?? '🌿',
-                            title: catalogLabel(results[i].labels),
-                            subtitle: plantCategoryLabel(
-                              coarsePlantCategory(results[i].category),
-                              t,
-                            ),
-                            selected: selectedIds.contains(results[i].id),
-                            onTap: () => _toggle(results[i]),
-                          ),
-                          separatorBuilder: (_, _) => Divider(
-                            height: 1,
-                            indent: 56,
-                            color: theme.colorScheme.outlineVariant,
-                          ),
+                        padding: EdgeInsets.fromLTRB(
+                          16,
+                          0,
+                          16,
+                          softSplit ? 0 : 16,
+                        ),
+                        sliver: _catalogSliver(
+                          firstRows,
+                          selectedIds,
+                          theme,
+                          t,
                         ),
                       ),
+                      if (softSplit) ...[
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
+                          sliver: SliverToBoxAdapter(
+                            child: SectionLabel(t.plants.less_likely),
+                          ),
+                        ),
+                        SliverPadding(
+                          padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          sliver: _catalogSliver(
+                            resultsOther,
+                            selectedIds,
+                            theme,
+                            t,
+                          ),
+                        ),
+                      ],
                       if (normQuery.isNotEmpty)
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
@@ -362,6 +390,30 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
         _searchController.clear();
       }
     });
+  }
+
+  // Lazy catalog list; split into a relevant and a "less likely" group for T4.
+  Widget _catalogSliver(
+    List<Plant> rows,
+    Set<String> selectedIds,
+    ThemeData theme,
+    Translations t,
+  ) {
+    return SliverList.separated(
+      itemCount: rows.length,
+      itemBuilder: (_, i) => PlantSelectRow(
+        icon: rows[i].icon ?? '🌿',
+        title: catalogLabel(rows[i].labels),
+        subtitle: plantCategoryLabel(coarsePlantCategory(rows[i].category), t),
+        selected: selectedIds.contains(rows[i].id),
+        onTap: () => _toggle(rows[i]),
+      ),
+      separatorBuilder: (_, _) => Divider(
+        height: 1,
+        indent: 56,
+        color: theme.colorScheme.outlineVariant,
+      ),
+    );
   }
 }
 

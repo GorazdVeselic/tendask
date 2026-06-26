@@ -18,7 +18,7 @@
 | T6 | Seznam rastlin ni urejen | **hiter** | srednja | ✅ **NAREJENO** (2026-06-25) — abecedno, locale-aware (č/š/ž, ä/ö/ü) |
 | T7 | Telefon naj obvesti o opravilu | **hiter** | **visoka** | **Naredi** — privzeti opomnik za *načrtovana* opravila (odločitev: default-on?) |
 | T3 | Opravila vezana na entiteto | srednji | visoka | ✅ **NAREJENO** (2026-06-25) — mehki dvig rastlin po izbranem tipu (`category_task_type`), brez blokiranja |
-| T4 | Rastline vezane na tip območja | srednji | srednja | Mehka prioritizacija, ne blokiranje; nižja prioriteta od T3 |
+| T4 | Rastline vezane na tip območja | srednji | srednja | ✅ **NAREJENO** (2026-06-26) — mehki dvig rastlin po tipu ciljnega območja, brez blokiranja |
 | T1 | Avtomatska opravila + napoved pobiranja | **zelo velik** | visoka | **Že planirano = M11** (pametni motor); pobiranje le kjer obstaja pravilo |
 | T2 | Predlog naslednje rastline (kolobarjenje) | velik | srednja | **Že zabeleženo = FR-10** (V2/motor) |
 | T5 | Manjka podvrsta/varieta | velik (strukturno) | srednja | Zdaj: prosti `personalAlias`; strukturni katalog = V2+ |
@@ -129,7 +129,20 @@ vegetable/herbs). Srednji trud. Tveganje: pretoga pravila (drevo v velikem loncu
 **Priporočilo:** mehka prioritizacija (predizberi/dvigni smiselne kategorije po tipu območja), brez
 trdega blokiranja. Nižja prioriteta kot T3 — najprej T3, potem isti vzorec za T4.
 
-**Odločitev:** _(odprto — po T3)_
+**Odločitev (2026-06-26): NAREJENO — mehki dvig, brez blokiranja (isti vzorec kot T3).** Ko se
+rastline dodaja na **konkretno ciljno območje** (`garden_plant_add_screen`, npr. odprto iz detajla
+območja), se rastline z ujemajočo kategorijo dvignejo na vrh, ostale pa zatrejo pod medlo oznako
+»manj verjetno« (`SectionLabel`) — nikoli skrijejo. Pravilo relevance je čista funkcija
+`lib/core/area_plant_relevance.dart` (`relevantPlantCategories(AreaType?)`), ki vrne fine seed
+kategorije za vsak tip območja: trata→`lawn`; živa meja→`hedge/shrub/conifer`; greda→
+`vegetable/herbs/berries/perennial/bulb/climber` (brez dreves); drevo→`fruit_tree/citrus/conifer`;
+okrasno→`perennial/shrub/bulb/climber/conifer/hedge`. **`garden`/`other`/brez območja → prazna
+množica → vse relevantno (brez ločnice)** — vrt je celovita celota, ne specifična greda. Particija
+teče prek istega `isCategoryRelevant` kot T3, zato **neznana (lastna) kategorija ostane relevantna**.
+Velja le, ko sta obe skupini neprazni; v subjektnem načinu (vnos opravila) ciljnega območja ni →
+brez dviga. Pokrito s 6 unit testi (`area_plant_relevance_test.dart`) + 2 widget testa
+(`garden_plant_add_split_test.dart`: drevo dvigne sadno drevje nad ločnico; vrt = brez ločnice).
+analyze čist, 268/268.
 
 ---
 
