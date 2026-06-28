@@ -122,6 +122,13 @@
     "coming_soon": "Coming soon.",
     "privacy_link": "Privacy policy"
   },
+  "account": {
+    "guest_tooltip": "Guest — tap to sign in",
+    "guest_title": "You're using Tendask as a guest",
+    "guest_body": "Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.",
+    "sign_in_cta": "Sign in / register",
+    "maybe_later": "Maybe later"
+  },
   "email_login": {
     "title": "Sign in with email",
     "email_label": "Email address",
@@ -139,7 +146,8 @@
     "err_verify": "The code is wrong or has expired. Try again.",
     "err_email_domain": "We can't find that email's domain. Check the address.",
     "did_you_mean(suggestion)": "Did you mean $suggestion?",
-    "resend_in(seconds)": "Send a new code ($seconds s)"
+    "resend_in(seconds)": "Send a new code ($seconds s)",
+    "skip_for_now": "Continue without signing in"
   },
   "location": {
     "title": "Where do you garden?",

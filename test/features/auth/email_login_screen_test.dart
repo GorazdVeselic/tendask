@@ -1,7 +1,10 @@
+import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/auth/auth_service.dart';
+import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/sync/connectivity.dart';
 import 'package:tendask/features/auth/data/email_domain_checker.dart';
 import 'package:tendask/features/auth/presentation/email_login_screen.dart';
@@ -36,19 +39,25 @@ EmailDomainChecker _checkerReturning(DomainVerdict verdict) {
 Future<void> _pumpScreen(
   WidgetTester tester, {
   required DomainVerdict verdict,
+  String? initialEmail,
 }) async {
+  // In-memory drift backs localPrefs (the screen persists a resume marker on a
+  // successful send); addTearDown closes it after the test.
+  final db = AppDatabase.forTesting(NativeDatabase.memory());
+  addTearDown(db.close);
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
         overrides: [
           authServiceProvider.overrideWith((ref) => _FakeAuthService()),
+          databaseProvider.overrideWithValue(db),
           emailDomainCheckerProvider.overrideWith(
             (ref) => _checkerReturning(verdict),
           ),
           // Deterministic "online" so the DNS gate runs (and no platform channel).
           onlineStatusProvider.overrideWith((ref) => Stream.value(true)),
         ],
-        child: const MaterialApp(home: EmailLoginScreen()),
+        child: MaterialApp(home: EmailLoginScreen(initialEmail: initialEmail)),
       ),
     ),
   );
@@ -132,5 +141,32 @@ void main() {
 
     final codeField = tester.widget<TextField>(find.byType(TextField));
     expect(codeField.keyboardType, TextInputType.number);
+  });
+
+  testWidgets('resumed with an initial email opens straight on the code step', (
+    tester,
+  ) async {
+    await _pumpScreen(
+      tester,
+      verdict: DomainVerdict.exists,
+      initialEmail: 'jan@firma123.si',
+    );
+
+    // Skipped the email step → already entering the code, with the address shown.
+    expect(find.text(t.email_login.code_label), findsOneWidget);
+    expect(find.text(t.email_login.email_label), findsNothing);
+    expect(
+      find.text(t.email_login.code_sent(email: 'jan@firma123.si')),
+      findsOneWidget,
+    );
+    // A resumed screen has no back button, so it offers its own way out.
+    expect(find.text(t.email_login.skip_for_now), findsOneWidget);
+  });
+
+  testWidgets('the email step never shows the resume escape hatch', (
+    tester,
+  ) async {
+    await _pumpScreen(tester, verdict: DomainVerdict.exists);
+    expect(find.text(t.email_login.skip_for_now), findsNothing);
   });
 }

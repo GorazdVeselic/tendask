@@ -52,6 +52,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$notif_preview$en notif_preview = Translations$notif_preview$en.internal(_root);
 	late final Translations$onboarding$en onboarding = Translations$onboarding$en.internal(_root);
 	late final Translations$auth$en auth = Translations$auth$en.internal(_root);
+	late final Translations$account$en account = Translations$account$en.internal(_root);
 	late final Translations$email_login$en email_login = Translations$email_login$en.internal(_root);
 	late final Translations$location$en location = Translations$location$en.internal(_root);
 	late final Translations$journal$en journal = Translations$journal$en.internal(_root);
@@ -464,6 +465,30 @@ class Translations$auth$en {
 	String get privacy_link => 'Privacy policy';
 }
 
+// Path: account
+class Translations$account$en {
+	Translations$account$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Guest — tap to sign in'
+	String get guest_tooltip => 'Guest — tap to sign in';
+
+	/// en: 'You're using Tendask as a guest'
+	String get guest_title => 'You\'re using Tendask as a guest';
+
+	/// en: 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.'
+	String get guest_body => 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.';
+
+	/// en: 'Sign in / register'
+	String get sign_in_cta => 'Sign in / register';
+
+	/// en: 'Maybe later'
+	String get maybe_later => 'Maybe later';
+}
+
 // Path: email_login
 class Translations$email_login$en {
 	Translations$email_login$en.internal(this._root);
@@ -522,6 +547,9 @@ class Translations$email_login$en {
 
 	/// en: 'Send a new code ($seconds s)'
 	String resend_in({required Object seconds}) => 'Send a new code (${seconds} s)';
+
+	/// en: 'Continue without signing in'
+	String get skip_for_now => 'Continue without signing in';
 }
 
 // Path: location
@@ -1828,6 +1856,11 @@ extension on Translations {
 			'auth.google_error' => 'Google sign-in failed. Please try again.',
 			'auth.coming_soon' => 'Coming soon.',
 			'auth.privacy_link' => 'Privacy policy',
+			'account.guest_tooltip' => 'Guest — tap to sign in',
+			'account.guest_title' => 'You\'re using Tendask as a guest',
+			'account.guest_body' => 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.',
+			'account.sign_in_cta' => 'Sign in / register',
+			'account.maybe_later' => 'Maybe later',
 			'email_login.title' => 'Sign in with email',
 			'email_login.email_label' => 'Email address',
 			'email_login.email_hint' => 'you@example.com',
@@ -1845,6 +1878,7 @@ extension on Translations {
 			'email_login.err_email_domain' => 'We can\'t find that email\'s domain. Check the address.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Did you mean ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
+			'email_login.skip_for_now' => 'Continue without signing in',
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',

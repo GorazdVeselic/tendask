@@ -12,6 +12,7 @@ import '../../../core/location/place_label_repository.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/areas/application/areas_providers.dart';
+import '../../../features/auth/presentation/widgets/account_avatar_button.dart';
 import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../features/tasks/presentation/subject_labels.dart';
@@ -56,6 +57,7 @@ class HomeScreen extends ConsumerWidget {
           ],
         ),
         actions: [
+          const AccountAvatarButton(),
           IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => context.pushNamed('settings'),

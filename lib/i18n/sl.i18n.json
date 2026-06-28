@@ -126,6 +126,13 @@
     "coming_soon": "Na voljo kmalu.",
     "privacy_link": "Politika zasebnosti"
   },
+  "account": {
+    "guest_tooltip": "Gost — tapni za prijavo",
+    "guest_title": "Tendask uporabljaš kot gost",
+    "guest_body": "Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.",
+    "sign_in_cta": "Prijava / registracija",
+    "maybe_later": "Morda kasneje"
+  },
   "email_login": {
     "title": "Prijava z e-pošto",
     "email_label": "E-poštni naslov",
@@ -143,7 +150,8 @@
     "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova.",
     "err_email_domain": "Domene tega e-naslova ne najdemo. Preveri naslov.",
     "did_you_mean(suggestion)": "Ste mislili $suggestion?",
-    "resend_in(seconds)": "Pošlji novo kodo ($seconds s)"
+    "resend_in(seconds)": "Pošlji novo kodo ($seconds s)",
+    "skip_for_now": "Nadaljuj brez prijave"
   },
   "location": {
     "title": "Kje vrtnariš?",

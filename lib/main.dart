@@ -157,9 +157,8 @@ Future<void> _bootstrap() async {
   }
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
-  final onboardingSeen = await container
-      .read(localPrefsProvider)
-      .onboardingSeen();
+  final localPrefs = container.read(localPrefsProvider);
+  final onboardingSeen = await localPrefs.onboardingSeen();
 
   final String target;
   if (!onboardingSeen) {
@@ -167,7 +166,18 @@ Future<void> _bootstrap() async {
   } else if (launchTaskId != null) {
     target = '/tasks/$launchTaskId';
   } else {
-    target = '/home';
+    // Resume an interrupted email sign-in (code sent, app closed before verify)
+    // on the code step — otherwise the relaunch silently lands in guest mode.
+    // Consume-once: an abandoned attempt falls back to home on the next launch.
+    final pendingEmail = container.read(authServiceProvider).hasSession
+        ? null
+        : await localPrefs.pendingSignInEmail();
+    if (pendingEmail != null && pendingEmail.isNotEmpty) {
+      await localPrefs.clearPendingSignInEmail();
+      target = '/login-email?email=${Uri.encodeComponent(pendingEmail)}';
+    } else {
+      target = '/home';
+    }
   }
 
   // Resolve the saved theme mode + colour palette before first paint so the app

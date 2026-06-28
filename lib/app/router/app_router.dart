@@ -107,7 +107,8 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
     GoRoute(
       path: '/login-email',
       name: 'login-email',
-      builder: (context, state) => const EmailLoginScreen(),
+      builder: (context, state) =>
+          EmailLoginScreen(initialEmail: state.uri.queryParameters['email']),
     ),
     GoRoute(
       path: '/location',
