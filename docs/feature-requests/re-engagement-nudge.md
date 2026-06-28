@@ -1,4 +1,4 @@
-# FR: Re-engagement opomnik za neaktivne uporabnike
+# FR-16: Re-engagement opomnik za neaktivne uporabnike
 
 - **Status:** predlog (raziskava + arhitekturna odločitev), neimplementirano
 - **Datum:** 2026-06-28

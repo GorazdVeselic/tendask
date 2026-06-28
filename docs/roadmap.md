@@ -438,6 +438,23 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   Hitro vizualno ločiti, kam je build povezan (prod Play vs. lokalni staging Docker). Kotni `Banner`
   prek `MaterialApp.builder`, viden samo ko `kEnvLabel != 'production'` → prod/Play nikoli ne pokaže.
   Polna spec: [`docs/feature-requests/env-banner.md`](feature-requests/env-banner.md).
+- **FR-14 — Analitika & metrike (interna BI + javne statistike).** Predlog (2026-06-22, ni implementiran),
+  čaka odločitev o obsegu. Trenutna shema je odlična za sync, šibka za analitiko (gostje nevidni; LWW
+  upsert = brez zgodovine dogodkov). Priporočen razrez dveh tirov: (A) vedenjska analitika (installi,
+  DAU/retencija, funnel, tudi gostje) prek Firebase Analytics / PostHog — brez dotika sync sheme; (B)
+  domenske/javne statistike prek Supabase event log. Polna spec:
+  [`docs/feature-requests/analytics.md`](feature-requests/analytics.md).
+- **FR-15 — Obvestilo o nadgradnji v aplikaciji (in-app update).** Predlog (2026-06-26, ni implementiran),
+  čaka odločitev o obsegu. Dva neodvisna mehanizma: (A) Google Play In-App Updates prek paketa
+  `in_app_update ^4.2.5` (flexible flow, samo Android, native UX, nič lastne infra) — **NOVA dependency
+  izven `tech-stack.md §1` → najprej potrdi + pin + posodobi §1**; (B) lasten Supabase `min_supported_version`
+  gate (cross-platform/iOS »force update«, dodan kasneje ob M10). Lokalno netestabilno (rabi Play track).
+  Polna spec: [`docs/feature-requests/in-app-update.md`](feature-requests/in-app-update.md).
+- **FR-16 — Re-engagement opomnik za neaktivne uporabnike.** Predlog (2026-06-28, ni implementiran).
+  Vrtnar vrtnari, a pozabi vnesti. Odločitev: **lokalni dead-man's-switch = MVP** (doseže tudi
+  neaktivirane/goste, brez M11/FCM, privacy-first); FCM/R8 šele kasneje kot dodatek za prijavljene.
+  Vključuje A/B segmentacijo + anti-spam guardrails. Polna spec:
+  [`docs/feature-requests/re-engagement-nudge.md`](feature-requests/re-engagement-nudge.md).
 
 ## Dnevnik napredka
 

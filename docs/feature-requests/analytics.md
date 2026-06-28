@@ -1,4 +1,4 @@
-# FR: Analitika & metrike (interna BI + javne statistike)
+# FR-14: Analitika & metrike (interna BI + javne statistike)
 
 - **Status:** predlog (feature request), čaka odločitev o obsegu
 - **Datum:** 2026-06-22
