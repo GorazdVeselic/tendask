@@ -473,7 +473,7 @@
     "logout_confirm_title": "Sign out?",
     "logout_confirm_body": "Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.",
     "logout_cancel": "Cancel",
-    "logout_offline": "Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.",
+    "logout_offline": "Sign-out is paused — your latest changes aren't saved to the cloud yet. Try again in a moment.",
     "export_share_text": "Tendask data export",
     "export_error": "Export failed. Please try again.",
     "delete_account": "Delete account and all data",

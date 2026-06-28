@@ -1556,8 +1556,8 @@ class Translations$settings$en {
 	/// en: 'Cancel'
 	String get logout_cancel => 'Cancel';
 
-	/// en: 'Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.'
-	String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
+	/// en: 'Sign-out is paused — your latest changes aren't saved to the cloud yet. Try again in a moment.'
+	String get logout_offline => 'Sign-out is paused — your latest changes aren\'t saved to the cloud yet. Try again in a moment.';
 
 	/// en: 'Tendask data export'
 	String get export_share_text => 'Tendask data export';
@@ -2170,7 +2170,7 @@ extension on Translations {
 			'settings.logout_confirm_title' => 'Sign out?',
 			'settings.logout_confirm_body' => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.',
 			'settings.logout_cancel' => 'Cancel',
-			'settings.logout_offline' => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.',
+			'settings.logout_offline' => 'Sign-out is paused — your latest changes aren\'t saved to the cloud yet. Try again in a moment.',
 			'settings.export_share_text' => 'Tendask data export',
 			'settings.export_error' => 'Export failed. Please try again.',
 			'settings.delete_account' => 'Delete account and all data',

@@ -748,7 +748,7 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get logout_confirm_title => 'Odjava?';
 	@override String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
 	@override String get logout_cancel => 'Prekliči';
-	@override String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
+	@override String get logout_offline => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.';
 	@override String get export_share_text => 'Tendask izvoz podatkov';
 	@override String get export_error => 'Izvoz ni uspel. Poskusi znova.';
 	@override String get delete_account => 'Izbriši račun in vse podatke';
@@ -1243,7 +1243,7 @@ extension on TranslationsSl {
 			'settings.logout_confirm_title' => 'Odjava?',
 			'settings.logout_confirm_body' => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.',
 			'settings.logout_cancel' => 'Prekliči',
-			'settings.logout_offline' => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.',
+			'settings.logout_offline' => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.',
 			'settings.export_share_text' => 'Tendask izvoz podatkov',
 			'settings.export_error' => 'Izvoz ni uspel. Poskusi znova.',
 			'settings.delete_account' => 'Izbriši račun in vse podatke',

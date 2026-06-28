@@ -740,7 +740,7 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get logout_confirm_title => 'Abmelden?';
 	@override String get logout_confirm_body => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.';
 	@override String get logout_cancel => 'Abbrechen';
-	@override String get logout_offline => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.';
+	@override String get logout_offline => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.';
 	@override String get export_share_text => 'Tendask Datenexport';
 	@override String get export_error => 'Export fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get delete_account => 'Konto und alle Daten löschen';
@@ -1235,7 +1235,7 @@ extension on TranslationsDe {
 			'settings.logout_confirm_title' => 'Abmelden?',
 			'settings.logout_confirm_body' => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.',
 			'settings.logout_cancel' => 'Abbrechen',
-			'settings.logout_offline' => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.',
+			'settings.logout_offline' => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.',
 			'settings.export_share_text' => 'Tendask Datenexport',
 			'settings.export_error' => 'Export fehlgeschlagen. Bitte versuche es erneut.',
 			'settings.delete_account' => 'Konto und alle Daten löschen',
