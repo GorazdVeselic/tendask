@@ -51,6 +51,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
+	@override late final _Translations$account$de account = _Translations$account$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
 	@override late final _Translations$location$de location = _Translations$location$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
@@ -277,6 +278,20 @@ class _Translations$auth$de extends Translations$auth$en {
 	@override String get privacy_link => 'Datenschutzerklärung';
 }
 
+// Path: account
+class _Translations$account$de extends Translations$account$en {
+	_Translations$account$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get guest_tooltip => 'Gast — zum Anmelden tippen';
+	@override String get guest_title => 'Du nutzt Tendask als Gast';
+	@override String get guest_body => 'Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.';
+	@override String get sign_in_cta => 'Anmelden / registrieren';
+	@override String get maybe_later => 'Vielleicht später';
+}
+
 // Path: email_login
 class _Translations$email_login$de extends Translations$email_login$en {
 	_Translations$email_login$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -301,6 +316,7 @@ class _Translations$email_login$de extends Translations$email_login$en {
 	@override String get err_email_domain => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.';
 	@override String did_you_mean({required Object suggestion}) => 'Meintest du ${suggestion}?';
 	@override String resend_in({required Object seconds}) => 'Neuen Code senden (${seconds} s)';
+	@override String get skip_for_now => 'Ohne Anmeldung fortfahren';
 }
 
 // Path: location
@@ -724,7 +740,7 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get logout_confirm_title => 'Abmelden?';
 	@override String get logout_confirm_body => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.';
 	@override String get logout_cancel => 'Abbrechen';
-	@override String get logout_offline => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.';
+	@override String get logout_offline => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.';
 	@override String get export_share_text => 'Tendask Datenexport';
 	@override String get export_error => 'Export fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get delete_account => 'Konto und alle Daten löschen';
@@ -905,6 +921,11 @@ extension on TranslationsDe {
 			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
 			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'auth.privacy_link' => 'Datenschutzerklärung',
+			'account.guest_tooltip' => 'Gast — zum Anmelden tippen',
+			'account.guest_title' => 'Du nutzt Tendask als Gast',
+			'account.guest_body' => 'Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.',
+			'account.sign_in_cta' => 'Anmelden / registrieren',
+			'account.maybe_later' => 'Vielleicht später',
 			'email_login.title' => 'Mit E-Mail anmelden',
 			'email_login.email_label' => 'E-Mail-Adresse',
 			'email_login.email_hint' => 'du@beispiel.de',
@@ -922,6 +943,7 @@ extension on TranslationsDe {
 			'email_login.err_email_domain' => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Meintest du ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
+			'email_login.skip_for_now' => 'Ohne Anmeldung fortfahren',
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
@@ -1213,7 +1235,7 @@ extension on TranslationsDe {
 			'settings.logout_confirm_title' => 'Abmelden?',
 			'settings.logout_confirm_body' => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.',
 			'settings.logout_cancel' => 'Abbrechen',
-			'settings.logout_offline' => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.',
+			'settings.logout_offline' => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.',
 			'settings.export_share_text' => 'Tendask Datenexport',
 			'settings.export_error' => 'Export fehlgeschlagen. Bitte versuche es erneut.',
 			'settings.delete_account' => 'Konto und alle Daten löschen',

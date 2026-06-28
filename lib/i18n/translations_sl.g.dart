@@ -51,6 +51,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$notif_preview$sl notif_preview = _Translations$notif_preview$sl._(_root);
 	@override late final _Translations$onboarding$sl onboarding = _Translations$onboarding$sl._(_root);
 	@override late final _Translations$auth$sl auth = _Translations$auth$sl._(_root);
+	@override late final _Translations$account$sl account = _Translations$account$sl._(_root);
 	@override late final _Translations$email_login$sl email_login = _Translations$email_login$sl._(_root);
 	@override late final _Translations$location$sl location = _Translations$location$sl._(_root);
 	@override late final _Translations$journal$sl journal = _Translations$journal$sl._(_root);
@@ -281,6 +282,20 @@ class _Translations$auth$sl extends Translations$auth$en {
 	@override String get privacy_link => 'Politika zasebnosti';
 }
 
+// Path: account
+class _Translations$account$sl extends Translations$account$en {
+	_Translations$account$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get guest_tooltip => 'Gost — tapni za prijavo';
+	@override String get guest_title => 'Tendask uporabljaš kot gost';
+	@override String get guest_body => 'Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.';
+	@override String get sign_in_cta => 'Prijava / registracija';
+	@override String get maybe_later => 'Morda kasneje';
+}
+
 // Path: email_login
 class _Translations$email_login$sl extends Translations$email_login$en {
 	_Translations$email_login$sl._(TranslationsSl root) : this._root = root, super.internal(root);
@@ -305,6 +320,7 @@ class _Translations$email_login$sl extends Translations$email_login$en {
 	@override String get err_email_domain => 'Domene tega e-naslova ne najdemo. Preveri naslov.';
 	@override String did_you_mean({required Object suggestion}) => 'Ste mislili ${suggestion}?';
 	@override String resend_in({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)';
+	@override String get skip_for_now => 'Nadaljuj brez prijave';
 }
 
 // Path: location
@@ -732,7 +748,7 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get logout_confirm_title => 'Odjava?';
 	@override String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
 	@override String get logout_cancel => 'Prekliči';
-	@override String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
+	@override String get logout_offline => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.';
 	@override String get export_share_text => 'Tendask izvoz podatkov';
 	@override String get export_error => 'Izvoz ni uspel. Poskusi znova.';
 	@override String get delete_account => 'Izbriši račun in vse podatke';
@@ -913,6 +929,11 @@ extension on TranslationsSl {
 			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
 			'auth.privacy_link' => 'Politika zasebnosti',
+			'account.guest_tooltip' => 'Gost — tapni za prijavo',
+			'account.guest_title' => 'Tendask uporabljaš kot gost',
+			'account.guest_body' => 'Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.',
+			'account.sign_in_cta' => 'Prijava / registracija',
+			'account.maybe_later' => 'Morda kasneje',
 			'email_login.title' => 'Prijava z e-pošto',
 			'email_login.email_label' => 'E-poštni naslov',
 			'email_login.email_hint' => 'ti@primer.si',
@@ -930,6 +951,7 @@ extension on TranslationsSl {
 			'email_login.err_email_domain' => 'Domene tega e-naslova ne najdemo. Preveri naslov.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Ste mislili ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
+			'email_login.skip_for_now' => 'Nadaljuj brez prijave',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
@@ -1221,7 +1243,7 @@ extension on TranslationsSl {
 			'settings.logout_confirm_title' => 'Odjava?',
 			'settings.logout_confirm_body' => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.',
 			'settings.logout_cancel' => 'Prekliči',
-			'settings.logout_offline' => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.',
+			'settings.logout_offline' => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.',
 			'settings.export_share_text' => 'Tendask izvoz podatkov',
 			'settings.export_error' => 'Izvoz ni uspel. Poskusi znova.',
 			'settings.delete_account' => 'Izbriši račun in vse podatke',

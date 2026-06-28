@@ -86,7 +86,10 @@ class SyncService {
       if (!_hasSession()) return false;
       await push();
       return true;
-    } catch (_) {
+    } catch (e) {
+      // Not necessarily offline — a constraint/RLS reject also lands here. Log so
+      // a "logout blocked" report is diagnosable (stripped in release).
+      debugPrint('flushPush failed: $e');
       return false;
     }
   }

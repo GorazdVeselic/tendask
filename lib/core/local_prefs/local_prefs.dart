@@ -10,6 +10,7 @@ const _kDefaultGardenSeeded = 'default_garden_seeded';
 const _kDefaultGardenLocalId = 'default_garden_local_id';
 const _kThemeMode = 'theme_mode';
 const _kThemePalette = 'theme_palette';
+const _kPendingSignInEmail = 'pending_sign_in_email';
 
 /// Device-local "seen once" flags backed by the local_flag table. Never synced —
 /// these are per-device UI state (which intro/priming screens the user passed).
@@ -82,6 +83,17 @@ class LocalPrefsRepository {
       _setString(_kDefaultGardenLocalId, id);
 
   Future<void> clearDefaultGardenLocalId() => _clear(_kDefaultGardenLocalId);
+
+  /// Email of an in-progress email OTP sign-in (code sent, not yet verified).
+  /// Set when the code is dispatched so a relaunch during the wait resumes on
+  /// the code step instead of silently dropping the user into guest mode.
+  /// Consumed once at launch (an abandoned attempt then falls back to home).
+  Future<String?> pendingSignInEmail() => _getString(_kPendingSignInEmail);
+
+  Future<void> setPendingSignInEmail(String email) =>
+      _setString(_kPendingSignInEmail, email);
+
+  Future<void> clearPendingSignInEmail() => _clear(_kPendingSignInEmail);
 }
 
 @riverpod

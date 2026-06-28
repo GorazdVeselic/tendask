@@ -122,6 +122,13 @@
     "coming_soon": "Demnächst verfügbar.",
     "privacy_link": "Datenschutzerklärung"
   },
+  "account": {
+    "guest_tooltip": "Gast — zum Anmelden tippen",
+    "guest_title": "Du nutzt Tendask als Gast",
+    "guest_body": "Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.",
+    "sign_in_cta": "Anmelden / registrieren",
+    "maybe_later": "Vielleicht später"
+  },
   "email_login": {
     "title": "Mit E-Mail anmelden",
     "email_label": "E-Mail-Adresse",
@@ -139,7 +146,8 @@
     "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut.",
     "err_email_domain": "Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.",
     "did_you_mean(suggestion)": "Meintest du $suggestion?",
-    "resend_in(seconds)": "Neuen Code senden ($seconds s)"
+    "resend_in(seconds)": "Neuen Code senden ($seconds s)",
+    "skip_for_now": "Ohne Anmeldung fortfahren"
   },
   "location": {
     "title": "Wo gärtnerst du?",
@@ -465,7 +473,7 @@
     "logout_confirm_title": "Abmelden?",
     "logout_confirm_body": "Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.",
     "logout_cancel": "Abbrechen",
-    "logout_offline": "Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.",
+    "logout_offline": "Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.",
     "export_share_text": "Tendask Datenexport",
     "export_error": "Export fehlgeschlagen. Bitte versuche es erneut.",
     "delete_account": "Konto und alle Daten löschen",

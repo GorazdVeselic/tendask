@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
+import '../../../core/local_prefs/local_prefs.dart';
 import '../../../core/sync/connectivity.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
@@ -24,7 +25,12 @@ enum _Step { email, code }
 /// suggestion, a DNS-over-HTTPS existence check (fail-open, skipped offline),
 /// and a resend cooldown mirroring the server-side throttle.
 class EmailLoginScreen extends ConsumerStatefulWidget {
-  const EmailLoginScreen({super.key});
+  const EmailLoginScreen({super.key, this.initialEmail});
+
+  /// When set (a relaunch resuming an interrupted sign-in), the screen opens on
+  /// the code step with this address prefilled — a code was already sent before
+  /// the app closed, so we skip straight to entering it.
+  final String? initialEmail;
 
   @override
   ConsumerState<EmailLoginScreen> createState() => _EmailLoginScreenState();
@@ -48,6 +54,24 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
 
   Timer? _cooldownTimer;
   int _cooldownRemaining = 0;
+
+  /// Opened by resuming an interrupted sign-in (vs. pushed from the login
+  /// screen). A resumed screen replaced the nav stack, so it has no back button
+  /// — it must offer its own way out, or the user is stranded on the code step.
+  bool get _resumed => widget.initialEmail != null;
+
+  @override
+  void initState() {
+    super.initState();
+    final initial = widget.initialEmail;
+    if (initial != null && initial.isNotEmpty) {
+      _emailController.text = initial;
+      _step = _Step.code;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        if (mounted) _codeFocus.requestFocus();
+      });
+    }
+  }
 
   @override
   void dispose() {
@@ -145,6 +169,15 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     });
     try {
       await ref.read(authServiceProvider).sendEmailOtp(email);
+      // Persist the in-flight sign-in so a relaunch during the wait resumes on
+      // the code step instead of silently landing in guest mode. Best-effort: a
+      // local-write hiccup must never mask a code that was actually sent (resume
+      // is a nicety; the sent code is the real outcome).
+      try {
+        await ref.read(localPrefsProvider).setPendingSignInEmail(email);
+      } on Object catch (e) {
+        debugPrint('Persisting pending sign-in failed (non-fatal): $e');
+      }
       if (!mounted) return;
       _startResendCooldown();
       // Dismiss the email (QWERTY) keyboard before showing the code field, then
@@ -167,6 +200,15 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     }
   }
 
+  /// Escape hatch for a resumed code step (no back button): drop the in-flight
+  /// sign-in and continue as a guest, via the same location-or-home routing as
+  /// any guest entry (a locationless device still reaches the location step).
+  Future<void> _leaveAsGuest() async {
+    await ref.read(localPrefsProvider).clearPendingSignInEmail();
+    if (!mounted) return;
+    await goToLocationOrHome(context, ref);
+  }
+
   Future<void> _verify() async {
     final t = context.t;
     final email = _emailController.text.trim();
@@ -182,6 +224,8 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     });
     try {
       await ref.read(authServiceProvider).verifyEmailOtp(email, code);
+      // Signed in — drop the resume marker so a later relaunch goes to home.
+      await ref.read(localPrefsProvider).clearPendingSignInEmail();
       if (!mounted) return;
       // Session established — start() claims the guest's local rows to this
       // account, pushes them, and pulls the account's existing data (merge).
@@ -307,6 +351,16 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
                         : t.email_login.resend,
                   ),
                 ),
+                // A resumed code step replaced the nav stack (no back button),
+                // so offer an explicit way out for a user who changed their mind.
+                if (_resumed)
+                  TextButton(
+                    onPressed: _loading ? null : _leaveAsGuest,
+                    style: TextButton.styleFrom(
+                      foregroundColor: cs.onSurfaceVariant,
+                    ),
+                    child: Text(t.email_login.skip_for_now),
+                  ),
               ],
             ],
           ),
