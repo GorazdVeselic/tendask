@@ -1,6 +1,6 @@
-# FR: Indikator okolja v aplikaciji (STAGING / OFFLINE)
+# FR-13: Indikator okolja v aplikaciji (STAGING / OFFLINE)
 
-- **Status:** predlog (feature request), čaka odločitev
+- **Status:** ✅ implementiran (2026-06-28; `_envBanner` v `lib/app/app.dart`)
 - **Datum:** 2026-06-24
 - **Avtor:** Gorazd
 - **Področja:** app shell (`lib/app/app.dart`), dev tooling
