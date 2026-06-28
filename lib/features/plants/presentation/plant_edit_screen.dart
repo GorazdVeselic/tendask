@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
+import '../../../core/haptics.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
@@ -91,6 +92,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
         showTopToast(context, context.t.area_pick.duplicate, error: true);
         return;
       }
+      AppHaptics.saved();
       context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);

@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/date_format.dart';
+import '../../../core/haptics.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
@@ -151,6 +152,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
           userPlantId: _userPlantId,
         );
       }
+      AppHaptics.saved();
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);

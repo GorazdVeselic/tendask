@@ -455,11 +455,31 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   neaktivirane/goste, brez M11/FCM, privacy-first); FCM/R8 šele kasneje kot dodatek za prijavljene.
   Vključuje A/B segmentacijo + anti-spam guardrails. Polna spec:
   [`docs/feature-requests/re-engagement-nudge.md`](feature-requests/re-engagement-nudge.md).
+- **FR-17 — Haptični odziv ob ključnih akcijah.** ✅ **Implementirano 2026-06-28 na
+  `feat/fr17-haptics`.** Nov `core/haptics.dart` (`AppHaptics.taskCompleted/saved/destructiveConfirmed`)
+  centralizira preslikavo jakosti; sproži se, **ko se dejanje dejansko zgodi** (ne ob tapu): ✓ opravljeno
+  (`lightImpact`, vse 4 točke — swipe/seznam-meni/detajl-gumb/detajl-meni), uspešno shranjen obrazec
+  (`mediumImpact`, na success-poti entry + area/plant/note), potrjen izbris/clear (`heavyImpact`, en
+  chokepoint v `showConfirmDialog`, ki pokrije VSE potrditve — v `lib/` je en sam `AlertDialog`). Brez
+  nove dependency/sheme/i18n; `HapticFeedback` je sistemski (brez `VIBRATE` dovoljenja), OS-onemogočena
+  vibracija = no-op. Testi: jakostna preslikava (3) + branža `showConfirmDialog` (3). Polna spec:
+  [`docs/feature-requests/haptics.md`](feature-requests/haptics.md).
 
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-28 — **FR-17: haptični odziv ob ključnih akcijah (`feat/fr17-haptics`).** Nov
+  `lib/core/haptics.dart` z `AppHaptics` (3 statične metode = `light`/`medium`/`heavy`), edina točka
+  preslikave jakosti in bodočega stikala. Načelo: haptika se sproži, **ko se dejanje zgodi**, ne ob tapu
+  — zato je `mediumImpact` na uspešni save-poti vsakega obrazca (entry `_save`, area/plant/note), ne v
+  skupnem `SaveBar` (ki ne ve za uspeh in bi utripnil ob neuspeli validaciji ali `PlantMoveResult.duplicate`).
+  `lightImpact` na vseh 4 complete-točkah (swipe prek skupnega `TaskSwipe`, seznam-meni, detajl-gumb,
+  detajl-meni). `heavyImpact` v `showConfirmDialog` ob `destructive && potrjeno` — en chokepoint pokrije
+  vse izbrise/clear/odjavo (preverjeno: v `lib/` je en sam `AlertDialog`). Brez nove dependency/sheme/
+  i18n; `HapticFeedback` (vgrajen) ne rabi `VIBRATE` dovoljenja, OS-onemogočena vibracija = no-op.
+  Testi (+6): jakostna preslikava prek mock platform kanala (3) + branža `showConfirmDialog` confirm/
+  cancel/non-destructive (3). analyze čist, 274/274.
 - 2026-06-28 — **FR-13: indikator okolja STAGING/OFFLINE (`feat/fr13-env-banner`).** Dev-only kotni
   `Banner` prek `MaterialApp.router` `builder` (`_envBanner` v `lib/app/app.dart`): na ne-produkcijskih
   buildih izriše `STAGING` (oranžen) / `OFFLINE` (siv), na produkciji vrne otroka brez ovoja → tester

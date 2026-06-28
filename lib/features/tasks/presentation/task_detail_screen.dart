@@ -8,6 +8,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/haptics.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
@@ -169,6 +170,7 @@ class TaskDetailScreen extends ConsumerWidget {
               _ActionBar(
                 isWaiting: isWaiting,
                 onComplete: () {
+                  AppHaptics.taskCompleted();
                   unawaited(repo.complete(id).then((_) => router.pop()));
                 },
                 onPostpone: () => unawaited(repo.postponeOneDay(id)),
@@ -238,6 +240,7 @@ class TaskDetailScreen extends ConsumerWidget {
                   ),
                   title: Text(t.task_detail.action_complete),
                   onTap: () {
+                    AppHaptics.taskCompleted();
                     Navigator.of(ctx).pop();
                     unawaited(repo.complete(task.id).then((_) => router.pop()));
                   },

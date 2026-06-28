@@ -7,6 +7,7 @@ import '../../../../core/catalog_labels.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
+import '../../../../core/haptics.dart';
 import '../../../../core/task_status.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../supplies/application/supplies_providers.dart';
@@ -293,6 +294,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             specs: _supplies,
             isDone: _status == TaskStatus.done,
           );
+      AppHaptics.saved();
       if (mounted) context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
