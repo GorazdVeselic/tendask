@@ -434,7 +434,7 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
   morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
   znano oznako; brez novih shranjenih koordinat.
-- **FR-13 — Indikator okolja (STAGING/OFFLINE) v aplikaciji.** Predlog (2026-06-24, ni implementiran).
+- **FR-13 — Indikator okolja (STAGING/OFFLINE) v aplikaciji.** ✅ **Implementirano 2026-06-28.**
   Hitro vizualno ločiti, kam je build povezan (prod Play vs. lokalni staging Docker). Kotni `Banner`
   prek `MaterialApp.builder`, viden samo ko `kEnvLabel != 'production'` → prod/Play nikoli ne pokaže.
   Polna spec: [`docs/feature-requests/env-banner.md`](feature-requests/env-banner.md).
@@ -460,6 +460,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-28 — **FR-13: indikator okolja STAGING/OFFLINE (`feat/fr13-env-banner`).** Dev-only kotni
+  `Banner` prek `MaterialApp.router` `builder` (`_envBanner` v `lib/app/app.dart`): na ne-produkcijskih
+  buildih izriše `STAGING` (oranžen) / `OFFLINE` (siv), na produkciji vrne otroka brez ovoja → tester
+  na Play nikoli ne vidi traku. Ponovno uporabi obstoječ `kEnvLabel` (`core/config.dart`); brez nove
+  dependency, sheme, i18n ali testov (niz dev-only). `Colors.orange/grey` = upravičena dev-only izjema
+  od »barve prek teme«. analyze čist.
+- 2026-06-28 — **FR backlog oštevilčen do FR-16 + FR-14/15/16 zapisani.** Trije samostojni
+  feature-request dokumenti dobili številko (analitika=FR-14, in-app update=FR-15, re-engagement=FR-16);
+  zapisano v glavah `.md` + backlogu. `in-app-update.md` prej neuvožen, zdaj sledjen (commit `485a620`).
 - 2026-06-24 — **Opozorilo »opomniki bodo tihi« + verifikacija 0011 + FR-13 (na `main`).** (1) Nov
   reaktivni banner `ReminderSoundBanner` (`core/notifications/reminder_audio.dart` + Android EventChannel/
   BroadcastReceiver) opozori, ko obvestila ne bodo zvenela (glasnost obvestil 0 ali tih profil). **Diagnoza

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/config.dart';
 import '../core/notifications/notification_service.dart';
 import '../i18n/translations.g.dart';
 import 'router/app_router.dart';
@@ -69,6 +70,21 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
       darkTheme: AppTheme.dark(palette),
       themeMode: themeMode,
       routerConfig: _router,
+      builder: _envBanner,
+    );
+  }
+
+  // Dev-only environment indicator: corner banner on non-production builds so a
+  // staging/offline build is never mistaken for prod. Colors are intentionally
+  // non-brand (this chrome never reaches prod users).
+  Widget _envBanner(BuildContext context, Widget? child) {
+    final content = child ?? const SizedBox.shrink();
+    if (kEnvLabel == 'production') return content;
+    return Banner(
+      message: kEnvLabel == 'staging' ? 'STAGING' : 'OFFLINE',
+      location: BannerLocation.topEnd,
+      color: kEnvLabel == 'staging' ? Colors.orange : Colors.grey,
+      child: content,
     );
   }
 }
