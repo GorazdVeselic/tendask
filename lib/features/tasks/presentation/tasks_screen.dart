@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -7,6 +9,7 @@ import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/haptics.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
@@ -70,7 +73,10 @@ class TasksScreen extends ConsumerWidget {
               catalog: catalog,
               subjectLabels: subjectLabels,
               reminderTaskIds: reminderTaskIds,
-              onComplete: (id) => repo.complete(id),
+              onComplete: (id) {
+                AppHaptics.taskCompleted();
+                unawaited(repo.complete(id));
+              },
               onPostpone: (id) => repo.postponeOneDay(id),
               onDuplicate: (id) => repo.duplicate(id),
               onDelete: (id) => repo.softDelete(id),

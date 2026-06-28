@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/area_type.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../../core/haptics.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/save_bar.dart';
@@ -79,6 +80,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
       final repo = ref.read(areasRepositoryProvider);
       if (_isEdit) {
         await repo.update(id: widget.areaId!, name: name, type: _type);
+        AppHaptics.saved();
         if (mounted) context.pop();
       } else {
         final userId = ref.read(authServiceProvider).userId;
@@ -87,6 +89,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
           name: name,
           type: _type,
         );
+        AppHaptics.saved();
         // Return the new id so callers can auto-select it (area-pick sheet,
         // entry subject step).
         if (mounted) context.pop(areaId);

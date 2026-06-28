@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/database/app_database.dart';
+import '../../../../core/haptics.dart';
 import '../../../../core/task_status.dart';
 import '../../../../core/widgets/swipe_actions.dart';
 import '../../../../i18n/translations.g.dart';
@@ -25,7 +26,10 @@ class TaskSwipe extends ConsumerWidget {
     final repo = ref.read(tasksRepositoryProvider);
     final actions = task.status == TaskStatus.waiting
         ? [
-            completeSwipe(context, () => unawaited(repo.complete(task.id))),
+            completeSwipe(context, () {
+              AppHaptics.taskCompleted();
+              unawaited(repo.complete(task.id));
+            }),
             postponeSwipe(
               context,
               () => unawaited(repo.postponeOneDay(task.id)),
