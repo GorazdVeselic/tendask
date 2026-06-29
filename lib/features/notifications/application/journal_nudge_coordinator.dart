@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:drift/drift.dart';
 import 'package:flutter/foundation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:sentry/sentry.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/clock.dart';
@@ -85,7 +86,11 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
         fromLocal: nowLocal,
         dayOffsets: kJournalNudgeDayOffsets,
         hour: kJournalNudgeHour,
-        taskReminderDays: await _taskReminderDays(repo, nowLocal),
+        // Only avoid reminder days when reminders are actually scheduled; with
+        // the master switch off there are none to clash with.
+        taskReminderDays: settings.taskRemindersEnabled
+            ? await _taskReminderDays(repo, nowLocal)
+            : const {},
       );
 
       // Segment A (never entered a task) vs B (lapsed) — copy chosen now; a
@@ -109,8 +114,11 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
           body: body,
         );
       }
-    } catch (e) {
-      debugPrint('journal nudge reschedule failed: $e');
+    } catch (error, stack) {
+      debugPrint('journal nudge reschedule failed: $error');
+      if (kSentryDsn.isNotEmpty) {
+        unawaited(Sentry.captureException(error, stackTrace: stack));
+      }
     } finally {
       _running = false;
       if (_dirty) {
@@ -121,25 +129,20 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
   }
 
   /// Local days that already carry a future task reminder, so the nudge can skip
-  /// them (FR-16 §3.5). Reuses [reminderFireTime] — the same fire-time logic the
-  /// reminder coordinator schedules with.
+  /// them (FR-16 §3.5). One join query (no N+1), then [reminderFireTime] — the
+  /// same fire-time logic the reminder coordinator schedules with.
   Future<Set<DateTime>> _taskReminderDays(
     TasksRepository repo,
     DateTime nowLocal,
   ) async {
     final days = <DateTime>{};
-    for (final task in await repo.pendingTasks()) {
-      final reminders = await repo.remindersForTask(task.id);
-      if (reminders.isEmpty) continue;
-      final taskDateLocal = task.date.toLocal();
-      for (final r in reminders) {
-        final fire = reminderFireTime(
-          taskDateLocal: taskDateLocal,
-          offsetMinutes: r.offset,
-          reminderTime: r.reminderTime,
-        );
-        if (fire.isAfter(nowLocal)) days.add(startOfDay(fire));
-      }
+    for (final input in await repo.reminderScheduleInputs()) {
+      final fire = reminderFireTime(
+        taskDateLocal: input.taskDate.toLocal(),
+        offsetMinutes: input.offsetMinutes,
+        reminderTime: input.reminderTime,
+      );
+      if (fire.isAfter(nowLocal)) days.add(startOfDay(fire));
     }
     return days;
   }

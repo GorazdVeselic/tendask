@@ -153,6 +153,32 @@ class TasksRepository {
   Future<List<TaskReminder>> remindersForTask(String taskId) =>
       _remindersQuery(taskId).get();
 
+  /// Scheduling inputs for every active reminder of a waiting task, in ONE join
+  /// (task date + offset/time) — lets a caller compute fire times without an N+1
+  /// over tasks. Used by the journal nudge to find days that already carry a
+  /// reminder (FR-16). Returns plain values, no drift types.
+  Future<List<({DateTime taskDate, int offsetMinutes, String? reminderTime})>>
+  reminderScheduleInputs() async {
+    final rows =
+        await (_db.select(_db.taskReminders).join([
+              innerJoin(
+                _db.tasks,
+                _db.tasks.id.equalsExp(_db.taskReminders.taskId) &
+                    _db.tasks.deleted.equals(false) &
+                    _db.tasks.status.equalsValue(TaskStatus.waiting),
+              ),
+            ])..where(_db.taskReminders.deleted.equals(false)))
+            .get();
+    return [
+      for (final row in rows)
+        (
+          taskDate: row.readTable(_db.tasks).date,
+          offsetMinutes: row.readTable(_db.taskReminders).offset,
+          reminderTime: row.readTable(_db.taskReminders).reminderTime,
+        ),
+    ];
+  }
+
   /// Active reminders of one task, soonest offset first — for the detail screen.
   Stream<List<TaskReminder>> watchRemindersForTask(String taskId) =>
       _remindersQuery(taskId).watch();
