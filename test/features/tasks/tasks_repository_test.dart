@@ -293,4 +293,65 @@ void main() {
       expect(copySubjects.single.areaId, areaId);
     });
   });
+
+  group('TasksRepository.reminderReconcileInputs', () {
+    test('returns only waiting tasks with reminders, each with its '
+        'reminders and subjects', () async {
+      final withReminder = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 60, time: '09:00')],
+      );
+      // No reminder → excluded.
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+      );
+      // Done → not pending, excluded even with a reminder.
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        status: TaskStatus.done,
+        reminders: const [ReminderSpec(offsetMinutes: 30)],
+      );
+
+      final inputs = await repo.reminderReconcileInputs();
+
+      expect(inputs, hasLength(1));
+      final only = inputs.single;
+      expect(only.task.id, withReminder);
+      expect(only.reminders.single.offset, 60);
+      expect(only.reminders.single.reminderTime, '09:00');
+      expect(only.subjects.single.areaId, areaId);
+    });
+
+    test('orders reminders by offset ascending', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [
+          ReminderSpec(offsetMinutes: 120),
+          ReminderSpec(offsetMinutes: 30),
+        ],
+      );
+
+      final inputs = await repo.reminderReconcileInputs();
+      expect(
+        inputs.single.reminders.map((r) => r.offset).toList(),
+        [30, 120],
+      );
+    });
+
+    test('returns empty when no pending tasks', () async {
+      expect(await repo.reminderReconcileInputs(), isEmpty);
+    });
+  });
 }

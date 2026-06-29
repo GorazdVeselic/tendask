@@ -104,20 +104,20 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       final nowLocal = _clock.now().toLocal();
 
       final desired = <int>{};
-      for (final task in await repo.pendingTasks()) {
-        final reminders = await repo.remindersForTask(task.id);
-        if (reminders.isEmpty) continue;
+      // Fixed three queries for all tasks (no per-task N+1, see repo doc).
+      for (final input in await repo.reminderReconcileInputs()) {
+        final task = input.task;
         final taskDateLocal = task.date.toLocal();
         final title = _title(task, types);
         final body = _body(
           task,
-          await repo.subjectsForTask(task.id),
+          input.subjects,
           areas: areas,
           userPlants: userPlants,
           plants: plants,
           nowLocal: nowLocal,
         );
-        for (final r in reminders) {
+        for (final r in input.reminders) {
           final fire = reminderFireTime(
             taskDateLocal: taskDateLocal,
             offsetMinutes: r.offset,

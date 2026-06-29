@@ -80,7 +80,6 @@ class TasksRepository {
             ..orderBy([(t) => OrderingTerm.desc(t.date)]))
           .watch();
 
-  /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
   /// Count of non-deleted tasks (any status) — drives the journal-nudge segment
   /// (FR-16): 0 → never-activated copy, >0 → lapsed copy.
   Future<int> totalCount() async {
@@ -92,6 +91,7 @@ class TasksRepository {
     return row.read(count) ?? 0;
   }
 
+  /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
   Future<List<Task>> pendingTasks() =>
       (_db.select(_db.tasks)..where(
             (t) =>
@@ -176,6 +176,49 @@ class TasksRepository {
           offsetMinutes: row.readTable(_db.taskReminders).offset,
           reminderTime: row.readTable(_db.taskReminders).reminderTime,
         ),
+    ];
+  }
+
+  /// Everything the reminder coordinator needs to (re)schedule, gathered in a
+  /// fixed THREE queries regardless of task count (no N+1): the waiting tasks
+  /// that carry at least one active reminder, each with its reminders (soonest
+  /// offset first) and its subjects. Returns plain row types, no drift Companion
+  /// on the boundary.
+  Future<
+    List<({Task task, List<TaskReminder> reminders, List<TaskSubject> subjects})>
+  >
+  reminderReconcileInputs() async {
+    final tasks = await pendingTasks();
+    if (tasks.isEmpty) return const [];
+    final taskIds = [for (final t in tasks) t.id];
+
+    final reminders =
+        await (_db.select(_db.taskReminders)
+              ..where((r) => r.taskId.isIn(taskIds) & r.deleted.equals(false))
+              ..orderBy([(r) => OrderingTerm.asc(r.offset)]))
+            .get();
+    final subjects =
+        await (_db.select(_db.taskSubjects)
+              ..where((s) => s.taskId.isIn(taskIds) & s.deleted.equals(false)))
+            .get();
+
+    final remindersByTask = <String, List<TaskReminder>>{};
+    for (final r in reminders) {
+      (remindersByTask[r.taskId] ??= []).add(r);
+    }
+    final subjectsByTask = <String, List<TaskSubject>>{};
+    for (final s in subjects) {
+      (subjectsByTask[s.taskId] ??= []).add(s);
+    }
+
+    return [
+      for (final task in tasks)
+        if (remindersByTask[task.id] case final taskReminders?)
+          (
+            task: task,
+            reminders: taskReminders,
+            subjects: subjectsByTask[task.id] ?? const [],
+          ),
     ];
   }
 
