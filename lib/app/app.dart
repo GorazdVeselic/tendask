@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/config.dart';
 import '../core/notifications/notification_service.dart';
+import '../features/notifications/application/journal_nudge_coordinator.dart';
 import '../i18n/translations.g.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
@@ -28,6 +29,7 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
   // Built once so navigation state survives rebuilds.
   late final _router = createAppRouter(initialLocation: widget.initialLocation);
   StreamSubscription<String>? _tapSub;
+  late final AppLifecycleListener _lifecycle;
 
   @override
   void initState() {
@@ -41,11 +43,19 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
           (taskId) =>
               _router.goNamed('task-detail', pathParameters: {'id': taskId}),
         );
+
+    // A foreground return counts as activity: push the journal nudge forward
+    // (FR-16). Cold start is covered by the coordinator's start() in main().
+    _lifecycle = AppLifecycleListener(
+      onResume: () =>
+          ref.read(journalNudgeCoordinatorProvider.notifier).onResume(),
+    );
   }
 
   @override
   void dispose() {
     _tapSub?.cancel();
+    _lifecycle.dispose();
     super.dispose();
   }
 

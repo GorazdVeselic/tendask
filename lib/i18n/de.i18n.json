@@ -40,6 +40,12 @@
     "today": "Heute",
     "tomorrow": "Morgen"
   },
+  "journal_nudge": {
+    "title_a": "Starte dein Gartentagebuch 🌱",
+    "body_a": "Trag deine erste Aufgabe ein — was wächst bei dir?",
+    "title_b": "Was passiert im Garten?",
+    "body_b": "Halt fest, was du diese Woche im Garten gemacht hast."
+  },
   "notif_priming": {
     "title": "Soll ich dich rechtzeitig erinnern?",
     "why": "Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.",
@@ -56,6 +62,8 @@
     "section_types": "Benachrichtigungsarten",
     "type_reminders": "Aufgaben-Erinnerungen",
     "type_reminders_sub": "lokal · funktionieren ohne Internet",
+    "type_journal_nudge": "Tagebuch-Erinnerung",
+    "type_journal_nudge_sub": "lokal · ein sanfter Anstoß, wenn es still wird",
     "type_weather": "Smarte Hinweise (Wetter)",
     "type_weather_sub": "demnächst · über Server",
     "type_community": "Hinweise aus der Umgebung",

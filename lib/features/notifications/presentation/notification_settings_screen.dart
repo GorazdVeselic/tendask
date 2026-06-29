@@ -93,6 +93,14 @@ class _Body extends ConsumerWidget {
                     _save(ref, settings.copyWith(taskRemindersEnabled: v)),
               ),
               SwitchListTile(
+                secondary: const Text('🌱', style: TextStyle(fontSize: 22)),
+                title: Text(t.notif_settings.type_journal_nudge),
+                subtitle: Text(t.notif_settings.type_journal_nudge_sub),
+                value: settings.journalNudgeEnabled,
+                onChanged: (v) =>
+                    _save(ref, settings.copyWith(journalNudgeEnabled: v)),
+              ),
+              SwitchListTile(
                 secondary: const Text('🌤️', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_weather),
                 subtitle: Text(t.notif_settings.type_weather_sub),

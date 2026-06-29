@@ -46,6 +46,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$en common = Translations$common$en.internal(_root);
 	late final Translations$swipe$en swipe = Translations$swipe$en.internal(_root);
 	late final Translations$notifications$en notifications = Translations$notifications$en.internal(_root);
+	late final Translations$journal_nudge$en journal_nudge = Translations$journal_nudge$en.internal(_root);
 	late final Translations$notif_priming$en notif_priming = Translations$notif_priming$en.internal(_root);
 	late final Translations$notif_settings$en notif_settings = Translations$notif_settings$en.internal(_root);
 	late final Translations$reminder_sound$en reminder_sound = Translations$reminder_sound$en.internal(_root);
@@ -201,6 +202,27 @@ class Translations$notifications$en {
 	String get tomorrow => 'Tomorrow';
 }
 
+// Path: journal_nudge
+class Translations$journal_nudge$en {
+	Translations$journal_nudge$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Start your garden journal 🌱'
+	String get title_a => 'Start your garden journal 🌱';
+
+	/// en: 'Log your first task — what's growing with you?'
+	String get body_a => 'Log your first task — what\'s growing with you?';
+
+	/// en: 'What's happening in the garden?'
+	String get title_b => 'What\'s happening in the garden?';
+
+	/// en: 'Jot down what you did in the garden this week.'
+	String get body_b => 'Jot down what you did in the garden this week.';
+}
+
 // Path: notif_priming
 class Translations$notif_priming$en {
 	Translations$notif_priming$en.internal(this._root);
@@ -256,6 +278,12 @@ class Translations$notif_settings$en {
 
 	/// en: 'local · works offline'
 	String get type_reminders_sub => 'local · works offline';
+
+	/// en: 'Journal nudge'
+	String get type_journal_nudge => 'Journal nudge';
+
+	/// en: 'local · a gentle nudge if you go quiet'
+	String get type_journal_nudge_sub => 'local · a gentle nudge if you go quiet';
 
 	/// en: 'Smart hints (weather)'
 	String get type_weather => 'Smart hints (weather)';
@@ -1786,6 +1814,10 @@ extension on Translations {
 			'swipe.delete' => 'Delete',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
+			'journal_nudge.title_a' => 'Start your garden journal 🌱',
+			'journal_nudge.body_a' => 'Log your first task — what\'s growing with you?',
+			'journal_nudge.title_b' => 'What\'s happening in the garden?',
+			'journal_nudge.body_b' => 'Jot down what you did in the garden this week.',
 			'notif_priming.title' => 'Let me remind you in time?',
 			'notif_priming.why' => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.',
 			'notif_priming.benefit_reminders' => 'Task reminders — e.g. "1 day before at 18:00".',
@@ -1799,6 +1831,8 @@ extension on Translations {
 			'notif_settings.section_types' => 'Notification types',
 			'notif_settings.type_reminders' => 'Task reminders',
 			'notif_settings.type_reminders_sub' => 'local · works offline',
+			'notif_settings.type_journal_nudge' => 'Journal nudge',
+			'notif_settings.type_journal_nudge_sub' => 'local · a gentle nudge if you go quiet',
 			'notif_settings.type_weather' => 'Smart hints (weather)',
 			'notif_settings.type_weather_sub' => 'soon · via server',
 			'notif_settings.type_community' => 'Nearby hints',

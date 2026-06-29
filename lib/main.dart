@@ -19,6 +19,7 @@ import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/areas/application/areas_providers.dart';
 import 'features/areas/data/garden_seed_service.dart';
+import 'features/notifications/application/journal_nudge_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -149,6 +150,10 @@ Future<void> _bootstrap() async {
     // Reconcile OS reminders with the task_reminder rows now, then reactively on
     // every task/reminder change (M8.2). Fire-and-forget.
     container.read(reminderCoordinatorProvider.notifier).start();
+
+    // Arm the re-engagement journal nudge (FR-16): a local dead-man's-switch that
+    // app opens / writes push forward and only fires after the user goes quiet.
+    container.read(journalNudgeCoordinatorProvider.notifier).start();
   } catch (error, stack) {
     debugPrint('Notification bootstrap failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {

@@ -45,6 +45,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$sl common = _Translations$common$sl._(_root);
 	@override late final _Translations$swipe$sl swipe = _Translations$swipe$sl._(_root);
 	@override late final _Translations$notifications$sl notifications = _Translations$notifications$sl._(_root);
+	@override late final _Translations$journal_nudge$sl journal_nudge = _Translations$journal_nudge$sl._(_root);
 	@override late final _Translations$notif_priming$sl notif_priming = _Translations$notif_priming$sl._(_root);
 	@override late final _Translations$notif_settings$sl notif_settings = _Translations$notif_settings$sl._(_root);
 	@override late final _Translations$reminder_sound$sl reminder_sound = _Translations$reminder_sound$sl._(_root);
@@ -158,6 +159,19 @@ class _Translations$notifications$sl extends Translations$notifications$en {
 	@override String get tomorrow => 'Jutri';
 }
 
+// Path: journal_nudge
+class _Translations$journal_nudge$sl extends Translations$journal_nudge$en {
+	_Translations$journal_nudge$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_a => 'Začni svoj vrtni dnevnik 🌱';
+	@override String get body_a => 'Zabeleži prvo opravilo — kaj raste pri tebi?';
+	@override String get title_b => 'Kaj se dogaja na vrtu?';
+	@override String get body_b => 'Zabeleži, kaj si ta teden počel na vrtu.';
+}
+
 // Path: notif_priming
 class _Translations$notif_priming$sl extends Translations$notif_priming$en {
 	_Translations$notif_priming$sl._(TranslationsSl root) : this._root = root, super.internal(root);
@@ -187,6 +201,8 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get section_types => 'Vrste obvestil';
 	@override String get type_reminders => 'Opomniki opravil';
 	@override String get type_reminders_sub => 'lokalno · delujejo brez interneta';
+	@override String get type_journal_nudge => 'Povabilo k dnevniku';
+	@override String get type_journal_nudge_sub => 'lokalno · nežno povabilo, ko utihneš';
 	@override String get type_weather => 'Pametni namigi (vreme)';
 	@override String get type_weather_sub => 'kmalu · prek strežnika';
 	@override String get type_community => 'Namigi okolice';
@@ -859,6 +875,10 @@ extension on TranslationsSl {
 			'swipe.delete' => 'Izbriši',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
+			'journal_nudge.title_a' => 'Začni svoj vrtni dnevnik 🌱',
+			'journal_nudge.body_a' => 'Zabeleži prvo opravilo — kaj raste pri tebi?',
+			'journal_nudge.title_b' => 'Kaj se dogaja na vrtu?',
+			'journal_nudge.body_b' => 'Zabeleži, kaj si ta teden počel na vrtu.',
 			'notif_priming.title' => 'Naj te pravočasno opozorim?',
 			'notif_priming.why' => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.',
 			'notif_priming.benefit_reminders' => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.',
@@ -872,6 +892,8 @@ extension on TranslationsSl {
 			'notif_settings.section_types' => 'Vrste obvestil',
 			'notif_settings.type_reminders' => 'Opomniki opravil',
 			'notif_settings.type_reminders_sub' => 'lokalno · delujejo brez interneta',
+			'notif_settings.type_journal_nudge' => 'Povabilo k dnevniku',
+			'notif_settings.type_journal_nudge_sub' => 'lokalno · nežno povabilo, ko utihneš',
 			'notif_settings.type_weather' => 'Pametni namigi (vreme)',
 			'notif_settings.type_weather_sub' => 'kmalu · prek strežnika',
 			'notif_settings.type_community' => 'Namigi okolice',

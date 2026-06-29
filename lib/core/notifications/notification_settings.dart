@@ -9,6 +9,7 @@ import '../config.dart';
 class NotificationSettings {
   const NotificationSettings({
     this.taskRemindersEnabled = true,
+    this.journalNudgeEnabled = true,
     this.weatherHintsEnabled = false,
     this.communityHintsEnabled = false,
     this.defaultReminderOffset = kDefaultReminderOffset,
@@ -18,6 +19,10 @@ class NotificationSettings {
 
   /// Master switch for local task reminders — when off, none are scheduled.
   final bool taskRemindersEnabled;
+
+  /// Opt-in for the local re-engagement journal nudge (FR-16). On by default; a
+  /// separate switch from task reminders (FR-16 §3.6). Local, works offline.
+  final bool journalNudgeEnabled;
 
   /// Opt-in for weather hints (FCM, deferred — stored, not yet wired).
   final bool weatherHintsEnabled;
@@ -36,6 +41,7 @@ class NotificationSettings {
 
   NotificationSettings copyWith({
     bool? taskRemindersEnabled,
+    bool? journalNudgeEnabled,
     bool? weatherHintsEnabled,
     bool? communityHintsEnabled,
     int? defaultReminderOffset,
@@ -43,6 +49,7 @@ class NotificationSettings {
     bool? frequencyCapEnabled,
   }) => NotificationSettings(
     taskRemindersEnabled: taskRemindersEnabled ?? this.taskRemindersEnabled,
+    journalNudgeEnabled: journalNudgeEnabled ?? this.journalNudgeEnabled,
     weatherHintsEnabled: weatherHintsEnabled ?? this.weatherHintsEnabled,
     communityHintsEnabled: communityHintsEnabled ?? this.communityHintsEnabled,
     defaultReminderOffset: defaultReminderOffset ?? this.defaultReminderOffset,
@@ -52,6 +59,7 @@ class NotificationSettings {
 
   Map<String, dynamic> toJson() => {
     'task_reminders': taskRemindersEnabled,
+    'journal_nudge': journalNudgeEnabled,
     'weather_hints': weatherHintsEnabled,
     'community_hints': communityHintsEnabled,
     'default_offset': defaultReminderOffset,
@@ -63,6 +71,7 @@ class NotificationSettings {
   factory NotificationSettings.fromJson(Map<String, dynamic> j) =>
       NotificationSettings(
         taskRemindersEnabled: j['task_reminders'] as bool? ?? true,
+        journalNudgeEnabled: j['journal_nudge'] as bool? ?? true,
         weatherHintsEnabled: j['weather_hints'] as bool? ?? false,
         communityHintsEnabled: j['community_hints'] as bool? ?? false,
         defaultReminderOffset:

@@ -95,6 +95,23 @@ const kReminderOffsetPresets = [0, 10, 60, kMinutesPerDay, 2 * kMinutesPerDay];
 /// reminder. 0 = at the time of the event. User-overridable in notification settings.
 const kDefaultReminderOffset = 0;
 
+/// Re-engagement journal nudge (FR-16) — a local dead-man's-switch. It fires
+/// only after the user goes quiet; every app open / task or note write pushes it
+/// forward, so an active user never sees it. Instead of one re-armed reminder we
+/// schedule a fixed decaying chain ([kJournalNudgeDayOffsets] whole days after
+/// the last activity) and then fall silent — 7 days, then 21 more, then stop —
+/// so the long-departed are never poked (anti-spam, FR-16 §3). 17:00 local sits
+/// outside quiet hours by design.
+const kJournalNudgeHour = 17;
+const kJournalNudgeDayOffsets = [7, 28];
+
+/// Reserved OS notification ids for the nudge chain (one per decay step).
+/// Negative on purpose: a task reminder id is always >= 0 (a hashed UUID masked
+/// with 0x7fffffff), so these can never collide with one, and the reminder
+/// coordinator excludes them from its orphan-cancel sweep. Length must match
+/// [kJournalNudgeDayOffsets].
+const kJournalNudgeNotificationIds = [-201, -202];
+
 /// Quiet-hours window shown in notification settings (display only in MVP). It
 /// is stored as a device-local preference and governs the future weather/
 /// community hints (FCM, deferred), NOT explicit task reminders — see

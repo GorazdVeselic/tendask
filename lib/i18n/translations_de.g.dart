@@ -45,6 +45,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$swipe$de swipe = _Translations$swipe$de._(_root);
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
+	@override late final _Translations$journal_nudge$de journal_nudge = _Translations$journal_nudge$de._(_root);
 	@override late final _Translations$notif_priming$de notif_priming = _Translations$notif_priming$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
 	@override late final _Translations$reminder_sound$de reminder_sound = _Translations$reminder_sound$de._(_root);
@@ -154,6 +155,19 @@ class _Translations$notifications$de extends Translations$notifications$en {
 	@override String get tomorrow => 'Morgen';
 }
 
+// Path: journal_nudge
+class _Translations$journal_nudge$de extends Translations$journal_nudge$en {
+	_Translations$journal_nudge$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_a => 'Starte dein Gartentagebuch 🌱';
+	@override String get body_a => 'Trag deine erste Aufgabe ein — was wächst bei dir?';
+	@override String get title_b => 'Was passiert im Garten?';
+	@override String get body_b => 'Halt fest, was du diese Woche im Garten gemacht hast.';
+}
+
 // Path: notif_priming
 class _Translations$notif_priming$de extends Translations$notif_priming$en {
 	_Translations$notif_priming$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -183,6 +197,8 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get section_types => 'Benachrichtigungsarten';
 	@override String get type_reminders => 'Aufgaben-Erinnerungen';
 	@override String get type_reminders_sub => 'lokal · funktionieren ohne Internet';
+	@override String get type_journal_nudge => 'Tagebuch-Erinnerung';
+	@override String get type_journal_nudge_sub => 'lokal · ein sanfter Anstoß, wenn es still wird';
 	@override String get type_weather => 'Smarte Hinweise (Wetter)';
 	@override String get type_weather_sub => 'demnächst · über Server';
 	@override String get type_community => 'Hinweise aus der Umgebung';
@@ -851,6 +867,10 @@ extension on TranslationsDe {
 			'swipe.delete' => 'Löschen',
 			'notifications.today' => 'Heute',
 			'notifications.tomorrow' => 'Morgen',
+			'journal_nudge.title_a' => 'Starte dein Gartentagebuch 🌱',
+			'journal_nudge.body_a' => 'Trag deine erste Aufgabe ein — was wächst bei dir?',
+			'journal_nudge.title_b' => 'Was passiert im Garten?',
+			'journal_nudge.body_b' => 'Halt fest, was du diese Woche im Garten gemacht hast.',
 			'notif_priming.title' => 'Soll ich dich rechtzeitig erinnern?',
 			'notif_priming.why' => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.',
 			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.',
@@ -864,6 +884,8 @@ extension on TranslationsDe {
 			'notif_settings.section_types' => 'Benachrichtigungsarten',
 			'notif_settings.type_reminders' => 'Aufgaben-Erinnerungen',
 			'notif_settings.type_reminders_sub' => 'lokal · funktionieren ohne Internet',
+			'notif_settings.type_journal_nudge' => 'Tagebuch-Erinnerung',
+			'notif_settings.type_journal_nudge_sub' => 'lokal · ein sanfter Anstoß, wenn es still wird',
 			'notif_settings.type_weather' => 'Smarte Hinweise (Wetter)',
 			'notif_settings.type_weather_sub' => 'demnächst · über Server',
 			'notif_settings.type_community' => 'Hinweise aus der Umgebung',

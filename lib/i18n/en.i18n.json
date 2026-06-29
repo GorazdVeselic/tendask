@@ -40,6 +40,12 @@
     "today": "Today",
     "tomorrow": "Tomorrow"
   },
+  "journal_nudge": {
+    "title_a": "Start your garden journal 🌱",
+    "body_a": "Log your first task — what's growing with you?",
+    "title_b": "What's happening in the garden?",
+    "body_b": "Jot down what you did in the garden this week."
+  },
   "notif_priming": {
     "title": "Let me remind you in time?",
     "why": "So a task doesn't slip by — the reminder arrives exactly when you set it.",
@@ -56,6 +62,8 @@
     "section_types": "Notification types",
     "type_reminders": "Task reminders",
     "type_reminders_sub": "local · works offline",
+    "type_journal_nudge": "Journal nudge",
+    "type_journal_nudge_sub": "local · a gentle nudge if you go quiet",
     "type_weather": "Smart hints (weather)",
     "type_weather_sub": "soon · via server",
     "type_community": "Nearby hints",

@@ -81,6 +81,17 @@ class TasksRepository {
           .watch();
 
   /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
+  /// Count of non-deleted tasks (any status) — drives the journal-nudge segment
+  /// (FR-16): 0 → never-activated copy, >0 → lapsed copy.
+  Future<int> totalCount() async {
+    final count = _db.tasks.id.count();
+    final query = _db.selectOnly(_db.tasks)
+      ..addColumns([count])
+      ..where(_db.tasks.deleted.equals(false));
+    final row = await query.getSingle();
+    return row.read(count) ?? 0;
+  }
+
   Future<List<Task>> pendingTasks() =>
       (_db.select(_db.tasks)..where(
             (t) =>

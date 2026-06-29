@@ -21,6 +21,22 @@ const _reminderDetails = NotificationDetails(
   ),
 );
 
+/// Separate channel for the gentle re-engagement journal nudge (FR-16) so the
+/// user can mute it in system settings without touching task reminders, and so
+/// cancelling one never touches the other. Default importance — it must never
+/// feel as urgent as a task reminder.
+const _kNudgeChannelId = 'journal_nudge';
+const _kNudgeChannelName = 'Nežna povabila k dnevniku';
+
+const _nudgeDetails = NotificationDetails(
+  android: AndroidNotificationDetails(
+    _kNudgeChannelId,
+    _kNudgeChannelName,
+    importance: Importance.defaultImportance,
+    priority: Priority.defaultPriority,
+  ),
+);
+
 /// Thin wrapper around flutter_local_notifications for local task reminders.
 /// [init] runs at bootstrap (timezone + plugin); the permission prompt is
 /// deferred to the priming screen (21) and never fired at startup. Taps deep-link
@@ -94,6 +110,42 @@ class NotificationService {
     required String title,
     required String body,
     String? payload,
+  }) => _schedule(
+    id: id,
+    when: when,
+    title: title,
+    body: body,
+    payload: payload,
+    details: _reminderDetails,
+    mode: AndroidScheduleMode.exactAllowWhileIdle,
+  );
+
+  /// Schedules a re-engagement journal nudge (FR-16) on its own channel. Inexact
+  /// (and so it needs no exact-alarm permission): a few minutes' drift around
+  /// 17:00 is irrelevant for a gentle nudge, and inexact is easier on the
+  /// battery. Reusing the same [id] replaces a previously scheduled one.
+  Future<void> scheduleNudge({
+    required int id,
+    required DateTime when,
+    required String title,
+    required String body,
+  }) => _schedule(
+    id: id,
+    when: when,
+    title: title,
+    body: body,
+    details: _nudgeDetails,
+    mode: AndroidScheduleMode.inexactAllowWhileIdle,
+  );
+
+  Future<void> _schedule({
+    required int id,
+    required DateTime when,
+    required String title,
+    required String body,
+    required NotificationDetails details,
+    required AndroidScheduleMode mode,
+    String? payload,
   }) async {
     await init();
     await _plugin.zonedSchedule(
@@ -102,8 +154,8 @@ class NotificationService {
       body: body,
       payload: payload,
       scheduledDate: tz.TZDateTime.from(when, tz.local),
-      notificationDetails: _reminderDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      notificationDetails: details,
+      androidScheduleMode: mode,
     );
   }
 

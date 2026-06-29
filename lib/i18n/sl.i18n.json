@@ -44,6 +44,12 @@
     "today": "Danes",
     "tomorrow": "Jutri"
   },
+  "journal_nudge": {
+    "title_a": "Začni svoj vrtni dnevnik 🌱",
+    "body_a": "Zabeleži prvo opravilo — kaj raste pri tebi?",
+    "title_b": "Kaj se dogaja na vrtu?",
+    "body_b": "Zabeleži, kaj si ta teden počel na vrtu."
+  },
   "notif_priming": {
     "title": "Naj te pravočasno opozorim?",
     "why": "Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.",
@@ -60,6 +66,8 @@
     "section_types": "Vrste obvestil",
     "type_reminders": "Opomniki opravil",
     "type_reminders_sub": "lokalno · delujejo brez interneta",
+    "type_journal_nudge": "Povabilo k dnevniku",
+    "type_journal_nudge_sub": "lokalno · nežno povabilo, ko utihneš",
     "type_weather": "Pametni namigi (vreme)",
     "type_weather_sub": "kmalu · prek strežnika",
     "type_community": "Namigi okolice",
