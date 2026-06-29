@@ -188,6 +188,7 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 ### Lokacija & profil
 - **Ena sama lokacija = lastnost uporabnikovega profila.** Iz nje izhajata lokalno
   vreme in (V2) **H3-celica**. Vsa območja podedujejo to lokacijo.
+  *(Gl. FR-18, če kdaj pretehtamo več lokacij/vrtov — to bi spremenilo to odločitev.)*
 - **FR-8 (2026-06-18):** ob izbiri lokacije iz trenutnih koordinat izpeljemo le
   **H3-celico (r7/r6/r5)** in koordinate **takoj zavržemo** — surovih koordinat ne
   hranimo niti na napravi. Vreme bere **centroid celice** (`cellToLatLng(profile.h3_r7)`),

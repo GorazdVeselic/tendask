@@ -470,6 +470,12 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   nove dependency/sheme/i18n; `HapticFeedback` je sistemski (brez `VIBRATE` dovoljenja), OS-onemogočena
   vibracija = no-op. Testi: jakostna preslikava (3) + branža `showConfirmDialog` (3). Polna spec:
   [`docs/feature-requests/haptics.md`](feature-requests/haptics.md).
+- **FR-18 — Več lokacij / vrtov (kandidat za premium »Tendask+«).** 💡 **Ideja/želja (2026-06-29,
+  neraziskano do spec ravni).** Več vrtov na uporabnika, vsak s svojim vremenom/rastlinami; možen
+  plačljiv dodatek. Večji poseg — trenutna arhitektura je »1 uporabnik = 1 lokacija« (lokacija =
+  lastnost profila, koncept §7.7). Srečni vzvod: `area` je že N-na-uporabnika → verjetno dovolj nova
+  `garden` tabela + `area.garden_id`. Groba ocena ~2–3 tedne (+1 IAP). Polna želja:
+  [`docs/feature-requests/multi-location.md`](feature-requests/multi-location.md).
 
 ## Dnevnik napredka
 
