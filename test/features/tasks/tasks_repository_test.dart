@@ -353,5 +353,202 @@ void main() {
     test('returns empty when no pending tasks', () async {
       expect(await repo.reminderReconcileInputs(), isEmpty);
     });
+
+    test('groups subjects with their own task, never mixed across tasks', () async {
+      const areaId2 = 'bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb';
+      await db
+          .into(db.areas)
+          .insert(
+            AreasCompanion.insert(
+              id: areaId2,
+              userId: userId,
+              name: 'Vrt 2',
+              type: const Value(AreaType.bed),
+              updatedAt: t0,
+            ),
+          );
+      final taskA = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 10)],
+      );
+      final taskB = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId2)],
+        taskTypeId: 'water',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 20)],
+      );
+
+      final byTask = {
+        for (final i in await repo.reminderReconcileInputs()) i.task.id: i,
+      };
+      expect(byTask[taskA]!.subjects.single.areaId, areaId);
+      expect(byTask[taskB]!.subjects.single.areaId, areaId2);
+    });
+
+    test('excludes deleted reminders and deleted subjects', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [
+          TaskSubjectSpec.area(areaId),
+          TaskSubjectSpec.area(areaId),
+        ],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [
+          ReminderSpec(offsetMinutes: 10),
+          ReminderSpec(offsetMinutes: 20),
+        ],
+      );
+
+      // Soft-delete one reminder and one subject directly.
+      final rem20 = (await db.select(db.taskReminders).get()).firstWhere(
+        (r) => r.offset == 20,
+      );
+      await (db.update(db.taskReminders)..where((r) => r.id.equals(rem20.id)))
+          .write(const TaskRemindersCompanion(deleted: Value(true)));
+      final firstSubject = (await db.select(db.taskSubjects).get()).first;
+      await (db.update(
+        db.taskSubjects,
+      )..where((s) => s.id.equals(firstSubject.id))).write(
+        const TaskSubjectsCompanion(deleted: Value(true)),
+      );
+
+      final only = (await repo.reminderReconcileInputs()).single;
+      expect(only.reminders.single.offset, 10);
+      expect(only.subjects, hasLength(1));
+    });
+
+    test('keeps a task whose reminder has no subjects (subjects == [])', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 10)],
+      );
+
+      final only = (await repo.reminderReconcileInputs()).single;
+      expect(only.subjects, isEmpty);
+      expect(only.reminders.single.offset, 10);
+    });
+  });
+
+  group('TasksRepository.reminderScheduleInputs', () {
+    test('one row per active reminder, joined to the task date', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [
+          ReminderSpec(offsetMinutes: 60, time: '09:00'),
+          ReminderSpec(offsetMinutes: 30),
+        ],
+      );
+
+      final rows = await repo.reminderScheduleInputs();
+      expect(rows, hasLength(2));
+      for (final r in rows) {
+        expect(r.taskDate.toUtc(), t0);
+      }
+      final byOffset = {for (final r in rows) r.offsetMinutes: r.reminderTime};
+      expect(byOffset[60], '09:00');
+      expect(byOffset.containsKey(30), isTrue);
+      expect(byOffset[30], isNull);
+    });
+
+    test('excludes deleted reminders and reminders of deleted/done tasks', () async {
+      // Active waiting task with reminder → included.
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 10)],
+      );
+      // Reminder soft-deleted → excluded.
+      final bId = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 20)],
+      );
+      await (db.update(db.taskReminders)..where((r) => r.taskId.equals(bId)))
+          .write(const TaskRemindersCompanion(deleted: Value(true)));
+      // Task soft-deleted, reminder left active → excluded by the join.
+      final cId = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        reminders: const [ReminderSpec(offsetMinutes: 30)],
+      );
+      await (db.update(db.tasks)..where((t) => t.id.equals(cId)))
+          .write(const TasksCompanion(deleted: Value(true)));
+      // Done task with reminder → excluded (join filters status=waiting).
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        status: TaskStatus.done,
+        reminders: const [ReminderSpec(offsetMinutes: 40)],
+      );
+
+      final rows = await repo.reminderScheduleInputs();
+      expect(rows, hasLength(1));
+      expect(rows.single.offsetMinutes, 10);
+    });
+
+    test('a task without reminders contributes nothing', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
+      expect(await repo.reminderScheduleInputs(), isEmpty);
+    });
+
+    test('returns empty on an empty database', () async {
+      expect(await repo.reminderScheduleInputs(), isEmpty);
+    });
+  });
+
+  group('TasksRepository.totalCount', () {
+    test('is 0 on an empty database', () async {
+      expect(await repo.totalCount(), 0);
+    });
+
+    test('counts waiting and done, excludes soft-deleted', () async {
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+      );
+      await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'water',
+        date: t0,
+        status: TaskStatus.done,
+      );
+      await repo.softDelete(
+        await repo.create(
+          userId: userId,
+          subjects: const [TaskSubjectSpec.area(areaId)],
+          taskTypeId: 'mow',
+          date: t0,
+        ),
+      );
+
+      expect(await repo.totalCount(), 2);
+    });
   });
 }
