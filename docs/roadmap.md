@@ -450,10 +450,16 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   izven `tech-stack.md §1` → najprej potrdi + pin + posodobi §1**; (B) lasten Supabase `min_supported_version`
   gate (cross-platform/iOS »force update«, dodan kasneje ob M10). Lokalno netestabilno (rabi Play track).
   Polna spec: [`docs/feature-requests/in-app-update.md`](feature-requests/in-app-update.md).
-- **FR-16 — Re-engagement opomnik za neaktivne uporabnike.** Predlog (2026-06-28, ni implementiran).
-  Vrtnar vrtnari, a pozabi vnesti. Odločitev: **lokalni dead-man's-switch = MVP** (doseže tudi
-  neaktivirane/goste, brez M11/FCM, privacy-first); FCM/R8 šele kasneje kot dodatek za prijavljene.
-  Vključuje A/B segmentacijo + anti-spam guardrails. Polna spec:
+- **FR-16 — Re-engagement opomnik za neaktivne uporabnike.** ✅ **Implementirano 2026-06-29 na `main`**
+  (commit `d29fd9d`). **Lokalni dead-man's-switch = MVP** (doseže tudi neaktivirane/goste, brez M11/FCM,
+  privacy-first); FCM/R8 ostane kot kasnejši dodatek za prijavljene. Mehanizem: namesto enega znova-
+  zakoličenega opomnika zakoličimo **fiksno verigo dveh** (dan +7, dan +28 = decay 7 → +21 → tišina); vsak
+  dotik (cold start / zapis task ali note / app resume) prekliče oba in ju zakoliči naprej — aktiven
+  uporabnik ju nikoli ne vidi. Tako so anti-spam guardraili (kapica 1×/7 dni, decay, reset ob aktivnosti)
+  zadoščeni **brez stanja v bazi**. A/B segment (`task.count==0` → »začni dnevnik« vs lapsed) izbran ob
+  zakoličenju. Ločen kanal `journal_nudge` + rezervirani **negativni** notif ID-ji (`reminder_coordinator`
+  ju izloča iz cancel-sweepa na obeh mestih); 17:00 = izven tihih ur po konstrukciji; collision-shift mimo
+  dneva s task-reminderjem; ločen toggle v zaslonu 22 (privzeto on). Polna spec:
   [`docs/feature-requests/re-engagement-nudge.md`](feature-requests/re-engagement-nudge.md).
 - **FR-17 — Haptični odziv ob ključnih akcijah.** ✅ **Implementirano 2026-06-28 na
   `feat/fr17-haptics`.** Nov `core/haptics.dart` (`AppHaptics.taskCompleted/saved/destructiveConfirmed`)
@@ -469,6 +475,23 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-29 — **FR-16: re-engagement opomnik za neaktivne uporabnike (`main`, commit `d29fd9d`).**
+  Lokalni dead-man's-switch: nova čista funkcija `journal_nudge_schedule.dart` (`journalNudgeFireTimes`,
+  testabilna) + `JournalNudgeCoordinator` (vzorec `_running`/`_dirty` + debounce kot reminder_coordinator).
+  **Ključni vpogled — decay brez fire-callbackov:** namesto enega znova-zakoličenega opomnika zakoličimo
+  fiksno **verigo dveh** (`kJournalNudgeDayOffsets=[7,28]` ob 17:00); vsak dotik (start/zapis task ali
+  note/`AppLifecycleListener.onResume`) prekliče oba in ju zakoliči naprej → aktiven uporabnik ju nikoli
+  ne vidi, tih dobi dva in nato mir = guardraili (kapica 1×/7d, decay 7→+21→stop, reset) brez stanja v
+  bazi. Ločen kanal `journal_nudge` (inexact, brez exact-alarm dovoljenja) + rezervirani **negativni**
+  ID-ji `[-201,-202]` (reminder hash je vedno ≥0 → brez trka). **Tester-najdba (kritična):**
+  `reminder_coordinator` je na **dveh** mestih (orphan-sweep + master-off veja) klical cancel čez *vse*
+  pending ID-je → bi pobrisal nudge, oba coordinatorja pa poslušata `db.profiles` → race; popravljeno z
+  izločitvijo `kJournalNudgeNotificationIds` na obeh mestih. + defensivni past-time guard (debug-skrajšava/
+  DST). A/B segment prek nove `TasksRepository.totalCount()`. i18n en/sl/de (`journal_nudge.*` +
+  `notif_settings.type_journal_nudge`). Code review + neodvisen security review (privacy-by-design potrjen:
+  generična kopija, nič PII na lock screenu). Testi (+12): čista funkcija (9) + settings round-trip/opt-out
+  (3). analyze čist, 289/289. ⏳ Preostane: on-device verifikacija (negativni ID-ji + sproženje/preklic;
+  predlog: začasni skrajšani offset).
 - 2026-06-28 — **FR-17: haptični odziv ob ključnih akcijah (`feat/fr17-haptics`).** Nov
   `lib/core/haptics.dart` z `AppHaptics` (3 statične metode = `light`/`medium`/`heavy`), edina točka
   preslikave jakosti in bodočega stikala. Načelo: haptika se sproži, **ko se dejanje zgodi**, ne ob tapu
