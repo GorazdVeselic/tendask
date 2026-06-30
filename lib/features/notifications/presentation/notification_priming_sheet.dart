@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import 'widgets/reminder_sound_banner.dart';
@@ -14,6 +15,29 @@ Future<bool?> showNotificationPriming(BuildContext context) {
     isScrollControlled: true,
     builder: (_) => const _NotificationPrimingSheet(),
   );
+}
+
+/// Outcome of asking for notification permission via [requestNotificationPermission].
+enum NotifPermission { granted, primingDeclined, denied }
+
+/// Asks for notification permission, showing the priming sheet first when needed.
+/// Returns [NotifPermission.granted] when notifications are (now) allowed,
+/// [NotifPermission.primingDeclined] when the user dismissed the soft ask, and
+/// [NotifPermission.denied] when they rejected the OS dialog. Safe to call when
+/// already granted (returns granted without any UI). Shared by the manual "add
+/// reminder" flow and the save-time check for an auto-seeded reminder (T7).
+Future<NotifPermission> requestNotificationPermission(
+  BuildContext context,
+  NotificationService notif,
+) async {
+  if (await notif.areNotificationsEnabled()) return NotifPermission.granted;
+  if (!context.mounted) return NotifPermission.primingDeclined;
+  if (await showNotificationPriming(context) != true) {
+    return NotifPermission.primingDeclined;
+  }
+  return await notif.requestPermission()
+      ? NotifPermission.granted
+      : NotifPermission.denied;
 }
 
 class _NotificationPrimingSheet extends StatelessWidget {

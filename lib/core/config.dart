@@ -95,6 +95,10 @@ const kReminderOffsetPresets = [0, 10, 60, kMinutesPerDay, 2 * kMinutesPerDay];
 /// reminder. 0 = at the time of the event. User-overridable in notification settings.
 const kDefaultReminderOffset = 0;
 
+/// Time of day for a day-based default reminder (T7) — used only when the user's
+/// preferred offset is day-based. Mirrors the reminder sheet's default time pick.
+const kDefaultReminderTime = '18:00';
+
 /// Prefilled values in the recurrence picker (FR-5) when the user first switches
 /// a task to a custom interval / a capped number of repeats (repeats = how many
 /// more times it recurs after the current one).

@@ -589,6 +589,8 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'um ${t}';
 	@override String get rem_choose_time => 'Um Uhrzeit';
 	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
+	@override String get rem_default_hint => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.';
+	@override String get rem_saved_notif_off => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.';
 	@override String get rem_perm_denied => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.';
 	@override String get rem_exact_title => 'Exakte Erinnerungen erlauben';
 	@override String get rem_exact_body => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.';
@@ -1171,6 +1173,8 @@ extension on TranslationsDe {
 			'entry.rem_at' => ({required Object t}) => 'um ${t}',
 			'entry.rem_choose_time' => 'Um Uhrzeit',
 			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',
+			'entry.rem_default_hint' => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.',
+			'entry.rem_saved_notif_off' => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.',
 			'entry.rem_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.',
 			'entry.rem_exact_title' => 'Exakte Erinnerungen erlauben',
 			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',

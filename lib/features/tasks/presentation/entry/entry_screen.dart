@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,8 +10,11 @@ import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
 import '../../../../core/haptics.dart';
+import '../../../../core/notifications/notification_service.dart';
 import '../../../../core/task_status.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../notifications/presentation/notification_priming_sheet.dart';
+import '../../../settings/application/profile_providers.dart';
 import '../../../supplies/application/supplies_providers.dart';
 import '../../../supplies/data/supply_spec.dart';
 import '../../application/tasks_providers.dart';
@@ -59,6 +64,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   Recurrence? _recurrence;
   bool _recurrenceValid = true;
 
+  // T7: a planned task is seeded one default reminder, once. The sentinel sticks
+  // even after the user removes it, so it never silently comes back.
+  bool _didSeedReminder = false;
+
   EntryStep _step = EntryStep.type;
   bool _isLoading = false;
   bool _isSaving = false;
@@ -74,6 +83,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _isLoading = true;
       _step = EntryStep.review;
       Future.microtask(_loadTask);
+    } else {
+      Future.microtask(_maybeSeedReminder);
     }
   }
 
@@ -159,6 +170,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
           ),
         );
+      // Stored reminders are authoritative — never auto-seed in edit mode.
+      _didSeedReminder = true;
       _isLoading = false;
     });
   }
@@ -194,6 +207,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           ),
         );
     });
+    unawaited(_maybeSeedReminder());
     _goTo(EntryStep.review);
   }
 
@@ -236,6 +250,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _date = date;
       if (!_statusManual) _status = _statusFromDate(date);
     });
+    unawaited(_maybeSeedReminder());
   }
 
   void _setStatus(TaskStatus status) {
@@ -243,14 +258,51 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _status = status;
       _statusManual = true;
     });
+    unawaited(_maybeSeedReminder());
+  }
+
+  // ── Default reminder seed (T7) ────────────────────────────────────────────
+
+  /// Seeds one default reminder for a planned task so the phone actually notifies
+  /// the user. Runs once (tracked by [_didSeedReminder]); skips a done/logged
+  /// task, one that already has reminders, or when task reminders are disabled.
+  Future<void> _maybeSeedReminder() async {
+    if (_didSeedReminder ||
+        _status != TaskStatus.waiting ||
+        _reminders.isNotEmpty) {
+      return;
+    }
+    final userId = ref.read(authServiceProvider).userId;
+    final settings = await ref
+        .read(profileRepositoryProvider)
+        .notificationSettings(userId);
+    if (!mounted) return;
+    // Re-check after the await: status/reminders may have changed meanwhile.
+    if (_didSeedReminder ||
+        _status != TaskStatus.waiting ||
+        _reminders.isNotEmpty ||
+        !settings.taskRemindersEnabled) {
+      return;
+    }
+    setState(() {
+      _reminders.add(
+        defaultReminderSpec(
+          offsetMinutes: settings.defaultReminderOffset,
+          taskDateLocal: _date,
+          nowLocal: DateTime.now(),
+        ),
+      );
+      _didSeedReminder = true;
+    });
   }
 
   // ── Save ──────────────────────────────────────────────────────────────────
 
   Future<void> _save() async {
     final t = context.t;
+    final messenger = ScaffoldMessenger.of(context);
     if (_subjects.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text(t.entry.err_subject),
           behavior: SnackBarBehavior.floating,
@@ -258,6 +310,20 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       );
       _goTo(EntryStep.subject);
       return;
+    }
+
+    // A planned task keeping a reminder needs OS permission to ever fire. Ask once
+    // here (priming + request); save regardless of the answer (offline-first: the
+    // task always saves, the reminder simply waits until permission is granted).
+    final wantsReminders =
+        _status == TaskStatus.waiting && _reminders.isNotEmpty;
+    var notifBlocked = false;
+    if (wantsReminders) {
+      final notif = ref.read(notificationServiceProvider);
+      notifBlocked =
+          await requestNotificationPermission(context, notif) !=
+          NotifPermission.granted;
+      if (!mounted) return;
     }
 
     setState(() => _isSaving = true);
@@ -302,7 +368,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             isDone: _status == TaskStatus.done,
           );
       AppHaptics.saved();
-      if (mounted) context.pop();
+      if (!mounted) return;
+      if (notifBlocked) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(t.entry.rem_saved_notif_off),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -391,6 +466,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                 ReminderStepBody(
                   reminders: _reminders,
                   taskDate: _date,
+                  seededDefault: _didSeedReminder,
                   onAdd: (spec) => setState(() => _reminders.add(spec)),
                   onRemove: (i) => setState(() => _reminders.removeAt(i)),
                 ),

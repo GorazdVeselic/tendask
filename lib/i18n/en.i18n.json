@@ -363,6 +363,8 @@
     "rem_at(t)": "at $t",
     "rem_choose_time": "At time",
     "rem_time_note": "The time applies to day-based offsets (e.g. \"1 day before at 18:00\").",
+    "rem_default_hint": "We added a default reminder. Remove it if you don't need it.",
+    "rem_saved_notif_off": "Task saved. Notifications are off — turn them on in settings.",
     "rem_perm_denied": "Notifications are disabled, so a reminder can't be added.",
     "rem_exact_title": "Allow exact reminders",
     "rem_exact_body": "To fire at the exact time, Tendask needs the \"Alarms & reminders\" permission. Enable it in settings, then add the reminder again.",

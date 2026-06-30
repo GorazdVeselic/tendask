@@ -371,6 +371,8 @@
     "rem_at(t)": "ob $t",
     "rem_choose_time": "Ob uri",
     "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).",
+    "rem_default_hint": "Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.",
+    "rem_saved_notif_off": "Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.",
     "rem_perm_denied": "Obvestila so onemogočena, zato opomnika ni mogoče dodati.",
     "rem_exact_title": "Dovoli točne opomnike",
     "rem_exact_body": "Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.",

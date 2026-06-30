@@ -1209,6 +1209,12 @@ class Translations$entry$en {
 	/// en: 'The time applies to day-based offsets (e.g. "1 day before at 18:00").'
 	String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
 
+	/// en: 'We added a default reminder. Remove it if you don't need it.'
+	String get rem_default_hint => 'We added a default reminder. Remove it if you don\'t need it.';
+
+	/// en: 'Task saved. Notifications are off — turn them on in settings.'
+	String get rem_saved_notif_off => 'Task saved. Notifications are off — turn them on in settings.';
+
 	/// en: 'Notifications are disabled, so a reminder can't be added.'
 	String get rem_perm_denied => 'Notifications are disabled, so a reminder can\'t be added.';
 
@@ -2154,6 +2160,8 @@ extension on Translations {
 			'entry.rem_at' => ({required Object t}) => 'at ${t}',
 			'entry.rem_choose_time' => 'At time',
 			'entry.rem_time_note' => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").',
+			'entry.rem_default_hint' => 'We added a default reminder. Remove it if you don\'t need it.',
+			'entry.rem_saved_notif_off' => 'Task saved. Notifications are off — turn them on in settings.',
 			'entry.rem_perm_denied' => 'Notifications are disabled, so a reminder can\'t be added.',
 			'entry.rem_exact_title' => 'Allow exact reminders',
 			'entry.rem_exact_body' => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.',

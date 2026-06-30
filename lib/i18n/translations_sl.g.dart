@@ -597,6 +597,8 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'ob ${t}';
 	@override String get rem_choose_time => 'Ob uri';
 	@override String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+	@override String get rem_default_hint => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.';
+	@override String get rem_saved_notif_off => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.';
 	@override String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
 	@override String get rem_exact_title => 'Dovoli točne opomnike';
 	@override String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
@@ -1179,6 +1181,8 @@ extension on TranslationsSl {
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
+			'entry.rem_default_hint' => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.',
+			'entry.rem_saved_notif_off' => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.',
 			'entry.rem_perm_denied' => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.',
 			'entry.rem_exact_title' => 'Dovoli točne opomnike',
 			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
