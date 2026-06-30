@@ -70,6 +70,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
 	@override late final _Translations$appearance$de appearance = _Translations$appearance$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
+	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
 }
 
 // Path: splash
@@ -856,6 +857,32 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get m_no_rain => 'kein Regen';
 }
 
+// Path: harvest
+class _Translations$harvest$de extends Translations$harvest$en {
+	_Translations$harvest$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Ertrag';
+	@override String get sheet_title => 'Wie viel hast du geerntet?';
+	@override String get amount_label => 'Menge';
+	@override String get amount_hint => 'z. B. 2,5';
+	@override String get unit_label => 'Einheit';
+	@override String get save => 'Speichern';
+	@override String get skip => 'Überspringen';
+	@override String get remove => 'Ertrag entfernen';
+	@override String get add => 'Ertrag hinzufügen';
+	@override String get summary_title => 'Ernte';
+	@override String get summary_total => 'Gesamt';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'Stk.';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'Bund';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1357,6 +1384,23 @@ extension on TranslationsDe {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Regen 48 h',
 			'weather.m_no_rain' => 'kein Regen',
+			'harvest.yield_section' => 'Ertrag',
+			'harvest.sheet_title' => 'Wie viel hast du geerntet?',
+			'harvest.amount_label' => 'Menge',
+			'harvest.amount_hint' => 'z. B. 2,5',
+			'harvest.unit_label' => 'Einheit',
+			'harvest.save' => 'Speichern',
+			'harvest.skip' => 'Überspringen',
+			'harvest.remove' => 'Ertrag entfernen',
+			'harvest.add' => 'Ertrag hinzufügen',
+			'harvest.summary_title' => 'Ernte',
+			'harvest.summary_total' => 'Gesamt',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'Stk.',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'Bund',
 			_ => null,
 		};
 	}

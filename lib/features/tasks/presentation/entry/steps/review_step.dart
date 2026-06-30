@@ -12,8 +12,10 @@ import '../../../../supplies/application/supplies_providers.dart';
 import '../../../../supplies/data/supply_spec.dart';
 import '../../../data/recurrence.dart';
 import '../../../data/tasks_repository.dart';
+import '../../../yield_unit.dart';
 import '../../recurrence_label.dart';
 import '../../subject_labels.dart';
+import '../../yield_format.dart';
 import '../entry_screen.dart';
 import 'reminder_step.dart';
 
@@ -31,6 +33,10 @@ class ReviewStepBody extends ConsumerWidget {
     required this.noteController,
     required this.consumesSupplies,
     required this.onFix,
+    required this.showYield,
+    required this.yieldAmount,
+    required this.yieldUnit,
+    required this.onEditYield,
   });
 
   final String? taskTypeId;
@@ -43,6 +49,11 @@ class ReviewStepBody extends ConsumerWidget {
   final TextEditingController noteController;
   final bool consumesSupplies;
   final ValueChanged<EntryStep> onFix;
+  // Harvest yield (T11) — shown only when logging a done harvest.
+  final bool showYield;
+  final double? yieldAmount;
+  final YieldUnit? yieldUnit;
+  final VoidCallback onEditYield;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -114,6 +125,15 @@ class ReviewStepBody extends ConsumerWidget {
                   sub: statusLabel,
                   onTap: () => onFix(EntryStep.when),
                 ),
+                if (showYield)
+                  _ReviewRow(
+                    label: t.harvest.yield_section,
+                    value: (yieldAmount != null && yieldUnit != null)
+                        ? formatYield(yieldAmount!, yieldUnit, t)
+                        : t.harvest.add,
+                    onTap: onEditYield,
+                    last: !consumesSupplies,
+                  ),
                 if (status == TaskStatus.waiting && recurrence != null)
                   _ReviewRow(
                     label: t.entry.recurrence_label,

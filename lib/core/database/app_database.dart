@@ -44,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -165,6 +165,12 @@ class AppDatabase extends _$AppDatabase {
       // Additive nullable column; mirrors Supabase migration.
       if (from < 11) {
         await m.addColumn(tasks, tasks.seriesId);
+      }
+      // v12: task.yield_amount + task.yield_unit record harvest yield (T11).
+      // Additive nullable columns; mirror Supabase migration 0014.
+      if (from < 12) {
+        await m.addColumn(tasks, tasks.yieldAmount);
+        await m.addColumn(tasks, tasks.yieldUnit);
       }
     },
   );

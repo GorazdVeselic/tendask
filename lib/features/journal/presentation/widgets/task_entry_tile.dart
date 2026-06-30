@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/date_format.dart';
+import '../../../../i18n/translations.g.dart';
 import '../../../tasks/presentation/widgets/recurring_badge.dart';
+import '../../../tasks/presentation/yield_format.dart';
 
 /// One task row: icon + type label + subject + time; tapping opens the detail.
 /// Shared by the journal timeline and the month-calendar day view.
@@ -29,20 +31,27 @@ class TaskEntryTile extends StatelessWidget {
         : task.taskTypeId;
     final timeStr = formatHm(task.date.toLocal());
 
+    // Subtitle combines the subject and any recorded harvest yield (T11).
+    final yieldChip = taskYieldChip(task, context.t);
+    final subtitle = [
+      if (subjectLabel != null && subjectLabel!.isNotEmpty) '🪴 $subjectLabel',
+      ?yieldChip,
+    ].join('   ');
+
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.surfaceContainerHighest,
         child: Text(icon, style: const TextStyle(fontSize: 18)),
       ),
       title: Text(label, style: theme.textTheme.bodyMedium),
-      subtitle: (subjectLabel != null && subjectLabel!.isNotEmpty)
-          ? Text(
-              '🪴 $subjectLabel',
+      subtitle: subtitle.isEmpty
+          ? null
+          : Text(
+              subtitle,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
-            )
-          : null,
+            ),
       trailing: Row(
         mainAxisSize: MainAxisSize.min,
         children: [

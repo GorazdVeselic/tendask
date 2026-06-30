@@ -70,6 +70,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
 	@override late final _Translations$appearance$sl appearance = _Translations$appearance$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
+	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
 }
 
 // Path: splash
@@ -864,6 +865,32 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get m_no_rain => 'brez dežja';
 }
 
+// Path: harvest
+class _Translations$harvest$sl extends Translations$harvest$en {
+	_Translations$harvest$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Pridelek';
+	@override String get sheet_title => 'Koliko si pobral?';
+	@override String get amount_label => 'Količina';
+	@override String get amount_hint => 'npr. 2,5';
+	@override String get unit_label => 'Enota';
+	@override String get save => 'Shrani';
+	@override String get skip => 'Preskoči';
+	@override String get remove => 'Odstrani pridelek';
+	@override String get add => 'Dodaj pridelek';
+	@override String get summary_title => 'Pridelek';
+	@override String get summary_total => 'Skupaj';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'kom';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'šop';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1365,6 +1392,23 @@ extension on TranslationsSl {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Dež 48 h',
 			'weather.m_no_rain' => 'brez dežja',
+			'harvest.yield_section' => 'Pridelek',
+			'harvest.sheet_title' => 'Koliko si pobral?',
+			'harvest.amount_label' => 'Količina',
+			'harvest.amount_hint' => 'npr. 2,5',
+			'harvest.unit_label' => 'Enota',
+			'harvest.save' => 'Shrani',
+			'harvest.skip' => 'Preskoči',
+			'harvest.remove' => 'Odstrani pridelek',
+			'harvest.add' => 'Dodaj pridelek',
+			'harvest.summary_title' => 'Pridelek',
+			'harvest.summary_total' => 'Skupaj',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'kom',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'šop',
 			_ => null,
 		};
 	}

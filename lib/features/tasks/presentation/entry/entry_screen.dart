@@ -20,6 +20,9 @@ import '../../../supplies/data/supply_spec.dart';
 import '../../application/tasks_providers.dart';
 import '../../data/recurrence.dart';
 import '../../data/tasks_repository.dart';
+import '../../harvest.dart';
+import '../../yield_unit.dart';
+import '../yield_sheet.dart';
 import 'steps/reminder_step.dart';
 import 'steps/review_step.dart';
 import 'steps/subject_step.dart';
@@ -63,6 +66,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   bool _statusManual = false;
   Recurrence? _recurrence;
   bool _recurrenceValid = true;
+  // Harvest yield (T11), captured only when logging a done harvest in create.
+  double? _yieldAmount;
+  YieldUnit? _yieldUnit;
 
   // T7: a planned task is seeded one default reminder, once. The sentinel sticks
   // even after the user removes it, so it never silently comes back.
@@ -296,6 +302,30 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     });
   }
 
+  // ── Yield (harvest only) ──────────────────────────────────────────────────
+
+  Future<void> _editYield() async {
+    final initial = (_yieldAmount != null && _yieldUnit != null)
+        ? YieldDraft(amount: _yieldAmount!, unit: _yieldUnit!)
+        : null;
+    final result = await showYieldSheet(
+      context,
+      initial: initial,
+      allowRemove: initial != null,
+    );
+    if (!mounted || result == null) return;
+    setState(() {
+      switch (result) {
+        case YieldSaved(:final draft):
+          _yieldAmount = draft.amount;
+          _yieldUnit = draft.unit;
+        case YieldCleared():
+          _yieldAmount = null;
+          _yieldUnit = null;
+      }
+    });
+  }
+
   // ── Save ──────────────────────────────────────────────────────────────────
 
   Future<void> _save() async {
@@ -356,9 +386,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           subjects: _subjects,
           recurrence: recurrence?.encode(),
           reminders: reminders,
+          // A type change away from harvest drops the recorded yield. Preserve
+          // when the type is unknown (catalog not loaded) — only a positively
+          // non-harvest type clears it.
+          typeRecordsYield: _selectedType == null || isHarvestType(_selectedType),
         );
         taskId = widget.taskId!;
       } else {
+        // Yield is only meaningful when logging a harvest as already done.
+        final harvestDone =
+            _status == TaskStatus.done && isHarvestType(_selectedType);
         taskId = await repo.create(
           userId: ref.read(authServiceProvider).userId,
           taskTypeId: _taskTypeId!,
@@ -368,6 +405,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           subjects: _subjects,
           recurrence: recurrence?.encode(),
           reminders: reminders,
+          yieldAmount: harvestDone ? _yieldAmount : null,
+          yieldUnit: harvestDone ? _yieldUnit : null,
         );
       }
       await ref
@@ -497,6 +536,13 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   consumesSupplies:
                       kSuppliesEnabled && (type?.consumesSupplies ?? false),
                   onFix: _goTo,
+                  showYield:
+                      !_isEdit &&
+                      _status == TaskStatus.done &&
+                      isHarvestType(type),
+                  yieldAmount: _yieldAmount,
+                  yieldUnit: _yieldUnit,
+                  onEditYield: _editYield,
                 ),
               ],
             ),

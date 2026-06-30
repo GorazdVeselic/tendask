@@ -29,8 +29,13 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 11', () {
-    expect(db.schemaVersion, 11);
+  test('schema version is 12', () {
+    expect(db.schemaVersion, 12);
+  });
+
+  test('v12: task carries the harvest yield columns (T11)', () async {
+    expect(await columnExists('task', 'yield_amount'), isTrue);
+    expect(await columnExists('task', 'yield_unit'), isTrue);
   });
 
   test('current schema has no device_location, keeps the user tables', () async {

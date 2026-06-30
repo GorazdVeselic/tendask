@@ -501,4 +501,52 @@ void main() {
     expect(c.id.value, 't1');
     expect(c.taskTypeId.value, 'water');
   });
+
+  test('taskToRemote: includes harvest yield (T11)', () {
+    final map = taskToRemote(
+      Task(
+        id: 't1',
+        userId: 'u1',
+        taskTypeId: 'harvest',
+        date: t0,
+        status: TaskStatus.done,
+        updatedAt: t0,
+        deleted: false,
+        syncStatus: kSyncPending,
+        yieldAmount: 2.5,
+        yieldUnit: 'kg',
+      ),
+    );
+    expect(map['yield_amount'], 2.5);
+    expect(map['yield_unit'], 'kg');
+  });
+
+  test('taskFromRemote: yield parsed; unknown unit kept verbatim (tolerant)', () {
+    final c = taskFromRemote({
+      'id': 't1',
+      'user_id': 'u1',
+      'task_type_id': 'harvest',
+      'date': '2026-06-05T10:00:00.000Z',
+      'status': 'done',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+      'yield_amount': 3, // int from JSON → double
+      'yield_unit': 'tonnes', // unknown to this app version
+    });
+    expect(c.yieldAmount.value, 3.0);
+    // Stored as-is so it round-trips; the display layer parses it leniently.
+    expect(c.yieldUnit.value, 'tonnes');
+  });
+
+  test('taskFromRemote: missing yield columns default to null', () {
+    final c = taskFromRemote({
+      'id': 't2',
+      'user_id': 'u1',
+      'task_type_id': 'harvest',
+      'date': '2026-06-05T10:00:00.000Z',
+      'status': 'waiting',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.yieldAmount.value, isNull);
+    expect(c.yieldUnit.value, isNull);
+  });
 }

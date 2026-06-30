@@ -7,7 +7,9 @@ import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/seed_service.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/supplies/data/supplies_repository.dart';
+import 'package:tendask/features/tasks/data/recurrence.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
+import 'package:tendask/features/tasks/yield_unit.dart';
 
 class _FakeClock implements Clock {
   _FakeClock(DateTime now) : _now = now;
@@ -549,6 +551,182 @@ void main() {
       );
 
       expect(await repo.totalCount(), 2);
+    });
+  });
+
+  group('TasksRepository yield (T11)', () {
+    Future<String> harvest({
+      TaskStatus status = TaskStatus.done,
+      String? recurrence,
+    }) => repo.create(
+      userId: userId,
+      subjects: const [TaskSubjectSpec.area(areaId)],
+      taskTypeId: 'harvest',
+      date: t0,
+      status: status,
+      recurrence: recurrence,
+    );
+
+    test('create stores amount + unit', () async {
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'harvest',
+        date: t0,
+        status: TaskStatus.done,
+        yieldAmount: 2.5,
+        yieldUnit: YieldUnit.kg,
+      );
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, 2.5);
+      expect(task.yieldUnit, 'kg');
+    });
+
+    test('create with amount but no unit stores neither (both-or-neither)', () async {
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'harvest',
+        date: t0,
+        status: TaskStatus.done,
+        yieldAmount: 2.5,
+      );
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('create with a non-positive amount stores neither (matches CHECK)', () async {
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'harvest',
+        date: t0,
+        status: TaskStatus.done,
+        yieldAmount: 0,
+        yieldUnit: YieldUnit.kg,
+      );
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('setYield with a non-positive amount clears (matches CHECK)', () async {
+      final id = await harvest();
+      await repo.setYield(id, amount: 2, unit: YieldUnit.kg);
+      await repo.setYield(id, amount: -1, unit: YieldUnit.kg);
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('complete records yield on the task', () async {
+      final id = await harvest(status: TaskStatus.waiting);
+      await repo.complete(id, yieldAmount: 3, yieldUnit: YieldUnit.pieces);
+      final task = await repo.byId(id);
+      expect(task!.status, TaskStatus.done);
+      expect(task.yieldAmount, 3);
+      expect(task.yieldUnit, 'pieces');
+      expect(task.syncStatus, 'pending');
+    });
+
+    test('complete without yield leaves the columns null', () async {
+      final id = await harvest(status: TaskStatus.waiting);
+      await repo.complete(id);
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('setYield adds, edits, then clears', () async {
+      final id = await harvest();
+      await repo.setYield(id, amount: 1.5, unit: YieldUnit.kg);
+      var task = await repo.byId(id);
+      expect(task!.yieldAmount, 1.5);
+      expect(task.yieldUnit, 'kg');
+
+      await repo.setYield(id, amount: 4, unit: YieldUnit.bunch);
+      task = await repo.byId(id);
+      expect(task!.yieldAmount, 4);
+      expect(task.yieldUnit, 'bunch');
+
+      await repo.setYield(id, amount: null, unit: null);
+      task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+      expect(task.syncStatus, 'pending');
+    });
+
+    test('setYield with a half pair clears (both-or-neither)', () async {
+      final id = await harvest();
+      await repo.setYield(id, amount: 5, unit: YieldUnit.kg);
+      await repo.setYield(id, amount: 5, unit: null);
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('revertToWaiting clears the recorded yield', () async {
+      final id = await harvest(status: TaskStatus.waiting);
+      await repo.complete(id, yieldAmount: 2, yieldUnit: YieldUnit.kg);
+      await repo.revertToWaiting(id);
+      final task = await repo.byId(id);
+      expect(task!.status, TaskStatus.waiting);
+      expect(task.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('updateTask clears yield when the new type no longer records it', () async {
+      final id = await harvest();
+      await repo.setYield(id, amount: 2, unit: YieldUnit.kg);
+      await repo.updateTask(
+        id: id,
+        taskTypeId: 'water',
+        status: TaskStatus.done,
+        date: t0,
+        note: null,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        typeRecordsYield: false,
+      );
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, isNull);
+      expect(task.yieldUnit, isNull);
+    });
+
+    test('updateTask preserves yield when the type still records it', () async {
+      final id = await harvest();
+      await repo.setYield(id, amount: 2, unit: YieldUnit.kg);
+      await repo.updateTask(
+        id: id,
+        taskTypeId: 'harvest',
+        status: TaskStatus.done,
+        date: t0,
+        note: 'edited',
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        typeRecordsYield: true,
+      );
+      final task = await repo.byId(id);
+      expect(task!.yieldAmount, 2);
+      expect(task.yieldUnit, 'kg');
+      expect(task.note, 'edited');
+    });
+
+    test('completing a recurring harvest records yield only on this instance',
+        () async {
+      final id = await harvest(
+        status: TaskStatus.waiting,
+        recurrence: const Recurrence(everyDays: 7).encode(),
+      );
+      await repo.complete(id, yieldAmount: 2, yieldUnit: YieldUnit.kg);
+
+      final done = await repo.byId(id);
+      expect(done!.yieldAmount, 2);
+
+      final pending = await repo.watchPending().first;
+      expect(pending, hasLength(1));
+      expect(pending.single.id, isNot(id));
+      expect(pending.single.yieldAmount, isNull);
+      expect(pending.single.yieldUnit, isNull);
     });
   });
 }

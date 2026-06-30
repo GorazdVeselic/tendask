@@ -565,5 +565,24 @@
     "m_et0": "ET₀",
     "m_rain48h": "Rain 48 h",
     "m_no_rain": "no rain"
+  },
+  "harvest": {
+    "yield_section": "Yield",
+    "sheet_title": "How much did you harvest?",
+    "amount_label": "Amount",
+    "amount_hint": "e.g. 2.5",
+    "unit_label": "Unit",
+    "save": "Save",
+    "skip": "Skip",
+    "remove": "Remove yield",
+    "add": "Add yield",
+    "summary_title": "Harvest",
+    "summary_total": "Total",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "pcs",
+    "unit_l": "l",
+    "unit_bunch": "bunch"
   }
 }

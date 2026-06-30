@@ -20,12 +20,16 @@ import '../../weather/presentation/weather_card.dart';
 import '../application/tasks_providers.dart';
 import '../data/recurrence.dart';
 import '../data/tasks_repository.dart';
+import '../harvest.dart';
+import '../yield_unit.dart';
 import '../../../i18n/translations.g.dart';
 import 'entry/steps/reminder_step.dart';
 import 'recurrence_label.dart';
 import 'subject_labels.dart';
 import 'task_actions.dart';
 import 'widgets/confirm_delete_dialog.dart';
+import 'yield_format.dart';
+import 'yield_sheet.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
   const TaskDetailScreen({super.key, required this.id});
@@ -57,7 +61,13 @@ class TaskDetailScreen extends ConsumerWidget {
             onPressed: () {
               final task = taskAsync.asData?.value;
               if (task != null) {
-                _openActionMenu(context, router, task, repo);
+                _openActionMenu(
+                  context,
+                  router,
+                  task,
+                  repo,
+                  isHarvest: isHarvestType(catalog?[task.taskTypeId]),
+                );
               }
             },
           ),
@@ -160,6 +170,11 @@ class TaskDetailScreen extends ConsumerWidget {
                       ),
                       SectionLabel(t.task_detail.section_weather),
                       _WeatherSection(task: task),
+                      if (isHarvestType(taskType) &&
+                          task.status == TaskStatus.done) ...[
+                        SectionLabel(t.harvest.yield_section),
+                        _YieldSection(task: task),
+                      ],
                       SectionLabel(t.task_detail.section_details),
                       _DetailsCard(
                         task: task,
@@ -175,7 +190,12 @@ class TaskDetailScreen extends ConsumerWidget {
                 onComplete: () {
                   AppHaptics.taskCompleted();
                   unawaited(
-                    completeTask(context, repo, id).then((_) => router.pop()),
+                    completeTask(
+                      context,
+                      repo,
+                      id,
+                      harvest: isHarvestType(taskType),
+                    ).then((_) => router.pop()),
                   );
                 },
                 onPostpone: () => unawaited(repo.postponeOneDay(id)),
@@ -224,8 +244,9 @@ class TaskDetailScreen extends ConsumerWidget {
     BuildContext context,
     GoRouter router,
     Task task,
-    TasksRepository repo,
-  ) {
+    TasksRepository repo, {
+    bool isHarvest = false,
+  }) {
     final isWaiting = task.status == TaskStatus.waiting;
     showModalBottomSheet<void>(
       context: context,
@@ -252,6 +273,7 @@ class TaskDetailScreen extends ConsumerWidget {
                         context,
                         repo,
                         task.id,
+                        harvest: isHarvest,
                       ).then((_) => router.pop()),
                     );
                   },
@@ -552,6 +574,79 @@ class _WeatherSection extends StatelessWidget {
               ),
             ),
           ],
+        ),
+      ),
+    );
+  }
+}
+
+// ─── Yield section (harvest only) ─────────────────────────────────────────────
+
+class _YieldSection extends ConsumerWidget {
+  const _YieldSection({required this.task});
+
+  final Task task;
+
+  Future<void> _edit(BuildContext context, WidgetRef ref) async {
+    // Capture the repo before the await — a WidgetRef must not be read after an
+    // await (the section can unmount while the sheet is open).
+    final repo = ref.read(tasksRepositoryProvider);
+    final amount = task.yieldAmount;
+    final unit = yieldUnitFromName(task.yieldUnit);
+    final initial = (amount != null && unit != null)
+        ? YieldDraft(amount: amount, unit: unit)
+        : null;
+    final result = await showYieldSheet(
+      context,
+      initial: initial,
+      allowRemove: initial != null,
+    );
+    if (result == null) return; // dismissed → no change
+    switch (result) {
+      case YieldSaved(:final draft):
+        await repo.setYield(task.id, amount: draft.amount, unit: draft.unit);
+      case YieldCleared():
+        await repo.setYield(task.id, amount: null, unit: null);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    final amount = task.yieldAmount;
+    final unit = yieldUnitFromName(task.yieldUnit);
+    final hasYield = amount != null;
+
+    return Card(
+      child: InkWell(
+        borderRadius: BorderRadius.circular(12),
+        onTap: () => unawaited(_edit(context, ref)),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
+            children: [
+              const Text('🧺', style: TextStyle(fontSize: 20)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  hasYield ? formatYield(amount, unit, t) : t.harvest.add,
+                  style: hasYield
+                      ? theme.textTheme.titleMedium?.copyWith(
+                          fontWeight: FontWeight.w700,
+                        )
+                      : theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                        ),
+                ),
+              ),
+              Icon(
+                hasYield ? Icons.edit_outlined : Icons.add,
+                size: 20,
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ],
+          ),
         ),
       ),
     );

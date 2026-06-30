@@ -573,5 +573,24 @@
     "m_et0": "ET₀",
     "m_rain48h": "Dež 48 h",
     "m_no_rain": "brez dežja"
+  },
+  "harvest": {
+    "yield_section": "Pridelek",
+    "sheet_title": "Koliko si pobral?",
+    "amount_label": "Količina",
+    "amount_hint": "npr. 2,5",
+    "unit_label": "Enota",
+    "save": "Shrani",
+    "skip": "Preskoči",
+    "remove": "Odstrani pridelek",
+    "add": "Dodaj pridelek",
+    "summary_title": "Pridelek",
+    "summary_total": "Skupaj",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "kom",
+    "unit_l": "l",
+    "unit_bunch": "šop"
   }
 }
