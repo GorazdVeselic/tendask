@@ -750,6 +750,8 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get pick_new => 'Novo sredstvo';
 	@override String get amount => 'Porabljena količina';
 	@override String get add_confirm => 'Dodaj';
+	@override String get form_delete => 'Izbriši sredstvo';
+	@override String get delete_note => 'Sredstvo bo odstranjeno s tvojega seznama.';
 }
 
 // Path: settings
@@ -1278,6 +1280,8 @@ extension on TranslationsSl {
 			'supplies.pick_new' => 'Novo sredstvo',
 			'supplies.amount' => 'Porabljena količina',
 			'supplies.add_confirm' => 'Dodaj',
+			'supplies.form_delete' => 'Izbriši sredstvo',
+			'supplies.delete_note' => 'Sredstvo bo odstranjeno s tvojega seznama.',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',

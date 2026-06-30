@@ -159,7 +159,7 @@ const kVersionChannel = ' (beta)';
 /// Supplies feature gate (temporarily off): hides the supplies wizard step and
 /// the settings garden/supplies section without removing the code. Flip to true
 /// to re-enable. See entry_screen (step list) and settings_screen.
-const kSuppliesEnabled = false;
+const kSuppliesEnabled = true;
 
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays

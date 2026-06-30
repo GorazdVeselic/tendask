@@ -473,7 +473,9 @@
     "add_to_task": "Add supply",
     "pick_new": "New supply",
     "amount": "Amount used",
-    "add_confirm": "Add"
+    "add_confirm": "Add",
+    "form_delete": "Delete supply",
+    "delete_note": "This supply will be removed from your list."
   },
   "settings": {
     "title": "Settings",

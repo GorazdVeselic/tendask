@@ -481,7 +481,9 @@
     "add_to_task": "Dodaj sredstvo",
     "pick_new": "Novo sredstvo",
     "amount": "Porabljena količina",
-    "add_confirm": "Dodaj"
+    "add_confirm": "Dodaj",
+    "form_delete": "Izbriši sredstvo",
+    "delete_note": "Sredstvo bo odstranjeno s tvojega seznama."
   },
   "settings": {
     "title": "Nastavitve",

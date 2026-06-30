@@ -1559,6 +1559,12 @@ class Translations$supplies$en {
 
 	/// en: 'Add'
 	String get add_confirm => 'Add';
+
+	/// en: 'Delete supply'
+	String get form_delete => 'Delete supply';
+
+	/// en: 'This supply will be removed from your list.'
+	String get delete_note => 'This supply will be removed from your list.';
 }
 
 // Path: settings
@@ -2253,6 +2259,8 @@ extension on Translations {
 			'supplies.pick_new' => 'New supply',
 			'supplies.amount' => 'Amount used',
 			'supplies.add_confirm' => 'Add',
+			'supplies.form_delete' => 'Delete supply',
+			'supplies.delete_note' => 'This supply will be removed from your list.',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',

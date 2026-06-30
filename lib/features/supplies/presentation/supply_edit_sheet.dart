@@ -3,6 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
+import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
@@ -112,6 +114,20 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
     if (mounted) Navigator.of(context).pop(id);
   }
 
+  Future<void> _delete() async {
+    final t = context.t;
+    final confirmed = await showConfirmDialog(
+      context,
+      title: t.supplies.form_delete,
+      body: t.supplies.delete_note,
+      confirmLabel: t.supplies.form_delete,
+      cancelLabel: t.tasks_list.delete_cancel,
+    );
+    if (!confirmed || !mounted) return;
+    await ref.read(suppliesRepositoryProvider).softDelete(widget.supplyId!);
+    if (mounted) Navigator.of(context).pop();
+  }
+
   void _err(String msg) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(content: Text(msg), behavior: SnackBarBehavior.floating),
@@ -215,6 +231,11 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
                           : Text(t.supplies.form_save),
                     ),
                   ),
+                  if (_isEdit)
+                    DestructiveButton(
+                      label: t.supplies.form_delete,
+                      onPressed: _delete,
+                    ),
                 ],
               ),
             ),

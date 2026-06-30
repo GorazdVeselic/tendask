@@ -473,7 +473,9 @@
     "add_to_task": "Mittel hinzufügen",
     "pick_new": "Neues Mittel",
     "amount": "Verbrauchte Menge",
-    "add_confirm": "Hinzufügen"
+    "add_confirm": "Hinzufügen",
+    "form_delete": "Material löschen",
+    "delete_note": "Dieses Material wird aus deiner Liste entfernt."
   },
   "settings": {
     "title": "Einstellungen",

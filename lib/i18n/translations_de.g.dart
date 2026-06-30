@@ -742,6 +742,8 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get pick_new => 'Neues Mittel';
 	@override String get amount => 'Verbrauchte Menge';
 	@override String get add_confirm => 'Hinzufügen';
+	@override String get form_delete => 'Material löschen';
+	@override String get delete_note => 'Dieses Material wird aus deiner Liste entfernt.';
 }
 
 // Path: settings
@@ -1270,6 +1272,8 @@ extension on TranslationsDe {
 			'supplies.pick_new' => 'Neues Mittel',
 			'supplies.amount' => 'Verbrauchte Menge',
 			'supplies.add_confirm' => 'Hinzufügen',
+			'supplies.form_delete' => 'Material löschen',
+			'supplies.delete_note' => 'Dieses Material wird aus deiner Liste entfernt.',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
