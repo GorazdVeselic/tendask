@@ -240,7 +240,17 @@ opravljena/retrospektivna ga ne dobijo. Sprejete izbire (faza 0):
 UX: predizpolnjeni opomnik se pokaže kot navadna odstranljiva vrstica (korak 4 + Pregled), pod njo
 medel hint (`rem_default_hint`). Nove i18n ključe (`rem_default_hint`, `rem_saved_notif_off`, sl/en/de).
 Koda v commitu `1eac918`; testi: 4 unit (`defaultReminderSpec` + clamp) + 2 widget (načrtovano dobi
-odstranljiv opomnik; opravljeno ne). ⏳ on-device verifikacija.
+odstranljiv opomnik; opravljeno ne).
+
+**Popravek (2026-06-30, on-device): exact-alarm gate tudi ob shranjevanju.** Prva izvedba je ob
+shranjevanju prosila le za obvestila, ne pa za exact-alarm (Android 14+ `SCHEDULE_EXACT_ALARM`), ki ga
+ročni »+ Dodaj« tok vedno zahteva. Posledica: na svežem deployu (kjer je sistemsko stikalo »Budilke in
+opomniki« privzeto izklopljeno) se je seed-opomnik shranil, a se v OS **ni razporedil** (reconcile:
+`exact_alarms_not_permitted`) in **ni zvonil**. Dovoljenjska logika izločena v skupni helper
+`requestReminderPermissions` (priming + obvestila + exact-alarm gate), ki ga deli ročni in save-time
+tok; ob manjkajočem dovoljenju se opravilo, kot pri ročnem dodajanju, ne shrani (uporabnik vklopi in
+znova shrani). On-device potrjeno (SM A536B, staging): seed + dialog + razporeditev alarma
+(`OW=2026-07-01 00:00:00`). Commit `b88bf68`.
 
 ---
 
