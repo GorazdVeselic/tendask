@@ -9,6 +9,7 @@ import '../../../../core/task_status.dart';
 import '../../../../core/widgets/swipe_actions.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/tasks_providers.dart';
+import '../task_actions.dart';
 
 /// Wraps a task row in the shared reveal-swipe with status-appropriate actions:
 /// swipe left → status (waiting: complete / +1 day, done: reopen); swipe right →
@@ -28,7 +29,7 @@ class TaskSwipe extends ConsumerWidget {
         ? [
             completeSwipe(context, () {
               AppHaptics.taskCompleted();
-              unawaited(repo.complete(task.id));
+              unawaited(completeTask(context, repo, task.id));
             }),
             postponeSwipe(
               context,
@@ -36,10 +37,7 @@ class TaskSwipe extends ConsumerWidget {
             ),
           ]
         : [
-            revertSwipe(
-              context,
-              () => unawaited(repo.revertToWaiting(task.id)),
-            ),
+            revertSwipe(context, () => revertTask(context, repo, task)),
           ];
     return SwipeRow(
       itemKey: task.id,

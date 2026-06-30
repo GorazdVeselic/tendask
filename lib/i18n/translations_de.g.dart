@@ -445,9 +445,12 @@ class _Translations$task_detail$de extends Translations$task_detail$en {
 	@override String get action_delete => 'Löschen';
 	@override String get action_revert => 'Zurück auf Ausstehend';
 	@override String get action_move => 'Verschieben';
-	@override String get recurrence_once => 'Einmalig';
+	@override String get action_stop_recurrence => 'Wiederholung beenden';
+	@override String get recurrence_none => 'Nein';
+	@override String get recurrence_daily => 'Täglich';
 	@override String get recurrence_weekly => 'Wöchentlich';
-	@override String get recurrence_seasonal => 'Saisonal';
+	@override String recurrence_every_days({required Object n}) => 'Alle ${n} Tage';
+	@override String recurrence_remaining({required Object n}) => ' · noch ${n}×';
 	@override String get none => '—';
 	@override String get not_found => 'Aufgabe nicht gefunden.';
 }
@@ -482,6 +485,9 @@ class _Translations$tasks_list$de extends Translations$tasks_list$en {
 	@override String get delete_confirm_body => 'Diese Aktion kann nicht rückgängig gemacht werden.';
 	@override String get delete_yes => 'Löschen';
 	@override String get delete_cancel => 'Abbrechen';
+	@override String get recurring_badge_tooltip => 'Wiederkehrende Aufgabe';
+	@override String completed_recurring_toast({required Object date}) => '↻ Wiederholt · nächste ${date}';
+	@override String get revert_blocked_recurring => 'Rückgängig nicht möglich — die nächste Aufgabe der Serie existiert bereits. Bei Bedarf löschen.';
 }
 
 // Path: subject_picker
@@ -536,6 +542,18 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get when_status_waiting => 'Wartet';
 	@override String get when_status_done => 'Erledigt';
 	@override String get when_status_note => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.';
+	@override String get recurrence_label => 'Wiederholung';
+	@override String get recurrence_off => 'Keine';
+	@override String get recurrence_daily => 'Täglich';
+	@override String get recurrence_weekly => 'Wöchentlich';
+	@override String get recurrence_custom => 'Eigene';
+	@override String get recurrence_interval_label => 'Alle';
+	@override String get recurrence_days_unit => 'Tage';
+	@override String get recurrence_repeat_count => 'Eine bestimmte Anzahl wiederholen';
+	@override String get recurrence_times_unit => 'Mal';
+	@override String get recurrence_repeat_count_hint => 'Wiederholt sich unbegrenzt; beende es bei der Aufgabe (⋯ → Wiederholung beenden).';
+	@override String get recurrence_invalid_number => 'Zahl eingeben';
+	@override String recurrence_next_preview({required Object date}) => 'Nächste: ${date}';
 	@override String get reminder_title => 'Erinnerung';
 	@override String get optional => '(optional)';
 	@override String get reminder_why => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.';
@@ -1039,9 +1057,12 @@ extension on TranslationsDe {
 			'task_detail.action_delete' => 'Löschen',
 			'task_detail.action_revert' => 'Zurück auf Ausstehend',
 			'task_detail.action_move' => 'Verschieben',
-			'task_detail.recurrence_once' => 'Einmalig',
+			'task_detail.action_stop_recurrence' => 'Wiederholung beenden',
+			'task_detail.recurrence_none' => 'Nein',
+			'task_detail.recurrence_daily' => 'Täglich',
 			'task_detail.recurrence_weekly' => 'Wöchentlich',
-			'task_detail.recurrence_seasonal' => 'Saisonal',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Alle ${n} Tage',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · noch ${n}×',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Aufgabe nicht gefunden.',
 			'tasks_list.title' => 'Aufgaben',
@@ -1064,6 +1085,9 @@ extension on TranslationsDe {
 			'tasks_list.delete_confirm_body' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
 			'tasks_list.delete_yes' => 'Löschen',
 			'tasks_list.delete_cancel' => 'Abbrechen',
+			'tasks_list.recurring_badge_tooltip' => 'Wiederkehrende Aufgabe',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Wiederholt · nächste ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Rückgängig nicht möglich — die nächste Aufgabe der Serie existiert bereits. Bei Bedarf löschen.',
 			'subject_picker.title' => 'Pflanze oder Bereich',
 			'subject_picker.choose' => 'Wählen',
 			'entry.title_new' => 'Neue Aufgabe',
@@ -1100,6 +1124,18 @@ extension on TranslationsDe {
 			'entry.when_status_waiting' => 'Wartet',
 			'entry.when_status_done' => 'Erledigt',
 			'entry.when_status_note' => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.',
+			'entry.recurrence_label' => 'Wiederholung',
+			'entry.recurrence_off' => 'Keine',
+			'entry.recurrence_daily' => 'Täglich',
+			'entry.recurrence_weekly' => 'Wöchentlich',
+			'entry.recurrence_custom' => 'Eigene',
+			'entry.recurrence_interval_label' => 'Alle',
+			'entry.recurrence_days_unit' => 'Tage',
+			'entry.recurrence_repeat_count' => 'Eine bestimmte Anzahl wiederholen',
+			'entry.recurrence_times_unit' => 'Mal',
+			'entry.recurrence_repeat_count_hint' => 'Wiederholt sich unbegrenzt; beende es bei der Aufgabe (⋯ → Wiederholung beenden).',
+			'entry.recurrence_invalid_number' => 'Zahl eingeben',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Nächste: ${date}',
 			'entry.reminder_title' => 'Erinnerung',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.',

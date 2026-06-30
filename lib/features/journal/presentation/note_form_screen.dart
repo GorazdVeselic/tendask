@@ -293,6 +293,7 @@ class _DateSegment extends StatelessWidget {
         ),
       ],
       selected: {option},
+      showSelectedIcon: false,
       onSelectionChanged: (s) {
         final picked = s.first;
         if (picked == _DateOption.custom) {

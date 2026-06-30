@@ -3224,6 +3224,17 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  @override
+  late final GeneratedColumn<String> seriesId = GeneratedColumn<String>(
+    'series_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -3272,6 +3283,7 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     note,
     weather,
     recurrence,
+    seriesId,
     updatedAt,
     deleted,
     syncStatus,
@@ -3338,6 +3350,12 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         recurrence.isAcceptableOrUnknown(data['recurrence']!, _recurrenceMeta),
       );
     }
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -3401,6 +3419,10 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}recurrence'],
       ),
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_id'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -3434,6 +3456,7 @@ class Task extends DataClass implements Insertable<Task> {
   final String? note;
   final String? weather;
   final String? recurrence;
+  final String? seriesId;
   final DateTime updatedAt;
   final bool deleted;
   final String syncStatus;
@@ -3446,6 +3469,7 @@ class Task extends DataClass implements Insertable<Task> {
     this.note,
     this.weather,
     this.recurrence,
+    this.seriesId,
     required this.updatedAt,
     required this.deleted,
     required this.syncStatus,
@@ -3471,6 +3495,9 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || recurrence != null) {
       map['recurrence'] = Variable<String>(recurrence);
     }
+    if (!nullToAbsent || seriesId != null) {
+      map['series_id'] = Variable<String>(seriesId);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['deleted'] = Variable<bool>(deleted);
     map['sync_status'] = Variable<String>(syncStatus);
@@ -3491,6 +3518,9 @@ class Task extends DataClass implements Insertable<Task> {
       recurrence: recurrence == null && nullToAbsent
           ? const Value.absent()
           : Value(recurrence),
+      seriesId: seriesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesId),
       updatedAt: Value(updatedAt),
       deleted: Value(deleted),
       syncStatus: Value(syncStatus),
@@ -3513,6 +3543,7 @@ class Task extends DataClass implements Insertable<Task> {
       note: serializer.fromJson<String?>(json['note']),
       weather: serializer.fromJson<String?>(json['weather']),
       recurrence: serializer.fromJson<String?>(json['recurrence']),
+      seriesId: serializer.fromJson<String?>(json['seriesId']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
@@ -3532,6 +3563,7 @@ class Task extends DataClass implements Insertable<Task> {
       'note': serializer.toJson<String?>(note),
       'weather': serializer.toJson<String?>(weather),
       'recurrence': serializer.toJson<String?>(recurrence),
+      'seriesId': serializer.toJson<String?>(seriesId),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
       'syncStatus': serializer.toJson<String>(syncStatus),
@@ -3547,6 +3579,7 @@ class Task extends DataClass implements Insertable<Task> {
     Value<String?> note = const Value.absent(),
     Value<String?> weather = const Value.absent(),
     Value<String?> recurrence = const Value.absent(),
+    Value<String?> seriesId = const Value.absent(),
     DateTime? updatedAt,
     bool? deleted,
     String? syncStatus,
@@ -3559,6 +3592,7 @@ class Task extends DataClass implements Insertable<Task> {
     note: note.present ? note.value : this.note,
     weather: weather.present ? weather.value : this.weather,
     recurrence: recurrence.present ? recurrence.value : this.recurrence,
+    seriesId: seriesId.present ? seriesId.value : this.seriesId,
     updatedAt: updatedAt ?? this.updatedAt,
     deleted: deleted ?? this.deleted,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -3577,6 +3611,7 @@ class Task extends DataClass implements Insertable<Task> {
       recurrence: data.recurrence.present
           ? data.recurrence.value
           : this.recurrence,
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       syncStatus: data.syncStatus.present
@@ -3596,6 +3631,7 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('note: $note, ')
           ..write('weather: $weather, ')
           ..write('recurrence: $recurrence, ')
+          ..write('seriesId: $seriesId, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus')
@@ -3613,6 +3649,7 @@ class Task extends DataClass implements Insertable<Task> {
     note,
     weather,
     recurrence,
+    seriesId,
     updatedAt,
     deleted,
     syncStatus,
@@ -3629,6 +3666,7 @@ class Task extends DataClass implements Insertable<Task> {
           other.note == this.note &&
           other.weather == this.weather &&
           other.recurrence == this.recurrence &&
+          other.seriesId == this.seriesId &&
           other.updatedAt == this.updatedAt &&
           other.deleted == this.deleted &&
           other.syncStatus == this.syncStatus);
@@ -3643,6 +3681,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String?> note;
   final Value<String?> weather;
   final Value<String?> recurrence;
+  final Value<String?> seriesId;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
   final Value<String> syncStatus;
@@ -3656,6 +3695,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.note = const Value.absent(),
     this.weather = const Value.absent(),
     this.recurrence = const Value.absent(),
+    this.seriesId = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -3670,6 +3710,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.note = const Value.absent(),
     this.weather = const Value.absent(),
     this.recurrence = const Value.absent(),
+    this.seriesId = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -3688,6 +3729,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<String>? note,
     Expression<String>? weather,
     Expression<String>? recurrence,
+    Expression<String>? seriesId,
     Expression<DateTime>? updatedAt,
     Expression<bool>? deleted,
     Expression<String>? syncStatus,
@@ -3702,6 +3744,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (note != null) 'note': note,
       if (weather != null) 'weather': weather,
       if (recurrence != null) 'recurrence': recurrence,
+      if (seriesId != null) 'series_id': seriesId,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deleted != null) 'deleted': deleted,
       if (syncStatus != null) 'sync_status': syncStatus,
@@ -3718,6 +3761,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<String?>? note,
     Value<String?>? weather,
     Value<String?>? recurrence,
+    Value<String?>? seriesId,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
     Value<String>? syncStatus,
@@ -3732,6 +3776,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
       note: note ?? this.note,
       weather: weather ?? this.weather,
       recurrence: recurrence ?? this.recurrence,
+      seriesId: seriesId ?? this.seriesId,
       updatedAt: updatedAt ?? this.updatedAt,
       deleted: deleted ?? this.deleted,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -3768,6 +3813,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (recurrence.present) {
       map['recurrence'] = Variable<String>(recurrence.value);
     }
+    if (seriesId.present) {
+      map['series_id'] = Variable<String>(seriesId.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -3794,6 +3842,7 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('note: $note, ')
           ..write('weather: $weather, ')
           ..write('recurrence: $recurrence, ')
+          ..write('seriesId: $seriesId, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus, ')
@@ -10399,6 +10448,7 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<String?> note,
       Value<String?> weather,
       Value<String?> recurrence,
+      Value<String?> seriesId,
       required DateTime updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -10414,6 +10464,7 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<String?> note,
       Value<String?> weather,
       Value<String?> recurrence,
+      Value<String?> seriesId,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -10537,6 +10588,11 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<String> get recurrence => $composableBuilder(
     column: $table.recurrence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10698,6 +10754,11 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -10768,6 +10829,9 @@ class $$TasksTableAnnotationComposer
     column: $table.recurrence,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get seriesId =>
+      $composableBuilder(column: $table.seriesId, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -10920,6 +10984,7 @@ class $$TasksTableTableManager
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -10933,6 +10998,7 @@ class $$TasksTableTableManager
                 note: note,
                 weather: weather,
                 recurrence: recurrence,
+                seriesId: seriesId,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,
@@ -10948,6 +11014,7 @@ class $$TasksTableTableManager
                 Value<String?> note = const Value.absent(),
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -10961,6 +11028,7 @@ class $$TasksTableTableManager
                 note: note,
                 weather: weather,
                 recurrence: recurrence,
+                seriesId: seriesId,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,

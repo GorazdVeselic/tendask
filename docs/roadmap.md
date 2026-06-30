@@ -325,10 +325,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   traku (skok na dan) je bil implementiran in po pregledu na napravi **zavrnjen** — dodal je vizualni šum
   brez prave vrednosti. Navigacijo po datumih že pokrivata kronološka časovnica (s skupinami po dnevih) in
   mesečni pogled. Ne implementiramo, dokler ne bo jasne potrebe in boljšega dizajna.
-- **FR-5 — Ponavljanje opravil (nice-to-have).** Korak »Kdaj« v vnosu predvideva izbiro ponavljanja
-  (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
-  dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
-  beleženje. Kasneje: definiraj pravilo ponavljanja + generator + UI za serijo. Do takrat je vsako opravilo enkratno.
+- **FR-5 — Ponavljanje opravil.** ✅ **Implementirano 2026-06-30 na `feat/fr5-recurrence`** (pushano,
+  PR čaka; gl. dnevnik). MVP obseg = **materializiraj-naslednjo-instanco-ob-dokončanju**: ob ✓ se v isti
+  transakciji ustvari naslednja instanca (sidro = načrtovani datum). UI v koraku »Kdaj«: Dnevno/Tedensko/
+  Po meri + neobvezno **število ponovitev** (= `remaining`, min 1) + živ »Naslednje: <datum>« + validacija
+  (prazno blokira »Naprej«). Model `Recurrence{everyDays, remaining}` v `task.recurrence` + nova
+  `task.series_id` (drift v11 + Supabase `0013`, additive). Značka serije, »Ustavi ponavljanje« v ⋯,
+  revert blokiran na dokončani ponavljajoči (D1). Polna spec: [`recurrence.md`](feature-requests/recurrence.md).
+  **Namerno izven obsega:** serijsko urejanje / izjeme / mesečno-RRULE / sprava z motorjem (M11) —
+  `series_id` to kasneje omogoči. **TODO ob prod releasu:** `supabase db push` za `0013` na prod PRED FR-5 buildom.
 - **FR-6 — »Ponovi zadnje« (hitrost ponavljajočega beleženja).** ✅ **Implementirano 2026-06-04.** Vrt pogosto pomeni isto opravilo na
   istih subjektih večkrat (zalivam paradižnik vsak večer). Predlog: na koraku 1 (Tip) stepperja na vrhu
   kartica »↻ Ponovi zadnje — 💧 Zalivanje · Paradižnik …«; tap predizpolni tip + subjekte + sredstva +
@@ -481,6 +486,21 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-30 — **FR-5: ponavljanje opravil (`feat/fr5-recurrence`, commita `06bab04` feat + `feebfed`
+  fix-ui; pushano, PR čaka).** Materializiraj-naslednjo-ob-dokončanju. Nov `data/recurrence.dart`
+  (`Recurrence{everyDays, remaining}` + tolerantni `tryParse`/`encode`/`next` + čisti DST-varni
+  `nextOccurrenceDate`); nova nullable `task.series_id` (drift **v11** + Supabase **`0013`**, additive;
+  `0013` apliciran na **staging**, prod čaka). `complete()` rodi otroka v isti transakciji (deduje
+  subjekte/opomnike/series_id), `updateTask` ureja recurrence, `stopRecurrence`, `duplicate` strip,
+  revert blokada (D1). UI: picker v `when_step` (Dnevno/Tedensko/Po meri + št. ponovitev=`remaining` min 1
+  + »Naslednje: <datum>« + validacija blokira »Naprej«), `RecurringBadge`, vrstica na Pregledu/detajlu,
+  »Ustavi ponavljanje« v ⋯, toast prek `showTopToast`. **Semantika (potrjeno z uporabnikom): »ponovitve«
+  = `remaining` neposredno (1 = trenutni + 1 = skupaj 2), NE »skupaj«.** **Nauki:** (a) `ValueKey(recurrence)`
+  na stateful pickerju ga ob vsakem emitu uniči/poustvari → zbris polja je skakal na »Dnevno« (odpravljeno
+  brez key); (b) `SegmentedButton` privzeto kaže ✓ na izbranem → krade širino, besedilo prebija → povsod
+  `showSelectedIcon: false`; (c) `×` enota je izgledala kot gumb za brisanje → »krat«. Review: 4-dimenzijski
+  multi-agentni + adversarna verifikacija; vse potrjene najdbe popravljene (revert-gate `status==done`,
+  `updateTask` null-check, 4× `!`→lokali, magic width→const, observability log). analyze čist · **345 testov**.
 - 2026-06-29 — **FR-16: re-engagement opomnik za neaktivne uporabnike (`main`, commit `d29fd9d`).**
   Lokalni dead-man's-switch: nova čista funkcija `journal_nudge_schedule.dart` (`journalNudgeFireTimes`,
   testabilna) + `JournalNudgeCoordinator` (vzorec `_running`/`_dirty` + debounce kot reminder_coordinator).

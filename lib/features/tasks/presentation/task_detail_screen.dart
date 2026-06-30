@@ -18,10 +18,13 @@ import '../../supplies/application/supplies_providers.dart';
 import '../../weather/data/weather_snapshot.dart';
 import '../../weather/presentation/weather_card.dart';
 import '../application/tasks_providers.dart';
+import '../data/recurrence.dart';
 import '../data/tasks_repository.dart';
 import '../../../i18n/translations.g.dart';
 import 'entry/steps/reminder_step.dart';
+import 'recurrence_label.dart';
 import 'subject_labels.dart';
+import 'task_actions.dart';
 import 'widgets/confirm_delete_dialog.dart';
 
 class TaskDetailScreen extends ConsumerWidget {
@@ -171,7 +174,9 @@ class TaskDetailScreen extends ConsumerWidget {
                 isWaiting: isWaiting,
                 onComplete: () {
                   AppHaptics.taskCompleted();
-                  unawaited(repo.complete(id).then((_) => router.pop()));
+                  unawaited(
+                    completeTask(context, repo, id).then((_) => router.pop()),
+                  );
                 },
                 onPostpone: () => unawaited(repo.postponeOneDay(id)),
                 onEdit: () =>
@@ -182,7 +187,7 @@ class TaskDetailScreen extends ConsumerWidget {
                 onDelete: () {
                   unawaited(repo.softDelete(id).then((_) => router.pop()));
                 },
-                onRevert: () => unawaited(repo.revertToWaiting(id)),
+                onRevert: () => revertTask(context, repo, task),
                 onMove: () async {
                   final current = task.date.toLocal();
                   final picked = await showDatePicker(
@@ -242,7 +247,13 @@ class TaskDetailScreen extends ConsumerWidget {
                   onTap: () {
                     AppHaptics.taskCompleted();
                     Navigator.of(ctx).pop();
-                    unawaited(repo.complete(task.id).then((_) => router.pop()));
+                    unawaited(
+                      completeTask(
+                        context,
+                        repo,
+                        task.id,
+                      ).then((_) => router.pop()),
+                    );
                   },
                 ),
                 ListTile(
@@ -259,7 +270,7 @@ class TaskDetailScreen extends ConsumerWidget {
                   title: Text(t.task_detail.action_revert),
                   onTap: () {
                     Navigator.of(ctx).pop();
-                    unawaited(repo.revertToWaiting(task.id));
+                    revertTask(context, repo, task);
                   },
                 ),
               ListTile(
@@ -281,6 +292,15 @@ class TaskDetailScreen extends ConsumerWidget {
                   unawaited(repo.duplicate(task.id).then((_) => router.pop()));
                 },
               ),
+              if (task.recurrence != null)
+                ListTile(
+                  leading: const Icon(Icons.sync_disabled),
+                  title: Text(t.task_detail.action_stop_recurrence),
+                  onTap: () {
+                    Navigator.of(ctx).pop();
+                    unawaited(repo.stopRecurrence(task.id));
+                  },
+                ),
               Divider(height: 1, color: theme.colorScheme.outlineVariant),
               ListTile(
                 leading: Icon(
@@ -555,17 +575,13 @@ class _DetailsCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final recurrenceLabel = switch (task.recurrence) {
-      'weekly' => t.task_detail.recurrence_weekly,
-      'seasonal' => t.task_detail.recurrence_seasonal,
-      _ => t.task_detail.recurrence_once,
-    };
+    final recurrenceText = recurrenceLabel(t, Recurrence.tryParse(task.recurrence));
 
     // Date is already shown in the status pill (hero) — not repeated here.
     final rows = [
       (t.task_detail.label_supplies, suppliesLabel ?? t.task_detail.none),
       (t.task_detail.label_reminder, remindersLabel ?? t.task_detail.none),
-      (t.task_detail.label_recurrence, recurrenceLabel),
+      (t.task_detail.label_recurrence, recurrenceText),
       if (task.note != null && task.note!.isNotEmpty)
         (t.task_detail.label_note, task.note!),
     ];

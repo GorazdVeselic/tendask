@@ -95,6 +95,12 @@ const kReminderOffsetPresets = [0, 10, 60, kMinutesPerDay, 2 * kMinutesPerDay];
 /// reminder. 0 = at the time of the event. User-overridable in notification settings.
 const kDefaultReminderOffset = 0;
 
+/// Prefilled values in the recurrence picker (FR-5) when the user first switches
+/// a task to a custom interval / a capped number of repeats (repeats = how many
+/// more times it recurs after the current one).
+const kRecurrenceDefaultIntervalDays = 14;
+const kRecurrenceDefaultRepeats = 3;
+
 /// Re-engagement journal nudge (FR-16) — a local dead-man's-switch. It fires
 /// only after the user goes quiet; every app open / task or note write pushes it
 /// forward, so an active user never sees it. Instead of one re-armed reminder we

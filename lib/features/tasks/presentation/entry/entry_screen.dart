@@ -13,6 +13,7 @@ import '../../../../i18n/translations.g.dart';
 import '../../../supplies/application/supplies_providers.dart';
 import '../../../supplies/data/supply_spec.dart';
 import '../../application/tasks_providers.dart';
+import '../../data/recurrence.dart';
 import '../../data/tasks_repository.dart';
 import 'steps/reminder_step.dart';
 import 'steps/review_step.dart';
@@ -55,6 +56,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   late DateTime _date;
   late TaskStatus _status;
   bool _statusManual = false;
+  Recurrence? _recurrence;
+  bool _recurrenceValid = true;
 
   EntryStep _step = EntryStep.type;
   bool _isLoading = false;
@@ -134,6 +137,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         _status = task.status;
         _statusManual = true; // stored status is authoritative
         _noteController.text = task.note ?? '';
+        _recurrence = Recurrence.tryParse(task.recurrence);
       }
       _plantIds
         ..clear()
@@ -259,10 +263,11 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     setState(() => _isSaving = true);
     try {
       final note = _noteController.text.trim();
-      // Reminders only make sense for a planned (waiting) task.
+      // Reminders and recurrence only make sense for a planned (waiting) task.
       final reminders = _status == TaskStatus.waiting
           ? _reminders
           : const <ReminderSpec>[];
+      final recurrence = _status == TaskStatus.waiting ? _recurrence : null;
       final repo = ref.read(tasksRepositoryProvider);
       final String taskId;
       if (_isEdit) {
@@ -273,6 +278,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           date: _date,
           note: note.isEmpty ? null : note,
           subjects: _subjects,
+          recurrence: recurrence?.encode(),
           reminders: reminders,
         );
         taskId = widget.taskId!;
@@ -284,6 +290,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           status: _status,
           note: note.isEmpty ? null : note,
           subjects: _subjects,
+          recurrence: recurrence?.encode(),
           reminders: reminders,
         );
       }
@@ -373,8 +380,13 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                 WhenStepBody(
                   date: _date,
                   status: _status,
+                  recurrence: _recurrence,
                   onSetDate: _setDate,
                   onSetStatus: _setStatus,
+                  onSetRecurrence: (r, valid) => setState(() {
+                    _recurrence = r;
+                    _recurrenceValid = valid;
+                  }),
                 ),
                 ReminderStepBody(
                   reminders: _reminders,
@@ -392,6 +404,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   subjects: _subjects,
                   date: _date,
                   status: _status,
+                  recurrence: _status == TaskStatus.waiting ? _recurrence : null,
                   reminders: _reminders,
                   supplies: _supplies,
                   noteController: _noteController,
@@ -409,6 +422,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             canContinue: switch (_step) {
               EntryStep.type => _taskTypeId != null,
               EntryStep.subject => _plantIds.isNotEmpty || _areaIds.isNotEmpty,
+              // Block while a shown recurrence field is empty/invalid.
+              EntryStep.when => _status != TaskStatus.waiting || _recurrenceValid,
               _ => true,
             },
             isSaving: _isSaving,

@@ -16,6 +16,7 @@ import '../../../features/auth/presentation/widgets/account_avatar_button.dart';
 import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../features/tasks/presentation/subject_labels.dart';
+import '../../../features/tasks/presentation/widgets/recurring_badge.dart';
 import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
@@ -426,6 +427,10 @@ class _TaskTile extends StatelessWidget {
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                if (task.recurrence != null) ...[
+                  const RecurringBadge(),
+                  const SizedBox(width: 6),
+                ],
                 if (hasReminder && !isDone) ...[
                   Icon(
                     Icons.notifications_outlined,
