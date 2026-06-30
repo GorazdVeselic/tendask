@@ -6,7 +6,8 @@
 >
 > Povezano: [`tech-stack.md`](tech-stack.md) (potrjen sklad + §6 struktura, §9 vrstni red),
 > [`koncept.md`](koncept.md) (§7.9 entiteta opravilo, §7.14 podatkovni model),
-> [`opravila-in-rastline.md`](opravila-in-rastline.md) (vir za seed), `wireframes/` (~27 zaslonov).
+> [`opravila-in-rastline.md`](opravila-in-rastline.md) (vir za seed), `wireframes/` (~27 zaslonov),
+> [`povratne-informacije.md`](povratne-informacije.md) (opažanja testerjev/uporabnikov + analiza/odločitve, runde T1–).
 
 ---
 
@@ -481,6 +482,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   lastnost profila, koncept §7.7). Srečni vzvod: `area` je že N-na-uporabnika → verjetno dovolj nova
   `garden` tabela + `area.garden_id`. Groba ocena ~2–3 tedne (+1 IAP). Polna želja:
   [`docs/feature-requests/multi-location.md`](feature-requests/multi-location.md).
+- **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
+  Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Za ceno je ključno:**
+  Google Play **service fee od 10 %** na prvi $1M/leto (od 30. 6. 2026, ZDA/EGP/UK), zdaj **LOČEN od billing
+  fee** → neto računaj po `(cena − service fee − billing fee)`, ne samo −10 %. Naročnine = isto 10 %. Vredno
+  preveriti **Apps Experience program** (znižane provizije za kakovostne ne-igre). **Tehnično:** IAP/naročnina
+  = nov package izven `tech-stack.md §1` (`in_app_purchase`/RevenueCat) → najprej uskladi sklad; payout/Merchant
+  + davčni setup v Play Console; premium **gating offline-first** (entitlement cache v drift, da plačnik dela
+  brez signala). Glej spomin `tendask-monetization-planned`.
 
 ## Dnevnik napredka
 

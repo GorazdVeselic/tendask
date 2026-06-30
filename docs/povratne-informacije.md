@@ -268,3 +268,75 @@ v smislu pametnih push namigov) pravzaprav že naslovljen v M11/FCM, ki ga ni mo
 sveže in akcijske ugotovitve za MVP so: **T3** (matrika že obstaja, le ožičiti), **T6** (abecedno
 sortiranje) in **T7** (privzeti opomnik za načrtovana opravila). T8 je edina, ki jo priporočam
 zavestno **ne** implementirati.
+
+---
+
+## Runda 2 — testerji, 2026-06-30
+
+> Vir: predlogi trenutnih testnih uporabnikov (zaprti test). Zapisano kot **ideje za naprej**
+> (še NE potrjeni FR-ji). Eno (luna) je tudi lastnikova želja.
+
+### T10 — Lunina mena / setveni koledar
+
+**Opazil:** nekateri vrtnarji delajo po Luni → želja, da se vidi, **ob kateri lunini meni** je bilo
+opravilo narejeno. Lastnikova razširitev: prikaz **luninega/setvenega koledarja**; morda, če obstaja
+več vrst setvenih koledarjev, ponudimo **izbiro**.
+
+**Dejansko stanje:** ni podpore. Opravilo ima `date` + zamrznjen vremenski posnetek, ne lunine faze.
+**Lunina faza je deterministična iz datuma** (astronomski izračun, **brez mreže/podatkov**, privacy-OK).
+
+**Ocena:** dvodelno. **(a) Poceni MVP** — izračunaj + prikaži lunino meno (8 men) za datum opravila
+(čista funkcija; ikona/oznaka na detajlu in v dnevniku, podobno kot vremenski posnetek). **(b) Polni
+setveni/biodinamični koledar** (npr. Maria Thun: koren/list/cvet/plod dnevi; več sistemov + izbira) =
+**vsebinski ruleset + koledarski UI** = velik zalogaj, ki se filozofsko prekriva z M11 (pravila/predlogi);
+pri večih sistemih še licenčni/viri pomislek. Dobro prileganje SI trgu (marsikdo dejansko sledi).
+
+**Priporočilo:** MVP = **prikaz lunine mene ob datumu** (poceni, lepo se ujame z »dnevnik + zgodovina«);
+**polni setveni koledar = V2** (ločen FR; razišči vire/licence koledarjev pred obljubo izbire). Lunine
+mene NE mešaj v M11 motor (drugačen miselni model — koledar vs agronomsko-vremenska pravila).
+
+**Odločitev:** _(odprto — predlagam: fazni prikaz kot kandidat FR po launchu; polni koledar V2)_
+
+### T11 — Količina pridelka ob pobiranju (yield)
+
+**Opazil:** ob obiranju vpiši **količino pridelka** → omogoča **analizo iz leta v leto** (ko
+»eksperimentiraš«: kaj si spremenil, glede na vreme, kakšen je bil donos).
+
+**Dejansko stanje:** ni polja za količino na opravilu. Vreme se **že** zamrzne ob `done` (§7.10) →
+**idealen par** za korelacijo donos × vreme × posegi. Strukturno: additive polje (količina + enota)
+na opravilu (ali specifično na pobiralnih tipih), vzorec lahko kot `task_supply` amount.
+
+**Ocena:** **najvišja vrednost od treh** — pretvori dnevnik v **podatkovno orodje**, kar je jedro
+diferenciatorja, ki ga tester sam izpostavi (»analiza čez leta«). MVP = zajem količine+enote ob
+pobiranju; **vizualizacija/grafi/primerjave = V2** (ločeno). Sklada se z že zajetim vremenom in
+zgodovino, brez tveganja za offline/zasebnost.
+
+**Priporočilo:** **močan kandidat za FR po launchu** (visoka vrednost, zmerna shema-sprememba,
+additive). MVP zajem najprej, analitika pridelka kasneje.
+
+**Odločitev:** _(odprto — predlagam: visoka prioriteta med post-launch FR-ji)_
+
+### T12 — Mesečna vsota padavin na lokaciji
+
+**Opazil:** vezano na vremensko napoved — koliko **padavin je padlo v tekočem mesecu** na tvoji lokaciji.
+
+**Dejansko stanje:** imamo Open-Meteo + **centroid celice** (FR-8/FR-12); trenutno zajamemo posnetek ob
+`done` + dashboard trenutno vreme. **Pretekle padavine** so dosegljive prek Open-Meteo (`past_days`/
+arhiv) → vsota za tekoči mesec na centroid; prikaz na vremenski kartici/statistiki.
+
+**Ocena:** gradi na obstoječi vremenski infri, **zmeren** zalogaj. Privacy OK (centroid že v rabi).
+Povezano s **FR-7** (`weather_observation` shramba) — lahko se združita. Opozorilo: Open-Meteo pri
+skali = komercialna raba (že znano).
+
+**Priporočilo:** smiseln, srednja prioriteta; razmisli o združitvi s FR-7 (dnevni vremenski povzetki).
+Pazi na meje Open-Meteo ob rasti.
+
+**Odločitev:** _(odprto — srednja prioriteta; morda skupaj s FR-7)_
+
+### Povzetek runde 2 (prioriteta)
+
+| # | Ideja | Trud | Vrednost | Priporočilo |
+|---|-------|:----:|:--------:|-------------|
+| T11 | Količina pridelka (yield) | srednji (MVP) | **visoka** | **Najmočnejši** post-launch kandidat; MVP zajem → analitika V2 |
+| T10 | Lunina mena / setveni koledar | nizek (faza) / velik (koledar) | srednja-visoka (SI trg) | MVP fazni prikaz; polni koledar V2 |
+| T12 | Mesečna vsota padavin | srednji | srednja | Smiseln; združi s FR-7 |
