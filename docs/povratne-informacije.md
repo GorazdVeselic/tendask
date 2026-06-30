@@ -218,6 +218,30 @@ predizbran; vse ostale možnosti (1 h, 1 dan …) ostanejo na voljo. **Samodejne
 zaenkrat NE — opravilo še vedno dobi opomnik šele ob »+ Dodaj« (ohrani tok dovoljenj + ne moti
 opravljenih opravil).
 
+**Odločitev (2026-06-30): IMPLEMENTIRANO — odločitev 2026-06-23 revidirana v samodejni predizpolni.**
+Načrtovano (waiting) opravilo ob ustvarjanju zdaj dobi **en predizpolnjen, odstranljiv** opomnik;
+opravljena/retrospektivna ga ne dobijo. Sprejete izbire (faza 0):
+- **Default-on** za načrtovana opravila (napetost z »beležim, kar sem naredil« velja le za opravljena,
+  ki opomnika tako ali tako ne dobijo). Če je master stikalo `taskRemindersEnabled` izklopljeno,
+  predizpolnitve **ni**.
+- **Zamik = uporabnikov `settings.defaultReminderOffset`** (privzeto `0` = ob dogodku) — en vir resnice
+  z ročnim »+ Dodaj« in nastavitvenim zaslonom. Robustno: waiting opravilo je v prihodnosti, zato
+  offset 0 vedno sproži; **clamp** — če bi day-based privzetek padel v preteklost (bližnje opravilo),
+  seed pade nazaj na »ob dogodku«, da načrtovano opravilo **vedno** dobi delujoč opomnik.
+- **Seme-enkrat** (sentinel): velja ob create-as-planned, done→waiting flipu in `_repeatLast`; **ne** ob
+  edit-loadu (shranjeni opomniki avtoritativni); ko uporabnik predizpolnjeni opomnik odstrani, se **ne
+  vrne**. Premik datuma naprej ne sproži ponovnega sejanja (opomnik »ob dogodku« sledi datumu).
+- **Dovoljenja ob shranjevanju** (ne ob predizpolnitvi): priming + zahteva enkrat; **opravilo se shrani
+  ne glede na izid** (offline-first), exact-alarm ne blokira; ob zavrnitvi miren snackbar. Dovoljenjska
+  logika izločena v skupni helper (`requestNotificationPermission`), deli ga ročni »+ Dodaj« tok.
+- **Brez interakcije s tihimi urami / frekvenčno kapico** — predizpolnjeni opomnik je navaden
+  task-opomnik (te kontrole veljajo le za prihodnje FCM namige).
+
+UX: predizpolnjeni opomnik se pokaže kot navadna odstranljiva vrstica (korak 4 + Pregled), pod njo
+medel hint (`rem_default_hint`). Nove i18n ključe (`rem_default_hint`, `rem_saved_notif_off`, sl/en/de).
+Koda v commitu `1eac918`; testi: 4 unit (`defaultReminderSpec` + clamp) + 2 widget (načrtovano dobi
+odstranljiv opomnik; opravljeno ne). ⏳ on-device verifikacija.
+
 ---
 
 ### T8 — Smiselno zaporedje opravil (zalivanje pred potrjenim sajenjem)
