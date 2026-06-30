@@ -88,6 +88,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                 ),
               ],
               selected: {_view},
+              showSelectedIcon: false,
               onSelectionChanged: (s) => setState(() => _view = s.first),
               style: const ButtonStyle(visualDensity: VisualDensity.compact),
             ),

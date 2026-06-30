@@ -129,6 +129,7 @@ class _Body extends ConsumerWidget {
               ),
           ],
           selected: {settings.defaultReminderOffset},
+          showSelectedIcon: false,
           onSelectionChanged: (sel) =>
               _save(ref, settings.copyWith(defaultReminderOffset: sel.first)),
           style: const ButtonStyle(visualDensity: VisualDensity.compact),
