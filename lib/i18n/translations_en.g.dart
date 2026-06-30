@@ -71,6 +71,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
 	late final Translations$appearance$en appearance = Translations$appearance$en.internal(_root);
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
+	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
 }
 
 // Path: splash
@@ -1837,6 +1838,66 @@ class Translations$weather$en {
 	String get m_no_rain => 'no rain';
 }
 
+// Path: harvest
+class Translations$harvest$en {
+	Translations$harvest$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Yield'
+	String get yield_section => 'Yield';
+
+	/// en: 'How much did you harvest?'
+	String get sheet_title => 'How much did you harvest?';
+
+	/// en: 'Amount'
+	String get amount_label => 'Amount';
+
+	/// en: 'e.g. 2.5'
+	String get amount_hint => 'e.g. 2.5';
+
+	/// en: 'Unit'
+	String get unit_label => 'Unit';
+
+	/// en: 'Save'
+	String get save => 'Save';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Remove yield'
+	String get remove => 'Remove yield';
+
+	/// en: 'Add yield'
+	String get add => 'Add yield';
+
+	/// en: 'Harvest'
+	String get summary_title => 'Harvest';
+
+	/// en: 'Total'
+	String get summary_total => 'Total';
+
+	/// en: 'kg'
+	String get unit_kg => 'kg';
+
+	/// en: 'dag'
+	String get unit_dag => 'dag';
+
+	/// en: 'g'
+	String get unit_g => 'g';
+
+	/// en: 'pcs'
+	String get unit_pieces => 'pcs';
+
+	/// en: 'l'
+	String get unit_l => 'l';
+
+	/// en: 'bunch'
+	String get unit_bunch => 'bunch';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -2336,6 +2397,23 @@ extension on Translations {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Rain 48 h',
 			'weather.m_no_rain' => 'no rain',
+			'harvest.yield_section' => 'Yield',
+			'harvest.sheet_title' => 'How much did you harvest?',
+			'harvest.amount_label' => 'Amount',
+			'harvest.amount_hint' => 'e.g. 2.5',
+			'harvest.unit_label' => 'Unit',
+			'harvest.save' => 'Save',
+			'harvest.skip' => 'Skip',
+			'harvest.remove' => 'Remove yield',
+			'harvest.add' => 'Add yield',
+			'harvest.summary_title' => 'Harvest',
+			'harvest.summary_total' => 'Total',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'pcs',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'bunch',
 			_ => null,
 		};
 	}

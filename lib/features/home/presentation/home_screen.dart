@@ -17,6 +17,7 @@ import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
 import '../../../features/tasks/presentation/subject_labels.dart';
 import '../../../features/tasks/presentation/widgets/recurring_badge.dart';
+import '../../../features/tasks/presentation/yield_format.dart';
 import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../features/weather/application/weather_service.dart';
 import '../../../features/weather/presentation/weather_card.dart';
@@ -405,17 +406,22 @@ class _TaskTile extends StatelessWidget {
     ).difference(startOfDay(task.date.toLocal())).inDays;
 
     final subject = subjectLabel;
+    // Subject + any recorded harvest yield (T11) on one muted subtitle line.
+    final subtitleText = [
+      if (subject != null && subject.isNotEmpty) '🪴 $subject',
+      ?taskYieldChip(task, t),
+    ].join('   ');
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
-      subtitle: subject != null && subject.isNotEmpty
-          ? Text(
-              '🪴 $subject',
+      subtitle: subtitleText.isEmpty
+          ? null
+          : Text(
+              subtitleText,
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
-            )
-          : null,
+            ),
       trailing: isOverdue
           ? Text(
               t.tasks_list.overdue_days(n: overdueDays),

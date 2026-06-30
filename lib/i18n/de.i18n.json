@@ -563,5 +563,24 @@
     "m_et0": "ET₀",
     "m_rain48h": "Regen 48 h",
     "m_no_rain": "kein Regen"
+  },
+  "harvest": {
+    "yield_section": "Ertrag",
+    "sheet_title": "Wie viel hast du geerntet?",
+    "amount_label": "Menge",
+    "amount_hint": "z. B. 2,5",
+    "unit_label": "Einheit",
+    "save": "Speichern",
+    "skip": "Überspringen",
+    "remove": "Ertrag entfernen",
+    "add": "Ertrag hinzufügen",
+    "summary_title": "Ernte",
+    "summary_total": "Gesamt",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "Stk.",
+    "unit_l": "l",
+    "unit_bunch": "Bund"
   }
 }

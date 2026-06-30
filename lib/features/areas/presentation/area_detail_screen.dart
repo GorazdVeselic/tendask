@@ -15,6 +15,7 @@ import '../../../i18n/translations.g.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/garden_plant_add_screen.dart';
 import '../../plants/presentation/widgets/plant_row.dart';
+import '../../tasks/presentation/yield_format.dart';
 import '../application/areas_providers.dart';
 import 'area_type_display.dart';
 
@@ -228,10 +229,19 @@ class _HistoryRow extends StatelessWidget {
     final type = catalog?[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
     final icon = type?.icon ?? '📋';
+    final yieldChip = taskYieldChip(task, context.t);
 
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
+      subtitle: yieldChip != null
+          ? Text(
+              yieldChip,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          : null,
       trailing: Text(
         formatDmy(task.date.toLocal()),
         style: theme.textTheme.bodySmall?.copyWith(

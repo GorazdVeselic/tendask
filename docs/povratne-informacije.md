@@ -314,7 +314,16 @@ zgodovino, brez tveganja za offline/zasebnost.
 **Priporočilo:** **močan kandidat za FR po launchu** (visoka vrednost, zmerna shema-sprememba,
 additive). MVP zajem najprej, analitika pridelka kasneje.
 
-**Odločitev:** _(odprto — predlagam: visoka prioriteta med post-launch FR-ji)_
+**Odločitev (2026-06-30): NAREJENO — zajem + osnovni povzetek** (branch `feat/t11-harvest-yield`,
+spec `docs/feature-requests/t11-harvest-yield.md`). Dve additivni polji na `task`
+(`yield_amount` `double?` + `yield_unit` `text`, enum `YieldUnit{kg,dag,g,kom,l,šop}`, shranjen kot
+`.name`, tolerantno parsanje), both-or-neither normalizira repo, DB CHECK na Supabase (migracija
+`0014`). Vnos **povsod, kjer harvest postane `done`** prek skupnega `YieldSheet` (presko­čljivo):
+ob `✓` (seznam + detajl), v čarovniku (pretekel harvest), dodaj/uredi/odstrani na detajlu opravila.
+Povzetek po enoti + po letih na detajlu rastline; yield chip v dnevniku in zgodovini rastline.
+Revert-to-waiting počisti yield. Grafi/primerjave med leti = še naprej **V2**. Pokrito z unit +
+widget testi; analyze čist. ⏳ pred deployem: `supabase db push` migracije `0014` na prod **pred**
+buildom (additivno, stari APK-ji varni), + on-device preverba.
 
 ### T12 — Mesečna vsota padavin na lokaciji
 
@@ -337,6 +346,6 @@ Pazi na meje Open-Meteo ob rasti.
 
 | # | Ideja | Trud | Vrednost | Priporočilo |
 |---|-------|:----:|:--------:|-------------|
-| T11 | Količina pridelka (yield) | srednji (MVP) | **visoka** | **Najmočnejši** post-launch kandidat; MVP zajem → analitika V2 |
+| T11 | Količina pridelka (yield) | srednji (MVP) | **visoka** | ✅ **NAREJENO** (2026-06-30) — zajem + povzetek po enoti/letih; analitika/grafi V2 |
 | T10 | Lunina mena / setveni koledar | nizek (faza) / velik (koledar) | srednja-visoka (SI trg) | MVP fazni prikaz; polni koledar V2 |
 | T12 | Mesečna vsota padavin | srednji | srednja | Smiseln; združi s FR-7 |
