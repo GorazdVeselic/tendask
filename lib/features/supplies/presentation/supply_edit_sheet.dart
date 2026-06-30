@@ -3,11 +3,14 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/auth/auth_service.dart';
+import '../../../core/supply_category.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
+import 'supply_category_display.dart';
 
 /// Opens the create/edit supply sheet. Returns the supply id on save, or null
 /// if dismissed. Pass [supplyId] to edit an existing supply.
@@ -38,6 +41,7 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
   final _unit = TextEditingController();
   final _quantity = TextEditingController();
   final _threshold = TextEditingController();
+  SupplyCategory _category = SupplyCategory.fertilizer;
   bool _loading = false;
   bool _saving = false;
 
@@ -58,6 +62,7 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
     if (s != null) {
       _name.text = s.name;
       _unit.text = s.unit ?? '';
+      _category = s.category;
       _quantity.text = _fmt(s.quantity);
       _threshold.text = s.lowThreshold != null ? _fmt(s.lowThreshold!) : '';
     }
@@ -98,6 +103,7 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
         id: widget.supplyId!,
         name: name,
         unit: unit,
+        category: _category,
         quantity: quantity,
         lowThreshold: threshold,
       );
@@ -107,6 +113,7 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
         userId: ref.read(authServiceProvider).userId,
         name: name,
         unit: unit,
+        category: _category,
         quantity: quantity,
         lowThreshold: threshold,
       );
@@ -164,6 +171,21 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
                       border: const OutlineInputBorder(),
                       isDense: true,
                     ),
+                  ),
+                  const SizedBox(height: 12),
+                  FieldLabel(t.supplies.form_category),
+                  const SizedBox(height: 6),
+                  Wrap(
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: [
+                      for (final c in SupplyCategory.values)
+                        ChoiceChip(
+                          label: Text(supplyCategoryLabel(c, t)),
+                          selected: c == _category,
+                          onSelected: (_) => setState(() => _category = c),
+                        ),
+                    ],
                   ),
                   const SizedBox(height: 12),
                   Row(

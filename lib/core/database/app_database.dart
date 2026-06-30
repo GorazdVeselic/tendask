@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../area_type.dart';
+import '../supply_category.dart';
 import '../sync/sync_status.dart';
 import '../task_status.dart';
 import 'tables/catalog_tables.dart';
@@ -44,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 12;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -165,6 +166,11 @@ class AppDatabase extends _$AppDatabase {
       // Additive nullable column; mirrors Supabase migration.
       if (from < 11) {
         await m.addColumn(tasks, tasks.seriesId);
+      }
+      // v12: supply.category groups the supplies list (08). Additive column with
+      // a default; existing rows backfill to 'other'. Mirrors Supabase migration.
+      if (from < 12) {
+        await m.addColumn(supplies, supplies.category);
       }
     },
   );

@@ -475,7 +475,12 @@
     "amount": "Amount used",
     "add_confirm": "Add",
     "form_delete": "Delete supply",
-    "delete_note": "This supply will be removed from your list."
+    "delete_note": "This supply will be removed from your list.",
+    "form_category": "Category",
+    "cat_fertilizer": "Fertilizers",
+    "cat_treatment": "Treatments",
+    "cat_equipment": "Equipment",
+    "cat_other": "Other"
   },
   "settings": {
     "title": "Settings",

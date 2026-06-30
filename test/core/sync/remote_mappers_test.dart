@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/sync/remote_mappers.dart';
+import 'package:tendask/core/supply_category.dart';
 import 'package:tendask/core/sync/sync_status.dart';
 import 'package:tendask/core/task_status.dart';
 
@@ -179,6 +180,7 @@ void main() {
         userId: 'u1',
         name: 'Compost',
         unit: 'kg',
+        category: SupplyCategory.fertilizer,
         quantity: 12.5,
         lowThreshold: null,
         updatedAt: t0,
@@ -188,6 +190,7 @@ void main() {
     );
     expect(map['quantity'], 12.5);
     expect(map['low_threshold'], isNull);
+    expect(map['category'], 'fertilizer');
   });
 
   // ── Remote → drift (pull) ─────────────────────────────────────────────────

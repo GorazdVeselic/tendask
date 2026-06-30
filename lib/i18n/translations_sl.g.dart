@@ -752,6 +752,11 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get add_confirm => 'Dodaj';
 	@override String get form_delete => 'Izbriši sredstvo';
 	@override String get delete_note => 'Sredstvo bo odstranjeno s tvojega seznama.';
+	@override String get form_category => 'Kategorija';
+	@override String get cat_fertilizer => 'Gnojila';
+	@override String get cat_treatment => 'Tretiva';
+	@override String get cat_equipment => 'Oprema';
+	@override String get cat_other => 'Drugo';
 }
 
 // Path: settings
@@ -1282,6 +1287,11 @@ extension on TranslationsSl {
 			'supplies.add_confirm' => 'Dodaj',
 			'supplies.form_delete' => 'Izbriši sredstvo',
 			'supplies.delete_note' => 'Sredstvo bo odstranjeno s tvojega seznama.',
+			'supplies.form_category' => 'Kategorija',
+			'supplies.cat_fertilizer' => 'Gnojila',
+			'supplies.cat_treatment' => 'Tretiva',
+			'supplies.cat_equipment' => 'Oprema',
+			'supplies.cat_other' => 'Drugo',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',

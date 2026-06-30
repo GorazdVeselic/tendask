@@ -3,9 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/database/app_database.dart';
+import '../../../core/supply_category.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
+import 'supply_category_display.dart';
 import 'supply_edit_sheet.dart';
 
 class SuppliesScreen extends ConsumerWidget {
@@ -52,12 +55,24 @@ class SuppliesScreen extends ConsumerWidget {
           ? const Center(child: CircularProgressIndicator.adaptive())
           : supplies.isEmpty
           ? EmptyState(t.supplies.empty)
-          : ListView.builder(
+          : ListView(
               padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-              itemCount: supplies.length,
-              itemBuilder: (_, i) => _SupplyRow(supply: supplies[i]),
+              children: _grouped(supplies, t),
             ),
     );
+  }
+
+  /// Sections in [SupplyCategory] declaration order; empty categories are
+  /// dropped. Supplies arrive already name-sorted from the provider.
+  List<Widget> _grouped(List<Supply> supplies, Translations t) {
+    final widgets = <Widget>[];
+    for (final category in SupplyCategory.values) {
+      final inGroup = supplies.where((s) => s.category == category).toList();
+      if (inGroup.isEmpty) continue;
+      widgets.add(SectionLabel(supplyCategoryLabel(category, t)));
+      widgets.addAll(inGroup.map((s) => _SupplyRow(supply: s)));
+    }
+    return widgets;
   }
 }
 
@@ -79,7 +94,10 @@ class _SupplyRow extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 3),
       child: ListTile(
-        leading: const Text('🧪', style: TextStyle(fontSize: 22)),
+        leading: Text(
+          supplyCategoryIcon(supply.category),
+          style: const TextStyle(fontSize: 22),
+        ),
         title: Text(supply.name, style: theme.textTheme.bodyMedium),
         subtitle: supply.unit != null
             ? Text(supply.unit!, style: theme.textTheme.bodySmall)

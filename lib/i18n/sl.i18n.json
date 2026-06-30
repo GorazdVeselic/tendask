@@ -483,7 +483,12 @@
     "amount": "Porabljena količina",
     "add_confirm": "Dodaj",
     "form_delete": "Izbriši sredstvo",
-    "delete_note": "Sredstvo bo odstranjeno s tvojega seznama."
+    "delete_note": "Sredstvo bo odstranjeno s tvojega seznama.",
+    "form_category": "Kategorija",
+    "cat_fertilizer": "Gnojila",
+    "cat_treatment": "Tretiva",
+    "cat_equipment": "Oprema",
+    "cat_other": "Drugo"
   },
   "settings": {
     "title": "Nastavitve",

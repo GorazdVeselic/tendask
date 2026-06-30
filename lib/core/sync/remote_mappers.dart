@@ -4,6 +4,7 @@ import 'package:drift/drift.dart';
 
 import '../area_type.dart';
 import '../database/app_database.dart';
+import '../supply_category.dart';
 import '../task_status.dart';
 import 'sync_status.dart';
 
@@ -103,6 +104,7 @@ Map<String, dynamic> supplyToRemote(Supply r) => {
   'user_id': r.userId,
   'name': r.name,
   'unit': r.unit,
+  'category': r.category.name,
   'quantity': r.quantity,
   'low_threshold': r.lowThreshold,
   'updated_at': _ts(r.updatedAt),
@@ -157,6 +159,11 @@ AreaType _areaType(Object? v) => AreaType.values.firstWhere(
 TaskStatus _taskStatus(Object? v) => TaskStatus.values.firstWhere(
   (e) => e.name == v,
   orElse: () => TaskStatus.waiting,
+);
+
+SupplyCategory _supplyCategory(Object? v) => SupplyCategory.values.firstWhere(
+  (e) => e.name == v,
+  orElse: () => SupplyCategory.other,
 );
 
 ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
@@ -252,6 +259,7 @@ SuppliesCompanion supplyFromRemote(Map<String, dynamic> r) => SuppliesCompanion(
   userId: Value(r['user_id'] as String),
   name: Value(r['name'] as String),
   unit: Value(r['unit'] as String?),
+  category: Value(_supplyCategory(r['category'])),
   quantity: Value(_double(r['quantity']) ?? 0),
   lowThreshold: Value(_double(r['low_threshold'])),
   updatedAt: Value(_dt(r['updated_at'])),

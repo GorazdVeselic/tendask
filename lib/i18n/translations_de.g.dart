@@ -744,6 +744,11 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get add_confirm => 'Hinzufügen';
 	@override String get form_delete => 'Material löschen';
 	@override String get delete_note => 'Dieses Material wird aus deiner Liste entfernt.';
+	@override String get form_category => 'Kategorie';
+	@override String get cat_fertilizer => 'Dünger';
+	@override String get cat_treatment => 'Pflanzenschutz';
+	@override String get cat_equipment => 'Geräte';
+	@override String get cat_other => 'Sonstiges';
 }
 
 // Path: settings
@@ -1274,6 +1279,11 @@ extension on TranslationsDe {
 			'supplies.add_confirm' => 'Hinzufügen',
 			'supplies.form_delete' => 'Material löschen',
 			'supplies.delete_note' => 'Dieses Material wird aus deiner Liste entfernt.',
+			'supplies.form_category' => 'Kategorie',
+			'supplies.cat_fertilizer' => 'Dünger',
+			'supplies.cat_treatment' => 'Pflanzenschutz',
+			'supplies.cat_equipment' => 'Geräte',
+			'supplies.cat_other' => 'Sonstiges',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',

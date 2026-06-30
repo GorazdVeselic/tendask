@@ -5456,6 +5456,16 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<SupplyCategory, String> category =
+      GeneratedColumn<String>(
+        'category',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('other'),
+      ).withConverter<SupplyCategory>($SuppliesTable.$convertercategory);
   static const VerificationMeta _quantityMeta = const VerificationMeta(
     'quantity',
   );
@@ -5523,6 +5533,7 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
     userId,
     name,
     unit,
+    category,
     quantity,
     lowThreshold,
     updatedAt,
@@ -5628,6 +5639,12 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
         DriftSqlType.string,
         data['${effectivePrefix}unit'],
       ),
+      category: $SuppliesTable.$convertercategory.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}category'],
+        )!,
+      ),
       quantity: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}quantity'],
@@ -5655,6 +5672,9 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
   $SuppliesTable createAlias(String alias) {
     return $SuppliesTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<SupplyCategory, String, String> $convertercategory =
+      const EnumNameConverter<SupplyCategory>(SupplyCategory.values);
 }
 
 class Supply extends DataClass implements Insertable<Supply> {
@@ -5662,6 +5682,7 @@ class Supply extends DataClass implements Insertable<Supply> {
   final String userId;
   final String name;
   final String? unit;
+  final SupplyCategory category;
   final double quantity;
   final double? lowThreshold;
   final DateTime updatedAt;
@@ -5672,6 +5693,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     required this.userId,
     required this.name,
     this.unit,
+    required this.category,
     required this.quantity,
     this.lowThreshold,
     required this.updatedAt,
@@ -5686,6 +5708,11 @@ class Supply extends DataClass implements Insertable<Supply> {
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || unit != null) {
       map['unit'] = Variable<String>(unit);
+    }
+    {
+      map['category'] = Variable<String>(
+        $SuppliesTable.$convertercategory.toSql(category),
+      );
     }
     map['quantity'] = Variable<double>(quantity);
     if (!nullToAbsent || lowThreshold != null) {
@@ -5703,6 +5730,7 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: Value(userId),
       name: Value(name),
       unit: unit == null && nullToAbsent ? const Value.absent() : Value(unit),
+      category: Value(category),
       quantity: Value(quantity),
       lowThreshold: lowThreshold == null && nullToAbsent
           ? const Value.absent()
@@ -5723,6 +5751,9 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
       unit: serializer.fromJson<String?>(json['unit']),
+      category: $SuppliesTable.$convertercategory.fromJson(
+        serializer.fromJson<String>(json['category']),
+      ),
       quantity: serializer.fromJson<double>(json['quantity']),
       lowThreshold: serializer.fromJson<double?>(json['lowThreshold']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -5738,6 +5769,9 @@ class Supply extends DataClass implements Insertable<Supply> {
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
       'unit': serializer.toJson<String?>(unit),
+      'category': serializer.toJson<String>(
+        $SuppliesTable.$convertercategory.toJson(category),
+      ),
       'quantity': serializer.toJson<double>(quantity),
       'lowThreshold': serializer.toJson<double?>(lowThreshold),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -5751,6 +5785,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     String? userId,
     String? name,
     Value<String?> unit = const Value.absent(),
+    SupplyCategory? category,
     double? quantity,
     Value<double?> lowThreshold = const Value.absent(),
     DateTime? updatedAt,
@@ -5761,6 +5796,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     userId: userId ?? this.userId,
     name: name ?? this.name,
     unit: unit.present ? unit.value : this.unit,
+    category: category ?? this.category,
     quantity: quantity ?? this.quantity,
     lowThreshold: lowThreshold.present ? lowThreshold.value : this.lowThreshold,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -5773,6 +5809,7 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: data.userId.present ? data.userId.value : this.userId,
       name: data.name.present ? data.name.value : this.name,
       unit: data.unit.present ? data.unit.value : this.unit,
+      category: data.category.present ? data.category.value : this.category,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
       lowThreshold: data.lowThreshold.present
           ? data.lowThreshold.value
@@ -5792,6 +5829,7 @@ class Supply extends DataClass implements Insertable<Supply> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('unit: $unit, ')
+          ..write('category: $category, ')
           ..write('quantity: $quantity, ')
           ..write('lowThreshold: $lowThreshold, ')
           ..write('updatedAt: $updatedAt, ')
@@ -5807,6 +5845,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     userId,
     name,
     unit,
+    category,
     quantity,
     lowThreshold,
     updatedAt,
@@ -5821,6 +5860,7 @@ class Supply extends DataClass implements Insertable<Supply> {
           other.userId == this.userId &&
           other.name == this.name &&
           other.unit == this.unit &&
+          other.category == this.category &&
           other.quantity == this.quantity &&
           other.lowThreshold == this.lowThreshold &&
           other.updatedAt == this.updatedAt &&
@@ -5833,6 +5873,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
   final Value<String> userId;
   final Value<String> name;
   final Value<String?> unit;
+  final Value<SupplyCategory> category;
   final Value<double> quantity;
   final Value<double?> lowThreshold;
   final Value<DateTime> updatedAt;
@@ -5844,6 +5885,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
     this.unit = const Value.absent(),
+    this.category = const Value.absent(),
     this.quantity = const Value.absent(),
     this.lowThreshold = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -5856,6 +5898,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     required String userId,
     required String name,
     this.unit = const Value.absent(),
+    this.category = const Value.absent(),
     this.quantity = const Value.absent(),
     this.lowThreshold = const Value.absent(),
     required DateTime updatedAt,
@@ -5871,6 +5914,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     Expression<String>? userId,
     Expression<String>? name,
     Expression<String>? unit,
+    Expression<String>? category,
     Expression<double>? quantity,
     Expression<double>? lowThreshold,
     Expression<DateTime>? updatedAt,
@@ -5883,6 +5927,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
       if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
       if (unit != null) 'unit': unit,
+      if (category != null) 'category': category,
       if (quantity != null) 'quantity': quantity,
       if (lowThreshold != null) 'low_threshold': lowThreshold,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -5897,6 +5942,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     Value<String>? userId,
     Value<String>? name,
     Value<String?>? unit,
+    Value<SupplyCategory>? category,
     Value<double>? quantity,
     Value<double?>? lowThreshold,
     Value<DateTime>? updatedAt,
@@ -5909,6 +5955,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       unit: unit ?? this.unit,
+      category: category ?? this.category,
       quantity: quantity ?? this.quantity,
       lowThreshold: lowThreshold ?? this.lowThreshold,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -5932,6 +5979,11 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     }
     if (unit.present) {
       map['unit'] = Variable<String>(unit.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(
+        $SuppliesTable.$convertercategory.toSql(category.value),
+      );
     }
     if (quantity.present) {
       map['quantity'] = Variable<double>(quantity.value);
@@ -5961,6 +6013,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('unit: $unit, ')
+          ..write('category: $category, ')
           ..write('quantity: $quantity, ')
           ..write('lowThreshold: $lowThreshold, ')
           ..write('updatedAt: $updatedAt, ')
@@ -12587,6 +12640,7 @@ typedef $$SuppliesTableCreateCompanionBuilder =
       required String userId,
       required String name,
       Value<String?> unit,
+      Value<SupplyCategory> category,
       Value<double> quantity,
       Value<double?> lowThreshold,
       required DateTime updatedAt,
@@ -12600,6 +12654,7 @@ typedef $$SuppliesTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> name,
       Value<String?> unit,
+      Value<SupplyCategory> category,
       Value<double> quantity,
       Value<double?> lowThreshold,
       Value<DateTime> updatedAt,
@@ -12658,6 +12713,12 @@ class $$SuppliesTableFilterComposer
   ColumnFilters<String> get unit => $composableBuilder(
     column: $table.unit,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SupplyCategory, SupplyCategory, String>
+  get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<double> get quantity => $composableBuilder(
@@ -12740,6 +12801,11 @@ class $$SuppliesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get quantity => $composableBuilder(
     column: $table.quantity,
     builder: (column) => ColumnOrderings(column),
@@ -12786,6 +12852,9 @@ class $$SuppliesTableAnnotationComposer
 
   GeneratedColumn<String> get unit =>
       $composableBuilder(column: $table.unit, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SupplyCategory, String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
 
   GeneratedColumn<double> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
@@ -12864,6 +12933,7 @@ class $$SuppliesTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> unit = const Value.absent(),
+                Value<SupplyCategory> category = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
                 Value<double?> lowThreshold = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -12875,6 +12945,7 @@ class $$SuppliesTableTableManager
                 userId: userId,
                 name: name,
                 unit: unit,
+                category: category,
                 quantity: quantity,
                 lowThreshold: lowThreshold,
                 updatedAt: updatedAt,
@@ -12888,6 +12959,7 @@ class $$SuppliesTableTableManager
                 required String userId,
                 required String name,
                 Value<String?> unit = const Value.absent(),
+                Value<SupplyCategory> category = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
                 Value<double?> lowThreshold = const Value.absent(),
                 required DateTime updatedAt,
@@ -12899,6 +12971,7 @@ class $$SuppliesTableTableManager
                 userId: userId,
                 name: name,
                 unit: unit,
+                category: category,
                 quantity: quantity,
                 lowThreshold: lowThreshold,
                 updatedAt: updatedAt,

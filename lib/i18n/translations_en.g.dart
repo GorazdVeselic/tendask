@@ -1565,6 +1565,21 @@ class Translations$supplies$en {
 
 	/// en: 'This supply will be removed from your list.'
 	String get delete_note => 'This supply will be removed from your list.';
+
+	/// en: 'Category'
+	String get form_category => 'Category';
+
+	/// en: 'Fertilizers'
+	String get cat_fertilizer => 'Fertilizers';
+
+	/// en: 'Treatments'
+	String get cat_treatment => 'Treatments';
+
+	/// en: 'Equipment'
+	String get cat_equipment => 'Equipment';
+
+	/// en: 'Other'
+	String get cat_other => 'Other';
 }
 
 // Path: settings
@@ -2261,6 +2276,11 @@ extension on Translations {
 			'supplies.add_confirm' => 'Add',
 			'supplies.form_delete' => 'Delete supply',
 			'supplies.delete_note' => 'This supply will be removed from your list.',
+			'supplies.form_category' => 'Category',
+			'supplies.cat_fertilizer' => 'Fertilizers',
+			'supplies.cat_treatment' => 'Treatments',
+			'supplies.cat_equipment' => 'Equipment',
+			'supplies.cat_other' => 'Other',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',

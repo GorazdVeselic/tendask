@@ -475,7 +475,12 @@
     "amount": "Verbrauchte Menge",
     "add_confirm": "Hinzufügen",
     "form_delete": "Material löschen",
-    "delete_note": "Dieses Material wird aus deiner Liste entfernt."
+    "delete_note": "Dieses Material wird aus deiner Liste entfernt.",
+    "form_category": "Kategorie",
+    "cat_fertilizer": "Dünger",
+    "cat_treatment": "Pflanzenschutz",
+    "cat_equipment": "Geräte",
+    "cat_other": "Sonstiges"
   },
   "settings": {
     "title": "Einstellungen",

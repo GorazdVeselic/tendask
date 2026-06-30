@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../area_type.dart';
+import '../../supply_category.dart';
 import '../../sync/sync_status.dart';
 import '../../task_status.dart';
 import 'catalog_tables.dart';
@@ -177,6 +178,9 @@ class Supplies extends Table {
   TextColumn get name => text()();
   // kg, l, piece, etc.
   TextColumn get unit => text().nullable()();
+  // fertilizer, treatment, equipment, other — groups the supplies list (08)
+  TextColumn get category =>
+      textEnum<SupplyCategory>().withDefault(const Constant('other'))();
   RealColumn get quantity => real().withDefault(const Constant(0.0))();
   // Warn when quantity drops below this; null = no threshold
   RealColumn get lowThreshold => real().nullable()();
