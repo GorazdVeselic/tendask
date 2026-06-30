@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/notifications/notification_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import 'widgets/reminder_sound_banner.dart';
@@ -17,27 +18,44 @@ Future<bool?> showNotificationPriming(BuildContext context) {
   );
 }
 
-/// Outcome of asking for notification permission via [requestNotificationPermission].
-enum NotifPermission { granted, primingDeclined, denied }
+/// Outcome of the reminder permission flow ([requestReminderPermissions]).
+enum ReminderPermission { granted, primingDeclined, notifDenied, exactAlarmMissing }
 
-/// Asks for notification permission, showing the priming sheet first when needed.
-/// Returns [NotifPermission.granted] when notifications are (now) allowed,
-/// [NotifPermission.primingDeclined] when the user dismissed the soft ask, and
-/// [NotifPermission.denied] when they rejected the OS dialog. Safe to call when
-/// already granted (returns granted without any UI). Shared by the manual "add
-/// reminder" flow and the save-time check for an auto-seeded reminder (T7).
-Future<NotifPermission> requestNotificationPermission(
+/// Full permission flow for a reminder that must fire on time: priming (21) +
+/// notifications (Android 13+) + the exact-alarm gate (Android 14+). Returns
+/// [ReminderPermission.granted] only when both permissions are in place; the
+/// other cases tell the caller why not. On [exactAlarmMissing] it has already
+/// shown the explainer and (if confirmed) opened system settings — exact alarms
+/// are grantable only there, so the caller stops and the user re-tries after.
+///
+/// Shared by the manual "add reminder" flow and the save-time check for an
+/// auto-seeded reminder (T7), so both ask for the same permissions.
+Future<ReminderPermission> requestReminderPermissions(
   BuildContext context,
   NotificationService notif,
 ) async {
-  if (await notif.areNotificationsEnabled()) return NotifPermission.granted;
-  if (!context.mounted) return NotifPermission.primingDeclined;
-  if (await showNotificationPriming(context) != true) {
-    return NotifPermission.primingDeclined;
+  if (!await notif.areNotificationsEnabled()) {
+    if (!context.mounted) return ReminderPermission.primingDeclined;
+    if (await showNotificationPriming(context) != true) {
+      return ReminderPermission.primingDeclined;
+    }
+    if (!await notif.requestPermission()) return ReminderPermission.notifDenied;
   }
-  return await notif.requestPermission()
-      ? NotifPermission.granted
-      : NotifPermission.denied;
+  if (!await notif.canScheduleExactAlarms()) {
+    if (!context.mounted) return ReminderPermission.exactAlarmMissing;
+    final t = context.t;
+    final open = await showConfirmDialog(
+      context,
+      title: t.entry.rem_exact_title,
+      body: t.entry.rem_exact_body,
+      confirmLabel: t.entry.rem_exact_open,
+      cancelLabel: t.tasks_list.delete_cancel,
+      destructive: false,
+    );
+    if (open) await notif.openExactAlarmSettings();
+    return ReminderPermission.exactAlarmMissing;
+  }
+  return ReminderPermission.granted;
 }
 
 class _NotificationPrimingSheet extends StatelessWidget {

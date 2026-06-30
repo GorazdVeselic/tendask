@@ -312,18 +312,28 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       return;
     }
 
-    // A planned task keeping a reminder needs OS permission to ever fire. Ask once
-    // here (priming + request); save regardless of the answer (offline-first: the
-    // task always saves, the reminder simply waits until permission is granted).
+    // A planned task keeping a reminder needs OS permission to ever fire, so ask
+    // for the same set as the manual "add reminder" flow (priming + notifications
+    // + exact alarms). Without exact alarms the reminder can never fire, so — like
+    // the manual flow — we stop and let the user enable it and tap Save again.
+    // Notifications declined is non-fatal: the task still saves (offline-first),
+    // with a quiet heads-up that reminders are off.
     final wantsReminders =
         _status == TaskStatus.waiting && _reminders.isNotEmpty;
     var notifBlocked = false;
     if (wantsReminders) {
       final notif = ref.read(notificationServiceProvider);
-      notifBlocked =
-          await requestNotificationPermission(context, notif) !=
-          NotifPermission.granted;
+      final outcome = await requestReminderPermissions(context, notif);
       if (!mounted) return;
+      switch (outcome) {
+        case ReminderPermission.exactAlarmMissing:
+          return;
+        case ReminderPermission.primingDeclined:
+        case ReminderPermission.notifDenied:
+          notifBlocked = true;
+        case ReminderPermission.granted:
+          break;
+      }
     }
 
     setState(() => _isSaving = true);

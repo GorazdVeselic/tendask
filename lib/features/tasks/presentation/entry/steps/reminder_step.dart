@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/config.dart';
 import '../../../../../core/notifications/notification_service.dart';
-import '../../../../../core/widgets/confirm_dialog.dart';
 import '../../../../../core/widgets/section_label.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
@@ -80,33 +79,19 @@ class ReminderStepBody extends ConsumerWidget {
     final notif = ref.read(notificationServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
 
-    // Priming (21) + notification permission, in context on intent. Shared with
-    // the save-time seed check so both ask the same way.
-    switch (await requestNotificationPermission(context, notif)) {
-      case NotifPermission.primingDeclined:
+    // Priming (21) + notifications + exact-alarm gate, in context on intent.
+    // Shared with the save-time seed check so both ask for the same permissions.
+    switch (await requestReminderPermissions(context, notif)) {
+      case ReminderPermission.primingDeclined:
+      case ReminderPermission.exactAlarmMissing:
         return;
-      case NotifPermission.denied:
+      case ReminderPermission.notifDenied:
         messenger.showSnackBar(SnackBar(content: Text(t.entry.rem_perm_denied)));
         return;
-      case NotifPermission.granted:
+      case ReminderPermission.granted:
         break;
     }
     if (!context.mounted) return;
-    // Exact alarms are granted only via system settings (not a dialog), so we
-    // explain and send the user there; they re-tap + after enabling.
-    if (!await notif.canScheduleExactAlarms()) {
-      if (!context.mounted) return;
-      final open = await showConfirmDialog(
-        context,
-        title: t.entry.rem_exact_title,
-        body: t.entry.rem_exact_body,
-        confirmLabel: t.entry.rem_exact_open,
-        cancelLabel: t.tasks_list.delete_cancel,
-        destructive: false,
-      );
-      if (open) await notif.openExactAlarmSettings();
-      return;
-    }
     final userId = ref.read(authServiceProvider).userId;
     final settings = await ref
         .read(profileRepositoryProvider)
