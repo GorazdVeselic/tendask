@@ -44,7 +44,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 10;
+  int get schemaVersion => 11;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -160,6 +160,11 @@ class AppDatabase extends _$AppDatabase {
       // re-seeds and pushes a duplicate (mirrors Supabase 0012).
       if (from < 10) {
         await m.addColumn(profiles, profiles.defaultGardenSeeded);
+      }
+      // v11: task.series_id groups instances of one recurring series (FR-5).
+      // Additive nullable column; mirrors Supabase migration.
+      if (from < 11) {
+        await m.addColumn(tasks, tasks.seriesId);
       }
     },
   );

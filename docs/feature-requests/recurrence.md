@@ -28,9 +28,11 @@ NE premakne termina (»vsak ponedeljek« ostane ponedeljek).
 
 ### Konec serije
 - Privzeto: **v nedogled** (nova instanca ob vsakem dokončanju).
-- Neobvezno: **»ponovi skupaj N-krat«** (D4) → original šteje kot pojavitev 1;
-  serija ustvari skupno N instanc. Zadnja (N-ta) instanca nima `recurrence`
-  (D2), zato je vidno, da se ne bo ponovila.
+- Neobvezno: **»ponovi določeno število krat«** (D4, popravljeno 2026-06-30) →
+  uporabnik vnese **število ponovitev** (R ≥ 1 = kolikokrat se opravilo še ponovi
+  po trenutnem). To je natanko `remaining`. Serija tako ustvari R dodatnih instanc
+  (skupaj R+1). Zadnja instanca nima `recurrence` (D2), zato je vidno, da se ne bo
+  ponovila. Ustavljanje med tekom: **⋯ → »Ustavi ponavljanje«** (ne brisanje).
 
 ## 2. NE-obseg (namerno izpuščeno za MVP)
 
@@ -67,9 +69,10 @@ Dva nosilca stanja na `task`:
   **po tej**. `null` = neomejeno. **Vrednost `0` se nikoli ne shrani** (D2): namesto
   zadnje instance z `remaining:0` dobi ta `recurrence = null`.
 
-### Semantika štetja (D2 + D4)
-- Uporabnik vnese *skupno* N pojavitev (N ≥ 2; N = 1 je enkratno) → prva instanca
-  dobi `remaining = N - 1`.
+### Semantika štetja (D2 + D4, UI popravljen 2026-06-30)
+- UI polje = **število ponovitev** R (R ≥ 1) = `remaining` neposredno (brez ±1).
+  »R ponovitev« pomeni R dodatnih instanc po trenutni (skupaj R+1). Prazno/neveljavno
+  polje (R < 1 ali prazen interval) **blokira »Naprej«** + pokaže napako pod poljem.
 - Ob dokončanju instance z `recurrence = r`:
   - `r == null` → ni nove instance (enkratno ali že zadnja).
   - `r.remaining == null` → nova instanca z `recurrence = {everyDays, remaining: null}` (neskončno).
@@ -117,12 +120,16 @@ DateTime nextOccurrenceDate(DateTime scheduledLocal, int everyDays) =>
 ## 5. Spremembe repozitorija (`tasks_repository.dart`)
 
 ### 5.1 `create(...)`
-Že sprejema `String? recurrence`. **Dodaj** `String? seriesId` parameter; če klicalec
-vklopi ponavljanje in `seriesId == null`, repo generira nov UUID (serija se rodi).
-Klicalec poda `recurrence?.encode()`.
+Že sprejema `String? recurrence`. **Dodaj** `String? seriesId` parameter (uporablja
+ga le `_materializeNext` za dedovanje); UI ga ne poda. Če je `recurrence != null` in
+`seriesId == null`, repo generira nov UUID (serija se rodi). Klicalec poda
+`recurrence?.encode()`.
 
 ### 5.2 `updateTask(...)`
-**Dodaj** `String? recurrence` (in `String? seriesId`) parameter ter ju zapiši.
+**Dodaj** `String? recurrence` parameter (in ga zapiši). **`series_id` NI parameter**
+(UI ga ne pozna) — repo ga **derivira** iz `recurrence` + obstoječega stanja vrstice
+(implementirano: bere trenutno vrstico, glej D5 pravila). Tako klicalcem ni treba
+poznati serijske identitete.
 *Opomba:* trenutno `updateTask` `recurrence` sploh ne piše → vrednost se ob editu
 **ohrani, a ni urejljiva**; naloga je narediti polje **urejljivo** (ne »nehati izgubljati«).
 Pravila (D5):
@@ -190,22 +197,24 @@ pazljiva ekstrakcija helperja (ne hierarhije).
   kopiranja po tile-ih.
 - **Povratna informacija ob dokončanju ponavljajočega:** `showTopToast(context, …)`
   (obstoječ `core/widgets/top_toast.dart`, zgornji auto-toast) z besedilom
-  `tasks.completed_recurring_toast` (»↻ Ponovljeno · naslednje $date«). Brez akcije
-  (revert serije je blokiran, D1). Haptika (FR-17) nespremenjena.
+  `tasks_list.completed_recurring_toast` (»↻ Ponovljeno · naslednje $date«). Brez
+  akcije (revert serije je blokiran, D1). Haptika (FR-17) nespremenjena.
 - **Korak »Kdaj« kontrolnik:** 4-segmentni `SegmentedButton`
-  `Brez/Dnevno/Tedensko/Na N dni`; pri »Na N dni« se pokaže polje »Vsakih [N] dni«;
-  neobvezni `CheckboxListTile` »Ponovi skupaj [N]×« (N ≥ 2; izklop → `remaining = null`).
-  Fallback `DropdownButton` (iste 4 vrednosti), če 4 segmenti prelijejo ozek zaslon.
-  Validacija na meji: `everyDays ≥ 1`, `N ≥ 2` → sicer onemogočen Naprej/Shrani.
+  `Brez/Dnevno/Tedensko/Po meri` (`showSelectedIcon: false`); pri »Po meri« se pokaže
+  polje »Vsakih [N] dni«; neobvezni `CheckboxListTile` »Ponovi določeno število krat«
+  → polje **števila ponovitev** [R] (R ≥ 1 = `remaining`; izklop → `remaining = null`).
+  Pod kontrolniki **»Naslednje: <datum>«** (živ izračun). Validacija na meji:
+  `everyDays ≥ 1`, `R ≥ 1` → prazno/neveljavno **blokira »Naprej«** + napaka pod poljem.
 - Detajl opravila: `switch` zamenjaj z `Recurrence.tryParse`; vrstica »Ponavljanje«
   kaže človeški povzetek (Ne / Dnevno / Tedensko / Vsakih N dni [+ »· še N×«]).
 - »Povrni na čaka« onemogočen na dokončani ponavljajoči instanci (§5.4) z razlago.
 - Uporaba obstoječih komponent (`SegmentedButton`, `FieldLabel`, `SaveBar`,
   `showTopToast`), brez novih kopij.
 
-## 8. i18n ključi (sl/en/de, namespace `entry`/`tasks`/`task_detail`)
+## 8. i18n ključi (sl/en/de, namespace `entry`/`tasks_list`/`task_detail`)
 
-Dokončan seznam (FAZA 2, potrjeno 2026-06-30; sl prikazan, en/de ob implementaciji):
+Dejansko stanje (usklajeno z implementacijo 2026-06-30; sl prikazan). Opomba:
+namespace je **`tasks_list`** (ne `tasks` — to je listni nav niz).
 
 | Ključ | sl |
 |------|-----|
@@ -213,18 +222,23 @@ Dokončan seznam (FAZA 2, potrjeno 2026-06-30; sl prikazan, en/de ob implementac
 | `entry.recurrence_off` | Brez |
 | `entry.recurrence_daily` | Dnevno |
 | `entry.recurrence_weekly` | Tedensko |
-| `entry.recurrence_custom` | Na N dni |
-| `entry.recurrence_interval_label` | Vsakih (dni) |
-| `entry.recurrence_repeat_count` | Ponovi skupaj N-krat |
-| `entry.recurrence_repeat_count_hint` | Sicer se ponavlja, dokler ga ne ustaviš. |
-| `tasks.recurring_badge_tooltip` | Ponavljajoče opravilo |
-| `tasks.completed_recurring_toast` | ↻ Ponovljeno · naslednje $date |
-| `tasks.revert_blocked_recurring` | Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši. |
+| `entry.recurrence_custom` | Po meri |
+| `entry.recurrence_interval_label` | Vsakih |
+| `entry.recurrence_days_unit` | dni |
+| `entry.recurrence_repeat_count` | Ponovi določeno število krat |
+| `entry.recurrence_times_unit` | krat |
+| `entry.recurrence_repeat_count_hint` | Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje). |
+| `entry.recurrence_invalid_number` | Vnesi število |
+| `entry.recurrence_next_preview(date)` | Naslednje: $date |
+| `tasks_list.recurring_badge_tooltip` | Ponavljajoče opravilo |
+| `tasks_list.completed_recurring_toast(date)` | ↻ Ponovljeno · naslednje $date |
+| `tasks_list.revert_blocked_recurring` | Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši. |
+| `task_detail.action_stop_recurrence` | Ustavi ponavljanje |
 | `task_detail.recurrence_none` | Ne |
 | `task_detail.recurrence_daily` | Dnevno |
 | `task_detail.recurrence_weekly` | Tedensko |
-| `task_detail.recurrence_every_days` | Vsakih $n dni |
-| `task_detail.recurrence_remaining` | · še $n× |
+| `task_detail.recurrence_every_days(n)` | Vsakih $n dni |
+| `task_detail.recurrence_remaining(n)` | · še $n× |
 
 *(Obstoječi `task_detail.recurrence_weekly/seasonal/once` se ob refaktorju switcha
 počistijo, če postanejo mrtvi — preveri, da ne ostane nerabljen ključ.)*
@@ -234,7 +248,9 @@ Po dodajanju ključev: `dart run slang`.
 ## 9. Prizadete / nove datoteke
 
 **Novo:**
-- `lib/features/tasks/domain/recurrence.dart` — model + parser + generator.
+- `lib/features/tasks/data/recurrence.dart` — model + parser + generator.
+  (V `data/`, ne `domain/`: projekt po CLAUDE.md nima `domain/` plasti —
+  struktura je `data/application/presentation`; model živi ob repozitoriju.)
 
 **Spremenjeno:**
 - `lib/core/database/app_database.dart` (oz. tabela) — nova nullable `series_id` v `Tasks`

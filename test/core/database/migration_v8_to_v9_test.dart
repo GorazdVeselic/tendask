@@ -29,8 +29,8 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 10', () {
-    expect(db.schemaVersion, 10);
+  test('schema version is 11', () {
+    expect(db.schemaVersion, 11);
   });
 
   test('current schema has no device_location, keeps the user tables', () async {

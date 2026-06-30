@@ -18,7 +18,9 @@ import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
 import '../../../i18n/translations.g.dart';
 import 'subject_labels.dart';
+import 'task_actions.dart';
 import 'widgets/confirm_delete_dialog.dart';
+import 'widgets/recurring_badge.dart';
 import 'widgets/task_swipe.dart';
 
 enum _Group { overdue, today, tomorrow, thisWeek, later }
@@ -75,7 +77,7 @@ class TasksScreen extends ConsumerWidget {
               reminderTaskIds: reminderTaskIds,
               onComplete: (id) {
                 AppHaptics.taskCompleted();
-                unawaited(repo.complete(id));
+                unawaited(completeTask(context, repo, id));
               },
               onPostpone: (id) => repo.postponeOneDay(id),
               onDuplicate: (id) => repo.duplicate(id),
@@ -271,6 +273,10 @@ class _TaskRow extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(width: 8),
+                if (task.recurrence != null) ...[
+                  const RecurringBadge(),
+                  const SizedBox(width: 6),
+                ],
                 if (hasReminder) ...[
                   Icon(
                     Icons.notifications_outlined,

@@ -10,7 +10,9 @@ import '../../../../areas/application/areas_providers.dart';
 import '../../../../plants/application/plants_providers.dart';
 import '../../../../supplies/application/supplies_providers.dart';
 import '../../../../supplies/data/supply_spec.dart';
+import '../../../data/recurrence.dart';
 import '../../../data/tasks_repository.dart';
+import '../../recurrence_label.dart';
 import '../../subject_labels.dart';
 import '../entry_screen.dart';
 import 'reminder_step.dart';
@@ -23,6 +25,7 @@ class ReviewStepBody extends ConsumerWidget {
     required this.subjects,
     required this.date,
     required this.status,
+    required this.recurrence,
     required this.reminders,
     required this.supplies,
     required this.noteController,
@@ -34,6 +37,7 @@ class ReviewStepBody extends ConsumerWidget {
   final List<TaskSubjectSpec> subjects;
   final DateTime date;
   final TaskStatus status;
+  final Recurrence? recurrence;
   final List<ReminderSpec> reminders;
   final List<SupplySpec> supplies;
   final TextEditingController noteController;
@@ -110,6 +114,12 @@ class ReviewStepBody extends ConsumerWidget {
                   sub: statusLabel,
                   onTap: () => onFix(EntryStep.when),
                 ),
+                if (status == TaskStatus.waiting && recurrence != null)
+                  _ReviewRow(
+                    label: t.entry.recurrence_label,
+                    value: recurrenceLabel(t, recurrence),
+                    onTap: () => onFix(EntryStep.when),
+                  ),
                 if (status == TaskStatus.waiting)
                   _ReviewRow(
                     label: t.entry.review_reminder,

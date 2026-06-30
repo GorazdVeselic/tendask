@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
@@ -8,6 +9,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
+import 'recurrence.dart';
 
 /// Captures a weather snapshot as JSON (or null when offline/unavailable).
 /// Injected so the repo stays agnostic of the weather feature — composition,
@@ -337,10 +339,15 @@ class TasksRepository {
     TaskStatus status = TaskStatus.waiting,
     String? note,
     String? recurrence,
+    String? seriesId,
     List<ReminderSpec> reminders = const [],
   }) async {
     final id = _uuid.v4();
     final now = _clock.now();
+    // A new task with a recurrence rule starts a series; the materializer passes
+    // an existing seriesId so children inherit it (even the terminal instance).
+    final effectiveSeriesId =
+        seriesId ?? (recurrence != null ? _uuid.v4() : null);
     await _db.transaction(() async {
       await _db
           .into(_db.tasks)
@@ -353,6 +360,7 @@ class TasksRepository {
               status: Value(status),
               note: Value(note),
               recurrence: Value(recurrence),
+              seriesId: Value(effectiveSeriesId),
               updatedAt: now,
             ),
           );
@@ -372,9 +380,17 @@ class TasksRepository {
     required DateTime date,
     required String? note,
     required List<TaskSubjectSpec> subjects,
+    String? recurrence,
     List<ReminderSpec> reminders = const [],
   }) async {
     final now = _clock.now();
+    final current = await byId(id);
+    if (current == null) return; // nothing to update (mirrors complete/revert)
+    // Keep the existing series when a rule stays; a brand-new rule starts one;
+    // clearing the rule drops the row out of its series (FR-5 D5).
+    final seriesId = recurrence != null
+        ? (current.seriesId ?? _uuid.v4())
+        : null;
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
@@ -382,6 +398,8 @@ class TasksRepository {
           status: Value(status),
           date: Value(date.toUtc()),
           note: Value(note),
+          recurrence: Value(recurrence),
+          seriesId: Value(seriesId),
           updatedAt: Value(now),
           syncStatus: const Value(kSyncPending),
         ),
@@ -451,7 +469,20 @@ class TasksRepository {
     }
   }
 
-  Future<void> complete(String id) async {
+  /// Marks a task done. For a recurring task, materializes the next instance in
+  /// the same transaction and returns its local date (for the completion toast);
+  /// returns null for a one-off.
+  Future<DateTime?> complete(String id) async {
+    final task = await byId(id);
+    if (task == null) return null;
+    final rule = Recurrence.tryParse(task.recurrence);
+    // Observability: a non-null recurrence that fails to parse means the series
+    // stops silently. The tolerant parse keeps the app safe; this just surfaces
+    // the anomaly so a bad writer/sync can be caught.
+    if (task.recurrence != null && rule == null) {
+      debugPrint('complete: unparseable recurrence on $id: ${task.recurrence}');
+    }
+    DateTime? nextLocal;
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
@@ -462,9 +493,48 @@ class TasksRepository {
       );
       // Deduct supplies from stock now that the task is done.
       await _supplies.applyForTask(id);
+      // Birth the next instance atomically — a recurring completion must not
+      // leave a done task without its successor.
+      if (rule != null) nextLocal = await _materializeNext(task, rule);
     });
     // Freeze a weather snapshot for the moment of completion (§7.10).
     unawaited(_captureWeather(id));
+    return nextLocal;
+  }
+
+  /// Inserts the next waiting instance of a recurring task, inheriting its
+  /// subjects, reminders and series id. Runs inside the caller's transaction.
+  /// Anchored on the scheduled date (FR-5): late completion does not shift it.
+  Future<DateTime> _materializeNext(Task parent, Recurrence rule) async {
+    final nextLocal = nextOccurrenceDate(parent.date.toLocal(), rule.everyDays);
+    final newId = _uuid.v4();
+    final now = _clock.now();
+    await _db
+        .into(_db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: newId,
+            userId: parent.userId,
+            taskTypeId: parent.taskTypeId,
+            date: nextLocal.toUtc(),
+            status: const Value(TaskStatus.waiting),
+            note: Value(parent.note),
+            recurrence: Value(rule.next()?.encode()),
+            seriesId: Value(parent.seriesId),
+            updatedAt: now,
+          ),
+        );
+    final subs = await subjectsForTask(parent.id);
+    await _insertSubjects(newId, [
+      for (final s in subs)
+        TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
+    ], now);
+    final reminders = await remindersForTask(parent.id);
+    await _insertReminders(newId, [
+      for (final r in reminders)
+        ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
+    ], now);
+    return nextLocal;
   }
 
   /// Fetches a weather snapshot (fire-and-forget) and stores it only if the task
@@ -548,7 +618,16 @@ class TasksRepository {
     );
   }
 
+  /// Returns a completed task to waiting. No-op on a completed recurring instance
+  /// (FR-5 D1): it already spawned its successor, so reverting would leave two
+  /// active instances. The UI also blocks this; the guard keeps any path safe.
   Future<void> revertToWaiting(String id) async {
+    final task = await byId(id);
+    if (task == null) return;
+    if (task.status == TaskStatus.done &&
+        Recurrence.tryParse(task.recurrence) != null) {
+      return;
+    }
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
@@ -560,6 +639,19 @@ class TasksRepository {
       // No longer done — return supplies to stock.
       await _supplies.revertForTask(id);
     });
+  }
+
+  /// Stops a recurring series: the task stays as-is but will no longer spawn a
+  /// successor on completion (FR-5). Leaves the series by clearing series_id (D5).
+  Future<void> stopRecurrence(String id) async {
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        recurrence: const Value(null),
+        seriesId: const Value(null),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
   }
 
   Future<String> duplicate(String id) async {
@@ -578,7 +670,9 @@ class TasksRepository {
               date: task.date,
               status: const Value(TaskStatus.waiting),
               note: Value(task.note),
-              recurrence: Value(task.recurrence),
+              // "Repeat last" is a one-off copy, not a series continuation (D6).
+              recurrence: const Value(null),
+              seriesId: const Value(null),
               updatedAt: now,
             ),
           );

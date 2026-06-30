@@ -63,6 +63,7 @@ Map<String, dynamic> taskToRemote(Task r) => {
   'note': r.note,
   'weather': _jsonb(r.weather),
   'recurrence': _jsonb(r.recurrence),
+  'series_id': r.seriesId,
   'updated_at': _ts(r.updatedAt),
   'deleted': r.deleted,
 };
@@ -205,6 +206,7 @@ TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
   note: Value(r['note'] as String?),
   weather: Value(_text(r['weather'])),
   recurrence: Value(_text(r['recurrence'])),
+  seriesId: Value(r['series_id'] as String?),
   updatedAt: Value(_dt(r['updated_at'])),
   deleted: Value(r['deleted'] as bool? ?? false),
   syncStatus: const Value(kSyncSynced),

@@ -91,6 +91,8 @@ class Tasks extends Table {
   TextColumn get weather => text().nullable()();
   // JSON recurrence rule; null = one-off
   TextColumn get recurrence => text().nullable()();
+  // Stable id shared by all instances of one recurring series; null = standalone
+  TextColumn get seriesId => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>

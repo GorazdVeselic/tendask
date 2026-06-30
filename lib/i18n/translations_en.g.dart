@@ -837,14 +837,23 @@ class Translations$task_detail$en {
 	/// en: 'Reschedule'
 	String get action_move => 'Reschedule';
 
-	/// en: 'Once'
-	String get recurrence_once => 'Once';
+	/// en: 'Stop repeating'
+	String get action_stop_recurrence => 'Stop repeating';
+
+	/// en: 'No'
+	String get recurrence_none => 'No';
+
+	/// en: 'Daily'
+	String get recurrence_daily => 'Daily';
 
 	/// en: 'Weekly'
 	String get recurrence_weekly => 'Weekly';
 
-	/// en: 'Seasonal'
-	String get recurrence_seasonal => 'Seasonal';
+	/// en: 'Every $n days'
+	String recurrence_every_days({required Object n}) => 'Every ${n} days';
+
+	/// en: ' · $n× left'
+	String recurrence_remaining({required Object n}) => ' · ${n}× left';
 
 	/// en: '—'
 	String get none => '—';
@@ -923,6 +932,15 @@ class Translations$tasks_list$en {
 
 	/// en: 'Cancel'
 	String get delete_cancel => 'Cancel';
+
+	/// en: 'Recurring task'
+	String get recurring_badge_tooltip => 'Recurring task';
+
+	/// en: '↻ Repeated · next $date'
+	String completed_recurring_toast({required Object date}) => '↻ Repeated · next ${date}';
+
+	/// en: 'Can't undo — the next task in the series already exists. Delete it if needed.'
+	String get revert_blocked_recurring => 'Can\'t undo — the next task in the series already exists. Delete it if needed.';
 }
 
 // Path: subject_picker
@@ -1049,6 +1067,42 @@ class Translations$entry$en {
 
 	/// en: 'Default derived from the date and time: future = waiting, otherwise = done.'
 	String get when_status_note => 'Default derived from the date and time: future = waiting, otherwise = done.';
+
+	/// en: 'Repeat'
+	String get recurrence_label => 'Repeat';
+
+	/// en: 'None'
+	String get recurrence_off => 'None';
+
+	/// en: 'Daily'
+	String get recurrence_daily => 'Daily';
+
+	/// en: 'Weekly'
+	String get recurrence_weekly => 'Weekly';
+
+	/// en: 'Custom'
+	String get recurrence_custom => 'Custom';
+
+	/// en: 'Every'
+	String get recurrence_interval_label => 'Every';
+
+	/// en: 'days'
+	String get recurrence_days_unit => 'days';
+
+	/// en: 'Repeat a set number of times'
+	String get recurrence_repeat_count => 'Repeat a set number of times';
+
+	/// en: 'times'
+	String get recurrence_times_unit => 'times';
+
+	/// en: 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).'
+	String get recurrence_repeat_count_hint => 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).';
+
+	/// en: 'Enter a number'
+	String get recurrence_invalid_number => 'Enter a number';
+
+	/// en: 'Next: $date'
+	String recurrence_next_preview({required Object date}) => 'Next: ${date}';
 
 	/// en: 'Reminder'
 	String get reminder_title => 'Reminder';
@@ -1986,9 +2040,12 @@ extension on Translations {
 			'task_detail.action_delete' => 'Delete',
 			'task_detail.action_revert' => 'Back to waiting',
 			'task_detail.action_move' => 'Reschedule',
-			'task_detail.recurrence_once' => 'Once',
+			'task_detail.action_stop_recurrence' => 'Stop repeating',
+			'task_detail.recurrence_none' => 'No',
+			'task_detail.recurrence_daily' => 'Daily',
 			'task_detail.recurrence_weekly' => 'Weekly',
-			'task_detail.recurrence_seasonal' => 'Seasonal',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Every ${n} days',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · ${n}× left',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Task not found.',
 			'tasks_list.title' => 'Tasks',
@@ -2011,6 +2068,9 @@ extension on Translations {
 			'tasks_list.delete_confirm_body' => 'This action cannot be undone.',
 			'tasks_list.delete_yes' => 'Delete',
 			'tasks_list.delete_cancel' => 'Cancel',
+			'tasks_list.recurring_badge_tooltip' => 'Recurring task',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Repeated · next ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Can\'t undo — the next task in the series already exists. Delete it if needed.',
 			'subject_picker.title' => 'Plant or area',
 			'subject_picker.choose' => 'Choose',
 			'entry.title_new' => 'New task',
@@ -2047,6 +2107,18 @@ extension on Translations {
 			'entry.when_status_waiting' => 'Waiting',
 			'entry.when_status_done' => 'Done',
 			'entry.when_status_note' => 'Default derived from the date and time: future = waiting, otherwise = done.',
+			'entry.recurrence_label' => 'Repeat',
+			'entry.recurrence_off' => 'None',
+			'entry.recurrence_daily' => 'Daily',
+			'entry.recurrence_weekly' => 'Weekly',
+			'entry.recurrence_custom' => 'Custom',
+			'entry.recurrence_interval_label' => 'Every',
+			'entry.recurrence_days_unit' => 'days',
+			'entry.recurrence_repeat_count' => 'Repeat a set number of times',
+			'entry.recurrence_times_unit' => 'times',
+			'entry.recurrence_repeat_count_hint' => 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).',
+			'entry.recurrence_invalid_number' => 'Enter a number',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Next: ${date}',
 			'entry.reminder_title' => 'Reminder',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.',

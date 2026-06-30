@@ -451,9 +451,12 @@ class _Translations$task_detail$sl extends Translations$task_detail$en {
 	@override String get action_delete => 'Izbriši';
 	@override String get action_revert => 'Na čaka';
 	@override String get action_move => 'Premakni';
-	@override String get recurrence_once => 'Enkratno';
+	@override String get action_stop_recurrence => 'Ustavi ponavljanje';
+	@override String get recurrence_none => 'Ne';
+	@override String get recurrence_daily => 'Dnevno';
 	@override String get recurrence_weekly => 'Tedensko';
-	@override String get recurrence_seasonal => 'Sezonsko';
+	@override String recurrence_every_days({required Object n}) => 'Vsakih ${n} dni';
+	@override String recurrence_remaining({required Object n}) => ' · še ${n}×';
 	@override String get none => '—';
 	@override String get not_found => 'Opravilo ni bilo najdeno.';
 }
@@ -490,6 +493,9 @@ class _Translations$tasks_list$sl extends Translations$tasks_list$en {
 	@override String get delete_confirm_body => 'To dejanje je nepopravljivo.';
 	@override String get delete_yes => 'Izbriši';
 	@override String get delete_cancel => 'Prekliči';
+	@override String get recurring_badge_tooltip => 'Ponavljajoče opravilo';
+	@override String completed_recurring_toast({required Object date}) => '↻ Ponovljeno · naslednje ${date}';
+	@override String get revert_blocked_recurring => 'Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši.';
 }
 
 // Path: subject_picker
@@ -544,6 +550,18 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get when_status_waiting => 'Čaka';
 	@override String get when_status_done => 'Opravljeno';
 	@override String get when_status_note => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.';
+	@override String get recurrence_label => 'Ponavljanje';
+	@override String get recurrence_off => 'Brez';
+	@override String get recurrence_daily => 'Dnevno';
+	@override String get recurrence_weekly => 'Tedensko';
+	@override String get recurrence_custom => 'Po meri';
+	@override String get recurrence_interval_label => 'Vsakih';
+	@override String get recurrence_days_unit => 'dni';
+	@override String get recurrence_repeat_count => 'Ponovi določeno število krat';
+	@override String get recurrence_times_unit => 'krat';
+	@override String get recurrence_repeat_count_hint => 'Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje).';
+	@override String get recurrence_invalid_number => 'Vnesi število';
+	@override String recurrence_next_preview({required Object date}) => 'Naslednje: ${date}';
 	@override String get reminder_title => 'Opomnik';
 	@override String get optional => '(neobvezno)';
 	@override String get reminder_why => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.';
@@ -1047,9 +1065,12 @@ extension on TranslationsSl {
 			'task_detail.action_delete' => 'Izbriši',
 			'task_detail.action_revert' => 'Na čaka',
 			'task_detail.action_move' => 'Premakni',
-			'task_detail.recurrence_once' => 'Enkratno',
+			'task_detail.action_stop_recurrence' => 'Ustavi ponavljanje',
+			'task_detail.recurrence_none' => 'Ne',
+			'task_detail.recurrence_daily' => 'Dnevno',
 			'task_detail.recurrence_weekly' => 'Tedensko',
-			'task_detail.recurrence_seasonal' => 'Sezonsko',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Vsakih ${n} dni',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · še ${n}×',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Opravilo ni bilo najdeno.',
 			'tasks_list.title' => 'Opravila',
@@ -1072,6 +1093,9 @@ extension on TranslationsSl {
 			'tasks_list.delete_confirm_body' => 'To dejanje je nepopravljivo.',
 			'tasks_list.delete_yes' => 'Izbriši',
 			'tasks_list.delete_cancel' => 'Prekliči',
+			'tasks_list.recurring_badge_tooltip' => 'Ponavljajoče opravilo',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Ponovljeno · naslednje ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši.',
 			'subject_picker.title' => 'Rastlina ali območje',
 			'subject_picker.choose' => 'Izberi',
 			'entry.title_new' => 'Novo opravilo',
@@ -1108,6 +1132,18 @@ extension on TranslationsSl {
 			'entry.when_status_waiting' => 'Čaka',
 			'entry.when_status_done' => 'Opravljeno',
 			'entry.when_status_note' => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.',
+			'entry.recurrence_label' => 'Ponavljanje',
+			'entry.recurrence_off' => 'Brez',
+			'entry.recurrence_daily' => 'Dnevno',
+			'entry.recurrence_weekly' => 'Tedensko',
+			'entry.recurrence_custom' => 'Po meri',
+			'entry.recurrence_interval_label' => 'Vsakih',
+			'entry.recurrence_days_unit' => 'dni',
+			'entry.recurrence_repeat_count' => 'Ponovi določeno število krat',
+			'entry.recurrence_times_unit' => 'krat',
+			'entry.recurrence_repeat_count_hint' => 'Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje).',
+			'entry.recurrence_invalid_number' => 'Vnesi število',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Naslednje: ${date}',
 			'entry.reminder_title' => 'Opomnik',
 			'entry.optional' => '(neobvezno)',
 			'entry.reminder_why' => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.',
