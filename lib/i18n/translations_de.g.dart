@@ -70,6 +70,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
 	@override late final _Translations$appearance$de appearance = _Translations$appearance$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
+	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
 }
 
 // Path: splash
@@ -127,6 +128,7 @@ class _Translations$common$de extends Translations$common$en {
 	@override String get today => 'Heute';
 	@override String get yesterday => 'gestern';
 	@override String get load_error => 'Daten konnten nicht geladen werden.';
+	@override String get save_error => 'Speichern fehlgeschlagen.';
 }
 
 // Path: swipe
@@ -594,6 +596,7 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get rem_exact_body => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.';
 	@override String get rem_exact_open => 'Einstellungen öffnen';
 	@override String get rem_added => 'bereits hinzugefügt';
+	@override String get supplies_use_recipe => 'Rezept verwenden';
 }
 
 // Path: plant_edit
@@ -749,6 +752,8 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get cat_treatment => 'Pflanzenschutz';
 	@override String get cat_equipment => 'Geräte';
 	@override String get cat_other => 'Sonstiges';
+	@override String get seg_supplies => 'Material';
+	@override String get seg_recipes => 'Rezepte';
 }
 
 // Path: settings
@@ -861,6 +866,29 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get m_no_rain => 'kein Regen';
 }
 
+// Path: recipes
+class _Translations$recipes$de extends Translations$recipes$en {
+	_Translations$recipes$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get empty => 'Noch keine Rezepte. Mischung mit + speichern.';
+	@override String get form_new => 'Neues Rezept';
+	@override String get form_edit => 'Rezept bearbeiten';
+	@override String get form_name => 'Name';
+	@override String get form_equipment => 'Geräte';
+	@override String get form_equipment_hint => 'z. B. 16-L-Sprühgerät';
+	@override String get form_save => 'Speichern';
+	@override String get err_name => 'Rezeptnamen eingeben.';
+	@override String get form_delete => 'Rezept löschen';
+	@override String get delete_note => 'Dieses Rezept wird aus deiner Liste entfernt.';
+	@override String get items => 'Material';
+	@override String get add_item => 'Material hinzufügen';
+	@override String get pick_title => 'Rezept wählen';
+	@override String get item_removed => 'Entferntes Material';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -884,6 +912,7 @@ extension on TranslationsDe {
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
 			'common.load_error' => 'Daten konnten nicht geladen werden.',
+			'common.save_error' => 'Speichern fehlgeschlagen.',
 			'swipe.complete' => 'Erledigt',
 			'swipe.postpone' => '+1 Tag',
 			'swipe.revert' => 'Zurück',
@@ -1183,6 +1212,7 @@ extension on TranslationsDe {
 			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',
 			'entry.rem_exact_open' => 'Einstellungen öffnen',
 			'entry.rem_added' => 'bereits hinzugefügt',
+			'entry.supplies_use_recipe' => 'Rezept verwenden',
 			'plant_edit.title_edit' => 'Pflanze bearbeiten',
 			'plant_edit.species' => 'Art',
 			'plant_edit.alias' => 'Eigener Name (optional)',
@@ -1284,6 +1314,8 @@ extension on TranslationsDe {
 			'supplies.cat_treatment' => 'Pflanzenschutz',
 			'supplies.cat_equipment' => 'Geräte',
 			'supplies.cat_other' => 'Sonstiges',
+			'supplies.seg_supplies' => 'Material',
+			'supplies.seg_recipes' => 'Rezepte',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
@@ -1367,6 +1399,22 @@ extension on TranslationsDe {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Regen 48 h',
 			'weather.m_no_rain' => 'kein Regen',
+			'recipes.empty' => 'Noch keine Rezepte. Mischung mit + speichern.',
+			'recipes.form_new' => 'Neues Rezept',
+			'recipes.form_edit' => 'Rezept bearbeiten',
+			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Geräte',
+			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
+			'recipes.form_save' => 'Speichern',
+			'recipes.err_name' => 'Rezeptnamen eingeben.',
+			'recipes.form_delete' => 'Rezept löschen',
+			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
+			_ => null,
+		} ?? switch (path) {
+			'recipes.items' => 'Material',
+			'recipes.add_item' => 'Material hinzufügen',
+			'recipes.pick_title' => 'Rezept wählen',
+			'recipes.item_removed' => 'Entferntes Material',
 			_ => null,
 		};
 	}

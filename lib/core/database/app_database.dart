@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 12;
+  int get schemaVersion => 13;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -167,9 +167,11 @@ class AppDatabase extends _$AppDatabase {
       if (from < 11) {
         await m.addColumn(tasks, tasks.seriesId);
       }
-      // v12: supply.category groups the supplies list (08). Additive column with
+      // v12 is reserved for main's task.yield_amount/yield_unit (T11) — it lands
+      // here on merge; this branch has no v12 step of its own.
+      // v13: supply.category groups the supplies list (08). Additive column with
       // a default; existing rows backfill to 'other'. Mirrors Supabase migration.
-      if (from < 12) {
+      if (from < 13) {
         await m.addColumn(supplies, supplies.category);
       }
     },

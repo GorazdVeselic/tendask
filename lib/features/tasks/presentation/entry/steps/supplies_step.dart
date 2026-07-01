@@ -5,6 +5,7 @@ import '../../../../../i18n/translations.g.dart';
 import '../../../../supplies/application/supplies_providers.dart';
 import '../../../../supplies/data/supply_spec.dart';
 import '../../../../supplies/presentation/add_supply_to_task_sheet.dart';
+import '../../../../supplies/presentation/recipe_picker_sheet.dart';
 
 /// Step 5 — supplies consumed by the task (deducted from stock on completion).
 /// Shown only for supply-consuming types (task_type.consumes_supplies).
@@ -24,6 +25,14 @@ class SuppliesStepBody extends ConsumerWidget {
     final spec = await showAddSupplyToTaskSheet(context);
     if (!context.mounted) return;
     if (spec != null) onAdd(spec);
+  }
+
+  Future<void> _addRecipe(BuildContext context) async {
+    final specs = await showRecipePickerSheet(context);
+    if (!context.mounted || specs == null) return;
+    for (final spec in specs) {
+      onAdd(spec);
+    }
   }
 
   @override
@@ -87,14 +96,27 @@ class SuppliesStepBody extends ConsumerWidget {
                 ),
               Align(
                 alignment: Alignment.centerLeft,
-                child: TextButton.icon(
-                  onPressed: () => _add(context),
-                  icon: const Icon(Icons.add, size: 18),
-                  label: Text(t.entry.supplies_add),
-                  style: TextButton.styleFrom(
-                    padding: const EdgeInsets.symmetric(horizontal: 16),
-                    visualDensity: VisualDensity.compact,
-                  ),
+                child: Wrap(
+                  children: [
+                    TextButton.icon(
+                      onPressed: () => _add(context),
+                      icon: const Icon(Icons.add, size: 18),
+                      label: Text(t.entry.supplies_add),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                    TextButton.icon(
+                      onPressed: () => _addRecipe(context),
+                      icon: const Icon(Icons.receipt_long, size: 18),
+                      label: Text(t.entry.supplies_use_recipe),
+                      style: TextButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(horizontal: 16),
+                        visualDensity: VisualDensity.compact,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ],

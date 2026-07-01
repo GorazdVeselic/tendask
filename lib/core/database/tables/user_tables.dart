@@ -202,7 +202,7 @@ class Recipes extends Table {
   TextColumn get name => text()();
   // Equipment the recipe is calibrated for (e.g. "16L sprayer")
   TextColumn get equipment => text().nullable()();
-  // JSON: [{supply_id, amount, unit}]
+  // JSON: [{supply_id, amount}] — unit is derived from the supply, not stored
   TextColumn get items => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();

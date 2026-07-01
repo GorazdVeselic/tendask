@@ -26,7 +26,8 @@
   "common": {
     "today": "Today",
     "yesterday": "yesterday",
-    "load_error": "Couldn't load data."
+    "load_error": "Couldn't load data.",
+    "save_error": "Couldn't save."
   },
   "swipe": {
     "complete": "Done",
@@ -367,7 +368,8 @@
     "rem_exact_title": "Allow exact reminders",
     "rem_exact_body": "To fire at the exact time, Tendask needs the \"Alarms & reminders\" permission. Enable it in settings, then add the reminder again.",
     "rem_exact_open": "Open settings",
-    "rem_added": "already added"
+    "rem_added": "already added",
+    "supplies_use_recipe": "Use recipe"
   },
   "plant_edit": {
     "title_edit": "Edit plant",
@@ -480,7 +482,9 @@
     "cat_fertilizer": "Fertilizers",
     "cat_treatment": "Treatments",
     "cat_equipment": "Equipment",
-    "cat_other": "Other"
+    "cat_other": "Other",
+    "seg_supplies": "Supplies",
+    "seg_recipes": "Recipes"
   },
   "settings": {
     "title": "Settings",
@@ -570,5 +574,21 @@
     "m_et0": "ET₀",
     "m_rain48h": "Rain 48 h",
     "m_no_rain": "no rain"
+  },
+  "recipes": {
+    "empty": "No recipes yet. Save a mixture with +.",
+    "form_new": "New recipe",
+    "form_edit": "Edit recipe",
+    "form_name": "Name",
+    "form_equipment": "Equipment",
+    "form_equipment_hint": "e.g. 16 L sprayer",
+    "form_save": "Save",
+    "err_name": "Enter a recipe name.",
+    "form_delete": "Delete recipe",
+    "delete_note": "This recipe will be removed from your list.",
+    "items": "Supplies",
+    "add_item": "Add supply",
+    "pick_title": "Pick a recipe",
+    "item_removed": "Removed supply"
   }
 }

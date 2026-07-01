@@ -30,7 +30,8 @@
   "common": {
     "today": "Danes",
     "yesterday": "včeraj",
-    "load_error": "Podatkov ni bilo mogoče naložiti."
+    "load_error": "Podatkov ni bilo mogoče naložiti.",
+    "save_error": "Shranjevanje ni uspelo."
   },
   "swipe": {
     "complete": "Opravljeno",
@@ -375,7 +376,8 @@
     "rem_exact_title": "Dovoli točne opomnike",
     "rem_exact_body": "Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.",
     "rem_exact_open": "Odpri nastavitve",
-    "rem_added": "že dodano"
+    "rem_added": "že dodano",
+    "supplies_use_recipe": "Uporabi recept"
   },
   "plant_edit": {
     "title_edit": "Uredi rastlino",
@@ -488,7 +490,9 @@
     "cat_fertilizer": "Gnojila",
     "cat_treatment": "Tretiva",
     "cat_equipment": "Oprema",
-    "cat_other": "Drugo"
+    "cat_other": "Drugo",
+    "seg_supplies": "Zaloge",
+    "seg_recipes": "Recepti"
   },
   "settings": {
     "title": "Nastavitve",
@@ -578,5 +582,21 @@
     "m_et0": "ET₀",
     "m_rain48h": "Dež 48 h",
     "m_no_rain": "brez dežja"
+  },
+  "recipes": {
+    "empty": "Še ni receptov. Shrani mešanico z +.",
+    "form_new": "Nov recept",
+    "form_edit": "Uredi recept",
+    "form_name": "Ime",
+    "form_equipment": "Oprema",
+    "form_equipment_hint": "npr. 16 l škropilnica",
+    "form_save": "Shrani",
+    "err_name": "Vnesi ime recepta.",
+    "form_delete": "Izbriši recept",
+    "delete_note": "Recept bo odstranjen s tvojega seznama.",
+    "items": "Sredstva",
+    "add_item": "Dodaj sredstvo",
+    "pick_title": "Izberi recept",
+    "item_removed": "Odstranjeno sredstvo"
   }
 }

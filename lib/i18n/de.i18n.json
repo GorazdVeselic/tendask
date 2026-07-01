@@ -26,7 +26,8 @@
   "common": {
     "today": "Heute",
     "yesterday": "gestern",
-    "load_error": "Daten konnten nicht geladen werden."
+    "load_error": "Daten konnten nicht geladen werden.",
+    "save_error": "Speichern fehlgeschlagen."
   },
   "swipe": {
     "complete": "Erledigt",
@@ -367,7 +368,8 @@
     "rem_exact_title": "Exakte Erinnerungen erlauben",
     "rem_exact_body": "Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.",
     "rem_exact_open": "Einstellungen öffnen",
-    "rem_added": "bereits hinzugefügt"
+    "rem_added": "bereits hinzugefügt",
+    "supplies_use_recipe": "Rezept verwenden"
   },
   "plant_edit": {
     "title_edit": "Pflanze bearbeiten",
@@ -480,7 +482,9 @@
     "cat_fertilizer": "Dünger",
     "cat_treatment": "Pflanzenschutz",
     "cat_equipment": "Geräte",
-    "cat_other": "Sonstiges"
+    "cat_other": "Sonstiges",
+    "seg_supplies": "Material",
+    "seg_recipes": "Rezepte"
   },
   "settings": {
     "title": "Einstellungen",
@@ -570,5 +574,21 @@
     "m_et0": "ET₀",
     "m_rain48h": "Regen 48 h",
     "m_no_rain": "kein Regen"
+  },
+  "recipes": {
+    "empty": "Noch keine Rezepte. Mischung mit + speichern.",
+    "form_new": "Neues Rezept",
+    "form_edit": "Rezept bearbeiten",
+    "form_name": "Name",
+    "form_equipment": "Geräte",
+    "form_equipment_hint": "z. B. 16-L-Sprühgerät",
+    "form_save": "Speichern",
+    "err_name": "Rezeptnamen eingeben.",
+    "form_delete": "Rezept löschen",
+    "delete_note": "Dieses Rezept wird aus deiner Liste entfernt.",
+    "items": "Material",
+    "add_item": "Material hinzufügen",
+    "pick_title": "Rezept wählen",
+    "item_removed": "Entferntes Material"
   }
 }

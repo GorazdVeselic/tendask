@@ -215,9 +215,11 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 - **Shranjene mešanice (recepti)** vezane na opremo (npr. "100g urea + 50ml alge / 16l").
 - Ob shranjevanju → **odpis iz zaloge** + opozorilo "malo".
 - v1 = ročna izbira / recept + preprost odpis. Avtomatski preračun volumna → v2.
-- **Status (2026-06-08):** Sredstva/zaloge so **začasno skrite** pred MVP releasom prek konstante
-  `kSuppliesEnabled=false` (`core/config.dart`) — preskočen korak »Sredstva« v čarovniku (§7.16) in
-  skrita sekcija v Nastavitvah; koda ostane za kasnejšo vključitev (flip na `true`).
+- **Status (2026-06-30):** Sredstva/zaloge so **vključene** (`kSuppliesEnabled=true`). Zaloge so
+  grupirane po **kategoriji** (`Supply.category`: Gnojila/Tretiva/Oprema/Drugo; drift v13 + Supabase
+  `0015`). **Recepti** (shranjene mešanice + neobvezna oprema) so na zaslonu Zaloge pod zavihkom
+  »Recepti« (wireframe `08b-recipes.html`) in jih v koraku »Sredstva« opravila izbereš → predizpolnijo
+  sredstva. Avtomatski preračun volumna ostaja v2.
 
 ### Večjezičnost — ⭐ KANONIČNI ID + i18n (od dne 1)
 - Opravila in rastline shranjeni kot **kanonični ID-ji** z oznakami {sl, de, en, ...},
@@ -662,8 +664,8 @@ stepper** — en korak na zaslon, »Nadaljuj«, na koncu **pregled** s »Shrani�
 4. **Opomnik** — *pogojno: le ko Čaka* (prihodnost); Google-stil zamik (ob dogodku · X prej · po meri)
    + ura, več na opravilo. **Terminologija:** na opravilu je »**opomnik**«, ne »obvestilo«
    (obvestilo = sistemski kanal dostave, §7.12). Wireframe urejanja: `reminder-add_v3.html`.
-5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje). **⚠️ Začasno skrito
-   (2026-06-08)** prek `kSuppliesEnabled=false` — korak se preskoči in ne šteje med korake; koda ostane.
+5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje); izbira posameznih sredstev ali
+   celega **recepta** (predizpolni sredstva). Vključeno (`kSuppliesEnabled=true`, 2026-06-30).
 6. **Pregled** — vse izbire + opomba; Shrani / tap = Popravi
 
 **Posledice:** košnja danes = koraki 1–3 + pregled (4–5 odpadeta) → hitrost ohranjena;

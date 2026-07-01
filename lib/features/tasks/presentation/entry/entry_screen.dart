@@ -294,11 +294,22 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           reminders: reminders,
         );
       }
+      // Persist supplies only when the final type consumes them; switching to a
+      // KNOWN non-consuming type must not silently book stock the user can't see
+      // (the supplies step is hidden), and empty specs reconcile an edit that
+      // moved away from a consuming type — returning previously booked stock.
+      // If the type can't be resolved (catalog not loaded), keep the buffer only
+      // on edit (don't wipe already-booked stock); on create drop it (nothing is
+      // booked yet, so the safe default is to not book unseen consumption).
+      final type = _selectedType;
+      final keepSupplies = type == null
+          ? _isEdit
+          : kSuppliesEnabled && type.consumesSupplies;
       await ref
           .read(suppliesRepositoryProvider)
           .syncForTask(
             taskId: taskId,
-            specs: _supplies,
+            specs: keepSupplies ? _supplies : const [],
             isDone: _status == TaskStatus.done,
           );
       AppHaptics.saved();

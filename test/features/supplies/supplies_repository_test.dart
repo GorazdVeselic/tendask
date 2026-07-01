@@ -134,6 +134,22 @@ void main() {
     expect(await qty(ureaId), 5);
   });
 
+  test('syncForTask with empty specs returns booked stock (type→non-consuming)',
+      () async {
+    await supplies.syncForTask(
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: true,
+    );
+    expect(await qty(ureaId), 3);
+
+    // The entry save path passes empty specs when the final type no longer
+    // consumes supplies — this must return the previously booked stock.
+    await supplies.syncForTask(taskId: taskId, specs: const [], isDone: true);
+    expect(await qty(ureaId), 5);
+    expect(await supplies.suppliesForTask(taskId), isEmpty);
+  });
+
   test('softDelete returns booked stock', () async {
     await supplies.syncForTask(
       taskId: taskId,
@@ -143,6 +159,21 @@ void main() {
     expect(await qty(ureaId), 3);
 
     await tasks.softDelete(taskId);
+    expect(await qty(ureaId), 5);
+  });
+
+  test('over-consumption goes negative and revert restores exactly', () async {
+    // Stock is approximate (logging reality, not enforcing inventory): consuming
+    // more than on hand drives quantity negative on purpose. Clamping at 0 would
+    // break revert symmetry, so the repository keeps the exact signed value.
+    await supplies.syncForTask(
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 8)], // only 5 in stock
+      isDone: true,
+    );
+    expect(await qty(ureaId), -3);
+
+    await tasks.revertToWaiting(taskId);
     expect(await qty(ureaId), 5);
   });
 

@@ -71,6 +71,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
 	late final Translations$appearance$en appearance = Translations$appearance$en.internal(_root);
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
+	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
 }
 
 // Path: splash
@@ -158,6 +159,9 @@ class Translations$common$en {
 
 	/// en: 'Couldn't load data.'
 	String get load_error => 'Couldn\'t load data.';
+
+	/// en: 'Couldn't save.'
+	String get save_error => 'Couldn\'t save.';
 }
 
 // Path: swipe
@@ -1223,6 +1227,9 @@ class Translations$entry$en {
 
 	/// en: 'already added'
 	String get rem_added => 'already added';
+
+	/// en: 'Use recipe'
+	String get supplies_use_recipe => 'Use recipe';
 }
 
 // Path: plant_edit
@@ -1580,6 +1587,12 @@ class Translations$supplies$en {
 
 	/// en: 'Other'
 	String get cat_other => 'Other';
+
+	/// en: 'Supplies'
+	String get seg_supplies => 'Supplies';
+
+	/// en: 'Recipes'
+	String get seg_recipes => 'Recipes';
 }
 
 // Path: settings
@@ -1858,6 +1871,57 @@ class Translations$weather$en {
 	String get m_no_rain => 'no rain';
 }
 
+// Path: recipes
+class Translations$recipes$en {
+	Translations$recipes$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No recipes yet. Save a mixture with +.'
+	String get empty => 'No recipes yet. Save a mixture with +.';
+
+	/// en: 'New recipe'
+	String get form_new => 'New recipe';
+
+	/// en: 'Edit recipe'
+	String get form_edit => 'Edit recipe';
+
+	/// en: 'Name'
+	String get form_name => 'Name';
+
+	/// en: 'Equipment'
+	String get form_equipment => 'Equipment';
+
+	/// en: 'e.g. 16 L sprayer'
+	String get form_equipment_hint => 'e.g. 16 L sprayer';
+
+	/// en: 'Save'
+	String get form_save => 'Save';
+
+	/// en: 'Enter a recipe name.'
+	String get err_name => 'Enter a recipe name.';
+
+	/// en: 'Delete recipe'
+	String get form_delete => 'Delete recipe';
+
+	/// en: 'This recipe will be removed from your list.'
+	String get delete_note => 'This recipe will be removed from your list.';
+
+	/// en: 'Supplies'
+	String get items => 'Supplies';
+
+	/// en: 'Add supply'
+	String get add_item => 'Add supply';
+
+	/// en: 'Pick a recipe'
+	String get pick_title => 'Pick a recipe';
+
+	/// en: 'Removed supply'
+	String get item_removed => 'Removed supply';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1881,6 +1945,7 @@ extension on Translations {
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
 			'common.load_error' => 'Couldn\'t load data.',
+			'common.save_error' => 'Couldn\'t save.',
 			'swipe.complete' => 'Done',
 			'swipe.postpone' => '+1 day',
 			'swipe.revert' => 'Reopen',
@@ -2180,6 +2245,7 @@ extension on Translations {
 			'entry.rem_exact_body' => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.',
 			'entry.rem_exact_open' => 'Open settings',
 			'entry.rem_added' => 'already added',
+			'entry.supplies_use_recipe' => 'Use recipe',
 			'plant_edit.title_edit' => 'Edit plant',
 			'plant_edit.species' => 'Species',
 			'plant_edit.alias' => 'Personal name (optional)',
@@ -2281,6 +2347,8 @@ extension on Translations {
 			'supplies.cat_treatment' => 'Treatments',
 			'supplies.cat_equipment' => 'Equipment',
 			'supplies.cat_other' => 'Other',
+			'supplies.seg_supplies' => 'Supplies',
+			'supplies.seg_recipes' => 'Recipes',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',
@@ -2364,6 +2432,22 @@ extension on Translations {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Rain 48 h',
 			'weather.m_no_rain' => 'no rain',
+			'recipes.empty' => 'No recipes yet. Save a mixture with +.',
+			'recipes.form_new' => 'New recipe',
+			'recipes.form_edit' => 'Edit recipe',
+			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Equipment',
+			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
+			'recipes.form_save' => 'Save',
+			'recipes.err_name' => 'Enter a recipe name.',
+			'recipes.form_delete' => 'Delete recipe',
+			'recipes.delete_note' => 'This recipe will be removed from your list.',
+			_ => null,
+		} ?? switch (path) {
+			'recipes.items' => 'Supplies',
+			'recipes.add_item' => 'Add supply',
+			'recipes.pick_title' => 'Pick a recipe',
+			'recipes.item_removed' => 'Removed supply',
 			_ => null,
 		};
 	}

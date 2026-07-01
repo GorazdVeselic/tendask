@@ -98,25 +98,32 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
     setState(() => _saving = true);
     final repo = ref.read(suppliesRepositoryProvider);
     final String id;
-    if (_isEdit) {
-      await repo.update(
-        id: widget.supplyId!,
-        name: name,
-        unit: unit,
-        category: _category,
-        quantity: quantity,
-        lowThreshold: threshold,
-      );
-      id = widget.supplyId!;
-    } else {
-      id = await repo.create(
-        userId: ref.read(authServiceProvider).userId,
-        name: name,
-        unit: unit,
-        category: _category,
-        quantity: quantity,
-        lowThreshold: threshold,
-      );
+    try {
+      if (_isEdit) {
+        await repo.update(
+          id: widget.supplyId!,
+          name: name,
+          unit: unit,
+          category: _category,
+          quantity: quantity,
+          lowThreshold: threshold,
+        );
+        id = widget.supplyId!;
+      } else {
+        id = await repo.create(
+          userId: ref.read(authServiceProvider).userId,
+          name: name,
+          unit: unit,
+          category: _category,
+          quantity: quantity,
+          lowThreshold: threshold,
+        );
+      }
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => _saving = false);
+      _err(t.common.save_error);
+      return;
     }
     if (mounted) Navigator.of(context).pop(id);
   }
@@ -131,7 +138,12 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
       cancelLabel: t.tasks_list.delete_cancel,
     );
     if (!confirmed || !mounted) return;
-    await ref.read(suppliesRepositoryProvider).softDelete(widget.supplyId!);
+    try {
+      await ref.read(suppliesRepositoryProvider).softDelete(widget.supplyId!);
+    } catch (_) {
+      if (mounted) _err(t.common.save_error);
+      return;
+    }
     if (mounted) Navigator.of(context).pop();
   }
 

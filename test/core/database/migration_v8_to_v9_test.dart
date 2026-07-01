@@ -29,8 +29,8 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 12', () {
-    expect(db.schemaVersion, 12);
+  test('schema version is 13', () {
+    expect(db.schemaVersion, 13);
   });
 
   test('current schema has no device_location, keeps the user tables', () async {
@@ -42,6 +42,20 @@ void main() {
 
   test('v10: profile carries the per-account default_garden_seeded flag', () async {
     expect(await columnExists('profile', 'default_garden_seeded'), isTrue);
+  });
+
+  test('v13: supply.category exists and defaults to other', () async {
+    expect(await columnExists('supply', 'category'), isTrue);
+    // A row inserted without a category takes the column default — the same
+    // default that backfills existing rows on the v12→v13 ALTER.
+    await db.customStatement(
+      "INSERT INTO supply (id, user_id, name, updated_at) "
+      "VALUES ('s1', 'u1', 'Urea', 0)",
+    );
+    final rows = await db
+        .customSelect("SELECT category FROM supply WHERE id='s1'")
+        .get();
+    expect(rows.single.data['category'], 'other');
   });
 
   test('dropping device_location is idempotent (v9 step is safe to re-run)',

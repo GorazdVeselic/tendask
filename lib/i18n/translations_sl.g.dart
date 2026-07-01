@@ -70,6 +70,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
 	@override late final _Translations$appearance$sl appearance = _Translations$appearance$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
+	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
 }
 
 // Path: splash
@@ -131,6 +132,7 @@ class _Translations$common$sl extends Translations$common$en {
 	@override String get today => 'Danes';
 	@override String get yesterday => 'včeraj';
 	@override String get load_error => 'Podatkov ni bilo mogoče naložiti.';
+	@override String get save_error => 'Shranjevanje ni uspelo.';
 }
 
 // Path: swipe
@@ -602,6 +604,7 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
 	@override String get rem_exact_open => 'Odpri nastavitve';
 	@override String get rem_added => 'že dodano';
+	@override String get supplies_use_recipe => 'Uporabi recept';
 }
 
 // Path: plant_edit
@@ -757,6 +760,8 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get cat_treatment => 'Tretiva';
 	@override String get cat_equipment => 'Oprema';
 	@override String get cat_other => 'Drugo';
+	@override String get seg_supplies => 'Zaloge';
+	@override String get seg_recipes => 'Recepti';
 }
 
 // Path: settings
@@ -869,6 +874,29 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get m_no_rain => 'brez dežja';
 }
 
+// Path: recipes
+class _Translations$recipes$sl extends Translations$recipes$en {
+	_Translations$recipes$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get empty => 'Še ni receptov. Shrani mešanico z +.';
+	@override String get form_new => 'Nov recept';
+	@override String get form_edit => 'Uredi recept';
+	@override String get form_name => 'Ime';
+	@override String get form_equipment => 'Oprema';
+	@override String get form_equipment_hint => 'npr. 16 l škropilnica';
+	@override String get form_save => 'Shrani';
+	@override String get err_name => 'Vnesi ime recepta.';
+	@override String get form_delete => 'Izbriši recept';
+	@override String get delete_note => 'Recept bo odstranjen s tvojega seznama.';
+	@override String get items => 'Sredstva';
+	@override String get add_item => 'Dodaj sredstvo';
+	@override String get pick_title => 'Izberi recept';
+	@override String get item_removed => 'Odstranjeno sredstvo';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -892,6 +920,7 @@ extension on TranslationsSl {
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
+			'common.save_error' => 'Shranjevanje ni uspelo.',
 			'swipe.complete' => 'Opravljeno',
 			'swipe.postpone' => '+1 dan',
 			'swipe.revert' => 'Povrni',
@@ -1191,6 +1220,7 @@ extension on TranslationsSl {
 			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
 			'entry.rem_exact_open' => 'Odpri nastavitve',
 			'entry.rem_added' => 'že dodano',
+			'entry.supplies_use_recipe' => 'Uporabi recept',
 			'plant_edit.title_edit' => 'Uredi rastlino',
 			'plant_edit.species' => 'Vrsta',
 			'plant_edit.alias' => 'Osebno ime (neobvezno)',
@@ -1292,6 +1322,8 @@ extension on TranslationsSl {
 			'supplies.cat_treatment' => 'Tretiva',
 			'supplies.cat_equipment' => 'Oprema',
 			'supplies.cat_other' => 'Drugo',
+			'supplies.seg_supplies' => 'Zaloge',
+			'supplies.seg_recipes' => 'Recepti',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',
@@ -1375,6 +1407,22 @@ extension on TranslationsSl {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Dež 48 h',
 			'weather.m_no_rain' => 'brez dežja',
+			'recipes.empty' => 'Še ni receptov. Shrani mešanico z +.',
+			'recipes.form_new' => 'Nov recept',
+			'recipes.form_edit' => 'Uredi recept',
+			'recipes.form_name' => 'Ime',
+			'recipes.form_equipment' => 'Oprema',
+			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
+			'recipes.form_save' => 'Shrani',
+			'recipes.err_name' => 'Vnesi ime recepta.',
+			'recipes.form_delete' => 'Izbriši recept',
+			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
+			_ => null,
+		} ?? switch (path) {
+			'recipes.items' => 'Sredstva',
+			'recipes.add_item' => 'Dodaj sredstvo',
+			'recipes.pick_title' => 'Izberi recept',
+			'recipes.item_removed' => 'Odstranjeno sredstvo',
 			_ => null,
 		};
 	}

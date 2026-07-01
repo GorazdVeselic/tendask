@@ -273,10 +273,25 @@ void main() {
       'name': 'Compost',
       'quantity': 12, // int from JSON → double
       'low_threshold': null,
+      'category': 'treatment',
       'updated_at': '2026-06-05T10:00:00.000Z',
     });
     expect(c.quantity.value, 12.0);
     expect(c.lowThreshold.value, isNull);
+    expect(c.category.value, SupplyCategory.treatment);
+  });
+
+  test('supplyFromRemote: missing/unknown category tolerates to other', () {
+    SuppliesCompanion parse(Object? category) => supplyFromRemote({
+      'id': 's1',
+      'user_id': 'u1',
+      'name': 'Compost',
+      'quantity': 1,
+      'category': ?category,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(parse(null).category.value, SupplyCategory.other); // missing key
+    expect(parse('bogus').category.value, SupplyCategory.other); // unknown enum
   });
 
   // ── Catalog: remote → drift (pull) ────────────────────────────────────────

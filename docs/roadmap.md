@@ -495,6 +495,27 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-06-30 — **Beleženje sredstev v celoti (`feat/supplies-tracking`, worktree `../tendask-supplies`).**
+  Tri faze: (1) **ponovni vklop** `kSuppliesEnabled=true` (korak v čarovniku + sekcija Nastavitve) +
+  manjkajoč **izbris zaloge** v edit sheetu (`DestructiveButton`) — commit `392e707`. (2) **Kategorije**:
+  nov enum `core/supply_category.dart` (Gnojila/Tretiva/Oprema/Drugo) + `Supply.category` (drift **v13**
+  + Supabase **`0015`** additive, default `'other'` + CHECK), `remote_mappers` push+toleranten pull,
+  edit sheet izbira + grupiranje na zaslonu 08 (`SectionLabel`) — commit `38dc1a1`. (3) **Recepti**:
+  `recipe_item.dart` (ročni model + tolerantni parse/encode kot `Recurrence`), `RecipesRepository` +
+  providerji (recipe tabela je bila že ožičena v sync), zavihek Zaloge|Recepti na zaslonu 08,
+  `recipe_edit_sheet` + `recipe_picker_sheet`, gumb »Uporabi recept« v koraku Sredstva (predizpolni).
+  Wireframe `08b-recipes.html` + posodobljen `08-supplies.html`/`index.html`, koncept §213/§7.16.
+  **3 neodvisni agentski pregledi + hardening:** (a) `.when(error:)` na seznamih, `try/catch` ob
+  shranjevanju, recept na izbrisano sredstvo (placeholder + picker filtrira); (b) **neviden odpis
+  zaloge** ob menjavi tipa na ne-trošeč → gating v `entry_screen._save` (`keepSupplies`, varno ob
+  neznane tipu); (c) **BLOKER: pre-poraba → negativna zaloga → Supabase CHECK zavrne push → fail-fast
+  zaustavi cel sync.** Odločitev (uporabnik): dovoli deficit — migracija **`0016`** spusti
+  `supply_quantity_check`; shrani točno (revert simetrija), UI clampa prikaz na `max(0,qty)` + »malo«.
+  analyze čist · **357 testov** (dodani: recept→odpis, pre-poraba→negativa+revert, prazni-specs
+  reconcile, kategorija default/pull-toleranca). **Preštevilčeno zaradi main-ovega `0014_task_yield`
+  (drift v12): najini migraciji sta `0015`/`0016`, drift **v13** (v12 rezerviran za task_yield ob
+  merge).** ⏳ **`db push` migracij `0015`+`0016` na prod** (ločen deploy korak) + merge main. Ročna
+  on-device: menjava tipa ne odpiše; realna v12→v13 nadgradnja.
 - 2026-06-30 — **FR-5: ponavljanje opravil (`feat/fr5-recurrence`, commita `06bab04` feat + `feebfed`
   fix-ui; pushano, PR čaka).** Materializiraj-naslednjo-ob-dokončanju. Nov `data/recurrence.dart`
   (`Recurrence{everyDays, remaining}` + tolerantni `tryParse`/`encode`/`next` + čisti DST-varni
