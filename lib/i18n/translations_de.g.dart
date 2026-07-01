@@ -757,6 +757,7 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get cat_other => 'Sonstiges';
 	@override String get seg_supplies => 'Material';
 	@override String get seg_recipes => 'Rezepte';
+	@override String get search => 'Material suchen';
 }
 
 // Path: settings
@@ -1347,6 +1348,7 @@ extension on TranslationsDe {
 			'supplies.cat_other' => 'Sonstiges',
 			'supplies.seg_supplies' => 'Material',
 			'supplies.seg_recipes' => 'Rezepte',
+			'supplies.search' => 'Material suchen',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
@@ -1437,9 +1439,9 @@ extension on TranslationsDe {
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
-			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
 			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			'recipes.items' => 'Material',

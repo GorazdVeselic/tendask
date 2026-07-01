@@ -765,6 +765,7 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get cat_other => 'Drugo';
 	@override String get seg_supplies => 'Zaloge';
 	@override String get seg_recipes => 'Recepti';
+	@override String get search => 'Išči sredstva';
 }
 
 // Path: settings
@@ -1355,6 +1356,7 @@ extension on TranslationsSl {
 			'supplies.cat_other' => 'Drugo',
 			'supplies.seg_supplies' => 'Zaloge',
 			'supplies.seg_recipes' => 'Recepti',
+			'supplies.search' => 'Išči sredstva',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',
@@ -1445,9 +1447,9 @@ extension on TranslationsSl {
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
-			'recipes.err_name' => 'Vnesi ime recepta.',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
 			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			'recipes.items' => 'Sredstva',

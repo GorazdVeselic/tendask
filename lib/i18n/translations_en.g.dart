@@ -1600,6 +1600,9 @@ class Translations$supplies$en {
 
 	/// en: 'Recipes'
 	String get seg_recipes => 'Recipes';
+
+	/// en: 'Search supplies'
+	String get search => 'Search supplies';
 }
 
 // Path: settings
@@ -2418,6 +2421,7 @@ extension on Translations {
 			'supplies.cat_other' => 'Other',
 			'supplies.seg_supplies' => 'Supplies',
 			'supplies.seg_recipes' => 'Recipes',
+			'supplies.search' => 'Search supplies',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',
@@ -2508,9 +2512,9 @@ extension on Translations {
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
-			'recipes.err_name' => 'Enter a recipe name.',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
 			'recipes.delete_note' => 'This recipe will be removed from your list.',
 			'recipes.items' => 'Supplies',

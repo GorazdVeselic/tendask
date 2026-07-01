@@ -486,7 +486,8 @@
     "cat_equipment": "Equipment",
     "cat_other": "Other",
     "seg_supplies": "Supplies",
-    "seg_recipes": "Recipes"
+    "seg_recipes": "Recipes",
+    "search": "Search supplies"
   },
   "settings": {
     "title": "Settings",

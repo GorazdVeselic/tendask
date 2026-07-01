@@ -486,7 +486,8 @@
     "cat_equipment": "Geräte",
     "cat_other": "Sonstiges",
     "seg_supplies": "Material",
-    "seg_recipes": "Rezepte"
+    "seg_recipes": "Rezepte",
+    "search": "Material suchen"
   },
   "settings": {
     "title": "Einstellungen",

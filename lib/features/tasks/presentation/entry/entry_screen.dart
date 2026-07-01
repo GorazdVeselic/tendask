@@ -488,7 +488,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       ),
       body: Column(
         children: [
-          _ProgressBar(count: active.length, current: pos < 0 ? 0 : pos),
+          // Review is the final summary, not a numbered step — exclude it from
+          // the bar so the dot count matches the highest "Korak N". Review is
+          // always the last active step, so all dots fill when it's reached.
+          _ProgressBar(count: active.length - 1, current: pos < 0 ? 0 : pos),
           _StepTitle(step: _step, position: pos),
           Expanded(
             child: PageView(

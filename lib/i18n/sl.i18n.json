@@ -494,7 +494,8 @@
     "cat_equipment": "Oprema",
     "cat_other": "Drugo",
     "seg_supplies": "Zaloge",
-    "seg_recipes": "Recepti"
+    "seg_recipes": "Recepti",
+    "search": "Išči sredstva"
   },
   "settings": {
     "title": "Nastavitve",
