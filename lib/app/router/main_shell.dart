@@ -11,20 +11,18 @@ class MainShell extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    // Add FAB on the Home/Tasks/Garden *tabs* themselves — not on pushed
-    // sub-pages (e.g. task detail), where it would overlap their action bars.
-    // Journal is a read-only history view, so it has no add button. On the
-    // Garden tab the FAB goes straight to adding plants (area-add is a quieter
-    // entry in the list); elsewhere it opens the task quick-log.
+    // Add FAB on the Home/Tasks *tabs* themselves — not on pushed sub-pages
+    // (e.g. task detail), where it would overlap their action bars. Journal is a
+    // read-only history view, so it has no add button. The Garden tab owns its
+    // own contextual FAB (plant/supply/recipe per segment), so it is excluded
+    // here to avoid a duplicate.
     final location = GoRouterState.of(context).uri.path;
-    final onGarden = location == '/areas';
-    final showFab = location == '/home' || location == '/tasks' || onGarden;
+    final showFab = location == '/home' || location == '/tasks';
     return Scaffold(
       body: shell,
       floatingActionButton: showFab
           ? FloatingActionButton(
-              onPressed: () =>
-                  context.pushNamed(onGarden ? 'plant-add' : 'task-new'),
+              onPressed: () => context.pushNamed('task-new'),
               child: const Icon(Icons.add),
             )
           : null,

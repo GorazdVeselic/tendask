@@ -403,6 +403,8 @@
   "areas": {
     "title": "Garten",
     "subtitle": "Pflanzen und Rasen",
+    "seg_areas": "Bereiche",
+    "fab_plant": "Pflanze",
     "unassigned": "Ohne Bereich",
     "last_prefix": "zuletzt:",
     "type_garden": "Garten",
@@ -461,9 +463,9 @@
     "field_empty": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu."
   },
   "supplies": {
-    "title": "Vorräte",
+    "title": "Mittel",
     "subtitle": "was ich zu Hause habe",
-    "empty": "Noch keine Vorräte. Füge welche mit + hinzu.",
+    "empty": "Noch keine Mittel. Füge welche mit + hinzu.",
     "low": "wenig",
     "qty(q, unit)": "~$q$unit",
     "form_new": "Neues Mittel",
@@ -478,16 +480,17 @@
     "pick_new": "Neues Mittel",
     "amount": "Verbrauchte Menge",
     "add_confirm": "Hinzufügen",
-    "form_delete": "Material löschen",
-    "delete_note": "Dieses Material wird aus deiner Liste entfernt.",
+    "form_delete": "Mittel löschen",
+    "delete_note": "Dieses Mittel wird aus deiner Liste entfernt.",
     "form_category": "Kategorie",
     "cat_fertilizer": "Dünger",
     "cat_treatment": "Pflanzenschutz",
     "cat_equipment": "Geräte",
     "cat_other": "Sonstiges",
-    "seg_supplies": "Material",
+    "seg_supplies": "Mittel",
     "seg_recipes": "Rezepte",
-    "search": "Material suchen"
+    "fab_new": "Mittel",
+    "search": "Mittel suchen"
   },
   "settings": {
     "title": "Einstellungen",
@@ -504,9 +507,6 @@
     "theme_dark": "Dunkel",
     "section_notifications": "Benachrichtigungen",
     "notifications_placeholder": "Benachrichtigungen und Erinnerungen",
-    "section_garden": "Garten",
-    "supplies": "📦 Vorräte & Mittel",
-    "supplies_sub": "Harnstoff, Algen, Dünger, Geräte",
     "section_account": "Konto & Daten",
     "export_data": "Daten exportieren (DSGVO)",
     "logout": "Abmelden",
@@ -580,6 +580,7 @@
   },
   "recipes": {
     "empty": "Noch keine Rezepte. Mischung mit + speichern.",
+    "fab_new": "Rezept",
     "form_new": "Neues Rezept",
     "form_edit": "Rezept bearbeiten",
     "form_name": "Name",
@@ -589,10 +590,10 @@
     "err_name": "Rezeptnamen eingeben.",
     "form_delete": "Rezept löschen",
     "delete_note": "Dieses Rezept wird aus deiner Liste entfernt.",
-    "items": "Material",
-    "add_item": "Material hinzufügen",
+    "items": "Mittel",
+    "add_item": "Mittel hinzufügen",
     "pick_title": "Rezept wählen",
-    "item_removed": "Entferntes Material"
+    "item_removed": "Entferntes Mittel"
   },
   "harvest": {
     "yield_section": "Ertrag",

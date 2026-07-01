@@ -216,21 +216,6 @@ class SettingsScreen extends ConsumerWidget {
               ),
             ),
 
-            // Garden / supplies — gated off for now (kSuppliesEnabled). The title
-            // string already carries the 📦, so it provides the leading glyph here
-            // (avoids the double-icon when re-enabled).
-            if (kSuppliesEnabled) ...[
-              SectionLabel(t.settings.section_garden),
-              Card(
-                child: ListTile(
-                  title: Text(t.settings.supplies),
-                  subtitle: Text(t.settings.supplies_sub),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.pushNamed('supplies'),
-                ),
-              ),
-            ],
-
             // Account & data (placeholder — M7 / GDPR)
             SectionLabel(t.settings.section_account),
             Card(

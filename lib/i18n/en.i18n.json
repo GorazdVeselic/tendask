@@ -403,6 +403,8 @@
   "areas": {
     "title": "Garden",
     "subtitle": "plants and lawns",
+    "seg_areas": "Areas",
+    "fab_plant": "Plant",
     "unassigned": "No area",
     "last_prefix": "last:",
     "type_garden": "Garden",
@@ -487,6 +489,7 @@
     "cat_other": "Other",
     "seg_supplies": "Supplies",
     "seg_recipes": "Recipes",
+    "fab_new": "Supply",
     "search": "Search supplies"
   },
   "settings": {
@@ -504,9 +507,6 @@
     "theme_dark": "Dark",
     "section_notifications": "Notifications",
     "notifications_placeholder": "Notifications and reminders",
-    "section_garden": "Garden",
-    "supplies": "📦 Supplies",
-    "supplies_sub": "urea, algae, fertilizers, gear",
     "section_account": "Account & data",
     "export_data": "Export data (GDPR)",
     "logout": "Sign out",
@@ -580,6 +580,7 @@
   },
   "recipes": {
     "empty": "No recipes yet. Save a mixture with +.",
+    "fab_new": "Recipe",
     "form_new": "New recipe",
     "form_edit": "Edit recipe",
     "form_name": "Name",

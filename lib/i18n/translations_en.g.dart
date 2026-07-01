@@ -1343,6 +1343,12 @@ class Translations$areas$en {
 	/// en: 'plants and lawns'
 	String get subtitle => 'plants and lawns';
 
+	/// en: 'Areas'
+	String get seg_areas => 'Areas';
+
+	/// en: 'Plant'
+	String get fab_plant => 'Plant';
+
 	/// en: 'No area'
 	String get unassigned => 'No area';
 
@@ -1601,6 +1607,9 @@ class Translations$supplies$en {
 	/// en: 'Recipes'
 	String get seg_recipes => 'Recipes';
 
+	/// en: 'Supply'
+	String get fab_new => 'Supply';
+
 	/// en: 'Search supplies'
 	String get search => 'Search supplies';
 }
@@ -1654,15 +1663,6 @@ class Translations$settings$en {
 
 	/// en: 'Notifications and reminders'
 	String get notifications_placeholder => 'Notifications and reminders';
-
-	/// en: 'Garden'
-	String get section_garden => 'Garden';
-
-	/// en: '📦 Supplies'
-	String get supplies => '📦 Supplies';
-
-	/// en: 'urea, algae, fertilizers, gear'
-	String get supplies_sub => 'urea, algae, fertilizers, gear';
 
 	/// en: 'Account & data'
 	String get section_account => 'Account & data';
@@ -1891,6 +1891,9 @@ class Translations$recipes$en {
 
 	/// en: 'No recipes yet. Save a mixture with +.'
 	String get empty => 'No recipes yet. Save a mixture with +.';
+
+	/// en: 'Recipe'
+	String get fab_new => 'Recipe';
 
 	/// en: 'New recipe'
 	String get form_new => 'New recipe';
@@ -2341,6 +2344,8 @@ extension on Translations {
 			'area_pick.duplicate' => 'This plant is already in the selected area.',
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
+			'areas.seg_areas' => 'Areas',
+			'areas.fab_plant' => 'Plant',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
 			'areas.type_garden' => 'Garden',
@@ -2421,6 +2426,7 @@ extension on Translations {
 			'supplies.cat_other' => 'Other',
 			'supplies.seg_supplies' => 'Supplies',
 			'supplies.seg_recipes' => 'Recipes',
+			'supplies.fab_new' => 'Supply',
 			'supplies.search' => 'Search supplies',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
@@ -2436,9 +2442,6 @@ extension on Translations {
 			'settings.theme_dark' => 'Dark',
 			'settings.section_notifications' => 'Notifications',
 			'settings.notifications_placeholder' => 'Notifications and reminders',
-			'settings.section_garden' => 'Garden',
-			'settings.supplies' => '📦 Supplies',
-			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
 			'settings.section_account' => 'Account & data',
 			'settings.export_data' => 'Export data (GDPR)',
 			'settings.logout' => 'Sign out',
@@ -2506,14 +2509,15 @@ extension on Translations {
 			'weather.m_rain48h' => 'Rain 48 h',
 			'weather.m_no_rain' => 'no rain',
 			'recipes.empty' => 'No recipes yet. Save a mixture with +.',
+			'recipes.fab_new' => 'Recipe',
 			'recipes.form_new' => 'New recipe',
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
-			'recipes.form_save' => 'Save',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_save' => 'Save',
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
 			'recipes.delete_note' => 'This recipe will be removed from your list.',

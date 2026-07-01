@@ -10,6 +10,7 @@ import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
 import '../data/recipe_item.dart';
 import 'add_supply_to_task_sheet.dart';
+import 'supply_format.dart';
 
 /// Opens the create/edit recipe sheet. Pass [recipeId] to edit an existing one.
 Future<void> showRecipeEditSheet(BuildContext context, {String? recipeId}) {
@@ -152,9 +153,7 @@ class _RecipeEditSheetState extends ConsumerState<_RecipeEditSheet> {
       // placeholder instead of a bare UUID so the user can drop the stale item.
       final name = supply?.name ?? t.recipes.item_removed;
       final unit = supply?.unit ?? '';
-      final amount = item.amount == item.amount.roundToDouble()
-          ? item.amount.toInt().toString()
-          : item.amount.toString();
+      final amount = formatSupplyQuantity(item.amount);
       return '$name — $amount$unit';
     }
 
