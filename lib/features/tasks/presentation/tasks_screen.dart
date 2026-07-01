@@ -16,6 +16,7 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../application/tasks_providers.dart';
+import '../harvest.dart';
 import '../../../i18n/translations.g.dart';
 import 'subject_labels.dart';
 import 'task_actions.dart';
@@ -75,9 +76,9 @@ class TasksScreen extends ConsumerWidget {
               catalog: catalog,
               subjectLabels: subjectLabels,
               reminderTaskIds: reminderTaskIds,
-              onComplete: (id) {
+              onComplete: (id, harvest) {
                 AppHaptics.taskCompleted();
-                unawaited(completeTask(context, repo, id));
+                unawaited(completeTask(context, repo, id, harvest: harvest));
               },
               onPostpone: (id) => repo.postponeOneDay(id),
               onDuplicate: (id) => repo.duplicate(id),
@@ -105,7 +106,7 @@ class _TasksList extends StatelessWidget {
   final Map<String, TaskType> catalog;
   final Map<String, String> subjectLabels;
   final Set<String> reminderTaskIds;
-  final void Function(String id) onComplete;
+  final void Function(String id, bool harvest) onComplete;
   final void Function(String id) onPostpone;
   final void Function(String id) onDuplicate;
   final void Function(String id) onDelete;
@@ -152,7 +153,7 @@ class _TasksList extends StatelessWidget {
             subjectLabel: subjectLabels[task.id],
             hasReminder: reminderTaskIds.contains(task.id),
             group: group,
-            onComplete: () => onComplete(task.id),
+            onComplete: () => onComplete(task.id, isHarvestType(catalog[task.taskTypeId])),
             onPostpone: () => onPostpone(task.id),
             onEdit: () =>
                 context.pushNamed('task-edit', pathParameters: {'id': task.id}),

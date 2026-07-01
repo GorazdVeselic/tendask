@@ -33,6 +33,11 @@ void main() {
     expect(db.schemaVersion, 13);
   });
 
+  test('v12: task carries the harvest yield columns (T11)', () async {
+    expect(await columnExists('task', 'yield_amount'), isTrue);
+    expect(await columnExists('task', 'yield_unit'), isTrue);
+  });
+
   test('current schema has no device_location, keeps the user tables', () async {
     expect(await tableExists('device_location'), isFalse);
     expect(await tableExists('profile'), isTrue);

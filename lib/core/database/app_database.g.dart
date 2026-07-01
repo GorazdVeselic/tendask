@@ -3235,6 +3235,28 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _yieldAmountMeta = const VerificationMeta(
+    'yieldAmount',
+  );
+  @override
+  late final GeneratedColumn<double> yieldAmount = GeneratedColumn<double>(
+    'yield_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yieldUnitMeta = const VerificationMeta(
+    'yieldUnit',
+  );
+  @override
+  late final GeneratedColumn<String> yieldUnit = GeneratedColumn<String>(
+    'yield_unit',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -3284,6 +3306,8 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     weather,
     recurrence,
     seriesId,
+    yieldAmount,
+    yieldUnit,
     updatedAt,
     deleted,
     syncStatus,
@@ -3356,6 +3380,21 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
       );
     }
+    if (data.containsKey('yield_amount')) {
+      context.handle(
+        _yieldAmountMeta,
+        yieldAmount.isAcceptableOrUnknown(
+          data['yield_amount']!,
+          _yieldAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('yield_unit')) {
+      context.handle(
+        _yieldUnitMeta,
+        yieldUnit.isAcceptableOrUnknown(data['yield_unit']!, _yieldUnitMeta),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -3423,6 +3462,14 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}series_id'],
       ),
+      yieldAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}yield_amount'],
+      ),
+      yieldUnit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}yield_unit'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -3457,6 +3504,8 @@ class Task extends DataClass implements Insertable<Task> {
   final String? weather;
   final String? recurrence;
   final String? seriesId;
+  final double? yieldAmount;
+  final String? yieldUnit;
   final DateTime updatedAt;
   final bool deleted;
   final String syncStatus;
@@ -3470,6 +3519,8 @@ class Task extends DataClass implements Insertable<Task> {
     this.weather,
     this.recurrence,
     this.seriesId,
+    this.yieldAmount,
+    this.yieldUnit,
     required this.updatedAt,
     required this.deleted,
     required this.syncStatus,
@@ -3498,6 +3549,12 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || seriesId != null) {
       map['series_id'] = Variable<String>(seriesId);
     }
+    if (!nullToAbsent || yieldAmount != null) {
+      map['yield_amount'] = Variable<double>(yieldAmount);
+    }
+    if (!nullToAbsent || yieldUnit != null) {
+      map['yield_unit'] = Variable<String>(yieldUnit);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['deleted'] = Variable<bool>(deleted);
     map['sync_status'] = Variable<String>(syncStatus);
@@ -3521,6 +3578,12 @@ class Task extends DataClass implements Insertable<Task> {
       seriesId: seriesId == null && nullToAbsent
           ? const Value.absent()
           : Value(seriesId),
+      yieldAmount: yieldAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(yieldAmount),
+      yieldUnit: yieldUnit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(yieldUnit),
       updatedAt: Value(updatedAt),
       deleted: Value(deleted),
       syncStatus: Value(syncStatus),
@@ -3544,6 +3607,8 @@ class Task extends DataClass implements Insertable<Task> {
       weather: serializer.fromJson<String?>(json['weather']),
       recurrence: serializer.fromJson<String?>(json['recurrence']),
       seriesId: serializer.fromJson<String?>(json['seriesId']),
+      yieldAmount: serializer.fromJson<double?>(json['yieldAmount']),
+      yieldUnit: serializer.fromJson<String?>(json['yieldUnit']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
@@ -3564,6 +3629,8 @@ class Task extends DataClass implements Insertable<Task> {
       'weather': serializer.toJson<String?>(weather),
       'recurrence': serializer.toJson<String?>(recurrence),
       'seriesId': serializer.toJson<String?>(seriesId),
+      'yieldAmount': serializer.toJson<double?>(yieldAmount),
+      'yieldUnit': serializer.toJson<String?>(yieldUnit),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
       'syncStatus': serializer.toJson<String>(syncStatus),
@@ -3580,6 +3647,8 @@ class Task extends DataClass implements Insertable<Task> {
     Value<String?> weather = const Value.absent(),
     Value<String?> recurrence = const Value.absent(),
     Value<String?> seriesId = const Value.absent(),
+    Value<double?> yieldAmount = const Value.absent(),
+    Value<String?> yieldUnit = const Value.absent(),
     DateTime? updatedAt,
     bool? deleted,
     String? syncStatus,
@@ -3593,6 +3662,8 @@ class Task extends DataClass implements Insertable<Task> {
     weather: weather.present ? weather.value : this.weather,
     recurrence: recurrence.present ? recurrence.value : this.recurrence,
     seriesId: seriesId.present ? seriesId.value : this.seriesId,
+    yieldAmount: yieldAmount.present ? yieldAmount.value : this.yieldAmount,
+    yieldUnit: yieldUnit.present ? yieldUnit.value : this.yieldUnit,
     updatedAt: updatedAt ?? this.updatedAt,
     deleted: deleted ?? this.deleted,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -3612,6 +3683,10 @@ class Task extends DataClass implements Insertable<Task> {
           ? data.recurrence.value
           : this.recurrence,
       seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
+      yieldAmount: data.yieldAmount.present
+          ? data.yieldAmount.value
+          : this.yieldAmount,
+      yieldUnit: data.yieldUnit.present ? data.yieldUnit.value : this.yieldUnit,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       syncStatus: data.syncStatus.present
@@ -3632,6 +3707,8 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('weather: $weather, ')
           ..write('recurrence: $recurrence, ')
           ..write('seriesId: $seriesId, ')
+          ..write('yieldAmount: $yieldAmount, ')
+          ..write('yieldUnit: $yieldUnit, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus')
@@ -3650,6 +3727,8 @@ class Task extends DataClass implements Insertable<Task> {
     weather,
     recurrence,
     seriesId,
+    yieldAmount,
+    yieldUnit,
     updatedAt,
     deleted,
     syncStatus,
@@ -3667,6 +3746,8 @@ class Task extends DataClass implements Insertable<Task> {
           other.weather == this.weather &&
           other.recurrence == this.recurrence &&
           other.seriesId == this.seriesId &&
+          other.yieldAmount == this.yieldAmount &&
+          other.yieldUnit == this.yieldUnit &&
           other.updatedAt == this.updatedAt &&
           other.deleted == this.deleted &&
           other.syncStatus == this.syncStatus);
@@ -3682,6 +3763,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String?> weather;
   final Value<String?> recurrence;
   final Value<String?> seriesId;
+  final Value<double?> yieldAmount;
+  final Value<String?> yieldUnit;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
   final Value<String> syncStatus;
@@ -3696,6 +3779,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.weather = const Value.absent(),
     this.recurrence = const Value.absent(),
     this.seriesId = const Value.absent(),
+    this.yieldAmount = const Value.absent(),
+    this.yieldUnit = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -3711,6 +3796,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.weather = const Value.absent(),
     this.recurrence = const Value.absent(),
     this.seriesId = const Value.absent(),
+    this.yieldAmount = const Value.absent(),
+    this.yieldUnit = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -3730,6 +3817,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<String>? weather,
     Expression<String>? recurrence,
     Expression<String>? seriesId,
+    Expression<double>? yieldAmount,
+    Expression<String>? yieldUnit,
     Expression<DateTime>? updatedAt,
     Expression<bool>? deleted,
     Expression<String>? syncStatus,
@@ -3745,6 +3834,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (weather != null) 'weather': weather,
       if (recurrence != null) 'recurrence': recurrence,
       if (seriesId != null) 'series_id': seriesId,
+      if (yieldAmount != null) 'yield_amount': yieldAmount,
+      if (yieldUnit != null) 'yield_unit': yieldUnit,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deleted != null) 'deleted': deleted,
       if (syncStatus != null) 'sync_status': syncStatus,
@@ -3762,6 +3853,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<String?>? weather,
     Value<String?>? recurrence,
     Value<String?>? seriesId,
+    Value<double?>? yieldAmount,
+    Value<String?>? yieldUnit,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
     Value<String>? syncStatus,
@@ -3777,6 +3870,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
       weather: weather ?? this.weather,
       recurrence: recurrence ?? this.recurrence,
       seriesId: seriesId ?? this.seriesId,
+      yieldAmount: yieldAmount ?? this.yieldAmount,
+      yieldUnit: yieldUnit ?? this.yieldUnit,
       updatedAt: updatedAt ?? this.updatedAt,
       deleted: deleted ?? this.deleted,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -3816,6 +3911,12 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (seriesId.present) {
       map['series_id'] = Variable<String>(seriesId.value);
     }
+    if (yieldAmount.present) {
+      map['yield_amount'] = Variable<double>(yieldAmount.value);
+    }
+    if (yieldUnit.present) {
+      map['yield_unit'] = Variable<String>(yieldUnit.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -3843,6 +3944,8 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('weather: $weather, ')
           ..write('recurrence: $recurrence, ')
           ..write('seriesId: $seriesId, ')
+          ..write('yieldAmount: $yieldAmount, ')
+          ..write('yieldUnit: $yieldUnit, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus, ')
@@ -10502,6 +10605,8 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<String?> weather,
       Value<String?> recurrence,
       Value<String?> seriesId,
+      Value<double?> yieldAmount,
+      Value<String?> yieldUnit,
       required DateTime updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -10518,6 +10623,8 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<String?> weather,
       Value<String?> recurrence,
       Value<String?> seriesId,
+      Value<double?> yieldAmount,
+      Value<String?> yieldUnit,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -10646,6 +10753,16 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<String> get seriesId => $composableBuilder(
     column: $table.seriesId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get yieldUnit => $composableBuilder(
+    column: $table.yieldUnit,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -10812,6 +10929,16 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get yieldUnit => $composableBuilder(
+    column: $table.yieldUnit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -10885,6 +11012,14 @@ class $$TasksTableAnnotationComposer
 
   GeneratedColumn<String> get seriesId =>
       $composableBuilder(column: $table.seriesId, builder: (column) => column);
+
+  GeneratedColumn<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get yieldUnit =>
+      $composableBuilder(column: $table.yieldUnit, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -11038,6 +11173,8 @@ class $$TasksTableTableManager
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
                 Value<String?> seriesId = const Value.absent(),
+                Value<double?> yieldAmount = const Value.absent(),
+                Value<String?> yieldUnit = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -11052,6 +11189,8 @@ class $$TasksTableTableManager
                 weather: weather,
                 recurrence: recurrence,
                 seriesId: seriesId,
+                yieldAmount: yieldAmount,
+                yieldUnit: yieldUnit,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,
@@ -11068,6 +11207,8 @@ class $$TasksTableTableManager
                 Value<String?> weather = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
                 Value<String?> seriesId = const Value.absent(),
+                Value<double?> yieldAmount = const Value.absent(),
+                Value<String?> yieldUnit = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -11082,6 +11223,8 @@ class $$TasksTableTableManager
                 weather: weather,
                 recurrence: recurrence,
                 seriesId: seriesId,
+                yieldAmount: yieldAmount,
+                yieldUnit: yieldUnit,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,

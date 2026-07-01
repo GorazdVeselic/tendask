@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/database/app_database.dart';
+import '../../../../core/database/catalog_provider.dart';
 import '../../../../core/haptics.dart';
 import '../../../../core/task_status.dart';
 import '../../../../core/widgets/swipe_actions.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/tasks_providers.dart';
+import '../../harvest.dart';
 import '../task_actions.dart';
 
 /// Wraps a task row in the shared reveal-swipe with status-appropriate actions:
@@ -25,11 +27,13 @@ class TaskSwipe extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final repo = ref.read(tasksRepositoryProvider);
+    final catalog = ref.watch(taskTypesMapProvider).asData?.value;
+    final harvest = isHarvestType(catalog?[task.taskTypeId]);
     final actions = task.status == TaskStatus.waiting
         ? [
             completeSwipe(context, () {
               AppHaptics.taskCompleted();
-              unawaited(completeTask(context, repo, task.id));
+              unawaited(completeTask(context, repo, task.id, harvest: harvest));
             }),
             postponeSwipe(
               context,

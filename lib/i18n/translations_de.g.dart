@@ -71,6 +71,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$appearance$de appearance = _Translations$appearance$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
 	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
+	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
 }
 
 // Path: splash
@@ -591,6 +592,8 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'um ${t}';
 	@override String get rem_choose_time => 'Um Uhrzeit';
 	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
+	@override String get rem_default_hint => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.';
+	@override String get rem_saved_notif_off => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.';
 	@override String get rem_perm_denied => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.';
 	@override String get rem_exact_title => 'Exakte Erinnerungen erlauben';
 	@override String get rem_exact_body => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.';
@@ -887,6 +890,32 @@ class _Translations$recipes$de extends Translations$recipes$en {
 	@override String get add_item => 'Material hinzufügen';
 	@override String get pick_title => 'Rezept wählen';
 	@override String get item_removed => 'Entferntes Material';
+}
+
+// Path: harvest
+class _Translations$harvest$de extends Translations$harvest$en {
+	_Translations$harvest$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Ertrag';
+	@override String get sheet_title => 'Wie viel hast du geerntet?';
+	@override String get amount_label => 'Menge';
+	@override String get amount_hint => 'z. B. 2,5';
+	@override String get unit_label => 'Einheit';
+	@override String get save => 'Speichern';
+	@override String get skip => 'Überspringen';
+	@override String get remove => 'Ertrag entfernen';
+	@override String get add => 'Ertrag hinzufügen';
+	@override String get summary_title => 'Ernte';
+	@override String get summary_total => 'Gesamt';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'Stk.';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'Bund';
 }
 
 /// The flat map containing all translations for locale <de>.
@@ -1207,6 +1236,8 @@ extension on TranslationsDe {
 			'entry.rem_at' => ({required Object t}) => 'um ${t}',
 			'entry.rem_choose_time' => 'Um Uhrzeit',
 			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',
+			'entry.rem_default_hint' => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.',
+			'entry.rem_saved_notif_off' => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.',
 			'entry.rem_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.',
 			'entry.rem_exact_title' => 'Exakte Erinnerungen erlauben',
 			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',
@@ -1407,14 +1438,31 @@ extension on TranslationsDe {
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
-			'recipes.form_delete' => 'Rezept löschen',
-			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_delete' => 'Rezept löschen',
+			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			'recipes.items' => 'Material',
 			'recipes.add_item' => 'Material hinzufügen',
 			'recipes.pick_title' => 'Rezept wählen',
 			'recipes.item_removed' => 'Entferntes Material',
+			'harvest.yield_section' => 'Ertrag',
+			'harvest.sheet_title' => 'Wie viel hast du geerntet?',
+			'harvest.amount_label' => 'Menge',
+			'harvest.amount_hint' => 'z. B. 2,5',
+			'harvest.unit_label' => 'Einheit',
+			'harvest.save' => 'Speichern',
+			'harvest.skip' => 'Überspringen',
+			'harvest.remove' => 'Ertrag entfernen',
+			'harvest.add' => 'Ertrag hinzufügen',
+			'harvest.summary_title' => 'Ernte',
+			'harvest.summary_total' => 'Gesamt',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'Stk.',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'Bund',
 			_ => null,
 		};
 	}

@@ -8,16 +8,36 @@ import '../../../core/task_status.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../data/tasks_repository.dart';
+import '../yield_unit.dart';
+import 'yield_sheet.dart';
 
 /// Completes a task and, when it was recurring, shows a top toast with the next
 /// instance's date. The toast lives in the root overlay, so it survives a screen
 /// pop (completing from the detail screen).
+///
+/// For a harvest task ([harvest] true), first offers a skip-able yield sheet
+/// (T11) — the recorded amount is frozen onto this instance. Skipping or
+/// dismissing still completes the task: yield is always optional.
 Future<void> completeTask(
   BuildContext context,
   TasksRepository repo,
-  String id,
-) async {
-  final next = await repo.complete(id);
+  String id, {
+  bool harvest = false,
+}) async {
+  double? yieldAmount;
+  YieldUnit? yieldUnit;
+  if (harvest) {
+    final result = await showYieldSheet(context, allowSkip: true);
+    if (result is YieldSaved) {
+      yieldAmount = result.draft.amount;
+      yieldUnit = result.draft.unit;
+    }
+  }
+  final next = await repo.complete(
+    id,
+    yieldAmount: yieldAmount,
+    yieldUnit: yieldUnit,
+  );
   if (next == null || !context.mounted) return;
   showTopToast(
     context,

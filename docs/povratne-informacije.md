@@ -218,6 +218,40 @@ predizbran; vse ostale možnosti (1 h, 1 dan …) ostanejo na voljo. **Samodejne
 zaenkrat NE — opravilo še vedno dobi opomnik šele ob »+ Dodaj« (ohrani tok dovoljenj + ne moti
 opravljenih opravil).
 
+**Odločitev (2026-06-30): IMPLEMENTIRANO — odločitev 2026-06-23 revidirana v samodejni predizpolni.**
+Načrtovano (waiting) opravilo ob ustvarjanju zdaj dobi **en predizpolnjen, odstranljiv** opomnik;
+opravljena/retrospektivna ga ne dobijo. Sprejete izbire (faza 0):
+- **Default-on** za načrtovana opravila (napetost z »beležim, kar sem naredil« velja le za opravljena,
+  ki opomnika tako ali tako ne dobijo). Če je master stikalo `taskRemindersEnabled` izklopljeno,
+  predizpolnitve **ni**.
+- **Zamik = uporabnikov `settings.defaultReminderOffset`** (privzeto `0` = ob dogodku) — en vir resnice
+  z ročnim »+ Dodaj« in nastavitvenim zaslonom. Robustno: waiting opravilo je v prihodnosti, zato
+  offset 0 vedno sproži; **clamp** — če bi day-based privzetek padel v preteklost (bližnje opravilo),
+  seed pade nazaj na »ob dogodku«, da načrtovano opravilo **vedno** dobi delujoč opomnik.
+- **Seme-enkrat** (sentinel): velja ob create-as-planned, done→waiting flipu in `_repeatLast`; **ne** ob
+  edit-loadu (shranjeni opomniki avtoritativni); ko uporabnik predizpolnjeni opomnik odstrani, se **ne
+  vrne**. Premik datuma naprej ne sproži ponovnega sejanja (opomnik »ob dogodku« sledi datumu).
+- **Dovoljenja ob shranjevanju** (ne ob predizpolnitvi): priming + zahteva enkrat; **opravilo se shrani
+  ne glede na izid** (offline-first), exact-alarm ne blokira; ob zavrnitvi miren snackbar. Dovoljenjska
+  logika izločena v skupni helper (`requestNotificationPermission`), deli ga ročni »+ Dodaj« tok.
+- **Brez interakcije s tihimi urami / frekvenčno kapico** — predizpolnjeni opomnik je navaden
+  task-opomnik (te kontrole veljajo le za prihodnje FCM namige).
+
+UX: predizpolnjeni opomnik se pokaže kot navadna odstranljiva vrstica (korak 4 + Pregled), pod njo
+medel hint (`rem_default_hint`). Nove i18n ključe (`rem_default_hint`, `rem_saved_notif_off`, sl/en/de).
+Koda v commitu `1eac918`; testi: 4 unit (`defaultReminderSpec` + clamp) + 2 widget (načrtovano dobi
+odstranljiv opomnik; opravljeno ne).
+
+**Popravek (2026-06-30, on-device): exact-alarm gate tudi ob shranjevanju.** Prva izvedba je ob
+shranjevanju prosila le za obvestila, ne pa za exact-alarm (Android 14+ `SCHEDULE_EXACT_ALARM`), ki ga
+ročni »+ Dodaj« tok vedno zahteva. Posledica: na svežem deployu (kjer je sistemsko stikalo »Budilke in
+opomniki« privzeto izklopljeno) se je seed-opomnik shranil, a se v OS **ni razporedil** (reconcile:
+`exact_alarms_not_permitted`) in **ni zvonil**. Dovoljenjska logika izločena v skupni helper
+`requestReminderPermissions` (priming + obvestila + exact-alarm gate), ki ga deli ročni in save-time
+tok; ob manjkajočem dovoljenju se opravilo, kot pri ročnem dodajanju, ne shrani (uporabnik vklopi in
+znova shrani). On-device potrjeno (SM A536B, staging): seed + dialog + razporeditev alarma
+(`OW=2026-07-01 00:00:00`). Commit `b88bf68`.
+
 ---
 
 ### T8 — Smiselno zaporedje opravil (zalivanje pred potrjenim sajenjem)
@@ -314,7 +348,16 @@ zgodovino, brez tveganja za offline/zasebnost.
 **Priporočilo:** **močan kandidat za FR po launchu** (visoka vrednost, zmerna shema-sprememba,
 additive). MVP zajem najprej, analitika pridelka kasneje.
 
-**Odločitev:** _(odprto — predlagam: visoka prioriteta med post-launch FR-ji)_
+**Odločitev (2026-06-30): NAREJENO — zajem + osnovni povzetek** (branch `feat/t11-harvest-yield`,
+spec `docs/feature-requests/t11-harvest-yield.md`). Dve additivni polji na `task`
+(`yield_amount` `double?` + `yield_unit` `text`, enum `YieldUnit{kg,dag,g,kom,l,šop}`, shranjen kot
+`.name`, tolerantno parsanje), both-or-neither normalizira repo, DB CHECK na Supabase (migracija
+`0014`). Vnos **povsod, kjer harvest postane `done`** prek skupnega `YieldSheet` (presko­čljivo):
+ob `✓` (seznam + detajl), v čarovniku (pretekel harvest), dodaj/uredi/odstrani na detajlu opravila.
+Povzetek po enoti + po letih na detajlu rastline; yield chip v dnevniku in zgodovini rastline.
+Revert-to-waiting počisti yield. Grafi/primerjave med leti = še naprej **V2**. Pokrito z unit +
+widget testi; analyze čist. ⏳ pred deployem: `supabase db push` migracije `0014` na prod **pred**
+buildom (additivno, stari APK-ji varni), + on-device preverba.
 
 ### T12 — Mesečna vsota padavin na lokaciji
 
@@ -337,6 +380,6 @@ Pazi na meje Open-Meteo ob rasti.
 
 | # | Ideja | Trud | Vrednost | Priporočilo |
 |---|-------|:----:|:--------:|-------------|
-| T11 | Količina pridelka (yield) | srednji (MVP) | **visoka** | **Najmočnejši** post-launch kandidat; MVP zajem → analitika V2 |
+| T11 | Količina pridelka (yield) | srednji (MVP) | **visoka** | ✅ **NAREJENO** (2026-06-30) — zajem + povzetek po enoti/letih; analitika/grafi V2 |
 | T10 | Lunina mena / setveni koledar | nizek (faza) / velik (koledar) | srednja-visoka (SI trg) | MVP fazni prikaz; polni koledar V2 |
 | T12 | Mesečna vsota padavin | srednji | srednja | Smiseln; združi s FR-7 |

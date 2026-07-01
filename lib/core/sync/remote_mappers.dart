@@ -65,6 +65,8 @@ Map<String, dynamic> taskToRemote(Task r) => {
   'weather': _jsonb(r.weather),
   'recurrence': _jsonb(r.recurrence),
   'series_id': r.seriesId,
+  'yield_amount': r.yieldAmount,
+  'yield_unit': r.yieldUnit,
   'updated_at': _ts(r.updatedAt),
   'deleted': r.deleted,
 };
@@ -214,6 +216,10 @@ TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
   weather: Value(_text(r['weather'])),
   recurrence: Value(_text(r['recurrence'])),
   seriesId: Value(r['series_id'] as String?),
+  // Unit stored as-is (tolerant): an unknown value round-trips; the display
+  // layer parses it leniently. Amount is numeric → double, or null.
+  yieldAmount: Value(_double(r['yield_amount'])),
+  yieldUnit: Value(r['yield_unit'] as String?),
   updatedAt: Value(_dt(r['updated_at'])),
   deleted: Value(r['deleted'] as bool? ?? false),
   syncStatus: const Value(kSyncSynced),

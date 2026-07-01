@@ -71,6 +71,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$appearance$sl appearance = _Translations$appearance$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
 	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
+	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
 }
 
 // Path: splash
@@ -599,6 +600,8 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'ob ${t}';
 	@override String get rem_choose_time => 'Ob uri';
 	@override String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+	@override String get rem_default_hint => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.';
+	@override String get rem_saved_notif_off => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.';
 	@override String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
 	@override String get rem_exact_title => 'Dovoli točne opomnike';
 	@override String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
@@ -895,6 +898,32 @@ class _Translations$recipes$sl extends Translations$recipes$en {
 	@override String get add_item => 'Dodaj sredstvo';
 	@override String get pick_title => 'Izberi recept';
 	@override String get item_removed => 'Odstranjeno sredstvo';
+}
+
+// Path: harvest
+class _Translations$harvest$sl extends Translations$harvest$en {
+	_Translations$harvest$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Pridelek';
+	@override String get sheet_title => 'Koliko si pobral?';
+	@override String get amount_label => 'Količina';
+	@override String get amount_hint => 'npr. 2,5';
+	@override String get unit_label => 'Enota';
+	@override String get save => 'Shrani';
+	@override String get skip => 'Preskoči';
+	@override String get remove => 'Odstrani pridelek';
+	@override String get add => 'Dodaj pridelek';
+	@override String get summary_title => 'Pridelek';
+	@override String get summary_total => 'Skupaj';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'kom';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'šop';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1215,6 +1244,8 @@ extension on TranslationsSl {
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
+			'entry.rem_default_hint' => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.',
+			'entry.rem_saved_notif_off' => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.',
 			'entry.rem_perm_denied' => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.',
 			'entry.rem_exact_title' => 'Dovoli točne opomnike',
 			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
@@ -1415,14 +1446,31 @@ extension on TranslationsSl {
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',
-			'recipes.form_delete' => 'Izbriši recept',
-			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_delete' => 'Izbriši recept',
+			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			'recipes.items' => 'Sredstva',
 			'recipes.add_item' => 'Dodaj sredstvo',
 			'recipes.pick_title' => 'Izberi recept',
 			'recipes.item_removed' => 'Odstranjeno sredstvo',
+			'harvest.yield_section' => 'Pridelek',
+			'harvest.sheet_title' => 'Koliko si pobral?',
+			'harvest.amount_label' => 'Količina',
+			'harvest.amount_hint' => 'npr. 2,5',
+			'harvest.unit_label' => 'Enota',
+			'harvest.save' => 'Shrani',
+			'harvest.skip' => 'Preskoči',
+			'harvest.remove' => 'Odstrani pridelek',
+			'harvest.add' => 'Dodaj pridelek',
+			'harvest.summary_title' => 'Pridelek',
+			'harvest.summary_total' => 'Skupaj',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'kom',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'šop',
 			_ => null,
 		};
 	}

@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/config.dart';
 import '../../../../../core/notifications/notification_service.dart';
-import '../../../../../core/widgets/confirm_dialog.dart';
 import '../../../../../core/widgets/section_label.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
 import '../../../../../i18n/translations.g.dart';
+import '../../../../notifications/application/reminder_schedule.dart';
 import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../notifications/presentation/widgets/reminder_sound_banner.dart';
 import '../../../../settings/application/profile_providers.dart';
@@ -33,6 +33,25 @@ String reminderLabel(ReminderSpec r, Translations t) {
   return base;
 }
 
+/// The default reminder seeded for a planned task (T7), using the user's preferred
+/// offset. Day-based offsets carry [kDefaultReminderTime]; if that would fire in
+/// the past (a near task), falls back to at-event so a planned task always gets a
+/// reminder that actually fires. Pure: [nowLocal] is injected for testability.
+ReminderSpec defaultReminderSpec({
+  required int offsetMinutes,
+  required DateTime taskDateLocal,
+  required DateTime nowLocal,
+}) {
+  final time = offsetMinutes >= kMinutesPerDay ? kDefaultReminderTime : null;
+  final fire = reminderFireTime(
+    taskDateLocal: taskDateLocal,
+    offsetMinutes: offsetMinutes,
+    reminderTime: time,
+  );
+  if (!fire.isAfter(nowLocal)) return const ReminderSpec(offsetMinutes: 0);
+  return ReminderSpec(offsetMinutes: offsetMinutes, time: time);
+}
+
 /// Step 4 — reminders (notifications). Shown only when the task is waiting.
 /// Adding a reminder first ensures the OS permissions it needs (notifications +
 /// exact alarms) — without them a scheduled reminder would never fire.
@@ -41,12 +60,17 @@ class ReminderStepBody extends ConsumerWidget {
     super.key,
     required this.reminders,
     required this.taskDate,
+    required this.seededDefault,
     required this.onAdd,
     required this.onRemove,
   });
 
   final List<ReminderSpec> reminders;
   final DateTime taskDate;
+
+  /// Whether the list still holds the auto-seeded default reminder (T7) — drives
+  /// the hint explaining it was added and can be removed.
+  final bool seededDefault;
   final ValueChanged<ReminderSpec> onAdd;
   final ValueChanged<int> onRemove;
 
@@ -55,32 +79,19 @@ class ReminderStepBody extends ConsumerWidget {
     final notif = ref.read(notificationServiceProvider);
     final messenger = ScaffoldMessenger.of(context);
 
-    // Priming screen (21) before the OS dialog, the first time around — skip it
-    // once notifications are already granted.
-    if (!await notif.areNotificationsEnabled()) {
-      if (!context.mounted) return;
-      if (await showNotificationPriming(context) != true) return;
+    // Priming (21) + notifications + exact-alarm gate, in context on intent.
+    // Shared with the save-time seed check so both ask for the same permissions.
+    switch (await requestReminderPermissions(context, notif)) {
+      case ReminderPermission.primingDeclined:
+      case ReminderPermission.exactAlarmMissing:
+        return;
+      case ReminderPermission.notifDenied:
+        messenger.showSnackBar(SnackBar(content: Text(t.entry.rem_perm_denied)));
+        return;
+      case ReminderPermission.granted:
+        break;
     }
-    // Notifications permission (Android 13+), requested in context on intent.
-    if (!await notif.requestPermission()) {
-      messenger.showSnackBar(SnackBar(content: Text(t.entry.rem_perm_denied)));
-      return;
-    }
-    // Exact alarms are granted only via system settings (not a dialog), so we
-    // explain and send the user there; they re-tap + after enabling.
-    if (!await notif.canScheduleExactAlarms()) {
-      if (!context.mounted) return;
-      final open = await showConfirmDialog(
-        context,
-        title: t.entry.rem_exact_title,
-        body: t.entry.rem_exact_body,
-        confirmLabel: t.entry.rem_exact_open,
-        cancelLabel: t.tasks_list.delete_cancel,
-        destructive: false,
-      );
-      if (open) await notif.openExactAlarmSettings();
-      return;
-    }
+    if (!context.mounted) return;
     final userId = ref.read(authServiceProvider).userId;
     final settings = await ref
         .read(profileRepositoryProvider)
@@ -160,6 +171,15 @@ class ReminderStepBody extends ConsumerWidget {
             ],
           ),
         ),
+        if (seededDefault && reminders.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            t.entry.rem_default_hint,
+            style: theme.textTheme.bodySmall?.copyWith(
+              color: theme.colorScheme.onSurfaceVariant,
+            ),
+          ),
+        ],
         const SizedBox(height: 10),
         Text(
           t.entry.reminder_note,

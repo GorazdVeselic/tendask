@@ -364,6 +364,8 @@
     "rem_at(t)": "um $t",
     "rem_choose_time": "Um Uhrzeit",
     "rem_time_note": "Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).",
+    "rem_default_hint": "Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.",
+    "rem_saved_notif_off": "Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.",
     "rem_perm_denied": "Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.",
     "rem_exact_title": "Exakte Erinnerungen erlauben",
     "rem_exact_body": "Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.",
@@ -590,5 +592,24 @@
     "add_item": "Material hinzufügen",
     "pick_title": "Rezept wählen",
     "item_removed": "Entferntes Material"
+  },
+  "harvest": {
+    "yield_section": "Ertrag",
+    "sheet_title": "Wie viel hast du geerntet?",
+    "amount_label": "Menge",
+    "amount_hint": "z. B. 2,5",
+    "unit_label": "Einheit",
+    "save": "Speichern",
+    "skip": "Überspringen",
+    "remove": "Ertrag entfernen",
+    "add": "Ertrag hinzufügen",
+    "summary_title": "Ernte",
+    "summary_total": "Gesamt",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "Stk.",
+    "unit_l": "l",
+    "unit_bunch": "Bund"
   }
 }

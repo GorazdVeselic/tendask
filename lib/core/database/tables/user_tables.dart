@@ -94,6 +94,10 @@ class Tasks extends Table {
   TextColumn get recurrence => text().nullable()();
   // Stable id shared by all instances of one recurring series; null = standalone
   TextColumn get seriesId => text().nullable()();
+  // Harvest yield (T11): amount + unit (YieldUnit.name). Set only for harvest
+  // tasks, always both-or-neither (the repository normalizes this).
+  RealColumn get yieldAmount => real().nullable()();
+  TextColumn get yieldUnit => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>

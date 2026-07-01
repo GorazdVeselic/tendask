@@ -9,6 +9,7 @@ import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
+import '../yield_unit.dart';
 import 'recurrence.dart';
 
 /// Captures a weather snapshot as JSON (or null when offline/unavailable).
@@ -43,6 +44,17 @@ class ReminderSpec {
   /// "HH:mm" time of day for the notification; null = use the task's own time.
   final String? time;
 }
+
+/// Normalizes a yield pair for storage (T11): a complete, positive pair, or
+/// (null, null) otherwise. Mirrors the Supabase CHECKs (`yield_amount > 0`,
+/// amount/unit both-or-neither) so a stray 0 / half pair can never wedge the
+/// sync push. The single gate for every writer.
+({double? amount, String? unitName}) _normalizeYield(
+  double? amount,
+  YieldUnit? unit,
+) => (amount != null && amount.isFinite && amount > 0 && unit != null)
+    ? (amount: amount, unitName: unit.name)
+    : (amount: null, unitName: null);
 
 class TasksRepository {
   TasksRepository(
@@ -341,9 +353,13 @@ class TasksRepository {
     String? recurrence,
     String? seriesId,
     List<ReminderSpec> reminders = const [],
+    double? yieldAmount,
+    YieldUnit? yieldUnit,
   }) async {
     final id = _uuid.v4();
     final now = _clock.now();
+    // Harvest yield is a positive both-or-neither pair (T11); normalize here.
+    final yieldValue = _normalizeYield(yieldAmount, yieldUnit);
     // A new task with a recurrence rule starts a series; the materializer passes
     // an existing seriesId so children inherit it (even the terminal instance).
     final effectiveSeriesId =
@@ -361,6 +377,8 @@ class TasksRepository {
               note: Value(note),
               recurrence: Value(recurrence),
               seriesId: Value(effectiveSeriesId),
+              yieldAmount: Value(yieldValue.amount),
+              yieldUnit: Value(yieldValue.unitName),
               updatedAt: now,
             ),
           );
@@ -382,6 +400,7 @@ class TasksRepository {
     required List<TaskSubjectSpec> subjects,
     String? recurrence,
     List<ReminderSpec> reminders = const [],
+    bool typeRecordsYield = true,
   }) async {
     final now = _clock.now();
     final current = await byId(id);
@@ -400,6 +419,10 @@ class TasksRepository {
           note: Value(note),
           recurrence: Value(recurrence),
           seriesId: Value(seriesId),
+          // Changing the type to one that doesn't record yield drops any
+          // recorded pair (T11); a harvest keeps it (yield is edited on detail).
+          yieldAmount: typeRecordsYield ? const Value.absent() : const Value(null),
+          yieldUnit: typeRecordsYield ? const Value.absent() : const Value(null),
           updatedAt: Value(now),
           syncStatus: const Value(kSyncPending),
         ),
@@ -471,10 +494,17 @@ class TasksRepository {
 
   /// Marks a task done. For a recurring task, materializes the next instance in
   /// the same transaction and returns its local date (for the completion toast);
-  /// returns null for a one-off.
-  Future<DateTime?> complete(String id) async {
+  /// returns null for a one-off. A harvest task may record its yield here (T11):
+  /// a positive both-or-neither pair, else the columns stay null (a waiting task
+  /// being completed never has a prior yield to preserve).
+  Future<DateTime?> complete(
+    String id, {
+    double? yieldAmount,
+    YieldUnit? yieldUnit,
+  }) async {
     final task = await byId(id);
     if (task == null) return null;
+    final yieldValue = _normalizeYield(yieldAmount, yieldUnit);
     final rule = Recurrence.tryParse(task.recurrence);
     // Observability: a non-null recurrence that fails to parse means the series
     // stops silently. The tolerant parse keeps the app safe; this just surfaces
@@ -487,6 +517,8 @@ class TasksRepository {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
           status: const Value(TaskStatus.done),
+          yieldAmount: Value(yieldValue.amount),
+          yieldUnit: Value(yieldValue.unitName),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(kSyncPending),
         ),
@@ -555,6 +587,25 @@ class TasksRepository {
             syncStatus: const Value(kSyncPending),
           ),
         );
+  }
+
+  /// Sets, edits or clears a task's harvest yield (T11) from the detail screen.
+  /// Pass null/null to remove it; both-or-neither is enforced here so a half
+  /// pair can never reach storage.
+  Future<void> setYield(
+    String id, {
+    required double? amount,
+    required YieldUnit? unit,
+  }) async {
+    final yieldValue = _normalizeYield(amount, unit);
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        yieldAmount: Value(yieldValue.amount),
+        yieldUnit: Value(yieldValue.unitName),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
   }
 
   Future<void> softDelete(String id) async {
@@ -632,6 +683,10 @@ class TasksRepository {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
           status: const Value(TaskStatus.waiting),
+          // Reopening a harvest drops its recorded yield (T11): it's no longer
+          // done, and the detail screen only edits yield on a done task.
+          yieldAmount: const Value(null),
+          yieldUnit: const Value(null),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(kSyncPending),
         ),

@@ -167,10 +167,14 @@ class AppDatabase extends _$AppDatabase {
       if (from < 11) {
         await m.addColumn(tasks, tasks.seriesId);
       }
-      // v12 is reserved for main's task.yield_amount/yield_unit (T11) — it lands
-      // here on merge; this branch has no v12 step of its own.
+      // v12: task.yield_amount + task.yield_unit record harvest yield (T11).
+      // Additive nullable columns; mirror Supabase migration 0014.
+      if (from < 12) {
+        await m.addColumn(tasks, tasks.yieldAmount);
+        await m.addColumn(tasks, tasks.yieldUnit);
+      }
       // v13: supply.category groups the supplies list (08). Additive column with
-      // a default; existing rows backfill to 'other'. Mirrors Supabase migration.
+      // a default; existing rows backfill to 'other'. Mirrors Supabase 0015.
       if (from < 13) {
         await m.addColumn(supplies, supplies.category);
       }

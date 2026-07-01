@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -8,13 +10,19 @@ import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/database/catalog_provider.dart';
 import '../../../../core/haptics.dart';
+import '../../../../core/notifications/notification_service.dart';
 import '../../../../core/task_status.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../notifications/presentation/notification_priming_sheet.dart';
+import '../../../settings/application/profile_providers.dart';
 import '../../../supplies/application/supplies_providers.dart';
 import '../../../supplies/data/supply_spec.dart';
 import '../../application/tasks_providers.dart';
 import '../../data/recurrence.dart';
 import '../../data/tasks_repository.dart';
+import '../../harvest.dart';
+import '../../yield_unit.dart';
+import '../yield_sheet.dart';
 import 'steps/reminder_step.dart';
 import 'steps/review_step.dart';
 import 'steps/subject_step.dart';
@@ -58,6 +66,13 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   bool _statusManual = false;
   Recurrence? _recurrence;
   bool _recurrenceValid = true;
+  // Harvest yield (T11), captured only when logging a done harvest in create.
+  double? _yieldAmount;
+  YieldUnit? _yieldUnit;
+
+  // T7: a planned task is seeded one default reminder, once. The sentinel sticks
+  // even after the user removes it, so it never silently comes back.
+  bool _didSeedReminder = false;
 
   EntryStep _step = EntryStep.type;
   bool _isLoading = false;
@@ -74,6 +89,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _isLoading = true;
       _step = EntryStep.review;
       Future.microtask(_loadTask);
+    } else {
+      Future.microtask(_maybeSeedReminder);
     }
   }
 
@@ -159,6 +176,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
           ),
         );
+      // Stored reminders are authoritative — never auto-seed in edit mode.
+      _didSeedReminder = true;
       _isLoading = false;
     });
   }
@@ -194,6 +213,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           ),
         );
     });
+    unawaited(_maybeSeedReminder());
     _goTo(EntryStep.review);
   }
 
@@ -236,6 +256,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _date = date;
       if (!_statusManual) _status = _statusFromDate(date);
     });
+    unawaited(_maybeSeedReminder());
   }
 
   void _setStatus(TaskStatus status) {
@@ -243,14 +264,75 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _status = status;
       _statusManual = true;
     });
+    unawaited(_maybeSeedReminder());
+  }
+
+  // ── Default reminder seed (T7) ────────────────────────────────────────────
+
+  /// Seeds one default reminder for a planned task so the phone actually notifies
+  /// the user. Runs once (tracked by [_didSeedReminder]); skips a done/logged
+  /// task, one that already has reminders, or when task reminders are disabled.
+  Future<void> _maybeSeedReminder() async {
+    if (_didSeedReminder ||
+        _status != TaskStatus.waiting ||
+        _reminders.isNotEmpty) {
+      return;
+    }
+    final userId = ref.read(authServiceProvider).userId;
+    final settings = await ref
+        .read(profileRepositoryProvider)
+        .notificationSettings(userId);
+    if (!mounted) return;
+    // Re-check after the await: status/reminders may have changed meanwhile.
+    if (_didSeedReminder ||
+        _status != TaskStatus.waiting ||
+        _reminders.isNotEmpty ||
+        !settings.taskRemindersEnabled) {
+      return;
+    }
+    setState(() {
+      _reminders.add(
+        defaultReminderSpec(
+          offsetMinutes: settings.defaultReminderOffset,
+          taskDateLocal: _date,
+          nowLocal: DateTime.now(),
+        ),
+      );
+      _didSeedReminder = true;
+    });
+  }
+
+  // ── Yield (harvest only) ──────────────────────────────────────────────────
+
+  Future<void> _editYield() async {
+    final initial = (_yieldAmount != null && _yieldUnit != null)
+        ? YieldDraft(amount: _yieldAmount!, unit: _yieldUnit!)
+        : null;
+    final result = await showYieldSheet(
+      context,
+      initial: initial,
+      allowRemove: initial != null,
+    );
+    if (!mounted || result == null) return;
+    setState(() {
+      switch (result) {
+        case YieldSaved(:final draft):
+          _yieldAmount = draft.amount;
+          _yieldUnit = draft.unit;
+        case YieldCleared():
+          _yieldAmount = null;
+          _yieldUnit = null;
+      }
+    });
   }
 
   // ── Save ──────────────────────────────────────────────────────────────────
 
   Future<void> _save() async {
     final t = context.t;
+    final messenger = ScaffoldMessenger.of(context);
     if (_subjects.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
+      messenger.showSnackBar(
         SnackBar(
           content: Text(t.entry.err_subject),
           behavior: SnackBarBehavior.floating,
@@ -258,6 +340,30 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       );
       _goTo(EntryStep.subject);
       return;
+    }
+
+    // A planned task keeping a reminder needs OS permission to ever fire, so ask
+    // for the same set as the manual "add reminder" flow (priming + notifications
+    // + exact alarms). Without exact alarms the reminder can never fire, so — like
+    // the manual flow — we stop and let the user enable it and tap Save again.
+    // Notifications declined is non-fatal: the task still saves (offline-first),
+    // with a quiet heads-up that reminders are off.
+    final wantsReminders =
+        _status == TaskStatus.waiting && _reminders.isNotEmpty;
+    var notifBlocked = false;
+    if (wantsReminders) {
+      final notif = ref.read(notificationServiceProvider);
+      final outcome = await requestReminderPermissions(context, notif);
+      if (!mounted) return;
+      switch (outcome) {
+        case ReminderPermission.exactAlarmMissing:
+          return;
+        case ReminderPermission.primingDeclined:
+        case ReminderPermission.notifDenied:
+          notifBlocked = true;
+        case ReminderPermission.granted:
+          break;
+      }
     }
 
     setState(() => _isSaving = true);
@@ -280,9 +386,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           subjects: _subjects,
           recurrence: recurrence?.encode(),
           reminders: reminders,
+          // A type change away from harvest drops the recorded yield. Preserve
+          // when the type is unknown (catalog not loaded) — only a positively
+          // non-harvest type clears it.
+          typeRecordsYield: _selectedType == null || isHarvestType(_selectedType),
         );
         taskId = widget.taskId!;
       } else {
+        // Yield is only meaningful when logging a harvest as already done.
+        final harvestDone =
+            _status == TaskStatus.done && isHarvestType(_selectedType);
         taskId = await repo.create(
           userId: ref.read(authServiceProvider).userId,
           taskTypeId: _taskTypeId!,
@@ -292,6 +405,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           subjects: _subjects,
           recurrence: recurrence?.encode(),
           reminders: reminders,
+          yieldAmount: harvestDone ? _yieldAmount : null,
+          yieldUnit: harvestDone ? _yieldUnit : null,
         );
       }
       // Persist supplies only when the final type consumes them; switching to a
@@ -313,7 +428,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             isDone: _status == TaskStatus.done,
           );
       AppHaptics.saved();
-      if (mounted) context.pop();
+      if (!mounted) return;
+      if (notifBlocked) {
+        messenger.showSnackBar(
+          SnackBar(
+            content: Text(t.entry.rem_saved_notif_off),
+            behavior: SnackBarBehavior.floating,
+          ),
+        );
+      }
+      context.pop();
     } finally {
       if (mounted) setState(() => _isSaving = false);
     }
@@ -402,6 +526,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                 ReminderStepBody(
                   reminders: _reminders,
                   taskDate: _date,
+                  seededDefault: _didSeedReminder,
                   onAdd: (spec) => setState(() => _reminders.add(spec)),
                   onRemove: (i) => setState(() => _reminders.removeAt(i)),
                 ),
@@ -422,6 +547,13 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
                   consumesSupplies:
                       kSuppliesEnabled && (type?.consumesSupplies ?? false),
                   onFix: _goTo,
+                  showYield:
+                      !_isEdit &&
+                      _status == TaskStatus.done &&
+                      isHarvestType(type),
+                  yieldAmount: _yieldAmount,
+                  yieldUnit: _yieldUnit,
+                  onEditYield: _editYield,
                 ),
               ],
             ),

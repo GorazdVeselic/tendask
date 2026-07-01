@@ -372,6 +372,8 @@
     "rem_at(t)": "ob $t",
     "rem_choose_time": "Ob uri",
     "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).",
+    "rem_default_hint": "Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.",
+    "rem_saved_notif_off": "Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.",
     "rem_perm_denied": "Obvestila so onemogočena, zato opomnika ni mogoče dodati.",
     "rem_exact_title": "Dovoli točne opomnike",
     "rem_exact_body": "Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.",
@@ -598,5 +600,24 @@
     "add_item": "Dodaj sredstvo",
     "pick_title": "Izberi recept",
     "item_removed": "Odstranjeno sredstvo"
+  },
+  "harvest": {
+    "yield_section": "Pridelek",
+    "sheet_title": "Koliko si pobral?",
+    "amount_label": "Količina",
+    "amount_hint": "npr. 2,5",
+    "unit_label": "Enota",
+    "save": "Shrani",
+    "skip": "Preskoči",
+    "remove": "Odstrani pridelek",
+    "add": "Dodaj pridelek",
+    "summary_title": "Pridelek",
+    "summary_total": "Skupaj",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "kom",
+    "unit_l": "l",
+    "unit_bunch": "šop"
   }
 }
