@@ -9,6 +9,7 @@ import '../application/supplies_providers.dart';
 import '../data/supply_spec.dart';
 import 'supply_category_display.dart';
 import 'supply_edit_sheet.dart';
+import 'supply_format.dart';
 
 /// Picks an existing supply (or creates a new one) plus a consumed amount.
 /// Returns the chosen [SupplySpec], or null if dismissed.
@@ -209,10 +210,7 @@ class _SupplyPickRow extends StatelessWidget {
     final isLow =
         supply.quantity <= 0 ||
         (supply.lowThreshold != null && supply.quantity <= supply.lowThreshold!);
-    final qty = supply.quantity < 0 ? 0.0 : supply.quantity;
-    final qtyText = qty == qty.roundToDouble()
-        ? qty.toInt().toString()
-        : qty.toString();
+    final qtyText = formatSupplyQuantity(supply.quantity, clampNegative: true);
 
     final qtyLabel = Text(
       isLow ? '⚠️ ${t.supplies.low}' : t.supplies.qty(q: qtyText, unit: supply.unit ?? ''),

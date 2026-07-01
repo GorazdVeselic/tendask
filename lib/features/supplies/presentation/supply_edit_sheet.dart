@@ -11,6 +11,7 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
 import 'supply_category_display.dart';
+import 'supply_format.dart';
 
 /// Opens the create/edit supply sheet. Returns the supply id on save, or null
 /// if dismissed. Pass [supplyId] to edit an existing supply.
@@ -63,14 +64,13 @@ class _SupplyEditSheetState extends ConsumerState<_SupplyEditSheet> {
       _name.text = s.name;
       _unit.text = s.unit ?? '';
       _category = s.category;
-      _quantity.text = _fmt(s.quantity);
-      _threshold.text = s.lowThreshold != null ? _fmt(s.lowThreshold!) : '';
+      _quantity.text = formatSupplyQuantity(s.quantity);
+      _threshold.text = s.lowThreshold != null
+          ? formatSupplyQuantity(s.lowThreshold!)
+          : '';
     }
     setState(() => _loading = false);
   }
-
-  static String _fmt(double v) =>
-      v == v.roundToDouble() ? v.toInt().toString() : v.toString();
 
   static double? _parse(String s) =>
       double.tryParse(s.trim().replaceAll(',', '.'));

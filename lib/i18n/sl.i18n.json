@@ -411,6 +411,8 @@
   "areas": {
     "title": "Vrt",
     "subtitle": "rastline in trate",
+    "seg_areas": "Območja",
+    "fab_plant": "Rastlina",
     "unassigned": "Brez območja",
     "last_prefix": "zadnje:",
     "type_garden": "Vrt",
@@ -469,9 +471,9 @@
     "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."
   },
   "supplies": {
-    "title": "Zaloge",
+    "title": "Sredstva",
     "subtitle": "kaj imam doma",
-    "empty": "Ni zalog. Dodaj jih z +.",
+    "empty": "Ni sredstev. Dodaj jih z +.",
     "low": "malo",
     "qty(q, unit)": "~$q$unit",
     "form_new": "Novo sredstvo",
@@ -493,8 +495,9 @@
     "cat_treatment": "Tretiva",
     "cat_equipment": "Oprema",
     "cat_other": "Drugo",
-    "seg_supplies": "Zaloge",
+    "seg_supplies": "Sredstva",
     "seg_recipes": "Recepti",
+    "fab_new": "Sredstvo",
     "search": "Išči sredstva"
   },
   "settings": {
@@ -512,9 +515,6 @@
     "theme_dark": "Temno",
     "section_notifications": "Obvestila",
     "notifications_placeholder": "Obvestila in opomniki",
-    "section_garden": "Vrt",
-    "supplies": "📦 Zaloge & sredstva",
-    "supplies_sub": "urea, alge, gnojila, oprema",
     "section_account": "Račun & podatki",
     "export_data": "Izvozi podatke (GDPR)",
     "logout": "Odjava",
@@ -588,6 +588,7 @@
   },
   "recipes": {
     "empty": "Še ni receptov. Shrani mešanico z +.",
+    "fab_new": "Recept",
     "form_new": "Nov recept",
     "form_edit": "Uredi recept",
     "form_name": "Ime",

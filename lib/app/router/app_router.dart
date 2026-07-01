@@ -19,7 +19,6 @@ import '../../features/plants/presentation/plant_picker_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
-import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
@@ -141,11 +140,6 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       name: 'plant-edit',
       builder: (context, state) =>
           PlantEditScreen(userPlantId: state.pathParameters['id']!),
-    ),
-    GoRoute(
-      path: '/supplies',
-      name: 'supplies',
-      builder: (context, state) => const SuppliesScreen(),
     ),
     GoRoute(
       path: '/settings',

@@ -17,11 +17,14 @@
   </div>
 
   <div class="content">
-    <h1 style="margin:2px 2px 4px;">Zaloge</h1>
+    <h1 style="margin:2px 2px 4px;">Vrt</h1>
     <div class="sub" style="margin:0 2px 8px;">kaj imam doma · tapni za urejanje · ＋ za novo</div>
 
-    <!-- Segment Zaloge | Recepti (en zaslon, dva pogleda). Recepti → 08b. -->
+    <!-- 2026-07-01: Zaloge/Recepti so segmenta zavihka VRT (ne več pod Nastavitve).
+         En SegmentedButton [Območja | Zaloge | Recepti], telo se zamenja v istem
+         zaslonu (kot Dnevnik [Časovnica | Mesec]). Območja → vrt_v5.html, Recepti → 08b. -->
     <div style="display:flex;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 2px 12px;">
+      <a href="vrt_v5.html" style="flex:1;text-align:center;padding:8px;color:var(--muted);font-weight:600;font-size:13px;text-decoration:none;">Območja</a>
       <div style="flex:1;text-align:center;padding:8px;background:var(--accent);color:#fff;font-weight:700;font-size:13px;">Zaloge</div>
       <a href="08b-recipes.html" style="flex:1;text-align:center;padding:8px;color:var(--muted);font-weight:600;font-size:13px;text-decoration:none;">Recepti</a>
     </div>

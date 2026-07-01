@@ -217,9 +217,17 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 - v1 = ročna izbira / recept + preprost odpis. Avtomatski preračun volumna → v2.
 - **Status (2026-06-30):** Sredstva/zaloge so **vključene** (`kSuppliesEnabled=true`). Zaloge so
   grupirane po **kategoriji** (`Supply.category`: Gnojila/Tretiva/Oprema/Drugo; drift v13 + Supabase
-  `0015`). **Recepti** (shranjene mešanice + neobvezna oprema) so na zaslonu Zaloge pod zavihkom
-  »Recepti« (wireframe `08b-recipes.html`) in jih v koraku »Sredstva« opravila izbereš → predizpolnijo
+  `0015`). **Recepti** (shranjene mešanice + neobvezna oprema) so pod zavihkom »Recepti«
+  (wireframe `08b-recipes.html`) in jih v koraku »Sredstva« opravila izbereš → predizpolnijo
   sredstva. Avtomatski preračun volumna ostaja v2.
+- **Umestitev (2026-07-01):** Zaloge in recepti **niso več pod Nastavitve** — živijo v zavihku
+  **Vrt** kot segmenta enega `SegmentedButton`-a `[Območja | Zaloge | Recepti]` (kot Dnevnik
+  `[Časovnica | Mesec]`), telo se zamenja v istem zaslonu. Samostojni `/supplies` zaslon je upokojen.
+  Ob `kSuppliesEnabled=false` Vrt pokaže le seznam območij (brez segmentov).
+- **Dodajanje (CTA):** en **kontekstni razširjeni FAB** doda primarno entiteto segmenta —
+  `Rastlina` / `Zaloga` / `Recept` (Vrt ima svoj FAB, ne skupni iz `main_shell`). Dodajanje
+  **območja** ostane tih sekundarni vnos na dnu seznama (velik FAB rezerviran za rastlino).
+  Urejanje/izbris: **tap vrstico** (ševron namig) → sheet z rdečim `DestructiveButton` »Izbriši«.
 
 ### Večjezičnost — ⭐ KANONIČNI ID + i18n (od dne 1)
 - Opravila in rastline shranjeni kot **kanonični ID-ji** z oznakami {sl, de, en, ...},

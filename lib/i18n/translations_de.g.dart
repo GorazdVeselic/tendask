@@ -659,6 +659,8 @@ class _Translations$areas$de extends Translations$areas$en {
 	// Translations
 	@override String get title => 'Garten';
 	@override String get subtitle => 'Pflanzen und Rasen';
+	@override String get seg_areas => 'Bereiche';
+	@override String get fab_plant => 'Pflanze';
 	@override String get unassigned => 'Ohne Bereich';
 	@override String get last_prefix => 'zuletzt:';
 	@override String get type_garden => 'Garten';
@@ -731,9 +733,9 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Vorräte';
+	@override String get title => 'Mittel';
 	@override String get subtitle => 'was ich zu Hause habe';
-	@override String get empty => 'Noch keine Vorräte. Füge welche mit + hinzu.';
+	@override String get empty => 'Noch keine Mittel. Füge welche mit + hinzu.';
 	@override String get low => 'wenig';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
 	@override String get form_new => 'Neues Mittel';
@@ -748,16 +750,17 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get pick_new => 'Neues Mittel';
 	@override String get amount => 'Verbrauchte Menge';
 	@override String get add_confirm => 'Hinzufügen';
-	@override String get form_delete => 'Material löschen';
-	@override String get delete_note => 'Dieses Material wird aus deiner Liste entfernt.';
+	@override String get form_delete => 'Mittel löschen';
+	@override String get delete_note => 'Dieses Mittel wird aus deiner Liste entfernt.';
 	@override String get form_category => 'Kategorie';
 	@override String get cat_fertilizer => 'Dünger';
 	@override String get cat_treatment => 'Pflanzenschutz';
 	@override String get cat_equipment => 'Geräte';
 	@override String get cat_other => 'Sonstiges';
-	@override String get seg_supplies => 'Material';
+	@override String get seg_supplies => 'Mittel';
 	@override String get seg_recipes => 'Rezepte';
-	@override String get search => 'Material suchen';
+	@override String get fab_new => 'Mittel';
+	@override String get search => 'Mittel suchen';
 }
 
 // Path: settings
@@ -781,9 +784,6 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get theme_dark => 'Dunkel';
 	@override String get section_notifications => 'Benachrichtigungen';
 	@override String get notifications_placeholder => 'Benachrichtigungen und Erinnerungen';
-	@override String get section_garden => 'Garten';
-	@override String get supplies => '📦 Vorräte & Mittel';
-	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
 	@override String get section_account => 'Konto & Daten';
 	@override String get export_data => 'Daten exportieren (DSGVO)';
 	@override String get logout => 'Abmelden';
@@ -878,6 +878,7 @@ class _Translations$recipes$de extends Translations$recipes$en {
 
 	// Translations
 	@override String get empty => 'Noch keine Rezepte. Mischung mit + speichern.';
+	@override String get fab_new => 'Rezept';
 	@override String get form_new => 'Neues Rezept';
 	@override String get form_edit => 'Rezept bearbeiten';
 	@override String get form_name => 'Name';
@@ -887,10 +888,10 @@ class _Translations$recipes$de extends Translations$recipes$en {
 	@override String get err_name => 'Rezeptnamen eingeben.';
 	@override String get form_delete => 'Rezept löschen';
 	@override String get delete_note => 'Dieses Rezept wird aus deiner Liste entfernt.';
-	@override String get items => 'Material';
-	@override String get add_item => 'Material hinzufügen';
+	@override String get items => 'Mittel';
+	@override String get add_item => 'Mittel hinzufügen';
 	@override String get pick_title => 'Rezept wählen';
-	@override String get item_removed => 'Entferntes Material';
+	@override String get item_removed => 'Entferntes Mittel';
 }
 
 // Path: harvest
@@ -1268,6 +1269,8 @@ extension on TranslationsDe {
 			'area_pick.duplicate' => 'Diese Pflanze ist bereits im gewählten Bereich.',
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
+			'areas.seg_areas' => 'Bereiche',
+			'areas.fab_plant' => 'Pflanze',
 			'areas.unassigned' => 'Ohne Bereich',
 			'areas.last_prefix' => 'zuletzt:',
 			'areas.type_garden' => 'Garten',
@@ -1322,9 +1325,9 @@ extension on TranslationsDe {
 			'plants.choose_area' => 'wählen',
 			'plants.field_add' => 'Pflanze auswählen',
 			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
-			'supplies.title' => 'Vorräte',
+			'supplies.title' => 'Mittel',
 			'supplies.subtitle' => 'was ich zu Hause habe',
-			'supplies.empty' => 'Noch keine Vorräte. Füge welche mit + hinzu.',
+			'supplies.empty' => 'Noch keine Mittel. Füge welche mit + hinzu.',
 			'supplies.low' => 'wenig',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
 			'supplies.form_new' => 'Neues Mittel',
@@ -1339,16 +1342,17 @@ extension on TranslationsDe {
 			'supplies.pick_new' => 'Neues Mittel',
 			'supplies.amount' => 'Verbrauchte Menge',
 			'supplies.add_confirm' => 'Hinzufügen',
-			'supplies.form_delete' => 'Material löschen',
-			'supplies.delete_note' => 'Dieses Material wird aus deiner Liste entfernt.',
+			'supplies.form_delete' => 'Mittel löschen',
+			'supplies.delete_note' => 'Dieses Mittel wird aus deiner Liste entfernt.',
 			'supplies.form_category' => 'Kategorie',
 			'supplies.cat_fertilizer' => 'Dünger',
 			'supplies.cat_treatment' => 'Pflanzenschutz',
 			'supplies.cat_equipment' => 'Geräte',
 			'supplies.cat_other' => 'Sonstiges',
-			'supplies.seg_supplies' => 'Material',
+			'supplies.seg_supplies' => 'Mittel',
 			'supplies.seg_recipes' => 'Rezepte',
-			'supplies.search' => 'Material suchen',
+			'supplies.fab_new' => 'Mittel',
+			'supplies.search' => 'Mittel suchen',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
@@ -1363,9 +1367,6 @@ extension on TranslationsDe {
 			'settings.theme_dark' => 'Dunkel',
 			'settings.section_notifications' => 'Benachrichtigungen',
 			'settings.notifications_placeholder' => 'Benachrichtigungen und Erinnerungen',
-			'settings.section_garden' => 'Garten',
-			'settings.supplies' => '📦 Vorräte & Mittel',
-			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
 			'settings.section_account' => 'Konto & Daten',
 			'settings.export_data' => 'Daten exportieren (DSGVO)',
 			'settings.logout' => 'Abmelden',
@@ -1433,21 +1434,22 @@ extension on TranslationsDe {
 			'weather.m_rain48h' => 'Regen 48 h',
 			'weather.m_no_rain' => 'kein Regen',
 			'recipes.empty' => 'Noch keine Rezepte. Mischung mit + speichern.',
+			'recipes.fab_new' => 'Rezept',
 			'recipes.form_new' => 'Neues Rezept',
 			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
-			'recipes.form_save' => 'Speichern',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_save' => 'Speichern',
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
 			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
-			'recipes.items' => 'Material',
-			'recipes.add_item' => 'Material hinzufügen',
+			'recipes.items' => 'Mittel',
+			'recipes.add_item' => 'Mittel hinzufügen',
 			'recipes.pick_title' => 'Rezept wählen',
-			'recipes.item_removed' => 'Entferntes Material',
+			'recipes.item_removed' => 'Entferntes Mittel',
 			'harvest.yield_section' => 'Ertrag',
 			'harvest.sheet_title' => 'Wie viel hast du geerntet?',
 			'harvest.amount_label' => 'Menge',

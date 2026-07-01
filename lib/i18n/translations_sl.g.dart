@@ -667,6 +667,8 @@ class _Translations$areas$sl extends Translations$areas$en {
 	// Translations
 	@override String get title => 'Vrt';
 	@override String get subtitle => 'rastline in trate';
+	@override String get seg_areas => 'Območja';
+	@override String get fab_plant => 'Rastlina';
 	@override String get unassigned => 'Brez območja';
 	@override String get last_prefix => 'zadnje:';
 	@override String get type_garden => 'Vrt';
@@ -739,9 +741,9 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Zaloge';
+	@override String get title => 'Sredstva';
 	@override String get subtitle => 'kaj imam doma';
-	@override String get empty => 'Ni zalog. Dodaj jih z +.';
+	@override String get empty => 'Ni sredstev. Dodaj jih z +.';
 	@override String get low => 'malo';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
 	@override String get form_new => 'Novo sredstvo';
@@ -763,8 +765,9 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get cat_treatment => 'Tretiva';
 	@override String get cat_equipment => 'Oprema';
 	@override String get cat_other => 'Drugo';
-	@override String get seg_supplies => 'Zaloge';
+	@override String get seg_supplies => 'Sredstva';
 	@override String get seg_recipes => 'Recepti';
+	@override String get fab_new => 'Sredstvo';
 	@override String get search => 'Išči sredstva';
 }
 
@@ -789,9 +792,6 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get theme_dark => 'Temno';
 	@override String get section_notifications => 'Obvestila';
 	@override String get notifications_placeholder => 'Obvestila in opomniki';
-	@override String get section_garden => 'Vrt';
-	@override String get supplies => '📦 Zaloge & sredstva';
-	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
 	@override String get section_account => 'Račun & podatki';
 	@override String get export_data => 'Izvozi podatke (GDPR)';
 	@override String get logout => 'Odjava';
@@ -886,6 +886,7 @@ class _Translations$recipes$sl extends Translations$recipes$en {
 
 	// Translations
 	@override String get empty => 'Še ni receptov. Shrani mešanico z +.';
+	@override String get fab_new => 'Recept';
 	@override String get form_new => 'Nov recept';
 	@override String get form_edit => 'Uredi recept';
 	@override String get form_name => 'Ime';
@@ -1276,6 +1277,8 @@ extension on TranslationsSl {
 			'area_pick.duplicate' => 'Ta rastlina je že v izbranem območju.',
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
+			'areas.seg_areas' => 'Območja',
+			'areas.fab_plant' => 'Rastlina',
 			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
 			'areas.type_garden' => 'Vrt',
@@ -1330,9 +1333,9 @@ extension on TranslationsSl {
 			'plants.choose_area' => 'izberi',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
-			'supplies.title' => 'Zaloge',
+			'supplies.title' => 'Sredstva',
 			'supplies.subtitle' => 'kaj imam doma',
-			'supplies.empty' => 'Ni zalog. Dodaj jih z +.',
+			'supplies.empty' => 'Ni sredstev. Dodaj jih z +.',
 			'supplies.low' => 'malo',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
 			'supplies.form_new' => 'Novo sredstvo',
@@ -1354,8 +1357,9 @@ extension on TranslationsSl {
 			'supplies.cat_treatment' => 'Tretiva',
 			'supplies.cat_equipment' => 'Oprema',
 			'supplies.cat_other' => 'Drugo',
-			'supplies.seg_supplies' => 'Zaloge',
+			'supplies.seg_supplies' => 'Sredstva',
 			'supplies.seg_recipes' => 'Recepti',
+			'supplies.fab_new' => 'Sredstvo',
 			'supplies.search' => 'Išči sredstva',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
@@ -1371,9 +1375,6 @@ extension on TranslationsSl {
 			'settings.theme_dark' => 'Temno',
 			'settings.section_notifications' => 'Obvestila',
 			'settings.notifications_placeholder' => 'Obvestila in opomniki',
-			'settings.section_garden' => 'Vrt',
-			'settings.supplies' => '📦 Zaloge & sredstva',
-			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
 			'settings.section_account' => 'Račun & podatki',
 			'settings.export_data' => 'Izvozi podatke (GDPR)',
 			'settings.logout' => 'Odjava',
@@ -1441,14 +1442,15 @@ extension on TranslationsSl {
 			'weather.m_rain48h' => 'Dež 48 h',
 			'weather.m_no_rain' => 'brez dežja',
 			'recipes.empty' => 'Še ni receptov. Shrani mešanico z +.',
+			'recipes.fab_new' => 'Recept',
 			'recipes.form_new' => 'Nov recept',
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
-			'recipes.form_save' => 'Shrani',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
 			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
