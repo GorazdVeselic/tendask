@@ -762,7 +762,7 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get delete_note => 'Sredstvo bo odstranjeno s tvojega seznama.';
 	@override String get form_category => 'Kategorija';
 	@override String get cat_fertilizer => 'Gnojila';
-	@override String get cat_treatment => 'Tretiva';
+	@override String get cat_treatment => 'Škropiva';
 	@override String get cat_equipment => 'Oprema';
 	@override String get cat_other => 'Drugo';
 	@override String get seg_supplies => 'Sredstva';
@@ -1354,7 +1354,7 @@ extension on TranslationsSl {
 			'supplies.delete_note' => 'Sredstvo bo odstranjeno s tvojega seznama.',
 			'supplies.form_category' => 'Kategorija',
 			'supplies.cat_fertilizer' => 'Gnojila',
-			'supplies.cat_treatment' => 'Tretiva',
+			'supplies.cat_treatment' => 'Škropiva',
 			'supplies.cat_equipment' => 'Oprema',
 			'supplies.cat_other' => 'Drugo',
 			'supplies.seg_supplies' => 'Sredstva',
