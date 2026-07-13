@@ -70,10 +70,17 @@ abstract final class AppTheme {
     // Optional roles: applied only when the palette sets them. Green leaves the
     // dark surfaceContainerHighest/inverseSurface unset → the M3 default, so the
     // legacy green theme is reproduced exactly.
+    //
+    // secondaryContainer mirrors primaryContainer because M3 draws a selected
+    // chip's LABEL from onSecondaryContainer while our chipTheme paints its
+    // BACKGROUND with primaryContainer — left unset, the label kept the M3
+    // baseline tone and read as disabled on top of the palette container.
     return base.copyWith(
       surfaceContainerHighest: r.surfaceContainerHighest,
       inverseSurface: r.inverseSurface,
       onInverseSurface: r.onInverseSurface,
+      secondaryContainer: r.primaryContainer,
+      onSecondaryContainer: r.onPrimaryContainer,
     );
   }
 
