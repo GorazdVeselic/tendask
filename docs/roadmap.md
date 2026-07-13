@@ -495,6 +495,23 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-01 — **Sredstva UX + preselitev v zavihek Vrt (`main`, merge `93d9d3a`).** (1) **UX koraka
+  Sredstva pri opravilu** (commit `c4ab4a5`): keyboard-safe `add_supply_to_task_sheet` (drseč seznam +
+  pripeta spodnja vrstica Količina[enota]+Dodaj nad tipkovnico prek `viewInsetsOf`), izbira = toggle
+  (ponoven tap odznači) z močnejšo oznako (primaryContainer + krepko + `check_circle`), zaloga+»malo«
+  v vrsticah, iskanje ko >8; progress bar v vnosu izloči »Pregled« iz pik. (2) **Preselitev zalog/receptov
+  iz Nastavitev v zavihek Vrt** (commit `7591611`): en `SegmentedButton [Območja | Sredstva | Recepti]`
+  (kot Dnevnik), telo se zamenja v istem zaslonu; samostojni `/supplies` zaslon **upokojen**, telesi
+  ekstrahirani v `supplies/presentation/widgets/supply_list_views.dart`. **Enoten kontekstni razširjeni
+  FAB** (Rastlina/Sredstvo/Recept) — preseljen iz `main_shell` v `areas_screen`, da pozna segment
+  (prej je na Zaloge/Recepti napačno dodal rastlino); območje ostane tih spodnji gumb; urejanje/izbris
+  prek tap vrstice (ševron namig). (3) **Izčrpen 5-agentni pregled + popravki:** harmonizirana
+  terminologija sredstev (**sl → »Sredstva«**, **de → »Mittel«**; »zaloga/Bestand/stock« ostane le za
+  stanje), skupni `formatSupplyQuantity` namesto 4 kopij, odstranjeni osiroteli i18n ključi `settings.*`.
+  Koncept §Zaloge + wireframe `08-supplies.html` posodobljena. `analyze` čist, **398 testov** zeleno.
+  **NEPUSHANO.** ⏳ on-device verifikacija napisov (USB je padel); PROD migraciji **0015+0016 še ne**
+  deployani (pred prod releasom `supabase db push`). Odprto: razdelitev `areas_screen.dart` (424 vrstic >300).
+
 - 2026-06-30 — **Beleženje sredstev v celoti (`feat/supplies-tracking`, worktree `../tendask-supplies`).**
   Tri faze: (1) **ponovni vklop** `kSuppliesEnabled=true` (korak v čarovniku + sekcija Nastavitve) +
   manjkajoč **izbris zaloge** v edit sheetu (`DestructiveButton`) — commit `392e707`. (2) **Kategorije**:
