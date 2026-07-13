@@ -228,6 +228,7 @@ class _AreasList extends StatelessWidget {
             area: area,
             lastTask: latest[area.id],
             catalog: catalog,
+            plantCount: (plantsByArea[area.id] ?? const <UserPlant>[]).length,
           );
         },
       ),
@@ -318,11 +319,13 @@ class _AreaHeader extends StatelessWidget {
     required this.area,
     required this.lastTask,
     required this.catalog,
+    required this.plantCount,
   });
 
   final Area area;
   final Task? lastTask;
   final Map<String, TaskType> catalog;
+  final int plantCount;
 
   @override
   Widget build(BuildContext context) {
@@ -377,9 +380,15 @@ class _AreaHeader extends StatelessWidget {
     );
   }
 
+  /// Falls back to the plant count, never the area type — the section label
+  /// above already names the type for the whole group.
   String _subtitle(Translations t) {
     final task = lastTask;
-    if (task == null) return areaTypeLabel(area.type, t);
+    if (task == null) {
+      return plantCount == 0
+          ? t.areas.no_plants
+          : t.areas.plant_count(n: plantCount);
+    }
     final type = catalog[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
     return '${t.areas.last_prefix} $label · ${formatDmy(task.date.toLocal())}';

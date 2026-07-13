@@ -1355,6 +1355,15 @@ class Translations$areas$en {
 	/// en: 'last:'
 	String get last_prefix => 'last:';
 
+	/// en: 'No plants'
+	String get no_plants => 'No plants';
+
+	/// en: '(one) {1 plant} (other) {$n plants}'
+	String plant_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '1 plant',
+		other: '${n} plants',
+	);
+
 	/// en: 'Garden'
 	String get type_garden => 'Garden';
 
@@ -2348,6 +2357,8 @@ extension on Translations {
 			'areas.fab_plant' => 'Plant',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
+			'areas.no_plants' => 'No plants',
+			'areas.plant_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 plant', other: '${n} plants', ), 
 			'areas.type_garden' => 'Garden',
 			'areas.type_lawn' => 'Lawn',
 			'areas.type_hedge' => 'Hedge',
@@ -2513,10 +2524,10 @@ extension on Translations {
 			'recipes.form_new' => 'New recipe',
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
-			'recipes.form_equipment' => 'Equipment',
-			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_equipment' => 'Equipment',
+			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',

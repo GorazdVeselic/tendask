@@ -415,6 +415,13 @@
     "fab_plant": "Rastlina",
     "unassigned": "Brez območja",
     "last_prefix": "zadnje:",
+    "no_plants": "Brez rastlin",
+    "plant_count(n)": {
+      "one": "1 rastlina",
+      "two": "$n rastlini",
+      "few": "$n rastline",
+      "other": "$n rastlin"
+    },
     "type_garden": "Vrt",
     "type_lawn": "Trata",
     "type_hedge": "Živa meja",

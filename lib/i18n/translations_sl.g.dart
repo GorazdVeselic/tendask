@@ -671,6 +671,13 @@ class _Translations$areas$sl extends Translations$areas$en {
 	@override String get fab_plant => 'Rastlina';
 	@override String get unassigned => 'Brez območja';
 	@override String get last_prefix => 'zadnje:';
+	@override String get no_plants => 'Brez rastlin';
+	@override String plant_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '1 rastlina',
+		two: '${n} rastlini',
+		few: '${n} rastline',
+		other: '${n} rastlin',
+	);
 	@override String get type_garden => 'Vrt';
 	@override String get type_lawn => 'Trata';
 	@override String get type_hedge => 'Živa meja';
@@ -1281,6 +1288,8 @@ extension on TranslationsSl {
 			'areas.fab_plant' => 'Rastlina',
 			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
+			'areas.no_plants' => 'Brez rastlin',
+			'areas.plant_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 rastlina', two: '${n} rastlini', few: '${n} rastline', other: '${n} rastlin', ), 
 			'areas.type_garden' => 'Vrt',
 			'areas.type_lawn' => 'Trata',
 			'areas.type_hedge' => 'Živa meja',
@@ -1446,10 +1455,10 @@ extension on TranslationsSl {
 			'recipes.form_new' => 'Nov recept',
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
-			'recipes.form_equipment' => 'Oprema',
-			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_equipment' => 'Oprema',
+			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',

@@ -407,6 +407,11 @@
     "fab_plant": "Plant",
     "unassigned": "No area",
     "last_prefix": "last:",
+    "no_plants": "No plants",
+    "plant_count(n)": {
+      "one": "1 plant",
+      "other": "$n plants"
+    },
     "type_garden": "Garden",
     "type_lawn": "Lawn",
     "type_hedge": "Hedge",
