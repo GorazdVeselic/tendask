@@ -2,22 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../core/area_plant_relevance.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
-import '../../../core/catalog_relevance.dart';
-import '../../../core/catalog_sort.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/plant_category.dart';
-import '../../../core/widgets/removable_chip.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
 import '../data/user_plants_repository.dart';
-import 'plant_display.dart';
+import 'plant_picker_view.dart';
 import 'widgets/area_pick_sheet.dart';
+import 'widgets/plant_added_bar.dart';
+import 'widgets/plant_area_bar.dart';
+import 'widgets/plant_custom_entry.dart';
 import 'widgets/plant_select_row.dart';
 
 /// Navigation args for the plant-add screen (passed via go_router `extra`).
@@ -30,15 +29,6 @@ class PlantAddArgs {
   /// True when opened from the task subject step: hides the area target row
   /// (location is irrelevant there) and just returns the created plant ids.
   final bool subjectMode;
-}
-
-/// One plant added during this session — kept so the footer can show what was
-/// added, catalog rows can show a ✓, and the created ids can be returned/removed.
-class _Added {
-  const _Added(this.id, this.plantId, this.label);
-  final String id;
-  final String? plantId;
-  final String label;
 }
 
 /// Garden plant-add: one screen, tap = added immediately, add as many as you
@@ -59,7 +49,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
   String _category = 'all';
   bool _searchExpanded = false;
   String? _targetAreaId;
-  final List<_Added> _added = [];
+  final List<PickedPlant> _added = [];
 
   // Snapshot taken once on open: the "Frequent" row stays stable through the
   // session instead of re-querying (and flickering) on every add.
@@ -82,6 +72,23 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
 
   List<String> get _createdIds => [for (final a in _added) a.id];
 
+  bool get _managesArea => !widget.args.subjectMode;
+
+  /// The target's contents as of now. Callbacks read (rather than watch) — the
+  /// build pass computes the same from its watched values.
+  List<PickedPlant> _members({
+    Map<String, UserPlant>? userPlants,
+    Map<String, Plant>? catalog,
+  }) => pickerMembers(
+    added: _added,
+    userPlants:
+        (userPlants ?? ref.read(userPlantsMapProvider).asData?.value ?? const {})
+            .values,
+    catalog: catalog ?? ref.read(plantsMapProvider).asData?.value ?? const {},
+    targetAreaId: _targetAreaId,
+    managesArea: _managesArea,
+  );
+
   Future<void> _create({
     String? plantId,
     String? customName,
@@ -96,14 +103,14 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
           customName: customName,
         );
     if (!mounted) return;
-    setState(() => _added.add(_Added(id, plantId, label)));
+    setState(() => _added.add(PickedPlant(id, plantId, label)));
   }
 
   /// Tap on a catalog/frequent plant: toggle its membership of the target. A
   /// member (added this session OR already in the target area) is removed;
   /// otherwise it is added. Custom entries (no plantId) never reach here.
   Future<void> _toggle(Plant plant) async {
-    final member = _memberFor(plant.id);
+    final member = memberFor(_members(), plant.id);
     if (member != null) {
       await _removeMember(member);
     } else {
@@ -111,25 +118,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     }
   }
 
-  /// The instance representing [plantId] in the current target — a session add
-  /// or, when a real area is targeted, a plant already living there.
-  _Added? _memberFor(String plantId) {
-    for (final a in _added) {
-      if (a.plantId == plantId) return a;
-    }
-    if (!widget.args.subjectMode) {
-      final map = ref.read(userPlantsMapProvider).asData?.value ?? const {};
-      final catalog = ref.read(plantsMapProvider).asData?.value ?? const {};
-      for (final p in map.values) {
-        if (p.areaId == _targetAreaId && p.plantId == plantId) {
-          return _Added(p.id, p.plantId, userPlantLabel(p, catalog));
-        }
-      }
-    }
-    return null;
-  }
-
-  Future<void> _removeMember(_Added member) async {
+  Future<void> _removeMember(PickedPlant member) async {
     await ref.read(userPlantsRepositoryProvider).softDelete(member.id);
     if (!mounted) return;
     setState(() => _added.removeWhere((a) => a.id == member.id));
@@ -149,7 +138,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     // new area already has the species, the fresh instance is redundant — drop
     // it instead of leaving a duplicate behind.
     final repo = ref.read(userPlantsRepositoryProvider);
-    final dropped = <_Added>[];
+    final dropped = <PickedPlant>[];
     for (final a in _added) {
       final res = await repo.moveToArea(id: a.id, areaId: pick.areaId);
       if (res == PlantMoveResult.duplicate) {
@@ -162,56 +151,37 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     }
   }
 
+  void _toggleSearch() {
+    setState(() {
+      _searchExpanded = !_searchExpanded;
+      if (!_searchExpanded) {
+        _query = '';
+        _searchController.clear();
+      }
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final theme = Theme.of(context);
     final plants = ref.watch(plantsListProvider).asData?.value;
     final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
-
-    final normQuery = _query.trim().toLowerCase();
-    final results = plants == null
-        ? const <Plant>[]
-        : sortedByLabel(
-            plants
-                .where(
-                  (p) =>
-                      _category == 'all' ||
-                      coarsePlantCategory(p.category) == _category,
-                )
-                .where((p) => plantMatchesQuery(p, normQuery)),
-            (p) => catalogLabel(p.labels),
-          );
-    // T4: lift plants that fit the target area's type, demote the rest under a
-    // muted divider (you don't plant a tree in a raised bed). No target / garden
-    // / other → empty set → everything relevant, no split. Unknown categories
-    // stay relevant (see isCategoryRelevant).
     final areasMap = ref.watch(areasMapProvider).asData?.value ?? const {};
-    final relevantCats = relevantPlantCategories(
-      _targetAreaId != null ? areasMap[_targetAreaId]?.type : null,
-    );
-    final resultsRelevant = results
-        .where((p) => isCategoryRelevant(relevantCats, p.category))
-        .toList();
-    final resultsOther = results
-        .where((p) => !isCategoryRelevant(relevantCats, p.category))
-        .toList();
-    final softSplit = resultsRelevant.isNotEmpty && resultsOther.isNotEmpty;
-    final firstRows = softSplit ? resultsRelevant : results;
-    // Members = added this session, plus (in garden mode) every plant already
-    // in the current target bucket — a real area OR "no area" (null) — so the
-    // footer, counter, ✓ and remove cover the bucket's whole contents.
     final userPlantsMap =
         ref.watch(userPlantsMapProvider).asData?.value ?? const {};
-    final managesArea = !widget.args.subjectMode;
-    final members = <_Added>[
-      ..._added,
-      if (managesArea)
-        for (final p in userPlantsMap.values)
-          if (p.areaId == _targetAreaId && _added.every((a) => a.id != p.id))
-            _Added(p.id, p.plantId, userPlantLabel(p, catalog)),
-    ];
+
+    final results = filterCatalog(
+      plants ?? const [],
+      category: _category,
+      query: _query,
+    );
+    final split = splitByRelevance(
+      results,
+      _targetAreaId != null ? areasMap[_targetAreaId]?.type : null,
+    );
+    final members = _members(userPlants: userPlantsMap, catalog: catalog);
     final selectedIds = {for (final m in members) ?m.plantId};
+    final hasQuery = _query.trim().isNotEmpty;
 
     return Scaffold(
       appBar: AppBar(
@@ -224,10 +194,8 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
       ),
       body: Column(
         children: [
-          // Add target — pinned at the top so it's always visible (the catalog
-          // list below can grow long).
-          if (!widget.args.subjectMode)
-            _AreaBar(
+          if (_managesArea)
+            PlantAreaBar(
               areaId: _targetAreaId,
               areas: areasMap,
               onTap: _changeTarget,
@@ -243,87 +211,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                       SliverPadding(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                         sliver: SliverToBoxAdapter(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              SizedBox(
-                                height: 40,
-                                child: ListView(
-                                  scrollDirection: Axis.horizontal,
-                                  children: [
-                                    for (final c in kPlantCategories)
-                                      Padding(
-                                        padding: const EdgeInsets.only(
-                                          right: 8,
-                                        ),
-                                        child: ChoiceChip(
-                                          label: Text(plantCategoryLabel(c, t)),
-                                          selected: c == _category,
-                                          onSelected: (_) =>
-                                              setState(() => _category = c),
-                                        ),
-                                      ),
-                                  ],
-                                ),
-                              ),
-                              if (_recentIds.isNotEmpty &&
-                                  normQuery.isEmpty) ...[
-                                SectionLabel(t.plants.frequent),
-                                Wrap(
-                                  spacing: 8,
-                                  runSpacing: 4,
-                                  children: [
-                                    for (final id in _recentIds)
-                                      if (catalog[id] case final p?)
-                                        FilterChip(
-                                          avatar: Text(
-                                            p.icon ?? '🌿',
-                                            style: const TextStyle(
-                                              fontSize: 16,
-                                            ),
-                                          ),
-                                          label: Text(catalogLabel(p.labels)),
-                                          selected: selectedIds.contains(p.id),
-                                          onSelected: (_) => _toggle(p),
-                                        ),
-                                  ],
-                                ),
-                                const SizedBox(height: 4),
-                              ],
-                              Row(
-                                children: [
-                                  Expanded(
-                                    child: SectionLabel(t.plants.from_catalog),
-                                  ),
-                                  IconButton(
-                                    icon: Icon(
-                                      _searchExpanded
-                                          ? Icons.search_off
-                                          : Icons.search,
-                                    ),
-                                    color: theme.colorScheme.primary,
-                                    onPressed: _toggleSearch,
-                                  ),
-                                ],
-                              ),
-                              if (_searchExpanded)
-                                Padding(
-                                  padding: const EdgeInsets.only(bottom: 8),
-                                  child: TextField(
-                                    controller: _searchController,
-                                    autofocus: true,
-                                    decoration: InputDecoration(
-                                      hintText: t.plants.search_hint,
-                                      prefixIcon: const Icon(Icons.search),
-                                      border: const OutlineInputBorder(),
-                                      isDense: true,
-                                    ),
-                                    onChanged: (v) =>
-                                        setState(() => _query = v),
-                                  ),
-                                ),
-                            ],
-                          ),
+                          child: _header(catalog, selectedIds, hasQuery),
                         ),
                       ),
                       SliverPadding(
@@ -331,16 +219,11 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                           16,
                           0,
                           16,
-                          softSplit ? 0 : 16,
+                          split.softSplit ? 0 : 16,
                         ),
-                        sliver: _catalogSliver(
-                          firstRows,
-                          selectedIds,
-                          theme,
-                          t,
-                        ),
+                        sliver: _catalogSliver(split.first, selectedIds),
                       ),
-                      if (softSplit) ...[
+                      if (split.softSplit) ...[
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 12, 16, 4),
                           sliver: SliverToBoxAdapter(
@@ -349,19 +232,14 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                         ),
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
-                          sliver: _catalogSliver(
-                            resultsOther,
-                            selectedIds,
-                            theme,
-                            t,
-                          ),
+                          sliver: _catalogSliver(split.other, selectedIds),
                         ),
                       ],
-                      if (normQuery.isNotEmpty)
+                      if (hasQuery)
                         SliverPadding(
                           padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
                           sliver: SliverToBoxAdapter(
-                            child: _CustomEntry(
+                            child: PlantCustomEntry(
                               query: _query.trim(),
                               onAdd: (name) =>
                                   _create(customName: name, label: name),
@@ -372,7 +250,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                   ),
           ),
           if (members.isNotEmpty)
-            _AddedBar(
+            PlantAddedBar(
               added: members,
               onRemove: _removeMember,
               onDone: () => context.pop(_createdIds),
@@ -382,23 +260,88 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     );
   }
 
-  void _toggleSearch() {
-    setState(() {
-      _searchExpanded = !_searchExpanded;
-      if (!_searchExpanded) {
-        _query = '';
-        _searchController.clear();
-      }
-    });
+  /// Category chips, the frequent row and the (collapsible) search field.
+  Widget _header(
+    Map<String, Plant> catalog,
+    Set<String> selectedIds,
+    bool hasQuery,
+  ) {
+    final t = context.t;
+    final theme = Theme.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(
+          height: 40,
+          child: ListView(
+            scrollDirection: Axis.horizontal,
+            children: [
+              for (final c in kPlantCategories)
+                Padding(
+                  padding: const EdgeInsets.only(right: 8),
+                  child: ChoiceChip(
+                    label: Text(plantCategoryLabel(c, t)),
+                    selected: c == _category,
+                    onSelected: (_) => setState(() => _category = c),
+                  ),
+                ),
+            ],
+          ),
+        ),
+        if (_recentIds.isNotEmpty && !hasQuery) ...[
+          SectionLabel(t.plants.frequent),
+          Wrap(
+            spacing: 8,
+            runSpacing: 4,
+            children: [
+              for (final id in _recentIds)
+                if (catalog[id] case final p?)
+                  FilterChip(
+                    avatar: Text(
+                      p.icon ?? '🌿',
+                      style: const TextStyle(fontSize: 16),
+                    ),
+                    label: Text(catalogLabel(p.labels)),
+                    selected: selectedIds.contains(p.id),
+                    onSelected: (_) => _toggle(p),
+                  ),
+            ],
+          ),
+          const SizedBox(height: 4),
+        ],
+        Row(
+          children: [
+            Expanded(child: SectionLabel(t.plants.from_catalog)),
+            IconButton(
+              icon: Icon(_searchExpanded ? Icons.search_off : Icons.search),
+              color: theme.colorScheme.primary,
+              onPressed: _toggleSearch,
+            ),
+          ],
+        ),
+        if (_searchExpanded)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8),
+            child: TextField(
+              controller: _searchController,
+              autofocus: true,
+              decoration: InputDecoration(
+                hintText: t.plants.search_hint,
+                prefixIcon: const Icon(Icons.search),
+                border: const OutlineInputBorder(),
+                isDense: true,
+              ),
+              onChanged: (v) => setState(() => _query = v),
+            ),
+          ),
+      ],
+    );
   }
 
   // Lazy catalog list; split into a relevant and a "less likely" group for T4.
-  Widget _catalogSliver(
-    List<Plant> rows,
-    Set<String> selectedIds,
-    ThemeData theme,
-    Translations t,
-  ) {
+  Widget _catalogSliver(List<Plant> rows, Set<String> selectedIds) {
+    final t = context.t;
+    final theme = Theme.of(context);
     return SliverList.separated(
       itemCount: rows.length,
       itemBuilder: (_, i) => PlantSelectRow(
@@ -412,207 +355,6 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
         height: 1,
         indent: 56,
         color: theme.colorScheme.outlineVariant,
-      ),
-    );
-  }
-}
-
-// ─── Custom entry ─────────────────────────────────────────────────────────────
-
-class _CustomEntry extends StatelessWidget {
-  const _CustomEntry({required this.query, required this.onAdd});
-
-  final String query;
-  final ValueChanged<String> onAdd;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-        side: BorderSide(color: theme.colorScheme.outlineVariant),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SectionLabel(
-              t.plants.not_found,
-              padding: const EdgeInsets.only(bottom: 6),
-            ),
-            InkWell(
-              borderRadius: BorderRadius.circular(8),
-              onTap: () => onAdd(query),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(vertical: 6),
-                child: Text(
-                  t.plants.custom_add(q: query),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 4),
-            Text(
-              t.plants.custom_private,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-// ─── Optional add target ──────────────────────────────────────────────────────
-
-class _AreaBar extends StatelessWidget {
-  const _AreaBar({
-    required this.areaId,
-    required this.areas,
-    required this.onTap,
-  });
-
-  final String? areaId;
-  final Map<String, Area> areas;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    final name = areaId != null ? areas[areaId]?.name : null;
-    return Material(
-      color: cs.surface,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          InkWell(
-            onTap: onTap,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(16, 10, 16, 10),
-              child: Row(
-                children: [
-                  Icon(
-                    Icons.place_outlined,
-                    size: 18,
-                    color: cs.onSurfaceVariant,
-                  ),
-                  const SizedBox(width: 8),
-                  Text(
-                    t.plants.add_to_label,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: cs.onSurfaceVariant,
-                    ),
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: Text(
-                      name ?? t.area_pick.none,
-                      style: theme.textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
-                  Text(
-                    t.plants.choose_area,
-                    style: TextStyle(
-                      color: cs.primary,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Divider(height: 1, color: cs.outlineVariant),
-        ],
-      ),
-    );
-  }
-}
-
-// ─── Sticky "added" footer ────────────────────────────────────────────────────
-
-class _AddedBar extends StatelessWidget {
-  const _AddedBar({
-    required this.added,
-    required this.onRemove,
-    required this.onDone,
-  });
-
-  final List<_Added> added;
-  final void Function(_Added) onRemove;
-  final VoidCallback onDone;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    // Newest first so the latest add sits at the front without scrolling.
-    final items = added.reversed.toList();
-    return SafeArea(
-      top: false,
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(16, 8, 16, 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              children: [
-                Container(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 9,
-                    vertical: 3,
-                  ),
-                  decoration: BoxDecoration(
-                    color: cs.primary,
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Text(
-                    '${added.length}',
-                    style: theme.textTheme.labelMedium?.copyWith(
-                      color: cs.onPrimary,
-                      fontWeight: FontWeight.w700,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 8),
-                Expanded(
-                  child: SizedBox(
-                    height: 36,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: items.length,
-                      separatorBuilder: (_, _) => const SizedBox(width: 6),
-                      itemBuilder: (_, i) => RemovableChip(
-                        label: items[i].label,
-                        onRemove: () => onRemove(items[i]),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 8),
-            SizedBox(
-              width: double.infinity,
-              child: FilledButton(
-                onPressed: onDone,
-                child: Text(t.plants.done),
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
