@@ -1,25 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
-import 'package:go_router/go_router.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
-import '../../../core/date_format.dart';
 import '../../../core/widgets/empty_state.dart';
-import '../../../features/areas/application/areas_providers.dart';
-import '../../../features/plants/application/plants_providers.dart';
-import '../../../features/tasks/application/tasks_providers.dart';
-import '../../../features/tasks/presentation/subject_labels.dart';
-import '../../../features/tasks/presentation/widgets/task_swipe.dart';
 import '../../../i18n/translations.g.dart';
+import '../../areas/application/areas_providers.dart';
+import '../../plants/application/plants_providers.dart';
+import '../../tasks/application/tasks_providers.dart';
+import '../../tasks/presentation/subject_labels.dart';
 import '../application/notes_providers.dart';
 import 'journal_entry.dart';
+import 'journal_timeline.dart';
 import 'month_calendar_view.dart';
-import 'widgets/note_swipe.dart';
-import 'widgets/task_entry_tile.dart';
-
-enum _Filter { all, tasks, notes }
+import 'widgets/journal_day_card.dart';
+import 'widgets/journal_filter_bar.dart';
 
 enum _View { timeline, month }
 
@@ -31,7 +27,7 @@ class JournalScreen extends ConsumerStatefulWidget {
 }
 
 class _JournalScreenState extends ConsumerState<JournalScreen> {
-  _Filter _filter = _Filter.all;
+  JournalFilter _filter = JournalFilter.all;
   _View _view = _View.timeline;
 
   @override
@@ -94,7 +90,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             ),
           ),
           if (_view == _View.timeline)
-            _FilterBar(
+            JournalFilterBar(
               filter: _filter,
               onChanged: (f) => setState(() => _filter = f),
             ),
@@ -106,13 +102,16 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
                       catalog == null ||
                       areas == null
                 ? const Center(child: CircularProgressIndicator.adaptive())
-                : _JournalList(
-                    tasks: completed,
-                    notes: notes,
+                : _Timeline(
+                    entries: journalEntries(
+                      tasks: completed,
+                      notes: notes,
+                      filter: _filter,
+                    ),
+                    filter: _filter,
                     catalog: catalog,
                     areas: areas,
                     subjectLabels: subjectLabels,
-                    filter: _filter,
                   ),
           ),
         ],
@@ -121,288 +120,41 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
   }
 }
 
-// ---------------------------------------------------------------------------
-// Filter bar
-// ---------------------------------------------------------------------------
-
-class _FilterBar extends StatelessWidget {
-  const _FilterBar({required this.filter, required this.onChanged});
-
-  final _Filter filter;
-  final ValueChanged<_Filter> onChanged;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    return SingleChildScrollView(
-      scrollDirection: Axis.horizontal,
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-      child: Row(
-        children: [
-          _FilterChip(
-            label: t.journal.filter_all,
-            selected: filter == _Filter.all,
-            onTap: () => onChanged(_Filter.all),
-          ),
-          const SizedBox(width: 8),
-          _FilterChip(
-            label: t.journal.filter_tasks,
-            selected: filter == _Filter.tasks,
-            onTap: () => onChanged(_Filter.tasks),
-          ),
-          const SizedBox(width: 8),
-          _FilterChip(
-            label: t.journal.filter_notes,
-            selected: filter == _Filter.notes,
-            onTap: () => onChanged(_Filter.notes),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _FilterChip extends StatelessWidget {
-  const _FilterChip({
-    required this.label,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final String label;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return FilterChip(
-      label: Text(label),
-      selected: selected,
-      onSelected: (_) => onTap(),
-      showCheckmark: false,
-      labelStyle: TextStyle(
-        color: selected
-            ? theme.colorScheme.onPrimaryContainer
-            : theme.colorScheme.onSurface,
-        fontWeight: selected ? FontWeight.w600 : FontWeight.normal,
-      ),
-    );
-  }
-}
-
-// ---------------------------------------------------------------------------
-// Journal list — groups completed tasks by date
-// ---------------------------------------------------------------------------
-
-class _JournalList extends StatelessWidget {
-  const _JournalList({
-    required this.tasks,
-    required this.notes,
+class _Timeline extends StatelessWidget {
+  const _Timeline({
+    required this.entries,
+    required this.filter,
     required this.catalog,
     required this.areas,
     required this.subjectLabels,
-    required this.filter,
   });
 
-  final List<Task> tasks;
-  final List<Note> notes;
+  final List<JournalEntry> entries;
+  final JournalFilter filter;
   final Map<String, TaskType> catalog;
   final Map<String, Area> areas;
   final Map<String, String> subjectLabels;
-  final _Filter filter;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final entries = <JournalEntry>[
-      if (filter != _Filter.notes)
-        for (final task in tasks) TaskJournalEntry(task),
-      if (filter != _Filter.tasks)
-        for (final note in notes) NoteJournalEntry(note),
-    ]..sort((a, b) => b.date.compareTo(a.date));
+    if (entries.isEmpty) return EmptyState(journalEmptyMessage(filter, t));
 
-    if (entries.isEmpty) {
-      final msg = filter == _Filter.notes
-          ? t.journal.empty_notes
-          : filter == _Filter.tasks
-          ? t.journal.empty_tasks
-          : t.journal.empty;
-      return EmptyState(msg);
-    }
-
-    final groups = _groupByDate(entries);
+    final days = groupEntriesByDay(entries);
+    final now = DateTime.now();
 
     return SlidableAutoCloseBehavior(
       child: ListView.builder(
         padding: const EdgeInsets.only(bottom: 100),
-        itemCount: groups.length,
-        itemBuilder: (context, i) => _DayGroup(
-          date: groups[i].date,
-          entries: groups[i].entries,
+        itemCount: days.length,
+        itemBuilder: (context, i) => JournalDayCard(
+          group: days[i],
+          now: now,
           catalog: catalog,
           areas: areas,
           subjectLabels: subjectLabels,
         ),
       ),
-    );
-  }
-
-  static List<_DateGroup> _groupByDate(List<JournalEntry> entries) {
-    final map = <String, _DateGroup>{};
-    for (final entry in entries) {
-      final local = entry.date.toLocal();
-      final key =
-          '${local.year}-${local.month.toString().padLeft(2, '0')}-${local.day.toString().padLeft(2, '0')}';
-      map.putIfAbsent(key, () => _DateGroup(local, [])).entries.add(entry);
-    }
-    return map.values.toList();
-  }
-}
-
-class _DateGroup {
-  _DateGroup(this.date, this.entries);
-  final DateTime date;
-  final List<JournalEntry> entries;
-}
-
-// ---------------------------------------------------------------------------
-// Day group
-// ---------------------------------------------------------------------------
-
-class _DayGroup extends StatelessWidget {
-  const _DayGroup({
-    required this.date,
-    required this.entries,
-    required this.catalog,
-    required this.areas,
-    required this.subjectLabels,
-  });
-
-  final DateTime date;
-  final List<JournalEntry> entries;
-  final Map<String, TaskType> catalog;
-  final Map<String, Area> areas;
-  final Map<String, String> subjectLabels;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _DayHeader(date: date),
-          const SizedBox(height: 6),
-          Card(
-            clipBehavior: Clip.antiAlias,
-            child: Column(
-              children: [
-                for (var i = 0; i < entries.length; i++) ...[
-                  if (i > 0)
-                    Divider(
-                      height: 1,
-                      indent: 56,
-                      color: theme.colorScheme.outlineVariant,
-                    ),
-                  switch (entries[i]) {
-                    TaskJournalEntry(:final task) => TaskSwipe(
-                      task: task,
-                      child: TaskEntryTile(
-                        task: task,
-                        taskType: catalog[task.taskTypeId],
-                        subjectLabel: subjectLabels[task.id],
-                      ),
-                    ),
-                    NoteJournalEntry(:final note) => NoteSwipe(
-                      note: note,
-                      child: _NoteEntry(
-                        note: note,
-                        area: note.areaId != null ? areas[note.areaId] : null,
-                      ),
-                    ),
-                  },
-                ],
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class _DayHeader extends StatelessWidget {
-  const _DayHeader({required this.date});
-
-  final DateTime date;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final today = startOfDay(DateTime.now());
-    final d = startOfDay(date);
-
-    final String label;
-    if (d == today) {
-      label = t.common.today;
-    } else if (d == today.subtract(const Duration(days: 1))) {
-      label = t.common.yesterday;
-    } else {
-      label = formatDmy(date);
-    }
-
-    return Text(
-      label,
-      style: theme.textTheme.labelMedium?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-        fontWeight: FontWeight.w600,
-      ),
-    );
-  }
-}
-
-class _NoteEntry extends StatelessWidget {
-  const _NoteEntry({required this.note, required this.area});
-
-  final Note note;
-  final Area? area;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final timeStr = formatHm(note.date.toLocal());
-
-    return ListTile(
-      leading: CircleAvatar(
-        backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        child: const Text('✍️', style: TextStyle(fontSize: 18)),
-      ),
-      title: Text(
-        note.content,
-        style: theme.textTheme.bodyMedium,
-        maxLines: 2,
-        overflow: TextOverflow.ellipsis,
-      ),
-      subtitle: area != null
-          ? Text(
-              '🪴 ${area!.name}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            )
-          : null,
-      trailing: Text(
-        timeStr,
-        style: theme.textTheme.bodySmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-      contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
-      onTap: () =>
-          context.pushNamed('note-edit', pathParameters: {'id': note.id}),
     );
   }
 }

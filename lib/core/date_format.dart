@@ -3,6 +3,9 @@
 
 DateTime startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
 
+/// The same calendar day, whatever the time of day.
+bool isSameDay(DateTime a, DateTime b) => startOfDay(a) == startOfDay(b);
+
 /// `1. 6. 2026`
 String formatDmy(DateTime d) => '${d.day}. ${d.month}. ${d.year}';
 
