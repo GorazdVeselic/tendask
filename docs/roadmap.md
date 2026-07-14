@@ -495,6 +495,40 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-14 — **Refaktor presentation plasti: logika iz widgetov v čiste funkcije (`main`, pushano,
+  `c39e70b`…`87df323`, 8 commitov).** Vedenje **nespremenjeno** (refaktor, ne redesign); merilo uspeha ni
+  število vrstic, ampak **novo pokrita logika: 399 → 493 testov (+94)**, `analyze` čist.
+  **Sedem zaslonov razrezanih:** `task_detail_screen` 913→170, `entry_screen` 708→501,
+  `garden_plant_add_screen` 619→337, `home_screen` 578→175, `location_screen` 550→275,
+  `appearance_screen` 523→103, `areas_screen` 424→196 (⏳ postavka iz prejšnjega vnosa zaprta).
+  **Izluščeno (vsako s testi, ki prej niso bili mogoči):** `areas/presentation/garden_items.dart`
+  (vrstni red vrta: brez-območja → tipi po `AreaType.values`; `areaSubtitle`),
+  `tasks/presentation/task_detail_labels.dart` (oznake sredstev/opomnikov/statusa; sredstva zdaj prek
+  obstoječega `formatSupplyQuantity`, ne ročno prepisanega `roundToDouble`), `core/date_format`
+  `combineDateAndTime` (prestavitev opravila ohrani uro), `entry/entry_flow.dart` (`activeSteps`,
+  `nextStep`/`previousStep`, `canLeaveStep`), `entry/entry_defaults.dart` (`nextFullHour`,
+  `statusFromDate`, `shouldSeedReminder` — 4-pogojni guard je bil dobesedno prepisan dvakrat),
+  **`entry/entry_save_spec.dart` (`resolveSave`) — najpomembnejše: pravila, ki knjižijo zalogo in brišejo
+  pridelek (`keepSupplies` ob nenaloženem katalogu, `typeRecordsYield` ob menjavi tipa stran od harvesta),
+  so bila doslej netestirana znotraj `_save()`**; `plants/presentation/plant_picker_view.dart`
+  (`filterCatalog`, `splitByRelevance`, `pickerMembers` — sken »kaj je že v ciljnem območju« je bil
+  podvojen v `build` in `_memberFor`), `home/presentation/home_buckets.dart` (koši danes/zamujeno/
+  prihajajoče **po koledarskem dnevu, ne 24h oknu** — »včeraj ob 22:00« je zjutraj zamujeno),
+  `auth/presentation/location_labels.dart`, `settings/presentation/palette_labels.dart`.
+  **Plasti zaprte (`b602c1b`):** `accountRepositoryProvider` je živel v `data/` → preseljen v
+  `settings/application/account_providers.dart`; `PlantMoveResult`/`ReminderSpec`/`TaskSubjectSpec` niso
+  drift tipi, ampak besednjak repo API-ja → v koren feature-ja (`tasks/task_specs.dart`,
+  `plants/plant_move_result.dart`, repozitorija ju re-exportata). **V `presentation/` ni več nobenega
+  uvoza `data/…_repository.dart`**; edina zavestna izjema je `task_actions.dart` (akcijska plast, imenuje
+  `TasksRepository` v podpisu). **On-device dimni test (staging release APK, čista namestitev, gost):**
+  lokacija (iskanje »Kranj« → status z imenom kraja), Domov (ura vs. »Danes«), Vrt (BREZ OBMOČJA → VRT),
+  dodajanje rastline, čarovnik (privzeta polna ura, opomnik zasejan, korak Sredstva preskočen), detajl
+  opravila (**`⋯` meni, ki zdaj bere repo skozi `Consumer`** — podvoji/opravljeno delujeta), Videz
+  (preklop palete + ponastavitev) — **brez izjem v logcatu**. Novo orodje: `tool/adb_ui.ps1` (tap/vnos +
+  `uiautomator dump` + izpis napisov z `bounds` v enem ukazu). **Nedotaknjeno (kandidati za naslednjič):**
+  `entry/steps/when_step.dart` (483, validacija ponavljanja), `tasks_screen.dart` (404, časovni koši),
+  `journal_screen.dart` + `month_calendar_view.dart` (grupiranje po dnevih, verjetno podvojeno).
+
 - 2026-07-14 — **vc14 pripravljen: prod migracije + on-device verifikacija sredstev + 3 UI popravki
   (`main`, pushano, `478d7c9`).** (1) **Migracije `0014`+`0015`+`0016` aplicirane na PROD**
   (`supabase db push --linked`) in verificirane z read-only sondo — **ledger IN dejanska shema**
