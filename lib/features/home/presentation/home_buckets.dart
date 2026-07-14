@@ -1,37 +1,33 @@
-import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/date_format.dart';
 import '../../../i18n/translations.g.dart';
+import '../../tasks/presentation/task_day_groups.dart';
 
-/// The dashboard's three buckets of pending tasks. Membership is by calendar day,
-/// not by a 24-hour window — a task due last night is overdue this morning, not
-/// "12 hours from now".
+/// The dashboard's three buckets of pending tasks, derived from the one task-day
+/// grouping the task list uses. Tasks past the upcoming window belong to no
+/// bucket — the dashboard does not show them at all.
 ({List<Task> today, List<Task> overdue, List<Task> upcoming}) bucketPendingTasks(
   List<Task> pending,
   DateTime now,
 ) {
-  final today = startOfDay(now);
-  final windowEnd = today.add(const Duration(days: kUpcomingWindowDays));
-
   final todayTasks = <Task>[];
   final overdue = <Task>[];
   final upcoming = <Task>[];
+
   for (final task in pending) {
-    final day = startOfDay(task.date.toLocal());
-    if (day.isBefore(today)) {
-      overdue.add(task);
-    } else if (day == today) {
-      todayTasks.add(task);
-    } else if (!day.isAfter(windowEnd)) {
-      upcoming.add(task);
+    switch (taskDayGroup(task.date, now)) {
+      case TaskDayGroup.overdue:
+        overdue.add(task);
+      case TaskDayGroup.today:
+        todayTasks.add(task);
+      case TaskDayGroup.tomorrow || TaskDayGroup.thisWeek:
+        upcoming.add(task);
+      case TaskDayGroup.later:
+        break;
     }
   }
   return (today: todayTasks, overdue: overdue, upcoming: upcoming);
 }
-
-/// How many calendar days a task is late by.
-int overdueDays(DateTime date, DateTime now) =>
-    startOfDay(now).difference(startOfDay(date.toLocal())).inDays;
 
 /// Backward calendar-day label for a done task: yesterday 22:00 reads as
 /// "yesterday", never "today".

@@ -91,17 +91,6 @@ void main() {
     });
   });
 
-  group('overdueDays', () {
-    test('counts calendar days, not elapsed hours', () {
-      // 11 hours earlier, but a day earlier on the calendar → 1 day late.
-      expect(overdueDays(DateTime(2026, 6, 9, 22), now), 1);
-    });
-
-    test('same day is zero', () {
-      expect(overdueDays(DateTime(2026, 6, 10, 1), now), 0);
-    });
-  });
-
   group('relativeDayLabel', () {
     test('yesterday at 22:00 reads as yesterday, never today', () {
       expect(relativeDayLabel(DateTime(2026, 6, 9, 22), now, t), t.common.yesterday);
