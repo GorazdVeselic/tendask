@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
-import '../../data/tasks_repository.dart';
+import '../../task_specs.dart';
 import '../subject_labels.dart';
 
 /// Selected-subjects field: chips for each chosen plant/area (removable) plus a

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/database/app_database.dart';
-import '../../data/tasks_repository.dart';
+import '../../task_specs.dart';
 import '../subject_labels.dart';
 
 /// The task's subjects (plants and/or areas), each row navigating to its detail.

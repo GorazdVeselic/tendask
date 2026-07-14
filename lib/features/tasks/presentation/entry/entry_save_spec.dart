@@ -3,8 +3,8 @@ import '../../../../core/database/app_database.dart';
 import '../../../../core/task_status.dart';
 import '../../../supplies/data/supply_spec.dart';
 import '../../data/recurrence.dart';
-import '../../data/tasks_repository.dart';
 import '../../harvest.dart';
+import '../../task_specs.dart';
 import '../../yield_unit.dart';
 
 /// What the entry wizard actually persists. The draft the user sees is not it:

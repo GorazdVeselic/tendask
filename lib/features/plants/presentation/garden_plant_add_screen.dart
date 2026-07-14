@@ -11,7 +11,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
-import '../data/user_plants_repository.dart';
+import '../plant_move_result.dart';
 import 'plant_picker_view.dart';
 import 'widgets/area_pick_sheet.dart';
 import 'widgets/plant_added_bar.dart';

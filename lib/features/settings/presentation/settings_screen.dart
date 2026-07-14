@@ -15,7 +15,7 @@ import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/profile_providers.dart';
-import '../data/account_repository.dart';
+import '../application/account_providers.dart';
 
 /// Native language names (endonyms) — not translated; shown the same in every locale.
 String _langLabel(AppLocale loc) => switch (loc) {

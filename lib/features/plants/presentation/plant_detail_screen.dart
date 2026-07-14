@@ -16,7 +16,7 @@ import '../../tasks/presentation/yield_format.dart';
 import '../../tasks/yield_summary.dart';
 import '../../tasks/yield_unit.dart';
 import '../application/plants_providers.dart';
-import '../data/user_plants_repository.dart';
+import '../plant_move_result.dart';
 import 'plant_display.dart';
 import 'widgets/area_pick_sheet.dart';
 

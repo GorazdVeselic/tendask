@@ -3,7 +3,7 @@ import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
 import '../../../i18n/translations.g.dart';
 import '../../supplies/presentation/supply_format.dart';
-import '../data/tasks_repository.dart';
+import '../task_specs.dart';
 import 'entry/steps/reminder_step.dart';
 
 /// Consumed supplies as one line, e.g. "Urea 1kg, NPK 0.5kg". Null when the task

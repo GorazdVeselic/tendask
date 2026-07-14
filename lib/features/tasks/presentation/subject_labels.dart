@@ -1,7 +1,7 @@
 import '../../../core/database/app_database.dart';
 import '../../areas/presentation/area_type_display.dart';
 import '../../plants/presentation/plant_display.dart';
-import '../data/tasks_repository.dart';
+import '../task_specs.dart';
 
 /// Human label for a single task subject: plant name (alias/custom/catalog) when
 /// it is a plant, else the area name. Empty when nothing resolves.

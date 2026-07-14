@@ -11,7 +11,7 @@ import '../../../../notifications/application/reminder_schedule.dart';
 import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../notifications/presentation/widgets/reminder_sound_banner.dart';
 import '../../../../settings/application/profile_providers.dart';
-import '../../../data/tasks_repository.dart';
+import '../../../task_specs.dart';
 
 /// Base label for a reminder offset, e.g. "1 day before" (without a time of day).
 String reminderOffsetLabel(int offsetMinutes, Translations t) =>

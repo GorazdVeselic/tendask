@@ -14,7 +14,7 @@ import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../application/plants_providers.dart';
-import '../data/user_plants_repository.dart';
+import '../plant_move_result.dart';
 import 'widgets/area_pick_sheet.dart';
 
 /// Edit a personal plant instance: alias + its area (single — move) + delete.

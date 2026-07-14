@@ -3,13 +3,9 @@ import 'dart:io';
 
 import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/database/app_database.dart';
-import '../../../core/database/database_provider.dart';
-
-part 'account_repository.g.dart';
 
 /// GDPR actions for the account: data export and account deletion.
 class AccountRepository {
@@ -38,9 +34,3 @@ class AccountRepository {
     await _db.clearUserData();
   }
 }
-
-@riverpod
-AccountRepository accountRepository(Ref ref) => AccountRepository(
-  ref.watch(databaseProvider),
-  ref.watch(authServiceProvider),
-);

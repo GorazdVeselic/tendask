@@ -11,7 +11,7 @@ import '../../../../plants/application/plants_providers.dart';
 import '../../../../supplies/application/supplies_providers.dart';
 import '../../../../supplies/data/supply_spec.dart';
 import '../../../data/recurrence.dart';
-import '../../../data/tasks_repository.dart';
+import '../../../task_specs.dart';
 import '../../../yield_unit.dart';
 import '../../recurrence_label.dart';
 import '../../subject_labels.dart';

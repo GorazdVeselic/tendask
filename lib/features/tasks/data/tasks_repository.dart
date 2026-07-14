@@ -9,41 +9,18 @@ import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
+import '../task_specs.dart';
 import '../yield_unit.dart';
 import 'recurrence.dart';
+
+// The boundary value types are part of this repository's API — callers that
+// import it get them without a second import.
+export '../task_specs.dart';
 
 /// Captures a weather snapshot as JSON (or null when offline/unavailable).
 /// Injected so the repo stays agnostic of the weather feature — composition,
 /// not a features→features dependency (the provider wires it to WeatherService).
 typedef WeatherCapture = Future<String?> Function();
-
-/// A subject on the repository boundary: a plant OR an area-as-subject.
-/// Keeps drift types out of the UI (see CLAUDE.md — no Companion in signatures).
-class TaskSubjectSpec {
-  const TaskSubjectSpec({this.userPlantId, this.areaId})
-    : assert(
-        userPlantId != null || areaId != null,
-        'A subject must reference a plant or an area',
-      );
-  const TaskSubjectSpec.plant(String userPlantId)
-    : this(userPlantId: userPlantId);
-  const TaskSubjectSpec.area(String areaId) : this(areaId: areaId);
-
-  final String? userPlantId;
-  final String? areaId;
-}
-
-/// A reminder on the repository boundary. Stored now; the actual scheduling
-/// (flutter_local_notifications) lands in M8 — this only persists the model.
-class ReminderSpec {
-  const ReminderSpec({required this.offsetMinutes, this.time});
-
-  /// Minutes before the task date; 0 = at event time.
-  final int offsetMinutes;
-
-  /// "HH:mm" time of day for the notification; null = use the task's own time.
-  final String? time;
-}
 
 /// Normalizes a yield pair for storage (T11): a complete, positive pair, or
 /// (null, null) otherwise. Mirrors the Supabase CHECKs (`yield_amount > 0`,
