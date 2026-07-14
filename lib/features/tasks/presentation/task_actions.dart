@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:flutter/widgets.dart';
+import 'package:flutter/material.dart';
 
 import '../../../core/database/app_database.dart';
 import '../../../core/date_format.dart';
@@ -43,6 +43,53 @@ Future<void> completeTask(
     context,
     context.t.tasks_list.completed_recurring_toast(date: formatDmy(next)),
   );
+}
+
+/// Moves a task to another day, keeping the time of day it was set for. A
+/// dismissed picker changes nothing.
+Future<void> moveTask(
+  BuildContext context,
+  TasksRepository repo,
+  Task task,
+) async {
+  final current = task.date.toLocal();
+  final picked = await showDatePicker(
+    context: context,
+    initialDate: current,
+    firstDate: DateTime(2020),
+    lastDate: DateTime.now().add(const Duration(days: 365 * 3)),
+  );
+  if (picked == null) return;
+  // context is not used after the await — only the repo (lint-safe).
+  await repo.reschedule(task.id, combineDateAndTime(picked, current));
+}
+
+/// Opens the yield sheet for a completed harvest task and writes the result:
+/// a saved amount replaces the frozen one, "remove" clears it, dismissing the
+/// sheet changes nothing.
+Future<void> editYield(
+  BuildContext context,
+  TasksRepository repo,
+  Task task,
+) async {
+  final amount = task.yieldAmount;
+  final unit = yieldUnitFromName(task.yieldUnit);
+  final initial = (amount != null && unit != null)
+      ? YieldDraft(amount: amount, unit: unit)
+      : null;
+  final result = await showYieldSheet(
+    context,
+    initial: initial,
+    allowRemove: initial != null,
+  );
+  switch (result) {
+    case null:
+      return; // dismissed → no change
+    case YieldSaved(:final draft):
+      await repo.setYield(task.id, amount: draft.amount, unit: draft.unit);
+    case YieldCleared():
+      await repo.setYield(task.id, amount: null, unit: null);
+  }
 }
 
 /// Reverts a task to waiting — unless it is a completed recurring instance whose
