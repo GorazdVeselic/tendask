@@ -495,6 +495,32 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-14 — **vc14 pripravljen: prod migracije + on-device verifikacija sredstev + 3 UI popravki
+  (`main`, pushano, `478d7c9`).** (1) **Migracije `0014`+`0015`+`0016` aplicirane na PROD**
+  (`supabase db push --linked`) in verificirane z read-only sondo — **ledger IN dejanska shema**
+  (`tmp/probe_0014_0016.py`). Prod je bil pri `0013`; manjkale so **tri** (ne dve, kot je trdil dnevnik —
+  tudi `0014` task yield). Živi vc13 na Play je bil ves čas varen, ker je zgrajen **pred** supplies/yield
+  commiti (`kSuppliesEnabled=false`, brez yield stolpcev; preverjeno s `git show <commit>:core/config.dart`).
+  (2) **On-device verifikacija zavihka Vrt** (release APK proti prod) — segmenti, kontekstni FAB
+  (Rastlina/Sredstvo/Recept), prazna stanja in grupiranje po kategorijah delujejo; našla je **3 napake**,
+  vse popravljene in on-device potrjene: **`adc8631` `fix(theme)`** — tema je izbranemu čipu barvala le
+  *ozadje* (`chipTheme.selectedColor = primaryContainer`), M3 pa besedilo izbranega čipa jemlje iz
+  `onSecondaryContainer`, ki ga shema ni nastavila → ostal je M3 baseline in se bral kot **onemogočen**;
+  fix = `secondaryContainer`/`onSecondaryContainer` v `_scheme()` → popravi **vseh 10 mest s čipi** naenkrat.
+  **`c0ebdf4` `fix(i18n)`** — sl kategorija sredstev »Tretiva« → **»Škropiva«** (»tretiva« ni slovenska beseda).
+  **`63e5985` `fix(areas)`** — območje brez opravil je v podnaslovu ponavljalo svoj **tip**, ki ga sekcijska
+  oznaka že pove (»VRT / Vrt / Vrt«) → podnaslov zdaj pade nazaj na **število rastlin** (`plant_count(n)`
+  slang plural + `no_plants`; podatek je že v `plantsByArea`, brez nove poizvedbe). `analyze` čist,
+  **399 testov** (+1 widget). (3) **E2E potrjeno proti ŽIVEMU PRODU** (vnos prek aplikacije + read-only sonda):
+  `supply.category` ✅, `task.yield_amount = 2.0 kg` ✅ (`0014`), recept z dvema sredstvoma ✅
+  (postavke so **JSONB v `recipe.items`**, ločene tabele `recipe_item` NI), in ključno — **negativna zaloga
+  `−450` gre skozi** (`task_supply.applied=true`, opravilo `done`, `supply_quantity_check` odstranjen) =
+  `0016` dela; pred njo bi `23514` na `supply` **zaklenil cel sync** (supply se pusha pred task).
+  (4) **AAB `1.0.0+14` zgrajen, a NAMERNO ZADRŽAN** — Google pregleduje prijavo za produkcijski dostop
+  in pregledovalci testirajo prek zaprtega tira; sredstva so v vc13 izklopljena, torej bi šla nova
+  funkcija pred pregledovalce brez testerskega cikla. Upload po Googlovi odločitvi.
+  ⏳ Odprto: razdelitev `areas_screen.dart` (>300 vrstic).
+
 - 2026-07-01 — **Sredstva UX + preselitev v zavihek Vrt (`main`, merge `93d9d3a`).** (1) **UX koraka
   Sredstva pri opravilu** (commit `c4ab4a5`): keyboard-safe `add_supply_to_task_sheet` (drseč seznam +
   pripeta spodnja vrstica Količina[enota]+Dodaj nad tipkovnico prek `viewInsetsOf`), izbira = toggle

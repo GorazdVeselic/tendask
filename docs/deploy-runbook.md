@@ -73,6 +73,24 @@ Stanje (junij 2026): **CLI ledger žive baze kaže samo 0001–0005**, vendar je
 `set default`/`set not null`), da je varno aplicirati prek CLI ali skripte, in da stari APK-ji
 (vc1–vc5) ob pull-u ne crashajo.
 
+**Na produkciji ničesar ne brišemo** — ne vrstic, ne tabel, ne stolpcev, tudi »testnih« ne.
+Skripte proti prod so privzeto **read-only sonde** (`tmp/probe_*.py`). Izbris je edina nepovratna
+operacija; kar je odveč, ostane.
+
+### Stanje ledgerja na PROD (preverjeno 2026-07-14)
+
+`0001`–`0005`, `0011`, `0012`, `0013`, **`0014`, `0015`, `0016`** (vrzel `0006`–`0010` = M11 veja, glej zgoraj).
+
+| Migracija | Vsebina | Rabi jo |
+|---|---|---|
+| `0014` | `task.yield_amount` + `yield_unit` | T11 zajem pridelka (vc14+) |
+| `0015` | `supply.category` (NOT NULL default `other` + CHECK) | sredstva (vc14+) |
+| `0016` | drop `supply_quantity_check` | **negativna zaloga** — brez tega `23514` na `supply` **zaklene cel sync** (supply se pusha pred task) |
+
+**Pravilo (potrjeno v praksi):** vsak nov prod build najprej `supabase db push`, šele nato upload.
+Pred vc14 je bil prod pri `0013`, medtem ko je koda že pisala `yield_amount`/`category` — živi vc13 je
+bil rešen le zato, ker je bil zgrajen **pred** temi funkcijami. Ne zanašaj se na to; preveri.
+
 ---
 
 ## 3. App deploy — `deploy.bat` matrika

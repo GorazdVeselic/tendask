@@ -23,7 +23,19 @@
 - `1.0.0+4` (vc4) — zgrajen 2026-06-13 za zaprti test, a **ZASTAREL**: ne vsebuje BUG-004 popravka
   (2026-06-18) ne FR-12 lokacijske prenove. Ne nalagaj ga; arhiviran.
 - `1.0.0+5` (vc5) — **zgrajen iz `main` in naložen v Closed testing** (vsi bugi razrešeni, FR-8 + FR-12 notri).
-  Bump `pubspec +4 → +5`: commit `8410106`. To je aktualni zaprti build.
+  Bump `pubspec +4 → +5`: commit `8410106`.
+- `1.0.0+6` (vc6) — zaprti test (katalog 139 rastlin, 0011, swipe-delete, privzeti opomnik).
+- `1.0.0+7` … `1.0.0+11` (vc7–vc11) — R8 / `ic_stat_notify` saga (opomniki so bili na Play tihi; fix v **vc10** =
+  density-neodvisen vektor v bazni `drawable/`). Podrobnosti v spominu `tendask-r8-shrinks-dynamic-resources`.
+- `1.0.0+12` (vc12) — zaprti test + **obvestilo 32 testerjem** (`vc12-tester-email.md`).
+- `1.0.0+13` (vc13) — **naložen v zaprti test 2026-06-30, AKTIVEN in odobren** (»Na voljo preizkuševalcem«).
+  Vsebuje FR-5 (ponavljanje), **NE** vsebuje sredstev/pridelka (`kSuppliesEnabled=false` v času builda) —
+  zato je bil ves čas združljiv s prod bazo pri migraciji `0013`.
+- `1.0.0+14` (vc14) — **zgrajen 2026-07-13/14 iz `main` (`478d7c9`), NI naložen — namerno zadržan.**
+  Prva izdaja s **sredstvi/recepti** (zavihek Vrt) + T11 pridelek + 3 UI popravki. Rabi prod migracije
+  `0014`–`0016` — **te so aplicirane in e2e potrjene (2026-07-14)**. Zadržan, ker Google pregleduje prijavo
+  za produkcijski dostop in pregledovalci app testirajo prek zaprtega tira → nova, na Play še neverificirana
+  funkcija sredi pregleda = tveganje brez koristi. **Naloži po Googlovi odločitvi.**
 
 ## Interni test
 
@@ -81,9 +93,18 @@
       v Google Cloud. Brez kode/builda. **On-device potrjeno: Google login na Play-buildu dela.**
       (Upload-key SHA-1 `62:CF:…:2C:F9` je bil že registriran 2026-06-09 — za sideload.)
       Klik-pot do SHA-1: Zaščiteno z Google Play → razširi »Zaščita Trgovine Play« → »Upravljanje podpisovanja aplikacij z Google Play«.
-- [ ] **Zaprti test: ≥12 testerjev × 14 dni** (obvezen gate za nove osebne račune pred produkcijo)
-      — zbrati testerje. **Vabilo pripravljeno:** `tester-invite.md` (SL/EN) + `assets/tester-preview.png`.
+- [x] **Zaprti test: ≥12 testerjev × 14 dni — IZPOLNJENO** (obvezen gate za nove osebne račune).
+      Vabila prek `tester-invite.md` + Mailmeteor; zadnji aktiven build v tiru = **vc13**.
       Opomba: interni test nima časovne zahteve; 14-dnevni števec teče šele v ZAPRTEM testu z ≥12 vključenimi testerji.
+- [~] **Prijava za produkcijski dostop ODDANA — V PREGLEDU** (opaženo 2026-07-13; Play javlja »Prejeli smo vašo
+      prijavo … pregled običajno do 7 dni, občasno dlje«; splošna razpoložljivost = »Neaktivno«).
+      **Med pregledom: zaprtega testa NE ustavljaj** in ne nalagaj novih, na Play neverificiranih funkcij —
+      pregledovalci app testirajo prek zaprtega tira (zato je vc14 zadržan).
+- [ ] Po odobritvi: naloži **vc14** (sredstva/recepti + pridelek; prod migracije `0014`–`0016` so že gor)
+      → nato objava v produkcijo.
+- Opomba: stran **»Zaščiteno z Googlom Play«** (Play Integrity API 0/7, Zaščita fakturiranja 0/4) = **neobvezno**,
+  ni pogoj za objavo. Integrity bi pomenil novo dep izven `tech-stack.md §1`; fakturiranje postane relevantno
+  šele ob premiumu.
 
 ## Najdeni bugi med testom — vsi razrešeni na `main` ✅
 
