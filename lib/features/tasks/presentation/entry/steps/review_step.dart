@@ -16,7 +16,7 @@ import '../../../yield_unit.dart';
 import '../../recurrence_label.dart';
 import '../../subject_labels.dart';
 import '../../yield_format.dart';
-import '../entry_screen.dart';
+import '../entry_flow.dart';
 import 'reminder_step.dart';
 
 /// Step 6 — review every choice (tap a row to jump back) plus the note.

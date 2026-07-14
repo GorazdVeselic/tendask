@@ -23,19 +23,24 @@ import '../../data/tasks_repository.dart';
 import '../../harvest.dart';
 import '../../yield_unit.dart';
 import '../yield_sheet.dart';
+import 'entry_defaults.dart';
+import 'entry_flow.dart';
+import 'entry_save_spec.dart';
 import 'steps/reminder_step.dart';
 import 'steps/review_step.dart';
 import 'steps/subject_step.dart';
 import 'steps/supplies_step.dart';
 import 'steps/type_step.dart';
 import 'steps/when_step.dart';
-
-/// Fixed page indices. The active set is a subset (conditional steps).
-enum EntryStep { type, subject, when, reminder, supplies, review }
+import 'widgets/entry_bottom_bar.dart';
+import 'widgets/entry_progress_bar.dart';
+import 'widgets/entry_step_title.dart';
 
 /// Single horizontal wizard that creates or edits a task. Replaces the old
-/// Quick Log + Task Form (concept §7.16). Conditional steps: reminder shows
-/// only when the task is waiting; supplies only for supply-consuming types.
+/// Quick Log + Task Form (concept §7.16). The step flow, the date/status
+/// defaults and the rules for what gets persisted live in `entry_flow.dart`,
+/// `entry_defaults.dart` and `entry_save_spec.dart` — this screen holds the
+/// draft and wires it to the steps.
 class EntryScreen extends ConsumerStatefulWidget {
   const EntryScreen({super.key, this.taskId, this.initialDate});
 
@@ -70,8 +75,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   double? _yieldAmount;
   YieldUnit? _yieldUnit;
 
-  // T7: a planned task is seeded one default reminder, once. The sentinel sticks
-  // even after the user removes it, so it never silently comes back.
+  // T7: a planned task is seeded one default reminder, once.
   bool _didSeedReminder = false;
 
   EntryStep _step = EntryStep.type;
@@ -83,8 +87,9 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   @override
   void initState() {
     super.initState();
-    _date = widget.initialDate ?? _nextFullHour(DateTime.now());
-    _status = _statusFromDate(_date);
+    final now = DateTime.now();
+    _date = widget.initialDate ?? nextFullHour(now);
+    _status = statusFromDate(_date, now);
     if (_isEdit) {
       _isLoading = true;
       _step = EntryStep.review;
@@ -114,27 +119,10 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     for (final id in _areaIds) TaskSubjectSpec.area(id),
   ];
 
-  /// Ordered fixed steps that are currently part of the flow.
-  List<EntryStep> get _activeSteps {
-    final consumes = _selectedType?.consumesSupplies ?? false;
-    return [
-      EntryStep.type,
-      EntryStep.subject,
-      EntryStep.when,
-      if (_status == TaskStatus.waiting) EntryStep.reminder,
-      // Supplies step gated off for now (kSuppliesEnabled).
-      if (consumes && kSuppliesEnabled) EntryStep.supplies,
-      EntryStep.review,
-    ];
-  }
-
-  static DateTime _nextFullHour(DateTime now) =>
-      DateTime(now.year, now.month, now.day, now.hour + 1);
-
-  // Derived from the full date+time vs now: anything in the future is planned
-  // (waiting), now/past is logged as done.
-  TaskStatus _statusFromDate(DateTime d) =>
-      d.isAfter(DateTime.now()) ? TaskStatus.waiting : TaskStatus.done;
+  List<EntryStep> get _activeSteps => activeSteps(
+    status: _status,
+    consumesSupplies: _selectedType?.consumesSupplies ?? false,
+  );
 
   // ── Loading (edit) ────────────────────────────────────────────────────────
 
@@ -156,12 +144,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         _noteController.text = task.note ?? '';
         _recurrence = Recurrence.tryParse(task.recurrence);
       }
-      _plantIds
-        ..clear()
-        ..addAll(subjects.map((s) => s.userPlantId).whereType<String>());
-      _areaIds
-        ..clear()
-        ..addAll(subjects.map((s) => s.areaId).whereType<String>());
+      _fillSubjects(subjects);
+      _fillSupplies(supplies);
       _reminders
         ..clear()
         ..addAll(
@@ -169,17 +153,27 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
             (r) => ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
           ),
         );
-      _supplies
-        ..clear()
-        ..addAll(
-          supplies.map(
-            (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
-          ),
-        );
       // Stored reminders are authoritative — never auto-seed in edit mode.
       _didSeedReminder = true;
       _isLoading = false;
     });
+  }
+
+  void _fillSubjects(List<TaskSubject> subjects) {
+    _plantIds
+      ..clear()
+      ..addAll(subjects.map((s) => s.userPlantId).whereType<String>());
+    _areaIds
+      ..clear()
+      ..addAll(subjects.map((s) => s.areaId).whereType<String>());
+  }
+
+  void _fillSupplies(List<TaskSupply> supplies) {
+    _supplies
+      ..clear()
+      ..addAll(
+        supplies.map((ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount)),
+      );
   }
 
   // ── Repeat last (FR-6) ──────────────────────────────────────────────────────
@@ -199,19 +193,8 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     setState(() {
       _taskTypeId = task.taskTypeId;
       _noteController.text = task.note ?? '';
-      _plantIds
-        ..clear()
-        ..addAll(subjects.map((s) => s.userPlantId).whereType<String>());
-      _areaIds
-        ..clear()
-        ..addAll(subjects.map((s) => s.areaId).whereType<String>());
-      _supplies
-        ..clear()
-        ..addAll(
-          supplies.map(
-            (ts) => SupplySpec(supplyId: ts.supplyId, amount: ts.amount),
-          ),
-        );
+      _fillSubjects(subjects);
+      _fillSupplies(supplies);
     });
     unawaited(_maybeSeedReminder());
     _goTo(EntryStep.review);
@@ -229,16 +212,14 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   }
 
   void _next() {
-    final active = _activeSteps;
-    final pos = active.indexOf(_step);
-    if (pos >= 0 && pos < active.length - 1) _goTo(active[pos + 1]);
+    final step = nextStep(_step, _activeSteps);
+    if (step != null) _goTo(step);
   }
 
   void _back() {
-    final active = _activeSteps;
-    final pos = active.indexOf(_step);
-    if (pos > 0) {
-      _goTo(active[pos - 1]);
+    final step = previousStep(_step, _activeSteps);
+    if (step != null) {
+      _goTo(step);
     } else {
       context.pop();
     }
@@ -254,7 +235,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
   void _setDate(DateTime date) {
     setState(() {
       _date = date;
-      if (!_statusManual) _status = _statusFromDate(date);
+      if (!_statusManual) _status = statusFromDate(date, DateTime.now());
     });
     unawaited(_maybeSeedReminder());
   }
@@ -269,27 +250,20 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
 
   // ── Default reminder seed (T7) ────────────────────────────────────────────
 
-  /// Seeds one default reminder for a planned task so the phone actually notifies
-  /// the user. Runs once (tracked by [_didSeedReminder]); skips a done/logged
-  /// task, one that already has reminders, or when task reminders are disabled.
+  /// Seeds one default reminder for a planned task so the phone actually
+  /// notifies the user. Whether the user has reminders enabled is only known
+  /// after the await, so the first check assumes they are.
   Future<void> _maybeSeedReminder() async {
-    if (_didSeedReminder ||
-        _status != TaskStatus.waiting ||
-        _reminders.isNotEmpty) {
-      return;
-    }
+    if (!_seedWanted(remindersEnabled: true)) return;
+
     final userId = ref.read(authServiceProvider).userId;
     final settings = await ref
         .read(profileRepositoryProvider)
         .notificationSettings(userId);
     if (!mounted) return;
     // Re-check after the await: status/reminders may have changed meanwhile.
-    if (_didSeedReminder ||
-        _status != TaskStatus.waiting ||
-        _reminders.isNotEmpty ||
-        !settings.taskRemindersEnabled) {
-      return;
-    }
+    if (!_seedWanted(remindersEnabled: settings.taskRemindersEnabled)) return;
+
     setState(() {
       _reminders.add(
         defaultReminderSpec(
@@ -301,6 +275,13 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       _didSeedReminder = true;
     });
   }
+
+  bool _seedWanted({required bool remindersEnabled}) => shouldSeedReminder(
+    didSeed: _didSeedReminder,
+    status: _status,
+    hasReminders: _reminders.isNotEmpty,
+    remindersEnabled: remindersEnabled,
+  );
 
   // ── Yield (harvest only) ──────────────────────────────────────────────────
 
@@ -369,11 +350,16 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     setState(() => _isSaving = true);
     try {
       final note = _noteController.text.trim();
-      // Reminders and recurrence only make sense for a planned (waiting) task.
-      final reminders = _status == TaskStatus.waiting
-          ? _reminders
-          : const <ReminderSpec>[];
-      final recurrence = _status == TaskStatus.waiting ? _recurrence : null;
+      final spec = resolveSave(
+        type: _selectedType,
+        isEdit: _isEdit,
+        status: _status,
+        reminders: _reminders,
+        recurrence: _recurrence,
+        supplies: _supplies,
+        yieldAmount: _yieldAmount,
+        yieldUnit: _yieldUnit,
+      );
       final repo = ref.read(tasksRepositoryProvider);
       final String taskId;
       if (_isEdit) {
@@ -384,18 +370,12 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           date: _date,
           note: note.isEmpty ? null : note,
           subjects: _subjects,
-          recurrence: recurrence?.encode(),
-          reminders: reminders,
-          // A type change away from harvest drops the recorded yield. Preserve
-          // when the type is unknown (catalog not loaded) — only a positively
-          // non-harvest type clears it.
-          typeRecordsYield: _selectedType == null || isHarvestType(_selectedType),
+          recurrence: spec.recurrence?.encode(),
+          reminders: spec.reminders,
+          typeRecordsYield: spec.typeRecordsYield,
         );
         taskId = widget.taskId!;
       } else {
-        // Yield is only meaningful when logging a harvest as already done.
-        final harvestDone =
-            _status == TaskStatus.done && isHarvestType(_selectedType);
         taskId = await repo.create(
           userId: ref.read(authServiceProvider).userId,
           taskTypeId: _taskTypeId!,
@@ -403,28 +383,17 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
           status: _status,
           note: note.isEmpty ? null : note,
           subjects: _subjects,
-          recurrence: recurrence?.encode(),
-          reminders: reminders,
-          yieldAmount: harvestDone ? _yieldAmount : null,
-          yieldUnit: harvestDone ? _yieldUnit : null,
+          recurrence: spec.recurrence?.encode(),
+          reminders: spec.reminders,
+          yieldAmount: spec.yieldAmount,
+          yieldUnit: spec.yieldUnit,
         );
       }
-      // Persist supplies only when the final type consumes them; switching to a
-      // KNOWN non-consuming type must not silently book stock the user can't see
-      // (the supplies step is hidden), and empty specs reconcile an edit that
-      // moved away from a consuming type — returning previously booked stock.
-      // If the type can't be resolved (catalog not loaded), keep the buffer only
-      // on edit (don't wipe already-booked stock); on create drop it (nothing is
-      // booked yet, so the safe default is to not book unseen consumption).
-      final type = _selectedType;
-      final keepSupplies = type == null
-          ? _isEdit
-          : kSuppliesEnabled && type.consumesSupplies;
       await ref
           .read(suppliesRepositoryProvider)
           .syncForTask(
             taskId: taskId,
-            specs: keepSupplies ? _supplies : const [],
+            specs: spec.supplies,
             isDone: _status == TaskStatus.done,
           );
       AppHaptics.saved();
@@ -488,90 +457,23 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       ),
       body: Column(
         children: [
-          // Review is the final summary, not a numbered step — exclude it from
-          // the bar so the dot count matches the highest "Korak N". Review is
-          // always the last active step, so all dots fill when it's reached.
-          _ProgressBar(count: active.length - 1, current: pos < 0 ? 0 : pos),
-          _StepTitle(step: _step, position: pos),
-          Expanded(
-            child: PageView(
-              controller: _pageController,
-              physics: const NeverScrollableScrollPhysics(),
-              children: [
-                TypeStepBody(
-                  selected: _taskTypeId,
-                  onSelect: _selectType,
-                  onNoteTap: () => context.pushNamed('note-new'),
-                  onRepeatLast: _isEdit ? null : _repeatLast,
-                ),
-                SubjectStepBody(
-                  taskTypeId: _taskTypeId,
-                  plantIds: _plantIds,
-                  areaIds: _areaIds,
-                  onTogglePlant: (id, sel) => setState(
-                    () => sel ? _plantIds.add(id) : _plantIds.remove(id),
-                  ),
-                  onToggleArea: (id, sel) => setState(
-                    () => sel ? _areaIds.add(id) : _areaIds.remove(id),
-                  ),
-                ),
-                WhenStepBody(
-                  date: _date,
-                  status: _status,
-                  recurrence: _recurrence,
-                  onSetDate: _setDate,
-                  onSetStatus: _setStatus,
-                  onSetRecurrence: (r, valid) => setState(() {
-                    _recurrence = r;
-                    _recurrenceValid = valid;
-                  }),
-                ),
-                ReminderStepBody(
-                  reminders: _reminders,
-                  taskDate: _date,
-                  seededDefault: _didSeedReminder,
-                  onAdd: (spec) => setState(() => _reminders.add(spec)),
-                  onRemove: (i) => setState(() => _reminders.removeAt(i)),
-                ),
-                SuppliesStepBody(
-                  supplies: _supplies,
-                  onAdd: (spec) => setState(() => _supplies.add(spec)),
-                  onRemove: (i) => setState(() => _supplies.removeAt(i)),
-                ),
-                ReviewStepBody(
-                  taskTypeId: _taskTypeId,
-                  subjects: _subjects,
-                  date: _date,
-                  status: _status,
-                  recurrence: _status == TaskStatus.waiting ? _recurrence : null,
-                  reminders: _reminders,
-                  supplies: _supplies,
-                  noteController: _noteController,
-                  consumesSupplies:
-                      kSuppliesEnabled && (type?.consumesSupplies ?? false),
-                  onFix: _goTo,
-                  showYield:
-                      !_isEdit &&
-                      _status == TaskStatus.done &&
-                      isHarvestType(type),
-                  yieldAmount: _yieldAmount,
-                  yieldUnit: _yieldUnit,
-                  onEditYield: _editYield,
-                ),
-              ],
-            ),
+          EntryProgressBar(
+            count: active.length - 1,
+            current: pos < 0 ? 0 : pos,
           ),
-          _BottomBar(
+          EntryStepTitle(step: _step, position: pos),
+          Expanded(child: _pages(type)),
+          EntryBottomBar(
             isReview: isReview,
             isOptional:
                 _step == EntryStep.reminder || _step == EntryStep.supplies,
-            canContinue: switch (_step) {
-              EntryStep.type => _taskTypeId != null,
-              EntryStep.subject => _plantIds.isNotEmpty || _areaIds.isNotEmpty,
-              // Block while a shown recurrence field is empty/invalid.
-              EntryStep.when => _status != TaskStatus.waiting || _recurrenceValid,
-              _ => true,
-            },
+            canContinue: canLeaveStep(
+              _step,
+              taskTypeId: _taskTypeId,
+              hasSubjects: _plantIds.isNotEmpty || _areaIds.isNotEmpty,
+              status: _status,
+              recurrenceValid: _recurrenceValid,
+            ),
             isSaving: _isSaving,
             onContinue: _next,
             onSave: _save,
@@ -580,129 +482,67 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       ),
     );
   }
-}
 
-// ─── Shell widgets ───────────────────────────────────────────────────────────
-
-class _ProgressBar extends StatelessWidget {
-  const _ProgressBar({required this.count, required this.current});
-  final int count;
-  final int current;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 4, 20, 10),
-      child: Row(
-        children: [
-          for (var i = 0; i < count; i++) ...[
-            Expanded(
-              child: Container(
-                height: 4,
-                decoration: BoxDecoration(
-                  color: i <= current
-                      ? theme.colorScheme.primary
-                      : theme.colorScheme.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(2),
-                ),
-              ),
-            ),
-            if (i < count - 1) const SizedBox(width: 6),
-          ],
-        ],
+  Widget _pages(TaskType? type) => PageView(
+    controller: _pageController,
+    physics: const NeverScrollableScrollPhysics(),
+    children: [
+      TypeStepBody(
+        selected: _taskTypeId,
+        onSelect: _selectType,
+        onNoteTap: () => context.pushNamed('note-new'),
+        onRepeatLast: _isEdit ? null : _repeatLast,
       ),
-    );
-  }
-}
-
-class _StepTitle extends StatelessWidget {
-  const _StepTitle({required this.step, required this.position});
-  final EntryStep step;
-  final int position;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final text = switch (step) {
-      EntryStep.type =>
-        '${t.entry.step} ${position + 1} · ${t.entry.type_title}',
-      EntryStep.subject =>
-        '${t.entry.step} ${position + 1} · ${t.entry.subject_title}',
-      EntryStep.when =>
-        '${t.entry.step} ${position + 1} · ${t.entry.when_title}',
-      EntryStep.reminder =>
-        '${t.entry.step} ${position + 1} · ${t.entry.reminder_title} ${t.entry.optional}',
-      EntryStep.supplies =>
-        '${t.entry.step} ${position + 1} · ${t.entry.supplies_title} ${t.entry.optional}',
-      EntryStep.review => t.entry.review_title,
-    };
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(20, 0, 20, 8),
-      child: Align(
-        alignment: Alignment.centerLeft,
-        child: Text(
-          text,
-          style: theme.textTheme.labelMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-            fontWeight: FontWeight.w600,
-          ),
-        ),
+      SubjectStepBody(
+        taskTypeId: _taskTypeId,
+        plantIds: _plantIds,
+        areaIds: _areaIds,
+        onTogglePlant: (id, sel) =>
+            setState(() => sel ? _plantIds.add(id) : _plantIds.remove(id)),
+        onToggleArea: (id, sel) =>
+            setState(() => sel ? _areaIds.add(id) : _areaIds.remove(id)),
       ),
-    );
-  }
-}
-
-class _BottomBar extends StatelessWidget {
-  const _BottomBar({
-    required this.isReview,
-    required this.isOptional,
-    required this.canContinue,
-    required this.isSaving,
-    required this.onContinue,
-    required this.onSave,
-  });
-
-  final bool isReview;
-  final bool isOptional;
-  final bool canContinue;
-  final bool isSaving;
-  final VoidCallback onContinue;
-  final VoidCallback onSave;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    return SafeArea(
-      child: Padding(
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              width: double.infinity,
-              height: 48,
-              child: FilledButton(
-                onPressed: isSaving || (!isReview && !canContinue)
-                    ? null
-                    : (isReview ? onSave : onContinue),
-                child: isSaving
-                    ? const SizedBox(
-                        width: 20,
-                        height: 20,
-                        child: CircularProgressIndicator.adaptive(
-                          strokeWidth: 2,
-                        ),
-                      )
-                    : Text(isReview ? t.entry.save : t.entry.kContinue),
-              ),
-            ),
-            if (isOptional)
-              TextButton(onPressed: onContinue, child: Text(t.entry.skip)),
-          ],
-        ),
+      WhenStepBody(
+        date: _date,
+        status: _status,
+        recurrence: _recurrence,
+        onSetDate: _setDate,
+        onSetStatus: _setStatus,
+        onSetRecurrence: (r, valid) => setState(() {
+          _recurrence = r;
+          _recurrenceValid = valid;
+        }),
       ),
-    );
-  }
+      ReminderStepBody(
+        reminders: _reminders,
+        taskDate: _date,
+        seededDefault: _didSeedReminder,
+        onAdd: (spec) => setState(() => _reminders.add(spec)),
+        onRemove: (i) => setState(() => _reminders.removeAt(i)),
+      ),
+      SuppliesStepBody(
+        supplies: _supplies,
+        onAdd: (spec) => setState(() => _supplies.add(spec)),
+        onRemove: (i) => setState(() => _supplies.removeAt(i)),
+      ),
+      ReviewStepBody(
+        taskTypeId: _taskTypeId,
+        subjects: _subjects,
+        date: _date,
+        status: _status,
+        recurrence: _status == TaskStatus.waiting ? _recurrence : null,
+        reminders: _reminders,
+        supplies: _supplies,
+        noteController: _noteController,
+        consumesSupplies:
+            kSuppliesEnabled && (type?.consumesSupplies ?? false),
+        onFix: _goTo,
+        showYield:
+            !_isEdit && _status == TaskStatus.done && isHarvestType(type),
+        yieldAmount: _yieldAmount,
+        yieldUnit: _yieldUnit,
+        onEditYield: _editYield,
+      ),
+    ],
+  );
 }
