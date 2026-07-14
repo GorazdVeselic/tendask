@@ -495,6 +495,44 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-14 — **Refaktor presentation plasti, 2. krog: zadnje tri velike datoteke (`main`, pushano,
+  `efbf761`+`b3364fd`+`ad65de5`).** Zaprte vse tri postavke »nedotaknjeno« iz prejšnjega vnosa.
+  Vedenje **nespremenjeno**; testi **493 → 544 (+51)**, `analyze` čist.
+  Razrezano: `tasks_screen` 404→133, `when_step` 483→210, `journal_screen` 369→146,
+  `month_calendar_view` 316→152.
+  **`tasks/presentation/task_day_groups.dart` — grupiranje opravil po dnevih je zdaj na ENEM mestu.**
+  Prej sta obstajali dve skoraj enaki pravili z **za dan zgrešeno mejo**: dashboard (`bucketPendingTasks`,
+  `!day.isAfter(today+7)`) je opravilo čez natanko 7 dni štel med prihajajoča, seznam
+  (`day.isBefore(today+7)`) pa ga je pokazal pod »Kasneje«. **Poenoteno na vključujočo mejo** (kot pravi
+  komentar pri `kUpcomingWindowDays`) → 👤 potrjeno; edina namerna sprememba vedenja v tem krogu.
+  `home_buckets` zdaj kliče `taskDayGroup`; `overdueDays` se je preselil sem (bil je podvojen inline v
+  `_StatusBadge`). Poleg tega `buildTaskListItems` (sealed `TaskListItem` — konec `List<Object>` + casta)
+  in `taskGroupLabel`/`taskStatusText`.
+  **`entry/steps/when_rules.dart` — validacija ponavljanja, ki gejta gumb »Naprej«.** Živela je zapletena
+  s `TextEditingController`-ji v stanju widgeta, zato so bile veje dosegljive le prek `WidgetTester`-ja in
+  netestirane: interval `0` (polje `digitsOnly` ga **spusti**, pravilo `<1` ga zavrne), prevelika številka
+  (`int.tryParse` → null), smet za **skritim** poljem (mode custom→weekly, odklopljena kapica) — ta ne sme
+  blokirati. Zdaj čista `evaluateRecurrence(mode, intervalText, limited, countText)` → `(rule, valid,
+  intervalInvalid, countInvalid, everyDays)`; widget samo riše (`entry/widgets/recurrence_picker.dart`).
+  Tudi `whenPreset`/`dateForPreset` (preset je bil izračunan v getterju z `DateTime.now()`), `_withDay` je
+  podvajal `combineDateAndTime`, `_Labelled` je bil lokalna kopija skupnega `FieldLabel` (razmik pod
+  oznako se s tem spremeni za 1 px — 👤 potrjeno).
+  **`journal/presentation/journal_timeline.dart` + `month_grid.dart`:** `journalEntries` (združi + filtrira
+  + sortira), `groupEntriesByDay`, `journalEmptyMessage`, `journalDayLabel`, ter `tasksOnDay`,
+  `taskCountsInMonth`, `preselectedDay` (`monthCells` preseljen sem). **Naslova dneva v dnevniku namenoma
+  NISEM poenotil z `relativeDayLabel` z Domov:** obrazec opombe dovoli datum v prihodnosti, in tam se
+  pravili razideta (dnevnik pokaže datum, `relativeDayLabel` bi rekel »danes«) → poenotenje bi tiho
+  spremenilo vedenje. Trikrat ponovljeni `startOfDay(a) == startOfDay(b)` je dobil ime (`isSameDay` v
+  `core/date_format`).
+  **On-device dimni test (prod release APK):** seznam (sekcija DANES + značka), čarovnik korak »Kdaj« →
+  tedensko → »Naslednje: 21. 7. 2026«, zaključek ponavljajočega opravila → naslednja ponovitev (dan+7)
+  **pod TA TEDEN** (potrjena poravnana meja), dnevnik (skupina »Danes«), filter Opombe (»Ni opomb.«),
+  mesečni koledar (»2 opravili ta mesec«, izbran današnji dan), prehod na tuj mesec (brez izbranega dneva).
+  **Orodje: `tool/adb_run.ps1` + `tool/smoke.md`** — cel scenarij v **enem** zagonu, koraki v `tmp/steps.txt`
+  so **napisi** (`taptext`), ne koordinate. Nauk: iz orodja `PowerShell` **ne zaganjaj ugnezdenega
+  `powershell -File …`** — Claude Code takega ukaza ne validira in vpraša za dovoljenje pri *vsakem* tapu;
+  poženi skript neposredno (`./tool/adb_run.ps1`).
+
 - 2026-07-14 — **Refaktor presentation plasti: logika iz widgetov v čiste funkcije (`main`, pushano,
   `c39e70b`…`87df323`, 8 commitov).** Vedenje **nespremenjeno** (refaktor, ne redesign); merilo uspeha ni
   število vrstic, ampak **novo pokrita logika: 399 → 493 testov (+94)**, `analyze` čist.
