@@ -2,16 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../app/theme/app_colors.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
 import '../../../core/location/place_label_repository.dart';
 import '../../../core/widgets/confirm_dialog.dart';
-import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
+import 'location_labels.dart';
+import 'widgets/enter_place_card.dart';
+import 'widgets/gps_card.dart';
+import 'widgets/location_privacy_note.dart';
+import 'widgets/location_status_banner.dart';
 
 /// Onboarding location step (wireframe 16). GPS via geolocator, or type a place
 /// (Open-Meteo geocoding). Either way only the derived H3 cells are stored to
@@ -73,18 +76,13 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     });
     final result = await ref.read(locationServiceProvider).currentCoordinates();
     if (!mounted) return;
-    switch (result) {
-      case LocationCoords(:final latitude, :final longitude):
-        await _save(latitude, longitude);
-        if (!mounted) return;
-        setState(() => _isSet = true);
-        _toast(t.location.set_gps);
-      case LocationDenied():
-        setState(() => _error = t.location.err_denied);
-      case LocationServiceDisabled():
-        setState(() => _error = t.location.err_disabled);
-      case LocationUnavailable():
-        setState(() => _error = t.location.err_unavailable);
+    if (result case LocationCoords(:final latitude, :final longitude)) {
+      await _save(latitude, longitude);
+      if (!mounted) return;
+      setState(() => _isSet = true);
+      _toast(t.location.set_gps);
+    } else {
+      setState(() => _error = locationErrorLabel(result, t));
     }
     if (mounted) setState(() => _loading = false);
   }
@@ -183,6 +181,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
               )
               .value
         : null;
+    final error = _error;
 
     return Scaffold(
       appBar: fromSettings
@@ -204,7 +203,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
               Expanded(
                 child: ListView(
                   children: [
-                    _StatusBanner(
+                    LocationStatusBanner(
                       isSet: _isSet,
                       placeName: placeName,
                       onClear: _isSet ? _clear : null,
@@ -242,7 +241,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     const SizedBox(height: 24),
                     // Manual entry on top — typing a place name is the most
                     // universally understood action; GPS is the alternative.
-                    _EnterPlaceCard(
+                    EnterPlaceCard(
                       key: _entryCardKey,
                       controller: _searchController,
                       loading: _loading,
@@ -251,24 +250,24 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       onSelect: _selectPlace,
                     ),
                     const SizedBox(height: 14),
-                    const _OrDivider(),
+                    const OrDivider(),
                     const SizedBox(height: 14),
-                    _GpsCard(loading: _loading, onTap: _useGps),
+                    GpsCard(loading: _loading, onTap: _useGps),
                     if (_loading) ...[
                       const SizedBox(height: 16),
                       const Center(child: CircularProgressIndicator()),
                     ],
-                    if (_error != null) ...[
+                    if (error != null) ...[
                       const SizedBox(height: 12),
                       Text(
-                        _error!,
+                        error,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: cs.error,
                         ),
                       ),
                     ],
                     const SizedBox(height: 20),
-                    _PrivacyNote(text: t.location.privacy),
+                    LocationPrivacyNote(text: t.location.privacy),
                   ],
                 ),
               ),
@@ -287,264 +286,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
           ),
         ),
       ),
-    );
-  }
-}
-
-/// Shows whether a garden location is already set, with an inline remove action
-/// when it is. Calm by design: set = green, unset = amber (attention, not error).
-class _StatusBanner extends StatelessWidget {
-  const _StatusBanner({required this.isSet, this.placeName, this.onClear});
-
-  final bool isSet;
-
-  /// The resolved place name, shown next to "set" when available.
-  final String? placeName;
-  final VoidCallback? onClear;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    // Set = palette primary-container (follows the colour theme); unset = the
-    // fixed warn tone (attention, not error, and constant across all palettes).
-    final bg = isSet ? theme.colorScheme.primaryContainer : AppColors.warnSoft;
-    final fg = isSet ? theme.colorScheme.onPrimaryContainer : AppColors.warn;
-    final String label;
-    if (!isSet) {
-      label = t.location.status_unset;
-    } else if (placeName != null) {
-      label = t.location.status_set_at(name: placeName!);
-    } else {
-      label = t.location.status_set;
-    }
-    return Container(
-      padding: const EdgeInsets.fromLTRB(14, 10, 8, 10),
-      decoration: BoxDecoration(
-        color: bg,
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Row(
-        children: [
-          Icon(
-            isSet ? Icons.check_circle : Icons.error_outline,
-            size: 18,
-            color: fg,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              label,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: fg,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          if (onClear != null)
-            TextButton(
-              onPressed: onClear,
-              style: TextButton.styleFrom(
-                foregroundColor: theme.colorScheme.error,
-                visualDensity: VisualDensity.compact,
-              ),
-              child: Text(t.location.clear),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-class _PrivacyNote extends StatelessWidget {
-  const _PrivacyNote({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: AppColors.infoSoft,
-        borderRadius: BorderRadius.circular(14),
-      ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Text('🔒', style: TextStyle(fontSize: 18)),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Text(
-              text,
-              style: theme.textTheme.bodySmall?.copyWith(
-                color: AppColors.info,
-                height: 1.5,
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Primary option: type a place name (Open-Meteo geocoding). Geocoded matches
-/// render inline below the field; tapping one saves it.
-class _EnterPlaceCard extends StatelessWidget {
-  const _EnterPlaceCard({
-    super.key,
-    required this.controller,
-    required this.loading,
-    required this.onSearch,
-    required this.results,
-    required this.onSelect,
-  });
-
-  final TextEditingController controller;
-  final bool loading;
-  final VoidCallback onSearch;
-  final List<GeoPlace> results;
-  final ValueChanged<GeoPlace> onSelect;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: cs.surface,
-        border: Border.all(color: cs.primary, width: 1.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FieldLabel(t.location.enter_place),
-          TextField(
-            controller: controller,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-              hintText: t.location.place_hint,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: loading ? null : onSearch,
-              ),
-            ),
-            onSubmitted: (_) => loading ? null : onSearch(),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            t.location.place_note,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
-            ),
-          ),
-          for (final place in results)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.place_outlined),
-              title: Text(place.name),
-              subtitle: Text(
-                [place.admin1, place.country].whereType<String>().join(', '),
-              ),
-              onTap: () => onSelect(place),
-            ),
-        ],
-      ),
-    );
-  }
-}
-
-/// Alternative option: let the device GPS fill in the location.
-class _GpsCard extends StatelessWidget {
-  const _GpsCard({required this.loading, required this.onTap});
-
-  final bool loading;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final t = context.t;
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
-    return Material(
-      color: cs.surface,
-      borderRadius: BorderRadius.circular(16),
-      child: InkWell(
-        borderRadius: BorderRadius.circular(16),
-        onTap: loading ? null : onTap,
-        child: Container(
-          padding: const EdgeInsets.all(14),
-          decoration: BoxDecoration(
-            border: Border.all(color: cs.outlineVariant),
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 46,
-                height: 46,
-                decoration: BoxDecoration(
-                  color: cs.surfaceContainerHighest,
-                  borderRadius: BorderRadius.circular(14),
-                ),
-                child: Icon(Icons.my_location, color: cs.primary),
-              ),
-              const SizedBox(width: 13),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      t.location.use_gps,
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 2),
-                    Text(
-                      t.location.gps_sub,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: cs.onSurfaceVariant,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Icon(Icons.chevron_right, color: cs.onSurfaceVariant),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-/// A centred "or" between the two location options.
-class _OrDivider extends StatelessWidget {
-  const _OrDivider();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        const Expanded(child: Divider()),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          child: Text(
-            context.t.location.or,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        const Expanded(child: Divider()),
-      ],
     );
   }
 }
