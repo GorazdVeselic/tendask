@@ -12,6 +12,7 @@ import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../notifications/presentation/widgets/reminder_sound_banner.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../task_specs.dart';
+import 'reminder_draft.dart';
 
 /// Base label for a reminder offset, e.g. "1 day before" (without a time of day).
 String reminderOffsetLabel(int offsetMinutes, Translations t) =>
@@ -214,16 +215,6 @@ Future<ReminderSpec?> showReminderEditSheet(
 /// Sentinel radio value for the "custom offset" row.
 const _kCustomOffset = -1;
 
-/// Unit for a custom offset. Days make it day-based (fires N whole days before
-/// at a chosen time); minutes/hours stay relative to the task's own time.
-enum _CustomUnit { minutes, hours, days }
-
-int _unitMinutes(_CustomUnit u) => switch (u) {
-  _CustomUnit.minutes => 1,
-  _CustomUnit.hours => 60,
-  _CustomUnit.days => kMinutesPerDay,
-};
-
 class _ReminderEditSheet extends StatefulWidget {
   const _ReminderEditSheet({
     required this.taskDate,
@@ -246,9 +237,19 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
 
   // Custom offset (the "Po meri…" row): value + unit, edited inline.
   bool _custom = false;
-  _CustomUnit _customUnit = _CustomUnit.days;
+  ReminderUnit _customUnit = ReminderUnit.days;
   final _customCtrl = TextEditingController(text: '2');
   int get _customValue => int.tryParse(_customCtrl.text) ?? 0;
+
+  /// The current editable state as a pure value — the source of every decision
+  /// (scheduled offset, day-based, spec, add-enabled) below.
+  ReminderDraft get _draft => ReminderDraft(
+    custom: _custom,
+    offset: _offset,
+    customUnit: _customUnit,
+    customValue: _customValue,
+    time: _time,
+  );
 
   @override
   void dispose() {
@@ -256,40 +257,19 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
     super.dispose();
   }
 
-  /// The offset actually scheduled — a preset, or the custom value in minutes.
-  int get _effectiveOffset =>
-      _custom ? _customValue * _unitMinutes(_customUnit) : _offset;
-
-  /// Day-based offsets carry a time of day. For custom offsets the unit decides
-  /// (days = day-based), so minutes/hours never hit the day-rounding path.
-  bool get _isDayBased =>
-      _custom ? _customUnit == _CustomUnit.days : _offset >= kMinutesPerDay;
-
-  /// An exact duplicate of an already-added reminder (same offset and time).
-  bool _isTaken(int offset, String? time) =>
-      widget.existing.any((r) => r.offsetMinutes == offset && r.time == time);
-
-  /// A non-day-based offset has no time, so once added it can only repeat —
-  /// disable it. Day-based offsets vary by time, so they stay selectable.
-  bool _offsetTaken(int offset) =>
-      offset < kMinutesPerDay && _isTaken(offset, null);
-
-  String get _timeText =>
-      '${_time.hour.toString().padLeft(2, '0')}:'
-      '${_time.minute.toString().padLeft(2, '0')}';
-
   String _unitLabel(Translations t) => switch (_customUnit) {
-    _CustomUnit.minutes => t.entry.rem_unit_min,
-    _CustomUnit.hours => t.entry.rem_unit_hour,
-    _CustomUnit.days => t.entry.rem_unit_day,
+    ReminderUnit.minutes => t.entry.rem_unit_min,
+    ReminderUnit.hours => t.entry.rem_unit_hour,
+    ReminderUnit.days => t.entry.rem_unit_day,
   };
 
   /// Human preview of the reminder being built, e.g. "2 dni prej ob 18:00".
   String _preview(Translations t) {
+    final draft = _draft;
     final base = _custom
         ? '$_customValue ${_unitLabel(t)} ${t.entry.rem_before}'
         : reminderOffsetLabel(_offset, t);
-    return _isDayBased ? '$base ${t.entry.rem_at(t: _timeText)}' : base;
+    return draft.isDayBased ? '$base ${t.entry.rem_at(t: draft.timeText)}' : base;
   }
 
   Future<void> _pickTime() async {
@@ -297,14 +277,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
     if (picked != null && mounted) setState(() => _time = picked);
   }
 
-  void _confirm() {
-    Navigator.of(context).pop(
-      ReminderSpec(
-        offsetMinutes: _effectiveOffset,
-        time: _isDayBased ? _timeText : null,
-      ),
-    );
-  }
+  void _confirm() => Navigator.of(context).pop(_draft.toSpec());
 
   @override
   Widget build(BuildContext context) {
@@ -344,9 +317,9 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                     for (final offset in kReminderOffsetPresets)
                       RadioListTile<int>(
                         value: offset,
-                        enabled: !_offsetTaken(offset),
+                        enabled: !reminderOffsetTaken(widget.existing, offset),
                         title: Text(reminderOffsetLabel(offset, t)),
-                        subtitle: _offsetTaken(offset)
+                        subtitle: reminderOffsetTaken(widget.existing, offset)
                             ? Text(
                                 t.entry.rem_added,
                                 style: theme.textTheme.bodySmall?.copyWith(
@@ -395,18 +368,18 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                     ),
                     const SizedBox(width: 12),
                     Expanded(
-                      child: SegmentedButton<_CustomUnit>(
+                      child: SegmentedButton<ReminderUnit>(
                         segments: [
                           ButtonSegment(
-                            value: _CustomUnit.minutes,
+                            value: ReminderUnit.minutes,
                             label: Text(t.entry.rem_unit_min),
                           ),
                           ButtonSegment(
-                            value: _CustomUnit.hours,
+                            value: ReminderUnit.hours,
                             label: Text(t.entry.rem_unit_hour),
                           ),
                           ButtonSegment(
-                            value: _CustomUnit.days,
+                            value: ReminderUnit.days,
                             label: Text(t.entry.rem_unit_day),
                           ),
                         ],
@@ -422,7 +395,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                   ],
                 ),
               ],
-              if (_isDayBased) ...[
+              if (_draft.isDayBased) ...[
                 const Divider(),
                 Row(
                   children: [
@@ -430,7 +403,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                     TextButton.icon(
                       onPressed: _pickTime,
                       icon: const Icon(Icons.access_time_outlined, size: 18),
-                      label: Text(_timeText),
+                      label: Text(_draft.timeText),
                     ),
                   ],
                 ),
@@ -475,14 +448,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                 child: FilledButton(
                   // Day-based offsets stay selectable but a same-time pick would
                   // duplicate — block the add then. Custom needs a value >= 1.
-                  onPressed:
-                      (_custom && _customValue < 1) ||
-                          _isTaken(
-                            _effectiveOffset,
-                            _isDayBased ? _timeText : null,
-                          )
-                      ? null
-                      : _confirm,
+                  onPressed: _draft.canAdd(widget.existing) ? _confirm : null,
                   child: Text(t.entry.reminder_add),
                 ),
               ),
