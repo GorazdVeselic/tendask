@@ -495,6 +495,41 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-15 — **Matrika postavitve + refaktor entry korakov + on-device dimni test (`main`, pushano).**
+  **(A) Matrika postavitve `test/layout/` (`850eb7b`).** Novo orodje proti tihim UI prelomom: vsak zaslon
+  se izriše čez **viewport × locale × text-scale** (3 širine 320/360/411 × sl/en/de × 1.0/1.3 = 234
+  kombinacij, 13 zaslonov) in lovi overflow + odrezan tekst. Bila je nedelujoča iz prekinjene seje (vseh
+  234 »did not complete«); dokončana. **4 sistemski defekti harnessa:** (1) `File.readAsBytes()` (async) v
+  `testWidgets` visi za vedno — ponarejen async zone ne izvede pravih `dart:io` future-jev → `readAsBytesSync()`;
+  (2) `*StepBody` rabijo `Material` prednika → `home: Scaffold(body:)`; (3) task-detail bere
+  `GoRouter.of(context)` v `build` → vbrizgan inerten `InheritedGoRouter`; (4) več izjem v enem frame-u
+  pride agregirano kot »Multiple exceptions« → izčrpaj vse v zanki + loči `overflow:`/`error:`.
+  **Ključno — detektor clipa je imel lažne pozitive:** `getMinIntrinsicWidth` pretirava za prosto-ovijajoč
+  tekst (empirično potrjeno: deljena nem. beseda se na napravi ovije v 2 vrstici, ne odreže; Flutter razlomi
+  tudi predolgo besedo). Pravilo: **prosto-ovijajoč tekst (`softWrap && maxLines==null`) se NIKOLI ne
+  odreže**; odreže se le vrstično omejen → nov detektor preskoči prosto-ovijajoče, flag na `didExceedMaxLines`
+  ali enovrstični `getMaxIntrinsicWidth > box`. To je **82 fantomskih prelomov zvedlo na 9 pravih**.
+  **En pravi bug (`c29879c`):** appearance palete kartice so pri text×1.3 prekoračile (+12px), ker je
+  `GridView.count childAspectRatio` zaklenil višino → `mainAxisExtent` izpeljan iz dejanskih text metrik.
+  Matrika 234/234; on-device potrjeno (screenshot pri scale 1.3, brez overflowa).
+  **(B) Pregled vseh velikih zaslonov + refaktor 4 entry/journal korakov (`9e14966`+`1527e77`+`d355125`+`829575d`).**
+  Explore agent klasificiral vseh 15 datotek >250 vrstic (večina deklarativnih/že-vzorčenih — pusti).
+  Izločena netestabilna logika (vsak svoj commit+testi; testi **778 → 820**): `subject_step` 412→369 →
+  **`subject_picker.dart`** (filter/particija T3 relevance/dedup lastnih vrst/kategorije, po vzorcu
+  `plant_picker_view`, 12 testov); `reminder_step` 495→461 → **`reminder_draft.dart`** (`ReminderDraft`:
+  effectiveOffset/isDayBased/toSpec/canAdd dedup + `reminderOffsetTaken`, 15 testov); `type_step` 255→233 →
+  **`type_ordering.dart`** (`sortTaskTypesByUsage` tie-break seed + `ensureSelectedVisible`, 7 testov);
+  `note_form` 364→347 → **`note_date.dart`** (`noteDateOption`/`noteSelectedDate` z injiciranim `now`, 8 testov).
+  `tasks_screen` je bil ŽE razrezan v 2. krogu — ne rabi nič.
+  **(C) On-device dimni test entry flowa (staging debug, gost) — vse zeleno.** Vseh 5 korakov (vrsta→predmet→
+  kdaj→opomnik→pregled→shrani) brez izjem v logcatu; potrjen `ReminderDraft` edit sheet (»Ob dogodku že
+  dodano« dedup, živ preview, dodaj → 2 opomnika), »Naslednje: 22.7.« preview, in **opomnik se je dejansko
+  sprožil** (cela veriga razpored→dostava, ne le UI). `tool/smoke.md` posodobljen (podroben entry scenarij +
+  opomnik/exact-alarm + izbris + deploy USB-drop gotcha). **Nauka:** (1) za on-device VEDNO `tmp/steps.txt` +
+  fiksni `& ./tool/adb_run.ps1` (allowlistan), NE `adb_ui.ps1` z različnimi argumenti (vsak = nov poziv);
+  (2) USB pade sredi `deploy.bat` (2×/seja) → `flutter run` izstopi a build ni nameščen; robustneje
+  `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` → `adb install -r`.
+
 - 2026-07-14 — **Refaktor presentation plasti, 2. krog: zadnje tri velike datoteke (`main`, pushano,
   `efbf761`+`b3364fd`+`ad65de5`).** Zaprte vse tri postavke »nedotaknjeno« iz prejšnjega vnosa.
   Vedenje **nespremenjeno**; testi **493 → 544 (+51)**, `analyze` čist.
