@@ -15,8 +15,7 @@ import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/plant_picker_screen.dart';
 import '../../plants/presentation/widgets/plant_field.dart';
 import '../application/notes_providers.dart';
-
-enum _DateOption { today, yesterday, custom }
+import 'note_date.dart';
 
 class NoteFormScreen extends ConsumerStatefulWidget {
   const NoteFormScreen({super.key, this.noteId});
@@ -32,7 +31,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
   final _contentController = TextEditingController();
   String? _areaId;
   String? _userPlantId;
-  _DateOption _dateOption = _DateOption.today;
+  NoteDateOption _dateOption = NoteDateOption.today;
   DateTime? _customDate;
   bool _isLoading = false;
   bool _isSaving = false;
@@ -57,20 +56,10 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
         _areaId = note.areaId;
         _userPlantId = note.userPlantId;
         _customDate = note.date.toLocal();
-        _dateOption = _optionForDate(_customDate!);
+        _dateOption = noteDateOption(_customDate!, DateTime.now());
       });
     }
     setState(() => _isLoading = false);
-  }
-
-  static _DateOption _optionForDate(DateTime date) {
-    final today = startOfDay(DateTime.now());
-    final day = startOfDay(date);
-    if (day == today) return _DateOption.today;
-    if (day == today.subtract(const Duration(days: 1))) {
-      return _DateOption.yesterday;
-    }
-    return _DateOption.custom;
   }
 
   @override
@@ -79,14 +68,8 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     super.dispose();
   }
 
-  DateTime get _selectedDate {
-    final now = DateTime.now();
-    return switch (_dateOption) {
-      _DateOption.today => now,
-      _DateOption.yesterday => now.subtract(const Duration(days: 1)),
-      _DateOption.custom => _customDate ?? now,
-    };
-  }
+  DateTime get _selectedDate =>
+      noteSelectedDate(_dateOption, _customDate, DateTime.now());
 
   Future<void> _pickDate() async {
     final picked = await showDatePicker(
@@ -98,7 +81,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     if (picked != null) {
       setState(() {
         _customDate = picked;
-        _dateOption = _DateOption.custom;
+        _dateOption = NoteDateOption.custom;
       });
     }
   }
@@ -268,27 +251,27 @@ class _DateSegment extends StatelessWidget {
     required this.onPickDate,
   });
 
-  final _DateOption option;
+  final NoteDateOption option;
   final DateTime? customDate;
-  final ValueChanged<_DateOption> onChanged;
+  final ValueChanged<NoteDateOption> onChanged;
   final VoidCallback onPickDate;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
-    final customLabel = customDate != null && option == _DateOption.custom
+    final customLabel = customDate != null && option == NoteDateOption.custom
         ? formatDmy(customDate!)
         : t.notes.pick_date;
 
-    return SegmentedButton<_DateOption>(
+    return SegmentedButton<NoteDateOption>(
       segments: [
-        ButtonSegment(value: _DateOption.today, label: Text(t.notes.today)),
+        ButtonSegment(value: NoteDateOption.today, label: Text(t.notes.today)),
         ButtonSegment(
-          value: _DateOption.yesterday,
+          value: NoteDateOption.yesterday,
           label: Text(t.notes.yesterday),
         ),
         ButtonSegment(
-          value: _DateOption.custom,
+          value: NoteDateOption.custom,
           label: Text(customLabel, overflow: TextOverflow.ellipsis),
         ),
       ],
@@ -296,7 +279,7 @@ class _DateSegment extends StatelessWidget {
       showSelectedIcon: false,
       onSelectionChanged: (s) {
         final picked = s.first;
-        if (picked == _DateOption.custom) {
+        if (picked == NoteDateOption.custom) {
           onPickDate();
         } else {
           onChanged(picked);
