@@ -67,13 +67,25 @@ class AppearanceScreen extends ConsumerWidget {
             ),
 
             SectionLabel(t.appearance.palette_label),
-            GridView.count(
+            GridView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              crossAxisCount: 2,
-              mainAxisSpacing: 10,
-              crossAxisSpacing: 10,
-              childAspectRatio: 1.55,
+              // A fixed aspect ratio clips the card's label once the system font
+              // scale grows the name row past the locked height. Derive the card
+              // height from the actual label metrics instead: fixed chrome (10px
+              // padding ×2 + 50px preview + 8px gap) plus one scaled text line.
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                mainAxisExtent:
+                    78 +
+                    MediaQuery.textScalerOf(
+                          context,
+                        ).scale(theme.textTheme.bodyMedium?.fontSize ?? 14) *
+                        1.4 +
+                    8,
+              ),
               children: [
                 for (final palette in appPalettes)
                   PaletteCard(
