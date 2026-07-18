@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-06-20**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-18**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -105,6 +105,28 @@
 - Opomba: stran **»Zaščiteno z Googlom Play«** (Play Integrity API 0/7, Zaščita fakturiranja 0/4) = **neobvezno**,
   ni pogoj za objavo. Integrity bi pomenil novo dep izven `tech-stack.md §1`; fakturiranje postane relevantno
   šele ob premiumu.
+
+## Preverjanje razvijalca + posodobitve pravil (2026-07)
+
+**Android Developer Verification** (posnetek 2026-07-17): paket **`app.tendask` = »Registrirana« ✅**
+(1 ključ, posodobljeno 10. jun. 2026). Od **septembra 2026** morajo preverjeni razvijalci registrirati vsa
+imena paketov, sicer aplikacija ne bo namestljiva na »potrjenih« Android napravah v izbranih regijah (velja
+tudi za sideload izven Play). Google: »99 % aplikacij registriranih samodejno« — Tendask je med njimi.
+- [x] Zavihek **Imena paketov** — `app.tendask` registrirana.
+- [ ] 👤 **Preveri zavihek »Identiteta«** v tem razdelku Play Console (razvijalska identiteta za verifikacijo —
+      ločen korak od registracije paketa; posnetek ga ne pokaže). Račun-identiteta je sicer že odobrena
+      (2026-06-10), a to je nov program — potrdi, da je zelen.
+
+**Policy update email (2026-07, »≥30 dni za skladnost«).** Triaža za Tendask:
+- **N/A** (ne zadeva): anonimni/naključni klepet (Tendask nima klepeta); SMS/Call Log `READ_CALL_LOG`
+  (ne uporablja); Personal Loans / EWA; third-party **AI** User Data (Tendask »motor« je pravilni, **ne AI**);
+  registracija za distribucijo **izven** Play (Tendask je Play-only; debug sideload = razvoj, ne distribucija).
+- **Že urejeno**: Content rating — app **je ocenjena** (Everyone/PEGI3), »brez neocenjenih« ne velja;
+  precise/approximate **location** disclosure — Data Safety že po FR-8 (coarse-only + H3, `play-data-safety.md`
+  v1.1) → ob priložnosti primerjaj z novim Googlovim vodilom.
+- [ ] 👤 **API level do 31. 8. 2026** (letna target-API zahteva) — zadnji build je bil **SDK 36** in je prestal
+      Play preverbe (`targetSdk = flutter.targetSdkVersion`); **potrdi ob naslednjem buildu**, da še ustreza.
+- Neobvezno: Google je izdal open-source »Android skill« za pregled skladnosti s Play pravili v IDE/CLI.
 
 ## Najdeni bugi med testom — vsi razrešeni na `main` ✅
 
