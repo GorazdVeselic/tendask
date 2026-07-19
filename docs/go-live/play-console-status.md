@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-18**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-19**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -96,8 +96,10 @@
 - [x] **Zaprti test: ≥12 testerjev × 14 dni — IZPOLNJENO** (obvezen gate za nove osebne račune).
       Vabila prek `tester-invite.md` + Mailmeteor; zadnji aktiven build v tiru = **vc13**.
       Opomba: interni test nima časovne zahteve; 14-dnevni števec teče šele v ZAPRTEM testu z ≥12 vključenimi testerji.
-- [~] **Prijava za produkcijski dostop ODDANA — V PREGLEDU** (opaženo 2026-07-13; Play javlja »Prejeli smo vašo
-      prijavo … pregled običajno do 7 dni, občasno dlje«; splošna razpoložljivost = »Neaktivno«).
+- [~] **Prijava za produkcijski dostop ODDANA — V PREGLEDU** (oddana **2026-07-11 ob 13:39**; Play javlja
+      »Prejeli smo vašo prijavo … pregled običajno do 7 dni, občasno dlje«; splošna razpoložljivost = »Neaktivno«).
+      **Stanje 2026-07-19: še v pregledu (8 dni, tik čez tipično okno).** Za nove osebne račune se to pogosto
+      zavleče čez 7 dni — ni razlog za skrb; obvestilo pride lastniku računa po e-pošti. Nič za ukrepati.
       **Med pregledom: zaprtega testa NE ustavljaj** in ne nalagaj novih, na Play neverificiranih funkcij —
       pregledovalci app testirajo prek zaprtega tira (zato je vc14 zadržan).
 - [ ] Po odobritvi: naloži **vc14** (sredstva/recepti + pridelek; prod migracije `0014`–`0016` so že gor)
