@@ -293,9 +293,9 @@ class _Translations$auth$sl extends Translations$auth$en {
 	@override String get continue_apple => 'Nadaljuj z Apple';
 	@override String get continue_google => 'Nadaljuj z Google';
 	@override String get continue_email => 'Nadaljuj z e-pošto';
-	@override String get guest => 'Preizkusi brez računa';
+	@override String get guest => 'Nadaljuj kot gost';
 	@override String get legal => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.';
-	@override String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
+	@override String get guest_warning => 'Kot gost hraniš podatke samo na tej napravi. Račun lahko dodaš pozneje.';
 	@override String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
 	@override String get coming_soon => 'Na voljo kmalu.';
 	@override String get privacy_link => 'Politika zasebnosti';
@@ -1037,9 +1037,9 @@ extension on TranslationsSl {
 			'auth.continue_apple' => 'Nadaljuj z Apple',
 			'auth.continue_google' => 'Nadaljuj z Google',
 			'auth.continue_email' => 'Nadaljuj z e-pošto',
-			'auth.guest' => 'Preizkusi brez računa',
+			'auth.guest' => 'Nadaljuj kot gost',
 			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
-			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
+			'auth.guest_warning' => 'Kot gost hraniš podatke samo na tej napravi. Račun lahko dodaš pozneje.',
 			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
 			'auth.privacy_link' => 'Politika zasebnosti',

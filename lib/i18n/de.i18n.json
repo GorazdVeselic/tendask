@@ -124,9 +124,9 @@
     "continue_apple": "Mit Apple fortfahren",
     "continue_google": "Mit Google fortfahren",
     "continue_email": "Mit E-Mail fortfahren",
-    "guest": "Ohne Konto ausprobieren",
+    "guest": "Als Gast fortfahren",
     "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
-    "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
+    "guest_warning": "Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.",
     "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
     "coming_soon": "Demnächst verfügbar.",
     "privacy_link": "Datenschutzerklärung"

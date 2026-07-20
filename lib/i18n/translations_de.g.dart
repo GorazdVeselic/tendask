@@ -289,9 +289,9 @@ class _Translations$auth$de extends Translations$auth$en {
 	@override String get continue_apple => 'Mit Apple fortfahren';
 	@override String get continue_google => 'Mit Google fortfahren';
 	@override String get continue_email => 'Mit E-Mail fortfahren';
-	@override String get guest => 'Ohne Konto ausprobieren';
+	@override String get guest => 'Als Gast fortfahren';
 	@override String get legal => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.';
-	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
+	@override String get guest_warning => 'Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.';
 	@override String get google_error => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get coming_soon => 'Demnächst verfügbar.';
 	@override String get privacy_link => 'Datenschutzerklärung';
@@ -1027,9 +1027,9 @@ extension on TranslationsDe {
 			'auth.continue_apple' => 'Mit Apple fortfahren',
 			'auth.continue_google' => 'Mit Google fortfahren',
 			'auth.continue_email' => 'Mit E-Mail fortfahren',
-			'auth.guest' => 'Ohne Konto ausprobieren',
+			'auth.guest' => 'Als Gast fortfahren',
 			'auth.legal' => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.',
-			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
+			'auth.guest_warning' => 'Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.',
 			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
 			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'auth.privacy_link' => 'Datenschutzerklärung',

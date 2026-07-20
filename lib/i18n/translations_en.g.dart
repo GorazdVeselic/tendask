@@ -479,14 +479,14 @@ class Translations$auth$en {
 	/// en: 'Continue with email'
 	String get continue_email => 'Continue with email';
 
-	/// en: 'Try without an account'
-	String get guest => 'Try without an account';
+	/// en: 'Continue as guest'
+	String get guest => 'Continue as guest';
 
 	/// en: 'We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.'
 	String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
 
-	/// en: 'Without an account, all your data is lost if you remove the app or change device.'
-	String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
+	/// en: 'As a guest, you keep your data on this device only. You can add an account later.'
+	String get guest_warning => 'As a guest, you keep your data on this device only. You can add an account later.';
 
 	/// en: 'Google sign-in failed. Please try again.'
 	String get google_error => 'Google sign-in failed. Please try again.';
@@ -2106,9 +2106,9 @@ extension on Translations {
 			'auth.continue_apple' => 'Continue with Apple',
 			'auth.continue_google' => 'Continue with Google',
 			'auth.continue_email' => 'Continue with email',
-			'auth.guest' => 'Try without an account',
+			'auth.guest' => 'Continue as guest',
 			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
-			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
+			'auth.guest_warning' => 'As a guest, you keep your data on this device only. You can add an account later.',
 			'auth.google_error' => 'Google sign-in failed. Please try again.',
 			'auth.coming_soon' => 'Coming soon.',
 			'auth.privacy_link' => 'Privacy policy',

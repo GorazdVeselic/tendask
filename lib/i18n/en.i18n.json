@@ -124,9 +124,9 @@
     "continue_apple": "Continue with Apple",
     "continue_google": "Continue with Google",
     "continue_email": "Continue with email",
-    "guest": "Try without an account",
+    "guest": "Continue as guest",
     "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
-    "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
+    "guest_warning": "As a guest, you keep your data on this device only. You can add an account later.",
     "google_error": "Google sign-in failed. Please try again.",
     "coming_soon": "Coming soon.",
     "privacy_link": "Privacy policy"
