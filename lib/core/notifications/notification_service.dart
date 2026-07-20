@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -47,6 +49,7 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _ready = false;
+  bool _initFailed = false;
 
   // Task ids of tapped reminders, consumed by the app layer to navigate. The
   // service stays decoupled from the router (core/ must not call features/).
@@ -58,21 +61,36 @@ class NotificationService {
 
   /// Loads the timezone database, resolves the device's local zone, and
   /// initializes the plugin. Idempotent. Safe to fire-and-forget at bootstrap.
+  /// Never throws: [isReady] reports whether notifications are usable.
   Future<void> init() async {
-    if (_ready) return;
-    tz_data.initializeTimeZones();
-    final local = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(local.identifier));
+    if (_ready || _initFailed) return;
+    try {
+      tz_data.initializeTimeZones();
+      final local = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(local.identifier));
 
-    const settings = InitializationSettings(
-      android: AndroidInitializationSettings('ic_stat_notify'),
-    );
-    await _plugin.initialize(
-      settings: settings,
-      onDidReceiveNotificationResponse: _onTap,
-    );
-    _ready = true;
+      const settings = InitializationSettings(
+        android: AndroidInitializationSettings('ic_stat_notify'),
+      );
+      await _plugin.initialize(
+        settings: settings,
+        onDidReceiveNotificationResponse: _onTap,
+      );
+      _ready = true;
+    } on Object catch (e) {
+      // Setup runs against the OS, and its failures are unrecoverable at
+      // runtime: an install whose resource table is incomplete (Play pre-launch
+      // emulators, which skip config splits) rejects the icon, an unknown
+      // timezone id has no fallback. Reminders are then unavailable, but that
+      // must not propagate into every caller that wants to schedule one.
+      _initFailed = true;
+      debugPrint('NotificationService.init failed: $e');
+    }
   }
+
+  /// Whether the plugin initialized successfully. False means the OS refused
+  /// setup and no reminder can be posted on this install.
+  bool get isReady => _ready;
 
   AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
       .resolvePlatformSpecificImplementation<
@@ -148,6 +166,7 @@ class NotificationService {
     String? payload,
   }) async {
     await init();
+    if (!_ready) return;
     await _plugin.zonedSchedule(
       id: id,
       title: title,
@@ -171,6 +190,7 @@ class NotificationService {
   /// callback does not fire for the launch notification.
   Future<String?> initialPayload() async {
     await init();
+    if (!_ready) return null;
     final details = await _plugin.getNotificationAppLaunchDetails();
     if (!(details?.didNotificationLaunchApp ?? false)) return null;
     final payload = details!.notificationResponse?.payload;
