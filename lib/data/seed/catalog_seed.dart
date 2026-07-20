@@ -673,6 +673,15 @@ abstract final class CatalogSeed {
       scientificName: 'Brassica oleracea',
     ),
     PlantSeed(
+      id: 'chinese_cabbage',
+      sl: 'kitajsko zelje',
+      en: 'chinese cabbage',
+      de: 'Chinakohl',
+      icon: '🥬',
+      category: 'vegetable',
+      scientificName: 'Brassica rapa subsp. pekinensis',
+    ),
+    PlantSeed(
       id: 'cauliflower',
       sl: 'cvetača',
       en: 'cauliflower',
@@ -743,6 +752,15 @@ abstract final class CatalogSeed {
       icon: '🔴',
       category: 'vegetable',
       scientificName: 'Raphanus sativus',
+    ),
+    PlantSeed(
+      id: 'black_radish',
+      sl: 'črna redkev',
+      en: 'black radish',
+      de: 'Schwarzer Rettich',
+      icon: '⚫',
+      category: 'vegetable',
+      scientificName: 'Raphanus sativus var. niger',
     ),
     PlantSeed(
       id: 'onion',
