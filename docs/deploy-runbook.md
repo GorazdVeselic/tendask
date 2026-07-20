@@ -11,6 +11,7 @@ shema/pravila v [`supabase/README.md`](../supabase/README.md) in [`CLAUDE.md`](.
 | Sprememba | Staging | Produkcija |
 |---|---|---|
 | **DB migracija** | WSL skripta (cilja lokalni container `supabase-db`) | ta repo: `supabase db push` |
+| **Katalog (rastline, opravila)** | `catalog.sql` prek `docker exec … psql` (gl. §1d) | `python supabase/seed/apply_catalog.py` |
 | **App build** | `deploy.bat hot` (debug + staging) | `deploy.bat` (release + prod) → AAB → Play |
 | **Postgres dosegljiv?** | lokalni container na strežniku (`127.0.0.1:5433`, ni v tunelu); WSL skripta bere migracije **direktno iz repa** (`/mnt/c`), commit ni potreben | prek povezanega projekta (CLI) |
 
@@ -36,9 +37,38 @@ Zato **`supabase db push` / `supabase db reset` BREZ `--db-url` gre na PROD.** N
   `00XX_*.sql` se uveljavi takoj.
 - Skripta zažene stack (Docker + Cloudflare tunel), počaka na healthy containerje in **aplicira
   samo še-neaplicirane migracije** na lokalni `supabase-db` (NIKOLI prod). Izpiše `+ 00XX ... Newly applied: N`.
-- Ukaz za zagon iz tega okolja: **TODO — dopolni točen klic** (npr. `wsl …` / pot do `.sh`).
+- Ukaz za zagon iz tega okolja (Windows → WSL, brez interaktivnega TUI):
+  ```bash
+  wsl -e bash -lc "tendask migrate"
+  ```
+  Skripta živi v `~/.local/bin/tendask` (WSL), stack v `~/tendask-supabase`.
 - Sorodno: `tendask start/stop/status`, `tendask psql`, `tendask backup/restore`, `tendask logs`.
   Staging je **on-demand** — če je dol, API ne dela.
+- **Gesla za staging bazo ne rabiš:** `tendask psql` je `docker exec -it supabase-db psql -U postgres`,
+  torej superuser prek containerja. (`127.0.0.1:5433` je z Windows strani sicer dosegljiv — WSL2
+  prepošlje localhost — a poverilnic za to pot v repu ni; container je enostavnejša pot.)
+
+### 1d. Katalog (rastline / vrste opravil)
+
+Katalog ni migracija: je **seed podatkov**, ki se (re)materializira iz `lib/data/seed/catalog_seed.dart`.
+Postopek dodajanja rastline je v [`how-to-add-plant.md`](how-to-add-plant.md); tu je samo aplikacija.
+
+```bash
+dart run tool/gen_catalog_sql.dart      # 1. regeneriraj supabase/seed/catalog.sql (sicer pade parity test)
+
+# 2a. STAGING (stack mora teči)
+wsl -e bash -lc "cat /mnt/c/Users/Uporabnik/StudioProjects/tendask/supabase/seed/catalog.sql \
+  | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
+
+# 2b. PRODUKCIJA
+python supabase/seed/apply_catalog.py   # izpiše števce; ref+pooler trdo zapisana, geslo iz .env
+```
+
+- Upsert je **idempotenten in aditiven** (`on conflict do update`) — skladno s pravilom, da na produkciji
+  ničesar ne brišemo. Varno ga je pognati večkrat.
+- `INSERT 0 0` na koncu ni napaka: `category_task_type` gre skozi `on conflict do nothing`.
+- **Nove izdaje aplikacije ni treba** — naprave poberejo katalog ob naslednjem zagonu (poln pull), tudi
+  na starejšem buildu in tudi kot gost.
 
 ### 1b. Produkcija (iz tega repa, po potrditvi staginga)
 ```bash

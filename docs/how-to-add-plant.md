@@ -32,8 +32,30 @@ slang se dotakneš **samo** ob uvedbi nove kategorije (chip label).
    `supabase/seed/catalog.sql`.
 3. **Testi:** `flutter test` — `catalog_sql_parity_test` pade, če pozabiš korak 2;
    `seed_service_test` bere dolžine dinamično (count-a ti ni treba ažurirati).
-4. **Apliciraj na oblak (👤):** `python supabase/seed/apply_catalog.py` — sicer obstoječe
-   naprave nove rastline ne dobijo. Upsert je idempotenten (`on conflict do update`).
+4. **Apliciraj na oblak** — sicer obstoječe naprave nove rastline ne dobijo. Upsert je
+   idempotenten (`on conflict do update`), aditiven in ga je varno pognati večkrat.
+   - **Produkcija:** `python supabase/seed/apply_catalog.py` (ref in pooler sta trdo zapisana
+     v skripti; geslo iz `.env`). Izpiše števce — preveri, da je `plant=` pričakovan.
+   - **Staging:** skripta staging varante **nima**. Postavitev teče v WSL, Postgres pa ni v
+     tunelu, zato gre prek containerja (brez gesla, `docker exec` kot superuser):
+     ```bash
+     wsl -e bash -lc "cat /mnt/c/Users/Uporabnik/StudioProjects/tendask/supabase/seed/catalog.sql \
+       | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
+     ```
+     Staging mora teči (`tendask start`). Zadnje vrstice `INSERT 0 0` so normalne —
+     to so `category_task_type` vrstice z `on conflict do nothing`.
+
+## Kdaj rastlina pride do uporabnika
+
+**Nova izdaja aplikacije NI potrebna** — gre za podatke, ne kodo; dobijo jih tudi naprave na
+starejšem buildu. `CatalogSyncService.pull()` naredi **poln** pull kataloga in se sproži:
+
+- **ob vsakem zagonu aplikacije** — `SyncCoordinator.start()` z `includeCatalog: true`;
+- **ob vrnitvi povezave** — prehod offline → online.
+
+Periodični sync kataloga namenoma **ne** vleče (redko se spreminja). Deluje tudi za **goste**
+(katalog je javno berljiv, seja ni potrebna). Brez povezave se ne zgodi nič — bundlan seed polni
+samo **prazno** tabelo, zato obstoječim napravam novih vrstic ne doda; od tod nujnost koraka 4.
 
 ## Obstoječe kategorije (brez dodatnega dela)
 

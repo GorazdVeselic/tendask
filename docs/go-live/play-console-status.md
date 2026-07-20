@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-19**.
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-20** — aplikacija je **JAVNO OBJAVLJENA** (`1.0.0+15`).
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -35,7 +35,15 @@
   Prva izdaja s **sredstvi/recepti** (zavihek Vrt) + T11 pridelek + 3 UI popravki. Rabi prod migracije
   `0014`–`0016` — **te so aplicirane in e2e potrjene (2026-07-14)**. Zadržan, ker Google pregleduje prijavo
   za produkcijski dostop in pregledovalci app testirajo prek zaprtega tira → nova, na Play še neverificirana
-  funkcija sredi pregleda = tveganje brez koristi. **Naloži po Googlovi odločitvi.**
+  funkcija sredi pregleda = tveganje brez koristi. **Zadeva zaključena: vc14 ni nikoli objavljen** —
+  naložen je bil v odprto preizkušanje in nato opuščen, s čimer je **kodo različice trajno porabil**.
+- `1.0.0+15` (vc15) — **PRVA PRODUKCIJSKA IZDAJA, objavljena 2026-07-20** (Splošna razpoložljivost,
+  40 držav, uvajanje 100 %, upravljano objavljanje izklopljeno). Vsebina vc14 + edge-to-edge popravek
+  (`SafeArea` v `TaskActionBar`) + jasnejši gumb za gosta. Zgrajena iz `main` (`48f4d44`).
+
+> **NAUK (drago plačan): kodo različice porabi že NALAGANJE svežnja, ne objava.** vc14 je padla, ker je
+> bila naložena v odprto preizkušanje in nato opuščena — Play je nato zavrnil isto številko za produkcijo
+> (»Koda različice 14 je že bila uporabljena«). Build številka gre **samo navzgor**, v katerikoli trak.
 
 ## Interni test
 
@@ -96,14 +104,13 @@
 - [x] **Zaprti test: ≥12 testerjev × 14 dni — IZPOLNJENO** (obvezen gate za nove osebne račune).
       Vabila prek `tester-invite.md` + Mailmeteor; zadnji aktiven build v tiru = **vc13**.
       Opomba: interni test nima časovne zahteve; 14-dnevni števec teče šele v ZAPRTEM testu z ≥12 vključenimi testerji.
-- [~] **Prijava za produkcijski dostop ODDANA — V PREGLEDU** (oddana **2026-07-11 ob 13:39**; Play javlja
-      »Prejeli smo vašo prijavo … pregled običajno do 7 dni, občasno dlje«; splošna razpoložljivost = »Neaktivno«).
-      **Stanje 2026-07-19: še v pregledu (8 dni, tik čez tipično okno).** Za nove osebne račune se to pogosto
-      zavleče čez 7 dni — ni razlog za skrb; obvestilo pride lastniku računa po e-pošti. Nič za ukrepati.
-      **Med pregledom: zaprtega testa NE ustavljaj** in ne nalagaj novih, na Play neverificiranih funkcij —
-      pregledovalci app testirajo prek zaprtega tira (zato je vc14 zadržan).
-- [ ] Po odobritvi: naloži **vc14** (sredstva/recepti + pridelek; prod migracije `0014`–`0016` so že gor)
-      → nato objava v produkcijo.
+- [x] **Produkcijski dostop ODOBREN 2026-07-20** (prijava oddana 2026-07-11 ob 13:39, odločitev v 9 dneh).
+      E-pošta: »Your app has been granted Google Play production access«.
+- [x] **OBJAVLJENO V PRODUKCIJI 2026-07-20 — `1.0.0+15`, 40 držav, uvajanje 100 %.**
+      Upravljano objavljanje izklopljeno → izdaja gre v živo samodejno po odobritvi pregleda.
+      Opomba za naslednjič: pri prvi objavi je bilo priporočeno **postopno uvajanje 10–20 %**, ker univerzalni
+      APK (lokalno testiranje) **ne reproducira config-splitov**, ki jih Play zgradi iz AAB — ravno tam se je
+      skrivala `ic_stat_notify` saga. Izbrano je bilo 100 %; ob težavi obstaja »Zaustavi uvajanje«.
 - Opomba: stran **»Zaščiteno z Googlom Play«** (Play Integrity API 0/7, Zaščita fakturiranja 0/4) = **neobvezno**,
   ni pogoj za objavo. Integrity bi pomenil novo dep izven `tech-stack.md §1`; fakturiranje postane relevantno
   šele ob premiumu.
@@ -129,6 +136,41 @@ tudi za sideload izven Play). Google: »99 % aplikacij registriranih samodejno«
 - [ ] 👤 **API level do 31. 8. 2026** (letna target-API zahteva) — zadnji build je bil **SDK 36** in je prestal
       Play preverbe (`targetSdk = flutter.targetSdkVersion`); **potrdi ob naslednjem buildu**, da še ustreza.
 - Neobvezno: Google je izdal open-source »Android skill« za pregled skladnosti s Play pravili v IDE/CLI.
+
+## »Za naslednjo izdajo« — očitki Play Console (2026-07-20)
+
+**1. »Manjkajo podatki za prijavo« (Pravilnik, rdeče).** Izjava se zdaj imenuje **»Podrobnosti o prijavi«**
+(prej »Dostop do aplikacije«) in živi pod **Vsebina aplikacije**, *ne* pod »Preizkus in izdaja« — v levem meniju
+je treba scrollati do dna (»Pravilnik in programi«).
+
+Preverba kode (2 agenta): **nič ni gate-ano za gosta** — `lib/app/router/app_router.dart` nima **nobenega**
+`redirect`, vse poti so dosegljive brez seje; edino skrito za gosta je vrstica »Odjava« v nastavitvah (gost nima
+seje). Izvoz podatkov, opomniki, dnevnik, vreme delujejo lokalno. Prijava pozna **samo Google + e-poštni OTP**
+(`auth_service.dart`, brez `signInWithPassword`), zato **testnega računa z geslom fizično ni mogoče dati** —
+pregledovalec brez dostopa do predala ne dobi kode. **Zato izjava pravilno ostaja »Ne«** (pri tej izbiri polja
+za navodila sploh ni); preklop na »Da« bi bil netočen in bi zahteval poverilnice, ki ne obstajajo.
+
+Verjetni razlog, da je pregledovalec obtičal (nobeden ni napaka v delovanju):
+- gumb za gosta se je imenoval »Try without an account« (bral se je kot omejen preizkus) → **popravljeno v vc15**
+  na »Continue as guest« / »Nadaljuj kot gost« / »Als Gast fortfahren«, opozorilo pod njim iz odvračilnega v nevtralno;
+- **zaslon Lokacija** (`location_screen.dart:274-284`): gumb »Nadaljuj« brezpogojno pelje na `/home` tudi s praznim
+  obrazcem, a ni videti kot preskok. **⏳ Če se očitek ponovi, je to prvi kandidat** — dodaj vidno »Preskoči za zdaj«.
+
+Pot pregledovalca do glavnega zaslona kot gost = **3 tapi**: Preskoči (onboarding) → Nadaljuj kot gost → Nadaljuj (Lokacija).
+
+**2. »Aplikacije morda ne bodo prikazane od roba do roba« (Uporabniška izkušnja, vezano na izdajo 13).**
+Efektivni `targetSdk = 36` (prek `flutter.targetSdkVersion`), torej je edge-to-edge **prisilno vklopljen** in
+`windowOptOutEdgeToEdgeEnforcement` na API 36 ne obstaja več. Pregled vseh 21 zaslonov, 5 spodnjih vrstic in 13
+bottom sheetov je našel **eno pravo mesto**: `TaskActionBar` (fiksen 24 dp padding, ni v `bottomNavigationBar`) —
+vidno le na **root poti `/task/:id`** (odprtje iz rastline ali deep link iz opomnika), kjer pod njim ni
+`NavigationBara`. **Popravljeno v vc15.** Sheeti brez `useSafeArea: true` so robni primer (imajo notranji
+`SafeArea`) — namerno nedotaknjeni.
+
+**3. 👤 Trgovine z aplikacijami drugih ponudnikov (ZDA, rok 22. 7. 2026).** Posledica sodne odločbe: deli se le
+**predstavitev** (ime, ikona, opis, posnetki), prenos in plačila še naprej tečejo prek Play pod istimi pogoji,
+vključno s storitveno provizijo. **Pozor: neodločitev ni nevtralna — do roka se objave samodejno vključijo v vse
+trgovine.** Priporočeno pustiti vključeno (večja vidnost brez novih obveznosti); srednja možnost (»upravljam
+posamično«) prinaša trajno odločanje s 30-dnevnim samodejnim privzetkom.
 
 ## Najdeni bugi med testom — vsi razrešeni na `main` ✅
 
