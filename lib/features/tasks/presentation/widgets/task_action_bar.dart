@@ -34,7 +34,6 @@ class TaskActionBar extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       decoration: BoxDecoration(
         color: theme.colorScheme.surface,
         boxShadow: [
@@ -45,79 +44,87 @@ class TaskActionBar extends StatelessWidget {
           ),
         ],
       ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: isWaiting
-                ? FilledButton(
-                    onPressed: onComplete,
-                    child: Text(t.task_detail.action_complete),
-                  )
-                : FilledButton.tonal(
-                    onPressed: onEdit,
-                    child: Text('✏️  ${t.task_detail.action_edit}'),
-                  ),
+      // Keep the buttons clear of the system gesture/navigation bar: this bar
+      // also renders outside the shell (/task/:id), without a NavigationBar.
+      child: SafeArea(
+        top: false,
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(
+                width: double.infinity,
+                height: 48,
+                child: isWaiting
+                    ? FilledButton(
+                        onPressed: onComplete,
+                        child: Text(t.task_detail.action_complete),
+                      )
+                    : FilledButton.tonal(
+                        onPressed: onEdit,
+                        child: Text('✏️  ${t.task_detail.action_edit}'),
+                      ),
+              ),
+              const SizedBox(height: 8),
+              Row(
+                children: isWaiting
+                    ? [
+                        _SecBtn(
+                          icon: Icons.schedule_outlined,
+                          label: t.task_detail.action_postpone,
+                          onTap: onPostpone,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.edit_outlined,
+                          label: t.task_detail.action_edit,
+                          onTap: onEdit,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.copy_outlined,
+                          label: t.task_detail.action_duplicate,
+                          onTap: onDuplicate,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.delete_outline,
+                          label: t.task_detail.action_delete,
+                          isDanger: true,
+                          onTap: () => unawaited(_confirmDelete(context)),
+                        ),
+                      ]
+                    : [
+                        _SecBtn(
+                          icon: Icons.copy_outlined,
+                          label: t.task_detail.action_duplicate,
+                          onTap: onDuplicate,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.calendar_today_outlined,
+                          label: t.task_detail.action_move,
+                          onTap: onMove,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.undo,
+                          label: t.task_detail.action_revert,
+                          onTap: onRevert,
+                        ),
+                        const SizedBox(width: 6),
+                        _SecBtn(
+                          icon: Icons.delete_outline,
+                          label: t.task_detail.action_delete,
+                          isDanger: true,
+                          onTap: () => unawaited(_confirmDelete(context)),
+                        ),
+                      ],
+              ),
+            ],
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: isWaiting
-                ? [
-                    _SecBtn(
-                      icon: Icons.schedule_outlined,
-                      label: t.task_detail.action_postpone,
-                      onTap: onPostpone,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.edit_outlined,
-                      label: t.task_detail.action_edit,
-                      onTap: onEdit,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.copy_outlined,
-                      label: t.task_detail.action_duplicate,
-                      onTap: onDuplicate,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.delete_outline,
-                      label: t.task_detail.action_delete,
-                      isDanger: true,
-                      onTap: () => unawaited(_confirmDelete(context)),
-                    ),
-                  ]
-                : [
-                    _SecBtn(
-                      icon: Icons.copy_outlined,
-                      label: t.task_detail.action_duplicate,
-                      onTap: onDuplicate,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.calendar_today_outlined,
-                      label: t.task_detail.action_move,
-                      onTap: onMove,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.undo,
-                      label: t.task_detail.action_revert,
-                      onTap: onRevert,
-                    ),
-                    const SizedBox(width: 6),
-                    _SecBtn(
-                      icon: Icons.delete_outline,
-                      label: t.task_detail.action_delete,
-                      isDanger: true,
-                      onTap: () => unawaited(_confirmDelete(context)),
-                    ),
-                  ],
-          ),
-        ],
+        ),
       ),
     );
   }
