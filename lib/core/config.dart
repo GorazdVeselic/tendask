@@ -158,7 +158,7 @@ const kSplashMinDuration = Duration(milliseconds: 1200);
 
 /// Release-channel suffix appended to the displayed version (e.g. " (beta)" for
 /// the internal/beta track). Empty for a production release — one place to flip.
-const kVersionChannel = ' (beta)';
+const kVersionChannel = '';
 
 /// Supplies feature gate (temporarily off): hides the supplies wizard step and
 /// the settings garden/supplies section without removing the code. Flip to true
