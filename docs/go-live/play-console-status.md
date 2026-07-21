@@ -69,7 +69,37 @@
   - 6 telefonskih posnetkov (`assets/screenshots/play/01..06`)
   - Tablet/Chromebook posnetki: **preskočeno** (neobvezno za MVP)
 - [x] **Store settings**: kategorija **Lifestyle**, kontakt `info@tendask.com`, web `tendask.com`, oznake (do 5)
-- [ ] **Prevodi listinga: SL + DE** (Manage translations; besedila v `store-listing.md`)
+- [x] **Prevodi listinga: SL + DE — poslani v pregled 2026-07-21** (Objave v trgovini → Privzeta objava →
+  »Upravljanje prevodov« → dodana sl-SI in de-DE; besedila v `store-listing.md`). Grafike/posnetki **podedovani iz EN**.
+  - **EN privzeti listing hkrati osvežen**: (a) odpravljen copy-paste artefakt v polnem opisu (podvojen kratek
+    opis + vrstica »Full description:«, v živo od 10. jun. 2026); (b) vsebina usklajena z `1.0.0+15` — dodani
+    sredstva/recepti, pridelek, ponavljanje opravil, teme videza; katalog »over 120« → »over 140«.
+  - **Tipografija (odločeno 2026-07-20):** v **opisih** dolgi pomišljaj `—` (Play izrecno zahteva; sicer app
+    ni upravičena do promocije v trgovini — opozorilo pod kratkim opisom); v **imenu aplikacije** ostane kratki
+    pomišljaj `–` (nedotaknjeno, Google pri tem polju ni javil očitka). SL ime = `Tendask – Vrtni dnevnik`.
+  - Dolžine preverjene: ime 23–24/30, kratek 75–79/80, polni ≈1380–1600/4000. Izraza »motor«/»engine« ni.
+  - Pregled: EN spremembi sta šli prvi (ločen paket), SL in DE za njima; vse tri v pregledu 2026-07-21.
+- [~] **Predstavitvena slika (feature graphic) — GRAFIKE PRIPRAVLJENE, čaka 👤 nalaganje.** Problem: izvirnik je
+  **slovenski** (»Dnevnik za tvoj vrt«), a visi na **privzetem (EN) listingu** → angleško/nemško govoreči vidijo
+  slovenski slogan. Izdelane tri jezikovne različice (podnapis = app `auth.tagline`), + osnova brez teksta + generator
+  (`docs/go-live/assets/`, glej tamkajšnji README):
+  - `feature-graphic-en-1024x500.png` (Your garden journal) → **privzeti (en-US) listing**
+  - `feature-graphic-sl-1024x500.png` (Tvoj vrtni dnevnik) → **prevod sl-SI**
+  - `feature-graphic-de-1024x500.png` (Dein Gartentagebuch) → **prevod de-DE**
+  - `feature-graphic-base-1024x500.png` = osnova brez podnapisa; `gen-feature-graphic.py` = generator.
+  - **Nalaganje 👤:** Objave v trgovini → Privzeta objava → Uredi → (jezik prek »Upravljanje prevodov«) → Grafični
+    elementi → Predstavitvena slika → zamenjaj. Grafike so per-listing, ne per-build → brez nove izdaje. Gre v pregled.
+  - Opomba: SL/DE prevoda trenutno **podedujeta EN predstavitveno sliko**; brez per-jezične zamenjave bi po tej
+    posodobitvi videla angleško grafiko.
+- [~] **Posnetki zaslona — 3 jezikovni seti po 8 pripravljeni (2026-07-21), čaka 👤 nalaganje.** Vsi zajeti v eni
+  sveži **gostujoči** seji z bogatimi podatki (3 območja, 30 rastlin, 5 sredstev, 5 receptov, opravila zamuda/danes/jutri,
+  dnevnik z opombo+pridelkom), temna tema, 1080×2160. Zasloni: Domov, Opravila, Vrt/Območja, Vrt/Sredstva, Vrt/Recepti,
+  Dnevnik, Hiter vnos, Detajl z vremenom.
+  - 🇸🇮 `assets/screenshots/play-sl/` → prevod **sl-SI**
+  - 🇬🇧 `assets/screenshots/play-en/` → **privzeti (en-US)**, nadomesti stari 6-set v `play/`
+  - 🇩🇪 `assets/screenshots/play-de/` → prevod **de-DE**
+  - Postopek + gotcha (brez umlautov/šumnikov v `adb input text`) v `assets/README.md`. **Nalaganje 👤:** Objave v
+    trgovini → Privzeta objava → Uredi → (privzeti=EN; prevoda prek Upravljanje prevodov) → Posnetki zaslona telefona.
 
 ## App content (vse KONČANO ✅)
 
@@ -122,9 +152,9 @@
 imena paketov, sicer aplikacija ne bo namestljiva na »potrjenih« Android napravah v izbranih regijah (velja
 tudi za sideload izven Play). Google: »99 % aplikacij registriranih samodejno« — Tendask je med njimi.
 - [x] Zavihek **Imena paketov** — `app.tendask` registrirana.
-- [ ] 👤 **Preveri zavihek »Identiteta«** v tem razdelku Play Console (razvijalska identiteta za verifikacijo —
-      ločen korak od registracije paketa; posnetek ga ne pokaže). Račun-identiteta je sicer že odobrena
-      (2026-06-10), a to je nov program — potrdi, da je zelen.
+- [x] 👤 **Zavihek »Identiteta« potrjen (2026-07-21).** Pot: raven računa (»← Vse aplikacije«) → levi meni
+      **»Preverjanje razvijalca za Android«** → zavihek **Identiteta**. Kaže uradno ime + naslov (GORAZD VESELIČ,
+      Hočka cesta 17A, Hoče 2311, SI), pridobljena iz računa razvijalca — **brez opozorila/poziva** = zeleno.
 
 **Policy update email (2026-07, »≥30 dni za skladnost«).** Triaža za Tendask:
 - **N/A** (ne zadeva): anonimni/naključni klepet (Tendask nima klepeta); SMS/Call Log `READ_CALL_LOG`
@@ -133,8 +163,10 @@ tudi za sideload izven Play). Google: »99 % aplikacij registriranih samodejno«
 - **Že urejeno**: Content rating — app **je ocenjena** (Everyone/PEGI3), »brez neocenjenih« ne velja;
   precise/approximate **location** disclosure — Data Safety že po FR-8 (coarse-only + H3, `play-data-safety.md`
   v1.1) → ob priložnosti primerjaj z novim Googlovim vodilom.
-- [ ] 👤 **API level do 31. 8. 2026** (letna target-API zahteva) — zadnji build je bil **SDK 36** in je prestal
-      Play preverbe (`targetSdk = flutter.targetSdkVersion`); **potrdi ob naslednjem buildu**, da še ustreza.
+- [x] 👤 **API level do 31. 8. 2026 — IZPOLNJENO (potrjeno 2026-07-21).** Koda: `android/app/build.gradle.kts:38`
+      `targetSdk = flutter.targetSdkVersion`; zgrajeni release manifest nosi `targetSdkVersion="36"` (Flutter 3.44.0).
+      Konzola: **Stanje pravilnika** (account) = »Z računom razvijalca ni težav«; app-level (Tendask) = »Najdena ni
+      bila nobena težava« — nobenega target-API opozorila. **Ob naslednjem buildu (vc16) potrdi, da še drži.**
 - Neobvezno: Google je izdal open-source »Android skill« za pregled skladnosti s Play pravili v IDE/CLI.
 
 ## »Za naslednjo izdajo« — očitki Play Console (2026-07-20)
