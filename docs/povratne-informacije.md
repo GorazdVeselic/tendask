@@ -329,7 +329,11 @@ pri večih sistemih še licenčni/viri pomislek. Dobro prileganje SI trgu (marsi
 **polni setveni koledar = V2** (ločen FR; razišči vire/licence koledarjev pred obljubo izbire). Lunine
 mene NE mešaj v M11 motor (drugačen miselni model — koledar vs agronomsko-vremenska pravila).
 
-**Odločitev:** _(odprto — predlagam: fazni prikaz kot kandidat FR po launchu; polni koledar V2)_
+**Odločitev (2026-07-21): SPEC NAPISAN → FR-19.** Izbran **biodinamični sistem koren/list/cvet/plod**
+(pristop **A = izračunan približek**, čim bližje originalu, a brez kopiranja Thuninega koledarja —
+nevtralno poimenovanje). Prikaz **lunine faze** (poceni raven) ostane odprt kot morebiten skupni dodatek.
+Gradnja = **V2 po launchu**. Polni spec + umestitev v aplikaciji:
+[`docs/feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md).
 
 ### T11 — Količina pridelka ob pobiranju (yield)
 

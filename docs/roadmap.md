@@ -482,6 +482,18 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   lastnost profila, koncept §7.7). Srečni vzvod: `area` je že N-na-uporabnika → verjetno dovolj nova
   `garden` tabela + `area.garden_id`. Groba ocena ~2–3 tedne (+1 IAP). Polna želja:
   [`docs/feature-requests/multi-location.md`](feature-requests/multi-location.md).
+- **FR-19 — Lunin koledar (biodinamični koren / list / cvet / plod).** 📝 **Spec (2026-07-21).** Delovno
+  ime »**Tendask biodinamični lunin koledar**« (in-app kratko »Lunin koledar«). Iz tester-feedbacka T10
+  (delo »po luni«). Pristop **A = lasten izračun** (siderični položaj Lune → element → del rastline),
+  **brez kopiranja Thuninega koledarja** (pravno kot »Lunine bukve« Kmečki glas — dejstva + tradicija
+  prosta, njen izdelek/znamka ne). **Jedro = uveljavljena načela; znamka Tendask = UX/planiranje**, ne
+  izmišljena pravila. **Nič sheme/synca/mreže/lokacije** — element je čista funkcija datuma. **Večdnevni
+  pogled naprej = jedro** (namenski zaslon, planiranje); + kontekstne oznake (Domov/detajl/»Kdaj«);
+  akcijske integracije = pol-avto opravilo iz koledarja, obratni iskalnik »naslednji dober dan za X«,
+  personalizacija po vrtu, opt-in obvestila. **Zdaj vse free** (billing še ni); premium meja (planer +
+  avto-opravilo + obvestila) = zapis namere za kasnejšo monetizacijo. Ni launch-gating (app v produkciji)
+  — »kasneje« = prioritizacija. Polni spec:
+  [`docs/feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
   Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Za ceno je ključno:**
   Google Play **service fee od 10 %** na prvi $1M/leto (od 30. 6. 2026, ZDA/EGP/UK), zdaj **LOČEN od billing
