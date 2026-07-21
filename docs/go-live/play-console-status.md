@@ -79,10 +79,10 @@
     pomišljaj `–` (nedotaknjeno, Google pri tem polju ni javil očitka). SL ime = `Tendask – Vrtni dnevnik`.
   - Dolžine preverjene: ime 23–24/30, kratek 75–79/80, polni ≈1380–1600/4000. Izraza »motor«/»engine« ni.
   - Pregled: EN spremembi sta šli prvi (ločen paket), SL in DE za njima; vse tri v pregledu 2026-07-21.
-- [~] **Predstavitvena slika (feature graphic) — GRAFIKE PRIPRAVLJENE, čaka 👤 nalaganje.** Problem: izvirnik je
-  **slovenski** (»Dnevnik za tvoj vrt«), a visi na **privzetem (EN) listingu** → angleško/nemško govoreči vidijo
-  slovenski slogan. Izdelane tri jezikovne različice (podnapis = app `auth.tagline`), + osnova brez teksta + generator
-  (`docs/go-live/assets/`, glej tamkajšnji README):
+- [x] **Predstavitvena slika (feature graphic) — NALOŽENA po jezikih (👤 2026-07-21).** Problem (rešen): izvirnik je bil
+  **slovenski** (»Dnevnik za tvoj vrt«), a je visel na **privzetem (EN) listingu** → angleško/nemško govoreči so videli
+  slovenski slogan. Naložene tri jezikovne različice (privzeti=EN, prevoda sl/de svojo). Izdelane so bile tri različice
+  (podnapis = app `auth.tagline`), + osnova brez teksta + generator (`docs/go-live/assets/`, glej tamkajšnji README):
   - `feature-graphic-en-1024x500.png` (Your garden journal) → **privzeti (en-US) listing**
   - `feature-graphic-sl-1024x500.png` (Tvoj vrtni dnevnik) → **prevod sl-SI**
   - `feature-graphic-de-1024x500.png` (Dein Gartentagebuch) → **prevod de-DE**
@@ -91,7 +91,7 @@
     elementi → Predstavitvena slika → zamenjaj. Grafike so per-listing, ne per-build → brez nove izdaje. Gre v pregled.
   - Opomba: SL/DE prevoda trenutno **podedujeta EN predstavitveno sliko**; brez per-jezične zamenjave bi po tej
     posodobitvi videla angleško grafiko.
-- [~] **Posnetki zaslona — 3 jezikovni seti po 8 pripravljeni (2026-07-21), čaka 👤 nalaganje.** Vsi zajeti v eni
+- [x] **Posnetki zaslona — 3 jezikovni seti po 8 NALOŽENI (👤 2026-07-21).** Vsi zajeti v eni
   sveži **gostujoči** seji z bogatimi podatki (3 območja, 30 rastlin, 5 sredstev, 5 receptov, opravila zamuda/danes/jutri,
   dnevnik z opombo+pridelkom), temna tema, 1080×2160. Zasloni: Domov, Opravila, Vrt/Območja, Vrt/Sredstva, Vrt/Recepti,
   Dnevnik, Hiter vnos, Detajl z vremenom.

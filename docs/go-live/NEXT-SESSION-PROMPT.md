@@ -1,26 +1,54 @@
 # Prompt za novo sejo (kopiraj v nov Claude Code chat)
 
 > Memory + CLAUDE.md se naložita samodejno; ta prompt samo usmeri fokus.
+> Zadnja posodobitev: **2026-07-21** (po pripravi jezikovnih listingov + posnetkov).
 
 ---
 
-Nadaljujeva Tendask. Stanje: M0–M9 ✅, Play Console setup večinoma narejen (app ustvarjen `app.tendask`, AAB na internem testu aktivno, listing EN + App content kompletni), **Google login na Play-buildu rešen** (Play App Signing SHA-1 registriran kot OAuth client). Podrobno stanje: `docs/go-live/play-console-status.md`.
+Nadaljujeva Tendask. **Aplikacija je javno na Google Play** (`1.0.0+15`, Splošna razpoložljivost,
+40 držav). Produkcijski dostop odobren, migracije aplicirane, katalog 141 rastlin. Stanje:
+`docs/go-live/play-console-status.md`.
 
-**Fokus te seje: popravi dva buga, ki blokirata zaprti test.** Opisana sta v `docs/bugreport.md`:
+**Kaj sva zaključila zadnjič (2026-07-21, commita `9f7d3e5` + `3f60764` na `main`):**
+- **Prevoda listinga SL + DE oddana v pregled** + osvežen EN privzeti (dodane funkcije sredstva/recepti/
+  pridelek/teme; iz opisov odstranjeni pomišljaji na uporabnikovo željo; ime aplikacije nedotaknjeno).
+  Besedila v `store-listing.md`.
+- **Identiteta (dev verification) + target-API do 31. 8. 2026 = potrjena zelena** v konzoli.
+- **Jezikovne feature grafike + 3×8 posnetkov zaslona NALOŽENI na Play (👤 2026-07-21)** — po jezikih
+  (privzeti=EN, prevoda sl/de svoje). Viri: `assets/feature-graphic-{en,sl,de}-1024x500.png` (+ `-base-`
+  + generator `gen-feature-graphic.py`) in `assets/screenshots/play-{sl,en,de}/` (`NN-{si,en,de}-*.png`).
 
-1. **BUG-002** — po prijavi (in logout→login) app **vedno** vpraša za lokacijo, čeprav je že nastavljena. Vzrok: `login_screen.dart:48` (Google) + `email_login_screen.dart:86` (e-pošta) + `:35` (gost) brezpogojno `context.go('/location')`, brez preverbe stanja. Nianса: surove koordinate so v local-only `device_location` (ob logoutu zbrisane, se NE vrnejo iz oblaka); sinhronizira se le `profile.h3`. Popravek naj po prijavi preveri, ali je lokacija že nastavljena (npr. `profile.h3_r7 != null`) → če je, naravnost na `/home`; sicer `/location`. Razmisli, ali naj bo korak lokacije po logoutu preskočljiv/neobvezen.
+**Fokus te seje: vc16 — nova izdaja s parkiranima popravkoma.**
 
-2. **BUG-003** — gost ima »Odjava«, logout pa tiho izbriše nesinhronizirane podatke (možna izguba). Zahtevano: (a) gost (`AuthService.email == null`) nima gumba »Odjava« (skrit/onemogočen); (b) pred `clearUserData()` ob odjavi `flushPush()` ali potrditveni dialog, če flush ni mogoč (offline). Vzorec flush-pred-clear že obstaja za e-poštno prijavo.
+### A) vc16 — nova izdaja s parkiranima popravkoma (razvojno delo)
+Na `main` čakata dva popravka; vc16 naj ju zajame:
+1. **`kVersionChannel = ' (beta)'` (`core/config.dart` ~vrstica 161)** — izdaja 15 v nastavitvah še piše
+   »(beta)«. Ob popravku se **odloči, ali naj se pripona izpelje samodejno** (`kDebugMode` / `--dart-define`),
+   da se ročni preklop ne more več pozabiti.
+2. **Morda vidnejši »Preskoči« na zaslonu Lokacija** (`location_screen.dart` ~274-284) — gumb »Nadaljuj«
+   dela pravilno tudi s praznim obrazcem, a ni videti kot preskok; kandidat, če Play ponovi očitek
+   »manjkajo podatki za prijavo«.
+Postopek: popravi → `flutter test` (cel suite, ne le analyze) → bump `pubspec` na **`1.0.0+16`** →
+release build → on-device test → 👤 upload v produkcijo (ali najprej zaprti/interni trak).
+
+### B) 👤 Preveri, da so listing-spremembe prešle Googlov pregled
+Prevodi (SL+DE), feature grafike in posnetki so **naloženi** (2026-07-21) in šli v pregled. Preveri v
+Play Console → Pregled objave, da je odobreno in v živo (če je še »v pregledu«, ni treba ukrepati).
 
 **Postopek (po CLAUDE.md):**
-- Najprej preberi prizadete datoteke + ustrezne dele `docs/koncept.md`/wireframov (auth/location flow), ne ugibaj.
-- Po code-gen spremembah (drift/riverpod): `dart run build_runner build --delete-conflicting-outputs`; po i18n: `dart run slang`.
-- `flutter analyze` čist + testi zeleni; dodaj test, kjer je smiselno (logout-flush, post-login routing).
-- **Vprašaj za commit** po vsakem zaključenem koraku (ne commitaj brez dovoljenja). En bug = en commit.
-- Ob koncu: zgradi nov **podpisan AAB** (`flutter build appbundle --release --dart-define-from-file=dart_defines.json`), **dvigni `versionCode`** v `pubspec.yaml` (`1.0.0+1` → `1.0.0+2`) pred buildom, da Play sprejme upload.
+- Preberi `play-console-status.md` (+ `store-listing.md` če se dotikaš besedil) preden karkoli predlagaš.
+- **Ne ugibaj klik-poti v Play Console** — prenovljena je; vprašaj za posnetek, če nisi prepričan.
+- Ob koncu posodobi dokumentacijo in **vprašaj za commit** (ne commitaj brez dovoljenja).
 
-**Po popravkih:** naloži nov AAB na interni test, on-device preveri (SM A536B, `! deploy.bat hot` za debug ali install AAB), nato uporabnik prestavi build na **zaprti test** in razpošlje vabilo (`docs/go-live/tester-invite.md`) za ≥12 testerjev (14-dnevni gate).
-
-**Ne pozabi:** ne dela popravka, dokler ni potrjen; po dogovoru vprašaj pred commitom; `tmp/` za scratch.
-
-Začni z branjem `docs/bugreport.md` (BUG-002, BUG-003) + prizadetih datotek, predlagaj načrt popravka, počakaj na potrditev.
+**Konteksta, ki ga ne izgubi:**
+- **Play porabi `versionCode` že ob NALAGANJU svežnja**, v katerikoli trak — ne ob objavi. Naslednji
+  build mora biti **`1.0.0+16`** (vc14 in vc15 sta porabljeni).
+- **Sentry `invalid_icon` ni bug za uporabnike** — dogodki so z Googlovega pre-launch emulatorja
+  (`android_x64`, `Users 0`); popravek `c0fc290` je na `main`. **Zdaj imamo prave uporabnike:** če se
+  v Sentryju pojavi napaka z `Users > 0`, ima **prednost pred vsem zgoraj**.
+- **On-device seeding gotcha** (če boš spet delal posnetke/testne podatke): `adb input text` **NE tipka
+  šumnikov/umlautov** (č/š/ž/ü/ö/ä/ß → NullPointerException) — tipkana imena izbiraj brez diakritike;
+  katalog rastlin + UI se prevajata sami. Preimenovanje odporno na re-sort z `taptext <staro-ime>`
+  (a postavka mora biti izrisana → dolgi seznami rabijo scroll). Glej memory `feedback-ondevice-tap-map`.
+- Telefon je bil po zadnji seji **očiščen** (app odstranjen); ob delu na napravi preklopi jezik nazaj
+  na slovenščino in se prijavi v svoj račun.
