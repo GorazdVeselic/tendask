@@ -1,6 +1,6 @@
 # Tendask — Play Console: stanje objave
 
-> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-20** — aplikacija je **JAVNO OBJAVLJENA** (`1.0.0+15`).
+> Sledenje konkretnim korakom v Google Play Console. Zadnja posodobitev: **2026-07-21** — aplikacija je **JAVNO OBJAVLJENA** (`1.0.0+15`); **vc16 `1.0.1+16` zgrajen + on-device potrjen, čaka 👤 upload**.
 > Vir besedil/odgovorov: [`store-listing.md`](store-listing.md), [`content-rating.md`](content-rating.md),
 > [`../legal/play-data-safety.md`](../legal/play-data-safety.md). Plan: [`README.md`](README.md).
 
@@ -40,6 +40,11 @@
 - `1.0.0+15` (vc15) — **PRVA PRODUKCIJSKA IZDAJA, objavljena 2026-07-20** (Splošna razpoložljivost,
   40 držav, uvajanje 100 %, upravljano objavljanje izklopljeno). Vsebina vc14 + edge-to-edge popravek
   (`SafeArea` v `TaskActionBar`) + jasnejši gumb za gosta. Zgrajena iz `main` (`48f4d44`).
+- `1.0.1+16` (vc16) — **prva izdaja s pobumpano različico (`1.0.0` → `1.0.1`).** Odstranjena beta pripona
+  (`kVersionChannel = ''` v `core/config.dart`; v Nastavitvah je izdaja 15 še pisala »(beta)«). **Zgrajen
+  iz `main` (`75c6e31`) + on-device potrjen 2026-07-21** (SM A536B: `versionCode=16`, `versionName=1.0.1`,
+  app se zažene brez fatal izjem). **AAB pripravljen** (`build/app/outputs/bundle/release/app-release.aab`),
+  **čaka 👤 upload v produkcijo.**
 
 > **NAUK (drago plačan): kodo različice porabi že NALAGANJE svežnja, ne objava.** vc14 je padla, ker je
 > bila naložena v odprto preizkušanje in nato opuščena — Play je nato zavrnil isto številko za produkcijo
@@ -166,7 +171,8 @@ tudi za sideload izven Play). Google: »99 % aplikacij registriranih samodejno«
 - [x] 👤 **API level do 31. 8. 2026 — IZPOLNJENO (potrjeno 2026-07-21).** Koda: `android/app/build.gradle.kts:38`
       `targetSdk = flutter.targetSdkVersion`; zgrajeni release manifest nosi `targetSdkVersion="36"` (Flutter 3.44.0).
       Konzola: **Stanje pravilnika** (account) = »Z računom razvijalca ni težav«; app-level (Tendask) = »Najdena ni
-      bila nobena težava« — nobenega target-API opozorila. **Ob naslednjem buildu (vc16) potrdi, da še drži.**
+      bila nobena težava« — nobenega target-API opozorila. **Potrjeno na vc16 (2026-07-21): on-device
+      `dumpsys package app.tendask` kaže `targetSdk=36`.**
 - Neobvezno: Google je izdal open-source »Android skill« za pregled skladnosti s Play pravili v IDE/CLI.
 
 ## »Za naslednjo izdajo« — očitki Play Console (2026-07-20)

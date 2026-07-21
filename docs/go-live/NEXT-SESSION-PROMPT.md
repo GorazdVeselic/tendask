@@ -1,7 +1,7 @@
 # Prompt za novo sejo (kopiraj v nov Claude Code chat)
 
 > Memory + CLAUDE.md se naložita samodejno; ta prompt samo usmeri fokus.
-> Zadnja posodobitev: **2026-07-21** (po pripravi jezikovnih listingov + posnetkov).
+> Zadnja posodobitev: **2026-07-21** (po pripravi vc16 — beta pripona odstranjena, bump 1.0.1+16, on-device potrjen).
 
 ---
 
@@ -18,18 +18,20 @@ Nadaljujeva Tendask. **Aplikacija je javno na Google Play** (`1.0.0+15`, Splošn
   (privzeti=EN, prevoda sl/de svoje). Viri: `assets/feature-graphic-{en,sl,de}-1024x500.png` (+ `-base-`
   + generator `gen-feature-graphic.py`) in `assets/screenshots/play-{sl,en,de}/` (`NN-{si,en,de}-*.png`).
 
-**Fokus te seje: vc16 — nova izdaja s parkiranima popravkoma.**
+**Fokus te seje: 👤 naloži vc16 v produkcijo (koda + build sta gotova).**
 
-### A) vc16 — nova izdaja s parkiranima popravkoma (razvojno delo)
-Na `main` čakata dva popravka; vc16 naj ju zajame:
-1. **`kVersionChannel = ' (beta)'` (`core/config.dart` ~vrstica 161)** — izdaja 15 v nastavitvah še piše
-   »(beta)«. Ob popravku se **odloči, ali naj se pripona izpelje samodejno** (`kDebugMode` / `--dart-define`),
-   da se ročni preklop ne more več pozabiti.
-2. **Morda vidnejši »Preskoči« na zaslonu Lokacija** (`location_screen.dart` ~274-284) — gumb »Nadaljuj«
-   dela pravilno tudi s praznim obrazcem, a ni videti kot preskok; kandidat, če Play ponovi očitek
-   »manjkajo podatki za prijavo«.
-Postopek: popravi → `flutter test` (cel suite, ne le analyze) → bump `pubspec` na **`1.0.0+16`** →
-release build → on-device test → 👤 upload v produkcijo (ali najprej zaprti/interni trak).
+### A) vc16 — ✅ ZGRAJEN + on-device potrjen, čaka samo upload
+- **`kVersionChannel = ''`** (`core/config.dart:161`) — beta pripona odstranjena (izdaja 15 je v Nastavitvah
+  še pisala »(beta)«). Odločeno: preprosta prazna vrednost, brez dodatne dart-define mašinerije.
+- **Bump `1.0.0+15` → `1.0.1+16`** (`pubspec.yaml`) — prvi bump versionName.
+- **`flutter test` = 823/823**; commit `75c6e31` na `main`.
+- **On-device potrjeno (2026-07-21, SM A536B):** `versionCode=16`, `versionName=1.0.1`, app se zažene brez
+  fatal izjem; `targetSdk=36`. AAB: `build/app/outputs/bundle/release/app-release.aab`.
+- **PARKIRANO (ni v vc16):** vidnejši »Preskoči« na `location_screen.dart:274-284` — gumb »Nadaljuj« s praznim
+  obrazcem že deluje kot preskok; prvi kandidat, **če** Play ponovi očitek »manjkajo podatki za prijavo«.
+
+👤 **Ostane samo:** upload `app-release.aab` v produkcijski trak (nova izdaja). Pozor: versionCode 16 se
+porabi že ob nalaganju.
 
 ### B) 👤 Preveri, da so listing-spremembe prešle Googlov pregled
 Prevodi (SL+DE), feature grafike in posnetki so **naloženi** (2026-07-21) in šli v pregled. Preveri v
