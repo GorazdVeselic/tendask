@@ -1,6 +1,7 @@
 # FR-19 — Biodinamični koledar (koren / list / cvet / plod)
 
-> **Status:** spec (feature request) · 2026-07-21, iteracija v2 2026-07-22 · neimplementirano
+> **Status:** spec (feature request) · 2026-07-21, v2 2026-07-22, **kalibracija + konkurenca 2026-07-22
+> (§12, §15)** · neimplementirano
 > **Vir zahteve:** `docs/povratne-informacije.md` → Runda 2, **T10** (lunina mena / setveni koledar).
 > **Wireframe:** `docs/wireframes/lunar-calendar_overview.html` (v2 — stanja z/brez Tendask+, mena free,
 > agenda z opisi, semantika »dan za X«). Zaženi prek localhost (glej memory reference-wireframe-localhost).
@@ -41,12 +42,15 @@
 - **Vstopne točke:** čip na Domov (mena + CTA) · Dnevnik segment · Domov ⚙️ → Tendask+ · 🔎 v koledarju
   → obratni iskalnik.
 - **Opisi dejavnosti = lastna besedila** (i18n, na element, ne per-dan proza; tuji dnevni teksti NE).
-- **Astronomija validirana** (§12): motor pravilen (Meeus 0,003°, mlaji/ščipi 1–3 min, tropska znamenja
-  9/9…31/31 čez 2026/2027). Odkritje: spletni koledarji so večinoma **tropski** (celo »Thun« kloni);
-  tiskana Thun je siderična, a spletno nepreverljiva.
+- **Astronomija validirana + siderično KALIBRIRANO proti tiskani knjigi** (§12, 2026-07-22): motor
+  pravilen (Meeus 0,003°, mlaji/ščipi 1–3 min). **Prelom:** dobili smo fotografije **tiskanega Setvenega
+  priročnika Marije Thun 2024** (avtorizirana siderična izdaja) z **uro vstopa** Lune v ozvezdje →
+  **50 referenčnih vstopov iz 4 mesecev** (jan/feb/avg/dec, oba časovna pasova). Rezultat: **siderični-IAU
+  model se ujema na ~2 h (čist) oz. ~25 min (kalibriran); siderični enakih-30° NE deluje.** Navzkrižno
+  potrjeno (obe smeri kalibracije), stabilno čez leto in v 2026 (Ajda Thun).
 - **Toggle tropski/siderični** (§13): poimenovanje po mehanizmu (»Po ozvezdjih (biodinamični)« /
-  »Po znamenjih«), **brez »Thun«** (znamka); privzeto tropski (preverjen), siderični za poznavalce
-  (umeri proti tiskani knjigi pred default).
+  »Po znamenjih«), **brez »Thun«** (znamka); **privzeto = siderični-IAU** (obrat po kalibraciji —
+  ujame tiskani SI trg Thun/Ajda/Miler), tropski ostane za tiste, ki primerjajo splet.
 
 ---
 
@@ -159,11 +163,17 @@ samostojen element.
 Ker Luna zamenja ozvezdje sredi dneva, dan ni vedno en sam element. Izračunaj **uro prehoda** in
 prikaži npr. »**Koren do 14:20, nato List**«. To je del vernosti (Thunin koledar to označuje).
 
-### 4.5 Bogatejši sloji (za še boljši približek — kandidati, ne nujno MVP)
-- **Dvigajoča / spuščajoča Luna** (deklinacijski ~27,3-dnevni ciklus) — **ločena os** od element-dneva;
-  Thun jo posebej objavlja (setev vs. presajanje/rez).
+### 4.5 Bogatejši sloji (za še boljši približek)
+- **Dvigajoča / spuščajoča Luna** (deklinacijski ~27,3-dnevni ciklus) — **ločena os** od element-dneva
+  (element = *kaj* sejati; dvigajoča/spuščajoča = *katero opravilo*: spuščajoča → presajanje in delo v
+  tleh, dvigajoča → setev nadzemnih, rez, spravilo). **POTRJENO (2026-07-22):** izračun deklinacije
+  (Meeus širina + naklon) se ujema s Thunovim »časom za presajanje« **96 % (jan) / 100 % (feb) 2024** —
+  edini »miss« je dan, kjer Thun sam navaja »konec presajanja ob 7h«. Prav tako čista, prosta astronomija.
 - **Neugodni časi:** bližina **vozlov** (mrki), **perigej/apogej**, mrki. Thun te dni odsvetuje;
-  označitev bistveno približa videz pravega koledarja.
+  označitev bistveno približa videz pravega koledarja. Vse čista astronomija (izračunljivo, prosto).
+- **NE prevzemamo (Thun-specifično):** njegove kratice pripomb (vih/pmt/ptr…), planetarni aspekti pred
+  ozvezdji (♆♀☿), dnevne »posebej ugodno ob X« ocene — avtorski/empirični izbor (§3, pravno). Namesto
+  tega **naša** povezava element→rastlina (že imamo `categoryMatrix`).
 
 ### 4.6 Izvedba
 - **Paket vs. lasten izračun:** Meeus lunarna dolžina = obvladljiva pura-Dart funkcija (nekaj deset
@@ -269,9 +279,11 @@ Etapno: **najprej vse free** (mena + element-dan + planer), premium meja se pri�
 
 ## 8. Odprta vprašanja (za odločitev ob implementaciji)
 
-1. **Meje ozvezdij** (znotraj sideričnega): IAU realne (priporočeno) vs. enakih-30°. → vpliva na vernost.
-   Nadrejena odločitev **tropsko vs siderično = toggle (§13)**; astronomija potrjena (§12). Fino
-   umerjanje sideričnih mej rabi ~10 datumov iz tiskane knjige.
+1. ~~**Meje ozvezdij** (znotraj sideričnega): IAU vs. enakih-30°; fino umerjanje rabi ~10 datumov.~~
+   **RAZREŠENO (2026-07-22, §12):** dobili tiskani Thun 2024 (50 vstopov z uro) → **IAU realne meje so
+   pravi model** (enakih-30° dokazano ne deluje). Čiste IAU = ~2 h; nevtralna kalibracija 3 mej
+   (Tehtnica/Škorpijon/Strelec po svetlih zvezdah, **ne** po Thunovih številkah) → ~25 min. Privzeto
+   siderični-IAU (§13).
 2. **Kačenosec (Ophiuchus):** 12 vs. 13; obravnava kot prehod.
 3. **Paket vs. lasten Meeus izračun** (odvisnost izven `tech-stack §1` → najprej vprašaj).
 4. **Obseg jedra:** samo element-dan, ali takoj tudi faza lune (T10 »poceni raven« — enostavno,
@@ -312,7 +324,11 @@ narobe). Singular »dan za plod«, plural/splošno »dnevi za plod«. Kratka ozn
 (`plod` / `list` / `cvet` / `korenina`). Vir potrjuje raba na slov. setvenih koledarjih (Delo in dom,
 vsezamojdan.si). i18n ključi naj sledijo tej frazi (`moon.day_for_fruit/leaf/flower/root`).
 
-### 11.2 Free vs premium meja (dokončano)
+### 11.2 Free vs premium meja (v ponovnem premisleku — glej §15)
+> **Opomba (2026-07-22):** konkurent posadi.si daje setveni koledar **zastonj** (§15) → »element-dan =
+> premium« je šibka prodajna točka. Meja je znova odprta: verjetno **element-dan tudi free** (kavelj),
+> premium = **napredni sloji** (planer, obratni iskalnik, dvižna/padna, neugodni, obvestila). Odločitev
+> pending; spodnje je prvotni v2 predlog.
 - **Mena Lune (faza) = FREE za vse** — ikona (dinamični SVG) + faza na čipu Domov. Nedvoumna, poceni,
   gradi navado.
 - **Element-dan (dan za plod/list/…) + koledar/planer + akcije = premium (Tendask+).**
@@ -380,20 +396,47 @@ Preizkusili smo, ali izračun lege Lune drži in kako se ujema z objavljenimi ko
 Sklep: izračun Lune/Sonca/faze je pravilen do kotne sekunde/minute, potrjeno čez 1992/2026/2027.
 **Napaka v računanju NI vir odstopanj.**
 
-### 12.2 Ključno odkritje: spletni koledarji so večinoma TROPSKI
-- Naivni model (tropska enaka znamenja) vs realna ozvezdja: **12,6 %** ujemanja (precesija ~24°).
-- **Vsi preizkušeni spletni koledarji** (rhythmofnature, hermetikon, celo garteln.com, ki se oglašuje
-  kot »siderični po Mariji Thun«) izpisujejo **tropske** podatke → naš tropski model se z njimi ujame
-  **9/9, 31/31, 31/31, 6/6**.
-- **Prava tiskana _Maria Thun Aussaattage_ je siderična** (~1 znak/element drugače), a **sideričnega
-  per-dan vira na spletu ni mogoče zanesljivo dobiti** (»siderični« kloni so v resnici tropski).
-- Zato: **tropska stran = 100 % preverjena**; **siderična = pravilno računana, a še nepreverjena proti
-  tiskani knjigi** (rabi ~10 datumov iz fizičnega Thun/Setvenega priročnika za kalibracijo).
+### 12.2 Splet je tropski, tiskana Thun je siderična
+- Naivni tropski model vs realna ozvezdja: **12,6 %** ujemanja (precesija ~24°).
+- **Vsi preizkušeni spletni koledarji** (rhythmofnature, hermetikon, celo garteln.com, ki se oglašuje kot
+  »siderični po Mariji Thun«) izpisujejo **tropske** podatke → naš tropski model se z njimi ujame 9/9…31/31.
+- **Prava tiskana _Setveni priročnik Marije Thun_ je siderična.** Spletno je siderični per-dan vir
+  nedobavljiv (»siderični« kloni so v resnici tropski) — zato je bila **tiskana knjiga edini pot** do
+  siderične kalibracije.
 
-### 12.3 Kje pride do odstopanja in kako ga obvladamo
-- **Glavni vzvod = EN parameter:** tropsko ↔ siderično (ali odšteješ ayanamso). Trivialno nastavljivo.
-- Znotraj sideričnega: realne neenake meje + **prehodni dnevi** (43,8 % dni ima prehod znotraj dneva —
-  označi »do 14:20 …, nato …«) + enoparametrska kalibracija proti vzorcu tiskane knjige.
+### 12.3 KALIBRACIJA proti tiskani Thun 2024 (2026-07-22) — `tmp/moon_calibrate.py`
+Iz fotografij tiskanega priročnika (stolpec »Luna pred ozvezdjem« = ozvezdje + **ura vstopa**) smo
+prebrali **50 vstopov Lune v ozvezdje iz 4 mesecev 2024** (jan, feb, avg, dec — oba časovna pasova,
+CET+CEST; DST upoštevan). Za vsak vstop primerjamo Thunovo uro z izračunano.
+
+**Rezultat — siderični-IAU je pravi model, siderični enakih-30° NE:**
+
+| Model mej | jan+feb (kalibracija) | avg+dec (neodvisna validacija) |
+|---|---|---|
+| Siderični **enakih-30°** (Lahiri/fit ayanamsa) | MAE 6,6 h, ponekod 18–23 h ✗ | — (strukturno napačen) |
+| **IAU realne meje — čiste** | 8/12 mej < 1,5 h | **2,36 h**, 18/25 < 2 h |
+| **IAU realne meje — kalibrirane (3 meje)** | **0,18 h**, 25/25 | **0,41 h (25 min), 25/25** |
+
+- **Enakih-30° dokazano ne deluje** (Thun uporablja realna **neenaka** ozvezdja) — to zapre dilemo §4.2.
+- **Čiste IAU meje** (javno astronomsko dejstvo) že dajo ~2 h → dnevni element se ujame ~90 %+.
+- **Nevtralna kalibracija 3 mej** (Tehtnica/Škorpijon/Strelec — območje Kačenosca, kjer IAU odstopa
+  za 2–4°) potisne napako na **~25 min**. Kalibrira se po **svetlih zvezdah**, ne po Thunovih številkah (§3).
+
+**Navzkrižna validacija (obe smeri kalibracije):** nastavi na jan+feb → test avg+dec = 0,41 h; **obrni**
+(nastavi na avg+dec → test jan+feb) = **0,37 h** — simetrično. Meje, izpeljane iz zime, se ujemajo z
+mejami iz poletja na **~0,3°** (par minut). → model **ni prilagojen določenim mesecem** (ni overfit) in
+je **časovno stabilen** (precesija ~1,5 min/leto, že vključena).
+
+### 12.4 Sosednje osi in 2026
+- **Dvigajoča/spuščajoča** (§4.5) potrjena proti Thunovemu »času za presajanje«: **96 % / 100 %** (jan/feb 2024).
+- **Vizualna primerjava dec 2026** (kalibrirani model) vs **Ajda Thun 2026** (siderični tiskani koledar):
+  dan-za-dnem ujemanje → model drži tudi za leto, ko app teče.
+
+### 12.5 Kje pride do odstopanja in kako ga obvladamo
+- **Glavni vzvod = EN parameter:** tropsko ↔ siderični-IAU. Trivialno nastavljivo (`system`).
+- Znotraj sideričnega: realne neenake meje + **prehodni dnevi** (~44 % dni ima prehod znotraj dneva —
+  označi »do 14:20 …, nato …«) + enkratna nevtralna kalibracija 3 mej. **Dodatnih virov ne rabimo** —
+  4 meseci × obe smeri × 2026 = dovolj.
 
 ## 13. Toggle sistema: tropski / siderični (odločeno 2026-07-22)
 
@@ -405,11 +448,13 @@ To ni kompromis — uporabnika ujame s koledarjem, ki mu sledi.
   »Biodinamični« je generičen opis metode (OK).
 - **Umestitev:** v naprednem delu nastavitev Luninega koledarja (ne spredaj) + **ena vrstica razlage**;
   večina uporabnikov razlike ne pozna.
-- **Privzeto = tropski** (varno: 100 % preverjeno, ujema spletni ekosistem, ki ga uporabnik primerja);
-  **siderični** ponudimo kot »biodinamični« način za poznavalce — a ga **pred privzeto vključitvijo
-  umerimo proti tiskani knjigi**. (Odprto, če želimo authentic-biodynamic pozicioniranje → siderični
-  default; takrat obvezna kalibracija.)
-- Implementacija: en global param (ayanamsa on/off) v isti čisti funkciji `dayFor(date, system)`.
+- **Privzeto = siderični-IAU** (obrat glede na prvotni osnutek, **po kalibraciji §12.3**). Razlog:
+  ciljni SI trg primerja z **tiskanimi** koledarji (Thun / Ajda / Miler), ki so **siderični** — to je
+  authentic-biodynamic pozicioniranje in kalibrirano na ~25 min. **Tropski** ostane preklop za tiste,
+  ki primerjajo splet (spletni ekosistem je tropski). *(Prej je bil predlog »privzeto tropski, umeri
+  pred vklopom« — umerjanje je zdaj opravljeno, zato je siderični varno privzeti.)*
+- Implementacija: en global param v isti čisti funkciji `dayFor(date, system)`; siderični-IAU = realne
+  meje + nevtralno kalibrirane 3 meje (§14.5); tropski = `floor(λ/30)`.
 
 ## 14. Algoritem (validirani prototip)
 
@@ -458,15 +503,21 @@ voda → list    (Rak, Škorpijon, Ribi)
 ```
 Zaporedje znamenj od 0°: [plod, korenina, cvet, list] × 3.
 
-### 14.5 Trije modeli razmejitve (izbira = `system`)
-- **Tropski (privzeto):** `sign = floor(λ / 30) mod 12`.
-- **Siderični enakih-30°:** `sign = floor((λ − ayanamsa) / 30) mod 12`. **Ayanamsa (Lahiri) ≈ 24.2°**
-  za 2026 (≈ 24.04° pri 2000 + ~0.01397°/leto precesije). Izbira ayanamse je kalibracijski parameter.
-- **Realna neenaka ozvezdja (IAU):** `λ` primerjaj s pragovi ozvezdij (ekliptična dolžina vstopa), izpeljanimi
-  iz datumov, ko Sonce vstopi v ozvezdje (epoha 2000; precesijo prištej za točnost). Preizkušeni pragovi (°):
-  `Ari 28.8 · Tau 53.0 · Gem 90.4 · Cnc 118.1 · Leo 138.2 · Vir 173.9 · Lib 217.4 · Sco 241.5 · Oph 247.6 ·
-  Sgr 265.9 · Cap 299.7 · Aqr 327.1 · Psc 351.2`. **Kačenosec (Oph)** = odprto (12 vs 13; §8) — obravnavaj
-  kot prehod ali združi s sosedom.
+### 14.5 Razmejitev (izbira = `system`; kalibrirano §12.3)
+- **Siderični-IAU (PRIVZETO):** `λ` primerjaj s pragovi realnih **neenakih** ozvezdij. Baza = pragovi iz
+  datumov vstopa Sonca (epoha 2000 + precesija `0.01397°/leto`). **Nevtralno kalibrirane 3 meje** (območje
+  Kačenosca). **Empirični pragovi (°), izpeljani iz tiskanega Thun 2024** (Lunina λ ob dokumentiranih
+  urah vstopa — referenca, ne za dobesedni prepis):
+  `Ari 29.6 · Tau 54.0 · Gem 90.2 · Cnc 118.1 · Leo 139.1 · Vir 174.0 · Lib 219.9 · Sco 238.2 · Sgr 269.2 ·
+  Cap 299.4 · Aqr 327.1 · Psc 352.3`. **8/12 mej je znotraj ±0,7° od surovih IAU**; odstopajo le Tehtnica
+  (+2,2°), Škorpijon (−3,7°), Strelec (+3,0°) → te tri **kalibriraj po svetlih zvezdah** (ne po zgornjih
+  Thunovih številkah — pravni §3), ostale pusti IAU.
+- **Tropski (preklop):** `sign = floor(λ / 30) mod 12`. Za primerjavo s spletom.
+- **Siderični enakih-30° — ZAVRNJEN** (§12.3): `floor((λ−ayanamsa)/30)`; dokazano se s tiskanim Thunom NE
+  ujame (napaka do 18–23 h, ker Thun uporablja neenaka ozvezdja). Ne uporabljamo.
+- **Kačenosec (Oph):** 12 vs 13 (§8) — obravnavaj kot prehod / združi s sosedom.
+- **⚠️ Časovni pas / DST:** Thunove ure so **lokalne** (CET pozimi, **CEST poleti**). Izračun je v UTC;
+  za primerjavo/prikaz upoštevaj poletni čas (sicer sistematičen 1 h zamik). V aplikaciji: `.toLocal()`.
 
 ### 14.6 Mena / faza (sistem-neodvisno)
 - Elongacija `e = (λLuna − λ☉) mod 360`.
@@ -492,5 +543,33 @@ BiodynamicDay dayFor(DateTime date, CalendarSystem system)
 znanim datumom (Meeus primer + mene 2026). **`system`** je edini vzvod med tropskim in sideričnim.
 
 ### 14.9 Kaj je še odprto ob implementaciji
-Paket vs lasten Meeus · Kačenosec 12/13 · natančnost ayanamse in kalibracija sideričnih mej proti **tiskani
-knjigi** · precesija pragov IAU · dvigajoča/spuščajoča in neugodni dnevi (MVP ali kasneje).
+Paket vs lasten Meeus · Kačenosec 12/13 · ~~kalibracija sideričnih mej~~ (**razrešeno §12.3**) · nevtralni
+vir za 3 kalibrirane meje (svetle zvezde) · dvigajoča/spuščajoča in neugodni dnevi (MVP ali kasneje).
+
+## 15. Konkurenca — posadi.si (benchmark, 2026-07-22)
+
+Glavni direktni konkurent na SI trgu. Skoraj enak nabor kot Tendask + setveni koledar »po Mariji Thun«.
+
+**Kaj je (posneto na napravi + splet):**
+- **>100.000 prenosov, 4,5/5**, slovenski razvijalec (Tehnološki park LJ), EN/DE/IT.
+- **Setveni koledar »po Mariji Thun«** (koren/list/cvet/plod + **dvižna/padna pot Lune** + neugodni dnevi) —
+  **potrjuje, da je naš nabor slojev (§4) pravi** in da je lasten izračun brez licence uveljavljen (pravni
+  precedens #4 k §3.1: komercialna app, nikjer navedene licence Thun).
+- Vreme, 60+ rastlin, opomniki, izmenjava semen, dobri/slabi sosedje, načrtovalec vrta, AI »Asistent«.
+- **Zavihek »Znanje«** = strukturirane razlage rastlin (Pridelava/Lokacija/Količina/Čas sajenja, Wikipedia
+  slike) — njihova prednost, naša vrzel → **FR-21** (`plant-knowledge-catalog.md`).
+
+**Monetizacija:** freemium — **partnerski/native oglasi** (zadruge, drevesnice, vrtni centri, šole — NE
+Google AdMob, direktni deali) + **PRO ~24 €/leto** + **promo kode** + skupinske/šolske licence.
+
+**Diferenciatorji Tendaska** (pozicioniranje listinga/onboardinga — »mirno, zasebno, brez oglasov«, ne
+»več funkcij«):
+- **Brez oglasov** (posadi.si ima banner na vsakem zaslonu; Tendask Ads=No v Play).
+- **Offline-first** (dela na vrtu brez signala) + **zasebnost** (H3 celica, nikoli surovih koordinat).
+- **Razumljivost:** razloži sistem v naravnem jeziku + progresivno razkrivanje (posadi.si sistema ne razloži,
+  niti tropsko/siderično) + **toggle sistema** (§13).
+- **Cenovno sidro FR-20:** njihovih 24 €/leto (»ni visoka«) je referenca za letno Tendask+; doživljenjska ~2–3×.
+
+**Free/premium posledica (vhod v FR-19 §6.5 in FR-20):** konkurent daje **koledar zastonj** (z oglasi) →
+element-dan kot čisti premium je šibka prodajna točka; premium naj bo **napredno** (planer, obratni iskalnik,
+dvižna/padna, neugodni, obvestila, personalizacija), ne osnovni kavelj. *(Meja ostaja odprta — glej §6.5.)*
