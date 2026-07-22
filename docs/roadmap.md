@@ -533,8 +533,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   reši nadgradnjo, dvojni nakup in nakup pred iztekom. **Lastne kode ostanejo** za Play pregled, grandfathering
   in darila (te tečejo **od unovčitve**, Polarjeve **od nakupa**). **Spletna stran ostane statična** (§4.5):
   `/plus` v treh jezikih + nav postavka + sekcija na landingu + footer na Polarjev portal; **fiksnih stroškov
-  0 €**; popraviti je treba hero značko »brezplačno«. **Odprto:** konkretne cene, ponudnik
-  (Polar ali Paddle), ali paket starta z eno funkcijo. Polni spec:
+  0 €**; popraviti je treba hero značko »brezplačno«. **Ponudnik — priporočilo Polar** (§4.3; tveganje mladega
+  podjetja ublaženo, ker je menjava prepis webhooka in ne selitev podatkov; prodaja potrošnikom, zato Paddlova
+  davčna globina odpade), **Paddle rezerva**, če Stripe Express za s.p. ne steče ali če Polar ne pošilja
+  opomnika pred obnovitvijo. **Popravek:** License Keys prihranijo le e-pošto in »izgubil sem kodo« — lastno
+  generiranje kod rabiš tako ali tako. **Predpogoj go-live:** Stripe Express (izplačilna cev, ne blagajna;
+  ročna izplačila). **Testiranje:** Polar sandbox ↔ obstoječi staging (ngrok ni potreben, tunel je javen);
+  letne obnovitve se ne da počakati → kratek testni izdelek ali ročni webhook. **Darila = lastna `granted`
+  koda** (0 €, brez kartice, teče od unovčitve), ne 100 % kupon. **Play pregled = `kind='review'` koda:**
+  večkratna s kapico, vsaka unovčitev da 30 dni, vklopiš ob oddaji in prekličeš po odobritvi; `App access`
+  gre z »Ne« na »Da«. **Odprto:** konkretne cene, potrditev ponudnika, ali paket starta z eno funkcijo.
+  Polni spec:
   [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
 - **FR-21 — Rastlinsko znanje / obogaten katalog (»Vodič«).** 💡 **Ideja / osnutek (2026-07-22).** Iz
   konkurenčne analize **posadi.si** (zavihek »Znanje« = strukturirane razlage rastlin = njihova glavna

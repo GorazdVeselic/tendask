@@ -117,22 +117,64 @@ To je **znotraj politike**: promocija lastne funkcije in vnos licence nista »le
 | **Lemon Squeezy** | 5 % + ~0,50 $ | +1,5 % mednarodne kartice, +0,5 % naročnine → v praksi najdražji |
 | **Stripe** | ~1,5 % + 0,25 € (EGP kartice) | najcenejši na papirju, a MoR si ti |
 
-**Odločitev: Polar ali Paddle.** Razlika ~3,5 % stane manj kot ura računovodje mesečno.
+**Odločitev proti Stripu: MoR.** Razlika ~3,5 % stane manj kot ura računovodje mesečno.
 
-### 4.3 Vprašanja za računovodjo (ne ugibava)
+### 4.3 Polar proti Paddlu — priporočilo (odprto za potrditev, §11.3)
+
+| | **Polar boljši** | **Paddle boljši** |
+|---|---|---|
+| Zrelost | — | od 2012, tisoče podjetij; **skoraj gotovo bo čez 5 let še tu** |
+| Registracija | samopostrežna, takoj | preverjanje prodajalca pred go-live (traja, sprašujejo) |
+| Izplačilo | — | **naravnost na banko**, brez vmesnega Stripe Express |
+| Davki | pokrije DDV/OSS | globlji robni primeri, B2B reverse charge, računi po državah |
+| Razvijalska izkušnja | moderni API, SDK-ji, **sandbox**, odprta koda | starejši občutek |
+| Vgrajeno | License Keys, portal za kupca | zrelo upravljanje naročnin: dunning, ponovni poskusi, **opomniki pred obnovitvijo** |
+| Cena | 5 % + 0,50 $, **cenejše stopnje + Startup Program** | 5 % + 0,50 $, brez cenejših stopenj |
+| Tveganje | mlado podjetje (~2023) | — |
+
+**Priporočilo: Polar.** Trije razlogi:
+
+1. **Tveganje platforme je že ublaženo** — ker po §5.2 vse zrcališ v Supabase, je menjava ponudnika **prepis webhooka, ne selitev podatkov**. Odločitev ni za pet let in je reverzibilna.
+2. **Prodajaš potrošnikom, ne podjetjem** → Paddlova največja prednost (B2B reverse charge, zahtevni računi) te ne zadeva.
+3. **Sandbox, portal in Startup Program skrajšajo delo zdaj**, ko to delaš prvič in sam.
+
+**Preskoči na Paddle, če:** Stripe Express onboarding za s.p. ne steče, **ali** Polar ne pošilja opomnika pred obnovitvijo (pri starejši publiki je to pomembno, §5.1).
+
+⚠️ **Startup Program naj NE odloči izbire.** Razlika je ~0,30 € na letno prodajo (~30 € pri stotih) — to ni argument za ponudnika, s katerim boš živel leta.
+
+### 4.4 Polar: predpogoji in okolja
+
+**Stripe Express je obvezen predpogoj za go-live.** Polar izplačuje prek **Stripe Connect Express** — enkratni onboarding, kjer postaneš lastnik računa in pravni prejemnik sredstev. To **ni** Stripe kot tvoja blagajna (to sva zavrgla) — je izplačilna cev; MoR ostaja Polar in davčna slika iz §4.1 se ne spremeni. Za s.p. bo Stripe hotel davčno in matično številko, osebni dokument in IBAN. **Izplačila so ročna** — sprožiš jih sam.
+
+**Sandbox se ujema z obstoječim staging okoljem:**
+
+| | Polar | Supabase | Build |
+|---|---|---|---|
+| Test | `sandbox.polar.sh` / `sandbox-api.polar.sh/v1` | staging | `deploy.bat hot` |
+| Živo | produkcija | prod | `deploy.bat release` |
+
+Sandbox je popolnoma izoliran (ločen račun, organizacija in tokeni — produkcijski token tam ne dela), plačila s Stripovimi testnimi karticami. **ngrok ni potreben** — staging tunel `api-staging.tendask.app` je že javno dosegljiv, torej lahko Polar kliče webhook naravnost nanj.
+
+Preveri pred tem: (a) ali staging stack sploh poganja `supabase/edge-runtime`, (b) da sta base URL in token **konfiguracija, ne konstanta** (isti vzorec kot obstoječi env-switch).
+
+⚠️ **Letne obnovitve v sandboxu ne moreš počakati.** Za preizkus poti podaljšanja naredi **testni izdelek s kratkim obdobjem**, ali ročno sproži webhook s posnetim payloadom. Sicer bo »podaljšanje« edini del sistema, ki ga nikoli nisi videl delovati — in se zgodi šele čez leto dni, ko boš na napako pozabil.
+
+**Startup Program** (`polar.sh/startup-program`): 12 mesecev na Scale pogojih (3,40 % + 0,30 $) brez 400 $/mesec, s shared Slack kanalom in P1 podporo. Prijava zahteva datum ustanovitve, zbran kapital, obseg plačil, velikost ekipe in 100 besed o izdelku. **Pogoji upravičenosti niso javno objavljeni** — z obsegom plačil 0 in brez investitorjev je sprejem negotov; prijava stane ~15 minut. ⚠️ **Ceno postavi na standardno tarifo (5 % + 0,50 $)** — ugodnejša je bonus prvega leta, ne osnova.
+
+### 4.5 Vprašanja za računovodjo (ne ugibava)
 
 1. Ali moraš pridobiti **ID za DDV** samo zaradi prejemanja storitev iz tujine (obrnjena davčna obveznost), tudi če nisi zavezanec doma? *Klasična past pri Stripe/Paddle/Google.*
 2. Kako se knjiži MoR izplačilo — potrjeno kot prihodek = **neto**?
 3. Kje je tvoj prag za normiranca in kdaj ga naročnine iztirijo?
 4. Ali rabiš spremembo dejavnosti (SKD) za prodajo digitalnih storitev potrošnikom?
 
-### 4.4 Pravno na spletni strani
+### 4.6 Pravno na spletni strani
 
 - Pogoji uporabe + politika zasebnosti + politika vračil.
 - **EU: 14-dnevna pravica do odstopa** za digitalno vsebino → ob nakupu izrecna privolitev v takojšnjo izvedbo (checkbox), sicer imaš 14 dni obvezno vračilo.
 - Jasni pogoji odpovedi naročnine (samopostrežno prek MoR portala).
 
-### 4.5 Umestitev na spletni strani (`../tendask_web`)
+### 4.7 Umestitev na spletni strani (`../tendask_web`)
 
 Stran je **statična in taka ostane** — Polar gosti blagajno, zato je gumb navadna povezava. Nič JS, nič obrazcev, nič PCI, nič DDV logike, **nič fiksnih stroškov** (Cloudflare Pages + Supabase free tier + Polar samo % na prodajo).
 
@@ -182,7 +224,19 @@ Trenutna struktura je en landing (`hero → #features → #shots → #okolica �
 | ponuja kupcu portal (koda, odpoved, računi) | odloči, kaj dogodek pomeni |
 | sporoča dogodke prek webhookov | — |
 
-Polar je **blagajna in poštar**; licenco vodiš ti. Odpadejo: generiranje kod, pošiljanje e-pošte, »izgubil sem kodo« podpora, omejitev naprav (Polar `activate` z activation limit), preklic ob vračilu.
+Polar je **blagajna in poštar**; licenco vodiš ti.
+
+⚠️ **Popravek (2026-07-22): License Keys prihranijo manj, kot je izgledalo.** Lastno generiranje kod potrebuješ **tako ali tako** (§6.6: Play pregled, grandfathering, darila). Natančna razlika:
+
+| Kos | Rabiš pri obeh ponudnikih | Prihrani Polar |
+|---|---|---|
+| Webhook sprejemnik, tabela `license`, `plus_until` | ✅ nujno | — |
+| Generiranje kode (~20 vrstic), atomarna unovčitev | ✅ že rabiš za darila | — |
+| **Pošiljanje kode kupcu po e-pošti** | ❌ | ✅ |
+| **»Izgubil sem kodo« samopostrežno** | ❌ | ✅ |
+| Omejitev naprav (`activate`), preklic ob vračilu | ❌ | ✅ |
+
+Ostaneta torej **transakcijska e-pošta** (Resend ipd., brezplačna raven pokrije obseg) in **stran za ponovno pridobitev kode** — skupaj ~dan dela plus trajna skrb za dostavljivost v treh jezikih. Nezanemarljivo, a **ni odločilen argument** za izbiro ponudnika.
 
 ⚠️ **Organization access token nikoli ne sme v aplikacijo** — klici proti Polarju gredo izključno iz Edge Function; iz APK-ja bi ga kdorkoli izluščil.
 ⚠️ **Zrcali licence v svojo bazo** prek webhookov — Polar je mlado podjetje; ob menjavi ponudnika imaš podatke pri sebi.
@@ -340,6 +394,42 @@ plus_until = redeemed_at + duration_days
 
 To je edini pošten model za darilo, ki ga nekdo prejme decembra in unovči marca. Za naročnino bi bilo napačno — plačilo teče od nakupa, torej mora tudi upravičenost.
 
+#### Podaritev licence — tri poti
+
+**A. Lastna `granted` koda (priporočeno).** Vrstica v `license` (`kind='granted'`, `duration_days=365`), kodo izročiš kakorkoli (e-pošta, listek, ustno).
+- **0 € stroška**, brez transakcije, provizije, DDV in računa
+- prejemnik **ne rabi kartice** ne računa pri ponudniku
+- deluje **identično pri Polarju in Paddlu**, ker ju sploh ne vključuje
+- teče **od unovčitve** → darilo, dano decembra in unovčeno marca, ni okrnjeno
+
+**B. 100 % kupon pri ponudniku.** Oba znata (Polar: enkrat / N mesecev / **za vedno**; Paddle: število obdobij, `null` = za vedno).
+- ⚠️ **Past:** pri naročnini mora biti popust **»za vedno«**, sicer po prvem obdobju začne bremeniti kartico — ki jo je obdarjeni moral vnesti.
+- Prednost: prejemnik dobi cel samopostrežni obred (ključ, e-pošta, portal). Slabost: mora skozi blagajno in pustiti podatke — za darilo starejšemu vrtnarju slabše od kode na listku.
+
+**C. Ročno v bazi.** `plus_until` naravnost na profil znanega uporabnika. Najhitreje, a **ni prenosljivo** — deluje le, če oseba že ima račun in veš, kateri je. Za testerja da, za darilo ne.
+
+#### `kind = 'review'` — koda za Googlov pregled
+
+**Enkratna koda tu ne deluje:** recenzent jo porabi in ob **naslednji izdaji je mrtva** — vsak nov `versionCode` gre skozi pregled, torej bi moral vsakič izdati novo kodo in popraviti `App access`. Prej ali slej pozabiš in izdaja pade.
+
+Zato posebna vrsta z drugačnim režimom:
+
+| Lastnost | Vrednost | Zakaj |
+|---|---|---|
+| Večkratna unovčitev | **da**, s kapico (~20) | preživi več izdaj brez posega |
+| Kaj podeli | **30 dni**, ne leto | ob uhajanju je škoda omejena |
+| Preklic | takojšen (`revoked_at`) | zapreš v sekundi |
+| Dnevnik | vsaka unovčitev (`uid`, čas) | zlorabo vidiš, ne ugibaš |
+| Rotacija | ob večji izdaji / četrtletno | omeji življenjsko dobo |
+
+Bistvo: ne šteješ, kolikokrat je bila uporabljena **za vedno**, ampak **koliko časa vsaka unovčitev velja**.
+
+**Najmočnejši in najcenejši ukrep: kodo vklopi ob oddaji izdaje in prekliči po odobritvi.** Oddajaš nekajkrat letno → koda je živa nekaj dni na leto. Dve vrstici v deploy obredu zapreta skoraj celotno okno zlorabe.
+
+Nevarnost je sicer manjša, kot se zdi: navodila iz `App access` **niso javna** (vidijo jih recenzenti in uporabniki tvojega Play Console računa) — ni v opisu, ne na posnetkih, ne v APK-ju. Cilj ni »zagotoviti, da jo uporabi samo recenzent« (to ni dosegljivo pri nobeni kodi), ampak da **tudi če uide, ni vredna dosti**.
+
+⚠️ **Odprto:** ali sme `review` koda mimo zahteve po prijavljenem računu (§5.3). Recenzent bi se sicer moral prijaviti z Google/OTP, kar doda korak, na katerem pregled lahko zatakne; izjema pa doda poseben primer v kodo.
+
 ### 6.7 Poštena luknja (zavestno sprejeta)
 
 Kdor unovči kodo, gre za vedno offline **in** premakne uro nazaj, obdrži Plus. Obramba (Play Integrity, zaznava root-a, obvezno online preverjanje) bi zlomila prav tisto, zaradi česar aplikacija obstaja.
@@ -384,7 +474,14 @@ license_redeem_attempt
 
 ⚠️ **Najbolj spregledana točka.**
 
-1. **`App access` se mora spremeniti.** Zdaj je »Ne, nič ni gate-ano« — to je pravilno za free aplikacijo. Ko dodaš Plus, **moraš Googlu dati testni račun z aktivno licenco** (ali kodo za unovčitev v navodilih), sicer pregled pade ali Plus funkcije nikoli niso pregledane.
+1. **`App access` se mora spremeniti z »Ne« na »Da«.** Zdaj je pravilno nastavljeno (nič ni gate-ano); ob vklopu Plus je napačno in tvegaš zavrnitev. Uporabi **`review` kodo** (§6.6), ne osebnega računa — Tendask ima le Google/OTP prijavo, zato deljen testni račun ni izvedljiv. Navodila naj bodo dobesedna:
+
+   > 1. Odpri aplikacijo, dokončaj uvod.
+   > 2. Domov → ⚙️ → Tendask + → »Vnesi kodo«.
+   > 3. Vnesi: `XXXX-XXXX-XXXX`.
+   > 4. Odklenejo se: lunin koledar, planer, …
+
+   *Drobnarija:* **pre-launch report je avtomatiziran in kode ne bo vnašal** — Plus zaslonov ne bo preizkusil. Ni težava, le od tam ne pričakuj pokritja.
 2. **Data Safety** — če MoR hrani e-pošto kupca, preveri, ali se kaj spremeni (verjetno ne, ker plačilo teče zunaj aplikacije).
 3. **Ni** potreben Merchant/payout setup v Play Console (ne uporabljava Play Billing).
 4. Listing opis lahko omeni Plus, a **brez cene in URL-ja do nakupa**.
@@ -458,14 +555,14 @@ Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne 
 1. ~~**Katere funkcije so Plus?**~~ **Odločeno (2026-07-22): prvi nosilec je FR-19** — element-dan + koledar/planer + akcije; mena Lune ostane free. **Opomniki so izrecno izključeni** (§10.1). Seznam kandidatov za širitev = §10.2, pri čemer je **M11 (zgrajen, a nikoli izdan) najmočnejši**. *Odprto ostaja, ali Plus starta z eno funkcijo ali počaka na dve — enofunkcijski paket je težje prodati; par »FR-19 kavelj + M11 vsebina« je najbolj obetaven.*
 2. **Cena in model.** **Mesečna naročnina zavrnjena (2026-07-22)** — v igri ostaneta **letna + doživljenjska**; **konkretne številke namenoma še niso zapečene.** Podlaga za odločitev:
    - Fiksni del provizije MoR (~0,50 $) požre mesečno: pri 1,99 € ti ostane **1,05 €** (47 % izgube), pri letni 9,90 € pa **7,20 €**, pri doživljenjski 29,90 € **22,80 €** (računano z 22 % DDV in 5 % + 0,50 $ MoR).
-   - **Prelomna točka: 7 mesecev.** Mesečna prehiti letno šele, če povprečen naročnik vztraja ≥7 mesecev (7,20 ÷ 1,05 = 6,9). Pri sezonski dejavnosti in slovenski zimi je to malo verjetno, a **ni izmerjeno** — je ocena, ne podatek.
+   - **Prelomna točka: 7 mesecev.** Mesečna prehiti letno šele, če povprečen naročnik vztraja ≥7 mesecev (7,20 ÷ 1,05 = 6,9). Pri sezonski dejavnosti in slovenski zimi je to malo verjetno, a **ni izmerjeno** — je ocena, ne podatek. *(Po Startup tarifi 3,40 % + 0,30 $ bi bila prelomna točka ~6 mesecev; odločitve ne spremeni, ker glavni argument ni ta številka, ampak spodnji strukturni.)*
    - Odločilnejši, ker ne temelji na ugibanju: **pri letni ceni ~9,90 € mesečna tarifa ne more obstati.** Sorazmerna mesečna bi bila ~1,00–1,20 € (pod pragom fiksne provizije); pri 1,99 € pa je letna le 5 mesečnih → vsi vzamejo letno in mesečna je mrtva izbira, ki le zapleta podporo in knjiženje.
    - **Trenje ubija prednost mesečne.** Ker v aplikaciji ni povezave do nakupa, mora kupec sam najti stran, plačati in prekopirati kodo. Nizka vstopna cena tu ne kupi obsega — le manj denarja od istih ljudi.
    - **Sidro za ceno:** tiskane *Lunine bukve 2026 s setvenim koledarjem* stanejo **9,90 € + poštnina** — isti kupec, isti namen, vsakoletni nakup. Primerljive aplikacije: Planta/Vera enkratno ~10 $, vrtnarske aplikacije ~4–50 $/leto.
    - **Razmislek o razmerju:** doživljenjska se običajno postavi na 2,5–3× letne. Ne kanibalizira letne, ker načelni nasprotniki naročnin sicer ne kupijo ničesar.
    - **Vezano na obseg paketa (§10.2):** M11 ima ponavljajoč se strošek → če je v paketu, govori proti neomejeni doživljenjski (ali za njeno omejitev na lansirno ponudbo).
    - **Vmesna možnost, če bo potreba:** sezonska licenca 6 mesecev (ena transakcija, ujame sezonsko vedenje brez upravljanja odpovedi).
-3. **Polar ali Paddle?**
+3. **Polar ali Paddle?** **Priporočilo = Polar** (§4.3), a ni potrjeno. Pred potrditvijo preveri dvoje: (a) ali Stripe Express onboarding za s.p. steče, (b) ali Polar pošilja **opomnik pred obnovitvijo** (§5.1) — če ne, ga moraš pošiljati sam ali izbrati Paddle.
 4. **Nova dependency za preverjanje podpisa** — kateri paket, in posodobitev `tech-stack.md §1`.
 5. **`kLicenseGraceDays`** — 7 ali 14?
 6. **Število sedežev** — 3 ali več?
@@ -482,8 +579,15 @@ Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne 
 4. **Spletna stran** (`../tendask_web/`, po §4.5): `/plus` v treh jezikih + nav postavka + sekcija na landingu + footer povezavi + popravek `t.hero.free` + pogoji in politika vračil.
 5. Aplikacija: `plusProvider` (bere iz drifta, preverja podpis prek `Clock`) + zaslon Tendask+ — **UI po FR-19 §11.3–11.4**, ne izmišljuj novega.
 6. i18n (en/sl/de) — **pregled vseh nizov glede anti-steering** pred oddajo (§3.1).
-7. Play Console: posodobi `App access` s testno kodo.
-8. DoD on-device: unovčitev → letalski način → Plus dela; predelana drift vrstica → Plus ugasne.
+7. Play Console: `App access` na »Da« + `review` koda in dobesedna navodila (§8).
+8. **DoD — vse v sandbox ↔ staging (§4.4), preden gre karkoli na prod:**
+   - nakup letne → koda po e-pošti → webhook → vrstica v `license`
+   - unovčitev v aplikaciji → **letalski način → Plus dela** (offline token)
+   - **pot podaljšanja** prek kratkega testnega izdelka ali ročno sproženega webhooka — *edini del, ki se sicer prvič zgodi šele čez leto dni*
+   - **vračilo/preklic** → `plus_until` se skrajša (edina pot, ki krajša)
+   - doživljenjska → token **ni** 2099, ampak `now + 12 mesecev` (§6.2)
+   - predelana drift vrstica → Plus ugasne
+   - `review` koda: druga unovčitev uspe, po preklicu ne
 
 **Vrstni red glede na FR-19:** Lunin koledar se gradi **najprej v celoti free** (FR-19 §11.2: »etapno — najprej vse free«). Ta FR se aktivira šele, ko je funkcija zrela in ima uporabnike; gating je zadnji korak, ne prvi.
 
