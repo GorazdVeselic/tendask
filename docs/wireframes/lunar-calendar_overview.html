@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lunin koledar — pregled (FR-19)</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  :root{
+    --el-root:#7e57c2;   --el-root-soft:#efe9f8;
+    --el-leaf:#1e88e5;   --el-leaf-soft:#e4f0fb;
+    --el-flower:#f4a91b; --el-flower-soft:#fdf1d6;
+    --el-fruit:#e5484d;  --el-fruit-soft:#fde7e8;
+    --tplus:#c8891f;  --tplus-soft:#fbf1d8;
+    --lock:#e5484d;
+    --page-max:1200px;
+  }
+  body{ background:#e7eae8; padding:0 0 80px; }
+  .wrap{ max-width:var(--page-max); margin:0 auto; padding:34px 22px; }
+  .doc-head h1{ font-size:30px; letter-spacing:-0.5px; margin-bottom:6px; }
+  .doc-head .tag{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:.5px;
+    text-transform:uppercase; color:var(--accent); background:var(--accent-soft);
+    padding:4px 11px; border-radius:999px; margin-bottom:14px; }
+  .doc-head p{ color:#40504a; font-size:15.5px; line-height:1.6; max-width:840px; margin-bottom:10px; }
+  .callout{ border-radius:16px; padding:16px 18px; margin:16px 0; font-size:14.5px; line-height:1.6; border:1px solid; }
+  .callout.verdict{ background:#eef7f0; border-color:#cfe6d6; }
+  .callout.sem{ background:#eef3fb; border-color:#cfe0f2; }
+  .callout b{ font-weight:700; }
+  .callout h3{ font-size:14px; text-transform:uppercase; letter-spacing:.5px; margin-bottom:8px; color:#2c5138; }
+  .callout.sem h3{ color:#255a8a; }
+  .semtab{ display:flex; flex-wrap:wrap; gap:8px; margin-top:10px; }
+  .semtab .st{ background:#fff; border:1px solid #d6e2ef; border-radius:10px; padding:7px 11px; font-size:13px; }
+  .semtab .st b{ color:#255a8a; }
+
+  .legend{ display:flex; flex-wrap:wrap; gap:10px; margin:16px 0 6px; }
+  .legend .lg{ display:flex; align-items:center; gap:9px; background:#fff; border:1px solid var(--line);
+    border-radius:12px; padding:9px 13px; font-size:13.5px; }
+  .legend .sw{ width:16px; height:16px; border-radius:5px; flex:0 0 16px; }
+  .legend .lg b{ font-weight:700; } .legend .lg span{ color:var(--muted); }
+
+  .board{ display:flex; gap:30px; flex-wrap:wrap; align-items:flex-start; margin:14px 0 40px;
+    padding-top:26px; border-top:1px dashed #c9d2cc; }
+  .board.first{ border-top:none; }
+  .pair{ display:flex; gap:20px; flex:0 0 auto; flex-wrap:wrap; }
+  .board .phone{ flex:0 0 360px; width:360px; height:780px; }
+  .plabel{ text-align:center; font-size:12px; font-weight:700; color:var(--muted); margin-bottom:8px; text-transform:uppercase; letter-spacing:.4px; }
+  .plabel.on{ color:var(--accent); } .plabel.off{ color:var(--lock); }
+  .note{ flex:1 1 330px; min-width:300px; max-width:560px; padding-top:6px; }
+  .note .screen-no{ font-size:12px; font-weight:700; color:var(--accent); letter-spacing:.5px; }
+  .note h2{ font-size:21px; margin:2px 0 12px; letter-spacing:-0.3px; }
+  .note h4{ font-size:12.5px; text-transform:uppercase; letter-spacing:.6px; color:var(--muted); margin:16px 0 6px; }
+  .note p{ font-size:14.5px; line-height:1.62; color:#37433d; margin-bottom:8px; }
+  .note .op{ background:#fbf7ec; border-left:3px solid var(--honey); border-radius:0 10px 10px 0; padding:11px 14px; font-size:14px; line-height:1.55; }
+  .note .op b{ color:#8a6a12; }
+  .note ul{ margin:4px 0 8px 18px; } .note li{ font-size:14px; line-height:1.55; margin-bottom:4px; }
+  code{ background:#eef1ee; padding:1px 5px; border-radius:5px; font-size:12.5px; }
+
+  /* moon chip (Domov CTA) */
+  .moonrow{ display:flex; align-items:center; gap:11px; background:#fff; border:1px solid var(--line);
+    border-radius:14px; padding:12px 14px; margin-bottom:12px; }
+  .moonrow .mtxt{ font-size:14.5px; font-weight:700; }
+  .moonrow .cta{ margin-left:auto; font-size:13.5px; font-weight:700; color:var(--accent); white-space:nowrap; }
+  .moonrow .cta.locked{ color:#fff; background:var(--lock); padding:5px 11px; border-radius:999px; font-size:12.5px; }
+
+  /* Tendask+ badge */
+  .tbadge{ display:inline-flex; align-items:center; gap:4px; background:var(--tplus-soft); color:var(--tplus);
+    border:1px solid #ecd9a6; font-size:11px; font-weight:800; padding:2px 8px; border-radius:999px; letter-spacing:.2px; }
+  .lockpill{ background:var(--lock); color:#fff; font-size:10.5px; font-weight:800; padding:2px 7px; border-radius:999px; }
+
+  /* license field + feature list */
+  .lic{ background:#f6f8f6; border:1.5px dashed var(--line-strong); border-radius:12px; padding:13px 14px; margin-bottom:6px;
+    font-size:14px; color:var(--muted); display:flex; align-items:center; gap:8px; }
+  .flist .fi{ display:flex; gap:11px; padding:11px 2px; border-bottom:1px solid var(--line); }
+  .flist .fi:last-child{ border-bottom:none; }
+  .flist .fi .ico{ font-size:19px; width:26px; text-align:center; }
+  .flist .fi .ft{ font-size:14.5px; font-weight:600; } .flist .fi .fs{ font-size:12.5px; color:var(--muted); margin-top:1px; }
+  .valid{ background:#eef7f0; border:1px solid #cfe6d6; border-radius:12px; padding:12px 14px; margin-bottom:14px;
+    font-size:13.5px; color:#2c5138; display:flex; align-items:center; gap:9px; }
+
+  /* month grid */
+  .mtoolbar{ display:flex; align-items:center; justify-content:space-between; margin:4px 0 12px; }
+  .mtoolbar .mo{ font-size:15px; font-weight:700; } .mtoolbar .nav{ color:var(--accent); font-size:18px; }
+  .mhead{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; margin-bottom:5px; }
+  .mhead div{ text-align:center; font-size:10px; font-weight:700; color:var(--muted); text-transform:uppercase; }
+  .mgrid{ display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+  .mday{ aspect-ratio:1/1.08; border-radius:9px; border:1px solid var(--line); padding:4px 3px 2px;
+    display:flex; flex-direction:column; position:relative; }
+  .mday .n{ font-size:11px; font-weight:600; } .mday .e{ margin-top:auto; text-align:center; font-size:15px; line-height:1; }
+  .mday .el{ font-size:7.5px; font-weight:700; text-align:center; margin-top:1px; text-transform:uppercase; }
+  .mday.other{ opacity:.32; } .mday .ph{ position:absolute; top:2px; right:3px; font-size:10px; }
+  .mday.today{ outline:2.5px solid var(--accent); outline-offset:-1px; }
+  .mday.star .n::after{ content:"★"; color:var(--honey); font-size:9px; margin-left:2px; }
+  .root{background:var(--el-root-soft)} .root .el{color:var(--el-root)}
+  .leaf{background:var(--el-leaf-soft)} .leaf .el{color:var(--el-leaf)}
+  .flower{background:var(--el-flower-soft)} .flower .el{color:var(--el-flower)}
+  .fruit{background:var(--el-fruit-soft)} .fruit .el{color:var(--el-fruit)}
+  .sw.root{background:var(--el-root)} .sw.leaf{background:var(--el-leaf)} .sw.flower{background:var(--el-flower)} .sw.fruit{background:var(--el-fruit)}
+
+  /* agenda (teden) */
+  .agrow{ display:flex; gap:12px; align-items:flex-start; padding:12px 4px; border-bottom:1px solid var(--line); }
+  .agrow .ad{ text-align:center; flex:0 0 40px; } .agrow .ad b{ font-size:16px; display:block; } .agrow .ad span{ font-size:11px; color:var(--muted); }
+  .agrow .ael{ flex:0 0 44px; text-align:center; } .agrow .ael .i{ font-size:20px; } .agrow .ael .l{ font-size:9px; font-weight:700; text-transform:uppercase; }
+  .agrow .atx{ flex:1; } .agrow .atx .t{ font-size:13.5px; font-weight:700; } .agrow .atx .d{ font-size:12.5px; color:#55605a; margin-top:2px; line-height:1.4; }
+  .agrow.today{ background:var(--accent-softer); border-radius:10px; }
+
+  /* element hero + infobox (dan podrobno) */
+  .elhero{ border-radius:16px; padding:15px 16px; margin-bottom:12px; display:flex; align-items:center; gap:14px; }
+  .elhero .big{ font-size:36px; } .elhero .t{ font-size:18px; font-weight:800; } .elhero .s{ font-size:12.5px; color:#55605a; margin-top:2px; }
+  .elhero.fruit{ background:var(--el-fruit-soft); border:1px solid #f6cdcf; }
+  .infobox{ background:#f5f7fb; border:1px solid #dde5f0; border-radius:14px; padding:13px 15px; margin-bottom:12px; }
+  .infobox .ih{ font-size:12px; font-weight:800; text-transform:uppercase; letter-spacing:.4px; color:#4a6b90; margin-bottom:7px; }
+  .infobox .ir{ display:flex; gap:9px; font-size:13px; line-height:1.5; margin-bottom:6px; color:#37433d; }
+  .infobox .ir:last-child{ margin-bottom:0; } .infobox .ir .k{ font-size:15px; flex:0 0 20px; text-align:center; }
+  .infobox .ir b{ font-weight:700; }
+  .suggest{ background:#fff; border:1px solid var(--line); border-radius:14px; padding:2px 14px; margin-bottom:12px; }
+
+  .setrow{ display:flex; align-items:center; gap:12px; padding:14px 4px; border-bottom:1px solid var(--line); }
+  .setrow .si{ font-size:19px; width:28px; text-align:center; } .setrow .sm{ flex:1; }
+  .setrow .sm .st{ font-size:14.5px; font-weight:600; } .setrow .sm .ss{ font-size:12px; color:var(--muted); margin-top:2px; }
+  .toggle{ width:44px; height:26px; border-radius:999px; background:var(--accent); position:relative; flex:0 0 44px; }
+  .toggle::after{ content:""; position:absolute; top:3px; right:3px; width:20px; height:20px; border-radius:50%; background:#fff; }
+  .toggle.off{ background:#cfd6d1; } .toggle.off::after{ right:auto; left:3px; }
+  .chevron{ color:var(--muted); font-size:18px; }
+
+  .foot{ margin-top:30px; padding-top:18px; border-top:1px solid var(--line-strong); font-size:13px; color:var(--muted); line-height:1.6; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <span class="tag">FR-19 · wireframe pregled · v2</span>
+    <h1>Lunin koledar <span class="tbadge" style="vertical-align:middle;font-size:12px;">✦ Tendask+</span></h1>
+    <p>»Tendask biodinamični lunin koledar« — <b>dnevi za plod / list / cvet / korenino</b>, izračunani na
+      napravi iz sideričnega položaja Lune. Brez mreže, brez shrambe, brez lokacije. <b>Kasneje plačljiv
+      (Tendask+);</b> zdaj vse free. Ta v2 dodaja: dve stanji (z/brez T+), zaslon Tendask+, semantiko
+      besedil, opise dejavnosti in vstop v obratni iskalnik.</p>
+
+    <div class="callout sem">
+      <h3>Semantika besedila (poenoteno — uveljavljena slovenska fraza)</h3>
+      <p style="margin:0 0 4px"><b>Ne »plodov dan«</b> (sliši se narobe), ampak <b>»dan za plod«</b> —
+        tako pišejo slovenski setveni koledarji. Singular = »dan za plod«, plural/splošno = »dnevi za plod«.
+        Kratka oznaka v celici = del rastline (plod/list/cvet/korenina).</p>
+      <div class="semtab">
+        <div class="st">🍅 <b>dan za plod</b> · dnevi za plod</div>
+        <div class="st">🥕 <b>dan za korenino</b> · dnevi za korenino</div>
+        <div class="st">🌸 <b>dan za cvet</b> · dnevi za cvet</div>
+        <div class="st">🌿 <b>dan za list</b> · dnevi za list</div>
+      </div>
+    </div>
+
+    <div class="callout verdict">
+      <h3>Primerljivost s Thunom / Luninimi bukvami</h3>
+      <p style="margin:0"><b>S Thunom (dnevi za plod/list/cvet/korenino): zelo blizu</b> (realne IAU meje
+      ozvezdij; ±1 dan le ob prehodih). <b>Z »Luninimi bukvami«: le delno</b> (drug sistem — pretežno mene);
+      <b>faza lune se ujema z vsemi</b>. Enega »pravilnega« koledarja ni.</p>
+    </div>
+
+    <div class="legend">
+      <div class="lg"><span class="sw fruit"></span>🍅 <b>dan za plod</b> <span>· ogenj · plodovke, sadje, seme</span></div>
+      <div class="lg"><span class="sw root"></span>🥕 <b>dan za korenino</b> <span>· zemlja · korenovke</span></div>
+      <div class="lg"><span class="sw flower"></span>🌸 <b>dan za cvet</b> <span>· zrak · cvetnice</span></div>
+      <div class="lg"><span class="sw leaf"></span>🌿 <b>dan za list</b> <span>· voda · listnata zelenjava</span></div>
+    </div>
+    <p style="font-size:12.5px;color:var(--muted);margin-top:4px;">Podatki na zaslonih so <b>ilustrativni</b>,
+      opisi dejavnosti so <b>naša lastna besedila</b> (fraza prosta; tuji objavljeni dnevni teksti ne). ★ =
+      priporočen dan · 🌑/🌕 = mena · <svg viewBox="0 0 20 20" width="15" height="15" style="vertical-align:-2px"><circle cx="10" cy="10" r="9" fill="#33384a"/><path d="M10 1 A9 9 0 0 1 10 19 A5.5 9 0 0 0 10 1 Z" fill="#f6e6a8"/></svg> = mena kot dinamični SVG.</p>
+  </div>
+
+
+  <!-- ============ BOARD 1: DOMOV — DVE STANJI ČIPA ============ -->
+  <div class="board first">
+    <div class="pair">
+      <div>
+        <div class="plabel off">Domov — BREZ Tendask+</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div><h1>Domov</h1><div class="sub">sreda, 15. julij</div></div><div class="icon-btn">⚙️</div></div>
+          <div class="content">
+            <div class="weather"><div class="ico">⛅</div><div class="temp">24°</div>
+              <div class="meta">Ljubljana<br>vetrovno · 12 %</div>
+              <div class="days"><div class="day"><b>26°</b>čet</div><div class="day"><b>23°</b>pet</div></div></div>
+            <div class="moonrow">
+              <svg viewBox="0 0 20 20" width="26" height="26"><circle cx="10" cy="10" r="9" fill="#33384a"/><path d="M10 1 A9 9 0 0 1 10 19 A5.5 9 0 0 0 10 1 Z" fill="#f6e6a8"/></svg>
+              <div style="line-height:1.25"><div class="mtxt">Lunin koledar</div><div style="font-size:12px;color:var(--muted);">🌔 rastoča luna · free</div></div>
+              <span class="cta locked">✦ Tendask+ ›</span>
+            </div>
+            <div class="section-title">Danes</div>
+            <div class="card" style="padding:6px 16px;">
+              <div class="list-item"><div class="li-check"></div><div class="li-main"><div class="li-title">Zalivanje — visoka greda 1</div><div class="li-sub">🪴 zunaj</div></div><div class="li-trail">18:00</div></div>
+              <div class="list-item"><div class="li-check"></div><div class="li-main"><div class="li-title">Pregled paradižnika</div><div class="li-sub">🪴 rastlinjak</div></div><div class="li-trail">—</div></div>
+            </div>
+          </div>
+          <nav class="bottomnav"><div class="nav-item active"><span class="ico">🏠</span>Domov</div><div class="nav-item"><span class="ico">📋</span>Opravila</div><div class="nav-item"><span class="ico">📅</span>Dnevnik</div><div class="nav-item"><span class="ico">🪴</span>Vrt</div></nav>
+        </div>
+      </div>
+      <div>
+        <div class="plabel on">Domov — Z Tendask+</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div><h1>Domov</h1><div class="sub">sreda, 15. julij</div></div><div class="icon-btn">⚙️</div></div>
+          <div class="content">
+            <div class="weather"><div class="ico">⛅</div><div class="temp">24°</div>
+              <div class="meta">Ljubljana<br>vetrovno · 12 %</div>
+              <div class="days"><div class="day"><b>26°</b>čet</div><div class="day"><b>23°</b>pet</div></div></div>
+            <div class="moonrow">
+              <svg viewBox="0 0 20 20" width="26" height="26"><circle cx="10" cy="10" r="9" fill="#33384a"/><path d="M10 1 A9 9 0 0 1 10 19 A5.5 9 0 0 0 10 1 Z" fill="#f6e6a8"/></svg>
+              <div style="line-height:1.25"><div class="mtxt">Lunin koledar</div><div style="font-size:12px;color:var(--muted);">🌔 rastoča luna</div></div>
+              <span class="cta">dan za list ›</span>
+            </div>
+            <div class="section-title">Danes</div>
+            <div class="card" style="padding:6px 16px;">
+              <div class="list-item"><div class="li-check"></div><div class="li-main"><div class="li-title">Zalivanje — visoka greda 1</div><div class="li-sub">🌿 dan za list · ugodno za listnato</div></div><div class="li-trail">18:00</div></div>
+              <div class="list-item"><div class="li-check"></div><div class="li-main"><div class="li-title">Pregled paradižnika</div><div class="li-sub">🪴 rastlinjak</div></div><div class="li-trail">—</div></div>
+            </div>
+          </div>
+          <nav class="bottomnav"><div class="nav-item active"><span class="ico">🏠</span>Domov</div><div class="nav-item"><span class="ico">📋</span>Opravila</div><div class="nav-item"><span class="ico">📅</span>Dnevnik</div><div class="nav-item"><span class="ico">🪴</span>Vrt</div></nav>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="screen-no">BOARD 1 · VSTOPNA TOČKA (2 STANJI)</div>
+      <h2>Domov — čip z meno Lune</h2>
+      <p>Čip ima levo <b>ikono mene Lune</b> (dinamični SVG iz izračunane osvetljenosti), nato <b>»Lunin
+        koledar«</b>, desno pa CTA, ki je odvisen od naročnine:</p>
+      <p><b>Mena Lune je FREE za vse</b> (ikona + faza, npr. »🌔 rastoča«). Premium je <b>element-dan</b>
+        (dan za plod/list/…) in koledar/planer.</p>
+      <ul>
+        <li><b>Z Tendask+:</b> desno »<b>dan za list ›</b>« → tap odpre koledar. Opravila dobijo oznako
+          dneva (»🌿 dan za list«).</li>
+        <li><b>Brez Tendask+:</b> mena je še vedno vidna, desno pa <span class="cta locked" style="font-size:11px">✦ Tendask+ ›</span>
+          → tap pelje na <b>zaslon Tendask+</b> (board 2). Element-dan skrit.</li>
+      </ul>
+      <div class="op"><b>Odločeno:</b> mena free za vse (nedvoumna, poceni, gradi navado); element-dan +
+        koledar = premium. Ikona mene + »Lunin koledar« sta prodajna površina v obeh stanjih. Danes vse
+        free (billing še ni); ko pride, se prižge le razlika.</p>
+      <h4>Razlaga (mena kot SVG)</h4>
+      <p>Meno rišemo dinamično: iz deleža osvetljenosti (0–100 %) sestavimo krivuljo terminatorja — čist
+        SVG, brez slik, offline. Enako gre v koledarske celice.</p>
+    </div>
+  </div>
+
+
+  <!-- ============ BOARD 2: TENDASK+ ZASLON — DVE STANJI ============ -->
+  <div class="board">
+    <div class="pair">
+      <div>
+        <div class="plabel off">Tendask+ — BREZ licence</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Nastavitve</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">Tendask+</h1></div></div>
+          <div class="content">
+            <div style="text-align:center;margin:6px 0 14px;">
+              <div class="tbadge" style="font-size:13px;padding:5px 12px;">✦ Tendask+</div>
+              <p style="font-size:13px;color:var(--muted);margin-top:8px;">Odkleni napredne funkcije za
+                načrtovanje vrta.</p></div>
+            <div class="field"><label>Licenčna koda</label>
+              <div class="lic">🔑 Vnesi kodo …</div></div>
+            <div class="btn" style="margin-bottom:18px;">Aktiviraj</div>
+            <div class="section-title" style="margin:4px 2px 6px;">Kaj ponuja Tendask+</div>
+            <div class="flist">
+              <div class="fi"><div class="ico">🌙</div><div><div class="ft">Lunin koledar</div><div class="fs">dnevi za plod/list/cvet/korenino, planiranje</div></div></div>
+              <div class="fi"><div class="ico">🔎</div><div><div class="ft">»Kdaj za …« iskalnik</div><div class="fs">naslednji primerni dnevi za rastlino</div></div></div>
+              <div class="fi"><div class="ico">＋</div><div><div class="ft">Opravilo iz koledarja</div><div class="fs">pol-avto vnos na izbran dan</div></div></div>
+              <div class="fi"><div class="ico">🔔</div><div><div class="ft">Namigi »jutri dober dan«</div><div class="fs">nežno, spoštuje tihe ure</div></div></div>
+              <div class="fi"><div class="ico">🪴</div><div><div class="ft">Prilagojeno tvojemu vrtu</div><div class="fs">poudari dneve za to, kar gojiš</div></div></div>
+              <div class="fi"><div class="ico">✦</div><div><div class="ft">Prihodnje funkcije</div><div class="fs">več vrtov, analitika … (kasneje)</div></div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="plabel on">Tendask+ — Z licenco</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Nastavitve</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">Tendask+</h1></div></div>
+          <div class="content">
+            <div class="valid">✓ <div><b>Tendask+ aktiven</b><br><span style="color:var(--muted)">veljavno do 12. 8. 2027</span></div></div>
+            <div class="section-title" style="margin:4px 2px 8px;">Funkcije Tendask+</div>
+            <div class="card" style="padding:2px 14px;margin-bottom:12px;">
+              <div class="setrow"><div class="si">🌙</div><div class="sm"><div class="st">Lunin koledar</div><div class="ss">vklopljeno · nastavitve ›</div></div><div class="chevron">›</div></div>
+              <div class="setrow" style="opacity:.5;"><div class="si">🪴</div><div class="sm"><div class="st">Več vrtov / lokacij</div><div class="ss">kmalu</div></div><div class="chevron">›</div></div>
+              <div class="setrow" style="opacity:.5;border-bottom:none;"><div class="si">📊</div><div class="sm"><div class="st">Analitika pridelka</div><div class="ss">kmalu</div></div><div class="chevron">›</div></div>
+            </div>
+            <div class="lic" style="border-style:solid;background:#fff;justify-content:space-between;">
+              <span>🔑 Koda: TENDA-••••-2027</span><span style="color:var(--accent);font-weight:700;">Zamenjaj</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="screen-no">BOARD 2 · TENDASK+ ZASLON (2 STANJI)</div>
+      <h2>Tendask+ nastavitve</h2>
+      <p>Dosegljiv iz <b>Domov → ⚙️ → Tendask+</b> in iz rdečega CTA čipa (board 1).</p>
+      <ul>
+        <li><b>Brez licence:</b> polje za <b>licenčno kodo</b> + »Aktiviraj«, spodaj <b>seznam ugodnosti</b>
+          (kaj vse T+ ponuja).</li>
+        <li><b>Z licenco:</b> <b>veljavnost (datum do)</b>, nato <b>skupina funkcij T+</b>; prva je
+          <b>»Lunin koledar«</b> → tap odpre njegove nastavitve (board 5). Ostale postavke so placeholderji
+          za prihodnje T+ funkcije.</li>
+      </ul>
+      <div class="op"><b>Odločeno — aktivacijski model = licenčna koda (zunanji nakup).</b> Google dovoli
+        prodajo digitalnih licenc <b>izven IAP</b>, a <b>aplikacija ne sme kazati/povezovati na stran, kjer
+        se nakup opravi</b> (anti-steering). Zato zaslon <b>NIMA</b> gumba »Kupi«/URL-ja — samo <b>vnos kode</b>
+        + opis ugodnosti; kodo uporabnik pridobi drugje (npr. splet) in jo prilepi. Deluje offline (drift
+        cache veljavnosti). <b>Za zdaj vse free</b> — koda pride šele z monetizacijo. Pred vklopom še enkrat
+        preveri aktualno Play politiko.</p>
+    </div>
+  </div>
+
+
+  <!-- ============ BOARD 3: KOLEDAR — MESEC (grid) + TEDEN (agenda z opisi) ============ -->
+  <div class="board">
+    <div class="pair">
+      <div>
+        <div class="plabel">Mesec — pregled</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Dnevnik</span></div>
+            <div style="display:flex;gap:10px;align-items:center;"><span class="icon-btn" style="background:var(--accent-soft);">🔎</span></div></div>
+          <div class="content">
+            <div class="segmented" style="margin-bottom:10px;"><div class="seg active">Mesec</div><div class="seg">Teden</div></div>
+            <div class="mtoolbar"><span class="nav">‹</span><span class="mo">julij 2026</span><span class="nav">›</span></div>
+            <div class="mhead"><div>p</div><div>t</div><div>s</div><div>č</div><div>p</div><div>s</div><div>n</div></div>
+            <div class="mgrid">
+              <div class="mday other fruit"><span class="n">29</span><span class="e">🍅</span></div>
+              <div class="mday other root"><span class="n">30</span><span class="e">🥕</span></div>
+              <div class="mday fruit"><span class="n">1</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday fruit"><span class="n">2</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday root"><span class="n">3</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday root"><span class="n">4</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday flower"><span class="n">5</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday flower"><span class="n">6</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday leaf"><span class="n">7</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday leaf"><span class="n">8</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday fruit"><span class="n">9</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday fruit"><span class="n">10</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday root"><span class="n">11</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday root"><span class="n">12</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday flower"><span class="n">13</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday flower"><span class="n">14</span><span class="ph">🌑</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday leaf today"><span class="n">15</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday leaf"><span class="n">16</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday fruit star"><span class="n">17</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday fruit star"><span class="n">18</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday root"><span class="n">19</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday root"><span class="n">20</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday flower"><span class="n">21</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday flower"><span class="n">22</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday leaf"><span class="n">23</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday leaf"><span class="n">24</span><span class="e">🌿</span><span class="el">list</span></div>
+              <div class="mday fruit"><span class="n">25</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday fruit"><span class="n">26</span><span class="e">🍅</span><span class="el">plod</span></div>
+              <div class="mday root"><span class="n">27</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday root"><span class="n">28</span><span class="e">🥕</span><span class="el">koren.</span></div>
+              <div class="mday flower"><span class="n">29</span><span class="ph">🌕</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday flower"><span class="n">30</span><span class="e">🌸</span><span class="el">cvet</span></div>
+              <div class="mday leaf"><span class="n">31</span><span class="e">🌿</span><span class="el">list</span></div>
+            </div>
+            <p style="font-size:11px;color:var(--muted);margin-top:10px;text-align:center;">🔎 zgoraj = »Kdaj za …« iskalnik · tap na dan → podrobnosti</p>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="plabel">Teden — z opisi dejavnosti</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Dnevnik</span></div>
+            <div style="display:flex;gap:10px;align-items:center;"><span class="icon-btn" style="background:var(--accent-soft);">🔎</span></div></div>
+          <div class="content">
+            <div class="segmented" style="margin-bottom:10px;"><div class="seg">Mesec</div><div class="seg active">Teden</div></div>
+            <div class="mtoolbar"><span class="nav">‹</span><span class="mo">13.–19. julij</span><span class="nav">›</span></div>
+            <div class="agrow"><div class="ad"><b>13</b><span>pon</span></div><div class="ael"><div class="i">🌸</div><div class="l" style="color:var(--el-flower)">cvet</div></div><div class="atx"><div class="t">Dan za cvet</div><div class="d">Setev in oskrba cvetnic; rez za šopke.</div></div></div>
+            <div class="agrow"><div class="ad"><b>14</b><span>tor</span></div><div class="ael"><div class="i">🌸</div><div class="l" style="color:var(--el-flower)">cvet</div></div><div class="atx"><div class="t">Dan za cvet · 🌑 mlaj</div><div class="d">Ob mlaju raje počitek; le lažja opravila.</div></div></div>
+            <div class="agrow today"><div class="ad"><b>15</b><span>sre</span></div><div class="ael"><div class="i">🌿</div><div class="l" style="color:var(--el-leaf)">list</div></div><div class="atx"><div class="t">Dan za list · danes</div><div class="d">Setev in oskrba listnate zelenjave (solata, špinača, zelje).</div></div></div>
+            <div class="agrow"><div class="ad"><b>16</b><span>čet</span></div><div class="ael"><div class="i">🌿</div><div class="l" style="color:var(--el-leaf)">list</div></div><div class="atx"><div class="t">Dan za list</div><div class="d">Zalivanje in okopavanje listnatih rastlin.</div></div></div>
+            <div class="agrow"><div class="ad"><b>17</b><span>pet</span></div><div class="ael"><div class="i">🍅</div><div class="l" style="color:var(--el-fruit)">plod</div></div><div class="atx"><div class="t">Dan za plod ★</div><div class="d">Setev plodovk (paradižnik, fižol); pobiranje semena.</div></div></div>
+            <div class="agrow"><div class="ad"><b>18</b><span>sob</span></div><div class="ael"><div class="i">🍅</div><div class="l" style="color:var(--el-fruit)">plod</div></div><div class="atx"><div class="t">Dan za plod ★</div><div class="d">Sadje in plodovke; spravilo za shrambo.</div></div></div>
+            <div class="agrow" style="border-bottom:none;"><div class="ad"><b>19</b><span>ned</span></div><div class="ael"><div class="i">🥕</div><div class="l" style="color:var(--el-root)">koren.</div></div><div class="atx"><div class="t">Dan za korenino</div><div class="d">Setev in oskrba korenovk (korenje, redkev, pesa).</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="screen-no">BOARD 3 · KOLEDAR (JEDRO)</div>
+      <h2>Mesec (pregled) + Teden (opisi dejavnosti)</h2>
+      <p><b>Mesec</b> = hiter barvni pregled za orientacijo. <b>Teden</b> = agenda z <b>opisi dejavnosti</b>
+        na vsak dan (rešuje tvojo željo po opisih — mrežna celica je premajhna za tekst, agenda ni).</p>
+      <h4>Vstop v obratni iskalnik (tvoje vprašanje »kako se pride na zaslon 3«)</h4>
+      <p><b>🔎 ikona v vrhu koledarja</b> odpre »Kdaj za …« (board 4). Dodatno dosegljiv iz <b>detajla
+        rastline</b> (»Kdaj sejati/saditi po luni?«).</p>
+      <div class="op"><b>Mnenje (pravno, pomembno):</b> opisi dejavnosti morajo biti <b>naša lastna
+        besedila</b>. Splošna povezava element→dejavnost je prosta tradicija, a <b>dnevnih tekstov iz
+        »Luninih bukev« ne prepisujemo</b>. Predlagam <b>fiksen nabor kratkih opisov na element</b> (4 osnovni
+        + variacije za setev/presaditev/spravilo), spisan vnaprej v i18n — ne per-dan proza.</p>
+    </div>
+  </div>
+
+
+  <!-- ============ BOARD 4: DAN PODROBNO (več info) + iskalnik ============ -->
+  <div class="board">
+    <div class="pair">
+      <div>
+        <div class="plabel">Dan podrobno — več informacij</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Koledar</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">petek 17. jul</h1></div></div>
+          <div class="content">
+            <div class="elhero fruit"><div class="big">🍅</div><div><div class="t">Dan za plod</div>
+              <div class="s">do 14:20, nato 🥕 dan za korenino · ogenj (toplota)</div></div></div>
+            <div class="infobox">
+              <div class="ih">Kaj se dogaja</div>
+              <div class="ir"><span class="k">🌌</span><div>Luna je v ozvezdju <b>Strelca</b> (ognjeno) → <b>dan za plod</b>. Ob <b>14:20</b> preide v <b>Kozoroga</b> (zemlja) → dan za korenino.</div></div>
+              <div class="ir"><span class="k">🌔</span><div><b>Rastoča luna</b> (proti polni) — tradicionalno ugodno za nadzemne pridelke in setev.</div></div>
+              <div class="ir"><span class="k">↗</span><div><b>Dvigajoča luna</b> — čas vzpona sokov: setev in nabiranje, manj presajanja.</div></div>
+              <div class="ir"><span class="k">✓</span><div>Brez bližine vozla ali mrka — <b>ugoden dan</b>.</div></div>
+            </div>
+            <div class="section-title" style="margin:6px 2px 8px;">Priporočeno za dan za plod</div>
+            <div class="suggest">
+              <div class="list-item"><div class="avatar" style="background:var(--el-fruit-soft)">🍅</div><div class="li-main"><div class="li-title">Setev plodovk</div><div class="li-sub">paradižnik · fižol · bučke</div></div><div class="li-trail" style="color:var(--accent);font-weight:700;">＋ opravilo</div></div>
+              <div class="list-item"><div class="avatar" style="background:var(--el-fruit-soft)">🌾</div><div class="li-main"><div class="li-title">Pobiranje semena</div><div class="li-sub">za shranjevanje</div></div><div class="li-trail" style="color:var(--accent);font-weight:700;">＋ opravilo</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="plabel">»Kdaj za …« iskalnik (zaslon 3)</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Koledar</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">Kdaj za …</h1></div></div>
+          <div class="content">
+            <div class="field"><label>Rastlina / opravilo</label><div class="input" style="display:flex;align-items:center;gap:8px;">🍅 Paradižnik — setev</div></div>
+            <div class="callout" style="background:var(--el-fruit-soft);border:1px solid #f6cdcf;padding:11px 13px;font-size:13px;margin:2px 0 14px;">Paradižnik je <b>plodovka</b> → najboljši so <b>dnevi za plod</b>, po možnosti ob rastoči luni.</div>
+            <div class="section-title" style="margin:4px 2px 8px;">Naslednji primerni dnevi</div>
+            <div class="suggest">
+              <div class="list-item"><div class="avatar" style="background:var(--el-fruit-soft)">🍅</div><div class="li-main"><div class="li-title">pet 17. – sob 18. jul</div><div class="li-sub">dan za plod · rastoča ↗ · ★ priporočeno</div></div><div class="li-trail" style="color:var(--accent);font-weight:700;">＋</div></div>
+              <div class="list-item"><div class="avatar" style="background:var(--el-fruit-soft)">🍅</div><div class="li-main"><div class="li-title">pet 25. – sob 26. jul</div><div class="li-sub">dan za plod · padajoča</div></div><div class="li-trail" style="color:var(--accent);font-weight:700;">＋</div></div>
+              <div class="list-item"><div class="avatar" style="background:var(--el-fruit-soft)">🍅</div><div class="li-main"><div class="li-title">čet 6. – pet 7. avg</div><div class="li-sub">dan za plod · rastoča ↗</div></div><div class="li-trail" style="color:var(--accent);font-weight:700;">＋</div></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="screen-no">BOARD 4 · DAN + ISKALNIK</div>
+      <h2>Dan podrobno (več info) + obratni iskalnik</h2>
+      <p>Dan podrobno zdaj razloži <b>»kaj se dogaja in kaj pomeni«</b>: v katerem ozvezdju/elementu je Luna,
+        <b>ura prehoda</b> v naslednji element, pomen mene in dvigajoče/spuščajoče, oznaka ugodnosti.</p>
+      <p><b>Iskalnik</b> (desno) je dosegljiv prek 🔎 v koledarju in iz detajla rastline — odgovori
+        »kdaj naslednjič sejati X«.</p>
+      <div class="op"><b>Mnenje:</b> info blok drži razlago <b>kratko in konkretno</b> (4 vrstice), z opozorilom
+        v pozicioniranju (tradicija). Imena ozvezdij v slovenščini (Strelec, Kozorog …) so lep, prepoznaven
+        detajl in poceni (izračun jih tako ali tako da).</p>
+    </div>
+  </div>
+
+
+  <!-- ============ BOARD 5: LUNIN KOLEDAR NADZOR (pod T+) ============ -->
+  <div class="board">
+    <div class="phone">
+      <div class="phone__notch"></div>
+      <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+      <div class="appbar"><div class="back">‹ <span style="margin-left:2px">Tendask+</span></div>
+        <div style="text-align:right"><h1 style="font-size:18px">Lunin koledar</h1></div></div>
+      <div class="content">
+        <div class="setrow"><div class="si">🌙</div><div class="sm"><div class="st">Prikaži Lunin koledar</div><div class="ss">čip na Domov, oznake po vrtu</div></div><div class="toggle"></div></div>
+        <div class="setrow"><div class="si">🔔</div><div class="sm"><div class="st">Namig »jutri dober dan«</div><div class="ss">nežno, spoštuje tihe ure</div></div><div class="toggle off"></div></div>
+        <div class="setrow"><div class="si">🪴</div><div class="sm"><div class="st">Poudari po mojem vrtu</div><div class="ss">dvigni dneve za to, kar gojim</div></div><div class="toggle"></div></div>
+        <div class="setrow"><div class="si">🌌</div><div class="sm"><div class="st">Prikaži ozvezdja in meno</div><div class="ss">več astro podrobnosti v dnevu</div></div><div class="toggle"></div></div>
+        <div class="card tinted" style="margin-top:18px;">
+          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">🌙 Kaj je to?</div>
+          <div style="font-size:13px;line-height:1.6;color:#3a463f;">Nekateri vrtnarji delajo »po luni«. Luna
+            potuje skozi ozvezdja, ki jih tradicija povezuje s <b>koreninami, listi, cvetovi in plodovi</b>.
+            Koledar pokaže element vsakega dne — kot pomoč pri <b>načrtovanju</b>, ne kot pravilo.
+            <div style="color:var(--muted);margin-top:8px;font-size:12px;">Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="screen-no">BOARD 5 · NADZOR (POD TENDASK+)</div>
+      <h2>Nastavitve Luninega koledarja</h2>
+      <p>Dosežeš iz <b>Tendask+ → Lunin koledar</b> (board 2, desno). Glavno stikalo + podstikala
+        (obvestila, personalizacija, astro podrobnosti) + razlaga »kaj je to«.</p>
+      <div class="op"><b>Mnenje:</b> ker Lunin koledar živi <b>pod Tendask+</b>, je opt-in dvonivojski:
+        najprej imaš T+, nato znotraj njega vklopiš/nastaviš koledar. Kdor T+ nima, teh nastavitev ne vidi —
+        vidi upsell (board 2 levo).</p>
+      <h4>Meja »lastnega algoritma«</h4>
+      <p>Znamka Tendask je v UX/planiranju/integraciji, <b>ne</b> v izmišljenih pravilih. Jedro =
+        uveljavljena, transparentno izračunana načela → obranljivo in prepoznavno.</p>
+    </div>
+  </div>
+
+
+  <div class="foot">
+    <b>Odločeno:</b> mena free za vse; element-dan + koledar = premium · aktivacija = licenčna koda (zunanji
+    nakup, brez »kupi« povezave v aplikaciji — anti-steering) · semantika »dan za plod/list/cvet/korenino«.<br>
+    <b>Še odprto:</b> nabor lastnih opisov dejavnosti (i18n, na element, ne per-dan) · meje ozvezdij (IAU vs
+    30°) · Kačenosec (12/13) · paket vs lasten Meeus
+    izračun (odvisnost izven <code>tech-stack §1</code>).<br>
+    Polni spec: <code>docs/feature-requests/biodynamic-calendar.md</code> · roadmap FR-19 · vstopne točke: Domov čip + Dnevnik segment + Domov ⚙️ → Tendask+.
+  </div>
+
+</div>
+</body>
+</html>

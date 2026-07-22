@@ -1,8 +1,11 @@
 # FR-19 — Biodinamični koledar (koren / list / cvet / plod)
 
-> **Status:** spec (feature request) · 2026-07-21 · neimplementirano
+> **Status:** spec (feature request) · 2026-07-21, iteracija v2 2026-07-22 · neimplementirano
 > **Vir zahteve:** `docs/povratne-informacije.md` → Runda 2, **T10** (lunina mena / setveni koledar).
-> **Ime izdelka:** »**Tendask biodinamični lunin koledar**« (lastna kompilacija, nevtralno poimenovanje).
+> **Wireframe:** `docs/wireframes/lunar-calendar_overview.html` (v2 — stanja z/brez Tendask+, mena free,
+> agenda z opisi, semantika »dan za X«). Zaženi prek localhost (glej memory reference-wireframe-localhost).
+> **Ime izdelka (in-app):** »**Lunin koledar**«; polna oblika »**Tendask biodinamični lunin koledar**«
+> (lastna kompilacija, nevtralno poimenovanje). **Premium (Tendask+)** kasneje; zdaj vse free.
 > **Obseg (potrjeno z lastnikom):** pristop **A = izračunan približek** z **najboljšim možnim
 > približkom originalnega koledarja**, a brez kopiranja Thuninega izdelka. Ta dokument je spec, ne koda.
 > **Faznost:** aplikacija je **že v produkciji** (Play, od 2026-07-20) — to NI launch-gating; »kasneje«
@@ -28,6 +31,16 @@
   takrat, ko pride plačilna infrastruktura**; plačljive postanejo »dobre/želene akcije« (§6.5).
 - **Ni launch-gating** — aplikacija je v produkciji; »kasneje« = prioritizacija (stabilizacija + drugi
   FR-ji prej).
+
+### Dodatno dogovorjeno (iteracija v2, 2026-07-22) — podrobno v §11
+
+- **Semantika:** uveljavljena fraza **»dan za plod / list / cvet / korenino«** (NE »plodov dan«).
+- **Mena Lune = FREE za vse**; **element-dan + koledar/planer = premium (Tendask+)**.
+- **Aktivacija = licenčna koda (zunanji nakup)**; aplikacija **ne kaže/povezuje na nakupno stran**
+  (anti-steering) — samo vnos kode + opis ugodnosti.
+- **Vstopne točke:** čip na Domov (mena + CTA) · Dnevnik segment · Domov ⚙️ → Tendask+ · 🔎 v koledarju
+  → obratni iskalnik.
+- **Opisi dejavnosti = lastna besedila** (i18n, na element, ne per-dan proza; tuji dnevni teksti NE).
 
 ---
 
@@ -225,24 +238,21 @@ Ker je element dneva poceni re-izpeljljiv, ga pokažemo na več mestih brez stro
 pride plačilna infrastruktura**, ne stikalo, ki bi ga vklopili zdaj. To NI vezano na launch (aplikacija
 je že v produkciji) — je stvar prioritizacije in kasnejše monetizacije.
 
-| Kasneje **Free** (kavelj, navada) | Kasneje **Premium »Tendask+«** (dobre/želene akcije) |
+**Meja (odločeno v2, 2026-07-22): mena free, element-dan premium.**
+
+| **Free** (za vse — kavelj, navada) | **Premium »Tendask+«** (dobre/želene akcije) |
 |---|---|
-| Današnji element + faza (Domov) | Večdnevni/mesečni planer (§6.2 zaslon) |
-| Nalepka element-dneva na opravilu (§6.1) | »Naslednji dober dan za X« (§6.3.7) |
-| Osnovni pogled koledarja | Pol-avto opravilo iz koledarja (§6.3.6) |
+| **Mena Lune (faza)** — čip na Domov + ikona | **Element-dan** (dan za plod/list/…) na opravilu + koledarju |
+| Razlaga »kaj je to« | Večdnevni/mesečni **planer** (§6.2) |
+| | »Naslednji dober dan za X« (§6.3.7) |
+| | Pol-avto opravilo iz koledarja (§6.3.6) |
 | | Personalizacija po vrtu (§6.3.8) |
 | | Dvigajoča/spuščajoča + neugodni dnevi |
 | | Obvestila (§6.3.9) |
 
 Načelo: izračun je poceni → **adut ni algoritem, ampak UX + integracija + planiranje**. Premium
 entitlement se cachea v drift (offline-first, plačnik dela brez signala — `tendask-monetization-planned`).
-Etapno: **najprej jedro free** (izračun + večdnevni zaslon + oznaka na opravilu), šele nato premium sloj.
-
-### 6.3 Nadzor
-- **Opt-in stikalo** v Nastavitvah (`settings`): »Prikaži biodinamični koledar« (privzeto **off** ali
-  ob-onboardingu vprašano — odločitev §8). Vzorec obstaja (`kSuppliesEnabled` feature-flag / nastavitve).
-  Ko je off, se oznake nikjer ne kažejo → uporabnik, ki ne dela po luni, ni obremenjen s šumom.
-- Kasneje morebitna **izbira koledarskega sistema** (§8) živi tu.
+Etapno: **najprej vse free** (mena + element-dan + planer), premium meja se prižge šele z monetizacijo.
 
 ## 7. i18n / brand
 
@@ -283,3 +293,52 @@ Etapno: **najprej jedro free** (izračun + večdnevni zaslon + oznaka na opravil
 - Shranjevanje/sync element-dneva (re-izpeljljiv iz datuma).
 - Lokacijska prilagoditev (globalno; §5).
 - Znanstvene trditve o učinku (pozicioniranje = tradicija/preferenca).
+
+## 11. Odločitve iteracije v2 (2026-07-22) — usklajeno z wireframom
+
+Vir: `docs/wireframes/lunar-calendar_overview.html` (v2). Te odločitve nadgrajujejo §0.
+
+### 11.1 Semantika besedil (poenoteno)
+Uveljavljena slovenska fraza je **»dan za plod / list / cvet / korenino«** (NE »plodov dan« — sliši se
+narobe). Singular »dan za plod«, plural/splošno »dnevi za plod«. Kratka oznaka v celici = del rastline
+(`plod` / `list` / `cvet` / `korenina`). Vir potrjuje raba na slov. setvenih koledarjih (Delo in dom,
+vsezamojdan.si). i18n ključi naj sledijo tej frazi (`moon.day_for_fruit/leaf/flower/root`).
+
+### 11.2 Free vs premium meja (dokončano)
+- **Mena Lune (faza) = FREE za vse** — ikona (dinamični SVG) + faza na čipu Domov. Nedvoumna, poceni,
+  gradi navado.
+- **Element-dan (dan za plod/list/…) + koledar/planer + akcije = premium (Tendask+).**
+- Čip na Domov je viden **v obeh stanjih** (prodajna površina): z T+ desno »dan za list ›« → koledar;
+  brez T+ desno rdeče »✦ Tendask+ ›« → zaslon Tendask+.
+
+### 11.3 Aktivacijski model = licenčna koda (zunanji nakup)
+> **Avtoritativni vir za licenciranje/plačila = FR-20** (`docs/feature-requests/tendask-plus-licensing.md`).
+> Tu povzemamo le vpliv na Lunin koledar; podrobnosti (MoR, podpisan offline token, unovčitev, Play App
+> access) so v FR-20.
+- **Odločeno:** Tendask+ se aktivira z **licenčno kodo**. Google dovoli prodajo digitalnih licenc
+  **izven IAP**, a **aplikacija ne sme kazati/povezovati na stran, kjer se nakup opravi** (anti-steering).
+- Zato zaslon Tendask+ (brez licence) vsebuje **samo vnos kode + »Aktiviraj« + opis ugodnosti** —
+  **NOBENEGA** gumba »Kupi«/URL-ja do nakupa. Kodo uporabnik pridobi drugje in jo prilepi.
+- Z licenco: prikaz **veljavnosti (datum do)** + skupina T+ funkcij (prva »Lunin koledar« → nastavitve).
+- Veljavnost cachana v drift (offline). **Pred vklopom še enkrat preveri aktualno Play politiko.**
+
+### 11.4 Vstopne točke / CTA
+- **Primarni:** čip na Domov (mena + CTA glede na naročnino).
+- **Sekundarni:** segment/vstop v **Dnevniku** (koledar je soroden dnevniku).
+- **Tendask+ zaslon:** Domov **⚙️ → Tendask+** (in iz rdečega CTA čipa).
+- **Obratni iskalnik** (»Kdaj za …«): **🔎 v vrhu koledarja** + iz **detajla rastline**.
+- **Lunin koledar nastavitve:** znotraj **Tendask+ → Lunin koledar** (dvonivojski opt-in).
+
+### 11.5 Opisi dejavnosti na koledarju
+- Mesečna mreža je pretesna za tekst → **»Teden« = agenda seznam** z opisom dejavnosti na vsak dan.
+- **Besedila so NAŠA lastna** (splošna povezava element→dejavnost je prosta tradicija; **objavljenih
+  dnevnih tekstov iz »Luninih bukev« NE prepisujemo** — pravno). Predlog: **fiksen nabor kratkih opisov
+  na element** (4 osnovni + variacije setev/presaditev/spravilo) v i18n, **ne** per-dan proza.
+
+### 11.6 Dan podrobno — več informacij
+Blok »Kaj se dogaja«: v katerem **ozvezdju/elementu** je Luna (+ slov. imena Strelec/Kozorog…), **ura
+prehoda** v naslednji element, pomen **mene** in **dvigajoče/spuščajoče**, oznaka **ugodnosti** (vozel/mrk).
+
+### 11.7 Mena kot dinamični SVG
+Meno rišemo iz deleža osvetljenosti (0–100 %) kot krivuljo terminatorja — čist SVG, brez slik, offline;
+enako v koledarske celice in čip.
