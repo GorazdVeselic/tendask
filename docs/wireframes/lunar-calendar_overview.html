@@ -150,10 +150,12 @@
     </div>
 
     <div class="callout verdict">
-      <h3>Primerljivost s Thunom / Luninimi bukvami</h3>
-      <p style="margin:0"><b>S Thunom (dnevi za plod/list/cvet/korenino): zelo blizu</b> (realne IAU meje
-      ozvezdij; ±1 dan le ob prehodih). <b>Z »Luninimi bukvami«: le delno</b> (drug sistem — pretežno mene);
-      <b>faza lune se ujema z vsemi</b>. Enega »pravilnega« koledarja ni.</p>
+      <h3>Validacija astronomije (dokazano 2026-07-22)</h3>
+      <p style="margin:0 0 6px"><b>Motor je pravilen:</b> Meeusov primer <b>0,003°</b>, mlaji/ščipi
+      <b>1–3 min</b>, tropska znamenja Lune <b>9/9…31/31</b> čez 2026/2027.</p>
+      <p style="margin:0"><b>Odkritje:</b> spletni koledarji so večinoma <b>tropski</b> (celo »Thun« kloni);
+      tiskana Maria Thun je <b>siderična</b>. Trg je razdeljen → <b>toggle tropski/siderični</b> (board 5).
+      Tropska stran 100 % preverjena; siderično umeri proti tiskani knjigi. Enega »pravilnega« koledarja ni.</p>
     </div>
 
     <div class="legend">
@@ -476,6 +478,16 @@
         <div style="text-align:right"><h1 style="font-size:18px">Lunin koledar</h1></div></div>
       <div class="content">
         <div class="setrow"><div class="si">🌙</div><div class="sm"><div class="st">Prikaži Lunin koledar</div><div class="ss">čip na Domov, oznake po vrtu</div></div><div class="toggle"></div></div>
+
+        <div style="padding:14px 4px 8px;">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;">Sistem koledarja</div>
+          <div class="segmented" style="margin-bottom:7px;">
+            <div class="seg active" style="line-height:1.25;">Po ozvezdjih<br><small style="font-weight:500;opacity:.8;">biodinamični</small></div>
+            <div class="seg" style="line-height:1.25;">Po znamenjih<br><small style="font-weight:500;opacity:.8;">astrološki</small></div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);">Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.</div>
+        </div>
+
         <div class="setrow"><div class="si">🔔</div><div class="sm"><div class="st">Namig »jutri dober dan«</div><div class="ss">nežno, spoštuje tihe ure</div></div><div class="toggle off"></div></div>
         <div class="setrow"><div class="si">🪴</div><div class="sm"><div class="st">Poudari po mojem vrtu</div><div class="ss">dvigni dneve za to, kar gojim</div></div><div class="toggle"></div></div>
         <div class="setrow"><div class="si">🌌</div><div class="sm"><div class="st">Prikaži ozvezdja in meno</div><div class="ss">več astro podrobnosti v dnevu</div></div><div class="toggle"></div></div>
@@ -496,6 +508,18 @@
       <div class="op"><b>Mnenje:</b> ker Lunin koledar živi <b>pod Tendask+</b>, je opt-in dvonivojski:
         najprej imaš T+, nato znotraj njega vklopiš/nastaviš koledar. Kdor T+ nima, teh nastavitev ne vidi —
         vidi upsell (board 2 levo).</p>
+      <h4>Sistem koledarja: tropski / siderični (nov)</h4>
+      <p>Preklop »<b>Po ozvezdjih (biodinamični)</b> / <b>Po znamenjih (astrološki)</b>«. <b>Poimenovanje po
+        mehanizmu, NE po znamki</b> — nikjer »Thun«/»Aussaattage« (licence). »Biodinamični« je generičen
+        opis metode (v redu).</p>
+      <div class="op"><b>Zakaj toggle:</b> preizkus je pokazal, da so <b>spletni koledarji večinoma tropski</b>
+        (celo »Thun« kloni), tiskana Maria Thun pa je <b>siderična</b> — trg je razdeljen. Toggle uporabnika
+        ujame s koledarjem, ki mu sledi. Razlika je EN parameter (ayanamsa), astronomija ista.</p>
+      <h4>Validacija (dokazano)</h4>
+      <p>Izračun lege Lune je potrjen: Meeusov primer <b>0,003°</b>, mlaji/ščipi <b>1–3 min</b>, tropska
+        znamenja <b>9/9…31/31</b> čez 2026/2027. <b>Tropska stran = 100 % preverjena</b>; siderično pred
+        privzeto vključitvijo umerimo proti <b>tiskani knjigi</b> (spletni »siderični« viri so tropski).
+        Zato <b>privzeto tropski</b>, siderični za poznavalce.</p>
       <h4>Meja »lastnega algoritma«</h4>
       <p>Znamka Tendask je v UX/planiranju/integraciji, <b>ne</b> v izmišljenih pravilih. Jedro =
         uveljavljena, transparentno izračunana načela → obranljivo in prepoznavno.</p>
@@ -505,9 +529,10 @@
 
   <div class="foot">
     <b>Odločeno:</b> mena free za vse; element-dan + koledar = premium · aktivacija = licenčna koda (zunanji
-    nakup, brez »kupi« povezave v aplikaciji — anti-steering) · semantika »dan za plod/list/cvet/korenino«.<br>
-    <b>Še odprto:</b> nabor lastnih opisov dejavnosti (i18n, na element, ne per-dan) · meje ozvezdij (IAU vs
-    30°) · Kačenosec (12/13) · paket vs lasten Meeus
+    nakup, brez »kupi« povezave v aplikaciji — anti-steering) · semantika »dan za plod/list/cvet/korenino« ·
+    <b>toggle tropski/siderični</b> (ime po mehanizmu, brez »Thun«; privzeto tropski) · astronomija validirana.<br>
+    <b>Še odprto:</b> nabor lastnih opisov dejavnosti (i18n, na element, ne per-dan) · <b>kalibracija sideričnega
+    proti tiskani knjigi</b> · meje ozvezdij (IAU vs 30°) · Kačenosec (12/13) · paket vs lasten Meeus
     izračun (odvisnost izven <code>tech-stack §1</code>).<br>
     Polni spec: <code>docs/feature-requests/biodynamic-calendar.md</code> · roadmap FR-19 · vstopne točke: Domov čip + Dnevnik segment + Domov ⚙️ → Tendask+.
   </div>
