@@ -132,28 +132,91 @@ To je **znotraj politike**: promocija lastne funkcije in vnos licence nista »le
 - **EU: 14-dnevna pravica do odstopa** za digitalno vsebino → ob nakupu izrecna privolitev v takojšnjo izvedbo (checkbox), sicer imaš 14 dni obvezno vračilo.
 - Jasni pogoji odpovedi naročnine (samopostrežno prek MoR portala).
 
+### 4.5 Umestitev na spletni strani (`../tendask_web`)
+
+Stran je **statična in taka ostane** — Polar gosti blagajno, zato je gumb navadna povezava. Nič JS, nič obrazcev, nič PCI, nič DDV logike, **nič fiksnih stroškov** (Cloudflare Pages + Supabase free tier + Polar samo % na prodajo).
+
+Trenutna struktura je en landing (`hero → #features → #shots → #okolica → #community`) z navigacijo na tri sidra.
+
+| Kam | Kaj |
+|---|---|
+| **`/plus`** (+ `/sl/plus`, `/de/plus`) | **edino mesto s ceno in gumbom** — SEO tarča, naslov za e-pošto |
+| **Nav, 4. postavka »Tendask +«** | vizualno ločena (medena `#E0A82E`); **glavna pot odkritja**, ker aplikacija ne sme voditi na nakup |
+| **Landing: nova sekcija med `#okolica` in `#community`** | kratka vaba (kaj odklene + »od X €« + gumb na `/plus`); **NE v hero** — naloga hera je namestitev |
+| **Footer** | »Tendask +« + **»Upravljanje naročnine / izgubljena koda«** → Polarjev portal (vsak klik = e-pošta, ki je ne prejmeš) |
+
+**Vsebina `/plus`:** kaj odklene konkretno (ne »premium«) · **poštena tabela brezplačno/Plus** (pomiri strah »zdaj bodo vse zaklenili«) · **aktivacija v treh korakih** (kupiš → koda po e-pošti → prilepiš v aplikacijo; brez tega bo polovica pisala na `support@`) · dva gumba · 14-dnevno vračilo ob gumbu · FAQ (offline? menjava telefona? odpoved? izgubljena koda?).
+
+⚠️ **Popravi hero značko `t.hero.free`** — ko bo Plus živ, je trditev »brezplačno« zavajajoča → »Brezplačen prenos« / »Osnovno brezplačno«, v vseh treh jezikih.
+
+**Kje bo dejansko promet:** sekcija na landingu prinese malo. Ker aplikacija ne sme oglaševati navznoter, je pravi lijak **vsebina, ki jo ljudje iščejo** — v SI se aktivno išče, kdaj je dan za plod/koren. Brezplačna vsebinska stran o luninem koledarju s povezavo na `/plus` je verjetno vredna več kot vse ostalo skupaj (`src/content/` že obstaja).
+
 ---
 
 ## 5. Licenčni model
 
-### 5.1 Zakaj koda in ne e-pošta
+### 5.1 Ponudba = dva izdelka (odločeno 2026-07-22)
+
+| Izdelek | Tip v Polarju | Obnovitev |
+|---|---|---|
+| **Tendask + letno** | naročnina (yearly) | samodejna, z jasnim »odpoveš kadarkoli, plačano leto ti ostane« |
+| **Tendask + doživljenjsko** | enkratni nakup | ni je |
+
+**Zavrnjeno in zakaj:**
+
+- **Plačano testno obdobje (npr. 1 mesec za 2 €)** — ne zaradi denarja (neto ostane ~1,06 €), ampak ker **vsak izdelek nosi svoj ključ**: uporabnik bi kodo lepil dvakrat (test, nato letna). Poleg tega vrne vse breme mesečne (neuspela plačila, odpovedi, 12× transakcij). **Ovira ni cena, ampak trenje** — nakup zahteva izhod iz aplikacije, iskanje strani in prepis kode; za 2 € ta pot ni vredna.
+  **Nadomestek (brezplačen):** 14-dnevno vračilo brez vprašanj (po EU pravu ga tako ali tako moraš ponuditi) + brezplačni sloj (mena Lune) + podarjene kode (`granted`).
+- **Ločena »letna brez obnovitve«** — ni svoj izdelek. Naročnino kupiš in **takoj odpoveš → leto ti vseeno ostane**. To je enkratni nakup brez druge SKU.
+
+**Pravilo ponudbe:** pri izdelku za ~10 € sta dve možnosti razumljivi v treh sekundah, tri so zgornja meja. Če bo kdaj potrebna tretja, naj bo **sezonska (6 mesecev)**, ne mesečna.
+
+⚠️ **Če ostane samodejna obnovitev:** obvezen **opomnik po e-pošti 7 dni pred bremenitvijo** (preveri, ali ga pošilja Polar; sicer je to edini e-mail, ki ga moraš pošiljati sam). Publika je starejša — pozabljena bremenitev čez leto dni pomeni chargeback in enozvezdično oceno.
+
+### 5.2 Delitev vlog
+
+| Polar (MoR) | Tendask (Supabase) |
+|---|---|
+| pobere denar, DDV, račun | vodi, **kdo ima Plus in do kdaj** |
+| **ustvari aktivacijsko kodo** (License Key benefit) | shrani kodo in jo veže na `auth.uid()` |
+| **pošlje kodo kupcu po e-pošti** | izda **podpisan offline token** |
+| ponuja kupcu portal (koda, odpoved, računi) | odloči, kaj dogodek pomeni |
+| sporoča dogodke prek webhookov | — |
+
+Polar je **blagajna in poštar**; licenco vodiš ti. Odpadejo: generiranje kod, pošiljanje e-pošte, »izgubil sem kodo« podpora, omejitev naprav (Polar `activate` z activation limit), preklic ob vračilu.
+
+⚠️ **Organization access token nikoli ne sme v aplikacijo** — klici proti Polarju gredo izključno iz Edge Function; iz APK-ja bi ga kdorkoli izluščil.
+⚠️ **Zrcali licence v svojo bazo** prek webhookov — Polar je mlado podjetje; ob menjavi ponudnika imaš podatke pri sebi.
+
+### 5.3 Zakaj koda in ne e-pošta
 
 Uporabnik ima v Tendask lahko **anonimen** ali **Google** račun z drugim naslovom, kot ga vpiše ob nakupu. Ujemanje po e-pošti bi od prvega dne generiralo podporne zahtevke. Koda deluje ne glede na to + omogoča darila in kupone.
 
 **Pravilo: unovčitev zahteva prijavljen račun (Google/OTP), ne anonimnega.** Sicer uporabnik ob menjavi telefona izgubi plačano licenco in tega ne moreš rešiti.
 
-### 5.2 Tok
+### 5.4 Tok
 
-```
-nakup na tendask.app  →  webhook (Polar/Paddle)
-   →  Supabase Edge Function (service role)  →  vrstica v `license` (koda + plus_until)
-   →  e-pošta s kodo kupcu
-   →  uporabnik vnese kodo v aplikaciji  →  RPC veže kodo na auth.uid()
-   →  profile.plus_until + podpisan token
-   →  obstoječi pull sync  →  drift  →  Plus deluje offline
-```
+**Ključna delitev:** *koda pove **kdo si**, webhook pove **do kdaj velja**.* Koda sama ne more vedeti, da je bilo plačano še eno leto — zato sta potrebna oba.
 
-### 5.3 Offline ≠ nikoli online (razrešitev navideznega nasprotja)
+**Nakup (letno):**
+
+1. Kupec na `tendask.com/plus` → Polarjeva blagajna (nakup nikoli ne teče čez tvoj strežnik).
+2. Polar ustvari kodo in jo pošlje po e-pošti.
+3. **Webhook → Edge Function:** »prodano, koda `X`, naročnina `sub_abc`, plačano do 20. 7. 2027.«
+4. Edge Function zapiše vrstico v `license`. → **Koda obstaja v tvoji bazi, še preden jo kdo vnese.**
+5. Kupec vnese kodo v aplikaciji → RPC preveri (obstaja? neunovčena? nepreklicana?) → veže na `auth.uid()`.
+6. Strežnik izda podpisan token → pull sync → drift → Plus deluje offline.
+
+**Podaljšanje (leto kasneje):** Polar sam bremeni kartico → webhook »`sub_abc` podaljšana do 2028« → Edge Function najde vrstico po `provider_ref` in prestavi `plus_until`. **Uporabnik ne naredi nič, kode ne dobi nove.**
+
+**Doživljenjsko:** enako kot 1–6, `plus_until` daleč v prihodnost, podaljšanja ni.
+
+**Odpoved:** ne narediš nič — `plus_until` poteče sam. **Vračilo/chargeback:** `plus_until = now()`, `revoked_at = now()`.
+
+⚠️ **V Polarju NE nastavljaj poteka (TTL) na sami kodi.** Sicer imaš dve uri — Polarjevo in svojo — in ko se razideta, ima uporabnik veljavno naročnino in mrtvo kodo. **`plus_until` v tvoji bazi je edina resnica.**
+
+**Poveži tudi kupca, ne le kode:** ob prvi unovčitvi shrani `profile.polar_customer_id`. Tako vsi kasnejši dogodki (obnovitev, ponovna naročnina po prekinitvi, sprememba paketa) najdejo uporabnika **brez nove kode**.
+
+### 5.5 Offline ≠ nikoli online (razrešitev navideznega nasprotja)
 
 Strežnik **ni vratar, ki ga aplikacija kliče vsakič**. Strežnik je **urad, ki izda dokument**; vratar je aplikacija sama.
 
@@ -169,7 +232,7 @@ Analogija: letna vozovnica s hologramom. Šofer ne kliče centrale — pogleda h
 
 **Ključno:** ne gradiva nobenega ločenega »preverjanja licence«. Token pride zraven v istem pull-u, ki že zdaj vleče opravila in katalog. **Nič novega omrežnega dela.**
 
-### 5.4 Kaj se preverja kje
+### 5.6 Kaj se preverja kje
 
 **Lokalno, offline, ob vsakem zagonu:**
 - je podpis pristen? → prepreči ročno predelavo drift baze
@@ -186,6 +249,10 @@ Analogija: letna vozovnica s hologramom. Šofer ne kliče centrale — pogleda h
 ## 6. Preprečevanje zlorab
 
 **Načelo:** en trd zid (kriptografski podpis), vse ostalo mehke DB invariante. Ponarejanje mora biti dražje od naročnine, ne nemogoče.
+
+### 6.0 Kaj prevzame Polar in kaj ostane tvoje
+
+Z uporabo Polarjevih License Keys se spodnje točke **skrčijo**: kode generira in dostavlja Polar (6.1 velja le še za lastne kode iz §6.7), omejitev naprav pokrije Polarjev `activate` z activation limit (6.4), preklic ob vračilu je Polarjev (6.3). **Nezmanjšano tvoje ostane 6.2 (podpisan token)** — Polar ne ve nič o vrtu brez signala.
 
 ### 6.1 Večkratna uporaba kode
 
@@ -229,10 +296,15 @@ Vse prek webhookov v isto Edge Function, ki samo prepiše `plus_until`:
 
 | Dogodek | Učinek |
 |---|---|
-| `subscription.created` / `renewed` | `plus_until = period_end + kLicenseGraceDays` |
+| `subscription.created` / `renewed` | `plus_until = max(now, plus_until) + obdobje + kLicenseGraceDays` |
+| `order.paid` (doživljenjsko) | `plus_until` daleč v prihodnost (token kljub temu omejen na 12 mes., §6.2) |
 | `subscription.canceled` | pusti do `period_end` (plačal je) |
 | `refund` / `chargeback` | `plus_until = now()`, `revoked_at = now()` |
 | ročni preklic (zloraba) | `revoked_at = now()` |
+
+> **Invarianta (obvezna): nakupni dogodki `plus_until` samo PODALJŠAJO — `max(now, obstoječi)`. Skrajšajo ga lahko izključno preklic, vračilo in chargeback.**
+>
+> Webhooki prihajajo **izven vrstnega reda**, zato brez tega pravila podvojen ali zamujen dogodek uporabniku odreže veljavnost. Hkrati to reši tri stvari zastonj: nadgradnjo iz letne v doživljenjsko, dvojni nakup, in nakup pred iztekom (kdor kupi 10 dni prej, ne izgubi teh 10 dni).
 
 **Grace je na strežniku, ne v aplikaciji.** Strežnik prišteje 7–14 dni k `period_end`; aplikacija pozna eno samo pravilo (`now < plus_until`). Plačnik, ki je tri tedne na vrtu, ne izgubi ničesar.
 
@@ -250,7 +322,25 @@ Maksimalna izpostavljenost ob preklicu = **ena obračunska perioda + grace**. To
 - **Rate limit:** ≤5 neuspelih poskusov/uro/`auth.uid()`, beleži v `license_redeem_attempt`.
 - **Ne razlikuj razloga napake:** vedno »koda ni veljavna« (neobstoječa / porabljena / preklicana) — sicer uhajanje informacij.
 
-### 6.6 Poštena luknja (zavestno sprejeta)
+### 6.6 Lastne kode: darila, promocije, Play pregled, grandfathering
+
+Polar pokriva **prodajo**. Za tri primere pa potrebuješ **lastne kode**, ki jih Polar ne more izdati:
+
+1. **Testni račun/koda za Googlov pregled** — obvezno (§8), sicer pregled pade.
+2. **Grandfathering** obstoječih uporabnikov koledarja (§10.4).
+3. **Darila, promocije, novinarji, povračilo za prijavljen hrošč.**
+
+Trije konkretni klicalci → po pravilu projekta (»≥3 klicalci«) to ni prezgodnja abstrakcija.
+
+**Razlika v uri:** Polarjeve licence tečejo **od nakupa** (Polar meri TTL od nakupa, ne od aktivacije), lastne kode pa **od unovčitve**:
+
+```
+plus_until = redeemed_at + duration_days
+```
+
+To je edini pošten model za darilo, ki ga nekdo prejme decembra in unovči marca. Za naročnino bi bilo napačno — plačilo teče od nakupa, torej mora tudi upravičenost.
+
+### 6.7 Poštena luknja (zavestno sprejeta)
 
 Kdor unovči kodo, gre za vedno offline **in** premakne uro nazaj, obdrži Plus. Obramba (Play Integrity, zaznava root-a, obvezno online preverjanje) bi zlomila prav tisto, zaradi česar aplikacija obstaja.
 
@@ -260,13 +350,17 @@ Kdor unovči kodo, gre za vedno offline **in** premakne uro nazaj, obdrži Plus.
 
 ```
 profile
-  + plus_until  timestamptz null          -- additive, nullable (stari APK-ji!)
-  + plus_token  text null                 -- podpisan JWT
+  + plus_until         timestamptz null   -- additive, nullable (stari APK-ji!)
+  + plus_token         text null          -- podpisan JWT
+  + plus_kind          text null          -- annual|lifetime|gift|granted — SAMO ZA PRIKAZ
+  + polar_customer_id  text null          -- da kasnejši dogodki najdejo uporabnika brez nove kode
 
 license
-  id uuid pk, code text unique, plus_until timestamptz,
+  id uuid pk, code text unique, kind text,            -- annual|lifetime|gift|granted
+  plus_until timestamptz null,                        -- Polar: iz webhooka
+  duration_days int null,                             -- lastne kode: plus_until = redeemed_at + to
   redeemed_by uuid null → auth.users, redeemed_at timestamptz null,
-  revoked_at timestamptz null, provider text, provider_ref text,
+  revoked_at timestamptz null, provider text, provider_ref text,  -- provider_ref = Polar sub_/order id
   created_at, updated_at
 
 license_device
@@ -282,6 +376,7 @@ license_redeem_attempt
 - `plus_until` in `plus_token` sta **strežniško lastna**: `revoke update (plus_until, plus_token) on profile from authenticated` (column-level grant, ker RLS ne zna po stolpcih).
 - **Sync push mora ta stolpca izpustiti** iz payloada — sicer si predelan klient prek LWW podari Plus.
 - Drift shema zrcali Supabase (nova verzija sheme + migracija).
+- **`plus_kind` je izključno za prikaz.** Upravičenost se bere **samo** iz `plus_until`, nikoli iz tipa — sicer dobiš dve resnici. Namen: `plus_until = 2099` na zaslonu izgleda kot napaka, zato »Doživljenjska« proti »Letna, velja do 12. 3. 2027« (FR-19 §11.3 hoče prikaz veljavnosti).
 
 ---
 
@@ -383,8 +478,8 @@ Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne 
 
 1. Odloči funkcije + ceno + ponudnika (§11.1–3).
 2. Uskladi `tech-stack.md §1` z novo dependency za podpis.
-3. Supabase migracija (additive + granti) + Edge Function za webhook + RPC `redeem_license`.
-4. Spletna stran: nakupna stran + pogoji + politika vračil (ločen repo `../tendask_web/`).
+3. **Polar:** dva izdelka (letno = naročnina, doživljenjsko = enkratno), oba z License Key benefit, **brez TTL na ključu**; webhook → Supabase Edge Function; RPC `redeem_license`; migracija (additive + granti).
+4. **Spletna stran** (`../tendask_web/`, po §4.5): `/plus` v treh jezikih + nav postavka + sekcija na landingu + footer povezavi + popravek `t.hero.free` + pogoji in politika vračil.
 5. Aplikacija: `plusProvider` (bere iz drifta, preverja podpis prek `Clock`) + zaslon Tendask+ — **UI po FR-19 §11.3–11.4**, ne izmišljuj novega.
 6. i18n (en/sl/de) — **pregled vseh nizov glede anti-steering** pred oddajo (§3.1).
 7. Play Console: posodobi `App access` s testno kodo.

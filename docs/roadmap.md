@@ -521,9 +521,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   strošek → argument za letno in proti neomejeni doživljenjski. Trajno free: jedro, sredstva/recepti/pridelek/teme
   (v listingu), GDPR izvoz/izbris, mena Lune. **Grandfathering:** kdor je koledar uporabljal pred vklopom zidu,
   ga obdrži trajno. **Cenovni model:** mesečna **zavrnjena** (fiksna provizija 0,50 $ vzame 47 % pri 1,99 €;
-  prelom pri 7 mesecih; pri letni ~9,90 € mesečna sploh ne more obstati) → v igri **letna + doživljenjska**,
-  **številke še niso zapečene**; sidro = tiskane Lunine bukve 9,90 €. **Odprto:** konkretne cene, ponudnik
-  (Polar ali Paddle), trial, ali paket starta z eno funkcijo. Polni spec:
+  prelom pri 7 mesecih; pri letni ~9,90 € mesečna sploh ne more obstati) → **ponudba = dva izdelka: letno
+  (naročnina, »odpoveš kadarkoli, leto ti ostane«) + doživljenjsko**; **številke še niso zapečene**; sidro =
+  tiskane Lunine bukve 9,90 €. Zavrnjena tudi **plačana testna doba** (vsak izdelek nosi svoj ključ → dvojno
+  lepljenje kode; nadomestek = 14-dnevno vračilo + brezplačni sloj + `granted` kode) in **ločena »letna brez
+  obnovitve«** (= naročnina, ki jo takoj odpoveš). **Arhitektura s Polarjem:** Polar = blagajna in poštar
+  (denar, DDV, račun, generiranje kode, e-pošta, portal, omejitev naprav prek `activate`); licenco vodiš ti
+  v Supabase. **Koda = kdo si, webhook = do kdaj velja** — koda sama ne ve za obnovitev. **NE nastavljaj TTL
+  na Polarjevem ključu** (dve uri se razideta); `plus_until` je edina resnica. **Invarianta:** nakupni dogodki
+  `plus_until` samo podaljšajo (`max(now, obstoječi)`) — webhooki prihajajo izven vrstnega reda; to zastonj
+  reši nadgradnjo, dvojni nakup in nakup pred iztekom. **Lastne kode ostanejo** za Play pregled, grandfathering
+  in darila (te tečejo **od unovčitve**, Polarjeve **od nakupa**). **Spletna stran ostane statična** (§4.5):
+  `/plus` v treh jezikih + nav postavka + sekcija na landingu + footer na Polarjev portal; **fiksnih stroškov
+  0 €**; popraviti je treba hero značko »brezplačno«. **Odprto:** konkretne cene, ponudnik
+  (Polar ali Paddle), ali paket starta z eno funkcijo. Polni spec:
   [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
 - **FR-21 — Rastlinsko znanje / obogaten katalog (»Vodič«).** 💡 **Ideja / osnutek (2026-07-22).** Iz
   konkurenčne analize **posadi.si** (zavihek »Znanje« = strukturirane razlage rastlin = njihova glavna
