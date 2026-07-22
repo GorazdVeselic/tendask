@@ -494,14 +494,37 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   avto-opravilo + obvestila) = zapis namere za kasnejšo monetizacijo. Ni launch-gating (app v produkciji)
   — »kasneje« = prioritizacija. Polni spec:
   [`docs/feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md).
+- **FR-20 — Tendask + (premium): licenciranje, plačila in skladnost s Play.** 📝 **Spec / dogovorjena smer
+  (2026-07-22).** Nadomešča prvotno predpostavko »premium = Play Billing«. **Pot = »consumption-only«**
+  (Netflix model): nakup **na spletni strani**, v aplikaciji samo **odkupna koda** → **0 % provizije Play**.
+  Politika to izrecno dovoli (»access content paid for somewhere else«), a **v aplikaciji ne sme biti nobenega
+  poziva k nakupu, cene ali URL-ja** — to je edina rdeča črta (velja tudi za push obvestila in i18n nize).
+  **Plačila prek merchant of record** (Polar ali Paddle, ~5 % + 0,50 $), **ne Stripe** — normirani s.p. je
+  obdavčen po **prihodkih**, zato je pri MoR prihodek neto in provizija dejansko zniža osnovo (+ MoR prevzame
+  DDV/OSS, račune, chargebacke). **Licenca:** koda (ne ujemanje po e-pošti — anonimni/Google računi se
+  razhajajo), enkratna unovčitev prek atomarnega `update ... where redeemed_by is null`, vezana na `auth.uid()`;
+  unovčitev **zahteva prijavljen račun**. **Offline:** podpisan token (`sub` + `plus_until`), javni ključ
+  bundlan → aplikacija preverja **lokalno**; strežnik je »urad, ki izda dokument«, ne vratar; token pride
+  zraven v **obstoječem pull syncu** (nič novega omrežnega dela); grace 7–14 dni prišteje **strežnik**.
+  `plus_until`/`plus_token` sta strežniško lastna (column-level revoke + izpuščena iz push payloada).
+  ⚠️ **Play Console: `App access` se mora spremeniti** (Googlu je treba dati testno kodo/račun s Plus).
+  ⚠️ Preverjanje podpisa = **nova dependency izven `tech-stack.md §1`**. Alternativa (pot B, če ni konverzije):
+  Googlov external payments program (od 30. 6. 2026, ZDA/UK/EGP) = gumb v aplikaciji dovoljen, a ~10 % service
+  fee + geo-pogojevanje; **arhitektura licenc je enaka**, zato ni izgubljenega dela. **Prvi nosilec = FR-19**
+  (lunin koledar: mena free, element-dan + planer + akcije = Plus); koledar se najprej zgradi **v celoti free**,
+  gating je zadnji korak. **Delitev dela:** FR-20 = licence/plačila/Play skladnost, FR-19 §11.2–11.4 = UI
+  Tendask+ zaslona in vstopne točke. **Odprto:** cena/model, ponudnik (Polar ali Paddle), trial, ali paket
+  starta z eno funkcijo. Polni spec:
+  [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
-  Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Za ceno je ključno:**
-  Google Play **service fee od 10 %** na prvi $1M/leto (od 30. 6. 2026, ZDA/EGP/UK), zdaj **LOČEN od billing
-  fee** → neto računaj po `(cena − service fee − billing fee)`, ne samo −10 %. Naročnine = isto 10 %. Vredno
-  preveriti **Apps Experience program** (znižane provizije za kakovostne ne-igre). **Tehnično:** IAP/naročnina
-  = nov package izven `tech-stack.md §1` (`in_app_purchase`/RevenueCat) → najprej uskladi sklad; payout/Merchant
-  + davčni setup v Play Console; premium **gating offline-first** (entitlement cache v drift, da plačnik dela
-  brez signala). Glej spomin `tendask-monetization-planned`.
+  Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj
+  specificirana v FR-20 (zunanja licenca, ne Play Billing) — spodnje velja le, če bi se kdaj vrnila na Play
+  Billing.** Google Play **service fee od 10 %** na prvi $1M/leto (od 30. 6. 2026, ZDA/EGP/UK), zdaj **LOČEN od
+  billing fee** (5 %, samo za Play Billing) → neto računaj po `(cena − service fee − billing fee)`, ne samo −10 %.
+  Naročnine = isto 10 %. Vredno preveriti **Apps Experience program** (znižane provizije za kakovostne ne-igre).
+  **Tehnično:** IAP/naročnina = nov package izven `tech-stack.md §1` (`in_app_purchase`/RevenueCat) → najprej
+  uskladi sklad; payout/Merchant + davčni setup v Play Console; premium **gating offline-first** (entitlement
+  cache v drift, da plačnik dela brez signala). Glej spomin `tendask-monetization-planned`.
 
 ## Dnevnik napredka
 
