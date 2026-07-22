@@ -513,8 +513,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   fee + geo-pogojevanje; **arhitektura licenc je enaka**, zato ni izgubljenega dela. **Prvi nosilec = FR-19**
   (lunin koledar: mena free, element-dan + planer + akcije = Plus); koledar se najprej zgradi **v celoti free**,
   gating je zadnji korak. **Delitev dela:** FR-20 = licence/plačila/Play skladnost, FR-19 §11.2–11.4 = UI
-  Tendask+ zaslona in vstopne točke. **Odprto:** cena/model, ponudnik (Polar ali Paddle), trial, ali paket
-  starta z eno funkcijo. Polni spec:
+  Tendask+ zaslona in vstopne točke. **Obseg paketa (§10):** *Plus se gradi iz novega in neizdanega, nikoli
+  iz izdanega* — izjema le razširitev zmogljivosti. **Opomniki ostajajo trajno free** (preverjeno in zavrnjeno
+  2026-07-22: so obljuba iz listinga, so zanka zadrževanja, nosi jih FR-16); monetizira se sme le nov sloj nad
+  njimi (vremensko pogojen opomnik, opomnik po fazi Lune). **Najmočnejši kandidat = M11 pametni motor** —
+  zgrajen na `feat/m11-smart-engine`, a **nikoli izdan**, torej nihče nič ne izgubi; ima pa ponavljajoč se
+  strošek → argument za letno in proti neomejeni doživljenjski. Trajno free: jedro, sredstva/recepti/pridelek/teme
+  (v listingu), GDPR izvoz/izbris, mena Lune. **Grandfathering:** kdor je koledar uporabljal pred vklopom zidu,
+  ga obdrži trajno. **Cenovni model:** mesečna **zavrnjena** (fiksna provizija 0,50 $ vzame 47 % pri 1,99 €;
+  prelom pri 7 mesecih; pri letni ~9,90 € mesečna sploh ne more obstati) → v igri **letna + doživljenjska**,
+  **številke še niso zapečene**; sidro = tiskane Lunine bukve 9,90 €. **Odprto:** konkretne cene, ponudnik
+  (Polar ali Paddle), trial, ali paket starta z eno funkcijo. Polni spec:
   [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
   Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj

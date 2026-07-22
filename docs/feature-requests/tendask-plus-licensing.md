@@ -215,6 +215,14 @@ Podpisan token (ES256 / Ed25519): privatni ključ v Supabase secrets, **javni kl
 - ⚠️ Rabi **nov package** (`dart_jsonwebtoken` ali `cryptography`) — izven `tech-stack.md §1` → najprej potrdi.
 - Za čas uporabi `Clock` (pravilo projekta), ne `DateTime.now()` — sicer ni testabilno.
 
+**Veljavnost tokena ≠ trajanje licence** (velja, če bo v ponudbi doživljenjska):
+
+```
+token.plus_until = min(entitlement_until, now + 12 mesecev)
+```
+
+Doživljenjska licenca **ne sme** izdati tokena z `plus_until = 2099` — tak token je neizničljiv, ker se naprava ni dolžna nikoli več sinhronizirati, in ga ob vračilu ali zlorabi ne moreš preklicati. Z zgornjim pravilom se letne licence ne spremenijo (so itak krajše), doživljenjska pa omeji izpostavljenost na eno leto; kupec se mora enkrat letno slučajno povezati, kar se zgodi samo od sebe.
+
 ### 6.3 Potek, odpoved, vračilo, preklic
 
 Vse prek webhookov v isto Edge Function, ki samo prepiše `plus_until`:
@@ -298,10 +306,70 @@ license_redeem_attempt
 
 ---
 
-## 10. Odprta vprašanja / odločitve
+## 10. Obseg paketa — kaj sme in kaj ne sme v Plus
 
-1. ~~**Katere funkcije so Plus?**~~ **Odločeno (2026-07-22): prvi nosilec je FR-19 — element-dan + koledar/planer + akcije; mena Lune ostane free.** Naslednja kandidata za širitev paketa: FR-18 (več vrtov/lokacij), FR-14 (analitika). *Odprto ostaja, ali Plus starta z eno funkcijo ali počaka na dve — enofunkcijski paket je težje prodati.*
-2. **Cena in model** (mesečno/letno/lifetime)? Letno je za MoR fiksno provizijo (~0,50 $/transakcijo) bistveno ugodnejše.
+> **Pravilo (odločeno 2026-07-22): Plus se gradi iz novega in neizdanega, nikoli iz izdanega.**
+> Edina dovoljena izjema je **razširitev zmogljivosti** (več tega, kar uporabnik že ima) — tam nihče ničesar ne izgubi.
+
+Zakaj tako strogo:
+
+- **Ocene na Play.** Odvzem obstoječe funkcije je zanesljiv generator enozvezdičnih ocen. Te te stanejo več, kot znaša celoten prihodek Plus.
+- **Listing je obljuba.** Julijska posodobitev listinga (SL/EN/DE) izrecno navaja **sredstva, recepte, pridelek in teme**. Zaklepanje česarkoli od tega zahteva popravek opisa **in** posnetkov zaslona v treh jezikih + nov pregled.
+- **Ne zaklepaj zanke zadrževanja.** Kar uporabnika vrača v aplikacijo, mora ostati brezplačno — sicer brezplačni uporabnik odide, preden bi sploh premislil o plačilu.
+
+### 10.1 Opomniki ostajajo trajno brezplačni (odločeno, ni odprto)
+
+Preverjeno kot možnost in **zavrnjeno** 2026-07-22:
+
+1. **So obljuba iz listinga** in so na posnetkih zaslona.
+2. **So zanka zadrževanja** — opomnik je razlog za vrnitev; FR-16 (re-engagement nudge) stoji na istem sistemu.
+3. **Brez njih Tendask ni več dnevnik opravil, ampak zapisnik.**
+
+Monetizirati se sme le **nov sloj nad njimi** (glej 10.2), nikoli sam mehanizem obveščanja.
+
+### 10.2 Kandidati za Plus
+
+| Kandidat | Stanje | Strošek na uporabnika | Opomba |
+|---|---|---|---|
+| **M11 pametni motor / predlogi** | **zgrajen (faze A–D) na `feat/m11-smart-engine`, NIKOLI izdan** — v `main` ni `lib/features/suggestions/` | **realen** (edge funkcije, cron, FCM, vreme) | Najboljši kandidat: nihče ničesar ne izgubi, najvišja zaznana vrednost, razvoj večinoma plačan |
+| **FR-19 lunin koledar** (element-dan, planer, akcije) | spec, gradi se **najprej free** | **nič** (čista funkcija datuma) | Prvi nosilec; mena Lune ostane free |
+| **FR-18 več vrtov/lokacij** | ideja | nizek | Razširitev zmogljivosti — danes ima vsak 1 vrt in ga obdrži |
+| **Vremensko pogojeni opomniki** | ne obstaja | nizek (vreme že imava) | »Ne opominjaj na zalivanje, če bo dež« — pošten način monetizacije opomnikov |
+| **Opomnik po fazi Lune** | ne obstaja | nič | Naravna vez s FR-19 |
+| **FR-14 analitika** | spec | nizek | Kasnejša širitev paketa |
+
+**Posledica za cenovni model:** M11 ima **ponavljajoč se strošek**, lunin koledar pa nobenega. Funkcija, ki te stane vsak mesec, ne sme biti plačana enkrat za vedno → M11 v paketu je argument **za letno naročnino in proti neomejeni doživljenjski** (glej §11.2).
+
+### 10.3 Trajno brezplačno (nikoli v Plus)
+
+- **Opomniki** in vse osnovno obveščanje (§10.1)
+- Opravila, dnevnik, območja, rastline, vreme — jedro aplikacije
+- **Sredstva, recepti, pridelek, teme** — izdano in navedeno v Play listingu
+- **Izvoz podatkov in izbris računa** — zakonska obveznost (GDPR)
+- **Mena Lune** — free sloj FR-19 (kavelj, gradi navado)
+
+### 10.4 Grandfathering ob vklopu plačilnega zidu
+
+Lunin koledar gre v produkcijo **brezplačen** in se zaklene šele kasneje (§12). To je edini primer, kjer se izdana funkcija umika za zid — in zato zahteva izrecno varovalko:
+
+**Vsi, ki so funkcijo uporabljali pred datumom vklopa, jo obdržijo trajno brezplačno.** Tehnično: ob vklopu enkratno označi obstoječe uporabnike (npr. `profile.plus_grandfathered bool`, dodeljeno strežniško po `updated_at`/uporabi pred mejnim datumom).
+
+Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne tihega popravka. Val enozvezdičnih ocen stane več kot celoten prihodek Plus.
+
+---
+
+## 11. Odprta vprašanja / odločitve
+
+1. ~~**Katere funkcije so Plus?**~~ **Odločeno (2026-07-22): prvi nosilec je FR-19** — element-dan + koledar/planer + akcije; mena Lune ostane free. **Opomniki so izrecno izključeni** (§10.1). Seznam kandidatov za širitev = §10.2, pri čemer je **M11 (zgrajen, a nikoli izdan) najmočnejši**. *Odprto ostaja, ali Plus starta z eno funkcijo ali počaka na dve — enofunkcijski paket je težje prodati; par »FR-19 kavelj + M11 vsebina« je najbolj obetaven.*
+2. **Cena in model.** **Mesečna naročnina zavrnjena (2026-07-22)** — v igri ostaneta **letna + doživljenjska**; **konkretne številke namenoma še niso zapečene.** Podlaga za odločitev:
+   - Fiksni del provizije MoR (~0,50 $) požre mesečno: pri 1,99 € ti ostane **1,05 €** (47 % izgube), pri letni 9,90 € pa **7,20 €**, pri doživljenjski 29,90 € **22,80 €** (računano z 22 % DDV in 5 % + 0,50 $ MoR).
+   - **Prelomna točka: 7 mesecev.** Mesečna prehiti letno šele, če povprečen naročnik vztraja ≥7 mesecev (7,20 ÷ 1,05 = 6,9). Pri sezonski dejavnosti in slovenski zimi je to malo verjetno, a **ni izmerjeno** — je ocena, ne podatek.
+   - Odločilnejši, ker ne temelji na ugibanju: **pri letni ceni ~9,90 € mesečna tarifa ne more obstati.** Sorazmerna mesečna bi bila ~1,00–1,20 € (pod pragom fiksne provizije); pri 1,99 € pa je letna le 5 mesečnih → vsi vzamejo letno in mesečna je mrtva izbira, ki le zapleta podporo in knjiženje.
+   - **Trenje ubija prednost mesečne.** Ker v aplikaciji ni povezave do nakupa, mora kupec sam najti stran, plačati in prekopirati kodo. Nizka vstopna cena tu ne kupi obsega — le manj denarja od istih ljudi.
+   - **Sidro za ceno:** tiskane *Lunine bukve 2026 s setvenim koledarjem* stanejo **9,90 € + poštnina** — isti kupec, isti namen, vsakoletni nakup. Primerljive aplikacije: Planta/Vera enkratno ~10 $, vrtnarske aplikacije ~4–50 $/leto.
+   - **Razmislek o razmerju:** doživljenjska se običajno postavi na 2,5–3× letne. Ne kanibalizira letne, ker načelni nasprotniki naročnin sicer ne kupijo ničesar.
+   - **Vezano na obseg paketa (§10.2):** M11 ima ponavljajoč se strošek → če je v paketu, govori proti neomejeni doživljenjski (ali za njeno omejitev na lansirno ponudbo).
+   - **Vmesna možnost, če bo potreba:** sezonska licenca 6 mesecev (ena transakcija, ujame sezonsko vedenje brez upravljanja odpovedi).
 3. **Polar ali Paddle?**
 4. **Nova dependency za preverjanje podpisa** — kateri paket, in posodobitev `tech-stack.md §1`.
 5. **`kLicenseGraceDays`** — 7 ali 14?
@@ -311,9 +379,9 @@ license_redeem_attempt
 
 ---
 
-## 11. Predlagan vrstni red 1. iteracije
+## 12. Predlagan vrstni red 1. iteracije
 
-1. Odloči funkcije + ceno + ponudnika (§10.1–3).
+1. Odloči funkcije + ceno + ponudnika (§11.1–3).
 2. Uskladi `tech-stack.md §1` z novo dependency za podpis.
 3. Supabase migracija (additive + granti) + Edge Function za webhook + RPC `redeem_license`.
 4. Spletna stran: nakupna stran + pogoji + politika vračil (ločen repo `../tendask_web/`).
@@ -326,4 +394,4 @@ license_redeem_attempt
 
 ---
 
-*Odločeno 2026-07-22 v pogovoru. Naslednji korak ni tehničen: §10.2 (cena/model) in §10.3 (Polar ali Paddle) — brez njiju infrastrukture ni smiselno graditi.*
+*Odločeno 2026-07-22 v pogovoru. Naslednji korak ni tehničen: §11.2 (konkretne cene) in §11.3 (Polar ali Paddle) — brez njiju infrastrukture ni smiselno graditi.*
