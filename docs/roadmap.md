@@ -525,6 +525,19 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   **številke še niso zapečene**; sidro = tiskane Lunine bukve 9,90 €. **Odprto:** konkretne cene, ponudnik
   (Polar ali Paddle), trial, ali paket starta z eno funkcijo. Polni spec:
   [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
+- **FR-21 — Rastlinsko znanje / obogaten katalog (»Vodič«).** 💡 **Ideja / osnutek (2026-07-22).** Iz
+  konkurenčne analize **posadi.si** (zavihek »Znanje« = strukturirane razlage rastlin = njihova glavna
+  prednost) in sorodnega **T5**. Danes je naš katalog (128 vrst) tanek (ime + kategorija); ideja = ob kliku
+  na rastlino **strukturiran opis** (pridelava, lokacija, čas sajenja, razmik, zalivanje, kolobar, sosedje,
+  škodljivci, spravilo, nasveti). **AI/LLM** naredi obseg (128 × ~12 sekcij × sl/en/de) izvedljiv, **a je le
+  pospešek za osnutek, ne avtoritativni vir** — agronomska halucinacija (napačen čas/razmik, ameriške cone)
+  uniči pridelek in zaupanje; zato **LLM osnutek → navzkrižna preverba trdih podatkov / strokovni pregled →
+  seed**, in **enkratno v katalog, ne runtime** (offline-first). **Arhitektura = obstoječi katalog**
+  (additive shema, oblak vir resnice + pull, bundlan offline fallback, typed model, i18n). **Free/premium
+  (priporočeno = opcija B):** osnovni opis **free** (paritet s posadi.si, ki to daje zastonj), poglobljeni
+  **»Tendask vodič« = Tendask+** (veže se na FR-19 + M11). Pravno: kuriran LLM tekst = lastna vsebina, **ne**
+  prepisujemo posadi.si; slike lastne ali Wikimedia z licenco/pripisom. Polni spec:
+  [`docs/feature-requests/plant-knowledge-catalog.md`](feature-requests/plant-knowledge-catalog.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
   Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj
   specificirana v FR-20 (zunanja licenca, ne Play Billing) — spodnje velja le, če bi se kdaj vrnila na Play
