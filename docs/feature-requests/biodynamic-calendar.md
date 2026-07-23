@@ -279,6 +279,10 @@ Etapno: **najprej vse free** (mena + element-dan + planer), premium meja se pri�
 
 ## 8. Odprta vprašanja (za odločitev ob implementaciji)
 
+> **Prečiščen, živ seznam odločitev za dorekniti PRED gradnjo** (z opcijami + posledicami) =
+> [`biodynamic-calendar-decisions.md`](biodynamic-calendar-decisions.md). Spodnji §8 je originalni popis;
+> odločitveni dokument ga prevaja v izbire, ki jih polirava.
+
 1. ~~**Meje ozvezdij** (znotraj sideričnega): IAU vs. enakih-30°; fino umerjanje rabi ~10 datumov.~~
    **RAZREŠENO (2026-07-22, §12):** dobili tiskani Thun 2024 (50 vstopov z uro) → **IAU realne meje so
    pravi model** (enakih-30° dokazano ne deluje). Čiste IAU = ~2 h; nevtralna kalibracija 3 mej
