@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lunin koledar — integracije na PRAVIH zaslonih (FR-19)</title>
+<style>
+  :root{
+    --el-root:#b39ddb;  --el-root-bg:#2c2540;
+    --el-leaf:#64b5f6;  --el-leaf-bg:#1c3350;
+    --el-flower:#ffca62;--el-flower-bg:#3a3016;
+    --el-fruit:#ef7a7f; --el-fruit-bg:#3a2224;
+    --accent:#8ab4f8;   --tplus:#e0b64e; --tplus-bg:#3a3016; --danger:#ef7a7f;
+  }
+  *{ box-sizing:border-box; }
+  body{ background:#e7eae8; margin:0; padding:0 0 80px; font-family:-apple-system,Segoe UI,Roboto,sans-serif; color:#1d2823; }
+  .wrap{ max-width:1200px; margin:0 auto; padding:34px 22px; }
+  .doc-head h1{ font-size:29px; letter-spacing:-0.5px; margin:0 0 6px; }
+  .tag{ display:inline-block; font-size:12px; font-weight:700; letter-spacing:.5px; text-transform:uppercase;
+    color:#2266aa; background:#e6f0fa; padding:4px 11px; border-radius:999px; margin-bottom:14px; }
+  .doc-head p{ color:#40504a; font-size:15px; line-height:1.6; max-width:880px; margin:0 0 10px; }
+  .doc-head code, .note code{ background:#dfe4e0; padding:1px 5px; border-radius:5px; font-size:12.5px; }
+
+  .board{ display:flex; gap:28px; flex-wrap:wrap; align-items:flex-start; margin:16px 0 40px;
+    padding-top:26px; border-top:1px dashed #c1cbc4; }
+  .board.first{ border-top:none; }
+  .flow{ display:inline-flex; align-items:center; gap:7px; flex-wrap:wrap; background:#eef3fb; border:1px solid #cfe0f2;
+    border-radius:10px; padding:8px 12px; font-size:12.5px; color:#255a8a; margin:0 0 12px; font-weight:600; }
+  .flow b{ color:#173a5c; } .flow .arw{ color:#8aa; font-weight:700; }
+
+  /* ---- dark phone (matches real app) ---- */
+  .phone{ width:320px; flex:0 0 320px; background:#0d1411; border-radius:30px; padding:12px 10px 0;
+    box-shadow:0 10px 30px rgba(0,0,0,.22); border:1px solid #05201a; color:#e6ece8; overflow:hidden; }
+  .phone.tall{ }
+  .sb{ display:flex; justify-content:space-between; font-size:11px; color:#c7d0ca; padding:2px 12px 8px; }
+  .ab{ display:flex; align-items:center; gap:10px; padding:4px 8px 12px; }
+  .ab .bk{ font-size:20px; color:#c7d0ca; } .ab h1{ font-size:17px; margin:0; font-weight:700; flex:1; }
+  .ab h1.c{ text-align:center; } .ab .r{ font-size:17px; color:#c7d0ca; }
+  .scr{ background:#0d1411; padding:0 10px 14px; max-height:760px; overflow:hidden; }
+  .sub{ font-size:11.5px; color:#8a988e; margin-top:-6px; padding:0 4px 8px; }
+  .lbl{ font-size:10px; font-weight:700; letter-spacing:.6px; text-transform:uppercase; color:#8a988e; margin:14px 4px 6px; }
+  .card{ background:#182019; border:1px solid #212c22; border-radius:14px; padding:12px 14px; }
+  .card+.card{ margin-top:10px; }
+  .row{ display:flex; align-items:center; gap:11px; }
+  .chev{ margin-left:auto; color:#6b776f; }
+  .pill{ display:inline-block; background:#1c2a3f; color:#9dc0ee; font-size:12px; font-weight:600; padding:5px 12px; border-radius:999px; }
+  .seg{ display:flex; background:#151d17; border:1px solid #24301f; border-radius:12px; overflow:hidden; }
+  .seg div{ flex:1; text-align:center; padding:9px 4px; font-size:12.5px; color:#9aa79e; }
+  .seg div.on{ background:#20304a; color:#cfe0ff; font-weight:600; }
+  .fld{ background:#141b15; border:1px solid #2a3729; border-radius:11px; padding:11px 12px; font-size:13.5px; color:#dbe4dd; display:flex; align-items:center; gap:8px; }
+  .flabel{ font-size:12px; color:#9aa79e; margin:0 2px 5px; }
+  .muted{ font-size:11.5px; color:#7f8d84; margin:7px 2px 0; }
+  .li{ display:flex; align-items:center; gap:11px; padding:11px 2px; border-bottom:1px solid #212c22; }
+  .li:last-child{ border-bottom:none; }
+  .av{ width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:18px; }
+  .li .t{ font-size:14px; font-weight:600; } .li .s{ font-size:11.5px; color:#8a988e; margin-top:1px; }
+  .li .tr{ margin-left:auto; font-size:12px; color:#8a988e; }
+  .btn{ background:#20304a; color:#bcd4ff; text-align:center; padding:14px; border-radius:16px; font-weight:600; font-size:15px; margin-top:14px; }
+
+  /* NEW highlight */
+  .new{ display:inline-block; background:var(--el-fruit); color:#2a1012; font-size:9.5px; font-weight:800;
+    padding:2px 7px; border-radius:999px; letter-spacing:.3px; vertical-align:middle; margin-left:6px; }
+  .add{ position:relative; border:1.5px dashed var(--tplus) !important; }
+  .addtag{ position:absolute; top:-9px; right:12px; background:var(--tplus); color:#241c05; font-size:9px;
+    font-weight:800; padding:2px 8px; border-radius:999px; letter-spacing:.3px; }
+
+  /* element section (task detail) */
+  .elsec{ display:flex; align-items:center; gap:13px; }
+  .elsec .big{ font-size:28px; } .elsec .t{ font-size:15px; font-weight:700; } .elsec .s{ font-size:11.5px; color:#9aa79e; margin-top:2px; }
+  /* element hint (when) */
+  .elhint{ display:flex; align-items:center; gap:9px; font-size:12.5px; color:#d7c98f; }
+  .elhint .dot{ width:9px; height:9px; border-radius:50%; background:var(--el-fruit); }
+  /* chip */
+  .chip{ display:inline-flex; align-items:center; gap:6px; border:1px solid #33414f; border-radius:999px; padding:7px 13px; font-size:12.5px; color:#cfe0ff; }
+  .chip.moon{ border-color:var(--tplus); color:var(--tplus); }
+
+  /* month grid (journal) */
+  .mg{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; }
+  .mh{ display:grid; grid-template-columns:repeat(7,1fr); gap:5px; margin-bottom:5px; }
+  .mh div{ text-align:center; font-size:9.5px; color:#8a988e; }
+  .cl{ aspect-ratio:1/1.06; border-radius:9px; background:#1a2740; display:flex; flex-direction:column;
+    align-items:center; padding:5px 0 0; position:relative; }
+  .cl .n{ font-size:11px; color:#d6ddd8; } .cl .dt{ margin-top:auto; margin-bottom:4px; display:flex; gap:2px; }
+  .cl .dt i{ width:4px; height:4px; border-radius:50%; background:#7fa8e0; }
+  .cl.today{ outline:2px solid #6b8fd6; } .cl.sel{ outline:2px solid #d18a72; }
+  .cl .mn{ position:absolute; top:3px; right:4px; font-size:9px; }
+  .cl.root{ background:var(--el-root-bg);} .cl.leaf{ background:var(--el-leaf-bg);} .cl.flower{ background:var(--el-flower-bg);} .cl.fruit{ background:var(--el-fruit-bg);}
+  .cl.root .n{color:#d9ccf5} .cl.leaf .n{color:#bcdcff} .cl.flower .n{color:#ffe6ab} .cl.fruit .n{color:#ffc9cb}
+
+  /* notes */
+  .note{ flex:1 1 320px; min-width:300px; max-width:540px; padding-top:4px; }
+  .note .sn{ font-size:12px; font-weight:700; color:#2266aa; letter-spacing:.4px; }
+  .note h2{ font-size:20px; margin:2px 0 10px; }
+  .note h4{ font-size:12px; text-transform:uppercase; letter-spacing:.5px; color:#6b7770; margin:15px 0 5px; }
+  .note p{ font-size:14px; line-height:1.6; color:#37433d; margin:0 0 8px; }
+  .note ul{ margin:4px 0 8px 18px; padding:0; } .note li{ font-size:13.5px; line-height:1.5; margin-bottom:4px; }
+  .op{ background:#fbf7ec; border-left:3px solid #e0a82e; border-radius:0 10px 10px 0; padding:11px 14px; font-size:13.5px; line-height:1.5; }
+  .op b{ color:#8a6a12; }
+  .q{ background:#fdeceb; border-left:3px solid #e5484d; border-radius:0 10px 10px 0; padding:11px 14px; font-size:13.5px; line-height:1.5; margin-top:8px; }
+
+  .foot{ margin-top:24px; padding-top:18px; border-top:1px solid #c1cbc4; font-size:13px; color:#5a655e; line-height:1.6; }
+  .foot code{ background:#dfe4e0; padding:1px 5px; border-radius:5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="doc-head">
+    <span class="tag">FR-19 · integracije na PRAVIH zaslonih · v3</span>
+    <h1>Kje se Lunin koledar prilepi na obstoječe zaslone</h1>
+    <p>Vsak telefon spodaj je <b>dejanski zaslon iz aplikacije</b> (posnet z naprave prek ADB, temna tema),
+      ne izmišljen. <b>Prekinjena medena obroba + značka »NOVO«</b> označuje edino, kar dodava. Nad vsakim
+      board-om je <b>pot klikov</b> — kako uporabnik sploh pride do tega zaslona. Celotna karta zaslonov +
+      rute: <code>docs/screen-map.md</code>. Namenski lunini zasloni (koledar, dan, iskalnik, ✦ Tendask+):
+      <code>lunar-calendar_overview.html</code>.</p>
+  </div>
+
+
+  <!-- ===== BOARD A: DETAJL OPRAVILA ===== -->
+  <div class="board first">
+    <div>
+      <div class="flow"><b>Kako prideš:</b> Domov / Opravila / Dnevnik <span class="arw">→</span> <b>tap opravila</b> <span class="arw">→</span> detajl opravila (<code>/task/:id</code>)</div>
+      <div class="phone">
+        <div class="sb"><span>17:00</span><span>📶 🔋</span></div>
+        <div class="ab"><span class="bk">←</span><h1 class="c">Opravilo</h1><span class="r">⋯</span></div>
+        <div class="scr">
+          <div class="row" style="gap:13px;margin-bottom:12px;">
+            <div class="av" style="background:#1c2a3f;">🧺</div>
+            <div><div style="font-size:17px;font-weight:700;">Pobiranje</div><div style="font-size:12px;color:#8a988e;">🌱 jablana</div></div>
+          </div>
+          <div style="margin-bottom:14px;"><span class="pill">✓ Opravljeno · 14. 7. 2026 · 10:00</span></div>
+
+          <div class="lbl">Rastlina ali območje (1)</div>
+          <div class="card"><div class="row">🍎 <span style="font-size:14px;">jablana</span><span class="chev">›</span></div></div>
+
+          <div class="lbl">Vremenski posnetek</div>
+          <div class="card"><div class="row" style="gap:12px;"><span style="font-size:26px;">☁️</span><div><div style="font-size:15px;font-weight:700;">Oblačno 26°C</div><div style="font-size:11px;color:#8a988e;">💧61% · 💨9.5 · 0mm · ETo 4.7</div></div></div></div>
+
+          <div class="lbl" style="color:var(--tplus);">Lunin koledar <span class="new">NOVO</span></div>
+          <div class="card add"><div class="addtag">＋ doda FR-19</div>
+            <div class="elsec"><div class="big">🍅</div><div><div class="t">Dan za plod</div><div class="s">do 14:20, nato 🥕 korenina · ogenj (Strelec)</div></div></div>
+            <div class="muted">Tradicija, ne nasvet. Preračunano iz datuma opravila.</div>
+          </div>
+
+          <div class="btn">✏️ Uredi</div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="sn">BOARD A · DETAJL OPRAVILA</div>
+      <h2>Oznaka element-dneva ob datumu</h2>
+      <p><b>Trigger (jasno):</b> nič novega za navigacijo — opravilo odpreš z <b>tapom kjerkoli</b> (Domov
+        NAZADNJE, seznam Opravila, dan v Dnevniku). Doda se le <b>nova sekcija »Lunin koledar«</b> pod
+        obstoječi »Vremenski posnetek« (<code>task_detail_screen.dart</code>).</p>
+      <div class="op"><b>Ključno:</b> element se <b>NE zamrzuje</b> kot vreme — vedno re-izpeljan iz
+        <code>task.date</code>. Če datum spremeniš, se posodobi. Brez sheme/synca.</div>
+      <div class="q"><b>Odprto:</b> pri vseh opravilih ali le setev/saditev/spravilo? Predlog: vedno (poceni),
+        besedilo nevtralno. Vidno le, ko je Lunin koledar vklopljen.</div>
+    </div>
+  </div>
+
+
+  <!-- ===== BOARD B: KORAK KDAJ ===== -->
+  <div class="board">
+    <div>
+      <div class="flow">Domov <b>＋</b> <span class="arw">→</span> Korak 1 (tip) <span class="arw">→</span> Korak 2 (za kaj) <span class="arw">→</span> <b>Korak 3 · Kdaj</b> (<code>/task-new</code>)</div>
+      <div class="phone">
+        <div class="sb"><span>17:02</span><span>📶 🔋</span></div>
+        <div class="ab"><span class="bk">←</span><h1 class="c">🧪 Gnojenje</h1><span class="r">✕</span></div>
+        <div class="scr">
+          <div style="display:flex;gap:5px;margin-bottom:14px;"><span style="flex:2;height:4px;background:#6b8fd6;border-radius:2px;"></span><span style="flex:1;height:4px;background:#26312a;border-radius:2px;"></span><span style="flex:1;height:4px;background:#26312a;border-radius:2px;"></span></div>
+          <div style="font-size:13px;color:#9aa79e;margin-bottom:12px;">Korak 3 · Kdaj</div>
+          <div class="seg" style="margin-bottom:14px;"><div class="on">Danes</div><div>Jutri</div><div>Datum…</div></div>
+          <div style="display:flex;gap:10px;">
+            <div style="flex:1;"><div class="flabel">Datum</div><div class="fld">📅 23. 7. 2026</div></div>
+            <div style="flex:0 0 110px;"><div class="flabel">Ura</div><div class="fld">🕐 18:00</div></div>
+          </div>
+
+          <div class="card add" style="margin-top:10px;padding:11px 13px;"><div class="addtag">＋ doda FR-19</div>
+            <div class="elhint"><span class="dot"></span><span>🍅 <b style="color:#f3b0b3;">dan za plod</b> — ugodno za setev plodovk</span></div>
+          </div>
+
+          <div class="flabel" style="margin-top:16px;">Status</div>
+          <div class="seg" style="width:210px;"><div class="on">Čaka</div><div>Opravljeno</div></div>
+          <div class="flabel" style="margin-top:16px;">Ponavljanje</div>
+          <div class="seg"><div class="on">Brez</div><div>Dnevno</div><div>Tedensko</div><div>Po meri</div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="sn">BOARD B · KORAK »KDAJ« (vnos opravila, korak 3)</div>
+      <h2>Medla oznaka pod izbranim datumom</h2>
+      <p><b>Trigger:</b> Domov <b>＋ (FAB)</b> → Korak 1 (tip) → Korak 2 (za kaj) → <b>Korak 3 · Kdaj</b>
+        (<code>when_step.dart</code>). Doda se <b>ena medla vrstica</b> pod polji Datum/Ura — element izbranega
+        datuma (parameter <code>date</code> že obstaja, brez novega stanja).</p>
+      <div class="op"><b>Zakaj tu največ vredno:</b> kdor dela po luni, <b>izbere datum ZATO, ker</b> je pravi
+        element. Namig neposredno ob izbiri datuma.</div>
+      <div class="q"><b>Odprto:</b> namig tudi pri »Danes/Jutri« (ne le »Datum…«)? Predlog: da, vedno ko je
+        datum znan. Skrit, ko je koledar izklopljen.</div>
+    </div>
+  </div>
+
+
+  <!-- ===== BOARD C: DNEVNIK KOLEDAR — OVERLAY (rethink) ===== -->
+  <div class="board">
+    <div>
+      <div class="flow">Dnevnik <span class="arw">→</span> <b>Mesec</b> · toggle v <code>/moon-settings</code> vklopi lunino plast</div>
+      <div style="display:flex;gap:18px;flex-wrap:wrap;">
+        <div>
+          <div style="text-align:center;font-size:11px;font-weight:700;color:#6b7770;text-transform:uppercase;margin-bottom:7px;">Lunin koledar IZKLOPLJEN (kot zdaj)</div>
+          <div class="phone">
+            <div class="sb"><span>16:59</span><span>📶 🔋</span></div>
+            <div class="ab"><h1>Dnevnik</h1></div><div class="sub">vrtni dnevnik</div>
+            <div class="scr">
+              <div class="seg" style="width:220px;margin:0 auto 12px;"><div>Časovnica</div><div class="on">Mesec</div></div>
+              <div style="text-align:center;font-size:13px;font-weight:600;margin-bottom:8px;">‹ julij 2026 ›</div>
+              <div class="mh"><div>p</div><div>t</div><div>s</div><div>č</div><div>p</div><div>s</div><div>n</div></div>
+              <div class="mg">
+                <div class="cl" style="visibility:hidden;"></div><div class="cl" style="visibility:hidden;"></div>
+                <div class="cl"><span class="n">1</span><div class="dt"><i></i></div></div>
+                <div class="cl"><span class="n">2</span><div class="dt"><i></i></div></div>
+                <div class="cl"><span class="n">3</span></div><div class="cl"><span class="n">4</span></div><div class="cl"><span class="n">5</span></div>
+                <div class="cl"><span class="n">6</span></div><div class="cl"><span class="n">7</span></div>
+                <div class="cl"><span class="n">8</span></div><div class="cl"><span class="n">9</span></div><div class="cl"><span class="n">10</span></div><div class="cl"><span class="n">11</span></div><div class="cl"><span class="n">12</span></div>
+                <div class="cl"><span class="n">13</span></div><div class="cl"><span class="n">14</span><div class="dt"><i></i><i></i></div></div><div class="cl"><span class="n">15</span></div><div class="cl"><span class="n">16</span></div><div class="cl"><span class="n">17</span></div><div class="cl"><span class="n">18</span></div><div class="cl"><span class="n">19</span></div>
+                <div class="cl"><span class="n">20</span><div class="dt"><i></i></div></div><div class="cl sel"><span class="n">21</span><div class="dt"><i></i></div></div><div class="cl"><span class="n">22</span></div><div class="cl today"><span class="n">23</span></div><div class="cl"><span class="n">24</span></div><div class="cl"><span class="n">25</span></div><div class="cl"><span class="n">26</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div>
+          <div style="text-align:center;font-size:11px;font-weight:700;color:var(--tplus);text-transform:uppercase;margin-bottom:7px;">VKLOPLJEN — element + mena čez isti koledar</div>
+          <div class="phone">
+            <div class="sb"><span>16:59</span><span>📶 🔋</span></div>
+            <div class="ab"><h1>Dnevnik</h1><span class="new" style="margin:0;">NOVO</span></div><div class="sub">vrtni dnevnik</div>
+            <div class="scr">
+              <div class="seg" style="width:220px;margin:0 auto 12px;"><div>Časovnica</div><div class="on">Mesec</div></div>
+              <div style="text-align:center;font-size:13px;font-weight:600;margin-bottom:8px;">‹ julij 2026 ›</div>
+              <div class="mh"><div>p</div><div>t</div><div>s</div><div>č</div><div>p</div><div>s</div><div>n</div></div>
+              <div class="mg">
+                <div class="cl" style="visibility:hidden;"></div><div class="cl" style="visibility:hidden;"></div>
+                <div class="cl fruit"><span class="n">1</span><div class="dt"><i></i></div></div>
+                <div class="cl fruit"><span class="n">2</span><div class="dt"><i></i></div></div>
+                <div class="cl root"><span class="n">3</span></div><div class="cl root"><span class="n">4</span></div><div class="cl flower"><span class="n">5</span></div>
+                <div class="cl flower"><span class="n">6</span></div><div class="cl leaf"><span class="n">7</span></div>
+                <div class="cl leaf"><span class="n">8</span></div><div class="cl fruit"><span class="n">9</span></div><div class="cl fruit"><span class="n">10</span></div><div class="cl root"><span class="n">11</span></div><div class="cl root"><span class="n">12</span></div>
+                <div class="cl flower"><span class="n">13</span></div><div class="cl flower"><span class="n">14</span><span class="mn">🌑</span><div class="dt"><i></i><i></i></div></div><div class="cl leaf"><span class="n">15</span></div><div class="cl leaf"><span class="n">16</span></div><div class="cl fruit"><span class="n">17</span></div><div class="cl fruit"><span class="n">18</span></div><div class="cl root"><span class="n">19</span></div>
+                <div class="cl root"><span class="n">20</span><div class="dt"><i></i></div></div><div class="cl flower sel"><span class="n">21</span><span class="mn">🌓</span><div class="dt"><i></i></div></div><div class="cl flower"><span class="n">22</span></div><div class="cl leaf today"><span class="n">23</span></div><div class="cl fruit"><span class="n">24</span></div><div class="cl fruit"><span class="n">25</span></div><div class="cl root"><span class="n">26</span></div>
+              </div>
+              <div style="font-size:10.5px;color:#8a988e;text-align:center;margin-top:10px;">Iste celice + tvoje pike opravil · element-barva + mena</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="sn">BOARD C · DNEVNIK KOLEDAR (prej nejasen — PREMIŠLJENO ZNOVA)</div>
+      <h2>En koledar, lunina plast se prižge/ugasne</h2>
+      <p>Prej sem narisal <b>ločen, zmeden koledar</b>. Bolje (tvoj predlog): <b>NE nov koledar</b>, ampak
+        <b>ista dnevniška mreža</b> (levo = kakršna je zdaj). Ko v nastavitvah vklopiš Lunin koledar, iste
+        celice dobijo <b>element-barvo + meno</b> (desno) — <b>tvoje pike opravil ostanejo</b>.</p>
+      <div class="flow" style="margin-top:0;">Toggle: <code>/moon-settings</code> → »Prikaži v Dnevniku« <span class="arw">→</span> Dnevnik Mesec se obarva</div>
+      <div class="op"><b>Razlika do namenskega koledarja</b> (<code>/moon-calendar</code>, board 3 v pregledu):
+        namenski je »dom« za <b>planiranje</b> (Teden z opisi, iskalnik, dan podrobno). Dnevniška plast je le
+        <b>orientacija ob tvojih opravilih</b> — brez podvajanja funkcij.</div>
+      <div class="q"><b>Odprto (§8.9):</b> gradiva to plast v MVP ali šele za V2 (najprej namenski koledar)?
+        Predlog: namenski najprej, dnevniška plast za V2.</div>
+    </div>
+  </div>
+
+
+  <!-- ===== BOARD D: DETAJL RASTLINE → iskalnik ===== -->
+  <div class="board">
+    <div>
+      <div class="flow">Vrt <span class="arw">→</span> <b>tap rastline</b> <span class="arw">→</span> detajl rastline (<code>/plant/:id</code>) <span class="arw">→</span> chip <b>»🌙 Kdaj za …«</b> <span class="arw">→</span> <code>/moon-finder?plant=</code></div>
+      <div class="phone">
+        <div class="sb"><span>17:01</span><span>📶 🔋</span></div>
+        <div class="ab"><span class="bk">←</span><h1 class="c"></h1><span class="r">✏️</span></div>
+        <div class="scr">
+          <div class="row" style="gap:14px;margin-bottom:12px;">
+            <div class="av" style="width:56px;height:56px;border-radius:50%;background:#1c2a3f;font-size:26px;">🍎</div>
+            <div><div style="font-size:19px;font-weight:700;">jablana</div><div style="font-size:12px;color:#8a988e;font-style:italic;">Malus domestica</div></div>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;">
+            <span class="chip">📍 Dodeli območje</span>
+            <span class="chip moon">🌙 Kdaj za … <span class="new" style="margin-left:2px;">NOVO</span></span>
+          </div>
+
+          <div class="lbl">Pridelek</div>
+          <div class="card"><div class="row"><span style="font-size:14px;">Skupaj</span><span class="chev" style="color:#e6ece8;font-weight:700;">2 kg</span></div></div>
+
+          <div class="lbl">Zgodovina opravil</div>
+          <div class="card"><div class="row"><div class="av" style="background:#1c2a3f;">🧺</div><div><div style="font-size:14px;font-weight:600;">Pobiranje</div><div style="font-size:11.5px;color:#8a988e;">🧺 2 kg</div></div><span class="tr" style="margin-left:auto;color:#8a988e;font-size:12px;">14. 7. 2026</span></div></div>
+        </div>
+      </div>
+    </div>
+    <div class="note">
+      <div class="sn">BOARD D · DETAJL RASTLINE → OBRATNI ISKALNIK</div>
+      <h2>Kateri CTA pelje do iskalnika</h2>
+      <p><b>Trigger (jasno, na pravem zaslonu):</b> Vrt → tap rastline → detajl rastline. Ta že ima chip
+        <b>»📍 Dodeli območje«</b> v hero-ju; poleg njega doda <b>drugi chip »🌙 Kdaj za …«</b>
+        (<code>plant_detail_screen.dart</code>, <code>_Hero</code>).</p>
+      <h4>Kaj naredi tap</h4>
+      <p>Chip → <code>pushNamed('moon-finder', {'plant': id})</code> → iskalnik se odpre <b>predizpolnjen s to
+        rastlino</b>, rezultati takoj. Vsaka rastlina ima svoj vstop → tako prideš do iskalnika za <b>različne
+        rastline</b>.</p>
+      <div class="op"><b>Mapping (že imava):</b> <code>plant.plantId</code> → <code>coarsePlantCategory</code>
+        → element. Nova le čista funkcija <code>categoryToElement()</code>.</div>
+      <div class="q"><b>Odprto:</b> chip (kompaktno) ali polna vrstica (vidneje)? Predlog: chip za konsistenco
+        z »Dodeli območje«. Vidno le ob vklopljenem koledarju (in — kasneje — aktivnem ✦ Tendask+, če iskalnik
+        ostane premium). Drugi vstop v iskalnik = 🔎 v koledarju (gl. pregled).</div>
+    </div>
+  </div>
+
+
+  <div class="foot">
+    <b>Vsi board-i so PRAVI zasloni z naprave</b> (ADB 2026-07-23), z eno dodano stvarjo (medena obroba + NOVO).
+    Vstop v ✦ Tendask+ iz Nastavitev je zdaj v <code>lunar-calendar_overview.html</code> (spada k lunini feature
+    skupini), realna struktura Nastavitev pa v <code>docs/screen-map.md §2.1</code>.<br>
+    <b>Skupna pravila:</b> element re-izpeljan iz datuma (brez shrambe/synca) · vidno le ob vklopljenem koledarju ·
+    barve/ikone iz teme · besedila <code>t.moon.*</code> (sl/en/de) · povsod <b>»✦ Tendask+«</b>, prihodnje = <b>»Kmalu«</b>.<br>
+    Karta zaslonov + rute + prehodi: <code>docs/screen-map.md</code> · namenski lunini zasloni: <code>lunar-calendar_overview.html</code>.
+  </div>
+
+</div>
+</body>
+</html>
