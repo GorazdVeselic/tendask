@@ -123,7 +123,8 @@ lokalno vreme · osebni zgodovinski opomniki · opomniki/todo (kaj+kdaj+opomba) 
 prosto besedilo / opombe · beleženje zalog sredstev · ponavljajoči opomniki.
 
 ### 6.7 ❌ V1 namenoma NE vključuje (→ kasneje)
-- **Foto** (izpuščeno zaenkrat).
+- **Foto / nalaganje slik** — **dokončno izven obsega** (odločeno 2026-07-22, tester T9): ne V1 ne
+  kasneje. Zahteva Supabase Storage + binarni sync + strošek/zasebnost ob skali — trči ob offline-first / €0.
 - **AI svetovalec** za odločanje ("ni nujno, izpustimo v tem koraku").
 - **Avtomatski kalkulator mešanic** — v1 le ročna opomba v polju
   (npr. "100g uree na 16l"); avtomatski izračun kasneje.
@@ -151,7 +152,6 @@ prosto besedilo / opombe · beleženje zalog sredstev · ponavljajoči opomniki.
 - **Kalkulator mešanice/odmerka** glede na opremo (npr. 16 l škropilnica).
 - **Profili opreme** (škropilnice in volumni) za personalizirane izračune.
 - **Profili sredstev** (povezano z zalogami in "katero mešanico sem uporabil lani").
-- **Foto-zgodovina** (rast, bolezni skozi čas).
 
 ### ⚠️ Tveganja (za kasneje)
 - **Točnost agronomskih nasvetov:** napačen odmerek lahko poškoduje rastline →

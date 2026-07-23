@@ -22,7 +22,6 @@
 | T1 | Avtomatska opravila + napoved pobiranja | **zelo velik** | visoka | **Že planirano = M11** (pametni motor); pobiranje le kjer obstaja pravilo |
 | T2 | Predlog naslednje rastline (kolobarjenje) | velik | srednja | **Že zabeleženo = FR-10** (V2/motor) |
 | T5 | Manjka podvrsta/varieta | velik (strukturno) | srednja | Zdaj: prosti `personalAlias`; strukturni katalog = V2+ |
-| T9 | Beleženje slik (zgodba rasti) | **zelo velik** | **visoka** | Močan V2 kandidat; rabi Supabase Storage + binarni sync |
 | T8 | Smiselno zaporedje opravil (odvisnosti) | velik | nizka | **Verjetno ne** — poruši prosti flow; motor to deloma reši z verigami |
 
 ---
@@ -274,24 +273,14 @@ prosti vnos. Verige motorja so pravšnja velikost odgovora. Nizka prioriteta.
 
 ---
 
-### T9 — Beleženje slik (zgodba rasti: saditev, mimohod, bolezen, pobiranje)
+### T9 — Beleženje slik (zgodba rasti) → ZAVRNJENO
 
-**Opazil:** slikaš ob saditvi, mimohodu, bolezni, pobiranju → na koncu sestaviš zgodbo, slikovno
-dokumentiraš prirastek.
+**Opazil:** slikaš ob saditvi/mimohodu/bolezni/pobiranju → slikovni dnevnik prirastka.
 
-**Dejansko stanje:** **ni podpore za slike** — namerno izpuščeno (`koncept.md` §6.7: »Foto izpuščeno
-zaenkrat«; roadmap wishlist: »Zgodovina rasti (foto, bolezni skozi čas)«). Nobena tabela (drift/Supabase)
-nima slikovnih polj; sync je vrstično/JSON, ne binarni.
-
-**Ocena:** **visoka uporabniška vrednost** (vizualni dnevnik je zelo privlačen), a **velik zalogaj**:
-zajem slike, lokalna shramba, **Supabase Storage**, **binarni sync** (trenutni sync tega ne zna),
-offline obravnava, sličice, stroški/zasebnost ob skali. Trči ob omejitve €0 / offline-first / zasebnost.
-
-**Priporočilo:** močan **V2 kandidat**, ne MVP. Ob obravnavi upoštevaj infrastrukturne posledice
-(Supabase Storage, binarni sync, strošek ob rasti). Že na wishlistu — predlagam dvig prioritete znotraj
-V2, a ne pred zaključkom MVP/launcha.
-
-**Odločitev:** _(odprto — V2)_
+**Odločitev (2026-07-22): NE — slik ne nalagamo (dokončno izven obsega).** Vizualni dnevnik ima visoko
+uporabniško vrednost, a zahteva Supabase Storage + binarni sync (trenutni sync tega ne zna) + offline
+obravnavo + sličice + strošek/zasebnost ob skali — trči ob €0 / offline-first / zasebnost. **Umaknjeno
+iz backloga** (ne V2, ne wishlist).
 
 ---
 
