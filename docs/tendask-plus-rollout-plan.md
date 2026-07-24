@@ -42,21 +42,22 @@ Vsak korak je **sam po sebi deployabilen v prod** (dark). Med koraki lahko kadar
 
 | # | Korak | Stanje v main | Dokument |
 |---|---|---|---|
-| **1** | **M11 poravnava → main** | dark (`kSuggestionsEnabled=false`) | [`m11/11-poravnava-v-main.md`](m11/11-poravnava-v-main.md) |
-| **2** | **Dokončaj M11** (ostanek faze E) | dark | [`m11/09-koraki.md`](m11/09-koraki.md) |
-| **3** | **FR-20 licenčna infra** | zid obstaja, nič ne zaklepa | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
-| **4** | **FR-19 lunin koledar** | mena Lune free; bogati del dark | [FR-19](feature-requests/biodynamic-calendar.md) |
-| **5** | **Prižig** | razkritje | §4 spodaj |
+| **1 ✅** | **Uskladi M11 z main** (main → M11; branch OSTANE, NE merge v main) — **IZVEDENO 2026-07-24** (`e0734ac`+`c27208e`) | na `feat/m11-smart-engine` | [`m11/11-poravnava-v-main.md`](m11/11-poravnava-v-main.md) |
+| **2** | **Dokončaj M11** (ostanek faze E) | na branchu | [`m11/09-koraki.md`](m11/09-koraki.md) |
+| **3** | **Merge M11 → main** (dark, `kSuggestionsEnabled=false`) — neboleč, ker M11 že vsebuje ves main | v main | — |
+| **4** | **FR-20 licenčna infra** | v main (zid obstaja, nič ne zaklepa) | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
+| **5** | **FR-19 lunin koledar** | v main (mena free; bogati del dark) | [FR-19](feature-requests/biodynamic-calendar.md) |
+| **6** | **Prižig** | razkritje | §4 spodaj |
 
 **Zakaj ta red:**
 - **M11 prvi** — je staralna bomba (125/46 in raste); defuziraj takoj. (FR-19 ne front-loadava, ker po novem modelu ne izide free — glej FR-20 §10.4.)
-- **Dokončaj M11 tik za poravnavo** (koraka 1→2 skupaj), ker je kontekst M11 takrat v glavi; FR-20 vmes bi ga naložil dvakrat.
+- **Uskladi → dokončaj → mergaj nazaj (koraki 1→2→3 skupaj, hitro):** uskladitev (korak 1) je le **posnetek** — če main vmes premakneš, M11 spet zaide, zato dokončaj in mergaj nazaj, preden main odtava. Kontekst M11 je takrat tudi v glavi.
 - **FR-20 pred FR-19**, ker FR-19 bogati del debitira zaklenjen → zid mora obstajati.
-- Koraka 1–3 se dotikata sheme → gredo **serijsko** (§2).
+- Koraki 1–4 se dotikajo sheme → gredo **serijsko** (§2).
 
 ---
 
-## 4. Prižig (korak 5 — edini »big bang«, in je majhen)
+## 4. Prižig (korak 6 — edini »big bang«, in je majhen)
 
 Vse hkrati, en dogodek:
 

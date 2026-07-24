@@ -572,6 +572,24 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-24 — **Uskladitev M11 ↔ main (main→M11, flag-dark; `feat/m11-smart-engine`, pushano).**
+  `git merge main` v M11 (branch OSTANE, **NE** merge v main) — da M11 sedi na svežem main in bo kasnejši
+  merge-back neboleč. Commita: `e0734ac` (merge, code reconcile) + `c27208e` (chore db). **Flag-dark:**
+  `kSuggestionsEnabled=false` + ovite vse M11 vstopne točke (band na Domov, `/suggestions/history` ruta,
+  gumb v nastavitvah, weather/community toggla, FCM init/token/handlerji/climate, suggestion notif-kanal).
+  **Drift shema re-sekvenca:** main v10–v13 (že v produkciji) ostanejo, M11 smart-engine → **v14**,
+  plant_task_rules → **v15**; `schemaVersion=15`. 4 razrezani zasloni (home/journal/entry/notif-settings)
+  na novo vgrajeni v main strukturo; i18n union + slang; generirane regenerirane (build_runner). Popravljeni
+  2 latentni M11 napaki: podvojena `/task/:id` `task-view` ruta + manjkajoča `supply` tabela v
+  `migration_v9_test`. **Supabase (`c27208e`):** 0006/0009 retrofitane na idempotentne (`if not exists`,
+  `drop policy if exists`, `on conflict do nothing`) — nujno, ker prod ima M11 objekte out-of-band (vrzel
+  0006–0010 v ledgerju; staging jih sploh nima); **server-dark `app_config.engine_enabled=false`** + guard
+  v `engine_dispatch()`+`agg_refresh_all()`. `flutter analyze` čist, cel `flutter test` **904 zeleno**;
+  on-device dimni test **PASS** (SM A536B staging: svež v15 onCreate brez crash-a, Domov brez suggestion
+  pasu = flag-dark potrjen, Firebase preskočen, sync s stagingom OK, `plant_task_rule` graciozno pade).
+  Sekvence prod/staging preverjene read-only (red-neodvisne). **NASLEDNJE:** dokončaj M11 fazo E → merge
+  M11→main → prižig. *Commiti:* `merge: uskladi feat/m11-smart-engine s trenutnim main (flag-dark)`,
+  `chore(db): idempotentne M11 migracije 0006-0010 + server-dark engine_enabled flag`
 - 2026-07-15 — **Matrika postavitve + refaktor entry korakov + on-device dimni test (`main`, pushano).**
   **(A) Matrika postavitve `test/layout/` (`850eb7b`).** Novo orodje proti tihim UI prelomom: vsak zaslon
   se izriše čez **viewport × locale × text-scale** (3 širine 320/360/411 × sl/en/de × 1.0/1.3 = 234

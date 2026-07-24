@@ -1,8 +1,10 @@
 # M11 — poravnava v `main` (flag-dark landing)
 
-- **Status:** načrt (ni izvedeno)
-- **Datum:** 2026-07-23
-- **Kontekst:** `feat/m11-smart-engine` je zaostal za `main` (**125 commitov main naprej, 46 M11 naprej**; razšla sta se 2026-06-19). Cilj: M11 poravnati v `main` **ugasnjen za flagom**, da neha zastarati, a uporabnik ne vidi ničesar do namernega vklopa (§ FR-20 §10.2 — M11 debitira zaklenjen kot Plus, brez grandfatheringa).
+- **Status:** ✅ IZVEDENO 2026-07-24 — commita `e0734ac` (merge) + `c27208e` (chore db) na `origin/feat/m11-smart-engine`; `flutter analyze` čist + cel `flutter test` zelen (904); on-device dimni test PASS (flag-dark potrjen). Branch OSTANE; merge M11→main je kasnejši ločen korak.
+- **Datum:** 2026-07-23 (načrt) · 2026-07-24 (izvedba)
+- **Kontekst:** `feat/m11-smart-engine` je zaostal za `main` (**125 commitov main naprej, 46 M11 naprej**; razšla sta se 2026-06-19).
+- **Cilj (ta korak): M11 branch USKLADITI s trenutnim `main` — pripelji main V M11 (`git merge main` na M11 branchu).** M11 branch **OSTANE**; **NE merge v `main` v tem koraku.** Namen: da M11 sedi na svežem main code base in bo **kasnejši** merge M11 → main **neboleč** (M11 bo že vseboval ves main). Merge M11 → main (dark, po FR-20 §10.2) je **ločen kasnejši korak** po dokončanju M11.
+- ⚠️ **Uskladitev je posnetek.** Če main premakneš, preden je M11 dokončan, **znova pomergaj main v M11** pred končnim merge-back. Zato M11 dokončaj + mergaj nazaj razmeroma hitro (prvi v rollout redu).
 - **Povezave:** [`09-koraki.md`](09-koraki.md) (M11 tasklist), [`08-flutter-arhitektura.md`](08-flutter-arhitektura.md), [`../feature-requests/tendask-plus-licensing.md`](../feature-requests/tendask-plus-licensing.md) (FR-20 §10.2, §12), [`../deploy-runbook.md`](../deploy-runbook.md) (migracijski ledger)
 
 ---
@@ -92,9 +94,13 @@ Ovij vstopne točke (vse na `if (kSuggestionsEnabled)`):
 - [ ] Drift `schemaVersion` usklajen; migracija čez obstoječo (main) bazo na napravi ne crasha.
 - [ ] On-device: app teče kot navaden main build (nič suggestions), M8 opomniki brez regresije.
 - [ ] `smart-engine` edge funkcija **NI** deployana; cron **NI** omogočen (dark na strežniku).
-- [ ] Merge v `main` (kratkoživ branch — od tod M11 riva z main in ne zastara več).
+- [ ] **NE merge v `main`.** Merge M11 → main je **kasnejši ločen korak** (po dokončanju M11), ne del te uskladitve.
+- [ ] Push posodobljenega `feat/m11-smart-engine` na origin (uskladitev varovana).
 
-**Prižig (kasneje, ne v tej poravnavi):** `kSuggestionsEnabled=true` + deploy edge/cron + gate kot Plus (FR-20 §10.2, §12) — hkrati s FR-19 bogatim delom, en dogodek.
+**Kasnejši koraki (NE v tej uskladitvi):**
+1. **Dokončaj M11** (ostanek faze E) na branchu.
+2. **Merge M11 → main** (dark) — neboleč, ker M11 že vsebuje ves main. Od tod M11 riva z main.
+3. **Prižig:** `kSuggestionsEnabled=true` + deploy edge/cron + gate kot Plus (FR-20 §10.2, §12) — hkrati s FR-19 bogatim delom, en dogodek.
 
 ---
 
