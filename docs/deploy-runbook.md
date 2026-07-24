@@ -121,6 +121,32 @@ operacija; kar je odveč, ostane.
 Pred vc14 je bil prod pri `0013`, medtem ko je koda že pisala `yield_amount`/`category` — živi vc13 je
 bil rešen le zato, ker je bil zgrajen **pred** temi funkcijami. Ne zanašaj se na to; preveri.
 
+### Uskladitev M11↔main + ledger vrzel (2026-07-24)
+
+`feat/m11-smart-engine` je bil usklajen z `main` (`main`→M11, flag-dark). M11 veja ima zdaj **cel
+nabor `0006`–`0016`**; datoteke `0006`–`0010` se prvič srečajo z `0011`–`0016` na eni veji. Preverjeno
+stanje (read-only sonde, 2026-07-24):
+
+| Okolje | Ledger | M11 objekti (`suggestion`, `app_config`, `engine_run`, `activity_*`, …) |
+|---|---|---|
+| **PROD** | `0001`–`0005`, `0011`–`0016` (vrzel `0006`–`0010`) | **obstajajo** (out-of-band) |
+| **STAGING** (WSL) | `0001`–`0005`, `0011`–`0016` (vrzel `0006`–`0010`) | **NE obstajajo** |
+
+Nabora sta **red-neodvisna** (M11 = climate/suggestion/engine/agg; main = default_garden/series/
+yield/supply — **nič prekrivanja objektov**), zato je vrstni red aplikacije nepomemben.
+
+**Idempotenca (2026-07-24):** `0006` in `0009` so retrofitani na `create table/index/materialized view
+if not exists`, `drop policy if exists` + create, `insert … on conflict do nothing`. Razlog: ob
+**ledger uskladitvi** (`db push` z M11-merged veje) bo CLI poskušal `0006`–`0010` (vrzel); na **prod**-u
+ti objekti **že obstajajo** → brez idempotence bi crashnil (»already exists«). Na **staging**-u jih
+ustvari na novo. `0007`/`0008`/`0010` so bili že idempotentni (funkcije `create or replace`, le granti).
+
+**Server-dark flag `app_config.engine_enabled` (2026-07-24):** dodan (seed `false`) + guard na vrhu
+**obeh** cron funkcij (`engine_dispatch()` 0007, `agg_refresh_all()` 0009): dokler je `false`, se croni
+vrtijo a takoj no-op (server-mirror klientskega `kSuggestionsEnabled`). **Ob PRIŽIGU** (skupaj z
+deploy edge fn + `kSuggestionsEnabled=true`): `update app_config set value='true' where key='engine_enabled';`.
+Opomba: `engine_endpoint` je seedan na real edge fn, zato server-dark drži **flag**, ne odsotnost endpointa.
+
 ---
 
 ## 3. App deploy — `deploy.bat` matrika

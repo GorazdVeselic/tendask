@@ -21,7 +21,9 @@
 -- ----- 4.4 aggregate tables ------------------------------------------------
 -- plant_id '' sentinel = "across all plants" (a NULL can't sit in a PK).
 
-create table activity_recent (
+-- Idempotent (if not exists / drop-then-create policy): 0006–0010 live out-of-band
+-- on prod; a ledger-reconcile `supabase db push` re-applies them and must not error.
+create table if not exists activity_recent (
   resolution        text not null check (resolution in ('r7','r6','r5','climate')),
   bucket_key        text not null,
   task_type_id      text not null references task_type(id),
@@ -31,7 +33,7 @@ create table activity_recent (
   primary key (resolution, bucket_key, task_type_id, plant_id)
 );
 
-create table activity_season (
+create table if not exists activity_season (
   resolution       text not null check (resolution in ('r7','r6','r5','climate')),
   bucket_key       text not null,
   task_type_id     text not null references task_type(id),
@@ -43,7 +45,7 @@ create table activity_season (
   primary key (resolution, bucket_key, task_type_id, plant_id, year, iso_week)
 );
 
-create table activity_frequency (
+create table if not exists activity_frequency (
   resolution   text not null check (resolution in ('r7','r6','r5','climate')),
   bucket_key   text not null,
   task_type_id text not null references task_type(id),
@@ -58,7 +60,7 @@ create table activity_frequency (
   primary key (resolution, bucket_key, task_type_id, plant_id, season_year)
 );
 
-create table bucket_population (
+create table if not exists bucket_population (
   resolution     text not null check (resolution in ('r7','r6','r5','climate')),
   bucket_key     text not null,
   distinct_users int  not null,
@@ -73,12 +75,16 @@ alter table activity_season    enable row level security;
 alter table activity_frequency enable row level security;
 alter table bucket_population   enable row level security;
 
+drop policy if exists activity_recent_read on activity_recent;
 create policy activity_recent_read on activity_recent
   for select to anon, authenticated using (distinct_users_7d >= public.k_privacy());
+drop policy if exists activity_season_read on activity_season;
 create policy activity_season_read on activity_season
   for select to anon, authenticated using (publishable);
+drop policy if exists activity_frequency_read on activity_frequency;
 create policy activity_frequency_read on activity_frequency
   for select to anon, authenticated using (n_users >= public.k_privacy());
+drop policy if exists bucket_population_read on bucket_population;
 create policy bucket_population_read on bucket_population
   for select to anon, authenticated using (distinct_users >= public.k_privacy());
 
@@ -94,7 +100,7 @@ grant select on activity_recent, activity_season, activity_frequency, bucket_pop
 -- ----- 4.5 eligible_user matview + agg_event view --------------------------
 -- Eligible users (anti-junk min account age / done count / active days,
 -- decision 8). Service-only: read by the cron, never exposed to clients.
-create materialized view eligible_user as
+create materialized view if not exists eligible_user as
 select u.id as user_id
 from auth.users u
 join public.task t on t.user_id = u.id and t.deleted = false and t.status = 'done'
@@ -106,7 +112,7 @@ having u.created_at <= now() - make_interval(days =>
    and count(distinct t.date::date) >=
          (select (value->>'min_active_days')::int from public.app_config where key = 'eligibility');
 
-create unique index eligible_user_pk on eligible_user (user_id);
+create unique index if not exists eligible_user_pk on eligible_user (user_id);
 revoke all on eligible_user from anon, authenticated;
 
 -- Shared event view for all aggregates: completion events of eligible users,
@@ -153,6 +159,14 @@ $$
 declare
   cur_year int := extract(year from current_date)::int;
 begin
+  -- Server-dark master switch (mirror of client kSuggestionsEnabled): skip the
+  -- whole nightly refresh while disabled. Flip app_config.engine_enabled at launch.
+  if not coalesce(
+       (select (value)::boolean from public.app_config where key = 'engine_enabled'),
+       false) then
+    return;
+  end if;
+
   refresh materialized view public.eligible_user;
 
   -- 1) FEED — sliding 7-day window [today-7, yesterday]; COUNT(DISTINCT) directly

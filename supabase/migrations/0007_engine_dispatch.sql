@@ -31,6 +31,15 @@ declare
   srv_key  text := (select decrypted_secret from vault.decrypted_secrets
                     where name = 'engine_service_key');
 begin
+  -- Server-dark master switch (mirror of the client kSuggestionsEnabled): while
+  -- app_config.engine_enabled is false the whole engine stays off — no dispatch,
+  -- no POST. Flip it to true at launch, together with deploying the edge fn.
+  if not coalesce(
+       (select (value)::boolean from public.app_config where key = 'engine_enabled'),
+       false) then
+    return;
+  end if;
+
   -- Fail loud-but-safe on a misconfigured deploy instead of POSTing 'Bearer '.
   if endpoint is null or srv_key is null then
     raise warning 'engine_dispatch: missing engine_endpoint or engine_service_key — skipping';
