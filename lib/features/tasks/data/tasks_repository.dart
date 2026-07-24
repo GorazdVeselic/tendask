@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
+import 'package:flutter/foundation.dart';
 import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
@@ -9,39 +10,29 @@ import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
+import '../task_specs.dart';
+import '../yield_unit.dart';
+import 'recurrence.dart';
+
+// The boundary value types are part of this repository's API — callers that
+// import it get them without a second import.
+export '../task_specs.dart';
 
 /// Captures a weather snapshot as JSON (or null when offline/unavailable).
 /// Injected so the repo stays agnostic of the weather feature — composition,
 /// not a features→features dependency (the provider wires it to WeatherService).
 typedef WeatherCapture = Future<String?> Function();
 
-/// A subject on the repository boundary: a plant OR an area-as-subject.
-/// Keeps drift types out of the UI (see CLAUDE.md — no Companion in signatures).
-class TaskSubjectSpec {
-  const TaskSubjectSpec({this.userPlantId, this.areaId})
-    : assert(
-        userPlantId != null || areaId != null,
-        'A subject must reference a plant or an area',
-      );
-  const TaskSubjectSpec.plant(String userPlantId)
-    : this(userPlantId: userPlantId);
-  const TaskSubjectSpec.area(String areaId) : this(areaId: areaId);
-
-  final String? userPlantId;
-  final String? areaId;
-}
-
-/// A reminder on the repository boundary. Stored now; the actual scheduling
-/// (flutter_local_notifications) lands in M8 — this only persists the model.
-class ReminderSpec {
-  const ReminderSpec({required this.offsetMinutes, this.time});
-
-  /// Minutes before the task date; 0 = at event time.
-  final int offsetMinutes;
-
-  /// "HH:mm" time of day for the notification; null = use the task's own time.
-  final String? time;
-}
+/// Normalizes a yield pair for storage (T11): a complete, positive pair, or
+/// (null, null) otherwise. Mirrors the Supabase CHECKs (`yield_amount > 0`,
+/// amount/unit both-or-neither) so a stray 0 / half pair can never wedge the
+/// sync push. The single gate for every writer.
+({double? amount, String? unitName}) _normalizeYield(
+  double? amount,
+  YieldUnit? unit,
+) => (amount != null && amount.isFinite && amount > 0 && unit != null)
+    ? (amount: amount, unitName: unit.name)
+    : (amount: null, unitName: null);
 
 class TasksRepository {
   TasksRepository(
@@ -80,6 +71,17 @@ class TasksRepository {
             )
             ..orderBy([(t) => OrderingTerm.desc(t.date)]))
           .watch();
+
+  /// Count of non-deleted tasks (any status) — drives the journal-nudge segment
+  /// (FR-16): 0 → never-activated copy, >0 → lapsed copy.
+  Future<int> totalCount() async {
+    final count = _db.tasks.id.count();
+    final query = _db.selectOnly(_db.tasks)
+      ..addColumns([count])
+      ..where(_db.tasks.deleted.equals(false));
+    final row = await query.getSingle();
+    return row.read(count) ?? 0;
+  }
 
   /// One-shot snapshot of waiting (non-deleted) tasks — for reminder reconcile.
   Future<List<Task>> pendingTasks() =>
@@ -142,6 +144,75 @@ class TasksRepository {
 
   Future<List<TaskReminder>> remindersForTask(String taskId) =>
       _remindersQuery(taskId).get();
+
+  /// Scheduling inputs for every active reminder of a waiting task, in ONE join
+  /// (task date + offset/time) — lets a caller compute fire times without an N+1
+  /// over tasks. Used by the journal nudge to find days that already carry a
+  /// reminder (FR-16). Returns plain values, no drift types.
+  Future<List<({DateTime taskDate, int offsetMinutes, String? reminderTime})>>
+  reminderScheduleInputs() async {
+    final rows =
+        await (_db.select(_db.taskReminders).join([
+              innerJoin(
+                _db.tasks,
+                _db.tasks.id.equalsExp(_db.taskReminders.taskId) &
+                    _db.tasks.deleted.equals(false) &
+                    _db.tasks.status.equalsValue(TaskStatus.waiting),
+              ),
+            ])..where(_db.taskReminders.deleted.equals(false)))
+            .get();
+    return [
+      for (final row in rows)
+        (
+          taskDate: row.readTable(_db.tasks).date,
+          offsetMinutes: row.readTable(_db.taskReminders).offset,
+          reminderTime: row.readTable(_db.taskReminders).reminderTime,
+        ),
+    ];
+  }
+
+  /// Everything the reminder coordinator needs to (re)schedule, gathered in a
+  /// fixed THREE queries regardless of task count (no N+1): the waiting tasks
+  /// that carry at least one active reminder, each with its reminders (soonest
+  /// offset first) and its subjects. Returns plain row types, no drift Companion
+  /// on the boundary.
+  Future<
+    List<({Task task, List<TaskReminder> reminders, List<TaskSubject> subjects})>
+  >
+  reminderReconcileInputs() async {
+    final tasks = await pendingTasks();
+    if (tasks.isEmpty) return const [];
+    final taskIds = [for (final t in tasks) t.id];
+
+    final reminders =
+        await (_db.select(_db.taskReminders)
+              ..where((r) => r.taskId.isIn(taskIds) & r.deleted.equals(false))
+              ..orderBy([(r) => OrderingTerm.asc(r.offset)]))
+            .get();
+    final subjects =
+        await (_db.select(_db.taskSubjects)
+              ..where((s) => s.taskId.isIn(taskIds) & s.deleted.equals(false)))
+            .get();
+
+    final remindersByTask = <String, List<TaskReminder>>{};
+    for (final r in reminders) {
+      (remindersByTask[r.taskId] ??= []).add(r);
+    }
+    final subjectsByTask = <String, List<TaskSubject>>{};
+    for (final s in subjects) {
+      (subjectsByTask[s.taskId] ??= []).add(s);
+    }
+
+    return [
+      for (final task in tasks)
+        if (remindersByTask[task.id] case final taskReminders?)
+          (
+            task: task,
+            reminders: taskReminders,
+            subjects: subjectsByTask[task.id] ?? const [],
+          ),
+    ];
+  }
 
   /// Active reminders of one task, soonest offset first — for the detail screen.
   Stream<List<TaskReminder>> watchRemindersForTask(String taskId) =>
@@ -258,10 +329,19 @@ class TasksRepository {
     TaskStatus status = TaskStatus.waiting,
     String? note,
     String? recurrence,
+    String? seriesId,
     List<ReminderSpec> reminders = const [],
+    double? yieldAmount,
+    YieldUnit? yieldUnit,
   }) async {
     final id = _uuid.v4();
     final now = _clock.now();
+    // Harvest yield is a positive both-or-neither pair (T11); normalize here.
+    final yieldValue = _normalizeYield(yieldAmount, yieldUnit);
+    // A new task with a recurrence rule starts a series; the materializer passes
+    // an existing seriesId so children inherit it (even the terminal instance).
+    final effectiveSeriesId =
+        seriesId ?? (recurrence != null ? _uuid.v4() : null);
     await _db.transaction(() async {
       await _db
           .into(_db.tasks)
@@ -274,6 +354,9 @@ class TasksRepository {
               status: Value(status),
               note: Value(note),
               recurrence: Value(recurrence),
+              seriesId: Value(effectiveSeriesId),
+              yieldAmount: Value(yieldValue.amount),
+              yieldUnit: Value(yieldValue.unitName),
               updatedAt: now,
             ),
           );
@@ -294,9 +377,18 @@ class TasksRepository {
     required DateTime date,
     required String? note,
     required List<TaskSubjectSpec> subjects,
+    String? recurrence,
     List<ReminderSpec> reminders = const [],
+    bool typeRecordsYield = true,
   }) async {
     final now = _clock.now();
+    final current = await byId(id);
+    if (current == null) return; // nothing to update (mirrors complete/revert)
+    // Keep the existing series when a rule stays; a brand-new rule starts one;
+    // clearing the rule drops the row out of its series (FR-5 D5).
+    final seriesId = recurrence != null
+        ? (current.seriesId ?? _uuid.v4())
+        : null;
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
@@ -304,6 +396,12 @@ class TasksRepository {
           status: Value(status),
           date: Value(date.toUtc()),
           note: Value(note),
+          recurrence: Value(recurrence),
+          seriesId: Value(seriesId),
+          // Changing the type to one that doesn't record yield drops any
+          // recorded pair (T11); a harvest keeps it (yield is edited on detail).
+          yieldAmount: typeRecordsYield ? const Value.absent() : const Value(null),
+          yieldUnit: typeRecordsYield ? const Value.absent() : const Value(null),
           updatedAt: Value(now),
           syncStatus: const Value(kSyncPending),
         ),
@@ -373,21 +471,83 @@ class TasksRepository {
     }
   }
 
-  Future<void> complete(String id) async {
+  /// Marks a task done. For a recurring task, materializes the next instance in
+  /// the same transaction and returns its local date (for the completion toast);
+  /// returns null for a one-off. A harvest task may record its yield here (T11):
+  /// a positive both-or-neither pair, else the columns stay null (a waiting task
+  /// being completed never has a prior yield to preserve).
+  Future<DateTime?> complete(
+    String id, {
+    double? yieldAmount,
+    YieldUnit? yieldUnit,
+  }) async {
+    final task = await byId(id);
+    if (task == null) return null;
+    final yieldValue = _normalizeYield(yieldAmount, yieldUnit);
+    final rule = Recurrence.tryParse(task.recurrence);
+    // Observability: a non-null recurrence that fails to parse means the series
+    // stops silently. The tolerant parse keeps the app safe; this just surfaces
+    // the anomaly so a bad writer/sync can be caught.
+    if (task.recurrence != null && rule == null) {
+      debugPrint('complete: unparseable recurrence on $id: ${task.recurrence}');
+    }
+    DateTime? nextLocal;
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
           status: const Value(TaskStatus.done),
+          yieldAmount: Value(yieldValue.amount),
+          yieldUnit: Value(yieldValue.unitName),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(kSyncPending),
         ),
       );
       // Deduct supplies from stock now that the task is done.
       await _supplies.applyForTask(id);
+      // Freeze the aggregation-buckets snapshot for the smart engine (M11).
       await _stampAggContext(id);
+      // Birth the next instance atomically — a recurring completion must not
+      // leave a done task without its successor.
+      if (rule != null) nextLocal = await _materializeNext(task, rule);
     });
     // Freeze a weather snapshot for the moment of completion (§7.10).
     unawaited(_captureWeather(id));
+    return nextLocal;
+  }
+
+  /// Inserts the next waiting instance of a recurring task, inheriting its
+  /// subjects, reminders and series id. Runs inside the caller's transaction.
+  /// Anchored on the scheduled date (FR-5): late completion does not shift it.
+  Future<DateTime> _materializeNext(Task parent, Recurrence rule) async {
+    final nextLocal = nextOccurrenceDate(parent.date.toLocal(), rule.everyDays);
+    final newId = _uuid.v4();
+    final now = _clock.now();
+    await _db
+        .into(_db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: newId,
+            userId: parent.userId,
+            taskTypeId: parent.taskTypeId,
+            date: nextLocal.toUtc(),
+            status: const Value(TaskStatus.waiting),
+            note: Value(parent.note),
+            recurrence: Value(rule.next()?.encode()),
+            seriesId: Value(parent.seriesId),
+            updatedAt: now,
+          ),
+        );
+    final subs = await subjectsForTask(parent.id);
+    await _insertSubjects(newId, [
+      for (final s in subs)
+        TaskSubjectSpec(userPlantId: s.userPlantId, areaId: s.areaId),
+    ], now);
+    final reminders = await remindersForTask(parent.id);
+    await _insertReminders(newId, [
+      for (final r in reminders)
+        ReminderSpec(offsetMinutes: r.offset, time: r.reminderTime),
+    ], now);
+    return nextLocal;
   }
 
   /// Freezes the aggregation-buckets snapshot ({h3_r7,h3_r6,h3_r5,
@@ -440,6 +600,25 @@ class TasksRepository {
             syncStatus: const Value(kSyncPending),
           ),
         );
+  }
+
+  /// Sets, edits or clears a task's harvest yield (T11) from the detail screen.
+  /// Pass null/null to remove it; both-or-neither is enforced here so a half
+  /// pair can never reach storage.
+  Future<void> setYield(
+    String id, {
+    required double? amount,
+    required YieldUnit? unit,
+  }) async {
+    final yieldValue = _normalizeYield(amount, unit);
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        yieldAmount: Value(yieldValue.amount),
+        yieldUnit: Value(yieldValue.unitName),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
   }
 
   Future<void> softDelete(String id) async {
@@ -503,11 +682,24 @@ class TasksRepository {
     );
   }
 
+  /// Returns a completed task to waiting. No-op on a completed recurring instance
+  /// (FR-5 D1): it already spawned its successor, so reverting would leave two
+  /// active instances. The UI also blocks this; the guard keeps any path safe.
   Future<void> revertToWaiting(String id) async {
+    final task = await byId(id);
+    if (task == null) return;
+    if (task.status == TaskStatus.done &&
+        Recurrence.tryParse(task.recurrence) != null) {
+      return;
+    }
     await _db.transaction(() async {
       await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
         TasksCompanion(
           status: const Value(TaskStatus.waiting),
+          // Reopening a harvest drops its recorded yield (T11): it's no longer
+          // done, and the detail screen only edits yield on a done task.
+          yieldAmount: const Value(null),
+          yieldUnit: const Value(null),
           updatedAt: Value(_clock.now()),
           syncStatus: const Value(kSyncPending),
         ),
@@ -515,6 +707,19 @@ class TasksRepository {
       // No longer done — return supplies to stock.
       await _supplies.revertForTask(id);
     });
+  }
+
+  /// Stops a recurring series: the task stays as-is but will no longer spawn a
+  /// successor on completion (FR-5). Leaves the series by clearing series_id (D5).
+  Future<void> stopRecurrence(String id) async {
+    await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
+      TasksCompanion(
+        recurrence: const Value(null),
+        seriesId: const Value(null),
+        updatedAt: Value(_clock.now()),
+        syncStatus: const Value(kSyncPending),
+      ),
+    );
   }
 
   Future<String> duplicate(String id) async {
@@ -533,7 +738,9 @@ class TasksRepository {
               date: task.date,
               status: const Value(TaskStatus.waiting),
               note: Value(task.note),
-              recurrence: Value(task.recurrence),
+              // "Repeat last" is a one-off copy, not a series continuation (D6).
+              recurrence: const Value(null),
+              seriesId: const Value(null),
               updatedAt: now,
             ),
           );

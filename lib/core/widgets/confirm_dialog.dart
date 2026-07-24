@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 
+import '../haptics.dart';
 import 'swipe_actions.dart';
 
 /// Generic confirmation dialog; resolves to `true` if confirmed.
-/// [destructive] tints the confirm button with the destructive (terracotta) color.
+/// [destructive] tints the confirm button with the destructive (terracotta) color
+/// and fires a strong haptic when confirmed (single point for every delete/clear).
 Future<bool> showConfirmDialog(
   BuildContext context, {
   required String title,
@@ -35,5 +37,7 @@ Future<bool> showConfirmDialog(
       ],
     ),
   );
-  return confirmed ?? false;
+  final ok = confirmed ?? false;
+  if (ok && destructive) AppHaptics.destructiveConfirmed();
+  return ok;
 }

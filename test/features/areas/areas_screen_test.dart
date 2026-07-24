@@ -20,6 +20,19 @@ Area _area(String id, String name, AreaType type) => Area(
   syncStatus: 'synced',
 );
 
+UserPlant _plant(String id, String areaId) => UserPlant(
+  id: id,
+  userId: 'u1',
+  areaId: areaId,
+  plantId: 'tomato',
+  customName: null,
+  personalAlias: null,
+  isCustom: false,
+  updatedAt: DateTime.utc(2026, 6, 16),
+  deleted: false,
+  syncStatus: 'synced',
+);
+
 void main() {
   setUpAll(() => LocaleSettings.setLocale(AppLocale.sl));
 
@@ -89,7 +102,48 @@ void main() {
     final gardenY = tester
         .getTopLeft(find.text(t.areas.type_garden.toUpperCase()))
         .dy;
-    final bedY = tester.getTopLeft(find.text(t.areas.type_bed.toUpperCase())).dy;
+    final bedY = tester
+        .getTopLeft(find.text(t.areas.type_bed.toUpperCase()))
+        .dy;
     expect(gardenY, lessThan(bedY));
+  });
+
+  testWidgets('area without tasks shows its plant count, not its type', (
+    tester,
+  ) async {
+    await tester.pumpWidget(
+      TranslationProvider(
+        child: ProviderScope(
+          overrides: [
+            // A bed, not a garden: the screen's own title is "Vrt" too, so the
+            // garden type label would collide with it in find.text.
+            areasListProvider.overrideWith(
+              (ref) => Stream.value([_area('g1', 'Ob hiši', AreaType.bed)]),
+            ),
+            latestTaskPerAreaProvider.overrideWith(
+              (ref) => Stream.value(<String, Task>{}),
+            ),
+            taskTypesMapProvider.overrideWith(
+              (ref) => Stream.value(<String, TaskType>{}),
+            ),
+            userPlantsMapProvider.overrideWith(
+              (ref) => Stream.value({
+                'p1': _plant('p1', 'g1'),
+                'p2': _plant('p2', 'g1'),
+              }),
+            ),
+            plantsMapProvider.overrideWith(
+              (ref) => Stream.value(<String, Plant>{}),
+            ),
+          ],
+          child: const MaterialApp(home: AreasScreen()),
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.areas.plant_count(n: 2)), findsOneWidget);
+    // The type names the section (uppercased); it must not repeat as a subtitle.
+    expect(find.text(t.areas.type_bed), findsNothing);
   });
 }

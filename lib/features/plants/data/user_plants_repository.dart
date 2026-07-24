@@ -5,11 +5,11 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/sync/sync_status.dart';
+import '../plant_move_result.dart';
 
-/// Outcome of [UserPlantsRepository.moveToArea] — a move is refused when the
-/// destination area already holds that species (the (area, species) pair is
-/// kept unique).
-enum PlantMoveResult { moved, duplicate }
+// The move outcome is part of this repository's API — callers that import it
+// get the enum without a second import.
+export '../plant_move_result.dart';
 
 class UserPlantsRepository {
   UserPlantsRepository(this._db, {this._clock = const SystemClock()});

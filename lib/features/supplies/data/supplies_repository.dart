@@ -3,6 +3,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/supply_category.dart';
 import '../../../core/sync/sync_status.dart';
 import 'supply_spec.dart';
 
@@ -39,6 +40,7 @@ class SuppliesRepository {
     required String userId,
     required String name,
     String? unit,
+    SupplyCategory category = SupplyCategory.other,
     double quantity = 0,
     double? lowThreshold,
   }) async {
@@ -51,6 +53,7 @@ class SuppliesRepository {
             userId: userId,
             name: name,
             unit: Value(unit),
+            category: Value(category),
             quantity: Value(quantity),
             lowThreshold: Value(lowThreshold),
             updatedAt: _clock.now(),
@@ -63,6 +66,7 @@ class SuppliesRepository {
     required String id,
     required String name,
     String? unit,
+    required SupplyCategory category,
     required double quantity,
     double? lowThreshold,
   }) async {
@@ -70,6 +74,7 @@ class SuppliesRepository {
       SuppliesCompanion(
         name: Value(name),
         unit: Value(unit),
+        category: Value(category),
         quantity: Value(quantity),
         lowThreshold: Value(lowThreshold),
         updatedAt: Value(_clock.now()),

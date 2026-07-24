@@ -2,36 +2,34 @@ import 'package:flutter/material.dart';
 
 import '../../../../../core/date_format.dart';
 import '../../../../../core/task_status.dart';
+import '../../../../../core/widgets/section_label.dart';
 import '../../../../../i18n/translations.g.dart';
-
-enum _Preset { today, tomorrow, custom }
+import '../../../data/recurrence.dart';
+import '../widgets/recurrence_picker.dart';
+import 'when_rules.dart';
 
 /// Step 3 — when: quick preset (today/tomorrow/date) over explicit date + time,
-/// plus the status (derived from the date, overridable). Recurrence is FR-5.
+/// the status (derived from the date, overridable), and recurrence (FR-5) shown
+/// only for a waiting (future) task.
 class WhenStepBody extends StatelessWidget {
   const WhenStepBody({
     super.key,
     required this.date,
     required this.status,
+    required this.recurrence,
     required this.onSetDate,
     required this.onSetStatus,
+    required this.onSetRecurrence,
   });
 
   final DateTime date;
   final TaskStatus status;
+  final Recurrence? recurrence;
   final ValueChanged<DateTime> onSetDate;
   final ValueChanged<TaskStatus> onSetStatus;
 
-  _Preset get _preset {
-    final today = startOfDay(DateTime.now());
-    final day = startOfDay(date);
-    if (day == today) return _Preset.today;
-    if (day == today.add(const Duration(days: 1))) return _Preset.tomorrow;
-    return _Preset.custom;
-  }
-
-  DateTime _withDay(DateTime day) =>
-      DateTime(day.year, day.month, day.day, date.hour, date.minute);
+  /// (rule, valid): valid == false when a shown number field is empty/invalid.
+  final void Function(Recurrence? rule, bool valid) onSetRecurrence;
 
   Future<void> _pickDate(BuildContext context) async {
     final picked = await showDatePicker(
@@ -40,7 +38,7 @@ class WhenStepBody extends StatelessWidget {
       firstDate: DateTime(2020),
       lastDate: DateTime.now().add(const Duration(days: 365 * 3)),
     );
-    if (picked != null) onSetDate(_withDay(picked));
+    if (picked != null) onSetDate(combineDateAndTime(picked, date));
   }
 
   Future<void> _pickTime(BuildContext context) async {
@@ -63,31 +61,29 @@ class WhenStepBody extends StatelessWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 16),
       children: [
-        SegmentedButton<_Preset>(
+        SegmentedButton<WhenPreset>(
           segments: [
             ButtonSegment(
-              value: _Preset.today,
+              value: WhenPreset.today,
               label: Text(t.entry.when_today),
             ),
             ButtonSegment(
-              value: _Preset.tomorrow,
+              value: WhenPreset.tomorrow,
               label: Text(t.entry.when_tomorrow),
             ),
             ButtonSegment(
-              value: _Preset.custom,
+              value: WhenPreset.custom,
               label: Text(t.entry.when_pick_date),
             ),
           ],
-          selected: {_preset},
+          selected: {whenPreset(date, DateTime.now())},
+          showSelectedIcon: false,
           onSelectionChanged: (s) {
-            final today = startOfDay(DateTime.now());
-            switch (s.first) {
-              case _Preset.today:
-                onSetDate(_withDay(today));
-              case _Preset.tomorrow:
-                onSetDate(_withDay(today.add(const Duration(days: 1))));
-              case _Preset.custom:
-                _pickDate(context);
+            final picked = dateForPreset(s.first, date, DateTime.now());
+            if (picked == null) {
+              _pickDate(context);
+            } else {
+              onSetDate(picked);
             }
           },
           style: const ButtonStyle(visualDensity: VisualDensity.compact),
@@ -97,7 +93,7 @@ class WhenStepBody extends StatelessWidget {
           children: [
             Expanded(
               flex: 3,
-              child: _Labelled(
+              child: _Field(
                 label: t.entry.when_date,
                 child: _TappableField(
                   text: formatDmy(date),
@@ -109,7 +105,7 @@ class WhenStepBody extends StatelessWidget {
             const SizedBox(width: 8),
             Expanded(
               flex: 2,
-              child: _Labelled(
+              child: _Field(
                 label: t.entry.when_time,
                 child: _TappableField(
                   text: formatHm(date),
@@ -128,7 +124,7 @@ class WhenStepBody extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 20),
-        _Labelled(
+        _Field(
           label: t.entry.when_status,
           child: SegmentedButton<TaskStatus>(
             segments: [
@@ -142,6 +138,7 @@ class WhenStepBody extends StatelessWidget {
               ),
             ],
             selected: {status},
+            showSelectedIcon: false,
             onSelectionChanged: (s) => onSetStatus(s.first),
             style: const ButtonStyle(visualDensity: VisualDensity.compact),
           ),
@@ -153,35 +150,36 @@ class WhenStepBody extends StatelessWidget {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
+        // Recurrence only makes sense for a planned (waiting) task (§7.9).
+        if (status == TaskStatus.waiting) ...[
+          const SizedBox(height: 20),
+          // No ValueKey here: the picker owns its state after mount. Keying it on
+          // `recurrence` would rebuild it (resetting the mode) on every keystroke,
+          // since each edit emits a new rule. Edit-load is safe because the step
+          // is first built only after the task loads (the _isLoading gate).
+          RecurrencePicker(
+            recurrence: recurrence,
+            anchorDate: date,
+            onChanged: onSetRecurrence,
+          ),
+        ],
       ],
     );
   }
 }
 
-class _Labelled extends StatelessWidget {
-  const _Labelled({required this.label, required this.child});
+/// A form field under its label.
+class _Field extends StatelessWidget {
+  const _Field({required this.label, required this.child});
+
   final String label;
   final Widget child;
 
   @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: const EdgeInsets.only(bottom: 7),
-          child: Text(
-            label,
-            style: theme.textTheme.labelMedium?.copyWith(
-              color: theme.colorScheme.onSurfaceVariant,
-            ),
-          ),
-        ),
-        child,
-      ],
-    );
-  }
+  Widget build(BuildContext context) => Column(
+    crossAxisAlignment: CrossAxisAlignment.start,
+    children: [FieldLabel(label), child],
+  );
 }
 
 class _TappableField extends StatelessWidget {
@@ -190,6 +188,7 @@ class _TappableField extends StatelessWidget {
     required this.icon,
     required this.onTap,
   });
+
   final String text;
   final IconData icon;
   final VoidCallback onTap;

@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/legal.dart';
+import '../../../core/local_prefs/local_prefs.dart';
 import '../../../core/sync/sync_coordinator.dart';
 import '../../../i18n/translations.g.dart';
 import 'post_sign_in_navigation.dart';
@@ -32,6 +33,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   Future<void> _continueAsGuest() async {
+    // Explicit "not now": drop any in-flight email sign-in so a relaunch won't
+    // resume the code step.
+    await ref.read(localPrefsProvider).clearPendingSignInEmail();
+    if (!mounted) return;
     // Guest stays local (no cloud session); skip the location step if this
     // device already has one set.
     await goToLocationOrHome(context, ref);
@@ -44,6 +49,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       final signedIn = await ref.read(authServiceProvider).signInWithGoogle();
       if (!mounted) return;
       if (!signedIn) return; // user dismissed the picker
+      // Signed in via Google — drop any pending email-resume marker.
+      await ref.read(localPrefsProvider).clearPendingSignInEmail();
+      if (!mounted) return;
       // start() claims the guest's local rows to this account, pushes them, and
       // pulls the account's existing data (a merge — sign-in keeps data).
       final syncFuture = ref.read(syncCoordinatorProvider.notifier).start();
@@ -139,18 +147,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   label: Text(t.auth.continue_email),
                 ),
               ),
-              const SizedBox(height: 6),
-              TextButton(
-                onPressed: busy ? null : _continueAsGuest,
-                child: Text(
-                  t.auth.guest,
-                  style: const TextStyle(decoration: TextDecoration.underline),
+              const SizedBox(height: 10),
+              SizedBox(
+                height: 52,
+                child: OutlinedButton(
+                  onPressed: busy ? null : _continueAsGuest,
+                  style: OutlinedButton.styleFrom(
+                    foregroundColor: cs.onSurfaceVariant,
+                  ),
+                  child: Text(t.auth.guest),
                 ),
               ),
               const SizedBox(height: 8),
               Text(
                 t.auth.guest_warning,
-                style: theme.textTheme.bodySmall?.copyWith(color: cs.error),
+                style: theme.textTheme.bodySmall?.copyWith(
+                  color: cs.onSurfaceVariant,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 10),

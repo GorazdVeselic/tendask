@@ -4,14 +4,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../core/database/app_database.dart';
+import '../../../../core/database/catalog_provider.dart';
+import '../../../../core/haptics.dart';
 import '../../../../core/task_status.dart';
 import '../../../../core/widgets/swipe_actions.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/tasks_providers.dart';
+import '../../harvest.dart';
+import '../task_actions.dart';
 
 /// Wraps a task row in the shared reveal-swipe with status-appropriate actions:
-/// waiting → complete / +1 day, done → reopen / delete. Used by the tasks list,
-/// the home dashboard and the journal so the gesture is identical everywhere.
+/// swipe left → status (waiting: complete / +1 day, done: reopen); swipe right →
+/// delete (confirmed). Used by the tasks list, the home dashboard and the
+/// journal so the gesture is identical everywhere.
 class TaskSwipe extends ConsumerWidget {
   const TaskSwipe({required this.task, required this.child, super.key});
 
@@ -22,26 +27,34 @@ class TaskSwipe extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final repo = ref.read(tasksRepositoryProvider);
+    final catalog = ref.watch(taskTypesMapProvider).asData?.value;
+    final harvest = isHarvestType(catalog?[task.taskTypeId]);
     final actions = task.status == TaskStatus.waiting
         ? [
-            completeSwipe(context, () => unawaited(repo.complete(task.id))),
+            completeSwipe(context, () {
+              AppHaptics.taskCompleted();
+              unawaited(completeTask(context, repo, task.id, harvest: harvest));
+            }),
             postponeSwipe(
               context,
               () => unawaited(repo.postponeOneDay(task.id)),
             ),
           ]
         : [
-            revertSwipe(
-              context,
-              () => unawaited(repo.revertToWaiting(task.id)),
-            ),
-            deleteSwipe(
-              context,
-              title: t.tasks_list.delete_confirm_title,
-              body: t.tasks_list.delete_confirm_body,
-              onConfirmed: () => repo.softDelete(task.id),
-            ),
+            revertSwipe(context, () => revertTask(context, repo, task)),
           ];
-    return SwipeRow(itemKey: task.id, actions: actions, child: child);
+    return SwipeRow(
+      itemKey: task.id,
+      actions: actions,
+      startActions: [
+        deleteSwipe(
+          context,
+          title: t.tasks_list.delete_confirm_title,
+          body: t.tasks_list.delete_confirm_body,
+          onConfirmed: () => repo.softDelete(task.id),
+        ),
+      ],
+      child: child,
+    );
   }
 }

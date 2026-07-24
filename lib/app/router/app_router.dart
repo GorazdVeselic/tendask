@@ -1,5 +1,6 @@
 import 'package:go_router/go_router.dart';
 
+import '../../core/config.dart';
 import '../../features/areas/presentation/area_detail_screen.dart';
 import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
@@ -16,10 +17,10 @@ import '../../features/plants/presentation/garden_plant_add_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
+import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
 import '../../features/suggestions/presentation/suggestion_history_screen.dart';
-import '../../features/supplies/presentation/supplies_screen.dart';
 import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
@@ -111,7 +112,8 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
     GoRoute(
       path: '/login-email',
       name: 'login-email',
-      builder: (context, state) => const EmailLoginScreen(),
+      builder: (context, state) =>
+          EmailLoginScreen(initialEmail: state.uri.queryParameters['email']),
     ),
     GoRoute(
       path: '/location',
@@ -146,25 +148,28 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
           PlantEditScreen(userPlantId: state.pathParameters['id']!),
     ),
     GoRoute(
-      path: '/supplies',
-      name: 'supplies',
-      builder: (context, state) => const SuppliesScreen(),
-    ),
-    GoRoute(
       path: '/settings',
       name: 'settings',
       builder: (context, state) => const SettingsScreen(),
+    ),
+    GoRoute(
+      path: '/appearance',
+      name: 'appearance',
+      builder: (context, state) => const AppearanceScreen(),
     ),
     GoRoute(
       path: '/notification-settings',
       name: 'notification-settings',
       builder: (context, state) => const NotificationSettingsScreen(),
     ),
-    GoRoute(
-      path: '/suggestions/history',
-      name: 'suggestion-history',
-      builder: (context, state) => const SuggestionHistoryScreen(),
-    ),
+    // Suggestion history (M11) — dark until launch (kSuggestionsEnabled). Its
+    // only entry points (Home band, settings engine row) are gated too.
+    if (kSuggestionsEnabled)
+      GoRoute(
+        path: '/suggestions/history',
+        name: 'suggestion-history',
+        builder: (context, state) => const SuggestionHistoryScreen(),
+      ),
     GoRoute(
       path: '/notification-preview',
       name: 'notification-preview',
@@ -193,17 +198,6 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       name: 'note-edit',
       builder: (context, state) =>
           NoteFormScreen(noteId: state.pathParameters['id']),
-    ),
-    // Top-level task detail for callers OUTSIDE the shell (suggestion history,
-    // plant detail). Pushing the shell-nested '/tasks/:id' (task-detail) from a
-    // non-shell route re-creates the already-mounted shell page → duplicate page
-    // key → Navigator 'keyReservation' assertion. This sibling renders the same
-    // screen full-screen; in-shell callers keep 'task-detail' (bottom nav stays).
-    GoRoute(
-      path: '/task/:id',
-      name: 'task-view',
-      builder: (context, state) =>
-          TaskDetailScreen(id: state.pathParameters['id']!),
     ),
     // Path must not collide with the shell '/tasks/:id' (task-detail):
     // '/tasks/new' would match ':id'="new". Use a distinct prefix.

@@ -6,7 +6,8 @@
 >
 > Povezano: [`tech-stack.md`](tech-stack.md) (potrjen sklad + §6 struktura, §9 vrstni red),
 > [`koncept.md`](koncept.md) (§7.9 entiteta opravilo, §7.14 podatkovni model),
-> [`opravila-in-rastline.md`](opravila-in-rastline.md) (vir za seed), `wireframes/` (~27 zaslonov).
+> [`opravila-in-rastline.md`](opravila-in-rastline.md) (vir za seed), `wireframes/` (~27 zaslonov),
+> [`povratne-informacije.md`](povratne-informacije.md) (opažanja testerjev/uporabnikov + analiza/odločitve, runde T1–).
 
 ---
 
@@ -325,10 +326,15 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   traku (skok na dan) je bil implementiran in po pregledu na napravi **zavrnjen** — dodal je vizualni šum
   brez prave vrednosti. Navigacijo po datumih že pokrivata kronološka časovnica (s skupinami po dnevih) in
   mesečni pogled. Ne implementiramo, dokler ne bo jasne potrebe in boljšega dizajna.
-- **FR-5 — Ponavljanje opravil (nice-to-have).** Korak »Kdaj« v vnosu predvideva izbiro ponavljanja
-  (Enkratno / Tedensko / Sezonsko; `task.recurrence` JSON, polje že obstaja). MVP ga **namenoma izpušča**:
-  dejanska logika (generiranje naslednjih instanc, urejanje serije, izjeme) ni trivialna in ni nujna za
-  beleženje. Kasneje: definiraj pravilo ponavljanja + generator + UI za serijo. Do takrat je vsako opravilo enkratno.
+- **FR-5 — Ponavljanje opravil.** ✅ **Implementirano 2026-06-30 na `feat/fr5-recurrence`** (pushano,
+  PR čaka; gl. dnevnik). MVP obseg = **materializiraj-naslednjo-instanco-ob-dokončanju**: ob ✓ se v isti
+  transakciji ustvari naslednja instanca (sidro = načrtovani datum). UI v koraku »Kdaj«: Dnevno/Tedensko/
+  Po meri + neobvezno **število ponovitev** (= `remaining`, min 1) + živ »Naslednje: <datum>« + validacija
+  (prazno blokira »Naprej«). Model `Recurrence{everyDays, remaining}` v `task.recurrence` + nova
+  `task.series_id` (drift v11 + Supabase `0013`, additive). Značka serije, »Ustavi ponavljanje« v ⋯,
+  revert blokiran na dokončani ponavljajoči (D1). Polna spec: [`recurrence.md`](feature-requests/recurrence.md).
+  **Namerno izven obsega:** serijsko urejanje / izjeme / mesečno-RRULE / sprava z motorjem (M11) —
+  `series_id` to kasneje omogoči. **TODO ob prod releasu:** `supabase db push` za `0013` na prod PRED FR-5 buildom.
 - **FR-6 — »Ponovi zadnje« (hitrost ponavljajočega beleženja).** ✅ **Implementirano 2026-06-04.** Vrt pogosto pomeni isto opravilo na
   istih subjektih večkrat (zalivam paradižnik vsak večer). Predlog: na koraku 1 (Tip) stepperja na vrhu
   kartica »↻ Ponovi zadnje — 💧 Zalivanje · Paradižnik …«; tap predizpolni tip + subjekte + sredstva +
@@ -434,11 +440,372 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   tretji ponudnik). **Prizadeti:** weather feature (data+presentation), location screen, i18n,
   morda pravni dokumenti. **DoD:** vremenska kartica pokaže ime kraja; offline pokaže zadnjo
   znano oznako; brez novih shranjenih koordinat.
+- **FR-13 — Indikator okolja (STAGING/OFFLINE) v aplikaciji.** ✅ **Implementirano 2026-06-28.**
+  Hitro vizualno ločiti, kam je build povezan (prod Play vs. lokalni staging Docker). Kotni `Banner`
+  prek `MaterialApp.builder`, viden samo ko `kEnvLabel != 'production'` → prod/Play nikoli ne pokaže.
+  Polna spec: [`docs/feature-requests/env-banner.md`](feature-requests/env-banner.md).
+- **FR-14 — Analitika & metrike (interna BI + javne statistike).** Predlog (2026-06-22, ni implementiran),
+  čaka odločitev o obsegu. Trenutna shema je odlična za sync, šibka za analitiko (gostje nevidni; LWW
+  upsert = brez zgodovine dogodkov). Priporočen razrez dveh tirov: (A) vedenjska analitika (installi,
+  DAU/retencija, funnel, tudi gostje) prek Firebase Analytics / PostHog — brez dotika sync sheme; (B)
+  domenske/javne statistike prek Supabase event log. Polna spec:
+  [`docs/feature-requests/analytics.md`](feature-requests/analytics.md).
+- **FR-15 — Obvestilo o nadgradnji v aplikaciji (in-app update).** Predlog (2026-06-26, ni implementiran),
+  čaka odločitev o obsegu. Dva neodvisna mehanizma: (A) Google Play In-App Updates prek paketa
+  `in_app_update ^4.2.5` (flexible flow, samo Android, native UX, nič lastne infra) — **NOVA dependency
+  izven `tech-stack.md §1` → najprej potrdi + pin + posodobi §1**; (B) lasten Supabase `min_supported_version`
+  gate (cross-platform/iOS »force update«, dodan kasneje ob M10). Lokalno netestabilno (rabi Play track).
+  Polna spec: [`docs/feature-requests/in-app-update.md`](feature-requests/in-app-update.md).
+- **FR-16 — Re-engagement opomnik za neaktivne uporabnike.** ✅ **Implementirano 2026-06-29 na `main`**
+  (commit `d29fd9d`). **Lokalni dead-man's-switch = MVP** (doseže tudi neaktivirane/goste, brez M11/FCM,
+  privacy-first); FCM/R8 ostane kot kasnejši dodatek za prijavljene. Mehanizem: namesto enega znova-
+  zakoličenega opomnika zakoličimo **fiksno verigo dveh** (dan +7, dan +28 = decay 7 → +21 → tišina); vsak
+  dotik (cold start / zapis task ali note / app resume) prekliče oba in ju zakoliči naprej — aktiven
+  uporabnik ju nikoli ne vidi. Tako so anti-spam guardraili (kapica 1×/7 dni, decay, reset ob aktivnosti)
+  zadoščeni **brez stanja v bazi**. A/B segment (`task.count==0` → »začni dnevnik« vs lapsed) izbran ob
+  zakoličenju. Ločen kanal `journal_nudge` + rezervirani **negativni** notif ID-ji (`reminder_coordinator`
+  ju izloča iz cancel-sweepa na obeh mestih); 17:00 = izven tihih ur po konstrukciji; collision-shift mimo
+  dneva s task-reminderjem; ločen toggle v zaslonu 22 (privzeto on). Polna spec:
+  [`docs/feature-requests/re-engagement-nudge.md`](feature-requests/re-engagement-nudge.md).
+- **FR-17 — Haptični odziv ob ključnih akcijah.** ✅ **Implementirano 2026-06-28 na
+  `feat/fr17-haptics`.** Nov `core/haptics.dart` (`AppHaptics.taskCompleted/saved/destructiveConfirmed`)
+  centralizira preslikavo jakosti; sproži se, **ko se dejanje dejansko zgodi** (ne ob tapu): ✓ opravljeno
+  (`lightImpact`, vse 4 točke — swipe/seznam-meni/detajl-gumb/detajl-meni), uspešno shranjen obrazec
+  (`mediumImpact`, na success-poti entry + area/plant/note), potrjen izbris/clear (`heavyImpact`, en
+  chokepoint v `showConfirmDialog`, ki pokrije VSE potrditve — v `lib/` je en sam `AlertDialog`). Brez
+  nove dependency/sheme/i18n; `HapticFeedback` je sistemski (brez `VIBRATE` dovoljenja), OS-onemogočena
+  vibracija = no-op. Testi: jakostna preslikava (3) + branža `showConfirmDialog` (3). Polna spec:
+  [`docs/feature-requests/haptics.md`](feature-requests/haptics.md).
+- **FR-18 — Več lokacij / vrtov (kandidat za premium »Tendask+«).** 💡 **Ideja/želja (2026-06-29,
+  neraziskano do spec ravni).** Več vrtov na uporabnika, vsak s svojim vremenom/rastlinami; možen
+  plačljiv dodatek. Večji poseg — trenutna arhitektura je »1 uporabnik = 1 lokacija« (lokacija =
+  lastnost profila, koncept §7.7). Srečni vzvod: `area` je že N-na-uporabnika → verjetno dovolj nova
+  `garden` tabela + `area.garden_id`. Groba ocena ~2–3 tedne (+1 IAP). Polna želja:
+  [`docs/feature-requests/multi-location.md`](feature-requests/multi-location.md).
+- **FR-19 — Lunin koledar (biodinamični koren / list / cvet / plod).** 📝 **Spec (2026-07-21).** Delovno
+  ime »**Tendask biodinamični lunin koledar**« (in-app kratko »Lunin koledar«). Iz tester-feedbacka T10
+  (delo »po luni«). Pristop **A = lasten izračun** (siderični položaj Lune → element → del rastline),
+  **brez kopiranja Thuninega koledarja** (pravno kot »Lunine bukve« Kmečki glas — dejstva + tradicija
+  prosta, njen izdelek/znamka ne). **Jedro = uveljavljena načela; znamka Tendask = UX/planiranje**, ne
+  izmišljena pravila. **Nič sheme/synca/mreže/lokacije** — element je čista funkcija datuma. **Večdnevni
+  pogled naprej = jedro** (namenski zaslon, planiranje); + kontekstne oznake (Domov/detajl/»Kdaj«);
+  akcijske integracije = pol-avto opravilo iz koledarja, obratni iskalnik »naslednji dober dan za X«,
+  personalizacija po vrtu, opt-in obvestila. **Zdaj vse free** (billing še ni); premium meja (planer +
+  avto-opravilo + obvestila) = zapis namere za kasnejšo monetizacijo. Ni launch-gating (app v produkciji)
+  — »kasneje« = prioritizacija. Polni spec:
+  [`docs/feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md).
+- **FR-20 — Tendask + (premium): licenciranje, plačila in skladnost s Play.** 📝 **Spec / dogovorjena smer
+  (2026-07-22).** Nadomešča prvotno predpostavko »premium = Play Billing«. **Pot = »consumption-only«**
+  (Netflix model): nakup **na spletni strani**, v aplikaciji samo **odkupna koda** → **0 % provizije Play**.
+  Politika to izrecno dovoli (»access content paid for somewhere else«), a **v aplikaciji ne sme biti nobenega
+  poziva k nakupu, cene ali URL-ja** — to je edina rdeča črta (velja tudi za push obvestila in i18n nize).
+  **Plačila prek merchant of record** (Polar ali Paddle, ~5 % + 0,50 $), **ne Stripe** — normirani s.p. je
+  obdavčen po **prihodkih**, zato je pri MoR prihodek neto in provizija dejansko zniža osnovo (+ MoR prevzame
+  DDV/OSS, račune, chargebacke). **Licenca:** koda (ne ujemanje po e-pošti — anonimni/Google računi se
+  razhajajo), enkratna unovčitev prek atomarnega `update ... where redeemed_by is null`, vezana na `auth.uid()`;
+  unovčitev **zahteva prijavljen račun**. **Offline:** podpisan token (`sub` + `plus_until`), javni ključ
+  bundlan → aplikacija preverja **lokalno**; strežnik je »urad, ki izda dokument«, ne vratar; token pride
+  zraven v **obstoječem pull syncu** (nič novega omrežnega dela); grace 7–14 dni prišteje **strežnik**.
+  `plus_until`/`plus_token` sta strežniško lastna (column-level revoke + izpuščena iz push payloada).
+  ⚠️ **Play Console: `App access` se mora spremeniti** (Googlu je treba dati testno kodo/račun s Plus).
+  ⚠️ Preverjanje podpisa = **nova dependency izven `tech-stack.md §1`**. Alternativa (pot B, če ni konverzije):
+  Googlov external payments program (od 30. 6. 2026, ZDA/UK/EGP) = gumb v aplikaciji dovoljen, a ~10 % service
+  fee + geo-pogojevanje; **arhitektura licenc je enaka**, zato ni izgubljenega dela. **Prvi nosilec = FR-19**
+  (lunin koledar: mena free, element-dan + planer + akcije = Plus); koledar se najprej zgradi **v celoti free**,
+  gating je zadnji korak. **Delitev dela:** FR-20 = licence/plačila/Play skladnost, FR-19 §11.2–11.4 = UI
+  Tendask+ zaslona in vstopne točke. **Obseg paketa (§10):** *Plus se gradi iz novega in neizdanega, nikoli
+  iz izdanega* — izjema le razširitev zmogljivosti. **Opomniki ostajajo trajno free** (preverjeno in zavrnjeno
+  2026-07-22: so obljuba iz listinga, so zanka zadrževanja, nosi jih FR-16); monetizira se sme le nov sloj nad
+  njimi (vremensko pogojen opomnik, opomnik po fazi Lune). **Najmočnejši kandidat = M11 pametni motor** —
+  zgrajen na `feat/m11-smart-engine`, a **nikoli izdan**, torej nihče nič ne izgubi; ima pa ponavljajoč se
+  strošek → argument za letno in proti neomejeni doživljenjski. Trajno free: jedro, sredstva/recepti/pridelek/teme
+  (v listingu), GDPR izvoz/izbris, mena Lune. **Grandfathering:** kdor je koledar uporabljal pred vklopom zidu,
+  ga obdrži trajno. **Cenovni model:** mesečna **zavrnjena** (fiksna provizija 0,50 $ vzame 47 % pri 1,99 €;
+  prelom pri 7 mesecih; pri letni ~9,90 € mesečna sploh ne more obstati) → **ponudba = dva izdelka: letno
+  (naročnina, »odpoveš kadarkoli, leto ti ostane«) + doživljenjsko**; **številke še niso zapečene**; sidro =
+  tiskane Lunine bukve 9,90 €. Zavrnjena tudi **plačana testna doba** (vsak izdelek nosi svoj ključ → dvojno
+  lepljenje kode; nadomestek = 14-dnevno vračilo + brezplačni sloj + `granted` kode) in **ločena »letna brez
+  obnovitve«** (= naročnina, ki jo takoj odpoveš). **Arhitektura s Polarjem:** Polar = blagajna in poštar
+  (denar, DDV, račun, generiranje kode, e-pošta, portal, omejitev naprav prek `activate`); licenco vodiš ti
+  v Supabase. **Koda = kdo si, webhook = do kdaj velja** — koda sama ne ve za obnovitev. **NE nastavljaj TTL
+  na Polarjevem ključu** (dve uri se razideta); `plus_until` je edina resnica. **Invarianta:** nakupni dogodki
+  `plus_until` samo podaljšajo (`max(now, obstoječi)`) — webhooki prihajajo izven vrstnega reda; to zastonj
+  reši nadgradnjo, dvojni nakup in nakup pred iztekom. **Lastne kode ostanejo** za Play pregled, grandfathering
+  in darila (te tečejo **od unovčitve**, Polarjeve **od nakupa**). **Spletna stran ostane statična** (§4.5):
+  `/plus` v treh jezikih + nav postavka + sekcija na landingu + footer na Polarjev portal; **fiksnih stroškov
+  0 €**; popraviti je treba hero značko »brezplačno«. **Ponudnik — priporočilo Polar** (§4.3; tveganje mladega
+  podjetja ublaženo, ker je menjava prepis webhooka in ne selitev podatkov; prodaja potrošnikom, zato Paddlova
+  davčna globina odpade), **Paddle rezerva**, če Stripe Express za s.p. ne steče ali če Polar ne pošilja
+  opomnika pred obnovitvijo. **Popravek:** License Keys prihranijo le e-pošto in »izgubil sem kodo« — lastno
+  generiranje kod rabiš tako ali tako. **Predpogoj go-live:** Stripe Express (izplačilna cev, ne blagajna;
+  ročna izplačila). **Testiranje:** Polar sandbox ↔ obstoječi staging (ngrok ni potreben, tunel je javen);
+  letne obnovitve se ne da počakati → kratek testni izdelek ali ročni webhook. **Darila = lastna `granted`
+  koda** (0 €, brez kartice, teče od unovčitve), ne 100 % kupon. **Play pregled = `kind='review'` koda:**
+  večkratna s kapico, vsaka unovčitev da 30 dni, vklopiš ob oddaji in prekličeš po odobritvi; `App access`
+  gre z »Ne« na »Da«. **Odprto:** konkretne cene, potrditev ponudnika, ali paket starta z eno funkcijo.
+  Polni spec:
+  [`docs/feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md).
+- **FR-21 — Rastlinsko znanje / obogaten katalog (»Vodič«).** 💡 **Ideja / osnutek (2026-07-22).** Iz
+  konkurenčne analize **posadi.si** (zavihek »Znanje« = strukturirane razlage rastlin = njihova glavna
+  prednost) in sorodnega **T5**. Danes je naš katalog (128 vrst) tanek (ime + kategorija); ideja = ob kliku
+  na rastlino **strukturiran opis** (pridelava, lokacija, čas sajenja, razmik, zalivanje, kolobar, sosedje,
+  škodljivci, spravilo, nasveti). **AI/LLM** naredi obseg (128 × ~12 sekcij × sl/en/de) izvedljiv, **a je le
+  pospešek za osnutek, ne avtoritativni vir** — agronomska halucinacija (napačen čas/razmik, ameriške cone)
+  uniči pridelek in zaupanje; zato **LLM osnutek → navzkrižna preverba trdih podatkov / strokovni pregled →
+  seed**, in **enkratno v katalog, ne runtime** (offline-first). **Arhitektura = obstoječi katalog**
+  (additive shema, oblak vir resnice + pull, bundlan offline fallback, typed model, i18n). **Free/premium
+  (priporočeno = opcija B):** osnovni opis **free** (paritet s posadi.si, ki to daje zastonj), poglobljeni
+  **»Tendask vodič« = Tendask+** (veže se na FR-19 + M11). Pravno: kuriran LLM tekst = lastna vsebina, **ne**
+  prepisujemo posadi.si; slike lastne ali Wikimedia z licenco/pripisom. Polni spec:
+  [`docs/feature-requests/plant-knowledge-catalog.md`](feature-requests/plant-knowledge-catalog.md).
+- **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
+  Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj
+  specificirana v FR-20 (zunanja licenca, ne Play Billing) — spodnje velja le, če bi se kdaj vrnila na Play
+  Billing.** Google Play **service fee od 10 %** na prvi $1M/leto (od 30. 6. 2026, ZDA/EGP/UK), zdaj **LOČEN od
+  billing fee** (5 %, samo za Play Billing) → neto računaj po `(cena − service fee − billing fee)`, ne samo −10 %.
+  Naročnine = isto 10 %. Vredno preveriti **Apps Experience program** (znižane provizije za kakovostne ne-igre).
+  **Tehnično:** IAP/naročnina = nov package izven `tech-stack.md §1` (`in_app_purchase`/RevenueCat) → najprej
+  uskladi sklad; payout/Merchant + davčni setup v Play Console; premium **gating offline-first** (entitlement
+  cache v drift, da plačnik dela brez signala). Glej spomin `tendask-monetization-planned`.
 
 ## Dnevnik napredka
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-15 — **Matrika postavitve + refaktor entry korakov + on-device dimni test (`main`, pushano).**
+  **(A) Matrika postavitve `test/layout/` (`850eb7b`).** Novo orodje proti tihim UI prelomom: vsak zaslon
+  se izriše čez **viewport × locale × text-scale** (3 širine 320/360/411 × sl/en/de × 1.0/1.3 = 234
+  kombinacij, 13 zaslonov) in lovi overflow + odrezan tekst. Bila je nedelujoča iz prekinjene seje (vseh
+  234 »did not complete«); dokončana. **4 sistemski defekti harnessa:** (1) `File.readAsBytes()` (async) v
+  `testWidgets` visi za vedno — ponarejen async zone ne izvede pravih `dart:io` future-jev → `readAsBytesSync()`;
+  (2) `*StepBody` rabijo `Material` prednika → `home: Scaffold(body:)`; (3) task-detail bere
+  `GoRouter.of(context)` v `build` → vbrizgan inerten `InheritedGoRouter`; (4) več izjem v enem frame-u
+  pride agregirano kot »Multiple exceptions« → izčrpaj vse v zanki + loči `overflow:`/`error:`.
+  **Ključno — detektor clipa je imel lažne pozitive:** `getMinIntrinsicWidth` pretirava za prosto-ovijajoč
+  tekst (empirično potrjeno: deljena nem. beseda se na napravi ovije v 2 vrstici, ne odreže; Flutter razlomi
+  tudi predolgo besedo). Pravilo: **prosto-ovijajoč tekst (`softWrap && maxLines==null`) se NIKOLI ne
+  odreže**; odreže se le vrstično omejen → nov detektor preskoči prosto-ovijajoče, flag na `didExceedMaxLines`
+  ali enovrstični `getMaxIntrinsicWidth > box`. To je **82 fantomskih prelomov zvedlo na 9 pravih**.
+  **En pravi bug (`c29879c`):** appearance palete kartice so pri text×1.3 prekoračile (+12px), ker je
+  `GridView.count childAspectRatio` zaklenil višino → `mainAxisExtent` izpeljan iz dejanskih text metrik.
+  Matrika 234/234; on-device potrjeno (screenshot pri scale 1.3, brez overflowa).
+  **(B) Pregled vseh velikih zaslonov + refaktor 4 entry/journal korakov (`9e14966`+`1527e77`+`d355125`+`829575d`).**
+  Explore agent klasificiral vseh 15 datotek >250 vrstic (večina deklarativnih/že-vzorčenih — pusti).
+  Izločena netestabilna logika (vsak svoj commit+testi; testi **778 → 820**): `subject_step` 412→369 →
+  **`subject_picker.dart`** (filter/particija T3 relevance/dedup lastnih vrst/kategorije, po vzorcu
+  `plant_picker_view`, 12 testov); `reminder_step` 495→461 → **`reminder_draft.dart`** (`ReminderDraft`:
+  effectiveOffset/isDayBased/toSpec/canAdd dedup + `reminderOffsetTaken`, 15 testov); `type_step` 255→233 →
+  **`type_ordering.dart`** (`sortTaskTypesByUsage` tie-break seed + `ensureSelectedVisible`, 7 testov);
+  `note_form` 364→347 → **`note_date.dart`** (`noteDateOption`/`noteSelectedDate` z injiciranim `now`, 8 testov).
+  `tasks_screen` je bil ŽE razrezan v 2. krogu — ne rabi nič.
+  **(C) On-device dimni test entry flowa (staging debug, gost) — vse zeleno.** Vseh 5 korakov (vrsta→predmet→
+  kdaj→opomnik→pregled→shrani) brez izjem v logcatu; potrjen `ReminderDraft` edit sheet (»Ob dogodku že
+  dodano« dedup, živ preview, dodaj → 2 opomnika), »Naslednje: 22.7.« preview, in **opomnik se je dejansko
+  sprožil** (cela veriga razpored→dostava, ne le UI). `tool/smoke.md` posodobljen (podroben entry scenarij +
+  opomnik/exact-alarm + izbris + deploy USB-drop gotcha). **Nauka:** (1) za on-device VEDNO `tmp/steps.txt` +
+  fiksni `& ./tool/adb_run.ps1` (allowlistan), NE `adb_ui.ps1` z različnimi argumenti (vsak = nov poziv);
+  (2) USB pade sredi `deploy.bat` (2×/seja) → `flutter run` izstopi a build ni nameščen; robustneje
+  `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` → `adb install -r`.
+
+- 2026-07-14 — **Refaktor presentation plasti, 2. krog: zadnje tri velike datoteke (`main`, pushano,
+  `efbf761`+`b3364fd`+`ad65de5`).** Zaprte vse tri postavke »nedotaknjeno« iz prejšnjega vnosa.
+  Vedenje **nespremenjeno**; testi **493 → 544 (+51)**, `analyze` čist.
+  Razrezano: `tasks_screen` 404→133, `when_step` 483→210, `journal_screen` 369→146,
+  `month_calendar_view` 316→152.
+  **`tasks/presentation/task_day_groups.dart` — grupiranje opravil po dnevih je zdaj na ENEM mestu.**
+  Prej sta obstajali dve skoraj enaki pravili z **za dan zgrešeno mejo**: dashboard (`bucketPendingTasks`,
+  `!day.isAfter(today+7)`) je opravilo čez natanko 7 dni štel med prihajajoča, seznam
+  (`day.isBefore(today+7)`) pa ga je pokazal pod »Kasneje«. **Poenoteno na vključujočo mejo** (kot pravi
+  komentar pri `kUpcomingWindowDays`) → 👤 potrjeno; edina namerna sprememba vedenja v tem krogu.
+  `home_buckets` zdaj kliče `taskDayGroup`; `overdueDays` se je preselil sem (bil je podvojen inline v
+  `_StatusBadge`). Poleg tega `buildTaskListItems` (sealed `TaskListItem` — konec `List<Object>` + casta)
+  in `taskGroupLabel`/`taskStatusText`.
+  **`entry/steps/when_rules.dart` — validacija ponavljanja, ki gejta gumb »Naprej«.** Živela je zapletena
+  s `TextEditingController`-ji v stanju widgeta, zato so bile veje dosegljive le prek `WidgetTester`-ja in
+  netestirane: interval `0` (polje `digitsOnly` ga **spusti**, pravilo `<1` ga zavrne), prevelika številka
+  (`int.tryParse` → null), smet za **skritim** poljem (mode custom→weekly, odklopljena kapica) — ta ne sme
+  blokirati. Zdaj čista `evaluateRecurrence(mode, intervalText, limited, countText)` → `(rule, valid,
+  intervalInvalid, countInvalid, everyDays)`; widget samo riše (`entry/widgets/recurrence_picker.dart`).
+  Tudi `whenPreset`/`dateForPreset` (preset je bil izračunan v getterju z `DateTime.now()`), `_withDay` je
+  podvajal `combineDateAndTime`, `_Labelled` je bil lokalna kopija skupnega `FieldLabel` (razmik pod
+  oznako se s tem spremeni za 1 px — 👤 potrjeno).
+  **`journal/presentation/journal_timeline.dart` + `month_grid.dart`:** `journalEntries` (združi + filtrira
+  + sortira), `groupEntriesByDay`, `journalEmptyMessage`, `journalDayLabel`, ter `tasksOnDay`,
+  `taskCountsInMonth`, `preselectedDay` (`monthCells` preseljen sem). **Naslova dneva v dnevniku namenoma
+  NISEM poenotil z `relativeDayLabel` z Domov:** obrazec opombe dovoli datum v prihodnosti, in tam se
+  pravili razideta (dnevnik pokaže datum, `relativeDayLabel` bi rekel »danes«) → poenotenje bi tiho
+  spremenilo vedenje. Trikrat ponovljeni `startOfDay(a) == startOfDay(b)` je dobil ime (`isSameDay` v
+  `core/date_format`).
+  **On-device dimni test (prod release APK):** seznam (sekcija DANES + značka), čarovnik korak »Kdaj« →
+  tedensko → »Naslednje: 21. 7. 2026«, zaključek ponavljajočega opravila → naslednja ponovitev (dan+7)
+  **pod TA TEDEN** (potrjena poravnana meja), dnevnik (skupina »Danes«), filter Opombe (»Ni opomb.«),
+  mesečni koledar (»2 opravili ta mesec«, izbran današnji dan), prehod na tuj mesec (brez izbranega dneva).
+  **Orodje: `tool/adb_run.ps1` + `tool/smoke.md`** — cel scenarij v **enem** zagonu, koraki v `tmp/steps.txt`
+  so **napisi** (`taptext`), ne koordinate. Nauk: iz orodja `PowerShell` **ne zaganjaj ugnezdenega
+  `powershell -File …`** — Claude Code takega ukaza ne validira in vpraša za dovoljenje pri *vsakem* tapu;
+  poženi skript neposredno (`./tool/adb_run.ps1`).
+
+- 2026-07-14 — **Refaktor presentation plasti: logika iz widgetov v čiste funkcije (`main`, pushano,
+  `c39e70b`…`87df323`, 8 commitov).** Vedenje **nespremenjeno** (refaktor, ne redesign); merilo uspeha ni
+  število vrstic, ampak **novo pokrita logika: 399 → 493 testov (+94)**, `analyze` čist.
+  **Sedem zaslonov razrezanih:** `task_detail_screen` 913→170, `entry_screen` 708→501,
+  `garden_plant_add_screen` 619→337, `home_screen` 578→175, `location_screen` 550→275,
+  `appearance_screen` 523→103, `areas_screen` 424→196 (⏳ postavka iz prejšnjega vnosa zaprta).
+  **Izluščeno (vsako s testi, ki prej niso bili mogoči):** `areas/presentation/garden_items.dart`
+  (vrstni red vrta: brez-območja → tipi po `AreaType.values`; `areaSubtitle`),
+  `tasks/presentation/task_detail_labels.dart` (oznake sredstev/opomnikov/statusa; sredstva zdaj prek
+  obstoječega `formatSupplyQuantity`, ne ročno prepisanega `roundToDouble`), `core/date_format`
+  `combineDateAndTime` (prestavitev opravila ohrani uro), `entry/entry_flow.dart` (`activeSteps`,
+  `nextStep`/`previousStep`, `canLeaveStep`), `entry/entry_defaults.dart` (`nextFullHour`,
+  `statusFromDate`, `shouldSeedReminder` — 4-pogojni guard je bil dobesedno prepisan dvakrat),
+  **`entry/entry_save_spec.dart` (`resolveSave`) — najpomembnejše: pravila, ki knjižijo zalogo in brišejo
+  pridelek (`keepSupplies` ob nenaloženem katalogu, `typeRecordsYield` ob menjavi tipa stran od harvesta),
+  so bila doslej netestirana znotraj `_save()`**; `plants/presentation/plant_picker_view.dart`
+  (`filterCatalog`, `splitByRelevance`, `pickerMembers` — sken »kaj je že v ciljnem območju« je bil
+  podvojen v `build` in `_memberFor`), `home/presentation/home_buckets.dart` (koši danes/zamujeno/
+  prihajajoče **po koledarskem dnevu, ne 24h oknu** — »včeraj ob 22:00« je zjutraj zamujeno),
+  `auth/presentation/location_labels.dart`, `settings/presentation/palette_labels.dart`.
+  **Plasti zaprte (`b602c1b`):** `accountRepositoryProvider` je živel v `data/` → preseljen v
+  `settings/application/account_providers.dart`; `PlantMoveResult`/`ReminderSpec`/`TaskSubjectSpec` niso
+  drift tipi, ampak besednjak repo API-ja → v koren feature-ja (`tasks/task_specs.dart`,
+  `plants/plant_move_result.dart`, repozitorija ju re-exportata). **V `presentation/` ni več nobenega
+  uvoza `data/…_repository.dart`**; edina zavestna izjema je `task_actions.dart` (akcijska plast, imenuje
+  `TasksRepository` v podpisu). **On-device dimni test (staging release APK, čista namestitev, gost):**
+  lokacija (iskanje »Kranj« → status z imenom kraja), Domov (ura vs. »Danes«), Vrt (BREZ OBMOČJA → VRT),
+  dodajanje rastline, čarovnik (privzeta polna ura, opomnik zasejan, korak Sredstva preskočen), detajl
+  opravila (**`⋯` meni, ki zdaj bere repo skozi `Consumer`** — podvoji/opravljeno delujeta), Videz
+  (preklop palete + ponastavitev) — **brez izjem v logcatu**. Novo orodje: `tool/adb_ui.ps1` (tap/vnos +
+  `uiautomator dump` + izpis napisov z `bounds` v enem ukazu). **Nedotaknjeno (kandidati za naslednjič):**
+  `entry/steps/when_step.dart` (483, validacija ponavljanja), `tasks_screen.dart` (404, časovni koši),
+  `journal_screen.dart` + `month_calendar_view.dart` (grupiranje po dnevih, verjetno podvojeno).
+
+- 2026-07-14 — **vc14 pripravljen: prod migracije + on-device verifikacija sredstev + 3 UI popravki
+  (`main`, pushano, `478d7c9`).** (1) **Migracije `0014`+`0015`+`0016` aplicirane na PROD**
+  (`supabase db push --linked`) in verificirane z read-only sondo — **ledger IN dejanska shema**
+  (`tmp/probe_0014_0016.py`). Prod je bil pri `0013`; manjkale so **tri** (ne dve, kot je trdil dnevnik —
+  tudi `0014` task yield). Živi vc13 na Play je bil ves čas varen, ker je zgrajen **pred** supplies/yield
+  commiti (`kSuppliesEnabled=false`, brez yield stolpcev; preverjeno s `git show <commit>:core/config.dart`).
+  (2) **On-device verifikacija zavihka Vrt** (release APK proti prod) — segmenti, kontekstni FAB
+  (Rastlina/Sredstvo/Recept), prazna stanja in grupiranje po kategorijah delujejo; našla je **3 napake**,
+  vse popravljene in on-device potrjene: **`adc8631` `fix(theme)`** — tema je izbranemu čipu barvala le
+  *ozadje* (`chipTheme.selectedColor = primaryContainer`), M3 pa besedilo izbranega čipa jemlje iz
+  `onSecondaryContainer`, ki ga shema ni nastavila → ostal je M3 baseline in se bral kot **onemogočen**;
+  fix = `secondaryContainer`/`onSecondaryContainer` v `_scheme()` → popravi **vseh 10 mest s čipi** naenkrat.
+  **`c0ebdf4` `fix(i18n)`** — sl kategorija sredstev »Tretiva« → **»Škropiva«** (»tretiva« ni slovenska beseda).
+  **`63e5985` `fix(areas)`** — območje brez opravil je v podnaslovu ponavljalo svoj **tip**, ki ga sekcijska
+  oznaka že pove (»VRT / Vrt / Vrt«) → podnaslov zdaj pade nazaj na **število rastlin** (`plant_count(n)`
+  slang plural + `no_plants`; podatek je že v `plantsByArea`, brez nove poizvedbe). `analyze` čist,
+  **399 testov** (+1 widget). (3) **E2E potrjeno proti ŽIVEMU PRODU** (vnos prek aplikacije + read-only sonda):
+  `supply.category` ✅, `task.yield_amount = 2.0 kg` ✅ (`0014`), recept z dvema sredstvoma ✅
+  (postavke so **JSONB v `recipe.items`**, ločene tabele `recipe_item` NI), in ključno — **negativna zaloga
+  `−450` gre skozi** (`task_supply.applied=true`, opravilo `done`, `supply_quantity_check` odstranjen) =
+  `0016` dela; pred njo bi `23514` na `supply` **zaklenil cel sync** (supply se pusha pred task).
+  (4) **AAB `1.0.0+14` zgrajen, a NAMERNO ZADRŽAN** — Google pregleduje prijavo za produkcijski dostop
+  in pregledovalci testirajo prek zaprtega tira; sredstva so v vc13 izklopljena, torej bi šla nova
+  funkcija pred pregledovalce brez testerskega cikla. Upload po Googlovi odločitvi.
+  ⏳ Odprto: razdelitev `areas_screen.dart` (>300 vrstic).
+
+- 2026-07-01 — **Sredstva UX + preselitev v zavihek Vrt (`main`, merge `93d9d3a`).** (1) **UX koraka
+  Sredstva pri opravilu** (commit `c4ab4a5`): keyboard-safe `add_supply_to_task_sheet` (drseč seznam +
+  pripeta spodnja vrstica Količina[enota]+Dodaj nad tipkovnico prek `viewInsetsOf`), izbira = toggle
+  (ponoven tap odznači) z močnejšo oznako (primaryContainer + krepko + `check_circle`), zaloga+»malo«
+  v vrsticah, iskanje ko >8; progress bar v vnosu izloči »Pregled« iz pik. (2) **Preselitev zalog/receptov
+  iz Nastavitev v zavihek Vrt** (commit `7591611`): en `SegmentedButton [Območja | Sredstva | Recepti]`
+  (kot Dnevnik), telo se zamenja v istem zaslonu; samostojni `/supplies` zaslon **upokojen**, telesi
+  ekstrahirani v `supplies/presentation/widgets/supply_list_views.dart`. **Enoten kontekstni razširjeni
+  FAB** (Rastlina/Sredstvo/Recept) — preseljen iz `main_shell` v `areas_screen`, da pozna segment
+  (prej je na Zaloge/Recepti napačno dodal rastlino); območje ostane tih spodnji gumb; urejanje/izbris
+  prek tap vrstice (ševron namig). (3) **Izčrpen 5-agentni pregled + popravki:** harmonizirana
+  terminologija sredstev (**sl → »Sredstva«**, **de → »Mittel«**; »zaloga/Bestand/stock« ostane le za
+  stanje), skupni `formatSupplyQuantity` namesto 4 kopij, odstranjeni osiroteli i18n ključi `settings.*`.
+  Koncept §Zaloge + wireframe `08-supplies.html` posodobljena. `analyze` čist, **398 testov** zeleno.
+  **NEPUSHANO.** ⏳ on-device verifikacija napisov (USB je padel); PROD migraciji **0015+0016 še ne**
+  deployani (pred prod releasom `supabase db push`). Odprto: razdelitev `areas_screen.dart` (424 vrstic >300).
+
+- 2026-06-30 — **Beleženje sredstev v celoti (`feat/supplies-tracking`, worktree `../tendask-supplies`).**
+  Tri faze: (1) **ponovni vklop** `kSuppliesEnabled=true` (korak v čarovniku + sekcija Nastavitve) +
+  manjkajoč **izbris zaloge** v edit sheetu (`DestructiveButton`) — commit `392e707`. (2) **Kategorije**:
+  nov enum `core/supply_category.dart` (Gnojila/Tretiva/Oprema/Drugo) + `Supply.category` (drift **v13**
+  + Supabase **`0015`** additive, default `'other'` + CHECK), `remote_mappers` push+toleranten pull,
+  edit sheet izbira + grupiranje na zaslonu 08 (`SectionLabel`) — commit `38dc1a1`. (3) **Recepti**:
+  `recipe_item.dart` (ročni model + tolerantni parse/encode kot `Recurrence`), `RecipesRepository` +
+  providerji (recipe tabela je bila že ožičena v sync), zavihek Zaloge|Recepti na zaslonu 08,
+  `recipe_edit_sheet` + `recipe_picker_sheet`, gumb »Uporabi recept« v koraku Sredstva (predizpolni).
+  Wireframe `08b-recipes.html` + posodobljen `08-supplies.html`/`index.html`, koncept §213/§7.16.
+  **3 neodvisni agentski pregledi + hardening:** (a) `.when(error:)` na seznamih, `try/catch` ob
+  shranjevanju, recept na izbrisano sredstvo (placeholder + picker filtrira); (b) **neviden odpis
+  zaloge** ob menjavi tipa na ne-trošeč → gating v `entry_screen._save` (`keepSupplies`, varno ob
+  neznane tipu); (c) **BLOKER: pre-poraba → negativna zaloga → Supabase CHECK zavrne push → fail-fast
+  zaustavi cel sync.** Odločitev (uporabnik): dovoli deficit — migracija **`0016`** spusti
+  `supply_quantity_check`; shrani točno (revert simetrija), UI clampa prikaz na `max(0,qty)` + »malo«.
+  analyze čist · **357 testov** (dodani: recept→odpis, pre-poraba→negativa+revert, prazni-specs
+  reconcile, kategorija default/pull-toleranca). **Preštevilčeno zaradi main-ovega `0014_task_yield`
+  (drift v12): najini migraciji sta `0015`/`0016`, drift **v13** (v12 rezerviran za task_yield ob
+  merge).** ⏳ **`db push` migracij `0015`+`0016` na prod** (ločen deploy korak) + merge main. Ročna
+  on-device: menjava tipa ne odpiše; realna v12→v13 nadgradnja.
+- 2026-06-30 — **FR-5: ponavljanje opravil (`feat/fr5-recurrence`, commita `06bab04` feat + `feebfed`
+  fix-ui; pushano, PR čaka).** Materializiraj-naslednjo-ob-dokončanju. Nov `data/recurrence.dart`
+  (`Recurrence{everyDays, remaining}` + tolerantni `tryParse`/`encode`/`next` + čisti DST-varni
+  `nextOccurrenceDate`); nova nullable `task.series_id` (drift **v11** + Supabase **`0013`**, additive;
+  `0013` apliciran na **staging**, prod čaka). `complete()` rodi otroka v isti transakciji (deduje
+  subjekte/opomnike/series_id), `updateTask` ureja recurrence, `stopRecurrence`, `duplicate` strip,
+  revert blokada (D1). UI: picker v `when_step` (Dnevno/Tedensko/Po meri + št. ponovitev=`remaining` min 1
+  + »Naslednje: <datum>« + validacija blokira »Naprej«), `RecurringBadge`, vrstica na Pregledu/detajlu,
+  »Ustavi ponavljanje« v ⋯, toast prek `showTopToast`. **Semantika (potrjeno z uporabnikom): »ponovitve«
+  = `remaining` neposredno (1 = trenutni + 1 = skupaj 2), NE »skupaj«.** **Nauki:** (a) `ValueKey(recurrence)`
+  na stateful pickerju ga ob vsakem emitu uniči/poustvari → zbris polja je skakal na »Dnevno« (odpravljeno
+  brez key); (b) `SegmentedButton` privzeto kaže ✓ na izbranem → krade širino, besedilo prebija → povsod
+  `showSelectedIcon: false`; (c) `×` enota je izgledala kot gumb za brisanje → »krat«. Review: 4-dimenzijski
+  multi-agentni + adversarna verifikacija; vse potrjene najdbe popravljene (revert-gate `status==done`,
+  `updateTask` null-check, 4× `!`→lokali, magic width→const, observability log). analyze čist · **345 testov**.
+- 2026-06-29 — **FR-16: re-engagement opomnik za neaktivne uporabnike (`main`, commit `d29fd9d`).**
+  Lokalni dead-man's-switch: nova čista funkcija `journal_nudge_schedule.dart` (`journalNudgeFireTimes`,
+  testabilna) + `JournalNudgeCoordinator` (vzorec `_running`/`_dirty` + debounce kot reminder_coordinator).
+  **Ključni vpogled — decay brez fire-callbackov:** namesto enega znova-zakoličenega opomnika zakoličimo
+  fiksno **verigo dveh** (`kJournalNudgeDayOffsets=[7,28]` ob 17:00); vsak dotik (start/zapis task ali
+  note/`AppLifecycleListener.onResume`) prekliče oba in ju zakoliči naprej → aktiven uporabnik ju nikoli
+  ne vidi, tih dobi dva in nato mir = guardraili (kapica 1×/7d, decay 7→+21→stop, reset) brez stanja v
+  bazi. Ločen kanal `journal_nudge` (inexact, brez exact-alarm dovoljenja) + rezervirani **negativni**
+  ID-ji `[-201,-202]` (reminder hash je vedno ≥0 → brez trka). **Tester-najdba (kritična):**
+  `reminder_coordinator` je na **dveh** mestih (orphan-sweep + master-off veja) klical cancel čez *vse*
+  pending ID-je → bi pobrisal nudge, oba coordinatorja pa poslušata `db.profiles` → race; popravljeno z
+  izločitvijo `kJournalNudgeNotificationIds` na obeh mestih. + defensivni past-time guard (debug-skrajšava/
+  DST). A/B segment prek nove `TasksRepository.totalCount()`. i18n en/sl/de (`journal_nudge.*` +
+  `notif_settings.type_journal_nudge`). Code review + neodvisen security review (privacy-by-design potrjen:
+  generična kopija, nič PII na lock screenu). Testi (+12): čista funkcija (9) + settings round-trip/opt-out
+  (3). analyze čist, 289/289. ⏳ Preostane: on-device verifikacija (negativni ID-ji + sproženje/preklic;
+  predlog: začasni skrajšani offset).
+- 2026-06-28 — **FR-17: haptični odziv ob ključnih akcijah (`feat/fr17-haptics`).** Nov
+  `lib/core/haptics.dart` z `AppHaptics` (3 statične metode = `light`/`medium`/`heavy`), edina točka
+  preslikave jakosti in bodočega stikala. Načelo: haptika se sproži, **ko se dejanje zgodi**, ne ob tapu
+  — zato je `mediumImpact` na uspešni save-poti vsakega obrazca (entry `_save`, area/plant/note), ne v
+  skupnem `SaveBar` (ki ne ve za uspeh in bi utripnil ob neuspeli validaciji ali `PlantMoveResult.duplicate`).
+  `lightImpact` na vseh 4 complete-točkah (swipe prek skupnega `TaskSwipe`, seznam-meni, detajl-gumb,
+  detajl-meni). `heavyImpact` v `showConfirmDialog` ob `destructive && potrjeno` — en chokepoint pokrije
+  vse izbrise/clear/odjavo (preverjeno: v `lib/` je en sam `AlertDialog`). Brez nove dependency/sheme/
+  i18n; `HapticFeedback` (vgrajen) ne rabi `VIBRATE` dovoljenja, OS-onemogočena vibracija = no-op.
+  Testi (+6): jakostna preslikava prek mock platform kanala (3) + branža `showConfirmDialog` confirm/
+  cancel/non-destructive (3). analyze čist, 274/274.
+- 2026-06-28 — **FR-13: indikator okolja STAGING/OFFLINE (`feat/fr13-env-banner`).** Dev-only kotni
+  `Banner` prek `MaterialApp.router` `builder` (`_envBanner` v `lib/app/app.dart`): na ne-produkcijskih
+  buildih izriše `STAGING` (oranžen) / `OFFLINE` (siv), na produkciji vrne otroka brez ovoja → tester
+  na Play nikoli ne vidi traku. Ponovno uporabi obstoječ `kEnvLabel` (`core/config.dart`); brez nove
+  dependency, sheme, i18n ali testov (niz dev-only). `Colors.orange/grey` = upravičena dev-only izjema
+  od »barve prek teme«. analyze čist.
+- 2026-06-28 — **FR backlog oštevilčen do FR-16 + FR-14/15/16 zapisani.** Trije samostojni
+  feature-request dokumenti dobili številko (analitika=FR-14, in-app update=FR-15, re-engagement=FR-16);
+  zapisano v glavah `.md` + backlogu. `in-app-update.md` prej neuvožen, zdaj sledjen (commit `485a620`).
+- 2026-06-24 — **Opozorilo »opomniki bodo tihi« + verifikacija 0011 + FR-13 (na `main`).** (1) Nov
+  reaktivni banner `ReminderSoundBanner` (`core/notifications/reminder_audio.dart` + Android EventChannel/
+  BroadcastReceiver) opozori, ko obvestila ne bodo zvenela (glasnost obvestil 0 ali tih profil). **Diagnoza
+  pri uporabniku:** »ni zvoka« = `STREAM_NOTIFICATION` glasnost na 0 (Samsung ima ločen drsnik), **NE bug** —
+  kanal (HIGH+zvok), točni alarm in vibracija delujejo (potrjeno prek `adb dumpsys audio/alarm/notification`).
+  Gumb »Vklopi zvok« dvigne glasnost (`ADJUST_RAISE`) + pokaže sistemski drsnik; banner izgine **takoj**
+  (live stream prek `VOLUME_CHANGED`/`RINGER_MODE_CHANGED`). Topla amber paleta (`AppColors.warnSoft`) za
+  vidnost na temni temi. Tri površine: nastavitve opomnikov, priming sheet, korak opomnika ob vnosu opravila.
+  analyze čist, `compileDebugKotlin` ✅, testi 232 + 10 novih. (2) Migracija `0011` (created_at/
+  server_inserted_at) verificirana na **PROD + staging** (ledger + dejanski stolpci 14/14). (3) **FR-13**
+  (indikator okolja) napisan kot feature request (`docs/feature-requests/env-banner.md`), ni implementiran.
 - 2026-06-16 — **M11.16 (V2 agregati) + zaklep grantov + push i18n fix + pregled M11.**
   **(1) M11.16 — V2 agregatne tabele + nočni cron** (migracija `0008`): štiri tabele
   (`activity_recent/season/frequency`, `bucket_population`), `eligible_user` matview (anti-junk

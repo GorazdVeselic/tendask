@@ -16,6 +16,7 @@ import '../../../../plants/application/plants_providers.dart';
 import '../../../../plants/presentation/garden_plant_add_screen.dart';
 import '../../../../plants/presentation/plant_display.dart';
 import '../../../../plants/presentation/widgets/plant_select_row.dart';
+import 'subject_picker.dart';
 
 /// Step 2 — subjects: multi-select plants + areas-as-subject, with inline
 /// "add from catalog" plus explicit "+ add plant / + add area" actions (so an
@@ -24,12 +25,15 @@ import '../../../../plants/presentation/widgets/plant_select_row.dart';
 class SubjectStepBody extends ConsumerStatefulWidget {
   const SubjectStepBody({
     super.key,
+    required this.taskTypeId,
     required this.plantIds,
     required this.areaIds,
     required this.onTogglePlant,
     required this.onToggleArea,
   });
 
+  /// Type chosen in step 1; drives the soft lift of relevant plants (T3).
+  final String? taskTypeId;
   final Set<String> plantIds;
   final Set<String> areaIds;
   final void Function(String id, bool selected) onTogglePlant;
@@ -91,68 +95,57 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final normQuery = _query.trim().toLowerCase();
-
     final areas = ref.watch(areasMapProvider).asData?.value ?? const {};
     final userPlants =
         ref.watch(userPlantsMapProvider).asData?.value ?? const {};
     final catalog = ref.watch(plantsMapProvider).asData?.value ?? const {};
     final catalogList = ref.watch(plantsListProvider).asData?.value ?? const [];
 
-    bool inCategory(String? plantId) {
-      if (_category == 'all') return true;
-      final cat = plantId != null ? catalog[plantId]?.category : null;
-      return cat != null && coarsePlantCategory(cat) == _category;
-    }
+    // T3: plant categories the chosen task type applies to (see
+    // isCategoryRelevant for the empty/unknown rules).
+    final relevantCategories =
+        ref.watch(taskTypeCategoriesProvider).asData?.value[widget.taskTypeId] ??
+        const <String>{};
 
-    final plants = userPlants.values
-        .where((p) => inCategory(p.plantId))
-        .where(
-          (p) =>
-              normQuery.isEmpty ||
-              userPlantLabel(p, catalog).toLowerCase().contains(normQuery),
-        )
-        .toList();
+    final (relevant: plantsRelevant, other: plantsOther, :softSplit) =
+        splitSubjectPlants(
+          filterSubjectPlants(
+            userPlants.values,
+            catalog: catalog,
+            category: _category,
+            query: _query,
+          ),
+          relevantCategories: relevantCategories,
+          catalog: catalog,
+        );
     final areaList = areas.values.toList();
-    final ownedPlantIds = {
-      for (final p in userPlants.values)
-        if (p.plantId != null) p.plantId,
-    };
-    final catalogMatches = normQuery.isEmpty
-        ? <Plant>[]
-        : catalogList
-              .where(
-                (p) =>
-                    !ownedPlantIds.contains(p.id) &&
-                    inCategory(p.id) &&
-                    plantMatchesQuery(p, normQuery),
-              )
-              .toList();
-
-    // Areas of the selected plants — shown as context, not a co-equal subject.
-    final selectedAreaNames = <String>{
-      for (final id in widget.plantIds) ?areas[userPlants[id]?.areaId]?.name,
-    };
+    final catalogMatches = subjectCatalogMatches(
+      catalogList,
+      owned: ownedPlantIds(userPlants.values),
+      relevantCategories: relevantCategories,
+      category: _category,
+      query: _query,
+    );
+    final selectedAreaNames = selectedPlantAreaNames(
+      plantIds: widget.plantIds,
+      userPlants: userPlants,
+      areas: areas,
+    );
+    final categoryChips = subjectCategoryChips(userPlants.values, catalog);
 
     String? areaSubtitle(UserPlant p) =>
         p.areaId != null && areas[p.areaId] != null
         ? '🪴 ${areas[p.areaId]!.name}'
         : null;
 
-    // Only offer category chips the user actually has plants in — an empty
-    // category would just return nothing.
-    final presentCategories = <String>{
-      for (final p in userPlants.values)
-        if (p.plantId != null && catalog[p.plantId] != null)
-          coarsePlantCategory(catalog[p.plantId]!.category),
-    };
-    final categoryChips = presentCategories.isEmpty
-        ? const <String>[]
-        : [
-            'all',
-            for (final c in kPlantCategories)
-              if (c != 'all' && presentCategories.contains(c)) c,
-          ];
+    Widget plantRow(UserPlant p) => PlantSelectRow(
+      icon: userPlantIcon(p, catalog),
+      title: userPlantLabel(p, catalog),
+      subtitle: areaSubtitle(p),
+      selected: widget.plantIds.contains(p.id),
+      onTap: () =>
+          widget.onTogglePlant(p.id, !widget.plantIds.contains(p.id)),
+    );
 
     final selectedChips = <({String label, VoidCallback onRemove})>[
       for (final id in widget.plantIds)
@@ -223,17 +216,13 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                     onChanged: (v) => setState(() => _query = v),
                   ),
                 ),
-              for (final p in plants)
-                PlantSelectRow(
-                  icon: userPlantIcon(p, catalog),
-                  title: userPlantLabel(p, catalog),
-                  subtitle: areaSubtitle(p),
-                  selected: widget.plantIds.contains(p.id),
-                  onTap: () => widget.onTogglePlant(
-                    p.id,
-                    !widget.plantIds.contains(p.id),
-                  ),
+              for (final p in plantsRelevant) plantRow(p),
+              if (softSplit)
+                SectionLabel(
+                  t.entry.subject_less_likely,
+                  padding: const EdgeInsets.fromLTRB(8, 12, 8, 4),
                 ),
+              for (final p in plantsOther) plantRow(p),
               if (selectedAreaNames.isNotEmpty)
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),

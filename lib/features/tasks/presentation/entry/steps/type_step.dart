@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/config.dart';
-import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
@@ -11,6 +10,7 @@ import '../../../../plants/application/plants_providers.dart';
 import '../../../application/tasks_providers.dart';
 import '../../subject_labels.dart';
 import '../../widgets/task_type_tile.dart';
+import 'type_ordering.dart';
 
 /// Step 1 — pick the task type. Tapping a tile auto-advances (onSelect). Types
 /// are sorted by per-user frequency; only the first few show until "show all".
@@ -37,29 +37,6 @@ class TypeStepBody extends ConsumerStatefulWidget {
 class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
   bool _expanded = false;
 
-  /// Catalog ordered by usage (most used first); ties keep the seed order.
-  List<TaskType> _sortedByUsage(
-    Map<String, TaskType> catalog,
-    Map<String, int> usage,
-  ) {
-    final list = catalog.values.toList();
-    final seedOrder = {for (var i = 0; i < list.length; i++) list[i].id: i};
-    list.sort((a, b) {
-      final byUse = (usage[b.id] ?? 0).compareTo(usage[a.id] ?? 0);
-      return byUse != 0 ? byUse : seedOrder[a.id]!.compareTo(seedOrder[b.id]!);
-    });
-    return list;
-  }
-
-  /// Keeps the currently selected type visible even when it falls outside the
-  /// collapsed window (e.g. returning to this step from review).
-  List<TaskType> _ensureSelected(List<TaskType> visible, List<TaskType> all) {
-    final sel = widget.selected;
-    if (sel == null || visible.any((t) => t.id == sel)) return visible;
-    final extra = all.where((t) => t.id == sel);
-    return extra.isEmpty ? visible : [...visible, extra.first];
-  }
-
   @override
   Widget build(BuildContext context) {
     final t = context.t;
@@ -84,13 +61,14 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
             ),
           ),
           data: (catalog) {
-            final sorted = _sortedByUsage(catalog, usage);
+            final sorted = sortTaskTypesByUsage(catalog, usage);
             final showToggle = sorted.length > kTaskTypeGridCollapsed;
             final visible = _expanded || !showToggle
                 ? sorted
-                : _ensureSelected(
+                : ensureSelectedVisible(
                     sorted.take(kTaskTypeGridCollapsed).toList(),
                     sorted,
+                    widget.selected,
                   );
             return Column(
               children: [

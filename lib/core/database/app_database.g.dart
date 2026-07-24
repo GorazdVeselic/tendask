@@ -2318,6 +2318,20 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         type: DriftSqlType.dateTime,
         requiredDuringInsert: false,
       );
+  static const VerificationMeta _defaultGardenSeededMeta =
+      const VerificationMeta('defaultGardenSeeded');
+  @override
+  late final GeneratedColumn<bool> defaultGardenSeeded = GeneratedColumn<bool>(
+    'default_garden_seeded',
+    aliasedName,
+    false,
+    type: DriftSqlType.bool,
+    requiredDuringInsert: false,
+    defaultConstraints: GeneratedColumn.constraintIsAlways(
+      'CHECK ("default_garden_seeded" IN (0, 1))',
+    ),
+    defaultValue: const Constant(false),
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -2354,6 +2368,7 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     climateProfile,
     fcmToken,
     fcmTokenUpdatedAt,
+    defaultGardenSeeded,
     updatedAt,
     syncStatus,
   ];
@@ -2449,6 +2464,15 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('default_garden_seeded')) {
+      context.handle(
+        _defaultGardenSeededMeta,
+        defaultGardenSeeded.isAcceptableOrUnknown(
+          data['default_garden_seeded']!,
+          _defaultGardenSeededMeta,
+        ),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -2516,6 +2540,10 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.dateTime,
         data['${effectivePrefix}fcm_token_updated_at'],
       ),
+      defaultGardenSeeded: attachedDatabase.typeMapping.read(
+        DriftSqlType.bool,
+        data['${effectivePrefix}default_garden_seeded'],
+      )!,
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -2545,6 +2573,7 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? climateProfile;
   final String? fcmToken;
   final DateTime? fcmTokenUpdatedAt;
+  final bool defaultGardenSeeded;
   final DateTime updatedAt;
   final String syncStatus;
   const Profile({
@@ -2559,6 +2588,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.climateProfile,
     this.fcmToken,
     this.fcmTokenUpdatedAt,
+    required this.defaultGardenSeeded,
     required this.updatedAt,
     required this.syncStatus,
   });
@@ -2596,6 +2626,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     if (!nullToAbsent || fcmTokenUpdatedAt != null) {
       map['fcm_token_updated_at'] = Variable<DateTime>(fcmTokenUpdatedAt);
     }
+    map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded);
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
@@ -2626,6 +2657,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       fcmTokenUpdatedAt: fcmTokenUpdatedAt == null && nullToAbsent
           ? const Value.absent()
           : Value(fcmTokenUpdatedAt),
+      defaultGardenSeeded: Value(defaultGardenSeeded),
       updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
     );
@@ -2652,6 +2684,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       fcmTokenUpdatedAt: serializer.fromJson<DateTime?>(
         json['fcmTokenUpdatedAt'],
       ),
+      defaultGardenSeeded: serializer.fromJson<bool>(
+        json['defaultGardenSeeded'],
+      ),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
@@ -2671,6 +2706,7 @@ class Profile extends DataClass implements Insertable<Profile> {
       'climateProfile': serializer.toJson<String?>(climateProfile),
       'fcmToken': serializer.toJson<String?>(fcmToken),
       'fcmTokenUpdatedAt': serializer.toJson<DateTime?>(fcmTokenUpdatedAt),
+      'defaultGardenSeeded': serializer.toJson<bool>(defaultGardenSeeded),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
@@ -2688,6 +2724,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<String?> climateProfile = const Value.absent(),
     Value<String?> fcmToken = const Value.absent(),
     Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
+    bool? defaultGardenSeeded,
     DateTime? updatedAt,
     String? syncStatus,
   }) => Profile(
@@ -2710,6 +2747,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     fcmTokenUpdatedAt: fcmTokenUpdatedAt.present
         ? fcmTokenUpdatedAt.value
         : this.fcmTokenUpdatedAt,
+    defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
     updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
   );
@@ -2734,6 +2772,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       fcmTokenUpdatedAt: data.fcmTokenUpdatedAt.present
           ? data.fcmTokenUpdatedAt.value
           : this.fcmTokenUpdatedAt,
+      defaultGardenSeeded: data.defaultGardenSeeded.present
+          ? data.defaultGardenSeeded.value
+          : this.defaultGardenSeeded,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -2755,6 +2796,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('climateProfile: $climateProfile, ')
           ..write('fcmToken: $fcmToken, ')
           ..write('fcmTokenUpdatedAt: $fcmTokenUpdatedAt, ')
+          ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
@@ -2774,6 +2816,7 @@ class Profile extends DataClass implements Insertable<Profile> {
     climateProfile,
     fcmToken,
     fcmTokenUpdatedAt,
+    defaultGardenSeeded,
     updatedAt,
     syncStatus,
   );
@@ -2792,6 +2835,7 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.climateProfile == this.climateProfile &&
           other.fcmToken == this.fcmToken &&
           other.fcmTokenUpdatedAt == this.fcmTokenUpdatedAt &&
+          other.defaultGardenSeeded == this.defaultGardenSeeded &&
           other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus);
 }
@@ -2808,6 +2852,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String?> climateProfile;
   final Value<String?> fcmToken;
   final Value<DateTime?> fcmTokenUpdatedAt;
+  final Value<bool> defaultGardenSeeded;
   final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
@@ -2823,6 +2868,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.climateProfile = const Value.absent(),
     this.fcmToken = const Value.absent(),
     this.fcmTokenUpdatedAt = const Value.absent(),
+    this.defaultGardenSeeded = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -2839,6 +2885,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.climateProfile = const Value.absent(),
     this.fcmToken = const Value.absent(),
     this.fcmTokenUpdatedAt = const Value.absent(),
+    this.defaultGardenSeeded = const Value.absent(),
     required DateTime updatedAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -2856,6 +2903,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? climateProfile,
     Expression<String>? fcmToken,
     Expression<DateTime>? fcmTokenUpdatedAt,
+    Expression<bool>? defaultGardenSeeded,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
@@ -2873,6 +2921,8 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       if (climateProfile != null) 'climate_profile': climateProfile,
       if (fcmToken != null) 'fcm_token': fcmToken,
       if (fcmTokenUpdatedAt != null) 'fcm_token_updated_at': fcmTokenUpdatedAt,
+      if (defaultGardenSeeded != null)
+        'default_garden_seeded': defaultGardenSeeded,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
@@ -2891,6 +2941,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String?>? climateProfile,
     Value<String?>? fcmToken,
     Value<DateTime?>? fcmTokenUpdatedAt,
+    Value<bool>? defaultGardenSeeded,
     Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<int>? rowid,
@@ -2907,6 +2958,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       climateProfile: climateProfile ?? this.climateProfile,
       fcmToken: fcmToken ?? this.fcmToken,
       fcmTokenUpdatedAt: fcmTokenUpdatedAt ?? this.fcmTokenUpdatedAt,
+      defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
@@ -2951,6 +3003,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (fcmTokenUpdatedAt.present) {
       map['fcm_token_updated_at'] = Variable<DateTime>(fcmTokenUpdatedAt.value);
     }
+    if (defaultGardenSeeded.present) {
+      map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -2977,6 +3032,7 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('climateProfile: $climateProfile, ')
           ..write('fcmToken: $fcmToken, ')
           ..write('fcmTokenUpdatedAt: $fcmTokenUpdatedAt, ')
+          ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
@@ -4220,6 +4276,39 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  static const VerificationMeta _seriesIdMeta = const VerificationMeta(
+    'seriesId',
+  );
+  @override
+  late final GeneratedColumn<String> seriesId = GeneratedColumn<String>(
+    'series_id',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yieldAmountMeta = const VerificationMeta(
+    'yieldAmount',
+  );
+  @override
+  late final GeneratedColumn<double> yieldAmount = GeneratedColumn<double>(
+    'yield_amount',
+    aliasedName,
+    true,
+    type: DriftSqlType.double,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _yieldUnitMeta = const VerificationMeta(
+    'yieldUnit',
+  );
+  @override
+  late final GeneratedColumn<String> yieldUnit = GeneratedColumn<String>(
+    'yield_unit',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -4269,6 +4358,9 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
     weather,
     aggContext,
     recurrence,
+    seriesId,
+    yieldAmount,
+    yieldUnit,
     updatedAt,
     deleted,
     syncStatus,
@@ -4341,6 +4433,27 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         recurrence.isAcceptableOrUnknown(data['recurrence']!, _recurrenceMeta),
       );
     }
+    if (data.containsKey('series_id')) {
+      context.handle(
+        _seriesIdMeta,
+        seriesId.isAcceptableOrUnknown(data['series_id']!, _seriesIdMeta),
+      );
+    }
+    if (data.containsKey('yield_amount')) {
+      context.handle(
+        _yieldAmountMeta,
+        yieldAmount.isAcceptableOrUnknown(
+          data['yield_amount']!,
+          _yieldAmountMeta,
+        ),
+      );
+    }
+    if (data.containsKey('yield_unit')) {
+      context.handle(
+        _yieldUnitMeta,
+        yieldUnit.isAcceptableOrUnknown(data['yield_unit']!, _yieldUnitMeta),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -4408,6 +4521,18 @@ class $TasksTable extends Tasks with TableInfo<$TasksTable, Task> {
         DriftSqlType.string,
         data['${effectivePrefix}recurrence'],
       ),
+      seriesId: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}series_id'],
+      ),
+      yieldAmount: attachedDatabase.typeMapping.read(
+        DriftSqlType.double,
+        data['${effectivePrefix}yield_amount'],
+      ),
+      yieldUnit: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}yield_unit'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -4442,6 +4567,9 @@ class Task extends DataClass implements Insertable<Task> {
   final String? weather;
   final String? aggContext;
   final String? recurrence;
+  final String? seriesId;
+  final double? yieldAmount;
+  final String? yieldUnit;
   final DateTime updatedAt;
   final bool deleted;
   final String syncStatus;
@@ -4455,6 +4583,9 @@ class Task extends DataClass implements Insertable<Task> {
     this.weather,
     this.aggContext,
     this.recurrence,
+    this.seriesId,
+    this.yieldAmount,
+    this.yieldUnit,
     required this.updatedAt,
     required this.deleted,
     required this.syncStatus,
@@ -4483,6 +4614,15 @@ class Task extends DataClass implements Insertable<Task> {
     if (!nullToAbsent || recurrence != null) {
       map['recurrence'] = Variable<String>(recurrence);
     }
+    if (!nullToAbsent || seriesId != null) {
+      map['series_id'] = Variable<String>(seriesId);
+    }
+    if (!nullToAbsent || yieldAmount != null) {
+      map['yield_amount'] = Variable<double>(yieldAmount);
+    }
+    if (!nullToAbsent || yieldUnit != null) {
+      map['yield_unit'] = Variable<String>(yieldUnit);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['deleted'] = Variable<bool>(deleted);
     map['sync_status'] = Variable<String>(syncStatus);
@@ -4506,6 +4646,15 @@ class Task extends DataClass implements Insertable<Task> {
       recurrence: recurrence == null && nullToAbsent
           ? const Value.absent()
           : Value(recurrence),
+      seriesId: seriesId == null && nullToAbsent
+          ? const Value.absent()
+          : Value(seriesId),
+      yieldAmount: yieldAmount == null && nullToAbsent
+          ? const Value.absent()
+          : Value(yieldAmount),
+      yieldUnit: yieldUnit == null && nullToAbsent
+          ? const Value.absent()
+          : Value(yieldUnit),
       updatedAt: Value(updatedAt),
       deleted: Value(deleted),
       syncStatus: Value(syncStatus),
@@ -4529,6 +4678,9 @@ class Task extends DataClass implements Insertable<Task> {
       weather: serializer.fromJson<String?>(json['weather']),
       aggContext: serializer.fromJson<String?>(json['aggContext']),
       recurrence: serializer.fromJson<String?>(json['recurrence']),
+      seriesId: serializer.fromJson<String?>(json['seriesId']),
+      yieldAmount: serializer.fromJson<double?>(json['yieldAmount']),
+      yieldUnit: serializer.fromJson<String?>(json['yieldUnit']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       deleted: serializer.fromJson<bool>(json['deleted']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
@@ -4549,6 +4701,9 @@ class Task extends DataClass implements Insertable<Task> {
       'weather': serializer.toJson<String?>(weather),
       'aggContext': serializer.toJson<String?>(aggContext),
       'recurrence': serializer.toJson<String?>(recurrence),
+      'seriesId': serializer.toJson<String?>(seriesId),
+      'yieldAmount': serializer.toJson<double?>(yieldAmount),
+      'yieldUnit': serializer.toJson<String?>(yieldUnit),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'deleted': serializer.toJson<bool>(deleted),
       'syncStatus': serializer.toJson<String>(syncStatus),
@@ -4565,6 +4720,9 @@ class Task extends DataClass implements Insertable<Task> {
     Value<String?> weather = const Value.absent(),
     Value<String?> aggContext = const Value.absent(),
     Value<String?> recurrence = const Value.absent(),
+    Value<String?> seriesId = const Value.absent(),
+    Value<double?> yieldAmount = const Value.absent(),
+    Value<String?> yieldUnit = const Value.absent(),
     DateTime? updatedAt,
     bool? deleted,
     String? syncStatus,
@@ -4578,6 +4736,9 @@ class Task extends DataClass implements Insertable<Task> {
     weather: weather.present ? weather.value : this.weather,
     aggContext: aggContext.present ? aggContext.value : this.aggContext,
     recurrence: recurrence.present ? recurrence.value : this.recurrence,
+    seriesId: seriesId.present ? seriesId.value : this.seriesId,
+    yieldAmount: yieldAmount.present ? yieldAmount.value : this.yieldAmount,
+    yieldUnit: yieldUnit.present ? yieldUnit.value : this.yieldUnit,
     updatedAt: updatedAt ?? this.updatedAt,
     deleted: deleted ?? this.deleted,
     syncStatus: syncStatus ?? this.syncStatus,
@@ -4599,6 +4760,11 @@ class Task extends DataClass implements Insertable<Task> {
       recurrence: data.recurrence.present
           ? data.recurrence.value
           : this.recurrence,
+      seriesId: data.seriesId.present ? data.seriesId.value : this.seriesId,
+      yieldAmount: data.yieldAmount.present
+          ? data.yieldAmount.value
+          : this.yieldAmount,
+      yieldUnit: data.yieldUnit.present ? data.yieldUnit.value : this.yieldUnit,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       deleted: data.deleted.present ? data.deleted.value : this.deleted,
       syncStatus: data.syncStatus.present
@@ -4619,6 +4785,9 @@ class Task extends DataClass implements Insertable<Task> {
           ..write('weather: $weather, ')
           ..write('aggContext: $aggContext, ')
           ..write('recurrence: $recurrence, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('yieldAmount: $yieldAmount, ')
+          ..write('yieldUnit: $yieldUnit, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus')
@@ -4637,6 +4806,9 @@ class Task extends DataClass implements Insertable<Task> {
     weather,
     aggContext,
     recurrence,
+    seriesId,
+    yieldAmount,
+    yieldUnit,
     updatedAt,
     deleted,
     syncStatus,
@@ -4654,6 +4826,9 @@ class Task extends DataClass implements Insertable<Task> {
           other.weather == this.weather &&
           other.aggContext == this.aggContext &&
           other.recurrence == this.recurrence &&
+          other.seriesId == this.seriesId &&
+          other.yieldAmount == this.yieldAmount &&
+          other.yieldUnit == this.yieldUnit &&
           other.updatedAt == this.updatedAt &&
           other.deleted == this.deleted &&
           other.syncStatus == this.syncStatus);
@@ -4669,6 +4844,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
   final Value<String?> weather;
   final Value<String?> aggContext;
   final Value<String?> recurrence;
+  final Value<String?> seriesId;
+  final Value<double?> yieldAmount;
+  final Value<String?> yieldUnit;
   final Value<DateTime> updatedAt;
   final Value<bool> deleted;
   final Value<String> syncStatus;
@@ -4683,6 +4861,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.weather = const Value.absent(),
     this.aggContext = const Value.absent(),
     this.recurrence = const Value.absent(),
+    this.seriesId = const Value.absent(),
+    this.yieldAmount = const Value.absent(),
+    this.yieldUnit = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -4698,6 +4879,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     this.weather = const Value.absent(),
     this.aggContext = const Value.absent(),
     this.recurrence = const Value.absent(),
+    this.seriesId = const Value.absent(),
+    this.yieldAmount = const Value.absent(),
+    this.yieldUnit = const Value.absent(),
     required DateTime updatedAt,
     this.deleted = const Value.absent(),
     this.syncStatus = const Value.absent(),
@@ -4717,6 +4901,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Expression<String>? weather,
     Expression<String>? aggContext,
     Expression<String>? recurrence,
+    Expression<String>? seriesId,
+    Expression<double>? yieldAmount,
+    Expression<String>? yieldUnit,
     Expression<DateTime>? updatedAt,
     Expression<bool>? deleted,
     Expression<String>? syncStatus,
@@ -4732,6 +4919,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
       if (weather != null) 'weather': weather,
       if (aggContext != null) 'agg_context': aggContext,
       if (recurrence != null) 'recurrence': recurrence,
+      if (seriesId != null) 'series_id': seriesId,
+      if (yieldAmount != null) 'yield_amount': yieldAmount,
+      if (yieldUnit != null) 'yield_unit': yieldUnit,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (deleted != null) 'deleted': deleted,
       if (syncStatus != null) 'sync_status': syncStatus,
@@ -4749,6 +4939,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
     Value<String?>? weather,
     Value<String?>? aggContext,
     Value<String?>? recurrence,
+    Value<String?>? seriesId,
+    Value<double?>? yieldAmount,
+    Value<String?>? yieldUnit,
     Value<DateTime>? updatedAt,
     Value<bool>? deleted,
     Value<String>? syncStatus,
@@ -4764,6 +4957,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
       weather: weather ?? this.weather,
       aggContext: aggContext ?? this.aggContext,
       recurrence: recurrence ?? this.recurrence,
+      seriesId: seriesId ?? this.seriesId,
+      yieldAmount: yieldAmount ?? this.yieldAmount,
+      yieldUnit: yieldUnit ?? this.yieldUnit,
       updatedAt: updatedAt ?? this.updatedAt,
       deleted: deleted ?? this.deleted,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -4803,6 +4999,15 @@ class TasksCompanion extends UpdateCompanion<Task> {
     if (recurrence.present) {
       map['recurrence'] = Variable<String>(recurrence.value);
     }
+    if (seriesId.present) {
+      map['series_id'] = Variable<String>(seriesId.value);
+    }
+    if (yieldAmount.present) {
+      map['yield_amount'] = Variable<double>(yieldAmount.value);
+    }
+    if (yieldUnit.present) {
+      map['yield_unit'] = Variable<String>(yieldUnit.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -4830,6 +5035,9 @@ class TasksCompanion extends UpdateCompanion<Task> {
           ..write('weather: $weather, ')
           ..write('aggContext: $aggContext, ')
           ..write('recurrence: $recurrence, ')
+          ..write('seriesId: $seriesId, ')
+          ..write('yieldAmount: $yieldAmount, ')
+          ..write('yieldUnit: $yieldUnit, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('deleted: $deleted, ')
           ..write('syncStatus: $syncStatus, ')
@@ -6443,6 +6651,16 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
     type: DriftSqlType.string,
     requiredDuringInsert: false,
   );
+  @override
+  late final GeneratedColumnWithTypeConverter<SupplyCategory, String> category =
+      GeneratedColumn<String>(
+        'category',
+        aliasedName,
+        false,
+        type: DriftSqlType.string,
+        requiredDuringInsert: false,
+        defaultValue: const Constant('other'),
+      ).withConverter<SupplyCategory>($SuppliesTable.$convertercategory);
   static const VerificationMeta _quantityMeta = const VerificationMeta(
     'quantity',
   );
@@ -6510,6 +6728,7 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
     userId,
     name,
     unit,
+    category,
     quantity,
     lowThreshold,
     updatedAt,
@@ -6615,6 +6834,12 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
         DriftSqlType.string,
         data['${effectivePrefix}unit'],
       ),
+      category: $SuppliesTable.$convertercategory.fromSql(
+        attachedDatabase.typeMapping.read(
+          DriftSqlType.string,
+          data['${effectivePrefix}category'],
+        )!,
+      ),
       quantity: attachedDatabase.typeMapping.read(
         DriftSqlType.double,
         data['${effectivePrefix}quantity'],
@@ -6642,6 +6867,9 @@ class $SuppliesTable extends Supplies with TableInfo<$SuppliesTable, Supply> {
   $SuppliesTable createAlias(String alias) {
     return $SuppliesTable(attachedDatabase, alias);
   }
+
+  static JsonTypeConverter2<SupplyCategory, String, String> $convertercategory =
+      const EnumNameConverter<SupplyCategory>(SupplyCategory.values);
 }
 
 class Supply extends DataClass implements Insertable<Supply> {
@@ -6649,6 +6877,7 @@ class Supply extends DataClass implements Insertable<Supply> {
   final String userId;
   final String name;
   final String? unit;
+  final SupplyCategory category;
   final double quantity;
   final double? lowThreshold;
   final DateTime updatedAt;
@@ -6659,6 +6888,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     required this.userId,
     required this.name,
     this.unit,
+    required this.category,
     required this.quantity,
     this.lowThreshold,
     required this.updatedAt,
@@ -6673,6 +6903,11 @@ class Supply extends DataClass implements Insertable<Supply> {
     map['name'] = Variable<String>(name);
     if (!nullToAbsent || unit != null) {
       map['unit'] = Variable<String>(unit);
+    }
+    {
+      map['category'] = Variable<String>(
+        $SuppliesTable.$convertercategory.toSql(category),
+      );
     }
     map['quantity'] = Variable<double>(quantity);
     if (!nullToAbsent || lowThreshold != null) {
@@ -6690,6 +6925,7 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: Value(userId),
       name: Value(name),
       unit: unit == null && nullToAbsent ? const Value.absent() : Value(unit),
+      category: Value(category),
       quantity: Value(quantity),
       lowThreshold: lowThreshold == null && nullToAbsent
           ? const Value.absent()
@@ -6710,6 +6946,9 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: serializer.fromJson<String>(json['userId']),
       name: serializer.fromJson<String>(json['name']),
       unit: serializer.fromJson<String?>(json['unit']),
+      category: $SuppliesTable.$convertercategory.fromJson(
+        serializer.fromJson<String>(json['category']),
+      ),
       quantity: serializer.fromJson<double>(json['quantity']),
       lowThreshold: serializer.fromJson<double?>(json['lowThreshold']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
@@ -6725,6 +6964,9 @@ class Supply extends DataClass implements Insertable<Supply> {
       'userId': serializer.toJson<String>(userId),
       'name': serializer.toJson<String>(name),
       'unit': serializer.toJson<String?>(unit),
+      'category': serializer.toJson<String>(
+        $SuppliesTable.$convertercategory.toJson(category),
+      ),
       'quantity': serializer.toJson<double>(quantity),
       'lowThreshold': serializer.toJson<double?>(lowThreshold),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
@@ -6738,6 +6980,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     String? userId,
     String? name,
     Value<String?> unit = const Value.absent(),
+    SupplyCategory? category,
     double? quantity,
     Value<double?> lowThreshold = const Value.absent(),
     DateTime? updatedAt,
@@ -6748,6 +6991,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     userId: userId ?? this.userId,
     name: name ?? this.name,
     unit: unit.present ? unit.value : this.unit,
+    category: category ?? this.category,
     quantity: quantity ?? this.quantity,
     lowThreshold: lowThreshold.present ? lowThreshold.value : this.lowThreshold,
     updatedAt: updatedAt ?? this.updatedAt,
@@ -6760,6 +7004,7 @@ class Supply extends DataClass implements Insertable<Supply> {
       userId: data.userId.present ? data.userId.value : this.userId,
       name: data.name.present ? data.name.value : this.name,
       unit: data.unit.present ? data.unit.value : this.unit,
+      category: data.category.present ? data.category.value : this.category,
       quantity: data.quantity.present ? data.quantity.value : this.quantity,
       lowThreshold: data.lowThreshold.present
           ? data.lowThreshold.value
@@ -6779,6 +7024,7 @@ class Supply extends DataClass implements Insertable<Supply> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('unit: $unit, ')
+          ..write('category: $category, ')
           ..write('quantity: $quantity, ')
           ..write('lowThreshold: $lowThreshold, ')
           ..write('updatedAt: $updatedAt, ')
@@ -6794,6 +7040,7 @@ class Supply extends DataClass implements Insertable<Supply> {
     userId,
     name,
     unit,
+    category,
     quantity,
     lowThreshold,
     updatedAt,
@@ -6808,6 +7055,7 @@ class Supply extends DataClass implements Insertable<Supply> {
           other.userId == this.userId &&
           other.name == this.name &&
           other.unit == this.unit &&
+          other.category == this.category &&
           other.quantity == this.quantity &&
           other.lowThreshold == this.lowThreshold &&
           other.updatedAt == this.updatedAt &&
@@ -6820,6 +7068,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
   final Value<String> userId;
   final Value<String> name;
   final Value<String?> unit;
+  final Value<SupplyCategory> category;
   final Value<double> quantity;
   final Value<double?> lowThreshold;
   final Value<DateTime> updatedAt;
@@ -6831,6 +7080,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     this.userId = const Value.absent(),
     this.name = const Value.absent(),
     this.unit = const Value.absent(),
+    this.category = const Value.absent(),
     this.quantity = const Value.absent(),
     this.lowThreshold = const Value.absent(),
     this.updatedAt = const Value.absent(),
@@ -6843,6 +7093,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     required String userId,
     required String name,
     this.unit = const Value.absent(),
+    this.category = const Value.absent(),
     this.quantity = const Value.absent(),
     this.lowThreshold = const Value.absent(),
     required DateTime updatedAt,
@@ -6858,6 +7109,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     Expression<String>? userId,
     Expression<String>? name,
     Expression<String>? unit,
+    Expression<String>? category,
     Expression<double>? quantity,
     Expression<double>? lowThreshold,
     Expression<DateTime>? updatedAt,
@@ -6870,6 +7122,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
       if (userId != null) 'user_id': userId,
       if (name != null) 'name': name,
       if (unit != null) 'unit': unit,
+      if (category != null) 'category': category,
       if (quantity != null) 'quantity': quantity,
       if (lowThreshold != null) 'low_threshold': lowThreshold,
       if (updatedAt != null) 'updated_at': updatedAt,
@@ -6884,6 +7137,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     Value<String>? userId,
     Value<String>? name,
     Value<String?>? unit,
+    Value<SupplyCategory>? category,
     Value<double>? quantity,
     Value<double?>? lowThreshold,
     Value<DateTime>? updatedAt,
@@ -6896,6 +7150,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
       userId: userId ?? this.userId,
       name: name ?? this.name,
       unit: unit ?? this.unit,
+      category: category ?? this.category,
       quantity: quantity ?? this.quantity,
       lowThreshold: lowThreshold ?? this.lowThreshold,
       updatedAt: updatedAt ?? this.updatedAt,
@@ -6919,6 +7174,11 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
     }
     if (unit.present) {
       map['unit'] = Variable<String>(unit.value);
+    }
+    if (category.present) {
+      map['category'] = Variable<String>(
+        $SuppliesTable.$convertercategory.toSql(category.value),
+      );
     }
     if (quantity.present) {
       map['quantity'] = Variable<double>(quantity.value);
@@ -6948,6 +7208,7 @@ class SuppliesCompanion extends UpdateCompanion<Supply> {
           ..write('userId: $userId, ')
           ..write('name: $name, ')
           ..write('unit: $unit, ')
+          ..write('category: $category, ')
           ..write('quantity: $quantity, ')
           ..write('lowThreshold: $lowThreshold, ')
           ..write('updatedAt: $updatedAt, ')
@@ -12115,6 +12376,7 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String?> climateProfile,
       Value<String?> fcmToken,
       Value<DateTime?> fcmTokenUpdatedAt,
+      Value<bool> defaultGardenSeeded,
       required DateTime updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -12132,6 +12394,7 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String?> climateProfile,
       Value<String?> fcmToken,
       Value<DateTime?> fcmTokenUpdatedAt,
+      Value<bool> defaultGardenSeeded,
       Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -12198,6 +12461,11 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<DateTime> get fcmTokenUpdatedAt => $composableBuilder(
     column: $table.fcmTokenUpdatedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -12276,6 +12544,11 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -12337,6 +12610,11 @@ class $$ProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<bool> get defaultGardenSeeded => $composableBuilder(
+    column: $table.defaultGardenSeeded,
+    builder: (column) => column,
+  );
+
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
@@ -12385,6 +12663,7 @@ class $$ProfilesTableTableManager
                 Value<String?> climateProfile = const Value.absent(),
                 Value<String?> fcmToken = const Value.absent(),
                 Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
+                Value<bool> defaultGardenSeeded = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -12400,6 +12679,7 @@ class $$ProfilesTableTableManager
                 climateProfile: climateProfile,
                 fcmToken: fcmToken,
                 fcmTokenUpdatedAt: fcmTokenUpdatedAt,
+                defaultGardenSeeded: defaultGardenSeeded,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -12417,6 +12697,7 @@ class $$ProfilesTableTableManager
                 Value<String?> climateProfile = const Value.absent(),
                 Value<String?> fcmToken = const Value.absent(),
                 Value<DateTime?> fcmTokenUpdatedAt = const Value.absent(),
+                Value<bool> defaultGardenSeeded = const Value.absent(),
                 required DateTime updatedAt,
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -12432,6 +12713,7 @@ class $$ProfilesTableTableManager
                 climateProfile: climateProfile,
                 fcmToken: fcmToken,
                 fcmTokenUpdatedAt: fcmTokenUpdatedAt,
+                defaultGardenSeeded: defaultGardenSeeded,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -13912,6 +14194,9 @@ typedef $$TasksTableCreateCompanionBuilder =
       Value<String?> weather,
       Value<String?> aggContext,
       Value<String?> recurrence,
+      Value<String?> seriesId,
+      Value<double?> yieldAmount,
+      Value<String?> yieldUnit,
       required DateTime updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -13928,6 +14213,9 @@ typedef $$TasksTableUpdateCompanionBuilder =
       Value<String?> weather,
       Value<String?> aggContext,
       Value<String?> recurrence,
+      Value<String?> seriesId,
+      Value<double?> yieldAmount,
+      Value<String?> yieldUnit,
       Value<DateTime> updatedAt,
       Value<bool> deleted,
       Value<String> syncStatus,
@@ -14056,6 +14344,21 @@ class $$TasksTableFilterComposer extends Composer<_$AppDatabase, $TasksTable> {
 
   ColumnFilters<String> get recurrence => $composableBuilder(
     column: $table.recurrence,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get yieldUnit => $composableBuilder(
+    column: $table.yieldUnit,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -14222,6 +14525,21 @@ class $$TasksTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get seriesId => $composableBuilder(
+    column: $table.seriesId,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get yieldUnit => $composableBuilder(
+    column: $table.yieldUnit,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -14297,6 +14615,17 @@ class $$TasksTableAnnotationComposer
     column: $table.recurrence,
     builder: (column) => column,
   );
+
+  GeneratedColumn<String> get seriesId =>
+      $composableBuilder(column: $table.seriesId, builder: (column) => column);
+
+  GeneratedColumn<double> get yieldAmount => $composableBuilder(
+    column: $table.yieldAmount,
+    builder: (column) => column,
+  );
+
+  GeneratedColumn<String> get yieldUnit =>
+      $composableBuilder(column: $table.yieldUnit, builder: (column) => column);
 
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
@@ -14450,6 +14779,9 @@ class $$TasksTableTableManager
                 Value<String?> weather = const Value.absent(),
                 Value<String?> aggContext = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
+                Value<double?> yieldAmount = const Value.absent(),
+                Value<String?> yieldUnit = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -14464,6 +14796,9 @@ class $$TasksTableTableManager
                 weather: weather,
                 aggContext: aggContext,
                 recurrence: recurrence,
+                seriesId: seriesId,
+                yieldAmount: yieldAmount,
+                yieldUnit: yieldUnit,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,
@@ -14480,6 +14815,9 @@ class $$TasksTableTableManager
                 Value<String?> weather = const Value.absent(),
                 Value<String?> aggContext = const Value.absent(),
                 Value<String?> recurrence = const Value.absent(),
+                Value<String?> seriesId = const Value.absent(),
+                Value<double?> yieldAmount = const Value.absent(),
+                Value<String?> yieldUnit = const Value.absent(),
                 required DateTime updatedAt,
                 Value<bool> deleted = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
@@ -14494,6 +14832,9 @@ class $$TasksTableTableManager
                 weather: weather,
                 aggContext: aggContext,
                 recurrence: recurrence,
+                seriesId: seriesId,
+                yieldAmount: yieldAmount,
+                yieldUnit: yieldUnit,
                 updatedAt: updatedAt,
                 deleted: deleted,
                 syncStatus: syncStatus,
@@ -16052,6 +16393,7 @@ typedef $$SuppliesTableCreateCompanionBuilder =
       required String userId,
       required String name,
       Value<String?> unit,
+      Value<SupplyCategory> category,
       Value<double> quantity,
       Value<double?> lowThreshold,
       required DateTime updatedAt,
@@ -16065,6 +16407,7 @@ typedef $$SuppliesTableUpdateCompanionBuilder =
       Value<String> userId,
       Value<String> name,
       Value<String?> unit,
+      Value<SupplyCategory> category,
       Value<double> quantity,
       Value<double?> lowThreshold,
       Value<DateTime> updatedAt,
@@ -16123,6 +16466,12 @@ class $$SuppliesTableFilterComposer
   ColumnFilters<String> get unit => $composableBuilder(
     column: $table.unit,
     builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnWithTypeConverterFilters<SupplyCategory, SupplyCategory, String>
+  get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnWithTypeConverterFilters(column),
   );
 
   ColumnFilters<double> get quantity => $composableBuilder(
@@ -16205,6 +16554,11 @@ class $$SuppliesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<String> get category => $composableBuilder(
+    column: $table.category,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<double> get quantity => $composableBuilder(
     column: $table.quantity,
     builder: (column) => ColumnOrderings(column),
@@ -16251,6 +16605,9 @@ class $$SuppliesTableAnnotationComposer
 
   GeneratedColumn<String> get unit =>
       $composableBuilder(column: $table.unit, builder: (column) => column);
+
+  GeneratedColumnWithTypeConverter<SupplyCategory, String> get category =>
+      $composableBuilder(column: $table.category, builder: (column) => column);
 
   GeneratedColumn<double> get quantity =>
       $composableBuilder(column: $table.quantity, builder: (column) => column);
@@ -16329,6 +16686,7 @@ class $$SuppliesTableTableManager
                 Value<String> userId = const Value.absent(),
                 Value<String> name = const Value.absent(),
                 Value<String?> unit = const Value.absent(),
+                Value<SupplyCategory> category = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
                 Value<double?> lowThreshold = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
@@ -16340,6 +16698,7 @@ class $$SuppliesTableTableManager
                 userId: userId,
                 name: name,
                 unit: unit,
+                category: category,
                 quantity: quantity,
                 lowThreshold: lowThreshold,
                 updatedAt: updatedAt,
@@ -16353,6 +16712,7 @@ class $$SuppliesTableTableManager
                 required String userId,
                 required String name,
                 Value<String?> unit = const Value.absent(),
+                Value<SupplyCategory> category = const Value.absent(),
                 Value<double> quantity = const Value.absent(),
                 Value<double?> lowThreshold = const Value.absent(),
                 required DateTime updatedAt,
@@ -16364,6 +16724,7 @@ class $$SuppliesTableTableManager
                 userId: userId,
                 name: name,
                 unit: unit,
+                category: category,
                 quantity: quantity,
                 lowThreshold: lowThreshold,
                 updatedAt: updatedAt,

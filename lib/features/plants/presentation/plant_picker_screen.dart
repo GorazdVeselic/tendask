@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/catalog_labels.dart';
+import '../../../core/catalog_sort.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/plant_category.dart';
@@ -41,14 +42,16 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
 
     final results = plants == null
         ? <Plant>[]
-        : plants
-              .where(
-                (p) =>
-                    _category == 'all' ||
-                    coarsePlantCategory(p.category) == _category,
-              )
-              .where((p) => plantMatchesQuery(p, normQuery))
-              .toList();
+        : sortedByLabel(
+            plants
+                .where(
+                  (p) =>
+                      _category == 'all' ||
+                      coarsePlantCategory(p.category) == _category,
+                )
+                .where((p) => plantMatchesQuery(p, normQuery)),
+            (p) => catalogLabel(p.labels),
+          );
 
     return Scaffold(
       appBar: AppBar(

@@ -16,7 +16,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../notifications/application/fcm_token_service.dart';
 import '../application/profile_providers.dart';
-import '../data/account_repository.dart';
+import '../application/account_providers.dart';
 
 /// Native language names (endonyms) — not translated; shown the same in every locale.
 String _langLabel(AppLocale loc) => switch (loc) {
@@ -202,6 +202,17 @@ class SettingsScreen extends ConsumerWidget {
               style: const ButtonStyle(visualDensity: VisualDensity.compact),
             ),
 
+            // Appearance — theme mode + colour palette (screen 12b), device-local.
+            SectionLabel(t.settings.section_appearance),
+            Card(
+              child: ListTile(
+                leading: const Text('🎨', style: TextStyle(fontSize: 22)),
+                title: Text(t.settings.appearance_placeholder),
+                trailing: const Icon(Icons.chevron_right),
+                onTap: () => context.pushNamed('appearance'),
+              ),
+            ),
+
             // Notifications — screen 22 (M8.4)
             SectionLabel(t.settings.section_notifications),
             Card(
@@ -214,30 +225,17 @@ class SettingsScreen extends ConsumerWidget {
             ),
 
             // Smart suggestions — read-only history of past suggestions and the
-            // user's responses (M11.13b). Always reachable here, even when the
-            // Home band is empty (the band's own link shows only when active).
-            SectionLabel(t.settings.section_suggestions),
-            Card(
-              child: ListTile(
-                leading: const Text('💡', style: TextStyle(fontSize: 22)),
-                title: Text(t.suggestions.past_title),
-                subtitle: Text(t.settings.suggestions_history_sub),
-                trailing: const Icon(Icons.chevron_right),
-                onTap: () => context.pushNamed('suggestion-history'),
-              ),
-            ),
-
-            // Garden / supplies — gated off for now (kSuppliesEnabled). The title
-            // string already carries the 📦, so it provides the leading glyph here
-            // (avoids the double-icon when re-enabled).
-            if (kSuppliesEnabled) ...[
-              SectionLabel(t.settings.section_garden),
+            // user's responses (M11.13b). Dark until launch (kSuggestionsEnabled);
+            // its route + the Home band are gated off too.
+            if (kSuggestionsEnabled) ...[
+              SectionLabel(t.settings.section_suggestions),
               Card(
                 child: ListTile(
-                  title: Text(t.settings.supplies),
-                  subtitle: Text(t.settings.supplies_sub),
+                  leading: const Text('💡', style: TextStyle(fontSize: 22)),
+                  title: Text(t.suggestions.past_title),
+                  subtitle: Text(t.settings.suggestions_history_sub),
                   trailing: const Icon(Icons.chevron_right),
-                  onTap: () => context.pushNamed('supplies'),
+                  onTap: () => context.pushNamed('suggestion-history'),
                 ),
               ),
             ],

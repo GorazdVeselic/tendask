@@ -1,10 +1,14 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
+
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_timezone/flutter_timezone.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
+
+import '../config.dart';
 
 part 'notification_service.g.dart';
 
@@ -43,6 +47,22 @@ const _suggestionDetails = NotificationDetails(
   ),
 );
 
+/// Separate channel for the gentle re-engagement journal nudge (FR-16) so the
+/// user can mute it in system settings without touching task reminders, and so
+/// cancelling one never touches the other. Default importance — it must never
+/// feel as urgent as a task reminder.
+const _kNudgeChannelId = 'journal_nudge';
+const _kNudgeChannelName = 'Nežna povabila k dnevniku';
+
+const _nudgeDetails = NotificationDetails(
+  android: AndroidNotificationDetails(
+    _kNudgeChannelId,
+    _kNudgeChannelName,
+    importance: Importance.defaultImportance,
+    priority: Priority.defaultPriority,
+  ),
+);
+
 // Distinguishes suggestion payloads from reminder payloads (bare task ids) in
 // the shared tap stream / launch payload.
 const _kSuggestionPayloadPrefix = 'suggestion:';
@@ -57,6 +77,7 @@ class NotificationService {
 
   final FlutterLocalNotificationsPlugin _plugin;
   bool _ready = false;
+  bool _initFailed = false;
 
   // Task ids of tapped reminders, consumed by the app layer to navigate. The
   // service stays decoupled from the router (core/ must not call features/).
@@ -68,22 +89,42 @@ class NotificationService {
 
   /// Loads the timezone database, resolves the device's local zone, and
   /// initializes the plugin. Idempotent. Safe to fire-and-forget at bootstrap.
+  /// Never throws: [isReady] reports whether notifications are usable.
   Future<void> init() async {
-    if (_ready) return;
-    tz_data.initializeTimeZones();
-    final local = await FlutterTimezone.getLocalTimezone();
-    tz.setLocalLocation(tz.getLocation(local.identifier));
+    if (_ready || _initFailed) return;
+    try {
+      tz_data.initializeTimeZones();
+      final local = await FlutterTimezone.getLocalTimezone();
+      tz.setLocalLocation(tz.getLocation(local.identifier));
 
-    const settings = InitializationSettings(
-      android: AndroidInitializationSettings('ic_stat_notify'),
-    );
-    await _plugin.initialize(
-      settings: settings,
-      onDidReceiveNotificationResponse: _onTap,
-    );
-    await _android?.createNotificationChannel(_suggestionChannel);
-    _ready = true;
+      const settings = InitializationSettings(
+        android: AndroidInitializationSettings('ic_stat_notify'),
+      );
+      await _plugin.initialize(
+        settings: settings,
+        onDidReceiveNotificationResponse: _onTap,
+      );
+      // Suggestion push channel (M11) — dark until launch: no FCM push arrives
+      // while suggestions are off, so the channel would only surface an unused
+      // entry in the system notification settings.
+      if (kSuggestionsEnabled) {
+        await _android?.createNotificationChannel(_suggestionChannel);
+      }
+      _ready = true;
+    } on Object catch (e) {
+      // Setup runs against the OS, and its failures are unrecoverable at
+      // runtime: an install whose resource table is incomplete (Play pre-launch
+      // emulators, which skip config splits) rejects the icon, an unknown
+      // timezone id has no fallback. Reminders are then unavailable, but that
+      // must not propagate into every caller that wants to schedule one.
+      _initFailed = true;
+      debugPrint('NotificationService.init failed: $e');
+    }
   }
+
+  /// Whether the plugin initialized successfully. False means the OS refused
+  /// setup and no reminder can be posted on this install.
+  bool get isReady => _ready;
 
   AndroidFlutterLocalNotificationsPlugin? get _android => _plugin
       .resolvePlatformSpecificImplementation<
@@ -121,16 +162,53 @@ class NotificationService {
     required String title,
     required String body,
     String? payload,
+  }) => _schedule(
+    id: id,
+    when: when,
+    title: title,
+    body: body,
+    payload: payload,
+    details: _reminderDetails,
+    mode: AndroidScheduleMode.exactAllowWhileIdle,
+  );
+
+  /// Schedules a re-engagement journal nudge (FR-16) on its own channel. Inexact
+  /// (and so it needs no exact-alarm permission): a few minutes' drift around
+  /// 17:00 is irrelevant for a gentle nudge, and inexact is easier on the
+  /// battery. Reusing the same [id] replaces a previously scheduled one.
+  Future<void> scheduleNudge({
+    required int id,
+    required DateTime when,
+    required String title,
+    required String body,
+  }) => _schedule(
+    id: id,
+    when: when,
+    title: title,
+    body: body,
+    details: _nudgeDetails,
+    mode: AndroidScheduleMode.inexactAllowWhileIdle,
+  );
+
+  Future<void> _schedule({
+    required int id,
+    required DateTime when,
+    required String title,
+    required String body,
+    required NotificationDetails details,
+    required AndroidScheduleMode mode,
+    String? payload,
   }) async {
     await init();
+    if (!_ready) return;
     await _plugin.zonedSchedule(
       id: id,
       title: title,
       body: body,
       payload: payload,
       scheduledDate: tz.TZDateTime.from(when, tz.local),
-      notificationDetails: _reminderDetails,
-      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      notificationDetails: details,
+      androidScheduleMode: mode,
     );
   }
 
@@ -177,6 +255,7 @@ class NotificationService {
   /// callback does not fire for the launch notification.
   Future<String?> initialPayload() async {
     await init();
+    if (!_ready) return null;
     final details = await _plugin.getNotificationAppLaunchDetails();
     if (!(details?.didNotificationLaunchApp ?? false)) return null;
     final payload = details!.notificationResponse?.payload;

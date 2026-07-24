@@ -6,6 +6,7 @@ import 'package:path/path.dart' as p;
 import 'package:path_provider/path_provider.dart';
 
 import '../area_type.dart';
+import '../supply_category.dart';
 import '../sync/sync_status.dart';
 import '../task_status.dart';
 import 'tables/catalog_tables.dart';
@@ -47,7 +48,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 11;
+  int get schemaVersion => 15;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -164,10 +165,34 @@ class AppDatabase extends _$AppDatabase {
       if (from < 9) {
         await customStatement('DROP TABLE IF EXISTS device_location');
       }
-      // v10: smart engine (M11.2) — climate/FCM profile fields, frozen
-      // agg_context snapshot on task, task_type.seasonal flag, suggestion
-      // tables. Mirrors Supabase migration 0006.
+      // v10: profile.default_garden_seeded — the default-garden one-shot moves
+      // from a device-local flag to the synced profile, so a reinstall no longer
+      // re-seeds and pushes a duplicate (mirrors Supabase 0012).
       if (from < 10) {
+        await m.addColumn(profiles, profiles.defaultGardenSeeded);
+      }
+      // v11: task.series_id groups instances of one recurring series (FR-5).
+      // Additive nullable column; mirrors Supabase migration.
+      if (from < 11) {
+        await m.addColumn(tasks, tasks.seriesId);
+      }
+      // v12: task.yield_amount + task.yield_unit record harvest yield (T11).
+      // Additive nullable columns; mirror Supabase migration 0014.
+      if (from < 12) {
+        await m.addColumn(tasks, tasks.yieldAmount);
+        await m.addColumn(tasks, tasks.yieldUnit);
+      }
+      // v13: supply.category groups the supplies list (08). Additive column with
+      // a default; existing rows backfill to 'other'. Mirrors Supabase 0015.
+      if (from < 13) {
+        await m.addColumn(supplies, supplies.category);
+      }
+      // v14: smart engine (M11.2) — climate/FCM profile fields, frozen
+      // agg_context snapshot on task, task_type.seasonal flag, suggestion
+      // tables. Mirrors Supabase migration 0006. Re-sequenced above main's
+      // v10–v13 during the main→M11 reconcile (was M11 v10); a production v13
+      // device runs this + v15 next.
+      if (from < 14) {
         await m.addColumn(profiles, profiles.timezone);
         await m.addColumn(profiles, profiles.climateBucket);
         await m.addColumn(profiles, profiles.climateProfile);
@@ -183,10 +208,10 @@ class AppDatabase extends _$AppDatabase {
         await m.createTable(suggestions);
         await m.createTable(suggestionLogs);
       }
-      // v11: plant_task_rule catalog (M11.4) — seeded by SeedService on the
+      // v15: plant_task_rule catalog (M11.4) — seeded by SeedService on the
       // next startup (it backfills any empty catalog table), pulled by
-      // catalog sync afterwards.
-      if (from < 11) {
+      // catalog sync afterwards. Re-sequenced (was M11 v11).
+      if (from < 15) {
         await m.createTable(plantTaskRules);
       }
     },

@@ -5,6 +5,7 @@ import 'package:drift/drift.dart';
 import '../area_type.dart';
 import '../database/app_database.dart';
 import '../suggestion_status.dart';
+import '../supply_category.dart';
 import '../task_status.dart';
 import 'sync_status.dart';
 
@@ -43,6 +44,7 @@ Map<String, dynamic> profileToRemote(Profile r) => {
   'climate_profile': _jsonb(r.climateProfile),
   'fcm_token': r.fcmToken,
   'fcm_token_updated_at': _tsOrNull(r.fcmTokenUpdatedAt),
+  'default_garden_seeded': r.defaultGardenSeeded,
   'updated_at': _ts(r.updatedAt),
 };
 
@@ -78,6 +80,9 @@ Map<String, dynamic> taskToRemote(Task r) => {
   'weather': _jsonb(r.weather),
   'agg_context': _jsonb(r.aggContext),
   'recurrence': _jsonb(r.recurrence),
+  'series_id': r.seriesId,
+  'yield_amount': r.yieldAmount,
+  'yield_unit': r.yieldUnit,
   'updated_at': _ts(r.updatedAt),
   'deleted': r.deleted,
 };
@@ -117,6 +122,7 @@ Map<String, dynamic> supplyToRemote(Supply r) => {
   'user_id': r.userId,
   'name': r.name,
   'unit': r.unit,
+  'category': r.category.name,
   'quantity': r.quantity,
   'low_threshold': r.lowThreshold,
   'updated_at': _ts(r.updatedAt),
@@ -197,6 +203,11 @@ TaskStatus _taskStatus(Object? v) => TaskStatus.values.firstWhere(
   orElse: () => TaskStatus.waiting,
 );
 
+SupplyCategory _supplyCategory(Object? v) => SupplyCategory.values.firstWhere(
+  (e) => e.name == v,
+  orElse: () => SupplyCategory.other,
+);
+
 ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
     ProfilesCompanion(
       userId: Value(r['user_id'] as String),
@@ -210,6 +221,7 @@ ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
       climateProfile: Value(_text(r['climate_profile'])),
       fcmToken: Value(r['fcm_token'] as String?),
       fcmTokenUpdatedAt: Value(_dtOrNull(r['fcm_token_updated_at'])),
+      defaultGardenSeeded: Value(r['default_garden_seeded'] as bool? ?? false),
       updatedAt: Value(_dt(r['updated_at'])),
       syncStatus: const Value(kSyncSynced),
     );
@@ -249,6 +261,11 @@ TasksCompanion taskFromRemote(Map<String, dynamic> r) => TasksCompanion(
   weather: Value(_text(r['weather'])),
   aggContext: Value(_text(r['agg_context'])),
   recurrence: Value(_text(r['recurrence'])),
+  seriesId: Value(r['series_id'] as String?),
+  // Unit stored as-is (tolerant): an unknown value round-trips; the display
+  // layer parses it leniently. Amount is numeric → double, or null.
+  yieldAmount: Value(_double(r['yield_amount'])),
+  yieldUnit: Value(r['yield_unit'] as String?),
   updatedAt: Value(_dt(r['updated_at'])),
   deleted: Value(r['deleted'] as bool? ?? false),
   syncStatus: const Value(kSyncSynced),
@@ -294,6 +311,7 @@ SuppliesCompanion supplyFromRemote(Map<String, dynamic> r) => SuppliesCompanion(
   userId: Value(r['user_id'] as String),
   name: Value(r['name'] as String),
   unit: Value(r['unit'] as String?),
+  category: Value(_supplyCategory(r['category'])),
   quantity: Value(_double(r['quantity']) ?? 0),
   lowThreshold: Value(_double(r['low_threshold'])),
   updatedAt: Value(_dt(r['updated_at'])),

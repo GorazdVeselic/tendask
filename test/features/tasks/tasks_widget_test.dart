@@ -16,6 +16,7 @@ import 'package:tendask/features/plants/application/plants_providers.dart';
 import 'package:tendask/features/supplies/application/supplies_providers.dart';
 import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/tasks/application/tasks_providers.dart';
+import 'package:tendask/features/tasks/data/recurrence.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/features/tasks/presentation/entry/entry_screen.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
@@ -121,6 +122,10 @@ void main() {
                 (ref) => Stream.value(<String, Plant>{}),
               ),
               plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
+              // Empty matrix → no T3 soft sort; keeps this flow test focused.
+              taskTypeCategoriesProvider.overrideWith(
+                (ref) => Stream.value(<String, Set<String>>{}),
+              ),
               suppliesListProvider.overrideWith(
                 (ref) => Stream.value(<Supply>[]),
               ),
@@ -289,6 +294,101 @@ void main() {
         final pending = await repo.watchPending().first;
         expect(pending, isEmpty);
       });
+    });
+
+    testWidgets('⋯ → Opravljeno on a recurring task spawns the next', (
+      tester,
+    ) async {
+      final db = await _buildDb();
+      addTearDown(db.close);
+
+      final repo = TasksRepository(db, SuppliesRepository(db));
+      final taskId = await repo.create(
+        userId: 'local',
+        taskTypeId: 'mow',
+        date: _past,
+        subjects: const [TaskSubjectSpec.area(_areaId)],
+        recurrence: const Recurrence(everyDays: 7).encode(),
+      );
+
+      final taskTypeMap = {
+        for (final t in await db.select(db.taskTypes).get()) t.id: t,
+      };
+      final areasMap = {
+        for (final a in await db.select(db.areas).get()) a.id: a,
+      };
+      final pendingTask = await repo.byId(taskId);
+
+      final router = GoRouter(
+        initialLocation: '/',
+        routes: [
+          GoRoute(path: '/', builder: (_, _) => const TasksScreen()),
+          GoRoute(
+            path: '/td/:id',
+            name: 'task-detail',
+            builder: (_, _) => const SizedBox(),
+          ),
+          GoRoute(
+            path: '/te/:id',
+            name: 'task-edit',
+            builder: (_, _) => const SizedBox(),
+          ),
+        ],
+      );
+
+      await tester.pumpWidget(
+        TranslationProvider(
+          child: ProviderScope(
+            overrides: [
+              tasksRepositoryProvider.overrideWith((ref) => repo),
+              taskTypesMapProvider.overrideWith(
+                (ref) => Stream.value(taskTypeMap),
+              ),
+              areasMapProvider.overrideWith((ref) => Stream.value(areasMap)),
+              pendingTasksProvider.overrideWith(
+                (ref) => Stream.value([pendingTask!]),
+              ),
+              completedTasksProvider.overrideWith(
+                (ref) => Stream.value(<Task>[]),
+              ),
+              taskIdsWithRemindersProvider.overrideWith(
+                (ref) => Stream.value(<String>{}),
+              ),
+              allTaskSubjectsProvider.overrideWith(
+                (ref) => Stream.value(<TaskSubject>[]),
+              ),
+              userPlantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, UserPlant>{}),
+              ),
+              plantsMapProvider.overrideWith(
+                (ref) => Stream.value(<String, Plant>{}),
+              ),
+            ],
+            child: MaterialApp.router(routerConfig: router),
+          ),
+        ),
+      );
+
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 100));
+
+      await tester.tap(find.byIcon(Icons.more_horiz));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      await tester.tap(find.text('Opravljeno'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+
+      await tester.runAsync(() async {
+        final pending = await repo.watchPending().first;
+        expect(pending, hasLength(1)); // the materialized next instance
+        expect(pending.single.id, isNot(taskId));
+        expect(pending.single.recurrence, isNotNull);
+      });
+
+      // completeTask shows a top toast (recurring) — flush its auto-dismiss
+      // timer so it does not outlive the widget tree.
+      await tester.pump(const Duration(seconds: 3));
     });
   });
 }

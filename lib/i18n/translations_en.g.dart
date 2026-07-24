@@ -46,11 +46,14 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$common$en common = Translations$common$en.internal(_root);
 	late final Translations$swipe$en swipe = Translations$swipe$en.internal(_root);
 	late final Translations$notifications$en notifications = Translations$notifications$en.internal(_root);
+	late final Translations$journal_nudge$en journal_nudge = Translations$journal_nudge$en.internal(_root);
 	late final Translations$notif_priming$en notif_priming = Translations$notif_priming$en.internal(_root);
 	late final Translations$notif_settings$en notif_settings = Translations$notif_settings$en.internal(_root);
+	late final Translations$reminder_sound$en reminder_sound = Translations$reminder_sound$en.internal(_root);
 	late final Translations$notif_preview$en notif_preview = Translations$notif_preview$en.internal(_root);
 	late final Translations$onboarding$en onboarding = Translations$onboarding$en.internal(_root);
 	late final Translations$auth$en auth = Translations$auth$en.internal(_root);
+	late final Translations$account$en account = Translations$account$en.internal(_root);
 	late final Translations$email_login$en email_login = Translations$email_login$en.internal(_root);
 	late final Translations$location$en location = Translations$location$en.internal(_root);
 	late final Translations$journal$en journal = Translations$journal$en.internal(_root);
@@ -66,7 +69,10 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$plants$en plants = Translations$plants$en.internal(_root);
 	late final Translations$supplies$en supplies = Translations$supplies$en.internal(_root);
 	late final Translations$settings$en settings = Translations$settings$en.internal(_root);
+	late final Translations$appearance$en appearance = Translations$appearance$en.internal(_root);
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
+	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
+	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
 	late final Translations$suggestions$en suggestions = Translations$suggestions$en.internal(_root);
 }
 
@@ -131,6 +137,12 @@ class Translations$home$en {
 		one: '1 overdue task',
 		other: '${n} overdue tasks',
 	);
+
+	/// en: '(one) {1 upcoming task} (other) {$n upcoming tasks}'
+	String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '1 upcoming task',
+		other: '${n} upcoming tasks',
+	);
 }
 
 // Path: common
@@ -149,6 +161,9 @@ class Translations$common$en {
 
 	/// en: 'Couldn't load data.'
 	String get load_error => 'Couldn\'t load data.';
+
+	/// en: 'Couldn't save.'
+	String get save_error => 'Couldn\'t save.';
 }
 
 // Path: swipe
@@ -191,6 +206,27 @@ class Translations$notifications$en {
 
 	/// en: 'Tomorrow'
 	String get tomorrow => 'Tomorrow';
+}
+
+// Path: journal_nudge
+class Translations$journal_nudge$en {
+	Translations$journal_nudge$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Start your garden journal 🌱'
+	String get title_a => 'Start your garden journal 🌱';
+
+	/// en: 'Log your first task — what's growing with you?'
+	String get body_a => 'Log your first task — what\'s growing with you?';
+
+	/// en: 'What's happening in the garden?'
+	String get title_b => 'What\'s happening in the garden?';
+
+	/// en: 'Jot down what you did in the garden this week.'
+	String get body_b => 'Jot down what you did in the garden this week.';
 }
 
 // Path: notif_priming
@@ -249,17 +285,23 @@ class Translations$notif_settings$en {
 	/// en: 'local · works offline'
 	String get type_reminders_sub => 'local · works offline';
 
+	/// en: 'Journal nudge'
+	String get type_journal_nudge => 'Journal nudge';
+
+	/// en: 'local · a gentle nudge if you go quiet'
+	String get type_journal_nudge_sub => 'local · a gentle nudge if you go quiet';
+
 	/// en: 'Smart hints (weather)'
 	String get type_weather => 'Smart hints (weather)';
 
-	/// en: '"dry tomorrow — a good time"'
-	String get type_weather_sub => '"dry tomorrow — a good time"';
+	/// en: 'soon · via server'
+	String get type_weather_sub => 'soon · via server';
 
 	/// en: 'Nearby hints'
 	String get type_community => 'Nearby hints';
 
-	/// en: 'what others nearby are doing'
-	String get type_community_sub => 'what others nearby are doing';
+	/// en: 'soon (V2)'
+	String get type_community_sub => 'soon (V2)';
 
 	/// en: 'Default reminder offset'
 	String get section_default_offset => 'Default reminder offset';
@@ -302,6 +344,24 @@ class Translations$notif_settings$en {
 
 	/// en: 'Notifications are disabled, so hints can't be turned on.'
 	String get hints_perm_denied => 'Notifications are disabled, so hints can\'t be turned on.';
+}
+
+// Path: reminder_sound
+class Translations$reminder_sound$en {
+	Translations$reminder_sound$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Reminders will be silent — notification volume is at 0.'
+	String get silent_volume => 'Reminders will be silent — notification volume is at 0.';
+
+	/// en: 'Reminders will be silent — the phone is in silent mode.'
+	String get silent_mode => 'Reminders will be silent — the phone is in silent mode.';
+
+	/// en: 'Turn on sound'
+	String get enable => 'Turn on sound';
 }
 
 // Path: notif_preview
@@ -423,14 +483,14 @@ class Translations$auth$en {
 	/// en: 'Continue with email'
 	String get continue_email => 'Continue with email';
 
-	/// en: 'Try without an account'
-	String get guest => 'Try without an account';
+	/// en: 'Continue as guest'
+	String get guest => 'Continue as guest';
 
 	/// en: 'We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.'
 	String get legal => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.';
 
-	/// en: 'Without an account, all your data is lost if you remove the app or change device.'
-	String get guest_warning => 'Without an account, all your data is lost if you remove the app or change device.';
+	/// en: 'As a guest, you keep your data on this device only. You can add an account later.'
+	String get guest_warning => 'As a guest, you keep your data on this device only. You can add an account later.';
 
 	/// en: 'Google sign-in failed. Please try again.'
 	String get google_error => 'Google sign-in failed. Please try again.';
@@ -440,6 +500,30 @@ class Translations$auth$en {
 
 	/// en: 'Privacy policy'
 	String get privacy_link => 'Privacy policy';
+}
+
+// Path: account
+class Translations$account$en {
+	Translations$account$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Guest — tap to sign in'
+	String get guest_tooltip => 'Guest — tap to sign in';
+
+	/// en: 'You're using Tendask as a guest'
+	String get guest_title => 'You\'re using Tendask as a guest';
+
+	/// en: 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.'
+	String get guest_body => 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.';
+
+	/// en: 'Sign in / register'
+	String get sign_in_cta => 'Sign in / register';
+
+	/// en: 'Maybe later'
+	String get maybe_later => 'Maybe later';
 }
 
 // Path: email_login
@@ -500,6 +584,9 @@ class Translations$email_login$en {
 
 	/// en: 'Send a new code ($seconds s)'
 	String resend_in({required Object seconds}) => 'Send a new code (${seconds} s)';
+
+	/// en: 'Continue without signing in'
+	String get skip_for_now => 'Continue without signing in';
 }
 
 // Path: location
@@ -759,20 +846,35 @@ class Translations$task_detail$en {
 	/// en: 'Reschedule'
 	String get action_move => 'Reschedule';
 
-	/// en: 'Once'
-	String get recurrence_once => 'Once';
+	/// en: 'Stop repeating'
+	String get action_stop_recurrence => 'Stop repeating';
+
+	/// en: 'No'
+	String get recurrence_none => 'No';
+
+	/// en: 'Daily'
+	String get recurrence_daily => 'Daily';
 
 	/// en: 'Weekly'
 	String get recurrence_weekly => 'Weekly';
 
-	/// en: 'Seasonal'
-	String get recurrence_seasonal => 'Seasonal';
+	/// en: 'Every $n days'
+	String recurrence_every_days({required Object n}) => 'Every ${n} days';
+
+	/// en: ' · $n× left'
+	String recurrence_remaining({required Object n}) => ' · ${n}× left';
 
 	/// en: '—'
 	String get none => '—';
 
 	/// en: 'Task not found.'
 	String get not_found => 'Task not found.';
+
+	/// en: 'Once'
+	String get recurrence_once => 'Once';
+
+	/// en: 'Seasonal'
+	String get recurrence_seasonal => 'Seasonal';
 }
 
 // Path: tasks_list
@@ -845,6 +947,15 @@ class Translations$tasks_list$en {
 
 	/// en: 'Cancel'
 	String get delete_cancel => 'Cancel';
+
+	/// en: 'Recurring task'
+	String get recurring_badge_tooltip => 'Recurring task';
+
+	/// en: '↻ Repeated · next $date'
+	String completed_recurring_toast({required Object date}) => '↻ Repeated · next ${date}';
+
+	/// en: 'Can't undo — the next task in the series already exists. Delete it if needed.'
+	String get revert_blocked_recurring => 'Can\'t undo — the next task in the series already exists. Delete it if needed.';
 }
 
 // Path: subject_picker
@@ -918,6 +1029,9 @@ class Translations$entry$en {
 	/// en: 'Plants'
 	String get subject_plants => 'Plants';
 
+	/// en: 'Less likely for this task'
+	String get subject_less_likely => 'Less likely for this task';
+
 	/// en: 'Add plant'
 	String get subject_add_plant => 'Add plant';
 
@@ -968,6 +1082,42 @@ class Translations$entry$en {
 
 	/// en: 'Default derived from the date and time: future = waiting, otherwise = done.'
 	String get when_status_note => 'Default derived from the date and time: future = waiting, otherwise = done.';
+
+	/// en: 'Repeat'
+	String get recurrence_label => 'Repeat';
+
+	/// en: 'None'
+	String get recurrence_off => 'None';
+
+	/// en: 'Daily'
+	String get recurrence_daily => 'Daily';
+
+	/// en: 'Weekly'
+	String get recurrence_weekly => 'Weekly';
+
+	/// en: 'Custom'
+	String get recurrence_custom => 'Custom';
+
+	/// en: 'Every'
+	String get recurrence_interval_label => 'Every';
+
+	/// en: 'days'
+	String get recurrence_days_unit => 'days';
+
+	/// en: 'Repeat a set number of times'
+	String get recurrence_repeat_count => 'Repeat a set number of times';
+
+	/// en: 'times'
+	String get recurrence_times_unit => 'times';
+
+	/// en: 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).'
+	String get recurrence_repeat_count_hint => 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).';
+
+	/// en: 'Enter a number'
+	String get recurrence_invalid_number => 'Enter a number';
+
+	/// en: 'Next: $date'
+	String recurrence_next_preview({required Object date}) => 'Next: ${date}';
 
 	/// en: 'Reminder'
 	String get reminder_title => 'Reminder';
@@ -1074,6 +1224,12 @@ class Translations$entry$en {
 	/// en: 'The time applies to day-based offsets (e.g. "1 day before at 18:00").'
 	String get rem_time_note => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").';
 
+	/// en: 'We added a default reminder. Remove it if you don't need it.'
+	String get rem_default_hint => 'We added a default reminder. Remove it if you don\'t need it.';
+
+	/// en: 'Task saved. Notifications are off — turn them on in settings.'
+	String get rem_saved_notif_off => 'Task saved. Notifications are off — turn them on in settings.';
+
 	/// en: 'Notifications are disabled, so a reminder can't be added.'
 	String get rem_perm_denied => 'Notifications are disabled, so a reminder can\'t be added.';
 
@@ -1088,6 +1244,9 @@ class Translations$entry$en {
 
 	/// en: 'already added'
 	String get rem_added => 'already added';
+
+	/// en: 'Use recipe'
+	String get supplies_use_recipe => 'Use recipe';
 }
 
 // Path: plant_edit
@@ -1194,11 +1353,26 @@ class Translations$areas$en {
 	/// en: 'plants and lawns'
 	String get subtitle => 'plants and lawns';
 
+	/// en: 'Areas'
+	String get seg_areas => 'Areas';
+
+	/// en: 'Plant'
+	String get fab_plant => 'Plant';
+
 	/// en: 'No area'
 	String get unassigned => 'No area';
 
 	/// en: 'last:'
 	String get last_prefix => 'last:';
+
+	/// en: 'No plants'
+	String get no_plants => 'No plants';
+
+	/// en: '(one) {1 plant} (other) {$n plants}'
+	String plant_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '1 plant',
+		other: '${n} plants',
+	);
 
 	/// en: 'Garden'
 	String get type_garden => 'Garden';
@@ -1344,6 +1518,9 @@ class Translations$plants$en {
 	/// en: 'Frequent'
 	String get frequent => 'Frequent';
 
+	/// en: 'Less likely for this area'
+	String get less_likely => 'Less likely for this area';
+
 	/// en: 'Undo'
 	String get undo => 'Undo';
 
@@ -1421,6 +1598,39 @@ class Translations$supplies$en {
 
 	/// en: 'Add'
 	String get add_confirm => 'Add';
+
+	/// en: 'Delete supply'
+	String get form_delete => 'Delete supply';
+
+	/// en: 'This supply will be removed from your list.'
+	String get delete_note => 'This supply will be removed from your list.';
+
+	/// en: 'Category'
+	String get form_category => 'Category';
+
+	/// en: 'Fertilizers'
+	String get cat_fertilizer => 'Fertilizers';
+
+	/// en: 'Treatments'
+	String get cat_treatment => 'Treatments';
+
+	/// en: 'Equipment'
+	String get cat_equipment => 'Equipment';
+
+	/// en: 'Other'
+	String get cat_other => 'Other';
+
+	/// en: 'Supplies'
+	String get seg_supplies => 'Supplies';
+
+	/// en: 'Recipes'
+	String get seg_recipes => 'Recipes';
+
+	/// en: 'Supply'
+	String get fab_new => 'Supply';
+
+	/// en: 'Search supplies'
+	String get search => 'Search supplies';
 }
 
 // Path: settings
@@ -1452,26 +1662,26 @@ class Translations$settings$en {
 	/// en: 'Language'
 	String get section_language => 'Language';
 
+	/// en: 'Appearance'
+	String get section_appearance => 'Appearance';
+
+	/// en: 'Theme & colours'
+	String get appearance_placeholder => 'Theme & colours';
+
+	/// en: 'System'
+	String get theme_system => 'System';
+
+	/// en: 'Light'
+	String get theme_light => 'Light';
+
+	/// en: 'Dark'
+	String get theme_dark => 'Dark';
+
 	/// en: 'Notifications'
 	String get section_notifications => 'Notifications';
 
 	/// en: 'Notifications and reminders'
 	String get notifications_placeholder => 'Notifications and reminders';
-
-	/// en: 'Suggestions'
-	String get section_suggestions => 'Suggestions';
-
-	/// en: 'What was suggested and how you responded'
-	String get suggestions_history_sub => 'What was suggested and how you responded';
-
-	/// en: 'Garden'
-	String get section_garden => 'Garden';
-
-	/// en: '📦 Supplies'
-	String get supplies => '📦 Supplies';
-
-	/// en: 'urea, algae, fertilizers, gear'
-	String get supplies_sub => 'urea, algae, fertilizers, gear';
 
 	/// en: 'Account & data'
 	String get section_account => 'Account & data';
@@ -1491,8 +1701,8 @@ class Translations$settings$en {
 	/// en: 'Cancel'
 	String get logout_cancel => 'Cancel';
 
-	/// en: 'Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.'
-	String get logout_offline => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.';
+	/// en: 'Sign-out is paused — your latest changes aren't saved to the cloud yet. Try again in a moment.'
+	String get logout_offline => 'Sign-out is paused — your latest changes aren\'t saved to the cloud yet. Try again in a moment.';
 
 	/// en: 'Tendask data export'
 	String get export_share_text => 'Tendask data export';
@@ -1532,6 +1742,93 @@ class Translations$settings$en {
 
 	/// en: 'Privacy policy'
 	String get privacy_policy => 'Privacy policy';
+
+	/// en: 'Suggestions'
+	String get section_suggestions => 'Suggestions';
+
+	/// en: 'What was suggested and how you responded'
+	String get suggestions_history_sub => 'What was suggested and how you responded';
+
+	/// en: 'Garden'
+	String get section_garden => 'Garden';
+
+	/// en: '📦 Supplies'
+	String get supplies => '📦 Supplies';
+
+	/// en: 'urea, algae, fertilizers, gear'
+	String get supplies_sub => 'urea, algae, fertilizers, gear';
+}
+
+// Path: appearance
+class Translations$appearance$en {
+	Translations$appearance$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Mode'
+	String get mode_label => 'Mode';
+
+	/// en: '“System” automatically switches between light and dark to match your phone.'
+	String get mode_help => '“System” automatically switches between light and dark to match your phone.';
+
+	/// en: 'Follows phone · currently light'
+	String get follows_system_light => 'Follows phone · currently light';
+
+	/// en: 'Follows phone · currently dark'
+	String get follows_system_dark => 'Follows phone · currently dark';
+
+	/// en: 'Colour theme'
+	String get palette_label => 'Colour theme';
+
+	/// en: 'Preview'
+	String get preview_label => 'Preview';
+
+	/// en: 'Default'
+	String get default_badge => 'Default';
+
+	/// en: 'Reset to default'
+	String get reset => 'Reset to default';
+
+	/// en: 'Changes apply instantly. They affect this device only.'
+	String get applies_immediately => 'Changes apply instantly. They affect this device only.';
+
+	/// en: 'Green'
+	String get palette_green => 'Green';
+
+	/// en: 'Lavender'
+	String get palette_lavender => 'Lavender';
+
+	/// en: 'Ocean'
+	String get palette_ocean => 'Ocean';
+
+	/// en: 'Terracotta'
+	String get palette_clay => 'Terracotta';
+
+	/// en: 'Blueberry'
+	String get palette_berry => 'Blueberry';
+
+	/// en: 'Sky'
+	String get palette_nebo => 'Sky';
+
+	/// en: 'Home'
+	String get preview_appbar => 'Home';
+
+	/// en: 'Watering · Tomato'
+	String get preview_task => 'Watering · Tomato';
+
+	/// en: 'today · hedge'
+	String get preview_task_sub => 'today · hedge';
+
+	/// en: 'Done'
+	String get preview_action => 'Done';
+
+	/// en: '✓ Fruit trees'
+	String get preview_chip => '✓ Fruit trees';
+
+	/// en: 'Basil'
+	String get preview_swipe => 'Basil';
 }
 
 // Path: weather
@@ -1616,6 +1913,120 @@ class Translations$weather$en {
 
 	/// en: 'no rain'
 	String get m_no_rain => 'no rain';
+}
+
+// Path: recipes
+class Translations$recipes$en {
+	Translations$recipes$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'No recipes yet. Save a mixture with +.'
+	String get empty => 'No recipes yet. Save a mixture with +.';
+
+	/// en: 'Recipe'
+	String get fab_new => 'Recipe';
+
+	/// en: 'New recipe'
+	String get form_new => 'New recipe';
+
+	/// en: 'Edit recipe'
+	String get form_edit => 'Edit recipe';
+
+	/// en: 'Name'
+	String get form_name => 'Name';
+
+	/// en: 'Equipment'
+	String get form_equipment => 'Equipment';
+
+	/// en: 'e.g. 16 L sprayer'
+	String get form_equipment_hint => 'e.g. 16 L sprayer';
+
+	/// en: 'Save'
+	String get form_save => 'Save';
+
+	/// en: 'Enter a recipe name.'
+	String get err_name => 'Enter a recipe name.';
+
+	/// en: 'Delete recipe'
+	String get form_delete => 'Delete recipe';
+
+	/// en: 'This recipe will be removed from your list.'
+	String get delete_note => 'This recipe will be removed from your list.';
+
+	/// en: 'Supplies'
+	String get items => 'Supplies';
+
+	/// en: 'Add supply'
+	String get add_item => 'Add supply';
+
+	/// en: 'Pick a recipe'
+	String get pick_title => 'Pick a recipe';
+
+	/// en: 'Removed supply'
+	String get item_removed => 'Removed supply';
+}
+
+// Path: harvest
+class Translations$harvest$en {
+	Translations$harvest$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Yield'
+	String get yield_section => 'Yield';
+
+	/// en: 'How much did you harvest?'
+	String get sheet_title => 'How much did you harvest?';
+
+	/// en: 'Amount'
+	String get amount_label => 'Amount';
+
+	/// en: 'e.g. 2.5'
+	String get amount_hint => 'e.g. 2.5';
+
+	/// en: 'Unit'
+	String get unit_label => 'Unit';
+
+	/// en: 'Save'
+	String get save => 'Save';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
+
+	/// en: 'Remove yield'
+	String get remove => 'Remove yield';
+
+	/// en: 'Add yield'
+	String get add => 'Add yield';
+
+	/// en: 'Harvest'
+	String get summary_title => 'Harvest';
+
+	/// en: 'Total'
+	String get summary_total => 'Total';
+
+	/// en: 'kg'
+	String get unit_kg => 'kg';
+
+	/// en: 'dag'
+	String get unit_dag => 'dag';
+
+	/// en: 'g'
+	String get unit_g => 'g';
+
+	/// en: 'pcs'
+	String get unit_pieces => 'pcs';
+
+	/// en: 'l'
+	String get unit_l => 'l';
+
+	/// en: 'bunch'
+	String get unit_bunch => 'bunch';
 }
 
 // Path: suggestions
@@ -3036,9 +3447,11 @@ extension on Translations {
 			'home.no_tasks_today' => 'No tasks planned for today.',
 			'home.no_recent' => 'No completed tasks yet.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 overdue task', other: '${n} overdue tasks', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 upcoming task', other: '${n} upcoming tasks', ), 
 			'common.today' => 'Today',
 			'common.yesterday' => 'yesterday',
 			'common.load_error' => 'Couldn\'t load data.',
+			'common.save_error' => 'Couldn\'t save.',
 			'swipe.complete' => 'Done',
 			'swipe.postpone' => '+1 day',
 			'swipe.revert' => 'Reopen',
@@ -3047,6 +3460,10 @@ extension on Translations {
 			'swipe.delete' => 'Delete',
 			'notifications.today' => 'Today',
 			'notifications.tomorrow' => 'Tomorrow',
+			'journal_nudge.title_a' => 'Start your garden journal 🌱',
+			'journal_nudge.body_a' => 'Log your first task — what\'s growing with you?',
+			'journal_nudge.title_b' => 'What\'s happening in the garden?',
+			'journal_nudge.body_b' => 'Jot down what you did in the garden this week.',
 			'notif_priming.title' => 'Let me remind you in time?',
 			'notif_priming.why' => 'So a task doesn\'t slip by — the reminder arrives exactly when you set it.',
 			'notif_priming.benefit_reminders' => 'Task reminders — e.g. "1 day before at 18:00".',
@@ -3060,10 +3477,12 @@ extension on Translations {
 			'notif_settings.section_types' => 'Notification types',
 			'notif_settings.type_reminders' => 'Task reminders',
 			'notif_settings.type_reminders_sub' => 'local · works offline',
+			'notif_settings.type_journal_nudge' => 'Journal nudge',
+			'notif_settings.type_journal_nudge_sub' => 'local · a gentle nudge if you go quiet',
 			'notif_settings.type_weather' => 'Smart hints (weather)',
-			'notif_settings.type_weather_sub' => '"dry tomorrow — a good time"',
+			'notif_settings.type_weather_sub' => 'soon · via server',
 			'notif_settings.type_community' => 'Nearby hints',
-			'notif_settings.type_community_sub' => 'what others nearby are doing',
+			'notif_settings.type_community_sub' => 'soon (V2)',
 			'notif_settings.section_default_offset' => 'Default reminder offset',
 			'notif_settings.default_offset_hint' => 'Prefills new tasks; you can always change it.',
 			'notif_settings.section_quiet' => 'So you\'re not overwhelmed',
@@ -3078,6 +3497,9 @@ extension on Translations {
 			'notif_settings.system_permission_on' => 'device: allowed',
 			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
 			'notif_settings.hints_perm_denied' => 'Notifications are disabled, so hints can\'t be turned on.',
+			'reminder_sound.silent_volume' => 'Reminders will be silent — notification volume is at 0.',
+			'reminder_sound.silent_mode' => 'Reminders will be silent — the phone is in silent mode.',
+			'reminder_sound.enable' => 'Turn on sound',
 			'notif_preview.title' => 'Notification appearance',
 			'notif_preview.date' => 'Tuesday, 1 June',
 			'notif_preview.rem_now' => 'now',
@@ -3109,12 +3531,17 @@ extension on Translations {
 			'auth.continue_apple' => 'Continue with Apple',
 			'auth.continue_google' => 'Continue with Google',
 			'auth.continue_email' => 'Continue with email',
-			'auth.guest' => 'Try without an account',
+			'auth.guest' => 'Continue as guest',
 			'auth.legal' => 'We\'ll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.',
-			'auth.guest_warning' => 'Without an account, all your data is lost if you remove the app or change device.',
+			'auth.guest_warning' => 'As a guest, you keep your data on this device only. You can add an account later.',
 			'auth.google_error' => 'Google sign-in failed. Please try again.',
 			'auth.coming_soon' => 'Coming soon.',
 			'auth.privacy_link' => 'Privacy policy',
+			'account.guest_tooltip' => 'Guest — tap to sign in',
+			'account.guest_title' => 'You\'re using Tendask as a guest',
+			'account.guest_body' => 'Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.',
+			'account.sign_in_cta' => 'Sign in / register',
+			'account.maybe_later' => 'Maybe later',
 			'email_login.title' => 'Sign in with email',
 			'email_login.email_label' => 'Email address',
 			'email_login.email_hint' => 'you@example.com',
@@ -3132,6 +3559,7 @@ extension on Translations {
 			'email_login.err_email_domain' => 'We can\'t find that email\'s domain. Check the address.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Did you mean ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
+			'email_login.skip_for_now' => 'Continue without signing in',
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',
@@ -3205,11 +3633,16 @@ extension on Translations {
 			'task_detail.action_delete' => 'Delete',
 			'task_detail.action_revert' => 'Back to waiting',
 			'task_detail.action_move' => 'Reschedule',
-			'task_detail.recurrence_once' => 'Once',
+			'task_detail.action_stop_recurrence' => 'Stop repeating',
+			'task_detail.recurrence_none' => 'No',
+			'task_detail.recurrence_daily' => 'Daily',
 			'task_detail.recurrence_weekly' => 'Weekly',
-			'task_detail.recurrence_seasonal' => 'Seasonal',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Every ${n} days',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · ${n}× left',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Task not found.',
+			'task_detail.recurrence_once' => 'Once',
+			'task_detail.recurrence_seasonal' => 'Seasonal',
 			'tasks_list.title' => 'Tasks',
 			'tasks_list.subtitle' => 'upcoming and overdue',
 			'tasks_list.section_overdue' => 'Overdue',
@@ -3230,6 +3663,9 @@ extension on Translations {
 			'tasks_list.delete_confirm_body' => 'This action cannot be undone.',
 			'tasks_list.delete_yes' => 'Delete',
 			'tasks_list.delete_cancel' => 'Cancel',
+			'tasks_list.recurring_badge_tooltip' => 'Recurring task',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Repeated · next ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Can\'t undo — the next task in the series already exists. Delete it if needed.',
 			'subject_picker.title' => 'Plant or area',
 			'subject_picker.choose' => 'Choose',
 			'entry.title_new' => 'New task',
@@ -3248,6 +3684,7 @@ extension on Translations {
 			'entry.subject_title' => 'For what?',
 			'entry.subject_search_hint' => 'Search plant…',
 			'entry.subject_plants' => 'Plants',
+			'entry.subject_less_likely' => 'Less likely for this task',
 			'entry.subject_add_plant' => 'Add plant',
 			'entry.subject_add_area' => 'Add area',
 			'entry.subject_from_catalog' => 'Add from catalog',
@@ -3265,6 +3702,18 @@ extension on Translations {
 			'entry.when_status_waiting' => 'Waiting',
 			'entry.when_status_done' => 'Done',
 			'entry.when_status_note' => 'Default derived from the date and time: future = waiting, otherwise = done.',
+			'entry.recurrence_label' => 'Repeat',
+			'entry.recurrence_off' => 'None',
+			'entry.recurrence_daily' => 'Daily',
+			'entry.recurrence_weekly' => 'Weekly',
+			'entry.recurrence_custom' => 'Custom',
+			'entry.recurrence_interval_label' => 'Every',
+			'entry.recurrence_days_unit' => 'days',
+			'entry.recurrence_repeat_count' => 'Repeat a set number of times',
+			'entry.recurrence_times_unit' => 'times',
+			'entry.recurrence_repeat_count_hint' => 'Repeats indefinitely; stop it from the task (⋯ → Stop repeating).',
+			'entry.recurrence_invalid_number' => 'Enter a number',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Next: ${date}',
 			'entry.reminder_title' => 'Reminder',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.',
@@ -3300,11 +3749,14 @@ extension on Translations {
 			'entry.rem_at' => ({required Object t}) => 'at ${t}',
 			'entry.rem_choose_time' => 'At time',
 			'entry.rem_time_note' => 'The time applies to day-based offsets (e.g. "1 day before at 18:00").',
+			'entry.rem_default_hint' => 'We added a default reminder. Remove it if you don\'t need it.',
+			'entry.rem_saved_notif_off' => 'Task saved. Notifications are off — turn them on in settings.',
 			'entry.rem_perm_denied' => 'Notifications are disabled, so a reminder can\'t be added.',
 			'entry.rem_exact_title' => 'Allow exact reminders',
 			'entry.rem_exact_body' => 'To fire at the exact time, Tendask needs the "Alarms & reminders" permission. Enable it in settings, then add the reminder again.',
 			'entry.rem_exact_open' => 'Open settings',
 			'entry.rem_added' => 'already added',
+			'entry.supplies_use_recipe' => 'Use recipe',
 			'plant_edit.title_edit' => 'Edit plant',
 			'plant_edit.species' => 'Species',
 			'plant_edit.alias' => 'Personal name (optional)',
@@ -3328,8 +3780,12 @@ extension on Translations {
 			'area_pick.duplicate' => 'This plant is already in the selected area.',
 			'areas.title' => 'Garden',
 			'areas.subtitle' => 'plants and lawns',
+			'areas.seg_areas' => 'Areas',
+			'areas.fab_plant' => 'Plant',
 			'areas.unassigned' => 'No area',
 			'areas.last_prefix' => 'last:',
+			'areas.no_plants' => 'No plants',
+			'areas.plant_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '1 plant', other: '${n} plants', ), 
 			'areas.type_garden' => 'Garden',
 			'areas.type_lawn' => 'Lawn',
 			'areas.type_hedge' => 'Hedge',
@@ -3375,6 +3831,7 @@ extension on Translations {
 			'plants.custom_private' => 'A custom entry is private and not shared with the community.',
 			'plants.add_title' => 'Add plants',
 			'plants.frequent' => 'Frequent',
+			'plants.less_likely' => 'Less likely for this area',
 			'plants.undo' => 'Undo',
 			'plants.done' => 'Done',
 			'plants.add_to_label' => 'Add to',
@@ -3398,6 +3855,17 @@ extension on Translations {
 			'supplies.pick_new' => 'New supply',
 			'supplies.amount' => 'Amount used',
 			'supplies.add_confirm' => 'Add',
+			'supplies.form_delete' => 'Delete supply',
+			'supplies.delete_note' => 'This supply will be removed from your list.',
+			'supplies.form_category' => 'Category',
+			'supplies.cat_fertilizer' => 'Fertilizers',
+			'supplies.cat_treatment' => 'Treatments',
+			'supplies.cat_equipment' => 'Equipment',
+			'supplies.cat_other' => 'Other',
+			'supplies.seg_supplies' => 'Supplies',
+			'supplies.seg_recipes' => 'Recipes',
+			'supplies.fab_new' => 'Supply',
+			'supplies.search' => 'Search supplies',
 			'settings.title' => 'Settings',
 			'settings.profile_guest' => 'Guest (not signed in)',
 			'settings.sign_in_prompt' => 'Sign in to back up your data',
@@ -3405,20 +3873,20 @@ extension on Translations {
 			'settings.section_location' => 'Location',
 			'settings.location_placeholder' => 'Weather location',
 			'settings.section_language' => 'Language',
+			'settings.section_appearance' => 'Appearance',
+			'settings.appearance_placeholder' => 'Theme & colours',
+			'settings.theme_system' => 'System',
+			'settings.theme_light' => 'Light',
+			'settings.theme_dark' => 'Dark',
 			'settings.section_notifications' => 'Notifications',
 			'settings.notifications_placeholder' => 'Notifications and reminders',
-			'settings.section_suggestions' => 'Suggestions',
-			'settings.suggestions_history_sub' => 'What was suggested and how you responded',
-			'settings.section_garden' => 'Garden',
-			'settings.supplies' => '📦 Supplies',
-			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
 			'settings.section_account' => 'Account & data',
 			'settings.export_data' => 'Export data (GDPR)',
 			'settings.logout' => 'Sign out',
 			'settings.logout_confirm_title' => 'Sign out?',
 			'settings.logout_confirm_body' => 'Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.',
 			'settings.logout_cancel' => 'Cancel',
-			'settings.logout_offline' => 'Can\'t sign out while offline — your data isn\'t saved to the cloud yet. Try again when you\'re connected.',
+			'settings.logout_offline' => 'Sign-out is paused — your latest changes aren\'t saved to the cloud yet. Try again in a moment.',
 			'settings.export_share_text' => 'Tendask data export',
 			'settings.export_error' => 'Export failed. Please try again.',
 			'settings.delete_account' => 'Delete account and all data',
@@ -3432,6 +3900,32 @@ extension on Translations {
 			'settings.delete_data_confirm' => 'Delete',
 			'settings.section_about' => 'About',
 			'settings.privacy_policy' => 'Privacy policy',
+			'settings.section_suggestions' => 'Suggestions',
+			'settings.suggestions_history_sub' => 'What was suggested and how you responded',
+			'settings.section_garden' => 'Garden',
+			'settings.supplies' => '📦 Supplies',
+			'settings.supplies_sub' => 'urea, algae, fertilizers, gear',
+			'appearance.mode_label' => 'Mode',
+			'appearance.mode_help' => '“System” automatically switches between light and dark to match your phone.',
+			'appearance.follows_system_light' => 'Follows phone · currently light',
+			'appearance.follows_system_dark' => 'Follows phone · currently dark',
+			'appearance.palette_label' => 'Colour theme',
+			'appearance.preview_label' => 'Preview',
+			'appearance.default_badge' => 'Default',
+			'appearance.reset' => 'Reset to default',
+			'appearance.applies_immediately' => 'Changes apply instantly. They affect this device only.',
+			'appearance.palette_green' => 'Green',
+			'appearance.palette_lavender' => 'Lavender',
+			'appearance.palette_ocean' => 'Ocean',
+			'appearance.palette_clay' => 'Terracotta',
+			'appearance.palette_berry' => 'Blueberry',
+			'appearance.palette_nebo' => 'Sky',
+			'appearance.preview_appbar' => 'Home',
+			'appearance.preview_task' => 'Watering · Tomato',
+			'appearance.preview_task_sub' => 'today · hedge',
+			'appearance.preview_action' => 'Done',
+			'appearance.preview_chip' => '✓ Fruit trees',
+			'appearance.preview_swipe' => 'Basil',
 			'weather.cond_clear' => 'Clear',
 			'weather.cond_mainly_clear' => 'Mostly clear',
 			'weather.cond_cloudy' => 'Cloudy',
@@ -3454,9 +3948,43 @@ extension on Translations {
 			'weather.m_wind' => 'Wind',
 			'weather.m_precipitation' => 'Precipitation',
 			'weather.m_soil_temp' => 'Soil temp.',
+			_ => null,
+		} ?? switch (path) {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Rain 48 h',
 			'weather.m_no_rain' => 'no rain',
+			'recipes.empty' => 'No recipes yet. Save a mixture with +.',
+			'recipes.fab_new' => 'Recipe',
+			'recipes.form_new' => 'New recipe',
+			'recipes.form_edit' => 'Edit recipe',
+			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Equipment',
+			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
+			'recipes.form_save' => 'Save',
+			'recipes.err_name' => 'Enter a recipe name.',
+			'recipes.form_delete' => 'Delete recipe',
+			'recipes.delete_note' => 'This recipe will be removed from your list.',
+			'recipes.items' => 'Supplies',
+			'recipes.add_item' => 'Add supply',
+			'recipes.pick_title' => 'Pick a recipe',
+			'recipes.item_removed' => 'Removed supply',
+			'harvest.yield_section' => 'Yield',
+			'harvest.sheet_title' => 'How much did you harvest?',
+			'harvest.amount_label' => 'Amount',
+			'harvest.amount_hint' => 'e.g. 2.5',
+			'harvest.unit_label' => 'Unit',
+			'harvest.save' => 'Save',
+			'harvest.skip' => 'Skip',
+			'harvest.remove' => 'Remove yield',
+			'harvest.add' => 'Add yield',
+			'harvest.summary_title' => 'Harvest',
+			'harvest.summary_total' => 'Total',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'pcs',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'bunch',
 			'suggestions.actions.plan' => 'Plan',
 			'suggestions.actions.dismiss' => 'Skip',
 			'suggestions.actions.already_done' => 'Already done',
@@ -3537,8 +4065,6 @@ extension on Translations {
 			'suggestions.berries.prune_winter.body' => 'Prune {subject} while dormant — by about {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Spring feed',
 			'suggestions.berries.fertilize_spring.body' => 'Feed {subject} as growth starts — by about {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Mulch',
 			'suggestions.berries.mulch.body' => 'Mulch {subject} to keep roots cool and moist — by about {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Dormant spray',

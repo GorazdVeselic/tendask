@@ -17,12 +17,17 @@
     "overdue_banner(n)": {
       "one": "1 überfällige Aufgabe",
       "other": "$n überfällige Aufgaben"
+    },
+    "upcoming_banner(n)": {
+      "one": "1 anstehende Aufgabe",
+      "other": "$n anstehende Aufgaben"
     }
   },
   "common": {
     "today": "Heute",
     "yesterday": "gestern",
-    "load_error": "Daten konnten nicht geladen werden."
+    "load_error": "Daten konnten nicht geladen werden.",
+    "save_error": "Speichern fehlgeschlagen."
   },
   "swipe": {
     "complete": "Erledigt",
@@ -35,6 +40,12 @@
   "notifications": {
     "today": "Heute",
     "tomorrow": "Morgen"
+  },
+  "journal_nudge": {
+    "title_a": "Starte dein Gartentagebuch 🌱",
+    "body_a": "Trag deine erste Aufgabe ein — was wächst bei dir?",
+    "title_b": "Was passiert im Garten?",
+    "body_b": "Halt fest, was du diese Woche im Garten gemacht hast."
   },
   "notif_priming": {
     "title": "Soll ich dich rechtzeitig erinnern?",
@@ -52,10 +63,12 @@
     "section_types": "Benachrichtigungsarten",
     "type_reminders": "Aufgaben-Erinnerungen",
     "type_reminders_sub": "lokal · funktionieren ohne Internet",
+    "type_journal_nudge": "Tagebuch-Erinnerung",
+    "type_journal_nudge_sub": "lokal · ein sanfter Anstoß, wenn es still wird",
     "type_weather": "Smarte Hinweise (Wetter)",
-    "type_weather_sub": "„morgen trocken — ein guter Zeitpunkt“",
+    "type_weather_sub": "demnächst · über Server",
     "type_community": "Hinweise aus der Umgebung",
-    "type_community_sub": "was andere in der Nähe tun",
+    "type_community_sub": "demnächst (V2)",
     "section_default_offset": "Standard-Vorlaufzeit",
     "default_offset_hint": "Füllt neue Aufgaben vor; jederzeit änderbar.",
     "section_quiet": "Damit du nicht überflutet wirst",
@@ -70,6 +83,11 @@
     "system_permission_on": "Gerät: erlaubt",
     "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen",
     "hints_perm_denied": "Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden."
+  },
+  "reminder_sound": {
+    "silent_volume": "Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.",
+    "silent_mode": "Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.",
+    "enable": "Ton einschalten"
   },
   "notif_preview": {
     "title": "Benachrichtigungen — Vorschau",
@@ -107,12 +125,19 @@
     "continue_apple": "Mit Apple fortfahren",
     "continue_google": "Mit Google fortfahren",
     "continue_email": "Mit E-Mail fortfahren",
-    "guest": "Ohne Konto ausprobieren",
+    "guest": "Als Gast fortfahren",
     "legal": "Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.",
-    "guest_warning": "Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.",
+    "guest_warning": "Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.",
     "google_error": "Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.",
     "coming_soon": "Demnächst verfügbar.",
     "privacy_link": "Datenschutzerklärung"
+  },
+  "account": {
+    "guest_tooltip": "Gast — zum Anmelden tippen",
+    "guest_title": "Du nutzt Tendask als Gast",
+    "guest_body": "Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.",
+    "sign_in_cta": "Anmelden / registrieren",
+    "maybe_later": "Vielleicht später"
   },
   "email_login": {
     "title": "Mit E-Mail anmelden",
@@ -131,7 +156,8 @@
     "err_verify": "Der Code ist falsch oder abgelaufen. Versuche es erneut.",
     "err_email_domain": "Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.",
     "did_you_mean(suggestion)": "Meintest du $suggestion?",
-    "resend_in(seconds)": "Neuen Code senden ($seconds s)"
+    "resend_in(seconds)": "Neuen Code senden ($seconds s)",
+    "skip_for_now": "Ohne Anmeldung fortfahren"
   },
   "location": {
     "title": "Wo gärtnerst du?",
@@ -216,11 +242,16 @@
     "action_delete": "Löschen",
     "action_revert": "Zurück auf Ausstehend",
     "action_move": "Verschieben",
-    "recurrence_once": "Einmalig",
+    "action_stop_recurrence": "Wiederholung beenden",
+    "recurrence_none": "Nein",
+    "recurrence_daily": "Täglich",
     "recurrence_weekly": "Wöchentlich",
-    "recurrence_seasonal": "Saisonal",
+    "recurrence_every_days(n)": "Alle $n Tage",
+    "recurrence_remaining(n)": " · noch $n×",
     "none": "—",
-    "not_found": "Aufgabe nicht gefunden."
+    "not_found": "Aufgabe nicht gefunden.",
+    "recurrence_once": "Einmalig",
+    "recurrence_seasonal": "Saisonal"
   },
   "tasks_list": {
     "title": "Aufgaben",
@@ -245,7 +276,10 @@
     "delete_confirm_title": "Aufgabe löschen?",
     "delete_confirm_body": "Diese Aktion kann nicht rückgängig gemacht werden.",
     "delete_yes": "Löschen",
-    "delete_cancel": "Abbrechen"
+    "delete_cancel": "Abbrechen",
+    "recurring_badge_tooltip": "Wiederkehrende Aufgabe",
+    "completed_recurring_toast(date)": "↻ Wiederholt · nächste $date",
+    "revert_blocked_recurring": "Rückgängig nicht möglich — die nächste Aufgabe der Serie existiert bereits. Bei Bedarf löschen."
   },
   "subject_picker": {
     "title": "Pflanze oder Bereich",
@@ -268,6 +302,7 @@
     "subject_title": "Wofür?",
     "subject_search_hint": "Pflanze suchen…",
     "subject_plants": "Pflanzen",
+    "subject_less_likely": "Weniger wahrscheinlich für diese Aufgabe",
     "subject_add_plant": "Pflanze hinzufügen",
     "subject_add_area": "Bereich hinzufügen",
     "subject_from_catalog": "Aus Katalog hinzufügen",
@@ -285,6 +320,18 @@
     "when_status_waiting": "Wartet",
     "when_status_done": "Erledigt",
     "when_status_note": "Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.",
+    "recurrence_label": "Wiederholung",
+    "recurrence_off": "Keine",
+    "recurrence_daily": "Täglich",
+    "recurrence_weekly": "Wöchentlich",
+    "recurrence_custom": "Eigene",
+    "recurrence_interval_label": "Alle",
+    "recurrence_days_unit": "Tage",
+    "recurrence_repeat_count": "Eine bestimmte Anzahl wiederholen",
+    "recurrence_times_unit": "Mal",
+    "recurrence_repeat_count_hint": "Wiederholt sich unbegrenzt; beende es bei der Aufgabe (⋯ → Wiederholung beenden).",
+    "recurrence_invalid_number": "Zahl eingeben",
+    "recurrence_next_preview(date)": "Nächste: $date",
     "reminder_title": "Erinnerung",
     "optional": "(optional)",
     "reminder_why": "Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.",
@@ -320,11 +367,14 @@
     "rem_at(t)": "um $t",
     "rem_choose_time": "Um Uhrzeit",
     "rem_time_note": "Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).",
+    "rem_default_hint": "Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.",
+    "rem_saved_notif_off": "Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.",
     "rem_perm_denied": "Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.",
     "rem_exact_title": "Exakte Erinnerungen erlauben",
     "rem_exact_body": "Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.",
     "rem_exact_open": "Einstellungen öffnen",
-    "rem_added": "bereits hinzugefügt"
+    "rem_added": "bereits hinzugefügt",
+    "supplies_use_recipe": "Rezept verwenden"
   },
   "plant_edit": {
     "title_edit": "Pflanze bearbeiten",
@@ -356,8 +406,15 @@
   "areas": {
     "title": "Garten",
     "subtitle": "Pflanzen und Rasen",
+    "seg_areas": "Bereiche",
+    "fab_plant": "Pflanze",
     "unassigned": "Ohne Bereich",
     "last_prefix": "zuletzt:",
+    "no_plants": "Keine Pflanzen",
+    "plant_count(n)": {
+      "one": "1 Pflanze",
+      "other": "$n Pflanzen"
+    },
     "type_garden": "Garten",
     "type_lawn": "Rasen",
     "type_hedge": "Hecke",
@@ -405,6 +462,7 @@
     "custom_private": "Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.",
     "add_title": "Pflanzen hinzufügen",
     "frequent": "Häufig",
+    "less_likely": "Weniger wahrscheinlich für diesen Bereich",
     "undo": "Rückgängig",
     "done": "Fertig",
     "add_to_label": "Hinzufügen zu",
@@ -413,9 +471,9 @@
     "field_empty": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu."
   },
   "supplies": {
-    "title": "Vorräte",
+    "title": "Mittel",
     "subtitle": "was ich zu Hause habe",
-    "empty": "Noch keine Vorräte. Füge welche mit + hinzu.",
+    "empty": "Noch keine Mittel. Füge welche mit + hinzu.",
     "low": "wenig",
     "qty(q, unit)": "~$q$unit",
     "form_new": "Neues Mittel",
@@ -429,7 +487,18 @@
     "add_to_task": "Mittel hinzufügen",
     "pick_new": "Neues Mittel",
     "amount": "Verbrauchte Menge",
-    "add_confirm": "Hinzufügen"
+    "add_confirm": "Hinzufügen",
+    "form_delete": "Mittel löschen",
+    "delete_note": "Dieses Mittel wird aus deiner Liste entfernt.",
+    "form_category": "Kategorie",
+    "cat_fertilizer": "Dünger",
+    "cat_treatment": "Pflanzenschutz",
+    "cat_equipment": "Geräte",
+    "cat_other": "Sonstiges",
+    "seg_supplies": "Mittel",
+    "seg_recipes": "Rezepte",
+    "fab_new": "Mittel",
+    "search": "Mittel suchen"
   },
   "settings": {
     "title": "Einstellungen",
@@ -439,20 +508,20 @@
     "section_location": "Standort",
     "location_placeholder": "Wetter-Standort",
     "section_language": "Sprache",
+    "section_appearance": "Darstellung",
+    "appearance_placeholder": "Thema & Farben",
+    "theme_system": "System",
+    "theme_light": "Hell",
+    "theme_dark": "Dunkel",
     "section_notifications": "Benachrichtigungen",
     "notifications_placeholder": "Benachrichtigungen und Erinnerungen",
-    "section_suggestions": "Vorschläge",
-    "suggestions_history_sub": "Was vorgeschlagen wurde und wie du reagiert hast",
-    "section_garden": "Garten",
-    "supplies": "📦 Vorräte & Mittel",
-    "supplies_sub": "Harnstoff, Algen, Dünger, Geräte",
     "section_account": "Konto & Daten",
     "export_data": "Daten exportieren (DSGVO)",
     "logout": "Abmelden",
     "logout_confirm_title": "Abmelden?",
     "logout_confirm_body": "Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.",
     "logout_cancel": "Abbrechen",
-    "logout_offline": "Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.",
+    "logout_offline": "Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.",
     "export_share_text": "Tendask Datenexport",
     "export_error": "Export fehlgeschlagen. Bitte versuche es erneut.",
     "delete_account": "Konto und alle Daten löschen",
@@ -465,7 +534,35 @@
     "delete_data_confirm_body": "Löscht alle Daten auf diesem Gerät (Aufgaben, Bereiche, Pflanzen, Notizen) endgültig. Dies kann nicht rückgängig gemacht werden.",
     "delete_data_confirm": "Löschen",
     "section_about": "Über",
-    "privacy_policy": "Datenschutzerklärung"
+    "privacy_policy": "Datenschutzerklärung",
+    "section_suggestions": "Vorschläge",
+    "suggestions_history_sub": "Was vorgeschlagen wurde und wie du reagiert hast",
+    "section_garden": "Garten",
+    "supplies": "📦 Vorräte & Mittel",
+    "supplies_sub": "Harnstoff, Algen, Dünger, Geräte"
+  },
+  "appearance": {
+    "mode_label": "Modus",
+    "mode_help": "„System“ wechselt automatisch zwischen Hell und Dunkel, passend zu deinem Telefon.",
+    "follows_system_light": "Folgt dem Telefon · aktuell hell",
+    "follows_system_dark": "Folgt dem Telefon · aktuell dunkel",
+    "palette_label": "Farbthema",
+    "preview_label": "Vorschau",
+    "default_badge": "Standard",
+    "reset": "Auf Standard zurücksetzen",
+    "applies_immediately": "Änderungen gelten sofort. Sie betreffen nur dieses Gerät.",
+    "palette_green": "Grün",
+    "palette_lavender": "Lavendel",
+    "palette_ocean": "Ozean",
+    "palette_clay": "Terrakotta",
+    "palette_berry": "Heidelbeere",
+    "palette_nebo": "Himmel",
+    "preview_appbar": "Start",
+    "preview_task": "Gießen · Tomate",
+    "preview_task_sub": "heute · Hecke",
+    "preview_action": "Erledigt",
+    "preview_chip": "✓ Obstbäume",
+    "preview_swipe": "Basilikum"
   },
   "weather": {
     "cond_clear": "Klar",
@@ -493,6 +590,42 @@
     "m_et0": "ET₀",
     "m_rain48h": "Regen 48 h",
     "m_no_rain": "kein Regen"
+  },
+  "recipes": {
+    "empty": "Noch keine Rezepte. Mischung mit + speichern.",
+    "fab_new": "Rezept",
+    "form_new": "Neues Rezept",
+    "form_edit": "Rezept bearbeiten",
+    "form_name": "Name",
+    "form_equipment": "Geräte",
+    "form_equipment_hint": "z. B. 16-L-Sprühgerät",
+    "form_save": "Speichern",
+    "err_name": "Rezeptnamen eingeben.",
+    "form_delete": "Rezept löschen",
+    "delete_note": "Dieses Rezept wird aus deiner Liste entfernt.",
+    "items": "Mittel",
+    "add_item": "Mittel hinzufügen",
+    "pick_title": "Rezept wählen",
+    "item_removed": "Entferntes Mittel"
+  },
+  "harvest": {
+    "yield_section": "Ertrag",
+    "sheet_title": "Wie viel hast du geerntet?",
+    "amount_label": "Menge",
+    "amount_hint": "z. B. 2,5",
+    "unit_label": "Einheit",
+    "save": "Speichern",
+    "skip": "Überspringen",
+    "remove": "Ertrag entfernen",
+    "add": "Ertrag hinzufügen",
+    "summary_title": "Ernte",
+    "summary_total": "Gesamt",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "Stk.",
+    "unit_l": "l",
+    "unit_bunch": "Bund"
   },
   "suggestions": {
     "actions": {

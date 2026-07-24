@@ -13,10 +13,11 @@ import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
 import '../application/fcm_token_service.dart';
 import 'notification_priming_sheet.dart';
+import 'widgets/reminder_sound_banner.dart';
 
 /// Default reminder offsets offered in settings — a subset of the reminder
 /// sheet presets so the prefilled value always matches a selectable option.
-const _offsetChoices = [0, 60, kDefaultReminderOffset];
+const _offsetChoices = [0, 60, kMinutesPerDay];
 
 String _quietHoursRange() {
   String hh(int h) => '${h.toString().padLeft(2, '0')}:00';
@@ -108,6 +109,9 @@ class _Body extends ConsumerWidget {
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
       children: [
+        // Shown only when reminders would be silent (volume 0 / silent mode).
+        const ReminderSoundBanner(),
+
         // Types — only task reminders are live; the rest await FCM.
         SectionLabel(t.notif_settings.section_types),
         Card(
@@ -122,40 +126,56 @@ class _Body extends ConsumerWidget {
                     _save(ref, settings.copyWith(taskRemindersEnabled: v)),
               ),
               SwitchListTile(
+                secondary: const Text('🌱', style: TextStyle(fontSize: 22)),
+                title: Text(t.notif_settings.type_journal_nudge),
+                subtitle: Text(t.notif_settings.type_journal_nudge_sub),
+                value: settings.journalNudgeEnabled,
+                onChanged: (v) =>
+                    _save(ref, settings.copyWith(journalNudgeEnabled: v)),
+              ),
+              SwitchListTile(
                 secondary: const Text('🌤️', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_weather),
                 subtitle: Text(t.notif_settings.type_weather_sub),
                 value: settings.weatherHintsEnabled,
-                onChanged: (v) => v
-                    ? unawaited(
-                        _enableHints(
-                          context,
-                          ref,
-                          settings.copyWith(weatherHintsEnabled: true),
-                        ),
-                      )
-                    : _save(
-                        ref,
-                        settings.copyWith(weatherHintsEnabled: false),
-                      ),
+                // Dark until launch (kSuggestionsEnabled): the hint pushes are
+                // server-side (FCM/engine), so keep the toggle inert — enabling
+                // it would only request permission + a pointless token.
+                onChanged: kSuggestionsEnabled
+                    ? (v) => v
+                          ? unawaited(
+                              _enableHints(
+                                context,
+                                ref,
+                                settings.copyWith(weatherHintsEnabled: true),
+                              ),
+                            )
+                          : _save(
+                              ref,
+                              settings.copyWith(weatherHintsEnabled: false),
+                            )
+                    : null,
               ),
               SwitchListTile(
                 secondary: const Text('🌍', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_community),
                 subtitle: Text(t.notif_settings.type_community_sub),
                 value: settings.communityHintsEnabled,
-                onChanged: (v) => v
-                    ? unawaited(
-                        _enableHints(
-                          context,
-                          ref,
-                          settings.copyWith(communityHintsEnabled: true),
-                        ),
-                      )
-                    : _save(
-                        ref,
-                        settings.copyWith(communityHintsEnabled: false),
-                      ),
+                // Dark until launch (kSuggestionsEnabled) — see weather toggle.
+                onChanged: kSuggestionsEnabled
+                    ? (v) => v
+                          ? unawaited(
+                              _enableHints(
+                                context,
+                                ref,
+                                settings.copyWith(communityHintsEnabled: true),
+                              ),
+                            )
+                          : _save(
+                              ref,
+                              settings.copyWith(communityHintsEnabled: false),
+                            )
+                    : null,
               ),
             ],
           ),
@@ -172,6 +192,7 @@ class _Body extends ConsumerWidget {
               ),
           ],
           selected: {settings.defaultReminderOffset},
+          showSelectedIcon: false,
           onSelectionChanged: (sel) =>
               _save(ref, settings.copyWith(defaultReminderOffset: sel.first)),
           style: const ButtonStyle(visualDensity: VisualDensity.compact),

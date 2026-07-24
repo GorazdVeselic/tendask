@@ -56,3 +56,50 @@ final class SuppliesRepositoryProvider
 
 String _$suppliesRepositoryHash() =>
     r'b76528c8a676ad0474b2c6bc990a439b6b7f5c71';
+
+@ProviderFor(recipesRepository)
+final recipesRepositoryProvider = RecipesRepositoryProvider._();
+
+final class RecipesRepositoryProvider
+    extends
+        $FunctionalProvider<
+          RecipesRepository,
+          RecipesRepository,
+          RecipesRepository
+        >
+    with $Provider<RecipesRepository> {
+  RecipesRepositoryProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'recipesRepositoryProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$recipesRepositoryHash();
+
+  @$internal
+  @override
+  $ProviderElement<RecipesRepository> $createElement(
+    $ProviderPointer pointer,
+  ) => $ProviderElement(pointer);
+
+  @override
+  RecipesRepository create(Ref ref) {
+    return recipesRepository(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(RecipesRepository value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<RecipesRepository>(value),
+    );
+  }
+}
+
+String _$recipesRepositoryHash() => r'4760f1e0745eee0f1e46a4b71bf50d5fa81dbe6e';

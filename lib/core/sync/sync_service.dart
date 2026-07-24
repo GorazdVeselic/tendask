@@ -8,7 +8,9 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../auth/auth_service.dart';
 import '../auth/local_row_claim.dart';
 import '../database/database_provider.dart';
+import '../local_prefs/local_prefs.dart';
 import 'catalog_sync_service.dart';
+import 'reconcile_default_garden.dart';
 import 'sync_pull_service.dart';
 import 'sync_push_service.dart';
 
@@ -25,17 +27,20 @@ class SyncService {
     required Future<void> Function() ensureSession,
     Future<void> Function()? push,
     Future<void> Function()? pull,
+    Future<void> Function()? afterPull,
     Future<void> Function()? catalog,
   }) : _hasSession = hasSession,
        _ensureSession = ensureSession,
        _push = push,
        _pull = pull,
+       _afterPull = afterPull,
        _catalog = catalog;
 
   final bool Function() _hasSession;
   final Future<void> Function() _ensureSession;
   final Future<void> Function()? _push;
   final Future<void> Function()? _pull;
+  final Future<void> Function()? _afterPull;
   final Future<void> Function()? _catalog;
 
   bool _running = false;
@@ -57,6 +62,10 @@ class SyncService {
       if (_hasSession()) {
         await _phase('push', _push);
         await _phase('pull', _pull);
+        // After the pull so the decision reads the account's freshly-synced
+        // default-garden flag; isolated like the others (a failure just retries
+        // on the next pull, the guest garden stays local meanwhile).
+        await _phase('reconcile-garden', _afterPull);
       }
       if (includeCatalog) await _phase('catalog', _catalog);
     } finally {
@@ -77,7 +86,10 @@ class SyncService {
       if (!_hasSession()) return false;
       await push();
       return true;
-    } catch (_) {
+    } catch (e) {
+      // Not necessarily offline — a constraint/RLS reject also lands here. Log so
+      // a "logout blocked" report is diagnosable (stripped in release).
+      debugPrint('flushPush failed: $e');
       return false;
     }
   }
@@ -98,6 +110,7 @@ class SyncService {
 SyncService syncService(Ref ref) {
   final db = ref.watch(databaseProvider);
   final auth = ref.watch(authServiceProvider);
+  final prefs = ref.watch(localPrefsProvider);
   final push = ref.watch(syncPushServiceProvider);
   final pull = ref.watch(syncPullServiceProvider);
   final catalog = ref.watch(catalogSyncServiceProvider);
@@ -105,11 +118,19 @@ SyncService syncService(Ref ref) {
     hasSession: () => auth.hasSession,
     // No session for guests (local-only); only when signed in do we re-own any
     // rows created as a guest so the cloud RLS with-check accepts them on push.
+    // The pending default garden is skipped here and settled by afterPull.
     ensureSession: () async {
-      if (auth.hasSession) await claimLocalRows(db, auth.userId);
+      if (auth.hasSession) {
+        await claimLocalRows(
+          db,
+          auth.userId,
+          skipAreaId: await prefs.defaultGardenLocalId(),
+        );
+      }
     },
     push: push == null ? null : () async => push.push(),
     pull: pull == null ? null : () async => pull.pull(),
+    afterPull: () => reconcileDefaultGarden(db, prefs, auth.userId),
     catalog: catalog == null ? null : () async => catalog.pull(),
   );
 }

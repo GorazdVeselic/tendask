@@ -19,12 +19,19 @@
       "two": "$n zamujeni opravili",
       "few": "$n zamujena opravila",
       "other": "$n zamujenih opravil"
+    },
+    "upcoming_banner(n)": {
+      "one": "1 prihajajoče opravilo",
+      "two": "$n prihajajoči opravili",
+      "few": "$n prihajajoča opravila",
+      "other": "$n prihajajočih opravil"
     }
   },
   "common": {
     "today": "Danes",
     "yesterday": "včeraj",
-    "load_error": "Podatkov ni bilo mogoče naložiti."
+    "load_error": "Podatkov ni bilo mogoče naložiti.",
+    "save_error": "Shranjevanje ni uspelo."
   },
   "swipe": {
     "complete": "Opravljeno",
@@ -37,6 +44,12 @@
   "notifications": {
     "today": "Danes",
     "tomorrow": "Jutri"
+  },
+  "journal_nudge": {
+    "title_a": "Začni svoj vrtni dnevnik 🌱",
+    "body_a": "Zabeleži prvo opravilo — kaj raste pri tebi?",
+    "title_b": "Kaj se dogaja na vrtu?",
+    "body_b": "Zabeleži, kaj si ta teden počel na vrtu."
   },
   "notif_priming": {
     "title": "Naj te pravočasno opozorim?",
@@ -54,10 +67,12 @@
     "section_types": "Vrste obvestil",
     "type_reminders": "Opomniki opravil",
     "type_reminders_sub": "lokalno · delujejo brez interneta",
+    "type_journal_nudge": "Povabilo k dnevniku",
+    "type_journal_nudge_sub": "lokalno · nežno povabilo, ko utihneš",
     "type_weather": "Pametni namigi (vreme)",
-    "type_weather_sub": "»jutri suho — primeren čas«",
+    "type_weather_sub": "kmalu · prek strežnika",
     "type_community": "Namigi okolice",
-    "type_community_sub": "kaj počnejo drugi v bližini",
+    "type_community_sub": "kmalu (V2)",
     "section_default_offset": "Privzeti zamik opomnika",
     "default_offset_hint": "Predizpolni nova opravila; vedno lahko spremeniš.",
     "section_quiet": "Da te ne zasipa",
@@ -72,6 +87,11 @@
     "system_permission_on": "naprava: dovoljeno",
     "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve",
     "hints_perm_denied": "Obvestila so onemogočena, zato namigov ni mogoče vklopiti."
+  },
+  "reminder_sound": {
+    "silent_volume": "Opomniki bodo tihi — glasnost obvestil je na 0.",
+    "silent_mode": "Opomniki bodo tihi — telefon je na tihem načinu.",
+    "enable": "Vklopi zvok"
   },
   "notif_preview": {
     "title": "Videz obvestil",
@@ -109,12 +129,19 @@
     "continue_apple": "Nadaljuj z Apple",
     "continue_google": "Nadaljuj z Google",
     "continue_email": "Nadaljuj z e-pošto",
-    "guest": "Preizkusi brez računa",
+    "guest": "Nadaljuj kot gost",
     "legal": "Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.",
-    "guest_warning": "Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.",
+    "guest_warning": "Kot gost hraniš podatke samo na tej napravi. Račun lahko dodaš pozneje.",
     "google_error": "Prijava z Google ni uspela. Poskusi znova.",
     "coming_soon": "Na voljo kmalu.",
     "privacy_link": "Politika zasebnosti"
+  },
+  "account": {
+    "guest_tooltip": "Gost — tapni za prijavo",
+    "guest_title": "Tendask uporabljaš kot gost",
+    "guest_body": "Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.",
+    "sign_in_cta": "Prijava / registracija",
+    "maybe_later": "Morda kasneje"
   },
   "email_login": {
     "title": "Prijava z e-pošto",
@@ -133,7 +160,8 @@
     "err_verify": "Koda ni pravilna ali je potekla. Poskusi znova.",
     "err_email_domain": "Domene tega e-naslova ne najdemo. Preveri naslov.",
     "did_you_mean(suggestion)": "Ste mislili $suggestion?",
-    "resend_in(seconds)": "Pošlji novo kodo ($seconds s)"
+    "resend_in(seconds)": "Pošlji novo kodo ($seconds s)",
+    "skip_for_now": "Nadaljuj brez prijave"
   },
   "location": {
     "title": "Kje vrtnariš?",
@@ -220,11 +248,16 @@
     "action_delete": "Izbriši",
     "action_revert": "Na čaka",
     "action_move": "Premakni",
-    "recurrence_once": "Enkratno",
+    "action_stop_recurrence": "Ustavi ponavljanje",
+    "recurrence_none": "Ne",
+    "recurrence_daily": "Dnevno",
     "recurrence_weekly": "Tedensko",
-    "recurrence_seasonal": "Sezonsko",
+    "recurrence_every_days(n)": "Vsakih $n dni",
+    "recurrence_remaining(n)": " · še $n×",
     "none": "—",
-    "not_found": "Opravilo ni bilo najdeno."
+    "not_found": "Opravilo ni bilo najdeno.",
+    "recurrence_once": "Enkratno",
+    "recurrence_seasonal": "Sezonsko"
   },
   "tasks_list": {
     "title": "Opravila",
@@ -251,7 +284,10 @@
     "delete_confirm_title": "Izbriši opravilo?",
     "delete_confirm_body": "To dejanje je nepopravljivo.",
     "delete_yes": "Izbriši",
-    "delete_cancel": "Prekliči"
+    "delete_cancel": "Prekliči",
+    "recurring_badge_tooltip": "Ponavljajoče opravilo",
+    "completed_recurring_toast(date)": "↻ Ponovljeno · naslednje $date",
+    "revert_blocked_recurring": "Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši."
   },
   "subject_picker": {
     "title": "Rastlina ali območje",
@@ -274,6 +310,7 @@
     "subject_title": "Za kaj?",
     "subject_search_hint": "Išči rastlino…",
     "subject_plants": "Rastline",
+    "subject_less_likely": "Manj verjetno za to opravilo",
     "subject_add_plant": "Dodaj rastlino",
     "subject_add_area": "Dodaj območje",
     "subject_from_catalog": "Dodaj iz kataloga",
@@ -291,6 +328,18 @@
     "when_status_waiting": "Čaka",
     "when_status_done": "Opravljeno",
     "when_status_note": "Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.",
+    "recurrence_label": "Ponavljanje",
+    "recurrence_off": "Brez",
+    "recurrence_daily": "Dnevno",
+    "recurrence_weekly": "Tedensko",
+    "recurrence_custom": "Po meri",
+    "recurrence_interval_label": "Vsakih",
+    "recurrence_days_unit": "dni",
+    "recurrence_repeat_count": "Ponovi določeno število krat",
+    "recurrence_times_unit": "krat",
+    "recurrence_repeat_count_hint": "Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje).",
+    "recurrence_invalid_number": "Vnesi število",
+    "recurrence_next_preview(date)": "Naslednje: $date",
     "reminder_title": "Opomnik",
     "optional": "(neobvezno)",
     "reminder_why": "Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.",
@@ -326,11 +375,14 @@
     "rem_at(t)": "ob $t",
     "rem_choose_time": "Ob uri",
     "rem_time_note": "Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).",
+    "rem_default_hint": "Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.",
+    "rem_saved_notif_off": "Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.",
     "rem_perm_denied": "Obvestila so onemogočena, zato opomnika ni mogoče dodati.",
     "rem_exact_title": "Dovoli točne opomnike",
     "rem_exact_body": "Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.",
     "rem_exact_open": "Odpri nastavitve",
-    "rem_added": "že dodano"
+    "rem_added": "že dodano",
+    "supplies_use_recipe": "Uporabi recept"
   },
   "plant_edit": {
     "title_edit": "Uredi rastlino",
@@ -362,8 +414,17 @@
   "areas": {
     "title": "Vrt",
     "subtitle": "rastline in trate",
+    "seg_areas": "Območja",
+    "fab_plant": "Rastlina",
     "unassigned": "Brez območja",
     "last_prefix": "zadnje:",
+    "no_plants": "Brez rastlin",
+    "plant_count(n)": {
+      "one": "1 rastlina",
+      "two": "$n rastlini",
+      "few": "$n rastline",
+      "other": "$n rastlin"
+    },
     "type_garden": "Vrt",
     "type_lawn": "Trata",
     "type_hedge": "Živa meja",
@@ -411,6 +472,7 @@
     "custom_private": "Lasten vnos je zaseben in se ne deli s skupnostjo.",
     "add_title": "Dodaj rastline",
     "frequent": "Pogosto",
+    "less_likely": "Manj verjetno za to območje",
     "undo": "Razveljavi",
     "done": "Končano",
     "add_to_label": "Kam dodajam",
@@ -419,9 +481,9 @@
     "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."
   },
   "supplies": {
-    "title": "Zaloge",
+    "title": "Sredstva",
     "subtitle": "kaj imam doma",
-    "empty": "Ni zalog. Dodaj jih z +.",
+    "empty": "Ni sredstev. Dodaj jih z +.",
     "low": "malo",
     "qty(q, unit)": "~$q$unit",
     "form_new": "Novo sredstvo",
@@ -435,7 +497,18 @@
     "add_to_task": "Dodaj sredstvo",
     "pick_new": "Novo sredstvo",
     "amount": "Porabljena količina",
-    "add_confirm": "Dodaj"
+    "add_confirm": "Dodaj",
+    "form_delete": "Izbriši sredstvo",
+    "delete_note": "Sredstvo bo odstranjeno s tvojega seznama.",
+    "form_category": "Kategorija",
+    "cat_fertilizer": "Gnojila",
+    "cat_treatment": "Škropiva",
+    "cat_equipment": "Oprema",
+    "cat_other": "Drugo",
+    "seg_supplies": "Sredstva",
+    "seg_recipes": "Recepti",
+    "fab_new": "Sredstvo",
+    "search": "Išči sredstva"
   },
   "settings": {
     "title": "Nastavitve",
@@ -445,20 +518,20 @@
     "section_location": "Lokacija",
     "location_placeholder": "Lokacija za vreme",
     "section_language": "Jezik",
+    "section_appearance": "Videz",
+    "appearance_placeholder": "Tema in barve",
+    "theme_system": "Sistemsko",
+    "theme_light": "Svetlo",
+    "theme_dark": "Temno",
     "section_notifications": "Obvestila",
     "notifications_placeholder": "Obvestila in opomniki",
-    "section_suggestions": "Predlogi",
-    "suggestions_history_sub": "Kaj je bilo predlagano in kako si se odzval",
-    "section_garden": "Vrt",
-    "supplies": "📦 Zaloge & sredstva",
-    "supplies_sub": "urea, alge, gnojila, oprema",
     "section_account": "Račun & podatki",
     "export_data": "Izvozi podatke (GDPR)",
     "logout": "Odjava",
     "logout_confirm_title": "Odjava?",
     "logout_confirm_body": "Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.",
     "logout_cancel": "Prekliči",
-    "logout_offline": "Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.",
+    "logout_offline": "Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.",
     "export_share_text": "Tendask izvoz podatkov",
     "export_error": "Izvoz ni uspel. Poskusi znova.",
     "delete_account": "Izbriši račun in vse podatke",
@@ -471,7 +544,35 @@
     "delete_data_confirm_body": "Trajno izbriše vse podatke v tej napravi (opravila, območja, rastline, opombe). Tega ni mogoče razveljaviti.",
     "delete_data_confirm": "Izbriši",
     "section_about": "O aplikaciji",
-    "privacy_policy": "Politika zasebnosti"
+    "privacy_policy": "Politika zasebnosti",
+    "section_suggestions": "Predlogi",
+    "suggestions_history_sub": "Kaj je bilo predlagano in kako si se odzval",
+    "section_garden": "Vrt",
+    "supplies": "📦 Zaloge & sredstva",
+    "supplies_sub": "urea, alge, gnojila, oprema"
+  },
+  "appearance": {
+    "mode_label": "Način",
+    "mode_help": "»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.",
+    "follows_system_light": "Sledi telefonu · trenutno svetlo",
+    "follows_system_dark": "Sledi telefonu · trenutno temno",
+    "palette_label": "Barvna tema",
+    "preview_label": "Predogled",
+    "default_badge": "Privzeto",
+    "reset": "Ponastavi na privzeto",
+    "applies_immediately": "Sprememba se uveljavi takoj. Velja samo za to napravo.",
+    "palette_green": "Zelena",
+    "palette_lavender": "Sivka",
+    "palette_ocean": "Ocean",
+    "palette_clay": "Terakota",
+    "palette_berry": "Borovnica",
+    "palette_nebo": "Nebo",
+    "preview_appbar": "Domov",
+    "preview_task": "Zalivanje · Paradižnik",
+    "preview_task_sub": "danes · živa meja",
+    "preview_action": "Opravi",
+    "preview_chip": "✓ Sadno drevje",
+    "preview_swipe": "Bazilika"
   },
   "weather": {
     "cond_clear": "Jasno",
@@ -499,6 +600,42 @@
     "m_et0": "ET₀",
     "m_rain48h": "Dež 48 h",
     "m_no_rain": "brez dežja"
+  },
+  "recipes": {
+    "empty": "Še ni receptov. Shrani mešanico z +.",
+    "fab_new": "Recept",
+    "form_new": "Nov recept",
+    "form_edit": "Uredi recept",
+    "form_name": "Ime",
+    "form_equipment": "Oprema",
+    "form_equipment_hint": "npr. 16 l škropilnica",
+    "form_save": "Shrani",
+    "err_name": "Vnesi ime recepta.",
+    "form_delete": "Izbriši recept",
+    "delete_note": "Recept bo odstranjen s tvojega seznama.",
+    "items": "Sredstva",
+    "add_item": "Dodaj sredstvo",
+    "pick_title": "Izberi recept",
+    "item_removed": "Odstranjeno sredstvo"
+  },
+  "harvest": {
+    "yield_section": "Pridelek",
+    "sheet_title": "Koliko si pobral?",
+    "amount_label": "Količina",
+    "amount_hint": "npr. 2,5",
+    "unit_label": "Enota",
+    "save": "Shrani",
+    "skip": "Preskoči",
+    "remove": "Odstrani pridelek",
+    "add": "Dodaj pridelek",
+    "summary_title": "Pridelek",
+    "summary_total": "Skupaj",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "kom",
+    "unit_l": "l",
+    "unit_bunch": "šop"
   },
   "suggestions": {
     "actions": {

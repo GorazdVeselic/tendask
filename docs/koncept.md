@@ -123,7 +123,8 @@ lokalno vreme · osebni zgodovinski opomniki · opomniki/todo (kaj+kdaj+opomba) 
 prosto besedilo / opombe · beleženje zalog sredstev · ponavljajoči opomniki.
 
 ### 6.7 ❌ V1 namenoma NE vključuje (→ kasneje)
-- **Foto** (izpuščeno zaenkrat).
+- **Foto / nalaganje slik** — **dokončno izven obsega** (odločeno 2026-07-22, tester T9): ne V1 ne
+  kasneje. Zahteva Supabase Storage + binarni sync + strošek/zasebnost ob skali — trči ob offline-first / €0.
 - **AI svetovalec** za odločanje ("ni nujno, izpustimo v tem koraku").
 - **Avtomatski kalkulator mešanic** — v1 le ročna opomba v polju
   (npr. "100g uree na 16l"); avtomatski izračun kasneje.
@@ -151,7 +152,6 @@ prosto besedilo / opombe · beleženje zalog sredstev · ponavljajoči opomniki.
 - **Kalkulator mešanice/odmerka** glede na opremo (npr. 16 l škropilnica).
 - **Profili opreme** (škropilnice in volumni) za personalizirane izračune.
 - **Profili sredstev** (povezano z zalogami in "katero mešanico sem uporabil lani").
-- **Foto-zgodovina** (rast, bolezni skozi čas).
 
 ### ⚠️ Tveganja (za kasneje)
 - **Točnost agronomskih nasvetov:** napačen odmerek lahko poškoduje rastline →
@@ -188,6 +188,7 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 ### Lokacija & profil
 - **Ena sama lokacija = lastnost uporabnikovega profila.** Iz nje izhajata lokalno
   vreme in (V2) **H3-celica**. Vsa območja podedujejo to lokacijo.
+  *(Gl. FR-18, če kdaj pretehtamo več lokacij/vrtov — to bi spremenilo to odločitev.)*
 - **FR-8 (2026-06-18):** ob izbiri lokacije iz trenutnih koordinat izpeljemo le
   **H3-celico (r7/r6/r5)** in koordinate **takoj zavržemo** — surovih koordinat ne
   hranimo niti na napravi. Vreme bere **centroid celice** (`cellToLatLng(profile.h3_r7)`),
@@ -214,9 +215,19 @@ greda, folija). Omogoči **vzgojo sadik** (predsetev → … → presaditev na p
 - **Shranjene mešanice (recepti)** vezane na opremo (npr. "100g urea + 50ml alge / 16l").
 - Ob shranjevanju → **odpis iz zaloge** + opozorilo "malo".
 - v1 = ročna izbira / recept + preprost odpis. Avtomatski preračun volumna → v2.
-- **Status (2026-06-08):** Sredstva/zaloge so **začasno skrite** pred MVP releasom prek konstante
-  `kSuppliesEnabled=false` (`core/config.dart`) — preskočen korak »Sredstva« v čarovniku (§7.16) in
-  skrita sekcija v Nastavitvah; koda ostane za kasnejšo vključitev (flip na `true`).
+- **Status (2026-06-30):** Sredstva/zaloge so **vključene** (`kSuppliesEnabled=true`). Zaloge so
+  grupirane po **kategoriji** (`Supply.category`: Gnojila/Tretiva/Oprema/Drugo; drift v13 + Supabase
+  `0015`). **Recepti** (shranjene mešanice + neobvezna oprema) so pod zavihkom »Recepti«
+  (wireframe `08b-recipes.html`) in jih v koraku »Sredstva« opravila izbereš → predizpolnijo
+  sredstva. Avtomatski preračun volumna ostaja v2.
+- **Umestitev (2026-07-01):** Zaloge in recepti **niso več pod Nastavitve** — živijo v zavihku
+  **Vrt** kot segmenta enega `SegmentedButton`-a `[Območja | Zaloge | Recepti]` (kot Dnevnik
+  `[Časovnica | Mesec]`), telo se zamenja v istem zaslonu. Samostojni `/supplies` zaslon je upokojen.
+  Ob `kSuppliesEnabled=false` Vrt pokaže le seznam območij (brez segmentov).
+- **Dodajanje (CTA):** en **kontekstni razširjeni FAB** doda primarno entiteto segmenta —
+  `Rastlina` / `Zaloga` / `Recept` (Vrt ima svoj FAB, ne skupni iz `main_shell`). Dodajanje
+  **območja** ostane tih sekundarni vnos na dnu seznama (velik FAB rezerviran za rastlino).
+  Urejanje/izbris: **tap vrstico** (ševron namig) → sheet z rdečim `DestructiveButton` »Izbriši«.
 
 ### Večjezičnost — ⭐ KANONIČNI ID + i18n (od dne 1)
 - Opravila in rastline shranjeni kot **kanonični ID-ji** z oznakami {sl, de, en, ...},
@@ -661,8 +672,8 @@ stepper** — en korak na zaslon, »Nadaljuj«, na koncu **pregled** s »Shrani�
 4. **Opomnik** — *pogojno: le ko Čaka* (prihodnost); Google-stil zamik (ob dogodku · X prej · po meri)
    + ura, več na opravilo. **Terminologija:** na opravilu je »**opomnik**«, ne »obvestilo«
    (obvestilo = sistemski kanal dostave, §7.12). Wireframe urejanja: `reminder-add_v3.html`.
-5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje). **⚠️ Začasno skrito
-   (2026-06-08)** prek `kSuppliesEnabled=false` — korak se preskoči in ne šteje med korake; koda ostane.
+5. **Sredstva** — *pogojno: tipi, ki jih rabijo* (gnojenje/tretiranje); izbira posameznih sredstev ali
+   celega **recepta** (predizpolni sredstva). Vključeno (`kSuppliesEnabled=true`, 2026-06-30).
 6. **Pregled** — vse izbire + opomba; Shrani / tap = Popravi
 
 **Posledice:** košnja danes = koraki 1–3 + pregled (4–5 odpadeta) → hitrost ohranjena;

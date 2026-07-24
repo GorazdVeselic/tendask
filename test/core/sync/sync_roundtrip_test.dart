@@ -153,6 +153,58 @@ void main() {
     },
   );
 
+  test('harvest yield (amount + unit) round-trips through push → pull', () async {
+    await putArea(dbA, 'a1', name: 'Greda', at: t1);
+    await dbA
+        .into(dbA.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: 't-yield',
+            userId: uid,
+            taskTypeId: 'harvest',
+            date: t1,
+            updatedAt: t1,
+            status: const Value(TaskStatus.done),
+            yieldAmount: const Value(2.5),
+            yieldUnit: const Value('kg'),
+            syncStatus: const Value(kSyncPending),
+          ),
+        );
+
+    await pushA.push();
+    await pullB.pull();
+
+    final t = await task(dbB, 't-yield');
+    expect(t, isNotNull);
+    expect(t!.yieldAmount, 2.5);
+    expect(t.yieldUnit, 'kg');
+    expect(t.syncStatus, kSyncSynced);
+  });
+
+  test('a yield with an unknown unit pulls without crashing (tolerant)', () async {
+    // A row written by a newer app version: this build doesn't know the unit.
+    cloud.store['task'] = [
+      {
+        'id': 't-x',
+        'user_id': uid,
+        'task_type_id': 'harvest',
+        'date': t1.toIso8601String(),
+        'status': 'done',
+        'updated_at': t1.toIso8601String(),
+        'deleted': false,
+        'yield_amount': 3, // int from JSON → double
+        'yield_unit': 'tonnes',
+      },
+    ];
+
+    final n = await pullB.pull();
+    expect(n, 1);
+    final t = await task(dbB, 't-x');
+    expect(t, isNotNull);
+    expect(t!.yieldAmount, 3.0);
+    expect(t.yieldUnit, 'tonnes'); // stored verbatim; display parses it leniently
+  });
+
   test(
     'LWW across two devices: a newer remote edit overwrites the older local',
     () async {

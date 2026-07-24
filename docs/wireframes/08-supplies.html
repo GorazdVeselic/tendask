@@ -17,12 +17,20 @@
   </div>
 
   <div class="content">
-    <h1 style="margin:2px 2px 4px;">Zaloge</h1>
+    <h1 style="margin:2px 2px 4px;">Vrt</h1>
     <div class="sub" style="margin:0 2px 8px;">kaj imam doma · tapni za urejanje · ＋ za novo</div>
 
-    <!-- PO-MVP: grupiranje po kategoriji (Gnojila/Oprema) rabi polje Supply.category
-         (sheme nima) → MVP je raven seznam brez sekcij. Sekcije so tu le ilustrativne. -->
-    <div class="section-title">Gnojila <span style="font-size:11px;color:var(--muted);font-weight:600;">· po-MVP (rabi shemo)</span></div>
+    <!-- 2026-07-01: Zaloge/Recepti so segmenta zavihka VRT (ne več pod Nastavitve).
+         En SegmentedButton [Območja | Zaloge | Recepti], telo se zamenja v istem
+         zaslonu (kot Dnevnik [Časovnica | Mesec]). Območja → vrt_v5.html, Recepti → 08b. -->
+    <div style="display:flex;gap:0;border:1px solid var(--line);border-radius:10px;overflow:hidden;margin:0 2px 12px;">
+      <a href="vrt_v5.html" style="flex:1;text-align:center;padding:8px;color:var(--muted);font-weight:600;font-size:13px;text-decoration:none;">Območja</a>
+      <div style="flex:1;text-align:center;padding:8px;background:var(--accent);color:#fff;font-weight:700;font-size:13px;">Zaloge</div>
+      <a href="08b-recipes.html" style="flex:1;text-align:center;padding:8px;color:var(--muted);font-weight:600;font-size:13px;text-decoration:none;">Recepti</a>
+    </div>
+
+    <!-- Grupiranje po kategoriji prek Supply.category (drift v12 + Supabase 0014). -->
+    <div class="section-title">Gnojila</div>
     <div class="card" style="padding:6px 16px;">
       <div class="list-item">
         <div class="avatar">🧪</div>
@@ -30,7 +38,7 @@
         <div class="li-trail">~3 kg</div>
       </div>
       <div class="list-item">
-        <div class="avatar">🌊</div>
+        <div class="avatar">🧪</div>
         <div class="li-main"><div class="li-title">Morske alge (ekstrakt)</div><div class="li-sub">1 l</div></div>
         <div class="li-trail">~600 ml</div>
       </div>
@@ -38,6 +46,15 @@
         <div class="avatar">🧪</div>
         <div class="li-main"><div class="li-title">NPK 12-40-12</div><div class="li-sub">vrtno gnojilo</div></div>
         <div class="li-trail">⚠️ malo</div>
+      </div>
+    </div>
+
+    <div class="section-title">Tretiva</div>
+    <div class="card" style="padding:6px 16px;">
+      <div class="list-item">
+        <div class="avatar">🧴</div>
+        <div class="li-main"><div class="li-title">Mospilan</div><div class="li-sub">insekticid</div></div>
+        <div class="li-trail">~80 g</div>
       </div>
     </div>
 
@@ -51,7 +68,7 @@
     </div>
 
     <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:14px;line-height:1.5;">
-      Zaloge se povežejo z opravili in opomniki<br>("100g uree na 16l" → odšteje iz zaloge — kasneje).
+      Sredstva se ob opravljenem opravilu odštejejo iz zaloge<br>(recept = shranjena mešanica, ki predizpolni sredstva).
     </div>
   </div>
 

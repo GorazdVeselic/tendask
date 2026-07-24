@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/notifications/notification_service.dart';
+import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import 'widgets/reminder_sound_banner.dart';
 
 /// Pre-permission priming sheet (wireframe 21). Shown the first time the user
 /// adds a reminder, before the OS permission dialog — explains why and lets them
@@ -13,6 +16,46 @@ Future<bool?> showNotificationPriming(BuildContext context) {
     isScrollControlled: true,
     builder: (_) => const _NotificationPrimingSheet(),
   );
+}
+
+/// Outcome of the reminder permission flow ([requestReminderPermissions]).
+enum ReminderPermission { granted, primingDeclined, notifDenied, exactAlarmMissing }
+
+/// Full permission flow for a reminder that must fire on time: priming (21) +
+/// notifications (Android 13+) + the exact-alarm gate (Android 14+). Returns
+/// [ReminderPermission.granted] only when both permissions are in place; the
+/// other cases tell the caller why not. On [exactAlarmMissing] it has already
+/// shown the explainer and (if confirmed) opened system settings — exact alarms
+/// are grantable only there, so the caller stops and the user re-tries after.
+///
+/// Shared by the manual "add reminder" flow and the save-time check for an
+/// auto-seeded reminder (T7), so both ask for the same permissions.
+Future<ReminderPermission> requestReminderPermissions(
+  BuildContext context,
+  NotificationService notif,
+) async {
+  if (!await notif.areNotificationsEnabled()) {
+    if (!context.mounted) return ReminderPermission.primingDeclined;
+    if (await showNotificationPriming(context) != true) {
+      return ReminderPermission.primingDeclined;
+    }
+    if (!await notif.requestPermission()) return ReminderPermission.notifDenied;
+  }
+  if (!await notif.canScheduleExactAlarms()) {
+    if (!context.mounted) return ReminderPermission.exactAlarmMissing;
+    final t = context.t;
+    final open = await showConfirmDialog(
+      context,
+      title: t.entry.rem_exact_title,
+      body: t.entry.rem_exact_body,
+      confirmLabel: t.entry.rem_exact_open,
+      cancelLabel: t.tasks_list.delete_cancel,
+      destructive: false,
+    );
+    if (open) await notif.openExactAlarmSettings();
+    return ReminderPermission.exactAlarmMissing;
+  }
+  return ReminderPermission.granted;
 }
 
 class _NotificationPrimingSheet extends StatelessWidget {
@@ -88,6 +131,8 @@ class _NotificationPrimingSheet extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 16),
+            // Shown only when reminders would be silent (volume 0 / silent mode).
+            const ReminderSoundBanner(),
             SizedBox(
               height: 48,
               child: FilledButton(

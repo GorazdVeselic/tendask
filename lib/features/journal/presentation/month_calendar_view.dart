@@ -1,5 +1,3 @@
-import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,21 +11,10 @@ import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
+import 'month_grid.dart';
+import 'widgets/day_cell.dart';
+import 'widgets/month_chrome.dart';
 import 'widgets/task_entry_tile.dart';
-
-/// Cells for the month grid: leading `null`s to align the 1st under the right
-/// weekday, then one [DateTime] per day. [firstWeekday] is 0=Sunday..6=Saturday
-/// (as in [MaterialLocalizations.firstDayOfWeekIndex]).
-List<DateTime?> monthCells(DateTime month, int firstWeekday) {
-  final first = DateTime(month.year, month.month);
-  final daysInMonth = DateTime(month.year, month.month + 1, 0).day;
-  // DateTime.weekday: Mon=1..Sun=7 → normalize to 0=Sun..6=Sat.
-  final firstCol = (first.weekday % 7 - firstWeekday + 7) % 7;
-  return [
-    for (var i = 0; i < firstCol; i++) null,
-    for (var d = 1; d <= daysInMonth; d++) DateTime(month.year, month.month, d),
-  ];
-}
 
 class MonthCalendarView extends ConsumerStatefulWidget {
   const MonthCalendarView({super.key});
@@ -46,7 +33,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     final now = DateTime.now();
     _visibleMonth = DateTime(now.year, now.month);
     // Open on today so the day list is populated immediately.
-    _selectedDay = DateTime(now.year, now.month, now.day);
+    _selectedDay = preselectedDay(_visibleMonth, now);
   }
 
   void _shift(int months) {
@@ -55,21 +42,15 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
         _visibleMonth.year,
         _visibleMonth.month + months,
       );
-      final now = DateTime.now();
-      // Preselect today when landing on the current month, else clear.
-      _selectedDay =
-          _visibleMonth.year == now.year && _visibleMonth.month == now.month
-          ? DateTime(now.year, now.month, now.day)
-          : null;
+      _selectedDay = preselectedDay(_visibleMonth, DateTime.now());
     });
   }
 
   void _addTask(DateTime day) {
-    final now = DateTime.now();
-    final dt = DateTime(day.year, day.month, day.day, now.hour, now.minute);
+    final at = combineDateAndTime(day, DateTime.now());
     context.pushNamed(
       'task-new',
-      queryParameters: {'date': dt.toIso8601String()},
+      queryParameters: {'date': at.toIso8601String()},
     );
   }
 
@@ -78,6 +59,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     final t = context.t;
     final theme = Theme.of(context);
     final ml = MaterialLocalizations.of(context);
+
     final tasks = ref.watch(allTasksProvider).asData?.value ?? const [];
     final catalog = ref.watch(taskTypesMapProvider).asData?.value ?? const {};
     final subjectLabels = subjectLabelsByTask(
@@ -87,42 +69,25 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
       plants: ref.watch(plantsMapProvider).asData?.value ?? const {},
     );
 
-    // Tasks of the selected day (oldest first), for the day list below.
-    final dayTasks = _selectedDay == null
+    final selected = _selectedDay;
+    final dayTasks = selected == null
         ? const <Task>[]
-        : (tasks
-              .where(
-                (t) =>
-                    startOfDay(t.date.toLocal()) == startOfDay(_selectedDay!),
-              )
-              .toList()
-            ..sort((a, b) => a.date.compareTo(b.date)));
-
-    // Tasks per day-of-month within the visible month.
-    final counts = <int, int>{};
-    var monthTotal = 0;
-    for (final task in tasks) {
-      final d = task.date.toLocal();
-      if (d.year == _visibleMonth.year && d.month == _visibleMonth.month) {
-        counts[d.day] = (counts[d.day] ?? 0) + 1;
-        monthTotal++;
-      }
-    }
-
+        : tasksOnDay(tasks, selected);
+    final counts = taskCountsInMonth(tasks, _visibleMonth);
     final cells = monthCells(_visibleMonth, ml.firstDayOfWeekIndex);
-    final today = startOfDay(DateTime.now());
+    final now = DateTime.now();
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
       children: [
-        _MonthNav(
+        MonthNav(
           label: ml.formatMonthYear(_visibleMonth),
           onPrev: () => _shift(-1),
           onNext: () => _shift(1),
         ),
         const SizedBox(height: 4),
         Text(
-          t.journal.month_count(n: monthTotal),
+          t.journal.month_count(n: counts.total),
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
           ),
@@ -136,7 +101,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
           ),
         ),
         const SizedBox(height: 12),
-        _WeekdayHeader(ml: ml),
+        WeekdayHeader(ml: ml),
         const SizedBox(height: 4),
         GridView.builder(
           shrinkWrap: true,
@@ -150,21 +115,19 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
           itemBuilder: (context, i) {
             final day = cells[i];
             if (day == null) return const SizedBox.shrink();
-            return _DayCell(
+            return DayCell(
               day: day,
-              count: counts[day.day] ?? 0,
-              isToday: startOfDay(day) == today,
-              selected:
-                  _selectedDay != null &&
-                  startOfDay(day) == startOfDay(_selectedDay!),
+              count: counts.byDay[day.day] ?? 0,
+              isToday: isSameDay(day, now),
+              selected: selected != null && isSameDay(day, selected),
               onTap: () => setState(() => _selectedDay = day),
             );
           },
         ),
-        if (_selectedDay != null) ...[
+        if (selected != null) ...[
           const SizedBox(height: 20),
           SectionLabel(
-            formatDmy(_selectedDay!),
+            formatDmy(selected),
             padding: const EdgeInsets.fromLTRB(4, 0, 4, 4),
           ),
           if (dayTasks.isEmpty)
@@ -188,152 +151,13 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
           Align(
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
-              onPressed: () => _addTask(_selectedDay!),
+              onPressed: () => _addTask(selected),
               icon: const Icon(Icons.add, size: 18),
               label: Text(t.journal.day_add),
             ),
           ),
         ],
       ],
-    );
-  }
-}
-
-class _MonthNav extends StatelessWidget {
-  const _MonthNav({
-    required this.label,
-    required this.onPrev,
-    required this.onNext,
-  });
-
-  final String label;
-  final VoidCallback onPrev;
-  final VoidCallback onNext;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        IconButton(
-          icon: const Icon(Icons.chevron_left),
-          color: theme.colorScheme.primary,
-          onPressed: onPrev,
-        ),
-        Text(
-          label,
-          style: theme.textTheme.titleMedium?.copyWith(
-            fontWeight: FontWeight.w700,
-          ),
-        ),
-        IconButton(
-          icon: const Icon(Icons.chevron_right),
-          color: theme.colorScheme.primary,
-          onPressed: onNext,
-        ),
-      ],
-    );
-  }
-}
-
-class _WeekdayHeader extends StatelessWidget {
-  const _WeekdayHeader({required this.ml});
-
-  final MaterialLocalizations ml;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Row(
-      children: [
-        for (var i = 0; i < 7; i++)
-          Expanded(
-            child: Center(
-              child: Text(
-                ml.narrowWeekdays[(ml.firstDayOfWeekIndex + i) % 7],
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: theme.colorScheme.onSurfaceVariant,
-                  fontWeight: FontWeight.w700,
-                ),
-              ),
-            ),
-          ),
-      ],
-    );
-  }
-}
-
-class _DayCell extends StatelessWidget {
-  const _DayCell({
-    required this.day,
-    required this.count,
-    required this.isToday,
-    required this.selected,
-    required this.onTap,
-  });
-
-  final DateTime day;
-  final int count;
-  final bool isToday;
-  final bool selected;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return InkWell(
-      borderRadius: BorderRadius.circular(10),
-      onTap: onTap,
-      child: Container(
-        decoration: BoxDecoration(
-          // Selected = honey fill (distinct from today's green); today keeps a
-          // light fill so the task dots stay visible.
-          color: selected
-              ? theme.colorScheme.secondary.withValues(alpha: 0.18)
-              : theme.colorScheme.surfaceContainerHighest,
-          borderRadius: BorderRadius.circular(10),
-          border: selected
-              ? Border.all(color: theme.colorScheme.secondary, width: 2.5)
-              : isToday
-              ? Border.all(color: theme.colorScheme.primary, width: 1.5)
-              : null,
-        ),
-        padding: const EdgeInsets.only(top: 5),
-        child: Column(
-          children: [
-            Text(
-              '${day.day}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: (isToday || selected)
-                    ? FontWeight.w700
-                    : FontWeight.w500,
-                // Today's number stays green even when the day is selected.
-                color: isToday ? theme.colorScheme.primary : null,
-              ),
-            ),
-            const SizedBox(height: 3),
-            if (count > 0)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var i = 0; i < math.min(count, 3); i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1),
-                      child: Container(
-                        width: 5,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          shape: BoxShape.circle,
-                        ),
-                      ),
-                    ),
-                ],
-              ),
-          ],
-        ),
-      ),
     );
   }
 }

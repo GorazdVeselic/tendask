@@ -6,7 +6,7 @@ import 'package:tendask/core/database/app_database.dart';
 // The real on-disk upgrade is verified on-device (a drift schema-verifier
 // harness isn't set up here). These lock down the parts a unit test can reach:
 // the version is bumped, device_location is gone (FR-8, v9), and the smart-engine
-// tables are present (M11, v10/v11) in the current schema.
+// tables are present (M11, v14/v15) in the current schema.
 void main() {
   late AppDatabase db;
 
@@ -23,8 +23,20 @@ void main() {
     return rows.isNotEmpty;
   }
 
-  test('schema version is 11', () {
-    expect(db.schemaVersion, 11);
+  Future<bool> columnExists(String table, String column) async {
+    final rows = await db
+        .customSelect('PRAGMA table_info($table)')
+        .get();
+    return rows.any((r) => r.data['name'] == column);
+  }
+
+  test('schema version is 15', () {
+    expect(db.schemaVersion, 15);
+  });
+
+  test('v12: task carries the harvest yield columns (T11)', () async {
+    expect(await columnExists('task', 'yield_amount'), isTrue);
+    expect(await columnExists('task', 'yield_unit'), isTrue);
   });
 
   test('current schema has no device_location, keeps the user + engine tables',
@@ -33,10 +45,28 @@ void main() {
     expect(await tableExists('profile'), isTrue);
     expect(await tableExists('area'), isTrue);
     expect(await tableExists('task'), isTrue);
-    // Smart-engine tables grafted in by the merge (M11, v10/v11).
+    // Smart-engine tables grafted in by the merge (M11, v14/v15).
     expect(await tableExists('suggestion'), isTrue);
     expect(await tableExists('suggestion_log'), isTrue);
     expect(await tableExists('plant_task_rule'), isTrue);
+  });
+
+  test('v10: profile carries the per-account default_garden_seeded flag', () async {
+    expect(await columnExists('profile', 'default_garden_seeded'), isTrue);
+  });
+
+  test('v13: supply.category exists and defaults to other', () async {
+    expect(await columnExists('supply', 'category'), isTrue);
+    // A row inserted without a category takes the column default — the same
+    // default that backfills existing rows on the v12→v13 ALTER.
+    await db.customStatement(
+      "INSERT INTO supply (id, user_id, name, updated_at) "
+      "VALUES ('s1', 'u1', 'Urea', 0)",
+    );
+    final rows = await db
+        .customSelect("SELECT category FROM supply WHERE id='s1'")
+        .get();
+    expect(rows.single.data['category'], 'other');
   });
 
   test('dropping device_location is idempotent (v9 step is safe to re-run)',

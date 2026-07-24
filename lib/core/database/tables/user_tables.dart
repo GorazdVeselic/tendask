@@ -1,6 +1,7 @@
 import 'package:drift/drift.dart';
 
 import '../../area_type.dart';
+import '../../supply_category.dart';
 import '../../sync/sync_status.dart';
 import '../../task_status.dart';
 import 'catalog_tables.dart';
@@ -29,6 +30,11 @@ class Profiles extends Table {
   // FCM push token (MVP: last device wins). Cleared on sign-out.
   TextColumn get fcmToken => text().nullable()();
   DateTimeColumn get fcmTokenUpdatedAt => dateTime().nullable()();
+  // True once this account has been given its default "garden" area (FR-9).
+  // Per-account (synced) so the one-shot survives a reinstall — a device-local
+  // flag would re-seed and push a duplicate on every fresh install + sign-in.
+  BoolColumn get defaultGardenSeeded =>
+      boolean().withDefault(const Constant(false))();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
       text().withDefault(const Constant(kSyncPending))();
@@ -99,6 +105,12 @@ class Tasks extends Table {
   TextColumn get aggContext => text().nullable()();
   // JSON recurrence rule; null = one-off
   TextColumn get recurrence => text().nullable()();
+  // Stable id shared by all instances of one recurring series; null = standalone
+  TextColumn get seriesId => text().nullable()();
+  // Harvest yield (T11): amount + unit (YieldUnit.name). Set only for harvest
+  // tasks, always both-or-neither (the repository normalizes this).
+  RealColumn get yieldAmount => real().nullable()();
+  TextColumn get yieldUnit => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();
   TextColumn get syncStatus =>
@@ -183,6 +195,9 @@ class Supplies extends Table {
   TextColumn get name => text()();
   // kg, l, piece, etc.
   TextColumn get unit => text().nullable()();
+  // fertilizer, treatment, equipment, other — groups the supplies list (08)
+  TextColumn get category =>
+      textEnum<SupplyCategory>().withDefault(const Constant('other'))();
   RealColumn get quantity => real().withDefault(const Constant(0.0))();
   // Warn when quantity drops below this; null = no threshold
   RealColumn get lowThreshold => real().nullable()();
@@ -204,7 +219,7 @@ class Recipes extends Table {
   TextColumn get name => text()();
   // Equipment the recipe is calibrated for (e.g. "16L sprayer")
   TextColumn get equipment => text().nullable()();
-  // JSON: [{supply_id, amount, unit}]
+  // JSON: [{supply_id, amount}] — unit is derived from the supply, not stored
   TextColumn get items => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   BoolColumn get deleted => boolean().withDefault(const Constant(false))();

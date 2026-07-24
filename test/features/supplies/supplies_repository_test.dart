@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/supply_category.dart';
 import 'package:tendask/features/supplies/data/supplies_repository.dart';
 import 'package:tendask/features/supplies/data/supply_spec.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
@@ -66,6 +67,24 @@ void main() {
     expect(s!.name, 'Urea');
     expect(s.unit, 'kg');
     expect(s.quantity, 5);
+    expect(s.category, SupplyCategory.other); // unspecified → default
+  });
+
+  test('create + update round-trips category', () async {
+    final id = await supplies.create(
+      userId: userId,
+      name: 'Mospilan',
+      category: SupplyCategory.treatment,
+    );
+    expect((await supplies.byId(id))!.category, SupplyCategory.treatment);
+
+    await supplies.update(
+      id: id,
+      name: 'Mospilan',
+      category: SupplyCategory.equipment,
+      quantity: 1,
+    );
+    expect((await supplies.byId(id))!.category, SupplyCategory.equipment);
   });
 
   test('syncForTask isDone=false records but does not deduct', () async {
@@ -115,6 +134,22 @@ void main() {
     expect(await qty(ureaId), 5);
   });
 
+  test('syncForTask with empty specs returns booked stock (type→non-consuming)',
+      () async {
+    await supplies.syncForTask(
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 2)],
+      isDone: true,
+    );
+    expect(await qty(ureaId), 3);
+
+    // The entry save path passes empty specs when the final type no longer
+    // consumes supplies — this must return the previously booked stock.
+    await supplies.syncForTask(taskId: taskId, specs: const [], isDone: true);
+    expect(await qty(ureaId), 5);
+    expect(await supplies.suppliesForTask(taskId), isEmpty);
+  });
+
   test('softDelete returns booked stock', () async {
     await supplies.syncForTask(
       taskId: taskId,
@@ -124,6 +159,21 @@ void main() {
     expect(await qty(ureaId), 3);
 
     await tasks.softDelete(taskId);
+    expect(await qty(ureaId), 5);
+  });
+
+  test('over-consumption goes negative and revert restores exactly', () async {
+    // Stock is approximate (logging reality, not enforcing inventory): consuming
+    // more than on hand drives quantity negative on purpose. Clamping at 0 would
+    // break revert symmetry, so the repository keeps the exact signed value.
+    await supplies.syncForTask(
+      taskId: taskId,
+      specs: [SupplySpec(supplyId: ureaId, amount: 8)], // only 5 in stock
+      isDone: true,
+    );
+    expect(await qty(ureaId), -3);
+
+    await tasks.revertToWaiting(taskId);
     expect(await qty(ureaId), 5);
   });
 

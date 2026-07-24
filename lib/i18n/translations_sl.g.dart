@@ -45,11 +45,14 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$sl common = _Translations$common$sl._(_root);
 	@override late final _Translations$swipe$sl swipe = _Translations$swipe$sl._(_root);
 	@override late final _Translations$notifications$sl notifications = _Translations$notifications$sl._(_root);
+	@override late final _Translations$journal_nudge$sl journal_nudge = _Translations$journal_nudge$sl._(_root);
 	@override late final _Translations$notif_priming$sl notif_priming = _Translations$notif_priming$sl._(_root);
 	@override late final _Translations$notif_settings$sl notif_settings = _Translations$notif_settings$sl._(_root);
+	@override late final _Translations$reminder_sound$sl reminder_sound = _Translations$reminder_sound$sl._(_root);
 	@override late final _Translations$notif_preview$sl notif_preview = _Translations$notif_preview$sl._(_root);
 	@override late final _Translations$onboarding$sl onboarding = _Translations$onboarding$sl._(_root);
 	@override late final _Translations$auth$sl auth = _Translations$auth$sl._(_root);
+	@override late final _Translations$account$sl account = _Translations$account$sl._(_root);
 	@override late final _Translations$email_login$sl email_login = _Translations$email_login$sl._(_root);
 	@override late final _Translations$location$sl location = _Translations$location$sl._(_root);
 	@override late final _Translations$journal$sl journal = _Translations$journal$sl._(_root);
@@ -65,7 +68,10 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plants$sl plants = _Translations$plants$sl._(_root);
 	@override late final _Translations$supplies$sl supplies = _Translations$supplies$sl._(_root);
 	@override late final _Translations$settings$sl settings = _Translations$settings$sl._(_root);
+	@override late final _Translations$appearance$sl appearance = _Translations$appearance$sl._(_root);
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
+	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
+	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
 	@override late final _Translations$suggestions$sl suggestions = _Translations$suggestions$sl._(_root);
 }
 
@@ -110,6 +116,12 @@ class _Translations$home$sl extends Translations$home$en {
 		few: '${n} zamujena opravila',
 		other: '${n} zamujenih opravil',
 	);
+	@override String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '1 prihajajoče opravilo',
+		two: '${n} prihajajoči opravili',
+		few: '${n} prihajajoča opravila',
+		other: '${n} prihajajočih opravil',
+	);
 }
 
 // Path: common
@@ -122,6 +134,7 @@ class _Translations$common$sl extends Translations$common$en {
 	@override String get today => 'Danes';
 	@override String get yesterday => 'včeraj';
 	@override String get load_error => 'Podatkov ni bilo mogoče naložiti.';
+	@override String get save_error => 'Shranjevanje ni uspelo.';
 }
 
 // Path: swipe
@@ -148,6 +161,19 @@ class _Translations$notifications$sl extends Translations$notifications$en {
 	// Translations
 	@override String get today => 'Danes';
 	@override String get tomorrow => 'Jutri';
+}
+
+// Path: journal_nudge
+class _Translations$journal_nudge$sl extends Translations$journal_nudge$en {
+	_Translations$journal_nudge$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_a => 'Začni svoj vrtni dnevnik 🌱';
+	@override String get body_a => 'Zabeleži prvo opravilo — kaj raste pri tebi?';
+	@override String get title_b => 'Kaj se dogaja na vrtu?';
+	@override String get body_b => 'Zabeleži, kaj si ta teden počel na vrtu.';
 }
 
 // Path: notif_priming
@@ -179,10 +205,12 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get section_types => 'Vrste obvestil';
 	@override String get type_reminders => 'Opomniki opravil';
 	@override String get type_reminders_sub => 'lokalno · delujejo brez interneta';
+	@override String get type_journal_nudge => 'Povabilo k dnevniku';
+	@override String get type_journal_nudge_sub => 'lokalno · nežno povabilo, ko utihneš';
 	@override String get type_weather => 'Pametni namigi (vreme)';
-	@override String get type_weather_sub => '»jutri suho — primeren čas«';
+	@override String get type_weather_sub => 'kmalu · prek strežnika';
 	@override String get type_community => 'Namigi okolice';
-	@override String get type_community_sub => 'kaj počnejo drugi v bližini';
+	@override String get type_community_sub => 'kmalu (V2)';
 	@override String get section_default_offset => 'Privzeti zamik opomnika';
 	@override String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
 	@override String get section_quiet => 'Da te ne zasipa';
@@ -197,6 +225,18 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get system_permission_on => 'naprava: dovoljeno';
 	@override String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
 	@override String get hints_perm_denied => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.';
+}
+
+// Path: reminder_sound
+class _Translations$reminder_sound$sl extends Translations$reminder_sound$en {
+	_Translations$reminder_sound$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get silent_volume => 'Opomniki bodo tihi — glasnost obvestil je na 0.';
+	@override String get silent_mode => 'Opomniki bodo tihi — telefon je na tihem načinu.';
+	@override String get enable => 'Vklopi zvok';
 }
 
 // Path: notif_preview
@@ -255,12 +295,26 @@ class _Translations$auth$sl extends Translations$auth$en {
 	@override String get continue_apple => 'Nadaljuj z Apple';
 	@override String get continue_google => 'Nadaljuj z Google';
 	@override String get continue_email => 'Nadaljuj z e-pošto';
-	@override String get guest => 'Preizkusi brez računa';
+	@override String get guest => 'Nadaljuj kot gost';
 	@override String get legal => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.';
-	@override String get guest_warning => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.';
+	@override String get guest_warning => 'Kot gost hraniš podatke samo na tej napravi. Račun lahko dodaš pozneje.';
 	@override String get google_error => 'Prijava z Google ni uspela. Poskusi znova.';
 	@override String get coming_soon => 'Na voljo kmalu.';
 	@override String get privacy_link => 'Politika zasebnosti';
+}
+
+// Path: account
+class _Translations$account$sl extends Translations$account$en {
+	_Translations$account$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get guest_tooltip => 'Gost — tapni za prijavo';
+	@override String get guest_title => 'Tendask uporabljaš kot gost';
+	@override String get guest_body => 'Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.';
+	@override String get sign_in_cta => 'Prijava / registracija';
+	@override String get maybe_later => 'Morda kasneje';
 }
 
 // Path: email_login
@@ -287,6 +341,7 @@ class _Translations$email_login$sl extends Translations$email_login$en {
 	@override String get err_email_domain => 'Domene tega e-naslova ne najdemo. Preveri naslov.';
 	@override String did_you_mean({required Object suggestion}) => 'Ste mislili ${suggestion}?';
 	@override String resend_in({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)';
+	@override String get skip_for_now => 'Nadaljuj brez prijave';
 }
 
 // Path: location
@@ -401,11 +456,16 @@ class _Translations$task_detail$sl extends Translations$task_detail$en {
 	@override String get action_delete => 'Izbriši';
 	@override String get action_revert => 'Na čaka';
 	@override String get action_move => 'Premakni';
-	@override String get recurrence_once => 'Enkratno';
+	@override String get action_stop_recurrence => 'Ustavi ponavljanje';
+	@override String get recurrence_none => 'Ne';
+	@override String get recurrence_daily => 'Dnevno';
 	@override String get recurrence_weekly => 'Tedensko';
-	@override String get recurrence_seasonal => 'Sezonsko';
+	@override String recurrence_every_days({required Object n}) => 'Vsakih ${n} dni';
+	@override String recurrence_remaining({required Object n}) => ' · še ${n}×';
 	@override String get none => '—';
 	@override String get not_found => 'Opravilo ni bilo najdeno.';
+	@override String get recurrence_once => 'Enkratno';
+	@override String get recurrence_seasonal => 'Sezonsko';
 }
 
 // Path: tasks_list
@@ -440,6 +500,9 @@ class _Translations$tasks_list$sl extends Translations$tasks_list$en {
 	@override String get delete_confirm_body => 'To dejanje je nepopravljivo.';
 	@override String get delete_yes => 'Izbriši';
 	@override String get delete_cancel => 'Prekliči';
+	@override String get recurring_badge_tooltip => 'Ponavljajoče opravilo';
+	@override String completed_recurring_toast({required Object date}) => '↻ Ponovljeno · naslednje ${date}';
+	@override String get revert_blocked_recurring => 'Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši.';
 }
 
 // Path: subject_picker
@@ -476,6 +539,7 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get subject_title => 'Za kaj?';
 	@override String get subject_search_hint => 'Išči rastlino…';
 	@override String get subject_plants => 'Rastline';
+	@override String get subject_less_likely => 'Manj verjetno za to opravilo';
 	@override String get subject_add_plant => 'Dodaj rastlino';
 	@override String get subject_add_area => 'Dodaj območje';
 	@override String get subject_from_catalog => 'Dodaj iz kataloga';
@@ -493,6 +557,18 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get when_status_waiting => 'Čaka';
 	@override String get when_status_done => 'Opravljeno';
 	@override String get when_status_note => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.';
+	@override String get recurrence_label => 'Ponavljanje';
+	@override String get recurrence_off => 'Brez';
+	@override String get recurrence_daily => 'Dnevno';
+	@override String get recurrence_weekly => 'Tedensko';
+	@override String get recurrence_custom => 'Po meri';
+	@override String get recurrence_interval_label => 'Vsakih';
+	@override String get recurrence_days_unit => 'dni';
+	@override String get recurrence_repeat_count => 'Ponovi določeno število krat';
+	@override String get recurrence_times_unit => 'krat';
+	@override String get recurrence_repeat_count_hint => 'Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje).';
+	@override String get recurrence_invalid_number => 'Vnesi število';
+	@override String recurrence_next_preview({required Object date}) => 'Naslednje: ${date}';
 	@override String get reminder_title => 'Opomnik';
 	@override String get optional => '(neobvezno)';
 	@override String get reminder_why => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.';
@@ -528,11 +604,14 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'ob ${t}';
 	@override String get rem_choose_time => 'Ob uri';
 	@override String get rem_time_note => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).';
+	@override String get rem_default_hint => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.';
+	@override String get rem_saved_notif_off => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.';
 	@override String get rem_perm_denied => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.';
 	@override String get rem_exact_title => 'Dovoli točne opomnike';
 	@override String get rem_exact_body => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.';
 	@override String get rem_exact_open => 'Odpri nastavitve';
 	@override String get rem_added => 'že dodano';
+	@override String get supplies_use_recipe => 'Uporabi recept';
 }
 
 // Path: plant_edit
@@ -592,8 +671,17 @@ class _Translations$areas$sl extends Translations$areas$en {
 	// Translations
 	@override String get title => 'Vrt';
 	@override String get subtitle => 'rastline in trate';
+	@override String get seg_areas => 'Območja';
+	@override String get fab_plant => 'Rastlina';
 	@override String get unassigned => 'Brez območja';
 	@override String get last_prefix => 'zadnje:';
+	@override String get no_plants => 'Brez rastlin';
+	@override String plant_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '1 rastlina',
+		two: '${n} rastlini',
+		few: '${n} rastline',
+		other: '${n} rastlin',
+	);
 	@override String get type_garden => 'Vrt';
 	@override String get type_lawn => 'Trata';
 	@override String get type_hedge => 'Živa meja';
@@ -648,6 +736,7 @@ class _Translations$plants$sl extends Translations$plants$en {
 	@override String get custom_private => 'Lasten vnos je zaseben in se ne deli s skupnostjo.';
 	@override String get add_title => 'Dodaj rastline';
 	@override String get frequent => 'Pogosto';
+	@override String get less_likely => 'Manj verjetno za to območje';
 	@override String get undo => 'Razveljavi';
 	@override String get done => 'Končano';
 	@override String get add_to_label => 'Kam dodajam';
@@ -663,9 +752,9 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Zaloge';
+	@override String get title => 'Sredstva';
 	@override String get subtitle => 'kaj imam doma';
-	@override String get empty => 'Ni zalog. Dodaj jih z +.';
+	@override String get empty => 'Ni sredstev. Dodaj jih z +.';
 	@override String get low => 'malo';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
 	@override String get form_new => 'Novo sredstvo';
@@ -680,6 +769,17 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	@override String get pick_new => 'Novo sredstvo';
 	@override String get amount => 'Porabljena količina';
 	@override String get add_confirm => 'Dodaj';
+	@override String get form_delete => 'Izbriši sredstvo';
+	@override String get delete_note => 'Sredstvo bo odstranjeno s tvojega seznama.';
+	@override String get form_category => 'Kategorija';
+	@override String get cat_fertilizer => 'Gnojila';
+	@override String get cat_treatment => 'Škropiva';
+	@override String get cat_equipment => 'Oprema';
+	@override String get cat_other => 'Drugo';
+	@override String get seg_supplies => 'Sredstva';
+	@override String get seg_recipes => 'Recepti';
+	@override String get fab_new => 'Sredstvo';
+	@override String get search => 'Išči sredstva';
 }
 
 // Path: settings
@@ -696,20 +796,20 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get section_location => 'Lokacija';
 	@override String get location_placeholder => 'Lokacija za vreme';
 	@override String get section_language => 'Jezik';
+	@override String get section_appearance => 'Videz';
+	@override String get appearance_placeholder => 'Tema in barve';
+	@override String get theme_system => 'Sistemsko';
+	@override String get theme_light => 'Svetlo';
+	@override String get theme_dark => 'Temno';
 	@override String get section_notifications => 'Obvestila';
 	@override String get notifications_placeholder => 'Obvestila in opomniki';
-	@override String get section_suggestions => 'Predlogi';
-	@override String get suggestions_history_sub => 'Kaj je bilo predlagano in kako si se odzval';
-	@override String get section_garden => 'Vrt';
-	@override String get supplies => '📦 Zaloge & sredstva';
-	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
 	@override String get section_account => 'Račun & podatki';
 	@override String get export_data => 'Izvozi podatke (GDPR)';
 	@override String get logout => 'Odjava';
 	@override String get logout_confirm_title => 'Odjava?';
 	@override String get logout_confirm_body => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.';
 	@override String get logout_cancel => 'Prekliči';
-	@override String get logout_offline => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.';
+	@override String get logout_offline => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.';
 	@override String get export_share_text => 'Tendask izvoz podatkov';
 	@override String get export_error => 'Izvoz ni uspel. Poskusi znova.';
 	@override String get delete_account => 'Izbriši račun in vse podatke';
@@ -723,6 +823,41 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get delete_data_confirm => 'Izbriši';
 	@override String get section_about => 'O aplikaciji';
 	@override String get privacy_policy => 'Politika zasebnosti';
+	@override String get section_suggestions => 'Predlogi';
+	@override String get suggestions_history_sub => 'Kaj je bilo predlagano in kako si se odzval';
+	@override String get section_garden => 'Vrt';
+	@override String get supplies => '📦 Zaloge & sredstva';
+	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
+}
+
+// Path: appearance
+class _Translations$appearance$sl extends Translations$appearance$en {
+	_Translations$appearance$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get mode_label => 'Način';
+	@override String get mode_help => '»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.';
+	@override String get follows_system_light => 'Sledi telefonu · trenutno svetlo';
+	@override String get follows_system_dark => 'Sledi telefonu · trenutno temno';
+	@override String get palette_label => 'Barvna tema';
+	@override String get preview_label => 'Predogled';
+	@override String get default_badge => 'Privzeto';
+	@override String get reset => 'Ponastavi na privzeto';
+	@override String get applies_immediately => 'Sprememba se uveljavi takoj. Velja samo za to napravo.';
+	@override String get palette_green => 'Zelena';
+	@override String get palette_lavender => 'Sivka';
+	@override String get palette_ocean => 'Ocean';
+	@override String get palette_clay => 'Terakota';
+	@override String get palette_berry => 'Borovnica';
+	@override String get palette_nebo => 'Nebo';
+	@override String get preview_appbar => 'Domov';
+	@override String get preview_task => 'Zalivanje · Paradižnik';
+	@override String get preview_task_sub => 'danes · živa meja';
+	@override String get preview_action => 'Opravi';
+	@override String get preview_chip => '✓ Sadno drevje';
+	@override String get preview_swipe => 'Bazilika';
 }
 
 // Path: weather
@@ -757,6 +892,56 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get m_et0 => 'ET₀';
 	@override String get m_rain48h => 'Dež 48 h';
 	@override String get m_no_rain => 'brez dežja';
+}
+
+// Path: recipes
+class _Translations$recipes$sl extends Translations$recipes$en {
+	_Translations$recipes$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get empty => 'Še ni receptov. Shrani mešanico z +.';
+	@override String get fab_new => 'Recept';
+	@override String get form_new => 'Nov recept';
+	@override String get form_edit => 'Uredi recept';
+	@override String get form_name => 'Ime';
+	@override String get form_equipment => 'Oprema';
+	@override String get form_equipment_hint => 'npr. 16 l škropilnica';
+	@override String get form_save => 'Shrani';
+	@override String get err_name => 'Vnesi ime recepta.';
+	@override String get form_delete => 'Izbriši recept';
+	@override String get delete_note => 'Recept bo odstranjen s tvojega seznama.';
+	@override String get items => 'Sredstva';
+	@override String get add_item => 'Dodaj sredstvo';
+	@override String get pick_title => 'Izberi recept';
+	@override String get item_removed => 'Odstranjeno sredstvo';
+}
+
+// Path: harvest
+class _Translations$harvest$sl extends Translations$harvest$en {
+	_Translations$harvest$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Pridelek';
+	@override String get sheet_title => 'Koliko si pobral?';
+	@override String get amount_label => 'Količina';
+	@override String get amount_hint => 'npr. 2,5';
+	@override String get unit_label => 'Enota';
+	@override String get save => 'Shrani';
+	@override String get skip => 'Preskoči';
+	@override String get remove => 'Odstrani pridelek';
+	@override String get add => 'Dodaj pridelek';
+	@override String get summary_title => 'Pridelek';
+	@override String get summary_total => 'Skupaj';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'kom';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'šop';
 }
 
 // Path: suggestions
@@ -1863,9 +2048,11 @@ extension on TranslationsSl {
 			'home.no_tasks_today' => 'Danes ni načrtovanih opravil.',
 			'home.no_recent' => 'Še ni opravljenih opravil.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 zamujeno opravilo', two: '${n} zamujeni opravili', few: '${n} zamujena opravila', other: '${n} zamujenih opravil', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 prihajajoče opravilo', two: '${n} prihajajoči opravili', few: '${n} prihajajoča opravila', other: '${n} prihajajočih opravil', ), 
 			'common.today' => 'Danes',
 			'common.yesterday' => 'včeraj',
 			'common.load_error' => 'Podatkov ni bilo mogoče naložiti.',
+			'common.save_error' => 'Shranjevanje ni uspelo.',
 			'swipe.complete' => 'Opravljeno',
 			'swipe.postpone' => '+1 dan',
 			'swipe.revert' => 'Povrni',
@@ -1874,6 +2061,10 @@ extension on TranslationsSl {
 			'swipe.delete' => 'Izbriši',
 			'notifications.today' => 'Danes',
 			'notifications.tomorrow' => 'Jutri',
+			'journal_nudge.title_a' => 'Začni svoj vrtni dnevnik 🌱',
+			'journal_nudge.body_a' => 'Zabeleži prvo opravilo — kaj raste pri tebi?',
+			'journal_nudge.title_b' => 'Kaj se dogaja na vrtu?',
+			'journal_nudge.body_b' => 'Zabeleži, kaj si ta teden počel na vrtu.',
 			'notif_priming.title' => 'Naj te pravočasno opozorim?',
 			'notif_priming.why' => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.',
 			'notif_priming.benefit_reminders' => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.',
@@ -1887,10 +2078,12 @@ extension on TranslationsSl {
 			'notif_settings.section_types' => 'Vrste obvestil',
 			'notif_settings.type_reminders' => 'Opomniki opravil',
 			'notif_settings.type_reminders_sub' => 'lokalno · delujejo brez interneta',
+			'notif_settings.type_journal_nudge' => 'Povabilo k dnevniku',
+			'notif_settings.type_journal_nudge_sub' => 'lokalno · nežno povabilo, ko utihneš',
 			'notif_settings.type_weather' => 'Pametni namigi (vreme)',
-			'notif_settings.type_weather_sub' => '»jutri suho — primeren čas«',
+			'notif_settings.type_weather_sub' => 'kmalu · prek strežnika',
 			'notif_settings.type_community' => 'Namigi okolice',
-			'notif_settings.type_community_sub' => 'kaj počnejo drugi v bližini',
+			'notif_settings.type_community_sub' => 'kmalu (V2)',
 			'notif_settings.section_default_offset' => 'Privzeti zamik opomnika',
 			'notif_settings.default_offset_hint' => 'Predizpolni nova opravila; vedno lahko spremeniš.',
 			'notif_settings.section_quiet' => 'Da te ne zasipa',
@@ -1905,6 +2098,9 @@ extension on TranslationsSl {
 			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
 			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
 			'notif_settings.hints_perm_denied' => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.',
+			'reminder_sound.silent_volume' => 'Opomniki bodo tihi — glasnost obvestil je na 0.',
+			'reminder_sound.silent_mode' => 'Opomniki bodo tihi — telefon je na tihem načinu.',
+			'reminder_sound.enable' => 'Vklopi zvok',
 			'notif_preview.title' => 'Videz obvestil',
 			'notif_preview.date' => 'torek, 1. junij',
 			'notif_preview.rem_now' => 'zdaj',
@@ -1936,12 +2132,17 @@ extension on TranslationsSl {
 			'auth.continue_apple' => 'Nadaljuj z Apple',
 			'auth.continue_google' => 'Nadaljuj z Google',
 			'auth.continue_email' => 'Nadaljuj z e-pošto',
-			'auth.guest' => 'Preizkusi brez računa',
+			'auth.guest' => 'Nadaljuj kot gost',
 			'auth.legal' => 'Z e-pošto pošljemo potrditveno kodo (brez gesla). Nadaljevanje pomeni strinjanje s pogoji in zasebnostjo.',
-			'auth.guest_warning' => 'Brez računa se ob odstranitvi aplikacije ali menjavi naprave vsi podatki izgubijo.',
+			'auth.guest_warning' => 'Kot gost hraniš podatke samo na tej napravi. Račun lahko dodaš pozneje.',
 			'auth.google_error' => 'Prijava z Google ni uspela. Poskusi znova.',
 			'auth.coming_soon' => 'Na voljo kmalu.',
 			'auth.privacy_link' => 'Politika zasebnosti',
+			'account.guest_tooltip' => 'Gost — tapni za prijavo',
+			'account.guest_title' => 'Tendask uporabljaš kot gost',
+			'account.guest_body' => 'Tvoj vrt je shranjen samo na tej napravi. Prijava ga varno shrani v oblak in sinhronizira med napravami — trenutni podatki ostanejo.',
+			'account.sign_in_cta' => 'Prijava / registracija',
+			'account.maybe_later' => 'Morda kasneje',
 			'email_login.title' => 'Prijava z e-pošto',
 			'email_login.email_label' => 'E-poštni naslov',
 			'email_login.email_hint' => 'ti@primer.si',
@@ -1959,6 +2160,7 @@ extension on TranslationsSl {
 			'email_login.err_email_domain' => 'Domene tega e-naslova ne najdemo. Preveri naslov.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Ste mislili ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
+			'email_login.skip_for_now' => 'Nadaljuj brez prijave',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
@@ -2032,11 +2234,16 @@ extension on TranslationsSl {
 			'task_detail.action_delete' => 'Izbriši',
 			'task_detail.action_revert' => 'Na čaka',
 			'task_detail.action_move' => 'Premakni',
-			'task_detail.recurrence_once' => 'Enkratno',
+			'task_detail.action_stop_recurrence' => 'Ustavi ponavljanje',
+			'task_detail.recurrence_none' => 'Ne',
+			'task_detail.recurrence_daily' => 'Dnevno',
 			'task_detail.recurrence_weekly' => 'Tedensko',
-			'task_detail.recurrence_seasonal' => 'Sezonsko',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Vsakih ${n} dni',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · še ${n}×',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Opravilo ni bilo najdeno.',
+			'task_detail.recurrence_once' => 'Enkratno',
+			'task_detail.recurrence_seasonal' => 'Sezonsko',
 			'tasks_list.title' => 'Opravila',
 			'tasks_list.subtitle' => 'prihajajoča in zapadla',
 			'tasks_list.section_overdue' => 'Zamuda',
@@ -2057,6 +2264,9 @@ extension on TranslationsSl {
 			'tasks_list.delete_confirm_body' => 'To dejanje je nepopravljivo.',
 			'tasks_list.delete_yes' => 'Izbriši',
 			'tasks_list.delete_cancel' => 'Prekliči',
+			'tasks_list.recurring_badge_tooltip' => 'Ponavljajoče opravilo',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Ponovljeno · naslednje ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Tega ni mogoče povrniti — naslednje opravilo v seriji je že ustvarjeno. Po potrebi ga izbriši.',
 			'subject_picker.title' => 'Rastlina ali območje',
 			'subject_picker.choose' => 'Izberi',
 			'entry.title_new' => 'Novo opravilo',
@@ -2075,6 +2285,7 @@ extension on TranslationsSl {
 			'entry.subject_title' => 'Za kaj?',
 			'entry.subject_search_hint' => 'Išči rastlino…',
 			'entry.subject_plants' => 'Rastline',
+			'entry.subject_less_likely' => 'Manj verjetno za to opravilo',
 			'entry.subject_add_plant' => 'Dodaj rastlino',
 			'entry.subject_add_area' => 'Dodaj območje',
 			'entry.subject_from_catalog' => 'Dodaj iz kataloga',
@@ -2092,6 +2303,18 @@ extension on TranslationsSl {
 			'entry.when_status_waiting' => 'Čaka',
 			'entry.when_status_done' => 'Opravljeno',
 			'entry.when_status_note' => 'Privzeto izpeljano iz datuma in ure: v prihodnosti = čaka, sicer = opravljeno.',
+			'entry.recurrence_label' => 'Ponavljanje',
+			'entry.recurrence_off' => 'Brez',
+			'entry.recurrence_daily' => 'Dnevno',
+			'entry.recurrence_weekly' => 'Tedensko',
+			'entry.recurrence_custom' => 'Po meri',
+			'entry.recurrence_interval_label' => 'Vsakih',
+			'entry.recurrence_days_unit' => 'dni',
+			'entry.recurrence_repeat_count' => 'Ponovi določeno število krat',
+			'entry.recurrence_times_unit' => 'krat',
+			'entry.recurrence_repeat_count_hint' => 'Ponavlja se v nedogled; ustaviš ga pri opravilu (⋯ → Ustavi ponavljanje).',
+			'entry.recurrence_invalid_number' => 'Vnesi število',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Naslednje: ${date}',
 			'entry.reminder_title' => 'Opomnik',
 			'entry.optional' => '(neobvezno)',
 			'entry.reminder_why' => 'Ta korak je tu, ker je opravilo načrtovano (Čaka). Opomnik te ob izbranem času opozori na telefon.',
@@ -2127,11 +2350,14 @@ extension on TranslationsSl {
 			'entry.rem_at' => ({required Object t}) => 'ob ${t}',
 			'entry.rem_choose_time' => 'Ob uri',
 			'entry.rem_time_note' => 'Ura velja pri dnevnih zamikih (npr. »1 dan prej ob 18:00«).',
+			'entry.rem_default_hint' => 'Dodali smo privzeti opomnik. Odstrani ga, če ga ne potrebuješ.',
+			'entry.rem_saved_notif_off' => 'Opravilo shranjeno. Obvestila so izklopljena — vklopi jih v nastavitvah.',
 			'entry.rem_perm_denied' => 'Obvestila so onemogočena, zato opomnika ni mogoče dodati.',
 			'entry.rem_exact_title' => 'Dovoli točne opomnike',
 			'entry.rem_exact_body' => 'Za sprožitev ob točnem času Tendask potrebuje dovoljenje »Budilke in opomniki«. Vklopi ga v nastavitvah, nato znova dodaj opomnik.',
 			'entry.rem_exact_open' => 'Odpri nastavitve',
 			'entry.rem_added' => 'že dodano',
+			'entry.supplies_use_recipe' => 'Uporabi recept',
 			'plant_edit.title_edit' => 'Uredi rastlino',
 			'plant_edit.species' => 'Vrsta',
 			'plant_edit.alias' => 'Osebno ime (neobvezno)',
@@ -2155,8 +2381,12 @@ extension on TranslationsSl {
 			'area_pick.duplicate' => 'Ta rastlina je že v izbranem območju.',
 			'areas.title' => 'Vrt',
 			'areas.subtitle' => 'rastline in trate',
+			'areas.seg_areas' => 'Območja',
+			'areas.fab_plant' => 'Rastlina',
 			'areas.unassigned' => 'Brez območja',
 			'areas.last_prefix' => 'zadnje:',
+			'areas.no_plants' => 'Brez rastlin',
+			'areas.plant_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '1 rastlina', two: '${n} rastlini', few: '${n} rastline', other: '${n} rastlin', ), 
 			'areas.type_garden' => 'Vrt',
 			'areas.type_lawn' => 'Trata',
 			'areas.type_hedge' => 'Živa meja',
@@ -2202,15 +2432,16 @@ extension on TranslationsSl {
 			'plants.custom_private' => 'Lasten vnos je zaseben in se ne deli s skupnostjo.',
 			'plants.add_title' => 'Dodaj rastline',
 			'plants.frequent' => 'Pogosto',
+			'plants.less_likely' => 'Manj verjetno za to območje',
 			'plants.undo' => 'Razveljavi',
 			'plants.done' => 'Končano',
 			'plants.add_to_label' => 'Kam dodajam',
 			'plants.choose_area' => 'izberi',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
-			'supplies.title' => 'Zaloge',
+			'supplies.title' => 'Sredstva',
 			'supplies.subtitle' => 'kaj imam doma',
-			'supplies.empty' => 'Ni zalog. Dodaj jih z +.',
+			'supplies.empty' => 'Ni sredstev. Dodaj jih z +.',
 			'supplies.low' => 'malo',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
 			'supplies.form_new' => 'Novo sredstvo',
@@ -2225,6 +2456,17 @@ extension on TranslationsSl {
 			'supplies.pick_new' => 'Novo sredstvo',
 			'supplies.amount' => 'Porabljena količina',
 			'supplies.add_confirm' => 'Dodaj',
+			'supplies.form_delete' => 'Izbriši sredstvo',
+			'supplies.delete_note' => 'Sredstvo bo odstranjeno s tvojega seznama.',
+			'supplies.form_category' => 'Kategorija',
+			'supplies.cat_fertilizer' => 'Gnojila',
+			'supplies.cat_treatment' => 'Škropiva',
+			'supplies.cat_equipment' => 'Oprema',
+			'supplies.cat_other' => 'Drugo',
+			'supplies.seg_supplies' => 'Sredstva',
+			'supplies.seg_recipes' => 'Recepti',
+			'supplies.fab_new' => 'Sredstvo',
+			'supplies.search' => 'Išči sredstva',
 			'settings.title' => 'Nastavitve',
 			'settings.profile_guest' => 'Gost (brez prijave)',
 			'settings.sign_in_prompt' => 'Prijavi se in shrani podatke v oblak',
@@ -2232,20 +2474,20 @@ extension on TranslationsSl {
 			'settings.section_location' => 'Lokacija',
 			'settings.location_placeholder' => 'Lokacija za vreme',
 			'settings.section_language' => 'Jezik',
+			'settings.section_appearance' => 'Videz',
+			'settings.appearance_placeholder' => 'Tema in barve',
+			'settings.theme_system' => 'Sistemsko',
+			'settings.theme_light' => 'Svetlo',
+			'settings.theme_dark' => 'Temno',
 			'settings.section_notifications' => 'Obvestila',
 			'settings.notifications_placeholder' => 'Obvestila in opomniki',
-			'settings.section_suggestions' => 'Predlogi',
-			'settings.suggestions_history_sub' => 'Kaj je bilo predlagano in kako si se odzval',
-			'settings.section_garden' => 'Vrt',
-			'settings.supplies' => '📦 Zaloge & sredstva',
-			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
 			'settings.section_account' => 'Račun & podatki',
 			'settings.export_data' => 'Izvozi podatke (GDPR)',
 			'settings.logout' => 'Odjava',
 			'settings.logout_confirm_title' => 'Odjava?',
 			'settings.logout_confirm_body' => 'Odjavi te in počisti lokalne podatke s te naprave. Sinhronizirani podatki ostanejo v oblaku in se vrnejo ob ponovni prijavi z istim računom.',
 			'settings.logout_cancel' => 'Prekliči',
-			'settings.logout_offline' => 'Odjava ni mogoča brez povezave — podatki še niso shranjeni v oblak. Poskusi znova, ko boš povezan.',
+			'settings.logout_offline' => 'Odjava je zadržana — zadnje spremembe še niso shranjene v oblak. Poskusi znova čez trenutek.',
 			'settings.export_share_text' => 'Tendask izvoz podatkov',
 			'settings.export_error' => 'Izvoz ni uspel. Poskusi znova.',
 			'settings.delete_account' => 'Izbriši račun in vse podatke',
@@ -2259,6 +2501,32 @@ extension on TranslationsSl {
 			'settings.delete_data_confirm' => 'Izbriši',
 			'settings.section_about' => 'O aplikaciji',
 			'settings.privacy_policy' => 'Politika zasebnosti',
+			'settings.section_suggestions' => 'Predlogi',
+			'settings.suggestions_history_sub' => 'Kaj je bilo predlagano in kako si se odzval',
+			'settings.section_garden' => 'Vrt',
+			'settings.supplies' => '📦 Zaloge & sredstva',
+			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
+			'appearance.mode_label' => 'Način',
+			'appearance.mode_help' => '»Sistemsko« samodejno preklaplja med svetlo in temno glede na nastavitev telefona.',
+			'appearance.follows_system_light' => 'Sledi telefonu · trenutno svetlo',
+			'appearance.follows_system_dark' => 'Sledi telefonu · trenutno temno',
+			'appearance.palette_label' => 'Barvna tema',
+			'appearance.preview_label' => 'Predogled',
+			'appearance.default_badge' => 'Privzeto',
+			'appearance.reset' => 'Ponastavi na privzeto',
+			'appearance.applies_immediately' => 'Sprememba se uveljavi takoj. Velja samo za to napravo.',
+			'appearance.palette_green' => 'Zelena',
+			'appearance.palette_lavender' => 'Sivka',
+			'appearance.palette_ocean' => 'Ocean',
+			'appearance.palette_clay' => 'Terakota',
+			'appearance.palette_berry' => 'Borovnica',
+			'appearance.palette_nebo' => 'Nebo',
+			'appearance.preview_appbar' => 'Domov',
+			'appearance.preview_task' => 'Zalivanje · Paradižnik',
+			'appearance.preview_task_sub' => 'danes · živa meja',
+			'appearance.preview_action' => 'Opravi',
+			'appearance.preview_chip' => '✓ Sadno drevje',
+			'appearance.preview_swipe' => 'Bazilika',
 			'weather.cond_clear' => 'Jasno',
 			'weather.cond_mainly_clear' => 'Pretežno jasno',
 			'weather.cond_cloudy' => 'Oblačno',
@@ -2281,9 +2549,43 @@ extension on TranslationsSl {
 			'weather.m_wind' => 'Veter',
 			'weather.m_precipitation' => 'Padavine',
 			'weather.m_soil_temp' => 'Temp. tal',
+			_ => null,
+		} ?? switch (path) {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Dež 48 h',
 			'weather.m_no_rain' => 'brez dežja',
+			'recipes.empty' => 'Še ni receptov. Shrani mešanico z +.',
+			'recipes.fab_new' => 'Recept',
+			'recipes.form_new' => 'Nov recept',
+			'recipes.form_edit' => 'Uredi recept',
+			'recipes.form_name' => 'Ime',
+			'recipes.form_equipment' => 'Oprema',
+			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
+			'recipes.form_save' => 'Shrani',
+			'recipes.err_name' => 'Vnesi ime recepta.',
+			'recipes.form_delete' => 'Izbriši recept',
+			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
+			'recipes.items' => 'Sredstva',
+			'recipes.add_item' => 'Dodaj sredstvo',
+			'recipes.pick_title' => 'Izberi recept',
+			'recipes.item_removed' => 'Odstranjeno sredstvo',
+			'harvest.yield_section' => 'Pridelek',
+			'harvest.sheet_title' => 'Koliko si pobral?',
+			'harvest.amount_label' => 'Količina',
+			'harvest.amount_hint' => 'npr. 2,5',
+			'harvest.unit_label' => 'Enota',
+			'harvest.save' => 'Shrani',
+			'harvest.skip' => 'Preskoči',
+			'harvest.remove' => 'Odstrani pridelek',
+			'harvest.add' => 'Dodaj pridelek',
+			'harvest.summary_title' => 'Pridelek',
+			'harvest.summary_total' => 'Skupaj',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'kom',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'šop',
 			'suggestions.actions.plan' => 'Načrtuj',
 			'suggestions.actions.dismiss' => 'Preskoči',
 			'suggestions.actions.already_done' => 'Že opravljeno',
@@ -2364,8 +2666,6 @@ extension on TranslationsSl {
 			'suggestions.berries.prune_winter.body' => 'Obreži {subject} v mirovanju — do približno {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Spomladansko gnojenje',
 			'suggestions.berries.fertilize_spring.body' => 'Pognoji {subject} ob začetku rasti — do približno {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Zastiranje',
 			'suggestions.berries.mulch.body' => 'Zastri {subject} za hladne in vlažne korenine — do približno {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Zimsko škropljenje',

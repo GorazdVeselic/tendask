@@ -51,7 +51,7 @@ final class ReminderCoordinatorProvider
 }
 
 String _$reminderCoordinatorHash() =>
-    r'fdaca5e9cad295747f8498a2eaea8138a11cf38f';
+    r'3415579d4bc8c9cb97d113b121288d4229a8a49b';
 
 /// Keeps OS-scheduled reminders in sync with the `task_reminder` rows. Reconciles
 /// once at startup and on every (debounced) write to task/task_reminder. Lives

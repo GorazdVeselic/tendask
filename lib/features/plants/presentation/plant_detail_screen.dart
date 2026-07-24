@@ -12,8 +12,11 @@ import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
+import '../../tasks/presentation/yield_format.dart';
+import '../../tasks/yield_summary.dart';
+import '../../tasks/yield_unit.dart';
 import '../application/plants_providers.dart';
-import '../data/user_plants_repository.dart';
+import '../plant_move_result.dart';
 import 'plant_display.dart';
 import 'widgets/area_pick_sheet.dart';
 
@@ -32,6 +35,9 @@ class PlantDetailScreen extends ConsumerWidget {
     final areas = ref.watch(areasMapProvider).asData?.value ?? const {};
     final history = ref.watch(tasksByPlantProvider(id)).asData?.value;
     final taskTypes = ref.watch(taskTypesMapProvider).asData?.value;
+    final yieldSummary = history == null
+        ? YieldSummary.empty
+        : summarizeYield(_yieldRecords(history));
 
     return Scaffold(
       appBar: AppBar(
@@ -54,6 +60,10 @@ class PlantDetailScreen extends ConsumerWidget {
               padding: const EdgeInsets.fromLTRB(16, 4, 16, 24),
               children: [
                 _Hero(plant: plant, catalog: catalog, areas: areas),
+                if (!yieldSummary.isEmpty) ...[
+                  SectionLabel(t.harvest.summary_title),
+                  _YieldSummaryCard(summary: yieldSummary),
+                ],
                 SectionLabel(t.plant_detail.history_title),
                 _History(history: history, catalog: taskTypes),
               ],
@@ -202,10 +212,19 @@ class _HistoryRow extends StatelessWidget {
     final type = catalog?[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
     final icon = type?.icon ?? '📋';
+    final yieldChip = taskYieldChip(task, context.t);
 
     return ListTile(
       leading: Text(icon, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
+      subtitle: yieldChip != null
+          ? Text(
+              yieldChip,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            )
+          : null,
       trailing: Text(
         formatDmy(task.date.toLocal()),
         style: theme.textTheme.bodySmall?.copyWith(
@@ -220,4 +239,100 @@ class _HistoryRow extends StatelessWidget {
           context.pushNamed('task-view', pathParameters: {'id': task.id}),
     );
   }
+}
+
+// ─── Yield summary (T11) ──────────────────────────────────────────────────────
+
+/// Records for the yield summary: a recorded amount with a known unit. Tasks
+/// without yield (non-harvest, or harvest logged without it) or with an unknown
+/// unit are dropped — an unknown unit can't be aggregated.
+List<YieldRecord> _yieldRecords(List<Task> tasks) => [
+  for (final task in tasks)
+    if (task.yieldAmount case final amount?)
+      if (yieldUnitFromName(task.yieldUnit) case final unit?)
+        (year: task.date.toLocal().year, amount: amount, unit: unit),
+];
+
+class _YieldSummaryCard extends StatelessWidget {
+  const _YieldSummaryCard({required this.summary});
+
+  final YieldSummary summary;
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    // Per-year rows add nothing when everything happened in one year.
+    final showYears = summary.byYear.length > 1;
+    final rows = <(String, String)>[
+      (t.harvest.summary_total, _formatTotals(summary.totals, t)),
+      if (showYears)
+        for (final y in summary.byYear)
+          (y.year.toString(), _formatTotals(y.totals, t)),
+    ];
+
+    final theme = Theme.of(context);
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 2),
+        child: Column(
+          children: [
+            for (var i = 0; i < rows.length; i++) ...[
+              if (i > 0)
+                Divider(height: 1, color: theme.colorScheme.outlineVariant),
+              _YieldRow(label: rows[i].$1, value: rows[i].$2, emphasized: i == 0),
+            ],
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class _YieldRow extends StatelessWidget {
+  const _YieldRow({
+    required this.label,
+    required this.value,
+    required this.emphasized,
+  });
+
+  final String label;
+  final String value;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 12),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              style: theme.textTheme.bodyMedium?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
+          ),
+          const SizedBox(width: 12),
+          Text(
+            value,
+            style: emphasized
+                ? theme.textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  )
+                : theme.textTheme.bodyMedium,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Joins per-unit totals into one line, e.g. "12 kg · 30 kom", units in a stable
+/// order so the display never reshuffles between rebuilds.
+String _formatTotals(Map<YieldUnit, double> totals, Translations t) {
+  final entries = totals.entries.toList()
+    ..sort((a, b) => a.key.index.compareTo(b.key.index));
+  return entries.map((e) => formatYield(e.value, e.key, t)).join(' · ');
 }

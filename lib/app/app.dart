@@ -4,11 +4,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../core/config.dart';
 import '../core/notifications/fcm_handler.dart';
 import '../core/notifications/notification_service.dart';
+import '../features/notifications/application/journal_nudge_coordinator.dart';
 import '../i18n/translations.g.dart';
 import 'router/app_router.dart';
 import 'theme/app_theme.dart';
+import 'theme/theme_mode_controller.dart';
+import 'theme/theme_palette.dart';
+import 'theme/theme_palette_controller.dart';
 
 class TendaskApp extends ConsumerStatefulWidget {
   const TendaskApp({super.key, this.initialLocation = '/home'});
@@ -26,6 +31,7 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
   late final _router = createAppRouter(initialLocation: widget.initialLocation);
   StreamSubscription<String>? _tapSub;
   StreamSubscription<String>? _fcmTapSub;
+  late final AppLifecycleListener _lifecycle;
 
   @override
   void initState() {
@@ -41,11 +47,20 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
         _router.goNamed('task-detail', pathParameters: {'id': payload});
       }
     });
-    // FCM pushes tapped while the app is in background (M11.7).
-    _fcmTapSub = ref
-        .read(fcmHandlerProvider)
-        .suggestionTaps
-        .listen(_goToSuggestion);
+    if (kSuggestionsEnabled) {
+      // FCM pushes tapped while the app is in background (M11.7).
+      _fcmTapSub = ref
+          .read(fcmHandlerProvider)
+          .suggestionTaps
+          .listen(_goToSuggestion);
+    }
+
+    // A foreground return counts as activity: push the journal nudge forward
+    // (FR-16). Cold start is covered by the coordinator's start() in main().
+    _lifecycle = AppLifecycleListener(
+      onResume: () =>
+          ref.read(journalNudgeCoordinatorProvider.notifier).onResume(),
+    );
   }
 
   // Home is the suggestions' home (koncept §7.12); the band highlights the id
@@ -57,11 +72,17 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
   void dispose() {
     _tapSub?.cancel();
     _fcmTapSub?.cancel();
+    _lifecycle.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    // Warmed in bootstrap, so these are resolved on first paint (no flash).
+    final themeMode =
+        ref.watch(themeModeControllerProvider).value ?? ThemeMode.system;
+    final palette =
+        ref.watch(themePaletteControllerProvider).value ?? greenPalette;
     return MaterialApp.router(
       title: 'Tendask',
       debugShowCheckedModeBanner: false,
@@ -72,9 +93,25 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      theme: AppTheme.light(),
-      darkTheme: AppTheme.dark(),
+      theme: AppTheme.light(palette),
+      darkTheme: AppTheme.dark(palette),
+      themeMode: themeMode,
       routerConfig: _router,
+      builder: _envBanner,
+    );
+  }
+
+  // Dev-only environment indicator: corner banner on non-production builds so a
+  // staging/offline build is never mistaken for prod. Colors are intentionally
+  // non-brand (this chrome never reaches prod users).
+  Widget _envBanner(BuildContext context, Widget? child) {
+    final content = child ?? const SizedBox.shrink();
+    if (kEnvLabel == 'production') return content;
+    return Banner(
+      message: kEnvLabel == 'staging' ? 'STAGING' : 'OFFLINE',
+      location: BannerLocation.topEnd,
+      color: kEnvLabel == 'staging' ? Colors.orange : Colors.grey,
+      child: content,
     );
   }
 }

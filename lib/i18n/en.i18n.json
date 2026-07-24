@@ -17,12 +17,17 @@
     "overdue_banner(n)": {
       "one": "1 overdue task",
       "other": "$n overdue tasks"
+    },
+    "upcoming_banner(n)": {
+      "one": "1 upcoming task",
+      "other": "$n upcoming tasks"
     }
   },
   "common": {
     "today": "Today",
     "yesterday": "yesterday",
-    "load_error": "Couldn't load data."
+    "load_error": "Couldn't load data.",
+    "save_error": "Couldn't save."
   },
   "swipe": {
     "complete": "Done",
@@ -35,6 +40,12 @@
   "notifications": {
     "today": "Today",
     "tomorrow": "Tomorrow"
+  },
+  "journal_nudge": {
+    "title_a": "Start your garden journal 🌱",
+    "body_a": "Log your first task — what's growing with you?",
+    "title_b": "What's happening in the garden?",
+    "body_b": "Jot down what you did in the garden this week."
   },
   "notif_priming": {
     "title": "Let me remind you in time?",
@@ -52,10 +63,12 @@
     "section_types": "Notification types",
     "type_reminders": "Task reminders",
     "type_reminders_sub": "local · works offline",
+    "type_journal_nudge": "Journal nudge",
+    "type_journal_nudge_sub": "local · a gentle nudge if you go quiet",
     "type_weather": "Smart hints (weather)",
-    "type_weather_sub": "\"dry tomorrow — a good time\"",
+    "type_weather_sub": "soon · via server",
     "type_community": "Nearby hints",
-    "type_community_sub": "what others nearby are doing",
+    "type_community_sub": "soon (V2)",
     "section_default_offset": "Default reminder offset",
     "default_offset_hint": "Prefills new tasks; you can always change it.",
     "section_quiet": "So you're not overwhelmed",
@@ -70,6 +83,11 @@
     "system_permission_on": "device: allowed",
     "system_permission_off": "exact reminders not allowed — tap for settings",
     "hints_perm_denied": "Notifications are disabled, so hints can't be turned on."
+  },
+  "reminder_sound": {
+    "silent_volume": "Reminders will be silent — notification volume is at 0.",
+    "silent_mode": "Reminders will be silent — the phone is in silent mode.",
+    "enable": "Turn on sound"
   },
   "notif_preview": {
     "title": "Notification appearance",
@@ -107,12 +125,19 @@
     "continue_apple": "Continue with Apple",
     "continue_google": "Continue with Google",
     "continue_email": "Continue with email",
-    "guest": "Try without an account",
+    "guest": "Continue as guest",
     "legal": "We'll send a confirmation code by email (no password). Continuing means you agree to the terms and privacy policy.",
-    "guest_warning": "Without an account, all your data is lost if you remove the app or change device.",
+    "guest_warning": "As a guest, you keep your data on this device only. You can add an account later.",
     "google_error": "Google sign-in failed. Please try again.",
     "coming_soon": "Coming soon.",
     "privacy_link": "Privacy policy"
+  },
+  "account": {
+    "guest_tooltip": "Guest — tap to sign in",
+    "guest_title": "You're using Tendask as a guest",
+    "guest_body": "Your garden is saved only on this device. Sign in to back it up to the cloud and sync across devices — your current data is kept.",
+    "sign_in_cta": "Sign in / register",
+    "maybe_later": "Maybe later"
   },
   "email_login": {
     "title": "Sign in with email",
@@ -131,7 +156,8 @@
     "err_verify": "The code is wrong or has expired. Try again.",
     "err_email_domain": "We can't find that email's domain. Check the address.",
     "did_you_mean(suggestion)": "Did you mean $suggestion?",
-    "resend_in(seconds)": "Send a new code ($seconds s)"
+    "resend_in(seconds)": "Send a new code ($seconds s)",
+    "skip_for_now": "Continue without signing in"
   },
   "location": {
     "title": "Where do you garden?",
@@ -216,11 +242,16 @@
     "action_delete": "Delete",
     "action_revert": "Back to waiting",
     "action_move": "Reschedule",
-    "recurrence_once": "Once",
+    "action_stop_recurrence": "Stop repeating",
+    "recurrence_none": "No",
+    "recurrence_daily": "Daily",
     "recurrence_weekly": "Weekly",
-    "recurrence_seasonal": "Seasonal",
+    "recurrence_every_days(n)": "Every $n days",
+    "recurrence_remaining(n)": " · $n× left",
     "none": "—",
-    "not_found": "Task not found."
+    "not_found": "Task not found.",
+    "recurrence_once": "Once",
+    "recurrence_seasonal": "Seasonal"
   },
   "tasks_list": {
     "title": "Tasks",
@@ -245,7 +276,10 @@
     "delete_confirm_title": "Delete task?",
     "delete_confirm_body": "This action cannot be undone.",
     "delete_yes": "Delete",
-    "delete_cancel": "Cancel"
+    "delete_cancel": "Cancel",
+    "recurring_badge_tooltip": "Recurring task",
+    "completed_recurring_toast(date)": "↻ Repeated · next $date",
+    "revert_blocked_recurring": "Can't undo — the next task in the series already exists. Delete it if needed."
   },
   "subject_picker": {
     "title": "Plant or area",
@@ -268,6 +302,7 @@
     "subject_title": "For what?",
     "subject_search_hint": "Search plant…",
     "subject_plants": "Plants",
+    "subject_less_likely": "Less likely for this task",
     "subject_add_plant": "Add plant",
     "subject_add_area": "Add area",
     "subject_from_catalog": "Add from catalog",
@@ -285,6 +320,18 @@
     "when_status_waiting": "Waiting",
     "when_status_done": "Done",
     "when_status_note": "Default derived from the date and time: future = waiting, otherwise = done.",
+    "recurrence_label": "Repeat",
+    "recurrence_off": "None",
+    "recurrence_daily": "Daily",
+    "recurrence_weekly": "Weekly",
+    "recurrence_custom": "Custom",
+    "recurrence_interval_label": "Every",
+    "recurrence_days_unit": "days",
+    "recurrence_repeat_count": "Repeat a set number of times",
+    "recurrence_times_unit": "times",
+    "recurrence_repeat_count_hint": "Repeats indefinitely; stop it from the task (⋯ → Stop repeating).",
+    "recurrence_invalid_number": "Enter a number",
+    "recurrence_next_preview(date)": "Next: $date",
     "reminder_title": "Reminder",
     "optional": "(optional)",
     "reminder_why": "This step is here because the task is planned (Waiting). A reminder notifies you on your phone at the chosen time.",
@@ -320,11 +367,14 @@
     "rem_at(t)": "at $t",
     "rem_choose_time": "At time",
     "rem_time_note": "The time applies to day-based offsets (e.g. \"1 day before at 18:00\").",
+    "rem_default_hint": "We added a default reminder. Remove it if you don't need it.",
+    "rem_saved_notif_off": "Task saved. Notifications are off — turn them on in settings.",
     "rem_perm_denied": "Notifications are disabled, so a reminder can't be added.",
     "rem_exact_title": "Allow exact reminders",
     "rem_exact_body": "To fire at the exact time, Tendask needs the \"Alarms & reminders\" permission. Enable it in settings, then add the reminder again.",
     "rem_exact_open": "Open settings",
-    "rem_added": "already added"
+    "rem_added": "already added",
+    "supplies_use_recipe": "Use recipe"
   },
   "plant_edit": {
     "title_edit": "Edit plant",
@@ -356,8 +406,15 @@
   "areas": {
     "title": "Garden",
     "subtitle": "plants and lawns",
+    "seg_areas": "Areas",
+    "fab_plant": "Plant",
     "unassigned": "No area",
     "last_prefix": "last:",
+    "no_plants": "No plants",
+    "plant_count(n)": {
+      "one": "1 plant",
+      "other": "$n plants"
+    },
     "type_garden": "Garden",
     "type_lawn": "Lawn",
     "type_hedge": "Hedge",
@@ -405,6 +462,7 @@
     "custom_private": "A custom entry is private and not shared with the community.",
     "add_title": "Add plants",
     "frequent": "Frequent",
+    "less_likely": "Less likely for this area",
     "undo": "Undo",
     "done": "Done",
     "add_to_label": "Add to",
@@ -429,7 +487,18 @@
     "add_to_task": "Add supply",
     "pick_new": "New supply",
     "amount": "Amount used",
-    "add_confirm": "Add"
+    "add_confirm": "Add",
+    "form_delete": "Delete supply",
+    "delete_note": "This supply will be removed from your list.",
+    "form_category": "Category",
+    "cat_fertilizer": "Fertilizers",
+    "cat_treatment": "Treatments",
+    "cat_equipment": "Equipment",
+    "cat_other": "Other",
+    "seg_supplies": "Supplies",
+    "seg_recipes": "Recipes",
+    "fab_new": "Supply",
+    "search": "Search supplies"
   },
   "settings": {
     "title": "Settings",
@@ -439,20 +508,20 @@
     "section_location": "Location",
     "location_placeholder": "Weather location",
     "section_language": "Language",
+    "section_appearance": "Appearance",
+    "appearance_placeholder": "Theme & colours",
+    "theme_system": "System",
+    "theme_light": "Light",
+    "theme_dark": "Dark",
     "section_notifications": "Notifications",
     "notifications_placeholder": "Notifications and reminders",
-    "section_suggestions": "Suggestions",
-    "suggestions_history_sub": "What was suggested and how you responded",
-    "section_garden": "Garden",
-    "supplies": "📦 Supplies",
-    "supplies_sub": "urea, algae, fertilizers, gear",
     "section_account": "Account & data",
     "export_data": "Export data (GDPR)",
     "logout": "Sign out",
     "logout_confirm_title": "Sign out?",
     "logout_confirm_body": "Signs you out and clears local data from this device. Synced data stays in the cloud and returns when you sign in again with the same account.",
     "logout_cancel": "Cancel",
-    "logout_offline": "Can't sign out while offline — your data isn't saved to the cloud yet. Try again when you're connected.",
+    "logout_offline": "Sign-out is paused — your latest changes aren't saved to the cloud yet. Try again in a moment.",
     "export_share_text": "Tendask data export",
     "export_error": "Export failed. Please try again.",
     "delete_account": "Delete account and all data",
@@ -465,7 +534,35 @@
     "delete_data_confirm_body": "Permanently deletes all data on this device (tasks, areas, plants, notes). This cannot be undone.",
     "delete_data_confirm": "Delete",
     "section_about": "About",
-    "privacy_policy": "Privacy policy"
+    "privacy_policy": "Privacy policy",
+    "section_suggestions": "Suggestions",
+    "suggestions_history_sub": "What was suggested and how you responded",
+    "section_garden": "Garden",
+    "supplies": "📦 Supplies",
+    "supplies_sub": "urea, algae, fertilizers, gear"
+  },
+  "appearance": {
+    "mode_label": "Mode",
+    "mode_help": "“System” automatically switches between light and dark to match your phone.",
+    "follows_system_light": "Follows phone · currently light",
+    "follows_system_dark": "Follows phone · currently dark",
+    "palette_label": "Colour theme",
+    "preview_label": "Preview",
+    "default_badge": "Default",
+    "reset": "Reset to default",
+    "applies_immediately": "Changes apply instantly. They affect this device only.",
+    "palette_green": "Green",
+    "palette_lavender": "Lavender",
+    "palette_ocean": "Ocean",
+    "palette_clay": "Terracotta",
+    "palette_berry": "Blueberry",
+    "palette_nebo": "Sky",
+    "preview_appbar": "Home",
+    "preview_task": "Watering · Tomato",
+    "preview_task_sub": "today · hedge",
+    "preview_action": "Done",
+    "preview_chip": "✓ Fruit trees",
+    "preview_swipe": "Basil"
   },
   "weather": {
     "cond_clear": "Clear",
@@ -493,6 +590,42 @@
     "m_et0": "ET₀",
     "m_rain48h": "Rain 48 h",
     "m_no_rain": "no rain"
+  },
+  "recipes": {
+    "empty": "No recipes yet. Save a mixture with +.",
+    "fab_new": "Recipe",
+    "form_new": "New recipe",
+    "form_edit": "Edit recipe",
+    "form_name": "Name",
+    "form_equipment": "Equipment",
+    "form_equipment_hint": "e.g. 16 L sprayer",
+    "form_save": "Save",
+    "err_name": "Enter a recipe name.",
+    "form_delete": "Delete recipe",
+    "delete_note": "This recipe will be removed from your list.",
+    "items": "Supplies",
+    "add_item": "Add supply",
+    "pick_title": "Pick a recipe",
+    "item_removed": "Removed supply"
+  },
+  "harvest": {
+    "yield_section": "Yield",
+    "sheet_title": "How much did you harvest?",
+    "amount_label": "Amount",
+    "amount_hint": "e.g. 2.5",
+    "unit_label": "Unit",
+    "save": "Save",
+    "skip": "Skip",
+    "remove": "Remove yield",
+    "add": "Add yield",
+    "summary_title": "Harvest",
+    "summary_total": "Total",
+    "unit_kg": "kg",
+    "unit_dag": "dag",
+    "unit_g": "g",
+    "unit_pieces": "pcs",
+    "unit_l": "l",
+    "unit_bunch": "bunch"
   },
   "suggestions": {
     "actions": {

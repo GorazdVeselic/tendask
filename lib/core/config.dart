@@ -47,6 +47,11 @@ const kClimateTempBandsC = <double>[4, 6, 8, 10, 12];
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;
 
+/// Forward window (in days) for the Home "upcoming tasks" summary banner: pending
+/// tasks due after today and within this many days are summarized in a collapsible
+/// bar above the today list. 7 mirrors the "this week" grouping in the task list.
+const kUpcomingWindowDays = 7;
+
 /// Max species shown in the "Frequent" row of the plant-add screen — the
 /// most recently used catalog species, so common picks stay one tap away.
 const kRecentPlantsLimit = 8;
@@ -97,9 +102,45 @@ const kReminderDebounce = Duration(milliseconds: 800);
 /// exists AND the device is online; a guest / offline write proceeds at once.
 const kProfilePullGrace = Duration(seconds: 3);
 
+/// Minutes in a day — day-based reminder offsets (>= this) fire N whole days
+/// before the task at a chosen time of day.
+const kMinutesPerDay = 1440;
+
+/// Reminder offset presets (minutes before the task) offered when adding a
+/// reminder: at-event, 10 min, 1 hour, 1 day, 2 days. Single source of truth;
+/// the settings screen offers a subset of these.
+const kReminderOffsetPresets = [0, 10, 60, kMinutesPerDay, 2 * kMinutesPerDay];
+
 /// Default reminder offset (minutes before the task) prefilled when adding a new
-/// reminder. 1440 = one day before. User-overridable in notification settings.
-const kDefaultReminderOffset = 1440;
+/// reminder. 0 = at the time of the event. User-overridable in notification settings.
+const kDefaultReminderOffset = 0;
+
+/// Time of day for a day-based default reminder (T7) — used only when the user's
+/// preferred offset is day-based. Mirrors the reminder sheet's default time pick.
+const kDefaultReminderTime = '18:00';
+
+/// Prefilled values in the recurrence picker (FR-5) when the user first switches
+/// a task to a custom interval / a capped number of repeats (repeats = how many
+/// more times it recurs after the current one).
+const kRecurrenceDefaultIntervalDays = 14;
+const kRecurrenceDefaultRepeats = 3;
+
+/// Re-engagement journal nudge (FR-16) — a local dead-man's-switch. It fires
+/// only after the user goes quiet; every app open / task or note write pushes it
+/// forward, so an active user never sees it. Instead of one re-armed reminder we
+/// schedule a fixed decaying chain ([kJournalNudgeDayOffsets] whole days after
+/// the last activity) and then fall silent — 7 days, then 21 more, then stop —
+/// so the long-departed are never poked (anti-spam, FR-16 §3). 17:00 local sits
+/// outside quiet hours by design.
+const kJournalNudgeHour = 17;
+const kJournalNudgeDayOffsets = [7, 28];
+
+/// Reserved OS notification ids for the nudge chain (one per decay step).
+/// Negative on purpose: a task reminder id is always >= 0 (a hashed UUID masked
+/// with 0x7fffffff), so these can never collide with one, and the reminder
+/// coordinator excludes them from its orphan-cancel sweep. Length must match
+/// [kJournalNudgeDayOffsets].
+const kJournalNudgeNotificationIds = [-201, -202];
 
 /// Quiet-hours window shown in notification settings (display only in MVP). It
 /// is stored as a device-local preference and governs the future weather/
@@ -141,12 +182,21 @@ const kSplashMinDuration = Duration(milliseconds: 1200);
 
 /// Release-channel suffix appended to the displayed version (e.g. " (beta)" for
 /// the internal/beta track). Empty for a production release — one place to flip.
-const kVersionChannel = ' (beta)';
+const kVersionChannel = '';
 
 /// Supplies feature gate (temporarily off): hides the supplies wizard step and
 /// the settings garden/supplies section without removing the code. Flip to true
 /// to re-enable. See entry_screen (step list) and settings_screen.
-const kSuppliesEnabled = false;
+const kSuppliesEnabled = true;
+
+/// Smart-suggestion (M11) feature gate — dark by default so M11 rides into the
+/// production APK without surfacing until the deliberate launch (kSuggestionsEnabled=true
+/// + smart-engine edge/cron deploy + Plus gate). Flip to true to reveal. Wraps
+/// the Home suggestion band + deep-link highlight, the /suggestions history route,
+/// the settings engine section, the M11 notification-settings rows, and FCM
+/// token registration (a token is pointless while nothing pushes). Mirrors the
+/// kSuppliesEnabled idiom. See docs/m11/11-poravnava-v-main.md.
+const kSuggestionsEnabled = false;
 
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays

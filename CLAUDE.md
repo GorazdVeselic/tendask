@@ -176,6 +176,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - **Pure logika** (drift poizvedbe, sync LWW/vrstni red, Open-Meteo parser, kasneje motor pravil): unit testi obvezni. Tečejo na CI brez naprave.
 - **Servisi:** mock zunanje dep-e (dio HTTP, Supabase client), testiraj svoj ovoj.
 - **UI:** widget testi za ključne/netrivialne zaslone (Hiter vnos shrani, akcija ✓ premakne opravilo). Brez golden testov, dokler dizajn ni stabilen. Brez e2e zaenkrat.
+- **Layout regresije: `test/layout/` matrika** (`layout_harness.dart` + `layout_matrix_test.dart`). Vsak zaslon se izriše čez viewport × locale × text-scale (320/360/411 × sl/en/de × 1.0/1.3) in lovi overflow + odrezan tekst — ujame prelome pri dolgi nemščini in veliki pisavi, ki jih navadni widget test ne. **Pomni:** prosto-ovijajoč tekst (`softWrap && maxLines==null`) se nikoli ne odreže (Flutter razlomi tudi predolgo besedo), zato `getMinIntrinsicWidth` NI signal za odrez — flag samo vrstično omejen tekst. Nov zaslon dodaš z enim `layoutMatrix(...)` klicem.
 - **Brez testov za scaffolding/setter-je** — ne plačajo vzdrževanja.
 - Ob mejniku: **ročna preverba na napravi** (Android, USB).
 

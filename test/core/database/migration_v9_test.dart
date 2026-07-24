@@ -44,6 +44,17 @@ void main() {
                 deleted INTEGER NOT NULL DEFAULT 0,
                 sync_status TEXT NOT NULL DEFAULT 'pending'
               )''')
+            // supply exists in the pre-M11 schema; the reconcile re-sequenced the
+            // engine step above main's v13 (supply.category), which the full v8→
+            // current ladder now runs, so this table must be present to migrate.
+            ..execute('''
+              CREATE TABLE supply (
+                id TEXT NOT NULL PRIMARY KEY,
+                user_id TEXT NOT NULL, name TEXT NOT NULL,
+                updated_at INTEGER NOT NULL,
+                deleted INTEGER NOT NULL DEFAULT 0,
+                sync_status TEXT NOT NULL DEFAULT 'pending'
+              )''')
             ..execute(
               "INSERT INTO task_type (id, labels, icon, category) VALUES "
               "('water', '{}', 'i', 'general'), ('prune', '{}', 'i', 'plant_care')",

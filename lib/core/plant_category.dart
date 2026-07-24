@@ -23,6 +23,7 @@ String coarsePlantCategory(String category) => switch (category) {
   'bulb' ||
   'conifer' ||
   'hedge' => 'ornamental',
+  'citrus' => 'fruit_tree',
   _ => category,
 };
 

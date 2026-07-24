@@ -81,13 +81,17 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       final notif = ref.read(notificationServiceProvider);
       final repo = ref.read(tasksRepositoryProvider);
 
-      // Master switch off: cancel everything we scheduled, schedule nothing.
+      // Master switch off: cancel everything we scheduled, schedule nothing —
+      // but never the journal nudge (FR-16), which has its own switch and owner.
       final userId = ref.read(authServiceProvider).userId;
       final settings = await ref
           .read(profileRepositoryProvider)
           .notificationSettings(userId);
       if (!settings.taskRemindersEnabled) {
-        for (final id in await notif.pendingIds()) {
+        final ours = (await notif.pendingIds()).difference(
+          kJournalNudgeNotificationIds.toSet(),
+        );
+        for (final id in ours) {
           await notif.cancel(id);
         }
         return;
@@ -100,20 +104,20 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       final nowLocal = _clock.now().toLocal();
 
       final desired = <int>{};
-      for (final task in await repo.pendingTasks()) {
-        final reminders = await repo.remindersForTask(task.id);
-        if (reminders.isEmpty) continue;
+      // Fixed three queries for all tasks (no per-task N+1, see repo doc).
+      for (final input in await repo.reminderReconcileInputs()) {
+        final task = input.task;
         final taskDateLocal = task.date.toLocal();
         final title = _title(task, types);
         final body = _body(
           task,
-          await repo.subjectsForTask(task.id),
+          input.subjects,
           areas: areas,
           userPlants: userPlants,
           plants: plants,
           nowLocal: nowLocal,
         );
-        for (final r in reminders) {
+        for (final r in input.reminders) {
           final fire = reminderFireTime(
             taskDateLocal: taskDateLocal,
             offsetMinutes: r.offset,
@@ -133,8 +137,13 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       }
 
       // Drop reminders that no longer exist / moved to the past (only pending,
-      // never already-delivered notifications).
-      for (final id in (await notif.pendingIds()).difference(desired)) {
+      // never already-delivered notifications). The journal nudge (FR-16) lives
+      // in the same OS queue but is owned by its own coordinator — never cancel
+      // its reserved ids here.
+      final orphans = (await notif.pendingIds())
+          .difference(desired)
+          .difference(kJournalNudgeNotificationIds.toSet());
+      for (final id in orphans) {
         await notif.cancel(id);
       }
     } catch (e) {

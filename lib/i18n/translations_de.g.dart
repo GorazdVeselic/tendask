@@ -45,11 +45,14 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$common$de common = _Translations$common$de._(_root);
 	@override late final _Translations$swipe$de swipe = _Translations$swipe$de._(_root);
 	@override late final _Translations$notifications$de notifications = _Translations$notifications$de._(_root);
+	@override late final _Translations$journal_nudge$de journal_nudge = _Translations$journal_nudge$de._(_root);
 	@override late final _Translations$notif_priming$de notif_priming = _Translations$notif_priming$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
+	@override late final _Translations$reminder_sound$de reminder_sound = _Translations$reminder_sound$de._(_root);
 	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
 	@override late final _Translations$auth$de auth = _Translations$auth$de._(_root);
+	@override late final _Translations$account$de account = _Translations$account$de._(_root);
 	@override late final _Translations$email_login$de email_login = _Translations$email_login$de._(_root);
 	@override late final _Translations$location$de location = _Translations$location$de._(_root);
 	@override late final _Translations$journal$de journal = _Translations$journal$de._(_root);
@@ -65,7 +68,10 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$plants$de plants = _Translations$plants$de._(_root);
 	@override late final _Translations$supplies$de supplies = _Translations$supplies$de._(_root);
 	@override late final _Translations$settings$de settings = _Translations$settings$de._(_root);
+	@override late final _Translations$appearance$de appearance = _Translations$appearance$de._(_root);
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
+	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
+	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
 	@override late final _Translations$suggestions$de suggestions = _Translations$suggestions$de._(_root);
 }
 
@@ -108,6 +114,10 @@ class _Translations$home$de extends Translations$home$en {
 		one: '1 überfällige Aufgabe',
 		other: '${n} überfällige Aufgaben',
 	);
+	@override String upcoming_banner({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '1 anstehende Aufgabe',
+		other: '${n} anstehende Aufgaben',
+	);
 }
 
 // Path: common
@@ -120,6 +130,7 @@ class _Translations$common$de extends Translations$common$en {
 	@override String get today => 'Heute';
 	@override String get yesterday => 'gestern';
 	@override String get load_error => 'Daten konnten nicht geladen werden.';
+	@override String get save_error => 'Speichern fehlgeschlagen.';
 }
 
 // Path: swipe
@@ -146,6 +157,19 @@ class _Translations$notifications$de extends Translations$notifications$en {
 	// Translations
 	@override String get today => 'Heute';
 	@override String get tomorrow => 'Morgen';
+}
+
+// Path: journal_nudge
+class _Translations$journal_nudge$de extends Translations$journal_nudge$en {
+	_Translations$journal_nudge$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title_a => 'Starte dein Gartentagebuch 🌱';
+	@override String get body_a => 'Trag deine erste Aufgabe ein — was wächst bei dir?';
+	@override String get title_b => 'Was passiert im Garten?';
+	@override String get body_b => 'Halt fest, was du diese Woche im Garten gemacht hast.';
 }
 
 // Path: notif_priming
@@ -177,10 +201,12 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get section_types => 'Benachrichtigungsarten';
 	@override String get type_reminders => 'Aufgaben-Erinnerungen';
 	@override String get type_reminders_sub => 'lokal · funktionieren ohne Internet';
+	@override String get type_journal_nudge => 'Tagebuch-Erinnerung';
+	@override String get type_journal_nudge_sub => 'lokal · ein sanfter Anstoß, wenn es still wird';
 	@override String get type_weather => 'Smarte Hinweise (Wetter)';
-	@override String get type_weather_sub => '„morgen trocken — ein guter Zeitpunkt“';
+	@override String get type_weather_sub => 'demnächst · über Server';
 	@override String get type_community => 'Hinweise aus der Umgebung';
-	@override String get type_community_sub => 'was andere in der Nähe tun';
+	@override String get type_community_sub => 'demnächst (V2)';
 	@override String get section_default_offset => 'Standard-Vorlaufzeit';
 	@override String get default_offset_hint => 'Füllt neue Aufgaben vor; jederzeit änderbar.';
 	@override String get section_quiet => 'Damit du nicht überflutet wirst';
@@ -195,6 +221,18 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get system_permission_on => 'Gerät: erlaubt';
 	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
 	@override String get hints_perm_denied => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.';
+}
+
+// Path: reminder_sound
+class _Translations$reminder_sound$de extends Translations$reminder_sound$en {
+	_Translations$reminder_sound$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get silent_volume => 'Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.';
+	@override String get silent_mode => 'Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.';
+	@override String get enable => 'Ton einschalten';
 }
 
 // Path: notif_preview
@@ -253,12 +291,26 @@ class _Translations$auth$de extends Translations$auth$en {
 	@override String get continue_apple => 'Mit Apple fortfahren';
 	@override String get continue_google => 'Mit Google fortfahren';
 	@override String get continue_email => 'Mit E-Mail fortfahren';
-	@override String get guest => 'Ohne Konto ausprobieren';
+	@override String get guest => 'Als Gast fortfahren';
 	@override String get legal => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.';
-	@override String get guest_warning => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.';
+	@override String get guest_warning => 'Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.';
 	@override String get google_error => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get coming_soon => 'Demnächst verfügbar.';
 	@override String get privacy_link => 'Datenschutzerklärung';
+}
+
+// Path: account
+class _Translations$account$de extends Translations$account$en {
+	_Translations$account$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get guest_tooltip => 'Gast — zum Anmelden tippen';
+	@override String get guest_title => 'Du nutzt Tendask als Gast';
+	@override String get guest_body => 'Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.';
+	@override String get sign_in_cta => 'Anmelden / registrieren';
+	@override String get maybe_later => 'Vielleicht später';
 }
 
 // Path: email_login
@@ -285,6 +337,7 @@ class _Translations$email_login$de extends Translations$email_login$en {
 	@override String get err_email_domain => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.';
 	@override String did_you_mean({required Object suggestion}) => 'Meintest du ${suggestion}?';
 	@override String resend_in({required Object seconds}) => 'Neuen Code senden (${seconds} s)';
+	@override String get skip_for_now => 'Ohne Anmeldung fortfahren';
 }
 
 // Path: location
@@ -397,11 +450,16 @@ class _Translations$task_detail$de extends Translations$task_detail$en {
 	@override String get action_delete => 'Löschen';
 	@override String get action_revert => 'Zurück auf Ausstehend';
 	@override String get action_move => 'Verschieben';
-	@override String get recurrence_once => 'Einmalig';
+	@override String get action_stop_recurrence => 'Wiederholung beenden';
+	@override String get recurrence_none => 'Nein';
+	@override String get recurrence_daily => 'Täglich';
 	@override String get recurrence_weekly => 'Wöchentlich';
-	@override String get recurrence_seasonal => 'Saisonal';
+	@override String recurrence_every_days({required Object n}) => 'Alle ${n} Tage';
+	@override String recurrence_remaining({required Object n}) => ' · noch ${n}×';
 	@override String get none => '—';
 	@override String get not_found => 'Aufgabe nicht gefunden.';
+	@override String get recurrence_once => 'Einmalig';
+	@override String get recurrence_seasonal => 'Saisonal';
 }
 
 // Path: tasks_list
@@ -434,6 +492,9 @@ class _Translations$tasks_list$de extends Translations$tasks_list$en {
 	@override String get delete_confirm_body => 'Diese Aktion kann nicht rückgängig gemacht werden.';
 	@override String get delete_yes => 'Löschen';
 	@override String get delete_cancel => 'Abbrechen';
+	@override String get recurring_badge_tooltip => 'Wiederkehrende Aufgabe';
+	@override String completed_recurring_toast({required Object date}) => '↻ Wiederholt · nächste ${date}';
+	@override String get revert_blocked_recurring => 'Rückgängig nicht möglich — die nächste Aufgabe der Serie existiert bereits. Bei Bedarf löschen.';
 }
 
 // Path: subject_picker
@@ -470,6 +531,7 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get subject_title => 'Wofür?';
 	@override String get subject_search_hint => 'Pflanze suchen…';
 	@override String get subject_plants => 'Pflanzen';
+	@override String get subject_less_likely => 'Weniger wahrscheinlich für diese Aufgabe';
 	@override String get subject_add_plant => 'Pflanze hinzufügen';
 	@override String get subject_add_area => 'Bereich hinzufügen';
 	@override String get subject_from_catalog => 'Aus Katalog hinzufügen';
@@ -487,6 +549,18 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get when_status_waiting => 'Wartet';
 	@override String get when_status_done => 'Erledigt';
 	@override String get when_status_note => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.';
+	@override String get recurrence_label => 'Wiederholung';
+	@override String get recurrence_off => 'Keine';
+	@override String get recurrence_daily => 'Täglich';
+	@override String get recurrence_weekly => 'Wöchentlich';
+	@override String get recurrence_custom => 'Eigene';
+	@override String get recurrence_interval_label => 'Alle';
+	@override String get recurrence_days_unit => 'Tage';
+	@override String get recurrence_repeat_count => 'Eine bestimmte Anzahl wiederholen';
+	@override String get recurrence_times_unit => 'Mal';
+	@override String get recurrence_repeat_count_hint => 'Wiederholt sich unbegrenzt; beende es bei der Aufgabe (⋯ → Wiederholung beenden).';
+	@override String get recurrence_invalid_number => 'Zahl eingeben';
+	@override String recurrence_next_preview({required Object date}) => 'Nächste: ${date}';
 	@override String get reminder_title => 'Erinnerung';
 	@override String get optional => '(optional)';
 	@override String get reminder_why => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.';
@@ -522,11 +596,14 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String rem_at({required Object t}) => 'um ${t}';
 	@override String get rem_choose_time => 'Um Uhrzeit';
 	@override String get rem_time_note => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).';
+	@override String get rem_default_hint => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.';
+	@override String get rem_saved_notif_off => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.';
 	@override String get rem_perm_denied => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.';
 	@override String get rem_exact_title => 'Exakte Erinnerungen erlauben';
 	@override String get rem_exact_body => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.';
 	@override String get rem_exact_open => 'Einstellungen öffnen';
 	@override String get rem_added => 'bereits hinzugefügt';
+	@override String get supplies_use_recipe => 'Rezept verwenden';
 }
 
 // Path: plant_edit
@@ -586,8 +663,15 @@ class _Translations$areas$de extends Translations$areas$en {
 	// Translations
 	@override String get title => 'Garten';
 	@override String get subtitle => 'Pflanzen und Rasen';
+	@override String get seg_areas => 'Bereiche';
+	@override String get fab_plant => 'Pflanze';
 	@override String get unassigned => 'Ohne Bereich';
 	@override String get last_prefix => 'zuletzt:';
+	@override String get no_plants => 'Keine Pflanzen';
+	@override String plant_count({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '1 Pflanze',
+		other: '${n} Pflanzen',
+	);
 	@override String get type_garden => 'Garten';
 	@override String get type_lawn => 'Rasen';
 	@override String get type_hedge => 'Hecke';
@@ -642,6 +726,7 @@ class _Translations$plants$de extends Translations$plants$en {
 	@override String get custom_private => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.';
 	@override String get add_title => 'Pflanzen hinzufügen';
 	@override String get frequent => 'Häufig';
+	@override String get less_likely => 'Weniger wahrscheinlich für diesen Bereich';
 	@override String get undo => 'Rückgängig';
 	@override String get done => 'Fertig';
 	@override String get add_to_label => 'Hinzufügen zu';
@@ -657,9 +742,9 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Vorräte';
+	@override String get title => 'Mittel';
 	@override String get subtitle => 'was ich zu Hause habe';
-	@override String get empty => 'Noch keine Vorräte. Füge welche mit + hinzu.';
+	@override String get empty => 'Noch keine Mittel. Füge welche mit + hinzu.';
 	@override String get low => 'wenig';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
 	@override String get form_new => 'Neues Mittel';
@@ -674,6 +759,17 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	@override String get pick_new => 'Neues Mittel';
 	@override String get amount => 'Verbrauchte Menge';
 	@override String get add_confirm => 'Hinzufügen';
+	@override String get form_delete => 'Mittel löschen';
+	@override String get delete_note => 'Dieses Mittel wird aus deiner Liste entfernt.';
+	@override String get form_category => 'Kategorie';
+	@override String get cat_fertilizer => 'Dünger';
+	@override String get cat_treatment => 'Pflanzenschutz';
+	@override String get cat_equipment => 'Geräte';
+	@override String get cat_other => 'Sonstiges';
+	@override String get seg_supplies => 'Mittel';
+	@override String get seg_recipes => 'Rezepte';
+	@override String get fab_new => 'Mittel';
+	@override String get search => 'Mittel suchen';
 }
 
 // Path: settings
@@ -690,20 +786,20 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get section_location => 'Standort';
 	@override String get location_placeholder => 'Wetter-Standort';
 	@override String get section_language => 'Sprache';
+	@override String get section_appearance => 'Darstellung';
+	@override String get appearance_placeholder => 'Thema & Farben';
+	@override String get theme_system => 'System';
+	@override String get theme_light => 'Hell';
+	@override String get theme_dark => 'Dunkel';
 	@override String get section_notifications => 'Benachrichtigungen';
 	@override String get notifications_placeholder => 'Benachrichtigungen und Erinnerungen';
-	@override String get section_suggestions => 'Vorschläge';
-	@override String get suggestions_history_sub => 'Was vorgeschlagen wurde und wie du reagiert hast';
-	@override String get section_garden => 'Garten';
-	@override String get supplies => '📦 Vorräte & Mittel';
-	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
 	@override String get section_account => 'Konto & Daten';
 	@override String get export_data => 'Daten exportieren (DSGVO)';
 	@override String get logout => 'Abmelden';
 	@override String get logout_confirm_title => 'Abmelden?';
 	@override String get logout_confirm_body => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.';
 	@override String get logout_cancel => 'Abbrechen';
-	@override String get logout_offline => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.';
+	@override String get logout_offline => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.';
 	@override String get export_share_text => 'Tendask Datenexport';
 	@override String get export_error => 'Export fehlgeschlagen. Bitte versuche es erneut.';
 	@override String get delete_account => 'Konto und alle Daten löschen';
@@ -717,6 +813,41 @@ class _Translations$settings$de extends Translations$settings$en {
 	@override String get delete_data_confirm => 'Löschen';
 	@override String get section_about => 'Über';
 	@override String get privacy_policy => 'Datenschutzerklärung';
+	@override String get section_suggestions => 'Vorschläge';
+	@override String get suggestions_history_sub => 'Was vorgeschlagen wurde und wie du reagiert hast';
+	@override String get section_garden => 'Garten';
+	@override String get supplies => '📦 Vorräte & Mittel';
+	@override String get supplies_sub => 'Harnstoff, Algen, Dünger, Geräte';
+}
+
+// Path: appearance
+class _Translations$appearance$de extends Translations$appearance$en {
+	_Translations$appearance$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get mode_label => 'Modus';
+	@override String get mode_help => '„System“ wechselt automatisch zwischen Hell und Dunkel, passend zu deinem Telefon.';
+	@override String get follows_system_light => 'Folgt dem Telefon · aktuell hell';
+	@override String get follows_system_dark => 'Folgt dem Telefon · aktuell dunkel';
+	@override String get palette_label => 'Farbthema';
+	@override String get preview_label => 'Vorschau';
+	@override String get default_badge => 'Standard';
+	@override String get reset => 'Auf Standard zurücksetzen';
+	@override String get applies_immediately => 'Änderungen gelten sofort. Sie betreffen nur dieses Gerät.';
+	@override String get palette_green => 'Grün';
+	@override String get palette_lavender => 'Lavendel';
+	@override String get palette_ocean => 'Ozean';
+	@override String get palette_clay => 'Terrakotta';
+	@override String get palette_berry => 'Heidelbeere';
+	@override String get palette_nebo => 'Himmel';
+	@override String get preview_appbar => 'Start';
+	@override String get preview_task => 'Gießen · Tomate';
+	@override String get preview_task_sub => 'heute · Hecke';
+	@override String get preview_action => 'Erledigt';
+	@override String get preview_chip => '✓ Obstbäume';
+	@override String get preview_swipe => 'Basilikum';
 }
 
 // Path: weather
@@ -751,6 +882,56 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get m_et0 => 'ET₀';
 	@override String get m_rain48h => 'Regen 48 h';
 	@override String get m_no_rain => 'kein Regen';
+}
+
+// Path: recipes
+class _Translations$recipes$de extends Translations$recipes$en {
+	_Translations$recipes$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get empty => 'Noch keine Rezepte. Mischung mit + speichern.';
+	@override String get fab_new => 'Rezept';
+	@override String get form_new => 'Neues Rezept';
+	@override String get form_edit => 'Rezept bearbeiten';
+	@override String get form_name => 'Name';
+	@override String get form_equipment => 'Geräte';
+	@override String get form_equipment_hint => 'z. B. 16-L-Sprühgerät';
+	@override String get form_save => 'Speichern';
+	@override String get err_name => 'Rezeptnamen eingeben.';
+	@override String get form_delete => 'Rezept löschen';
+	@override String get delete_note => 'Dieses Rezept wird aus deiner Liste entfernt.';
+	@override String get items => 'Mittel';
+	@override String get add_item => 'Mittel hinzufügen';
+	@override String get pick_title => 'Rezept wählen';
+	@override String get item_removed => 'Entferntes Mittel';
+}
+
+// Path: harvest
+class _Translations$harvest$de extends Translations$harvest$en {
+	_Translations$harvest$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get yield_section => 'Ertrag';
+	@override String get sheet_title => 'Wie viel hast du geerntet?';
+	@override String get amount_label => 'Menge';
+	@override String get amount_hint => 'z. B. 2,5';
+	@override String get unit_label => 'Einheit';
+	@override String get save => 'Speichern';
+	@override String get skip => 'Überspringen';
+	@override String get remove => 'Ertrag entfernen';
+	@override String get add => 'Ertrag hinzufügen';
+	@override String get summary_title => 'Ernte';
+	@override String get summary_total => 'Gesamt';
+	@override String get unit_kg => 'kg';
+	@override String get unit_dag => 'dag';
+	@override String get unit_g => 'g';
+	@override String get unit_pieces => 'Stk.';
+	@override String get unit_l => 'l';
+	@override String get unit_bunch => 'Bund';
 }
 
 // Path: suggestions
@@ -1857,9 +2038,11 @@ extension on TranslationsDe {
 			'home.no_tasks_today' => 'Heute keine geplanten Aufgaben.',
 			'home.no_recent' => 'Noch keine erledigten Aufgaben.',
 			'home.overdue_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 überfällige Aufgabe', other: '${n} überfällige Aufgaben', ), 
+			'home.upcoming_banner' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 anstehende Aufgabe', other: '${n} anstehende Aufgaben', ), 
 			'common.today' => 'Heute',
 			'common.yesterday' => 'gestern',
 			'common.load_error' => 'Daten konnten nicht geladen werden.',
+			'common.save_error' => 'Speichern fehlgeschlagen.',
 			'swipe.complete' => 'Erledigt',
 			'swipe.postpone' => '+1 Tag',
 			'swipe.revert' => 'Zurück',
@@ -1868,6 +2051,10 @@ extension on TranslationsDe {
 			'swipe.delete' => 'Löschen',
 			'notifications.today' => 'Heute',
 			'notifications.tomorrow' => 'Morgen',
+			'journal_nudge.title_a' => 'Starte dein Gartentagebuch 🌱',
+			'journal_nudge.body_a' => 'Trag deine erste Aufgabe ein — was wächst bei dir?',
+			'journal_nudge.title_b' => 'Was passiert im Garten?',
+			'journal_nudge.body_b' => 'Halt fest, was du diese Woche im Garten gemacht hast.',
 			'notif_priming.title' => 'Soll ich dich rechtzeitig erinnern?',
 			'notif_priming.why' => 'Damit dir keine Aufgabe entgeht — die Erinnerung kommt genau dann, wenn du sie eingestellt hast.',
 			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.',
@@ -1881,10 +2068,12 @@ extension on TranslationsDe {
 			'notif_settings.section_types' => 'Benachrichtigungsarten',
 			'notif_settings.type_reminders' => 'Aufgaben-Erinnerungen',
 			'notif_settings.type_reminders_sub' => 'lokal · funktionieren ohne Internet',
+			'notif_settings.type_journal_nudge' => 'Tagebuch-Erinnerung',
+			'notif_settings.type_journal_nudge_sub' => 'lokal · ein sanfter Anstoß, wenn es still wird',
 			'notif_settings.type_weather' => 'Smarte Hinweise (Wetter)',
-			'notif_settings.type_weather_sub' => '„morgen trocken — ein guter Zeitpunkt“',
+			'notif_settings.type_weather_sub' => 'demnächst · über Server',
 			'notif_settings.type_community' => 'Hinweise aus der Umgebung',
-			'notif_settings.type_community_sub' => 'was andere in der Nähe tun',
+			'notif_settings.type_community_sub' => 'demnächst (V2)',
 			'notif_settings.section_default_offset' => 'Standard-Vorlaufzeit',
 			'notif_settings.default_offset_hint' => 'Füllt neue Aufgaben vor; jederzeit änderbar.',
 			'notif_settings.section_quiet' => 'Damit du nicht überflutet wirst',
@@ -1899,6 +2088,9 @@ extension on TranslationsDe {
 			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
 			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
 			'notif_settings.hints_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.',
+			'reminder_sound.silent_volume' => 'Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.',
+			'reminder_sound.silent_mode' => 'Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.',
+			'reminder_sound.enable' => 'Ton einschalten',
 			'notif_preview.title' => 'Benachrichtigungen — Vorschau',
 			'notif_preview.date' => 'Dienstag, 1. Juni',
 			'notif_preview.rem_now' => 'jetzt',
@@ -1930,12 +2122,17 @@ extension on TranslationsDe {
 			'auth.continue_apple' => 'Mit Apple fortfahren',
 			'auth.continue_google' => 'Mit Google fortfahren',
 			'auth.continue_email' => 'Mit E-Mail fortfahren',
-			'auth.guest' => 'Ohne Konto ausprobieren',
+			'auth.guest' => 'Als Gast fortfahren',
 			'auth.legal' => 'Wir senden einen Bestätigungscode per E-Mail (ohne Passwort). Mit dem Fortfahren stimmst du den Bedingungen und dem Datenschutz zu.',
-			'auth.guest_warning' => 'Ohne Konto gehen alle Daten verloren, wenn du die App entfernst oder das Gerät wechselst.',
+			'auth.guest_warning' => 'Als Gast speicherst du deine Daten nur auf diesem Gerät. Du kannst später ein Konto hinzufügen.',
 			'auth.google_error' => 'Google-Anmeldung fehlgeschlagen. Bitte versuche es erneut.',
 			'auth.coming_soon' => 'Demnächst verfügbar.',
 			'auth.privacy_link' => 'Datenschutzerklärung',
+			'account.guest_tooltip' => 'Gast — zum Anmelden tippen',
+			'account.guest_title' => 'Du nutzt Tendask als Gast',
+			'account.guest_body' => 'Dein Garten ist nur auf diesem Gerät gespeichert. Melde dich an, um ihn in der Cloud zu sichern und geräteübergreifend zu synchronisieren — deine aktuellen Daten bleiben erhalten.',
+			'account.sign_in_cta' => 'Anmelden / registrieren',
+			'account.maybe_later' => 'Vielleicht später',
 			'email_login.title' => 'Mit E-Mail anmelden',
 			'email_login.email_label' => 'E-Mail-Adresse',
 			'email_login.email_hint' => 'du@beispiel.de',
@@ -1953,6 +2150,7 @@ extension on TranslationsDe {
 			'email_login.err_email_domain' => 'Die Domain dieser E-Mail wurde nicht gefunden. Prüfe die Adresse.',
 			'email_login.did_you_mean' => ({required Object suggestion}) => 'Meintest du ${suggestion}?',
 			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
+			'email_login.skip_for_now' => 'Ohne Anmeldung fortfahren',
 			'location.title' => 'Wo gärtnerst du?',
 			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
@@ -2026,11 +2224,16 @@ extension on TranslationsDe {
 			'task_detail.action_delete' => 'Löschen',
 			'task_detail.action_revert' => 'Zurück auf Ausstehend',
 			'task_detail.action_move' => 'Verschieben',
-			'task_detail.recurrence_once' => 'Einmalig',
+			'task_detail.action_stop_recurrence' => 'Wiederholung beenden',
+			'task_detail.recurrence_none' => 'Nein',
+			'task_detail.recurrence_daily' => 'Täglich',
 			'task_detail.recurrence_weekly' => 'Wöchentlich',
-			'task_detail.recurrence_seasonal' => 'Saisonal',
+			'task_detail.recurrence_every_days' => ({required Object n}) => 'Alle ${n} Tage',
+			'task_detail.recurrence_remaining' => ({required Object n}) => ' · noch ${n}×',
 			'task_detail.none' => '—',
 			'task_detail.not_found' => 'Aufgabe nicht gefunden.',
+			'task_detail.recurrence_once' => 'Einmalig',
+			'task_detail.recurrence_seasonal' => 'Saisonal',
 			'tasks_list.title' => 'Aufgaben',
 			'tasks_list.subtitle' => 'bevorstehende und überfällige',
 			'tasks_list.section_overdue' => 'Überfällig',
@@ -2051,6 +2254,9 @@ extension on TranslationsDe {
 			'tasks_list.delete_confirm_body' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
 			'tasks_list.delete_yes' => 'Löschen',
 			'tasks_list.delete_cancel' => 'Abbrechen',
+			'tasks_list.recurring_badge_tooltip' => 'Wiederkehrende Aufgabe',
+			'tasks_list.completed_recurring_toast' => ({required Object date}) => '↻ Wiederholt · nächste ${date}',
+			'tasks_list.revert_blocked_recurring' => 'Rückgängig nicht möglich — die nächste Aufgabe der Serie existiert bereits. Bei Bedarf löschen.',
 			'subject_picker.title' => 'Pflanze oder Bereich',
 			'subject_picker.choose' => 'Wählen',
 			'entry.title_new' => 'Neue Aufgabe',
@@ -2069,6 +2275,7 @@ extension on TranslationsDe {
 			'entry.subject_title' => 'Wofür?',
 			'entry.subject_search_hint' => 'Pflanze suchen…',
 			'entry.subject_plants' => 'Pflanzen',
+			'entry.subject_less_likely' => 'Weniger wahrscheinlich für diese Aufgabe',
 			'entry.subject_add_plant' => 'Pflanze hinzufügen',
 			'entry.subject_add_area' => 'Bereich hinzufügen',
 			'entry.subject_from_catalog' => 'Aus Katalog hinzufügen',
@@ -2086,6 +2293,18 @@ extension on TranslationsDe {
 			'entry.when_status_waiting' => 'Wartet',
 			'entry.when_status_done' => 'Erledigt',
 			'entry.when_status_note' => 'Standard aus Datum und Uhrzeit: Zukunft = wartet, sonst = erledigt.',
+			'entry.recurrence_label' => 'Wiederholung',
+			'entry.recurrence_off' => 'Keine',
+			'entry.recurrence_daily' => 'Täglich',
+			'entry.recurrence_weekly' => 'Wöchentlich',
+			'entry.recurrence_custom' => 'Eigene',
+			'entry.recurrence_interval_label' => 'Alle',
+			'entry.recurrence_days_unit' => 'Tage',
+			'entry.recurrence_repeat_count' => 'Eine bestimmte Anzahl wiederholen',
+			'entry.recurrence_times_unit' => 'Mal',
+			'entry.recurrence_repeat_count_hint' => 'Wiederholt sich unbegrenzt; beende es bei der Aufgabe (⋯ → Wiederholung beenden).',
+			'entry.recurrence_invalid_number' => 'Zahl eingeben',
+			'entry.recurrence_next_preview' => ({required Object date}) => 'Nächste: ${date}',
 			'entry.reminder_title' => 'Erinnerung',
 			'entry.optional' => '(optional)',
 			'entry.reminder_why' => 'Dieser Schritt ist da, weil die Aufgabe geplant ist (Wartet). Eine Erinnerung benachrichtigt dich zur gewählten Zeit auf dem Handy.',
@@ -2121,11 +2340,14 @@ extension on TranslationsDe {
 			'entry.rem_at' => ({required Object t}) => 'um ${t}',
 			'entry.rem_choose_time' => 'Um Uhrzeit',
 			'entry.rem_time_note' => 'Die Uhrzeit gilt bei tagbasiertem Vorlauf (z. B. „1 Tag vorher um 18:00“).',
+			'entry.rem_default_hint' => 'Wir haben eine Standard-Erinnerung hinzugefügt. Entferne sie, wenn du sie nicht brauchst.',
+			'entry.rem_saved_notif_off' => 'Aufgabe gespeichert. Benachrichtigungen sind aus — aktiviere sie in den Einstellungen.',
 			'entry.rem_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher kann keine Erinnerung hinzugefügt werden.',
 			'entry.rem_exact_title' => 'Exakte Erinnerungen erlauben',
 			'entry.rem_exact_body' => 'Damit sie zur exakten Zeit ausgelöst wird, benötigt Tendask die Berechtigung „Wecker und Erinnerungen“. Aktiviere sie in den Einstellungen und füge die Erinnerung erneut hinzu.',
 			'entry.rem_exact_open' => 'Einstellungen öffnen',
 			'entry.rem_added' => 'bereits hinzugefügt',
+			'entry.supplies_use_recipe' => 'Rezept verwenden',
 			'plant_edit.title_edit' => 'Pflanze bearbeiten',
 			'plant_edit.species' => 'Art',
 			'plant_edit.alias' => 'Eigener Name (optional)',
@@ -2149,8 +2371,12 @@ extension on TranslationsDe {
 			'area_pick.duplicate' => 'Diese Pflanze ist bereits im gewählten Bereich.',
 			'areas.title' => 'Garten',
 			'areas.subtitle' => 'Pflanzen und Rasen',
+			'areas.seg_areas' => 'Bereiche',
+			'areas.fab_plant' => 'Pflanze',
 			'areas.unassigned' => 'Ohne Bereich',
 			'areas.last_prefix' => 'zuletzt:',
+			'areas.no_plants' => 'Keine Pflanzen',
+			'areas.plant_count' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '1 Pflanze', other: '${n} Pflanzen', ), 
 			'areas.type_garden' => 'Garten',
 			'areas.type_lawn' => 'Rasen',
 			'areas.type_hedge' => 'Hecke',
@@ -2196,15 +2422,16 @@ extension on TranslationsDe {
 			'plants.custom_private' => 'Ein eigener Eintrag ist privat und wird nicht mit der Community geteilt.',
 			'plants.add_title' => 'Pflanzen hinzufügen',
 			'plants.frequent' => 'Häufig',
+			'plants.less_likely' => 'Weniger wahrscheinlich für diesen Bereich',
 			'plants.undo' => 'Rückgängig',
 			'plants.done' => 'Fertig',
 			'plants.add_to_label' => 'Hinzufügen zu',
 			'plants.choose_area' => 'wählen',
 			'plants.field_add' => 'Pflanze auswählen',
 			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
-			'supplies.title' => 'Vorräte',
+			'supplies.title' => 'Mittel',
 			'supplies.subtitle' => 'was ich zu Hause habe',
-			'supplies.empty' => 'Noch keine Vorräte. Füge welche mit + hinzu.',
+			'supplies.empty' => 'Noch keine Mittel. Füge welche mit + hinzu.',
 			'supplies.low' => 'wenig',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
 			'supplies.form_new' => 'Neues Mittel',
@@ -2219,6 +2446,17 @@ extension on TranslationsDe {
 			'supplies.pick_new' => 'Neues Mittel',
 			'supplies.amount' => 'Verbrauchte Menge',
 			'supplies.add_confirm' => 'Hinzufügen',
+			'supplies.form_delete' => 'Mittel löschen',
+			'supplies.delete_note' => 'Dieses Mittel wird aus deiner Liste entfernt.',
+			'supplies.form_category' => 'Kategorie',
+			'supplies.cat_fertilizer' => 'Dünger',
+			'supplies.cat_treatment' => 'Pflanzenschutz',
+			'supplies.cat_equipment' => 'Geräte',
+			'supplies.cat_other' => 'Sonstiges',
+			'supplies.seg_supplies' => 'Mittel',
+			'supplies.seg_recipes' => 'Rezepte',
+			'supplies.fab_new' => 'Mittel',
+			'supplies.search' => 'Mittel suchen',
 			'settings.title' => 'Einstellungen',
 			'settings.profile_guest' => 'Gast (nicht angemeldet)',
 			'settings.sign_in_prompt' => 'Melde dich an, um deine Daten zu sichern',
@@ -2226,20 +2464,20 @@ extension on TranslationsDe {
 			'settings.section_location' => 'Standort',
 			'settings.location_placeholder' => 'Wetter-Standort',
 			'settings.section_language' => 'Sprache',
+			'settings.section_appearance' => 'Darstellung',
+			'settings.appearance_placeholder' => 'Thema & Farben',
+			'settings.theme_system' => 'System',
+			'settings.theme_light' => 'Hell',
+			'settings.theme_dark' => 'Dunkel',
 			'settings.section_notifications' => 'Benachrichtigungen',
 			'settings.notifications_placeholder' => 'Benachrichtigungen und Erinnerungen',
-			'settings.section_suggestions' => 'Vorschläge',
-			'settings.suggestions_history_sub' => 'Was vorgeschlagen wurde und wie du reagiert hast',
-			'settings.section_garden' => 'Garten',
-			'settings.supplies' => '📦 Vorräte & Mittel',
-			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
 			'settings.section_account' => 'Konto & Daten',
 			'settings.export_data' => 'Daten exportieren (DSGVO)',
 			'settings.logout' => 'Abmelden',
 			'settings.logout_confirm_title' => 'Abmelden?',
 			'settings.logout_confirm_body' => 'Meldet dich ab und löscht lokale Daten von diesem Gerät. Synchronisierte Daten bleiben in der Cloud und kehren zurück, wenn du dich mit demselben Konto erneut anmeldest.',
 			'settings.logout_cancel' => 'Abbrechen',
-			'settings.logout_offline' => 'Abmelden offline nicht möglich — deine Daten sind noch nicht in der Cloud gesichert. Versuche es erneut, sobald du verbunden bist.',
+			'settings.logout_offline' => 'Abmelden pausiert — deine letzten Änderungen sind noch nicht in der Cloud gesichert. Versuche es gleich erneut.',
 			'settings.export_share_text' => 'Tendask Datenexport',
 			'settings.export_error' => 'Export fehlgeschlagen. Bitte versuche es erneut.',
 			'settings.delete_account' => 'Konto und alle Daten löschen',
@@ -2253,6 +2491,32 @@ extension on TranslationsDe {
 			'settings.delete_data_confirm' => 'Löschen',
 			'settings.section_about' => 'Über',
 			'settings.privacy_policy' => 'Datenschutzerklärung',
+			'settings.section_suggestions' => 'Vorschläge',
+			'settings.suggestions_history_sub' => 'Was vorgeschlagen wurde und wie du reagiert hast',
+			'settings.section_garden' => 'Garten',
+			'settings.supplies' => '📦 Vorräte & Mittel',
+			'settings.supplies_sub' => 'Harnstoff, Algen, Dünger, Geräte',
+			'appearance.mode_label' => 'Modus',
+			'appearance.mode_help' => '„System“ wechselt automatisch zwischen Hell und Dunkel, passend zu deinem Telefon.',
+			'appearance.follows_system_light' => 'Folgt dem Telefon · aktuell hell',
+			'appearance.follows_system_dark' => 'Folgt dem Telefon · aktuell dunkel',
+			'appearance.palette_label' => 'Farbthema',
+			'appearance.preview_label' => 'Vorschau',
+			'appearance.default_badge' => 'Standard',
+			'appearance.reset' => 'Auf Standard zurücksetzen',
+			'appearance.applies_immediately' => 'Änderungen gelten sofort. Sie betreffen nur dieses Gerät.',
+			'appearance.palette_green' => 'Grün',
+			'appearance.palette_lavender' => 'Lavendel',
+			'appearance.palette_ocean' => 'Ozean',
+			'appearance.palette_clay' => 'Terrakotta',
+			'appearance.palette_berry' => 'Heidelbeere',
+			'appearance.palette_nebo' => 'Himmel',
+			'appearance.preview_appbar' => 'Start',
+			'appearance.preview_task' => 'Gießen · Tomate',
+			'appearance.preview_task_sub' => 'heute · Hecke',
+			'appearance.preview_action' => 'Erledigt',
+			'appearance.preview_chip' => '✓ Obstbäume',
+			'appearance.preview_swipe' => 'Basilikum',
 			'weather.cond_clear' => 'Klar',
 			'weather.cond_mainly_clear' => 'Überwiegend klar',
 			'weather.cond_cloudy' => 'Bewölkt',
@@ -2275,9 +2539,43 @@ extension on TranslationsDe {
 			'weather.m_wind' => 'Wind',
 			'weather.m_precipitation' => 'Niederschlag',
 			'weather.m_soil_temp' => 'Bodentemp.',
+			_ => null,
+		} ?? switch (path) {
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Regen 48 h',
 			'weather.m_no_rain' => 'kein Regen',
+			'recipes.empty' => 'Noch keine Rezepte. Mischung mit + speichern.',
+			'recipes.fab_new' => 'Rezept',
+			'recipes.form_new' => 'Neues Rezept',
+			'recipes.form_edit' => 'Rezept bearbeiten',
+			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Geräte',
+			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
+			'recipes.form_save' => 'Speichern',
+			'recipes.err_name' => 'Rezeptnamen eingeben.',
+			'recipes.form_delete' => 'Rezept löschen',
+			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
+			'recipes.items' => 'Mittel',
+			'recipes.add_item' => 'Mittel hinzufügen',
+			'recipes.pick_title' => 'Rezept wählen',
+			'recipes.item_removed' => 'Entferntes Mittel',
+			'harvest.yield_section' => 'Ertrag',
+			'harvest.sheet_title' => 'Wie viel hast du geerntet?',
+			'harvest.amount_label' => 'Menge',
+			'harvest.amount_hint' => 'z. B. 2,5',
+			'harvest.unit_label' => 'Einheit',
+			'harvest.save' => 'Speichern',
+			'harvest.skip' => 'Überspringen',
+			'harvest.remove' => 'Ertrag entfernen',
+			'harvest.add' => 'Ertrag hinzufügen',
+			'harvest.summary_title' => 'Ernte',
+			'harvest.summary_total' => 'Gesamt',
+			'harvest.unit_kg' => 'kg',
+			'harvest.unit_dag' => 'dag',
+			'harvest.unit_g' => 'g',
+			'harvest.unit_pieces' => 'Stk.',
+			'harvest.unit_l' => 'l',
+			'harvest.unit_bunch' => 'Bund',
 			'suggestions.actions.plan' => 'Einplanen',
 			'suggestions.actions.dismiss' => 'Überspringen',
 			'suggestions.actions.already_done' => 'Schon erledigt',
@@ -2358,8 +2656,6 @@ extension on TranslationsDe {
 			'suggestions.berries.prune_winter.body' => 'Schneide {subject} in der Ruhephase — bis etwa {window_end_date}.',
 			'suggestions.berries.fertilize_spring.title' => 'Frühjahrsdüngung',
 			'suggestions.berries.fertilize_spring.body' => 'Dünge {subject} zu Wachstumsbeginn — bis etwa {window_end_date}.',
-			_ => null,
-		} ?? switch (path) {
 			'suggestions.berries.mulch.title' => 'Mulchen',
 			'suggestions.berries.mulch.body' => 'Mulche {subject} für kühle, feuchte Wurzeln — bis etwa {window_end_date}.',
 			'suggestions.berries.treat_dormant.title' => 'Winterspritzung',

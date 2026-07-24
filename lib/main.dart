@@ -4,10 +4,13 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:sentry/sentry.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'app/app.dart';
+import 'app/theme/theme_mode_controller.dart';
+import 'app/theme/theme_palette_controller.dart';
 import 'core/auth/auth_service.dart';
 import 'core/config.dart';
 import 'core/database/database_provider.dart';
@@ -20,6 +23,7 @@ import 'core/sync/sync_coordinator.dart';
 import 'features/areas/application/areas_providers.dart';
 import 'features/areas/data/garden_seed_service.dart';
 import 'features/notifications/application/fcm_token_service.dart';
+import 'features/notifications/application/journal_nudge_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
@@ -34,13 +38,24 @@ void main() async {
     await _bootstrap();
     return;
   }
-  await Sentry.init((options) {
-    options.dsn = kSentryDsn;
-    options.environment = kReleaseMode ? 'production' : 'development';
-  });
   // runZonedGuarded captures uncaught async errors during the whole run;
-  // framework + platform errors are forwarded from inside _bootstrap.
-  await runZonedGuarded(_bootstrap, (error, stack) {
+  // framework + platform errors are forwarded from inside _bootstrap. Binding +
+  // Sentry init run INSIDE the zone, before _bootstrap, so they share the zone
+  // that later calls runApp (a different zone triggers Flutter's mismatch error).
+  await runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    // Tag every event with the build that produced it (e.g. invalid_icon was a
+    // vc5-only bug) — the pure-Dart SDK does not auto-detect the release, so we
+    // read it from the installed package: "app.tendask@1.0.0+6".
+    final info = await PackageInfo.fromPlatform();
+    await Sentry.init((options) {
+      options.dsn = kSentryDsn;
+      options.environment = kReleaseMode ? 'production' : 'development';
+      options.release =
+          '${info.packageName}@${info.version}+${info.buildNumber}';
+    });
+    await _bootstrap();
+  }, (error, stack) {
     unawaited(Sentry.captureException(error, stackTrace: stack));
   });
 }
@@ -77,12 +92,16 @@ Future<void> _bootstrap() async {
   // FCM (M11.5): Firebase reads its config from native resources
   // (google-services.json), so init works offline. FCM is only a bell — a
   // failure here must never block boot (suggestions still arrive via pull).
-  try {
-    await Firebase.initializeApp();
-  } catch (error, stack) {
-    debugPrint('Firebase bootstrap failed (non-fatal): $error');
-    if (kSentryDsn.isNotEmpty) {
-      unawaited(Sentry.captureException(error, stackTrace: stack));
+  // Dark until launch (kSuggestionsEnabled): Firebase serves only FCM, so skip
+  // it entirely while suggestions are off.
+  if (kSuggestionsEnabled) {
+    try {
+      await Firebase.initializeApp();
+    } catch (error, stack) {
+      debugPrint('Firebase bootstrap failed (non-fatal): $error');
+      if (kSentryDsn.isNotEmpty) {
+        unawaited(Sentry.captureException(error, stackTrace: stack));
+      }
     }
   }
 
@@ -106,8 +125,10 @@ Future<void> _bootstrap() async {
   if (savedLang != null) await LocaleSettings.setLocaleRaw(savedLang);
 
   // Seed the default "garden" area once per device (FR-9), named in the now-set
-  // language. Runs before sync so the first cycle pushes it; offline-safe (a
-  // pure local write). One-shot via a local flag — a deleted garden stays gone.
+  // language. Offline-safe (a pure local write) — it is created owned by `local`
+  // and settled on sign-in by reconcileDefaultGarden, so the first cloud sync
+  // never pushes a duplicate. One-shot via a local flag (a deleted garden stays
+  // gone); the per-account guard that survives reinstall lives in the profile.
   //
   // Unlike the catalog seed, the default garden is NOT essential to booting: a
   // DB hiccup here must never black-screen the app. Degrade gracefully — on
@@ -118,7 +139,7 @@ Future<void> _bootstrap() async {
       container.read(databaseProvider),
       container.read(areasRepositoryProvider),
       container.read(localPrefsProvider),
-    ).seedDefaultIfNeeded(userId: userId, name: t.areas.default_garden_name);
+    ).seedDefaultIfNeeded(name: t.areas.default_garden_name);
   } catch (error, stack) {
     debugPrint('Default garden seed failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {
@@ -136,11 +157,14 @@ Future<void> _bootstrap() async {
   // the registration token in the profile (the smart engine's push target).
   // listen, not read: an unlistened keepAlive provider rebuilds lazily, so the
   // auth-change re-run (sign-in after boot) would otherwise never fire.
-  container.listen(fcmTokenServiceProvider, (_, _) {});
-
-  // Silent yearly climate-profile refresh (M11.3): fills a profile left null by
-  // an offline onboarding or older than a year. Fire-and-forget, never throws.
-  unawaited(container.read(locationRepositoryProvider).refreshClimateIfStale(userId));
+  // Dark until launch (kSuggestionsEnabled): a token is pointless while nothing
+  // pushes; the silent climate refresh (M11.3) only feeds the engine, so skip it too.
+  if (kSuggestionsEnabled) {
+    container.listen(fcmTokenServiceProvider, (_, _) {});
+    unawaited(
+      container.read(locationRepositoryProvider).refreshClimateIfStale(userId),
+    );
+  }
 
   // Local notifications (M8): init the plugin (timezone + plugin), needed to
   // resolve a cold-start deep-link below. The permission prompt stays deferred to
@@ -159,6 +183,10 @@ Future<void> _bootstrap() async {
     // Reconcile OS reminders with the task_reminder rows now, then reactively on
     // every task/reminder change (M8.2). Fire-and-forget.
     container.read(reminderCoordinatorProvider.notifier).start();
+
+    // Arm the re-engagement journal nudge (FR-16): a local dead-man's-switch that
+    // app opens / writes push forward and only fires after the user goes quiet.
+    container.read(journalNudgeCoordinatorProvider.notifier).start();
   } catch (error, stack) {
     debugPrint('Notification bootstrap failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {
@@ -169,22 +197,25 @@ Future<void> _bootstrap() async {
   // FCM message handlers (M11.7): foreground pushes pull + notify locally,
   // taps deep-link to Home. If a tapped push cold-started the app, route to
   // Home below. Non-fatal like the Firebase init above (FCM is only a bell).
+  // Dark until launch (kSuggestionsEnabled): stays null so routing never takes
+  // the suggestion branch.
   String? launchSuggestionId;
-  try {
-    final fcm = container.read(fcmHandlerProvider);
-    fcm.start();
-    launchSuggestionId = await fcm.initialSuggestionId();
-  } catch (error, stack) {
-    debugPrint('FCM bootstrap failed (non-fatal): $error');
-    if (kSentryDsn.isNotEmpty) {
-      unawaited(Sentry.captureException(error, stackTrace: stack));
+  if (kSuggestionsEnabled) {
+    try {
+      final fcm = container.read(fcmHandlerProvider);
+      fcm.start();
+      launchSuggestionId = await fcm.initialSuggestionId();
+    } catch (error, stack) {
+      debugPrint('FCM bootstrap failed (non-fatal): $error');
+      if (kSentryDsn.isNotEmpty) {
+        unawaited(Sentry.captureException(error, stackTrace: stack));
+      }
     }
   }
 
   // First-run gating (M7.2): show the onboarding intro until the user passes it.
-  final onboardingSeen = await container
-      .read(localPrefsProvider)
-      .onboardingSeen();
+  final localPrefs = container.read(localPrefsProvider);
+  final onboardingSeen = await localPrefs.onboardingSeen();
 
   // A locally shown suggestion notification (FCM foreground) carries a
   // 'suggestion:' payload; a bare payload is a reminder's task id (M8.3).
@@ -202,8 +233,24 @@ Future<void> _bootstrap() async {
   } else if (launchPayload != null) {
     target = '/tasks/$launchPayload';
   } else {
-    target = '/home';
+    // Resume an interrupted email sign-in (code sent, app closed before verify)
+    // on the code step — otherwise the relaunch silently lands in guest mode.
+    // Consume-once: an abandoned attempt falls back to home on the next launch.
+    final pendingEmail = container.read(authServiceProvider).hasSession
+        ? null
+        : await localPrefs.pendingSignInEmail();
+    if (pendingEmail != null && pendingEmail.isNotEmpty) {
+      await localPrefs.clearPendingSignInEmail();
+      target = '/login-email?email=${Uri.encodeComponent(pendingEmail)}';
+    } else {
+      target = '/home';
+    }
   }
+
+  // Resolve the saved theme mode + colour palette before first paint so the app
+  // opens in the chosen theme without a flash (same container backs runApp).
+  await container.read(themeModeControllerProvider.future);
+  await container.read(themePaletteControllerProvider.future);
 
   // Start on the branded splash (M9.2), which routes to [target] after a brief
   // readable delay.
