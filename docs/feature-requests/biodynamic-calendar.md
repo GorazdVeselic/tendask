@@ -268,7 +268,12 @@ je že v produkciji) — je stvar prioritizacije in kasnejše monetizacije.
 
 Načelo: izračun je poceni → **adut ni algoritem, ampak UX + integracija + planiranje**. Premium
 entitlement se cachea v drift (offline-first, plačnik dela brez signala — `tendask-monetization-planned`).
-Etapno: **najprej vse free** (mena + element-dan + planer), premium meja se prižge šele z monetizacijo.
+
+**Razkritje (posodobljeno 2026-07-24, nadomešča prvotni »najprej vse free«):** prvotna ideja je bila
+etapno vse free in kasnejši vklop zidu — a to na koncu **povzroči slabe ocene** (odvzem izdane funkcije).
+Zato: **bogati del (element-dan + planer + akcije) se gradi za flagom, temen — ne izide free.** Free ostane
+le **mena Lune**. Ob prižigu vsi obstoječi profili dobijo **1 leto Tendask+ zastonj** (lansirno darilo).
+Avtoritativno: **FR-20 §10.4** + [`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md).
 
 ## 7. i18n / brand
 
@@ -329,10 +334,14 @@ narobe). Singular »dan za plod«, plural/splošno »dnevi za plod«. Kratka ozn
 vsezamojdan.si). i18n ključi naj sledijo tej frazi (`moon.day_for_fruit/leaf/flower/root`).
 
 ### 11.2 Free vs premium meja (v ponovnem premisleku — glej §15)
-> **Opomba (2026-07-22):** konkurent posadi.si daje setveni koledar **zastonj** (§15) → »element-dan =
-> premium« je šibka prodajna točka. Meja je znova odprta: verjetno **element-dan tudi free** (kavelj),
-> premium = **napredni sloji** (planer, obratni iskalnik, dvižna/padna, neugodni, obvestila). Odločitev
-> pending; spodnje je prvotni v2 predlog.
+> **Ločiti dve vprašanji:**
+> - **Način razkritja = REŠENO (2026-07-24).** Karkoli pristane v premium, se gradi **za flagom (dark) in
+>   debitira zaklenjeno** — NE izide free in se kasneje zaklene (to povzroči slabe ocene). Ob prižigu
+>   vsi obstoječi dobijo **1 leto Tendask+ zastonj**. Avtoritativno: FR-20 §10.4 + rollout plan.
+> - **Kje je meja = ŠE ODPRTO.** Opomba (2026-07-22): konkurent posadi.si daje setveni koledar **zastonj**
+>   (§15) → »element-dan = premium« je šibka prodajna točka. Verjetno **element-dan tudi free** (kavelj),
+>   premium = **napredni sloji** (planer, obratni iskalnik, dvižna/padna, neugodni, obvestila). Odločitev
+>   pending; spodnje je prvotni v2 predlog. **Karkoli konča kot premium, sledi zgornjemu načinu razkritja.**
 - **Mena Lune (faza) = FREE za vse** — ikona (dinamični SVG) + faza na čipu Domov. Nedvoumna, poceni,
   gradi navado.
 - **Element-dan (dan za plod/list/…) + koledar/planer + akcije = premium (Tendask+).**

@@ -226,6 +226,8 @@ Trenutna struktura je en landing (`hero → #features → #shots → #okolica �
 
 Polar je **blagajna in poštar**; licenco vodiš ti.
 
+> **Odločeno (2026-07-23): licence vodi Tendask sam, ponudnik je zamenljiv od prve migracije.** Vsa licenčna resnica (`license` + `plus_until` + podpisan token) živi v Supabase; plačilni ponudnik je le blagajna. **Shema mora hitro menjavo omogočati že v štartu** — `license.provider` in `license.provider_ref` sta obvezna od prve migracije (§7), edina ponudnik-specifična koda je **adapter**: Edge Function, ki webhook dogodek prevede v kanonični upsert po `provider_ref`. Menjava ponudnika (Polar/Paddle/Stripe/…) = **prepis adapterja, ne selitev podatkov**. Menjava Polar↔Paddle je čista (oba MoR); Stripe spremeni davčno sliko (§4.1), ne le kode — zato je v §9.
+
 ⚠️ **Popravek (2026-07-22): License Keys prihranijo manj, kot je izgledalo.** Lastno generiranje kod potrebuješ **tako ali tako** (§6.6: Play pregled, grandfathering, darila). Natančna razlika:
 
 | Kos | Rabiš pri obeh ponudnikih | Prihrani Polar |
@@ -461,6 +463,7 @@ license_redeem_attempt
 ```
 
 **Pravila (iz `CLAUDE.md`):**
+- **`provider` + `provider_ref` sta obvezna že v prvi migraciji** (ne dodana kasneje) — omogočata hitro menjavo ponudnika brez migracije podatkov. `provider` = `'polar'|'paddle'|'stripe'|'internal'` (za lastne kode), `provider_ref` = ponudnikov `sub_`/`order` id. Vsi webhook adapterji iščejo vrstico **po `provider_ref`**, nikoli po ponudnik-specifičnem polju v drugi obliki.
 - Migracija **additive-only**, nova stolpca **nullable** → stari APK-ji ob pull-u ne crashajo.
 - **Eksplicitni granti v isti migraciji.** `license*` tabele **nimajo** granta za `authenticated` — dostop samo prek `security definer` RPC.
 - `plus_until` in `plus_token` sta **strežniško lastna**: `revoke update (plus_until, plus_token) on profile from authenticated` (column-level grant, ker RLS ne zna po stolpcih).
@@ -540,13 +543,20 @@ Monetizirati se sme le **nov sloj nad njimi** (glej 10.2), nikoli sam mehanizem 
 - **Izvoz podatkov in izbris računa** — zakonska obveznost (GDPR)
 - **Mena Lune** — free sloj FR-19 (kavelj, gradi navado)
 
-### 10.4 Grandfathering ob vklopu plačilnega zidu
+### 10.4 Lansirno darilo namesto trajnega grandfatheringa (odločeno 2026-07-23)
 
-Lunin koledar gre v produkcijo **brezplačen** in se zaklene šele kasneje (§12). To je edini primer, kjer se izdana funkcija umika za zid — in zato zahteva izrecno varovalko:
+**Nadomešča prvotni model »free-first + trajni grandfathering«.** Da spoštujeva pravilo §10 do konca (»nič, kar bo Plus, ne izide free«), **noben bodoči-Plus del ne gre v produkcijo brezplačno.** FR-19 bogati del (element-dan + planer + akcije) in M11 **debitirata že zaklenjena** (gradita se za flagom — glej rollout plan), tako kot M11. Free ostane le **mena Lune** (kavelj, §10.2/§10.3).
 
-**Vsi, ki so funkcijo uporabljali pred datumom vklopa, jo obdržijo trajno brezplačno.** Tehnično: ob vklopu enkratno označi obstoječe uporabnike (npr. `profile.plus_grandfathered bool`, dodeljeno strežniško po `updated_at`/uporabi pred mejnim datumom).
+Namesto trajne obveznosti daš **omejeno lansirno darilo**: ob prižigu zidu **masovno dodeliš vsem obstoječim profilom 1-letno `granted` licenco** (mehanizem §6.6). Strežniška enkratna operacija (additive migracija; server je lastnik `plus_until`/`plus_token`).
 
-Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne tihega popravka. Val enozvezdičnih ocen stane več kot celoten prihodek Plus.
+| | Trajni grandfathering (zavrnjeno) | **1-letno lansirno darilo (izbrano)** |
+|---|---|---|
+| Obljuba | ta funkcija **za vedno** free za zgodnji val | **cel paket** free **1 leto** za obstoječe |
+| Obveznost | neomejena, večna (`plus_grandfathered` flag za vedno) | **zamejena** — poteče |
+| Kdaj feature debitira | free → kasneje odvzet delu ljudi | **že zaklenjen od 1. dne** (nič ni nikoli odvzeto) |
+| Tveganje 1★ | obvladano z zgodbo | **še manjše** — nihče nič ne izgubi, vsi **dobijo** darilo |
+
+Po letu dni zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**1 leto v zahvalo**« (ne »za vedno«), čez leto ni drugega vala presenečenja. Iz tega naredi objavljeno zgodbo, ne tihega popravka.
 
 ---
 
@@ -589,7 +599,9 @@ Iz tega naredi **objavljeno zgodbo** (»zgodnji uporabniki obdržijo vse«), ne 
    - predelana drift vrstica → Plus ugasne
    - `review` koda: druga unovčitev uspe, po preklicu ne
 
-**Vrstni red glede na FR-19:** Lunin koledar se gradi **najprej v celoti free** (FR-19 §11.2: »etapno — najprej vse free«). Ta FR se aktivira šele, ko je funkcija zrela in ima uporabnike; gating je zadnji korak, ne prvi.
+**Vrstni red glede na FR-19 in M11 (posodobljeno 2026-07-23):** avtoritativno zaporedje je v **[`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md)**. Načelo: **deployaj sproti (flag-dark), razkrij enkrat.** FR-19 bogati del in M11 se gradita **za flagom, temna**; oba **debitirata zaklenjena** ob enem samem prižigu (§10.4), ne izideta free. Free ostane le mena Lune.
+
+⚠️ **Neusklajenost za popraviti:** FR-19 §11.2 še piše »etapno — najprej vse free«. To je **preseženo** — bogati del FR-19 ne izide free (§10.4). FR-19 spec je treba uskladiti.
 
 ---
 
