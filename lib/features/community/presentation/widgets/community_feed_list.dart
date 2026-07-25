@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/catalog_labels.dart';
+import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
@@ -109,8 +111,15 @@ class _FeedRow extends StatelessWidget {
     final theme = Theme.of(context);
     final type = taskType;
     final subject = plant;
-    // TODO(gorazd, 2026-08-31): tap → community-task (built in M11.18, step 8).
     return ListTile(
+      onTap: () => context.pushNamed(
+        'community-task',
+        pathParameters: {'taskTypeId': item.taskTypeId},
+        // Site work carries no plant, so the detail resolves the site cohort.
+        queryParameters: {
+          if (item.cohort != kCommunityCohortSite) 'plant': item.cohort,
+        },
+      ),
       leading: Text(
         subject?.icon ?? type?.icon ?? '🌱',
         style: const TextStyle(fontSize: 22),

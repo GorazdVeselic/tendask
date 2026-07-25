@@ -36,6 +36,26 @@ class CommunityRepository {
   final RemoteAggFetch? _fetch;
   final Clock _clock;
 
+  /// The profile's aggregation buckets, finest → coarsest. A stream so moving
+  /// the garden (new H3 cells) re-resolves the scope without a restart.
+  Stream<List<Bucket>> watchBuckets(String userId) =>
+      (_db.select(_db.profiles)..where((p) => p.userId.equals(userId)))
+          .watchSingleOrNull()
+          .map((profile) {
+            if (profile == null) return const <Bucket>[];
+            final keys = {
+              CommunityResolution.r7: profile.h3R7,
+              CommunityResolution.r6: profile.h3R6,
+              CommunityResolution.r5: profile.h3R5,
+              CommunityResolution.climate: profile.climateBucket,
+            };
+            return [
+              for (final level in keys.entries)
+                if (level.value case final key?)
+                  Bucket(resolution: level.key, key: key),
+            ];
+          });
+
   /// Finest bucket (r7 → r6 → r5 → climate) whose population clears the privacy
   /// threshold, then its "This week" feed. Widens the geography one level at a
   /// time, never mixing (§7.4). null = not enough gardeners at any level.
@@ -58,6 +78,37 @@ class CommunityRepository {
         bucket: bucket,
         population: population,
         items: items,
+      );
+    }
+    return null;
+  }
+
+  /// The "this week" line for ONE cohort at ONE resolution level, read from the
+  /// same daily `activity_recent` slice the feed already caches — no extra
+  /// request. null = this cohort is not in the slice at this level (nobody, or
+  /// below the RLS threshold), so the caller widens.
+  Future<CommunityWeekly?> recentActivity({
+    required Bucket bucket,
+    required String taskTypeId,
+    required String cohort,
+  }) async {
+    final population = await bucketPopulation(bucket: bucket);
+    if (population == null || population < kCommunityPrivacyMin) return null;
+    final rows = await _cachedRows('activity_recent', {
+      'resolution': bucket.resolution.name,
+      'bucket_key': bucket.key,
+    });
+    if (rows == null) return null;
+    for (final row in rows) {
+      if (row['task_type_id'] != taskTypeId || row['plant_id'] != cohort) {
+        continue;
+      }
+      final users = row['distinct_users_7d'];
+      if (users is! num) continue;
+      return CommunityWeekly(
+        bucket: bucket,
+        distinctUsers7d: users.toInt(),
+        intensity: feedIntensity(users.toInt(), population),
       );
     }
     return null;
@@ -106,46 +157,54 @@ class CommunityRepository {
     );
   }
 
-  /// My own first completion of [taskTypeId] in [cohort] this season — the "you"
-  /// marker. Season = calendar year, mirroring the cron's
-  /// `extract(year from local_day)`; cohort membership mirrors `agg_event`
-  /// (catalog plant subject → that plant, otherwise site work, so a task on a
-  /// private custom plant counts as site here too). The returned date is in
-  /// local time, the flavour [isoWeek] expects for the marker.
-  /// LOCAL only: this never leaves the device. null = not started yet this year.
-  Future<DateTime?> myFirstThisSeason(
+  /// My own record for [taskTypeId] in [cohort] this season: the first date (the
+  /// "you" marker) and how many times I did it (the "you" bar). Season =
+  /// calendar year, mirroring the cron's `extract(year from local_day)`; cohort
+  /// membership mirrors `agg_event` (catalog plant subject → that plant,
+  /// otherwise site work, so a task on a private custom plant counts as site
+  /// here too). Dates are local, the flavour [isoWeek] expects.
+  ///
+  /// A stream, so logging a task while the screen is open moves the marker.
+  /// LOCAL only: this never leaves the device.
+  Stream<MySeason> watchMySeason(
     String taskTypeId, {
     required String cohort,
-  }) async {
+  }) {
     final year = _clock.now().toLocal().year;
     final from = DateTime(year).toUtc();
     final until = DateTime(year + 1).toUtc();
 
-    final tasks =
-        await (_db.select(_db.tasks)
-              ..where(
-                (t) =>
-                    t.taskTypeId.equals(taskTypeId) &
-                    t.status.equalsValue(TaskStatus.done) &
-                    t.deleted.equals(false) &
-                    t.date.isBiggerOrEqualValue(from) &
-                    t.date.isSmallerThanValue(until),
-              )
-              ..orderBy([(t) => OrderingTerm(expression: t.date)]))
-            .get();
-    if (tasks.isEmpty) return null;
+    return (_db.select(_db.tasks)
+          ..where(
+            (t) =>
+                t.taskTypeId.equals(taskTypeId) &
+                t.status.equalsValue(TaskStatus.done) &
+                t.deleted.equals(false) &
+                t.date.isBiggerOrEqualValue(from) &
+                t.date.isSmallerThanValue(until),
+          )
+          ..orderBy([(t) => OrderingTerm(expression: t.date)]))
+        .watch()
+        .asyncMap((tasks) => _mySeasonOf(tasks, cohort));
+  }
 
+  Future<MySeason> _mySeasonOf(List<Task> tasks, String cohort) async {
+    if (tasks.isEmpty) return const MySeason(first: null, count: 0);
     final catalogPlantsByTask = await _catalogPlantsByTask(
       tasks.map((t) => t.id).toList(),
     );
+    DateTime? first;
+    var count = 0;
     for (final task in tasks) {
       final plants = catalogPlantsByTask[task.id] ?? const <String>{};
       final inCohort = cohort == kCommunityCohortSite
           ? plants.isEmpty
           : plants.contains(cohort);
-      if (inCohort) return task.date;
+      if (!inCohort) continue;
+      first ??= task.date; // the query is ordered by date
+      count++;
     }
-    return null;
+    return MySeason(first: first, count: count);
   }
 
   /// Catalog plant ids per task (custom plants excluded, like `agg_event`).

@@ -108,7 +108,12 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
 | `/task-new` | **task-new** | Domov +FAB · Dnevnik »+ Dodaj …« (`?date=`) | wizard (gl. §3.1) |
 | `/tasks/:id/edit` | task-edit | task-detail »✏️ Uredi« | wizard v edit-načinu |
 | `/task/:id` | **task-view** | task-detail za klicalce **nad** shell-om (npr. plant-detail) | isti kot task-detail |
-| `/community/task/:taskTypeId` | **community-task** [M11, flag-dark] | Okolica feed · Domov kartica · detajl opravila CTA (`?plant=`) | percentil krivulja + »ti« marker + frekvenca stolpci + »ta teden«; brez Plus → `TeaseOverlay` |
+
+> **Opomba k `community-task`:** ruta je **gnezdena pod `/community`** (ostane v zavihku, ima svoj back
+> stack), zato ni [full]. `?plant=` **odsoten = prostorska skupina** (`@site`) — sentinel ne gre v URL.
+> Os obeh grafov je **datumska** (`formatDm` ponedeljka tedna), ne imena mesecev kot v wireframu B3:
+> imena mesecev bi pomenila 36 novih prevodov za manj natančnosti na tedenskem grafu.
+| `/community/task/:taskTypeId` | **community-task** [M11, flag-dark] | Okolica feed · Domov kartica · detajl opravila CTA (`?plant=`) | percentil stolpci + »ti« marker + frekvenca stolpci + »ta teden« + ℹ️ explain sheet; brez Plus → `TeaseOverlay` čez vso vsebino |
 
 ### 2.1 Nastavitve — `/settings` (dejansko, ADB 2026-07-23)
 Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA oznaka + kartica):

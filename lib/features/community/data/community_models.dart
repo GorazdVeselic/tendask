@@ -45,6 +45,27 @@ abstract class CommunityFeed with _$CommunityFeed {
   }) = _CommunityFeed;
 }
 
+/// How busy ONE cohort has been over the sliding 7-day window, at the scope that
+/// cleared the threshold — the "this week" line on the detail screen. Read from
+/// the same daily feed slice, so it costs no extra request.
+@freezed
+abstract class CommunityWeekly with _$CommunityWeekly {
+  const factory CommunityWeekly({
+    required Bucket bucket,
+    required int distinctUsers7d,
+    required CommunityIntensity intensity,
+  }) = _CommunityWeekly;
+}
+
+/// My own record for one task type in one cohort this season (drift only, never
+/// leaves the device): [first] anchors the "you" marker on the season chart,
+/// [count] the "you" bar on the frequency chart. Both come from one query.
+@freezed
+abstract class MySeason with _$MySeason {
+  const factory MySeason({required DateTime? first, required int count}) =
+      _MySeason;
+}
+
 /// Where a date falls against the season curve when a percentage would overstate
 /// the precision (below `kCommunityReliabilityMin`, §7.7): the three terciles.
 enum CommunityTiming { early, typical, late }

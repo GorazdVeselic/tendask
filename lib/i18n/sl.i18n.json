@@ -1003,6 +1003,51 @@
     "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
     "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
     "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.",
+    "detail": {
+      "timing_kicker": "Kdaj · tvoj položaj",
+      "you_percent": "Bil si med prvimi ~$percent %",
+      "you_band": {
+        "early": "Bil si med zgodnejšimi",
+        "typical": "Bil si približno ob običajnem času",
+        "late": "Bil si med poznejšimi"
+      },
+      "not_started": "Letos tega še nisi naredil",
+      "by_now_percent": "Do zdaj je začelo ~$percent %.",
+      "by_date_percent": "Do $date je začelo ~$percent %.",
+      "peak_weeks": "Večina začne med $from in $to.",
+      "censored_note": "Prva sezona: šteti so le tisti, ki so letos že začeli, zato se delež še premika.",
+      "among(n)": {
+        "one": "med ~1 vrtnarjem",
+        "two": "med ~$n vrtnarjema",
+        "few": "med ~$n vrtnarji",
+        "other": "med ~$n vrtnarji"
+      },
+      "you": "ti",
+      "frequency_title": "Kako pogosto",
+      "freq_range": "$from–$to×",
+      "freq_low_n": "Premalo vrtnarjev za tipičen razpon.",
+      "freq_caption": "koliko vrtnarjev to naredi N-krat",
+      "unit": {
+        "per_month": "na mesec",
+        "per_season": "na sezono"
+      },
+      "this_week": {
+        "often": "Ta teden: to dela veliko vrtnarjev v okolici",
+        "some": "Ta teden: to dela nekaj vrtnarjev v okolici",
+        "rare": "Ta teden: to dela malo vrtnarjev v okolici"
+      },
+      "no_curve": "Za to primerjavo je še premalo vrtnarjev.",
+      "explain": {
+        "cta": "Kako beremo te podatke",
+        "title": "Kako beremo te podatke",
+        "source": "Številke prihajajo od vrtnarjev na Tendasku, ki beležijo opravila — ne od vseh vrtnarjev in niso agronomski nasvet.",
+        "cohort": "Primerjava teče vedno znotraj ene skupine: ista rastlina ali delo na površini, npr. trata ali gredica. Obrez jablane in obrez maline sta različni opravili, zato ju nikoli ne združimo.",
+        "scope": "Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kar razreši, je vedno napisano na zaslonu.",
+        "thresholds": "Pod 5 vrtnarji ne pokažemo ničesar; pod 30 ostane delež opisen namesto številke. Odstotke zaokrožimo na 10.",
+        "descriptive": "To opisuje, kaj ljudje delajo. Nikoli ti ne pove, kaj naj narediš.",
+        "close": "Razumem"
+      }
+    },
     "tease": {
       "title": "Na voljo v Tendask +",
       "body": "Kaj vrtnarji v okolici delajo, kdaj začnejo, kje si ti in kako pogosto.",

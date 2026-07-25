@@ -19,3 +19,28 @@ String communityIntensityLabel(Translations t, CommunityIntensity intensity) =>
       CommunityIntensity.some => t.community.intensity.some,
       CommunityIntensity.rare => t.community.intensity.rare,
     };
+
+/// The same qualitative scale as a full sentence, for the detail screen's
+/// "this week" row.
+String communityThisWeekLabel(Translations t, CommunityIntensity intensity) =>
+    switch (intensity) {
+      CommunityIntensity.often => t.community.detail.this_week.often,
+      CommunityIntensity.some => t.community.detail.this_week.some,
+      CommunityIntensity.rare => t.community.detail.this_week.rare,
+    };
+
+/// Where the reader stands, worded without a number — the honest form below
+/// [kCommunityReliabilityMin] (§7.7).
+String communityTimingLabel(Translations t, CommunityTiming timing) =>
+    switch (timing) {
+      CommunityTiming.early => t.community.detail.you_band.early,
+      CommunityTiming.typical => t.community.detail.you_band.typical,
+      CommunityTiming.late => t.community.detail.you_band.late,
+    };
+
+/// The aggregate row's `unit` column. Unknown units fall back to per-season
+/// rather than leaking a raw server string into the UI (tolerant parser).
+String communityFrequencyUnitLabel(Translations t, String unit) =>
+    unit == 'per_month'
+    ? t.community.detail.unit.per_month
+    : t.community.detail.unit.per_season;

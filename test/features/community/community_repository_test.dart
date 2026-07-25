@@ -253,6 +253,50 @@ void main() {
     );
   });
 
+  group('recentActivity — the detail screen "this week" line', () {
+    test('reads the cohort out of the slice the feed already cached', () async {
+      final before = calls;
+      await repo().feed(buckets: buckets); // warms the r6 slice
+      final warmed = calls;
+
+      final weekly = await repo().recentActivity(
+        bucket: r6,
+        taskTypeId: 'prune',
+        cohort: 'apple',
+      );
+
+      expect(weekly, isNotNull);
+      expect(weekly!.distinctUsers7d, 4);
+      expect(weekly.intensity, CommunityIntensity.some); // 4/40
+      expect(calls, warmed); // same daily slice, no extra request
+      expect(warmed, greaterThan(before));
+    });
+
+    test('null for a cohort the level does not carry, so the caller widens', () async {
+      expect(
+        await repo().recentActivity(
+          bucket: r6,
+          taskTypeId: 'prune',
+          cohort: 'pear',
+        ),
+        isNull,
+      );
+    });
+
+    test('never answers with the contaminated superset row', () async {
+      // 'prune' has a pooled row of 9 users in the slice; asking for the site
+      // cohort must not hand it back (it is not site work at all).
+      expect(
+        await repo().recentActivity(
+          bucket: r6,
+          taskTypeId: 'prune',
+          cohort: kCommunityCohortSite,
+        ),
+        isNull,
+      );
+    });
+  });
+
   test('a mid-fetch failure falls back to the stale slice', () async {
     await repo().feed(buckets: buckets); // warm cache
     clock._now = DateTime(2026, 6, 2, 9); // force staleness
@@ -265,7 +309,10 @@ void main() {
     expect(feed!.population, 40);
   });
 
-  group('myFirstThisSeason (local only)', () {
+  group('watchMySeason (local only)', () {
+    Future<MySeason> mySeason(String cohort, {String type = 'mow'}) =>
+        repo().watchMySeason(type, cohort: cohort).first;
+
     /// Inserts a completed task, optionally on a user plant of [plantId].
     Future<void> addDone(
       String id,
@@ -311,16 +358,14 @@ void main() {
           );
     }
 
-    test('returns the earliest site completion of this calendar season', () async {
+    test('returns the first date and the count of this calendar season', () async {
       await addDone('t-late', DateTime(2026, 5, 20, 9));
       await addDone('t-first', DateTime(2026, 4, 2, 9));
       await addDone('t-lastyear', DateTime(2025, 3, 1, 9));
 
-      final first = await repo().myFirstThisSeason(
-        'mow',
-        cohort: kCommunityCohortSite,
-      );
-      expect(first?.toLocal(), DateTime(2026, 4, 2, 9));
+      final mine = await mySeason(kCommunityCohortSite);
+      expect(mine.first?.toLocal(), DateTime(2026, 4, 2, 9));
+      expect(mine.count, 2); // last year is a different season
     });
 
     test('ignores other task types, other years and unfinished tasks', () async {
@@ -333,8 +378,8 @@ void main() {
       );
 
       expect(
-        await repo().myFirstThisSeason('mow', cohort: kCommunityCohortSite),
-        isNull,
+        await mySeason(kCommunityCohortSite),
+        const MySeason(first: null, count: 0),
       );
     });
 
@@ -344,22 +389,19 @@ void main() {
       await addDone('t-raspberry', DateTime(2026, 8, 5, 9), plantId: 'raspberry');
 
       expect(
-        (await repo().myFirstThisSeason('mow', cohort: 'apple'))?.toLocal(),
+        (await mySeason('apple')).first?.toLocal(),
         DateTime(2026, 2, 5, 9),
       );
       expect(
-        (await repo().myFirstThisSeason('mow', cohort: 'raspberry'))?.toLocal(),
+        (await mySeason('raspberry')).first?.toLocal(),
         DateTime(2026, 8, 5, 9),
       );
       // A task on a plant is NOT site work, so the site cohort ignores it.
       expect(
-        (await repo().myFirstThisSeason(
-          'mow',
-          cohort: kCommunityCohortSite,
-        ))?.toLocal(),
+        (await mySeason(kCommunityCohortSite)).first?.toLocal(),
         DateTime(2026, 3, 10, 9),
       );
-      expect(await repo().myFirstThisSeason('mow', cohort: 'pepper'), isNull);
+      expect((await mySeason('pepper')).count, 0);
     });
 
     test('a private custom plant counts as site work, like agg_event', () async {
@@ -398,10 +440,7 @@ void main() {
           );
 
       expect(
-        (await repo().myFirstThisSeason(
-          'mow',
-          cohort: kCommunityCohortSite,
-        ))?.toLocal(),
+        (await mySeason(kCommunityCohortSite)).first?.toLocal(),
         DateTime(2026, 4, 1, 9),
       );
     });

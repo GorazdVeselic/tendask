@@ -2130,6 +2130,7 @@ class Translations$community$en {
 	/// en: 'Anonymous, at least 5 gardeners. Your exact location is never shared.'
 	String get privacy_note => 'Anonymous, at least 5 gardeners. Your exact location is never shared.';
 
+	late final Translations$community$detail$en detail = Translations$community$detail$en.internal(_root);
 	late final Translations$community$tease$en tease = Translations$community$tease$en.internal(_root);
 }
 
@@ -2529,6 +2530,67 @@ class Translations$community$intensity$en {
 
 	/// en: 'rarely'
 	String get rare => 'rarely';
+}
+
+// Path: community.detail
+class Translations$community$detail$en {
+	Translations$community$detail$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'When · where you stand'
+	String get timing_kicker => 'When · where you stand';
+
+	/// en: 'You were among the first ~$percent %'
+	String you_percent({required Object percent}) => 'You were among the first ~${percent} %';
+
+	late final Translations$community$detail$you_band$en you_band = Translations$community$detail$you_band$en.internal(_root);
+
+	/// en: 'You haven't done this yet this season'
+	String get not_started => 'You haven\'t done this yet this season';
+
+	/// en: 'By now ~$percent % have started.'
+	String by_now_percent({required Object percent}) => 'By now ~${percent} % have started.';
+
+	/// en: 'By $date ~$percent % had started.'
+	String by_date_percent({required Object date, required Object percent}) => 'By ${date} ~${percent} % had started.';
+
+	/// en: 'Most start between $from and $to.'
+	String peak_weeks({required Object from, required Object to}) => 'Most start between ${from} and ${to}.';
+
+	/// en: 'First season: only people who have already started this year are counted, so the share keeps moving.'
+	String get censored_note => 'First season: only people who have already started this year are counted, so the share keeps moving.';
+
+	/// en: '(one) {among ~1 gardener} (other) {among ~$n gardeners}'
+	String among({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: 'among ~1 gardener',
+		other: 'among ~${n} gardeners',
+	);
+
+	/// en: 'you'
+	String get you => 'you';
+
+	/// en: 'How often'
+	String get frequency_title => 'How often';
+
+	/// en: '$from–$to×'
+	String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+
+	/// en: 'Too few gardeners for a typical range yet.'
+	String get freq_low_n => 'Too few gardeners for a typical range yet.';
+
+	/// en: 'gardeners doing it N times'
+	String get freq_caption => 'gardeners doing it N times';
+
+	late final Translations$community$detail$unit$en unit = Translations$community$detail$unit$en.internal(_root);
+	late final Translations$community$detail$this_week$en this_week = Translations$community$detail$this_week$en.internal(_root);
+
+	/// en: 'Not enough gardeners for this comparison yet.'
+	String get no_curve => 'Not enough gardeners for this comparison yet.';
+
+	late final Translations$community$detail$explain$en explain = Translations$community$detail$explain$en.internal(_root);
 }
 
 // Path: community.tease
@@ -3524,6 +3586,90 @@ class Translations$suggestions$zucchini$sow_direct$en {
 	String get body => 'Sow {subject} outdoors after frost — around {frost_date}.';
 }
 
+// Path: community.detail.you_band
+class Translations$community$detail$you_band$en {
+	Translations$community$detail$you_band$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'You were among the earlier ones'
+	String get early => 'You were among the earlier ones';
+
+	/// en: 'You were around the usual time'
+	String get typical => 'You were around the usual time';
+
+	/// en: 'You were among the later ones'
+	String get late => 'You were among the later ones';
+}
+
+// Path: community.detail.unit
+class Translations$community$detail$unit$en {
+	Translations$community$detail$unit$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'per month'
+	String get per_month => 'per month';
+
+	/// en: 'per season'
+	String get per_season => 'per season';
+}
+
+// Path: community.detail.this_week
+class Translations$community$detail$this_week$en {
+	Translations$community$detail$this_week$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'This week: many nearby are doing this'
+	String get often => 'This week: many nearby are doing this';
+
+	/// en: 'This week: some nearby are doing this'
+	String get some => 'This week: some nearby are doing this';
+
+	/// en: 'This week: a few nearby are doing this'
+	String get rare => 'This week: a few nearby are doing this';
+}
+
+// Path: community.detail.explain
+class Translations$community$detail$explain$en {
+	Translations$community$detail$explain$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'How we read these numbers'
+	String get cta => 'How we read these numbers';
+
+	/// en: 'How we read these numbers'
+	String get title => 'How we read these numbers';
+
+	/// en: 'The numbers come from Tendask gardeners who log their tasks — not from every gardener, and they are not gardening advice.'
+	String get source => 'The numbers come from Tendask gardeners who log their tasks — not from every gardener, and they are not gardening advice.';
+
+	/// en: 'A comparison always runs inside one group: the same plant, or site work such as a lawn or a bed. Pruning an apple and pruning a raspberry are different jobs, so they are never pooled.'
+	String get cohort => 'A comparison always runs inside one group: the same plant, or site work such as a lawn or a bed. Pruning an apple and pruning a raspberry are different jobs, so they are never pooled.';
+
+	/// en: 'The scope widens only as far as it has to — your area first, a similar climate last. Whatever it lands on is named on screen.'
+	String get scope => 'The scope widens only as far as it has to — your area first, a similar climate last. Whatever it lands on is named on screen.';
+
+	/// en: 'Below 5 gardeners nothing is shown at all; below 30 the share stays descriptive instead of a number. Percentages are rounded to 10.'
+	String get thresholds => 'Below 5 gardeners nothing is shown at all; below 30 the share stays descriptive instead of a number. Percentages are rounded to 10.';
+
+	/// en: 'This describes what people do. It never tells you what to do.'
+	String get descriptive => 'This describes what people do. It never tells you what to do.';
+
+	/// en: 'Got it'
+	String get close => 'Got it';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -4251,6 +4397,36 @@ extension on Translations {
 			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
 			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
 			'community.privacy_note' => 'Anonymous, at least 5 gardeners. Your exact location is never shared.',
+			'community.detail.timing_kicker' => 'When · where you stand',
+			'community.detail.you_percent' => ({required Object percent}) => 'You were among the first ~${percent} %',
+			'community.detail.you_band.early' => 'You were among the earlier ones',
+			'community.detail.you_band.typical' => 'You were around the usual time',
+			'community.detail.you_band.late' => 'You were among the later ones',
+			'community.detail.not_started' => 'You haven\'t done this yet this season',
+			'community.detail.by_now_percent' => ({required Object percent}) => 'By now ~${percent} % have started.',
+			'community.detail.by_date_percent' => ({required Object date, required Object percent}) => 'By ${date} ~${percent} % had started.',
+			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Most start between ${from} and ${to}.',
+			'community.detail.censored_note' => 'First season: only people who have already started this year are counted, so the share keeps moving.',
+			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'among ~1 gardener', other: 'among ~${n} gardeners', ), 
+			'community.detail.you' => 'you',
+			'community.detail.frequency_title' => 'How often',
+			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_low_n' => 'Too few gardeners for a typical range yet.',
+			'community.detail.freq_caption' => 'gardeners doing it N times',
+			'community.detail.unit.per_month' => 'per month',
+			'community.detail.unit.per_season' => 'per season',
+			'community.detail.this_week.often' => 'This week: many nearby are doing this',
+			'community.detail.this_week.some' => 'This week: some nearby are doing this',
+			'community.detail.this_week.rare' => 'This week: a few nearby are doing this',
+			'community.detail.no_curve' => 'Not enough gardeners for this comparison yet.',
+			'community.detail.explain.cta' => 'How we read these numbers',
+			'community.detail.explain.title' => 'How we read these numbers',
+			'community.detail.explain.source' => 'The numbers come from Tendask gardeners who log their tasks — not from every gardener, and they are not gardening advice.',
+			'community.detail.explain.cohort' => 'A comparison always runs inside one group: the same plant, or site work such as a lawn or a bed. Pruning an apple and pruning a raspberry are different jobs, so they are never pooled.',
+			'community.detail.explain.scope' => 'The scope widens only as far as it has to — your area first, a similar climate last. Whatever it lands on is named on screen.',
+			'community.detail.explain.thresholds' => 'Below 5 gardeners nothing is shown at all; below 30 the share stays descriptive instead of a number. Percentages are rounded to 10.',
+			'community.detail.explain.descriptive' => 'This describes what people do. It never tells you what to do.',
+			'community.detail.explain.close' => 'Got it',
 			'community.tease.title' => 'Available in Tendask +',
 			'community.tease.body' => 'What gardeners nearby are doing, when they start, where you stand and how often.',
 			'community.tease.redeem' => 'Enter code',

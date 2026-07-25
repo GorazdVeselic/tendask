@@ -62,6 +62,81 @@ SeasonCurve? buildSeasonCurve(
 double seasonCdfForWeek(SeasonCurve curve, int week) =>
     curve.cdf[week.clamp(1, kIsoWeeksPerYear) - 1];
 
+/// The Monday of ISO [week] in [year] — the inverse of [isoWeek]. The chart
+/// labels its axis with real dates rather than month names, which would cost 36
+/// translated strings for less precision on a weekly chart.
+DateTime mondayOfIsoWeek(int year, int week) {
+  // 4 January is by definition in ISO week 1, whatever weekday it lands on.
+  final jan4 = DateTime(year, 1, 4);
+  final mondayOfWeek1 = jan4.subtract(Duration(days: jan4.weekday - 1));
+  return mondayOfWeek1.add(Duration(days: (week - 1) * 7));
+}
+
+/// The weeks carrying the middle half of the season (CDF 25 %..75 %) — "most
+/// start between X and Y". Both bounds are ISO week numbers.
+(int, int) seasonPeakWeeks(SeasonCurve curve) {
+  var from = curve.cdf.indexWhere((c) => c >= 0.25);
+  var to = curve.cdf.indexWhere((c) => c >= 0.75);
+  if (from < 0) from = 0;
+  if (to < from) to = from;
+  return (from + 1, to + 1);
+}
+
+/// The slice of the season curve the detail chart draws: [density] holds the
+/// share of gardeners whose FIRST completion fell in each week of the window,
+/// starting at ISO week [firstWeek]. [myIndex] points at the reader's own week
+/// inside [density], or is null when they have not started this season.
+typedef SeasonWindow = ({int firstWeek, List<double> density, int? myIndex});
+
+/// Per-week shares behind the cumulative [SeasonCurve.cdf] — the bars in the
+/// wireframe are the density, while the headline percentage stays cumulative.
+List<double> seasonDensity(SeasonCurve curve) => [
+  for (var w = 0; w < curve.cdf.length; w++)
+    w == 0 ? curve.cdf[0] : curve.cdf[w] - curve.cdf[w - 1],
+];
+
+/// Picks the window worth drawing (see [kCommunitySeasonWindowMinWeeks]): the
+/// weeks carrying the season's mass, widened to the minimum width and always
+/// containing [myWeek] — a marker outside the chart would be a lie by omission.
+SeasonWindow seasonWindow(SeasonCurve curve, {int? myWeek}) {
+  final density = seasonDensity(curve);
+  var first = curve.cdf.indexWhere((c) => c > kCommunitySeasonWindowLowCdf);
+  var last = curve.cdf.indexWhere((c) => c >= kCommunitySeasonWindowHighCdf);
+  // An all-zero or degenerate curve cannot happen (pooledTotal > 0), but a
+  // single-week season legitimately collapses to first == last.
+  if (first < 0) first = 0;
+  if (last < first) last = curve.cdf.length - 1;
+
+  final me = myWeek == null ? null : myWeek.clamp(1, curve.cdf.length) - 1;
+  if (me != null) {
+    if (me < first) first = me;
+    if (me > last) last = me;
+  }
+  // Grow symmetrically to the minimum width, then shift back inside the year.
+  while (last - first + 1 < kCommunitySeasonWindowMinWeeks) {
+    if (first > 0) first--;
+    if (last - first + 1 < kCommunitySeasonWindowMinWeeks &&
+        last < curve.cdf.length - 1) {
+      last++;
+    }
+    if (first == 0 && last == curve.cdf.length - 1) break;
+  }
+
+  return (
+    firstWeek: first + 1,
+    density: density.sublist(first, last + 1),
+    myIndex: me == null ? null : me - first,
+  );
+}
+
+/// Cumulative share rounded for display (§7.7), or null when the sample is too
+/// thin for a number and only [timingBand] may be shown.
+int? seasonPercent(SeasonCurve curve, int week) {
+  if (curve.pooledTotal < kCommunityReliabilityMin) return null;
+  final raw = seasonCdfForWeek(curve, week) * 100;
+  return (raw / kCommunityPercentStep).round() * kCommunityPercentStep;
+}
+
 /// Descriptive band for a CDF value — the honest form below
 /// [kCommunityReliabilityMin], where a percentage would fake precision (§7.7).
 CommunityTiming timingBand(double cdf) {

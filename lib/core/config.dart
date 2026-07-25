@@ -180,6 +180,20 @@ const kCommunityFeedMaxPerType = 2;
 /// aggregate stores `iso_week` 1..53, so the curve always spans 53 slots.
 const kIsoWeeksPerYear = 53;
 
+/// The slice of the season the detail chart draws (wireframe B3): from the week
+/// the historic CDF first clears [kCommunitySeasonWindowLowCdf] to the one where
+/// it reaches [kCommunitySeasonWindowHighCdf], widened to at least
+/// [kCommunitySeasonWindowMinWeeks]. Drawing all 53 weeks would leave ~4 dp per
+/// bar on a 320 dp screen; monthly bins would hide the very difference being
+/// measured (weeks 12 and 15 are both "April").
+const kCommunitySeasonWindowLowCdf = 0.05;
+const kCommunitySeasonWindowHighCdf = 0.95;
+const kCommunitySeasonWindowMinWeeks = 13;
+
+/// Percentages are rounded to this step before display: at n = 30 the sampling
+/// noise is ±9 %, so a finer number would fake precision (§7.7).
+const kCommunityPercentStep = 10;
+
 /// Feed intensity cut-offs: a task type's share of the bucket's gardeners over
 /// the sliding 7-day window maps to a qualitative label (often/some/rare) — a
 /// raw % over a 7-day window would be misleading (§7.8), so the feed stays

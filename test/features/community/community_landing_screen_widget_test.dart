@@ -104,6 +104,18 @@ void main() {
     expect(find.text(t.community.intensity.rare), findsOneWidget);
   });
 
+  testWidgets('every feed row opens its own comparison template', (
+    tester,
+  ) async {
+    await _pump(tester, feed: _feed());
+
+    // The real route only exists behind kSuggestionsEnabled, so this asserts
+    // the rows carry a destination rather than driving a hand-built router.
+    final tiles = tester.widgetList<ListTile>(find.byType(ListTile));
+    expect(tiles, hasLength(3));
+    expect(tiles.every((tile) => tile.onTap != null), isTrue);
+  });
+
   testWidgets('meta row states the window, the scope and the population', (
     tester,
   ) async {

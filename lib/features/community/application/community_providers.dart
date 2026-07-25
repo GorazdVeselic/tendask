@@ -33,26 +33,16 @@ CommunityRepository communityRepository(Ref ref) {
 bool hasPlus(Ref ref) => kDevPlusStub;
 
 /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
-/// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
-@riverpod
-Future<List<Bucket>> communityBuckets(Ref ref) async {
+/// sign-in/out so the feed follows the account, and on a profile write so moving
+/// the garden re-scopes it. Empty when no profile/cells yet.
+///
+/// keepAlive: every community read awaits this first, and an autoDispose stream
+/// is torn down mid-flight before the awaiting provider ever sees a value.
+@Riverpod(keepAlive: true)
+Stream<List<Bucket>> communityBuckets(Ref ref) {
   ref.watch(authStateChangesProvider);
-  final db = ref.watch(databaseProvider);
   final userId = ref.read(authServiceProvider).userId;
-  final profile =
-      await (db.select(db.profiles)
-        ..where((p) => p.userId.equals(userId))).getSingleOrNull();
-  if (profile == null) return const [];
-  return [
-    if (profile.h3R7 != null)
-      Bucket(resolution: CommunityResolution.r7, key: profile.h3R7!),
-    if (profile.h3R6 != null)
-      Bucket(resolution: CommunityResolution.r6, key: profile.h3R6!),
-    if (profile.h3R5 != null)
-      Bucket(resolution: CommunityResolution.r5, key: profile.h3R5!),
-    if (profile.climateBucket != null)
-      Bucket(resolution: CommunityResolution.climate, key: profile.climateBucket!),
-  ];
+  return ref.watch(communityRepositoryProvider).watchBuckets(userId);
 }
 
 /// The landing "This week" feed for the resolved scope. null = not enough
@@ -109,16 +99,35 @@ Future<FrequencyStats?> communityFrequency(
   return null;
 }
 
-/// My own first completion of the task type in [cohort] this season (drift
-/// only) — the "you" marker on the curve. null = not started yet this year.
+/// The "this week" line for the task type inside [cohort], resolved like
+/// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+/// gardeners are active in any single week — so the UI labels it separately.
+/// null = no level has this cohort in its 7-day slice.
 @riverpod
-Future<DateTime?> myFirstThisSeason(
+Future<CommunityWeekly?> communityWeekly(
   Ref ref,
   String taskTypeId,
   String cohort,
 ) async {
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  final repo = ref.watch(communityRepositoryProvider);
+  for (final bucket in buckets) {
+    final weekly = await repo.recentActivity(
+      bucket: bucket,
+      taskTypeId: taskTypeId,
+      cohort: cohort,
+    );
+    if (weekly != null) return weekly;
+  }
+  return null;
+}
+
+/// My own record for the task type in [cohort] this season (drift only) — the
+/// "you" marker on the season chart and the "you" bar on the frequency chart.
+@riverpod
+Stream<MySeason> mySeason(Ref ref, String taskTypeId, String cohort) {
   ref.watch(authStateChangesProvider);
   return ref
       .watch(communityRepositoryProvider)
-      .myFirstThisSeason(taskTypeId, cohort: cohort);
+      .watchMySeason(taskTypeId, cohort: cohort);
 }

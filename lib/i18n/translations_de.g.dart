@@ -999,6 +999,7 @@ class _Translations$community$de extends Translations$community$en {
 	@override String get empty_feed => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.';
 	@override String get empty_standing => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.';
 	@override String get privacy_note => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.';
+	@override late final _Translations$community$detail$de detail = _Translations$community$detail$de._(_root);
 	@override late final _Translations$community$tease$de tease = _Translations$community$tease$de._(_root);
 }
 
@@ -1350,6 +1351,36 @@ class _Translations$community$intensity$de extends Translations$community$intens
 	@override String get often => 'häufig';
 	@override String get some => 'einige';
 	@override String get rare => 'selten';
+}
+
+// Path: community.detail
+class _Translations$community$detail$de extends Translations$community$detail$en {
+	_Translations$community$detail$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get timing_kicker => 'Wann · wo du stehst';
+	@override String you_percent({required Object percent}) => 'Du warst unter den ersten ~${percent} %';
+	@override late final _Translations$community$detail$you_band$de you_band = _Translations$community$detail$you_band$de._(_root);
+	@override String get not_started => 'Das hast du diese Saison noch nicht gemacht';
+	@override String by_now_percent({required Object percent}) => 'Bis jetzt haben ~${percent} % begonnen.';
+	@override String by_date_percent({required Object date, required Object percent}) => 'Bis ${date} hatten ~${percent} % begonnen.';
+	@override String peak_weeks({required Object from, required Object to}) => 'Die meisten beginnen zwischen ${from} und ${to}.';
+	@override String get censored_note => 'Erste Saison: gezählt werden nur die, die dieses Jahr schon begonnen haben — der Anteil verschiebt sich also noch.';
+	@override String among({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: 'unter ~1 Gärtner',
+		other: 'unter ~${n} Gärtnern',
+	);
+	@override String get you => 'du';
+	@override String get frequency_title => 'Wie oft';
+	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+	@override String get freq_low_n => 'Zu wenige Gärtner für eine typische Spanne.';
+	@override String get freq_caption => 'wie viele Gärtner es N-mal machen';
+	@override late final _Translations$community$detail$unit$de unit = _Translations$community$detail$unit$de._(_root);
+	@override late final _Translations$community$detail$this_week$de this_week = _Translations$community$detail$this_week$de._(_root);
+	@override String get no_curve => 'Für diesen Vergleich sind es noch zu wenige Gärtner.';
+	@override late final _Translations$community$detail$explain$de explain = _Translations$community$detail$explain$de._(_root);
 }
 
 // Path: community.tease
@@ -2079,6 +2110,58 @@ class _Translations$suggestions$zucchini$sow_direct$de extends Translations$sugg
 	@override String get body => 'Säe {subject} nach dem Frost ins Freie — um {frost_date}.';
 }
 
+// Path: community.detail.you_band
+class _Translations$community$detail$you_band$de extends Translations$community$detail$you_band$en {
+	_Translations$community$detail$you_band$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get early => 'Du warst eher früh dran';
+	@override String get typical => 'Du warst etwa zur üblichen Zeit dran';
+	@override String get late => 'Du warst eher spät dran';
+}
+
+// Path: community.detail.unit
+class _Translations$community$detail$unit$de extends Translations$community$detail$unit$en {
+	_Translations$community$detail$unit$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get per_month => 'pro Monat';
+	@override String get per_season => 'pro Saison';
+}
+
+// Path: community.detail.this_week
+class _Translations$community$detail$this_week$de extends Translations$community$detail$this_week$en {
+	_Translations$community$detail$this_week$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get often => 'Diese Woche: viele in der Nähe machen das';
+	@override String get some => 'Diese Woche: einige in der Nähe machen das';
+	@override String get rare => 'Diese Woche: wenige in der Nähe machen das';
+}
+
+// Path: community.detail.explain
+class _Translations$community$detail$explain$de extends Translations$community$detail$explain$en {
+	_Translations$community$detail$explain$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get cta => 'Wie wir diese Zahlen lesen';
+	@override String get title => 'Wie wir diese Zahlen lesen';
+	@override String get source => 'Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.';
+	@override String get cohort => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.';
+	@override String get scope => 'Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.';
+	@override String get thresholds => 'Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.';
+	@override String get descriptive => 'Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.';
+	@override String get close => 'Verstanden';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -2806,6 +2889,36 @@ extension on TranslationsDe {
 			'community.empty_feed' => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.',
 			'community.empty_standing' => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.',
 			'community.privacy_note' => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.',
+			'community.detail.timing_kicker' => 'Wann · wo du stehst',
+			'community.detail.you_percent' => ({required Object percent}) => 'Du warst unter den ersten ~${percent} %',
+			'community.detail.you_band.early' => 'Du warst eher früh dran',
+			'community.detail.you_band.typical' => 'Du warst etwa zur üblichen Zeit dran',
+			'community.detail.you_band.late' => 'Du warst eher spät dran',
+			'community.detail.not_started' => 'Das hast du diese Saison noch nicht gemacht',
+			'community.detail.by_now_percent' => ({required Object percent}) => 'Bis jetzt haben ~${percent} % begonnen.',
+			'community.detail.by_date_percent' => ({required Object date, required Object percent}) => 'Bis ${date} hatten ~${percent} % begonnen.',
+			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Die meisten beginnen zwischen ${from} und ${to}.',
+			'community.detail.censored_note' => 'Erste Saison: gezählt werden nur die, die dieses Jahr schon begonnen haben — der Anteil verschiebt sich also noch.',
+			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: 'unter ~1 Gärtner', other: 'unter ~${n} Gärtnern', ), 
+			'community.detail.you' => 'du',
+			'community.detail.frequency_title' => 'Wie oft',
+			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_low_n' => 'Zu wenige Gärtner für eine typische Spanne.',
+			'community.detail.freq_caption' => 'wie viele Gärtner es N-mal machen',
+			'community.detail.unit.per_month' => 'pro Monat',
+			'community.detail.unit.per_season' => 'pro Saison',
+			'community.detail.this_week.often' => 'Diese Woche: viele in der Nähe machen das',
+			'community.detail.this_week.some' => 'Diese Woche: einige in der Nähe machen das',
+			'community.detail.this_week.rare' => 'Diese Woche: wenige in der Nähe machen das',
+			'community.detail.no_curve' => 'Für diesen Vergleich sind es noch zu wenige Gärtner.',
+			'community.detail.explain.cta' => 'Wie wir diese Zahlen lesen',
+			'community.detail.explain.title' => 'Wie wir diese Zahlen lesen',
+			'community.detail.explain.source' => 'Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.',
+			'community.detail.explain.cohort' => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.',
+			'community.detail.explain.scope' => 'Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.',
+			'community.detail.explain.thresholds' => 'Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.',
+			'community.detail.explain.descriptive' => 'Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.',
+			'community.detail.explain.close' => 'Verstanden',
 			'community.tease.title' => 'Verfügbar in Tendask +',
 			'community.tease.body' => 'Was Gärtner in der Nähe tun, wann sie beginnen, wo du stehst und wie oft.',
 			'community.tease.redeem' => 'Code eingeben',

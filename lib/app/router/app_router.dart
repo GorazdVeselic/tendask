@@ -8,6 +8,7 @@ import '../../features/auth/presentation/email_login_screen.dart';
 import '../../features/auth/presentation/location_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
 import '../../features/community/presentation/community_landing_screen.dart';
+import '../../features/community/presentation/community_task_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
@@ -101,6 +102,18 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
                 path: '/community',
                 name: 'community',
                 builder: (context, state) => const CommunityLandingScreen(),
+                routes: [
+                  // Nested, so the tab keeps its bottom nav and its back stack.
+                  // ?plant= names the comparison cohort; absent = site work.
+                  GoRoute(
+                    path: 'task/:taskTypeId',
+                    name: 'community-task',
+                    builder: (context, state) => CommunityTaskScreen(
+                      taskTypeId: state.pathParameters['taskTypeId'] ?? '',
+                      plantId: state.uri.queryParameters['plant'],
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

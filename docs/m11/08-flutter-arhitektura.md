@@ -144,9 +144,18 @@ lokalni podatek (drift: moja prva izvedba) + agregat (številke).
 rastline, `skupnost-agregacija.md §7.4`); zlite `''` vrstice se ne berejo nikoli.
 ```dart
 class CommunityRepository {
+  /// The profile's buckets, finest → coarsest. A stream: moving the garden
+  /// re-scopes every community read without a restart.  LOCAL.
+  Stream<List<Bucket>> watchBuckets(String userId);
+
   /// Feed slice for the user's buckets; cloud fetch at most 1x/day, served from
   /// the drift community_cache afterwards (offline-friendly).  CLOUD+CACHE.
   Future<CommunityFeed?> feed({required List<Bucket> buckets});
+
+  /// The detail screen's 'this week' line for ONE cohort, read out of the same
+  /// daily activity_recent slice the feed cached — no extra request.
+  Future<CommunityWeekly?> recentActivity({
+    required Bucket bucket, required String taskTypeId, required String cohort});
 
   /// Season curve (CDF weeks 1..53) for a task type in ONE cohort at ONE
   /// resolution level. Returns null when below thresholds.  CLOUD+CACHE.
@@ -158,9 +167,11 @@ class CommunityRepository {
 
   Future<int?> bucketPopulation({required Bucket bucket});
 
-  /// My first completion of the type in this cohort this season — the 'you'
-  /// marker. LOCAL; cohort membership mirrors agg_event (custom plant = site).
-  Future<DateTime?> myFirstThisSeason(String taskTypeId, {required String cohort});
+  /// My record for the type in this cohort this season: first date ('you'
+  /// marker) + count ('you' bar), from ONE query. A stream, so logging a task
+  /// with the screen open moves the marker. LOCAL; cohort membership mirrors
+  /// agg_event (custom plant = site).
+  Stream<MySeason> watchMySeason(String taskTypeId, {required String cohort});
 }
 ```
 

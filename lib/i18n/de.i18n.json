@@ -991,6 +991,49 @@
     "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
     "empty_standing": "Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.",
     "privacy_note": "Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.",
+    "detail": {
+      "timing_kicker": "Wann · wo du stehst",
+      "you_percent": "Du warst unter den ersten ~$percent %",
+      "you_band": {
+        "early": "Du warst eher früh dran",
+        "typical": "Du warst etwa zur üblichen Zeit dran",
+        "late": "Du warst eher spät dran"
+      },
+      "not_started": "Das hast du diese Saison noch nicht gemacht",
+      "by_now_percent": "Bis jetzt haben ~$percent % begonnen.",
+      "by_date_percent": "Bis $date hatten ~$percent % begonnen.",
+      "peak_weeks": "Die meisten beginnen zwischen $from und $to.",
+      "censored_note": "Erste Saison: gezählt werden nur die, die dieses Jahr schon begonnen haben — der Anteil verschiebt sich also noch.",
+      "among(n)": {
+        "one": "unter ~1 Gärtner",
+        "other": "unter ~$n Gärtnern"
+      },
+      "you": "du",
+      "frequency_title": "Wie oft",
+      "freq_range": "$from–$to×",
+      "freq_low_n": "Zu wenige Gärtner für eine typische Spanne.",
+      "freq_caption": "wie viele Gärtner es N-mal machen",
+      "unit": {
+        "per_month": "pro Monat",
+        "per_season": "pro Saison"
+      },
+      "this_week": {
+        "often": "Diese Woche: viele in der Nähe machen das",
+        "some": "Diese Woche: einige in der Nähe machen das",
+        "rare": "Diese Woche: wenige in der Nähe machen das"
+      },
+      "no_curve": "Für diesen Vergleich sind es noch zu wenige Gärtner.",
+      "explain": {
+        "cta": "Wie wir diese Zahlen lesen",
+        "title": "Wie wir diese Zahlen lesen",
+        "source": "Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.",
+        "cohort": "Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.",
+        "scope": "Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.",
+        "thresholds": "Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.",
+        "descriptive": "Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.",
+        "close": "Verstanden"
+      }
+    },
     "tease": {
       "title": "Verfügbar in Tendask +",
       "body": "Was Gärtner in der Nähe tun, wann sie beginnen, wo du stehst und wie oft.",

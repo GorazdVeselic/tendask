@@ -16,7 +16,9 @@ import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
+import 'package:tendask/features/community/data/community_stats.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
+import 'package:tendask/features/community/presentation/community_task_screen.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
@@ -161,6 +163,46 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
         ),
       ],
     ),
+  ),
+];
+
+/// The detail template with everything present: curve + frequency + this week,
+/// which is the widest the screen ever gets.
+List<Override> _communityTaskOverrides({required bool hasPlus}) => [
+  taskTypesMapProvider.overrideWith((ref) => Stream.value({'water': _taskType()})),
+  plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
+  hasPlusProvider.overrideWithValue(hasPlus),
+  communitySeasonCurveProvider('water', 'tomato').overrideWith(
+    (ref) async => buildSeasonCurve(
+      const [
+        {'year': 2025, 'iso_week': 18, 'first_user_count': 12},
+        {'year': 2025, 'iso_week': 20, 'first_user_count': 28},
+        {'year': 2025, 'iso_week': 22, 'first_user_count': 10},
+      ],
+      bucket: const Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
+      currentYear: 2026,
+    ),
+  ),
+  communityFrequencyProvider('water', 'tomato').overrideWith(
+    (ref) async => const FrequencyStats(
+      bucket: Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
+      p25: 2,
+      p50: 3,
+      p75: 4,
+      unit: 'per_month',
+      nUsers: 40,
+      hist: {'1': 4, '2': 9, '3': 12, '4': 7, '5+': 3},
+    ),
+  ),
+  communityWeeklyProvider('water', 'tomato').overrideWith(
+    (ref) async => const CommunityWeekly(
+      bucket: Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
+      distinctUsers7d: 9,
+      intensity: CommunityIntensity.some,
+    ),
+  ),
+  mySeasonProvider('water', 'tomato').overrideWith(
+    (ref) => Stream.value(MySeason(first: DateTime(2026, 5, 11), count: 3)),
   ),
 ];
 
@@ -330,5 +372,19 @@ void main() {
     'community/landing (tease)',
     overrides: () => _communityOverrides(hasPlus: false),
     build: () => const CommunityLandingScreen(),
+  );
+
+  layoutMatrix(
+    'community/task',
+    overrides: () => _communityTaskOverrides(hasPlus: true),
+    build: () =>
+        const CommunityTaskScreen(taskTypeId: 'water', plantId: 'tomato'),
+  );
+
+  layoutMatrix(
+    'community/task (tease)',
+    overrides: () => _communityTaskOverrides(hasPlus: false),
+    build: () =>
+        const CommunityTaskScreen(taskTypeId: 'water', plantId: 'tomato'),
   );
 }

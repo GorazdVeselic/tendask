@@ -991,6 +991,49 @@
     "empty_feed": "Not enough gardeners nearby yet. This fills in as more people log their tasks.",
     "empty_standing": "No task yet has enough gardeners nearby to compare with.",
     "privacy_note": "Anonymous, at least 5 gardeners. Your exact location is never shared.",
+    "detail": {
+      "timing_kicker": "When · where you stand",
+      "you_percent": "You were among the first ~$percent %",
+      "you_band": {
+        "early": "You were among the earlier ones",
+        "typical": "You were around the usual time",
+        "late": "You were among the later ones"
+      },
+      "not_started": "You haven't done this yet this season",
+      "by_now_percent": "By now ~$percent % have started.",
+      "by_date_percent": "By $date ~$percent % had started.",
+      "peak_weeks": "Most start between $from and $to.",
+      "censored_note": "First season: only people who have already started this year are counted, so the share keeps moving.",
+      "among(n)": {
+        "one": "among ~1 gardener",
+        "other": "among ~$n gardeners"
+      },
+      "you": "you",
+      "frequency_title": "How often",
+      "freq_range": "$from–$to×",
+      "freq_low_n": "Too few gardeners for a typical range yet.",
+      "freq_caption": "gardeners doing it N times",
+      "unit": {
+        "per_month": "per month",
+        "per_season": "per season"
+      },
+      "this_week": {
+        "often": "This week: many nearby are doing this",
+        "some": "This week: some nearby are doing this",
+        "rare": "This week: a few nearby are doing this"
+      },
+      "no_curve": "Not enough gardeners for this comparison yet.",
+      "explain": {
+        "cta": "How we read these numbers",
+        "title": "How we read these numbers",
+        "source": "The numbers come from Tendask gardeners who log their tasks — not from every gardener, and they are not gardening advice.",
+        "cohort": "A comparison always runs inside one group: the same plant, or site work such as a lawn or a bed. Pruning an apple and pruning a raspberry are different jobs, so they are never pooled.",
+        "scope": "The scope widens only as far as it has to — your area first, a similar climate last. Whatever it lands on is named on screen.",
+        "thresholds": "Below 5 gardeners nothing is shown at all; below 30 the share stays descriptive instead of a number. Percentages are rounded to 10.",
+        "descriptive": "This describes what people do. It never tells you what to do.",
+        "close": "Got it"
+      }
+    },
     "tease": {
       "title": "Available in Tendask +",
       "body": "What gardeners nearby are doing, when they start, where you stand and how often.",

@@ -1,5 +1,6 @@
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/misc.dart' show Refreshable;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/config.dart';
@@ -61,11 +62,20 @@ void main() {
     final c = ProviderContainer(
       overrides: [
         communityRepositoryProvider.overrideWithValue(repo),
-        communityBucketsProvider.overrideWith((ref) async => buckets),
+        communityBucketsProvider.overrideWith((ref) => Stream.value(buckets)),
       ],
     );
     addTearDown(c.dispose);
     return c;
+  }
+
+  /// Reads an autoDispose provider the way a screen does — subscribed. A bare
+  /// `read` lets the scheduler tear the provider down mid-await, and the result
+  /// never arrives.
+  Future<T> readAlive<T>(ProviderContainer c, Refreshable<Future<T>> p) {
+    final sub = c.listen(p, (_, _) {});
+    addTearDown(sub.close);
+    return sub.read();
   }
 
   test('widens the geography one level when the finer one is too thin', () async {
@@ -73,7 +83,8 @@ void main() {
     store['activity_season|r7|cellA|mow|@site'] = _season(3);
     store['activity_season|r6|cellB|mow|@site'] = _season(20);
 
-    final curve = await container().read(
+    final curve = await readAlive(
+      container(),
       communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
     );
 
@@ -91,7 +102,8 @@ void main() {
     // Same for the legacy pooled row: it is the contaminated superset.
     store['activity_season|r7|cellA|prune|'] = _season(90);
 
-    final curve = await container().read(
+    final curve = await readAlive(
+      container(),
       communitySeasonCurveProvider('prune', 'apple').future,
     );
 
@@ -104,7 +116,8 @@ void main() {
     store['activity_season|r7|cellA|prune|'] = _season(90);
 
     expect(
-      await container().read(
+      await readAlive(
+        container(),
         communitySeasonCurveProvider('prune', 'apple').future,
       ),
       isNull,
@@ -116,7 +129,8 @@ void main() {
     store['activity_season|climate|e1_t5|mow|@site'] = _season(4);
 
     expect(
-      await container().read(
+      await readAlive(
+        container(),
         communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
       ),
       isNull,
@@ -127,12 +141,15 @@ void main() {
     store['activity_frequency|r7|cellA|mow|@site'] = _frequency(3);
     store['activity_frequency|r5|cellC|mow|@site'] = _frequency(18);
 
-    final stats = await container(
-      buckets: const [
-        _r7,
-        Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
-      ],
-    ).read(communityFrequencyProvider('mow', kCommunityCohortSite).future);
+    final stats = await readAlive(
+      container(
+        buckets: const [
+          _r7,
+          Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
+        ],
+      ),
+      communityFrequencyProvider('mow', kCommunityCohortSite).future,
+    );
 
     expect(stats!.bucket.resolution, CommunityResolution.r5);
     expect(stats.nUsers, 18);
@@ -140,9 +157,10 @@ void main() {
 
   test('no buckets (no location yet) resolves to null, not an error', () async {
     expect(
-      await container(
-        buckets: const [],
-      ).read(communitySeasonCurveProvider('mow', kCommunityCohortSite).future),
+      await readAlive(
+        container(buckets: const []),
+        communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
+      ),
       isNull,
     );
   });

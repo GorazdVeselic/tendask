@@ -60,7 +60,12 @@
 - **Cilj:** pravilen percentil z zanesljivo fallback verigo, testirano.
 
 ### Korak 8 — Detajl opravila (krivulja + »ti« + stolpci) + tease
-- **Zajema:** `community_task_screen` (percentil krivulja + »ti« marker + frekvenca stolpci + »ta teden«), `kReliab` opisni način (brez % pod 30, zaokroži na 10, n viden), flag-dark. Brez Plus (stub) → celoten zaslon TeaseOverlay. Widget test.
+- **Zajema:** `community_task_screen` (percentil stolpci + »ti« marker + frekvenca stolpci + »ta teden«), `kReliab` opisni način (brez % pod 30, zaokroži na 10, n viden), flag-dark. Brez Plus (stub) → celoten zaslon TeaseOverlay. Widget test.
+- **Graf percentila = gostota v sezonskem oknu** (odločeno 2026-07-25 po wireframu B3): stolpci rišejo,
+  koliko jih je **prvič** začelo v tem tednu (izpeljano iz CDF), čez okno od `kCommunitySeasonWindowLowCdf`
+  do `...HighCdf`, razširjeno na `kCommunitySeasonWindowMinWeeks` in vedno vključno s tvojim tednom.
+  Odstotek (»~30 %«) ostane iz CDF. Vseh 53 tednov ne rišemo (na 320 dp ~4 dp/stolpec), mesečni koši pa
+  zabrišejo prav razliko zgoden/pozen (teden 12 in 15 sta oba »april«).
 - **Cilj:** per-opravilo pogled skladen s `skupnost-agregacija.md §7`.
 
 ### Korak 8b — Vstopni točki v Okolico (Domov + detajl opravila) 👈 dodano 2026-07-25
@@ -72,9 +77,23 @@
   tretja), v prvotnem planu pa nista bili v nobenem koraku (ugotovljeno pri pregledu kode K5–K7).
 - **Odvisnosti:** korak 8 (ista predloga je cilj obeh CTA-jev) · **Kompleksnost:** M
 
-### Korak 9 — i18n Okolica detajl (en/sl/de)
-- **Zajema:** `community.*` detajl/obseg/opisni nizi; `dart run slang`.
-- **Cilj:** detajl v treh jezikih.
+### Korak 8c — Zavihek »Kje si ti« (landing, 2. segment) 👈 dodano 2026-07-25
+- **Zajema:** seznam **mojih tipov opravil te sezone** (nova drift poizvedba) z oznako
+  zgoden/običajen/pozen (`timingBand` nad krivuljo skupine) → tap odpre predlogo iz koraka 8.
+  Zahteva **bulk branje**: `RemoteAggFetch` danes zna samo `eq`, rabi `in`, da N krivulj pride v
+  eni rezini na vedro (`skupnost-agregacija.md §12.4`), sicer je prvo dnevno odprtje N×4 zahtev.
+  Zavihek se ovije v `TeaseOverlay` enako kot »Ta teden«.
+- **Zakaj ločen korak:** K5 je segment postavil, a pustil prazen (`TODO`); noben korak plana ga ni
+  napolnil (8 = detajl, 8b = vstopi, 9 = i18n). Brez tega gre M11 v main z zavihkom, ki je vedno
+  prazen. Obsegom je enak koraku 8, ne dodatek k njemu.
+- **Odvisnosti:** korak 8 (ista predloga je cilj tapa) · **Kompleksnost:** M
+
+### Korak 9 — i18n Okolica: pregled prevodov (en/sl/de)
+- **Zajema:** ~~pisanje~~ **pregled** `community.detail.*` — nizi so nastali že v koraku 8, ker
+  `test/i18n/community_i18n_test.dart` zahteva sl/de za vsak en ključ (uvedeno v koraku 6) in bi
+  samo-EN commit pustil suite rdeč. Ostane: branje prevodov s svežimi očmi (register, dolžina v
+  layout matriki, anti-steering), po potrebi popravki + `dart run slang`.
+- **Cilj:** ubeseditev, ki jo je nekdo prebral kot besedilo, ne kot ključe.
 
 ## Faza 4 — M11.19 R6 v motorju
 
@@ -105,8 +124,8 @@
 ## Odvisnosti
 
 ```
-1 → 2 → (3 → 4 → 5 → 6) → (7 → 7b → 8 → 8b → 9) → 10 → 11 → 12 → 13 → 14
-        └─ M11.17 ─────┘   └───── M11.18 ──────┘   M11.19  M11.21  merge
+1 → 2 → (3 → 4 → 5 → 6) → (7 → 7b → 8 → 8b → 8c → 9) → 10 → 11 → 12 → 13 → 14
+        └─ M11.17 ─────┘   └──────── M11.18 ────────┘   M11.19  M11.21  merge
 ```
 
 ## Opombe

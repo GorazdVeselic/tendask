@@ -827,6 +827,547 @@ $BucketCopyWith<$Res> get bucket {
 }
 
 /// @nodoc
+mixin _$CommunityWeekly {
+
+ Bucket get bucket; int get distinctUsers7d; CommunityIntensity get intensity;
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommunityWeeklyCopyWith<CommunityWeekly> get copyWith => _$CommunityWeeklyCopyWithImpl<CommunityWeekly>(this as CommunityWeekly, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,distinctUsers7d,intensity);
+
+@override
+String toString() {
+  return 'CommunityWeekly(bucket: $bucket, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CommunityWeeklyCopyWith<$Res>  {
+  factory $CommunityWeeklyCopyWith(CommunityWeekly value, $Res Function(CommunityWeekly) _then) = _$CommunityWeeklyCopyWithImpl;
+@useResult
+$Res call({
+ Bucket bucket, int distinctUsers7d, CommunityIntensity intensity
+});
+
+
+$BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class _$CommunityWeeklyCopyWithImpl<$Res>
+    implements $CommunityWeeklyCopyWith<$Res> {
+  _$CommunityWeeklyCopyWithImpl(this._self, this._then);
+
+  final CommunityWeekly _self;
+  final $Res Function(CommunityWeekly) _then;
+
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+  return _then(_self.copyWith(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
+as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as CommunityIntensity,
+  ));
+}
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [CommunityWeekly].
+extension CommunityWeeklyPatterns on CommunityWeekly {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommunityWeekly value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommunityWeekly() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommunityWeekly value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityWeekly():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommunityWeekly value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityWeekly() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommunityWeekly() when $default != null:
+return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
+switch (_that) {
+case _CommunityWeekly():
+return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
+switch (_that) {
+case _CommunityWeekly() when $default != null:
+return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _CommunityWeekly implements CommunityWeekly {
+  const _CommunityWeekly({required this.bucket, required this.distinctUsers7d, required this.intensity});
+  
+
+@override final  Bucket bucket;
+@override final  int distinctUsers7d;
+@override final  CommunityIntensity intensity;
+
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommunityWeeklyCopyWith<_CommunityWeekly> get copyWith => __$CommunityWeeklyCopyWithImpl<_CommunityWeekly>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,distinctUsers7d,intensity);
+
+@override
+String toString() {
+  return 'CommunityWeekly(bucket: $bucket, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommunityWeeklyCopyWith<$Res> implements $CommunityWeeklyCopyWith<$Res> {
+  factory _$CommunityWeeklyCopyWith(_CommunityWeekly value, $Res Function(_CommunityWeekly) _then) = __$CommunityWeeklyCopyWithImpl;
+@override @useResult
+$Res call({
+ Bucket bucket, int distinctUsers7d, CommunityIntensity intensity
+});
+
+
+@override $BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class __$CommunityWeeklyCopyWithImpl<$Res>
+    implements _$CommunityWeeklyCopyWith<$Res> {
+  __$CommunityWeeklyCopyWithImpl(this._self, this._then);
+
+  final _CommunityWeekly _self;
+  final $Res Function(_CommunityWeekly) _then;
+
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+  return _then(_CommunityWeekly(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
+as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as CommunityIntensity,
+  ));
+}
+
+/// Create a copy of CommunityWeekly
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+/// @nodoc
+mixin _$MySeason {
+
+ DateTime? get first; int get count;
+/// Create a copy of MySeason
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$MySeasonCopyWith<MySeason> get copyWith => _$MySeasonCopyWithImpl<MySeason>(this as MySeason, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is MySeason&&(identical(other.first, first) || other.first == first)&&(identical(other.count, count) || other.count == count));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,first,count);
+
+@override
+String toString() {
+  return 'MySeason(first: $first, count: $count)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $MySeasonCopyWith<$Res>  {
+  factory $MySeasonCopyWith(MySeason value, $Res Function(MySeason) _then) = _$MySeasonCopyWithImpl;
+@useResult
+$Res call({
+ DateTime? first, int count
+});
+
+
+
+
+}
+/// @nodoc
+class _$MySeasonCopyWithImpl<$Res>
+    implements $MySeasonCopyWith<$Res> {
+  _$MySeasonCopyWithImpl(this._self, this._then);
+
+  final MySeason _self;
+  final $Res Function(MySeason) _then;
+
+/// Create a copy of MySeason
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? first = freezed,Object? count = null,}) {
+  return _then(_self.copyWith(
+first: freezed == first ? _self.first : first // ignore: cast_nullable_to_non_nullable
+as DateTime?,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [MySeason].
+extension MySeasonPatterns on MySeason {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _MySeason value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _MySeason() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _MySeason value)  $default,){
+final _that = this;
+switch (_that) {
+case _MySeason():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _MySeason value)?  $default,){
+final _that = this;
+switch (_that) {
+case _MySeason() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( DateTime? first,  int count)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _MySeason() when $default != null:
+return $default(_that.first,_that.count);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( DateTime? first,  int count)  $default,) {final _that = this;
+switch (_that) {
+case _MySeason():
+return $default(_that.first,_that.count);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( DateTime? first,  int count)?  $default,) {final _that = this;
+switch (_that) {
+case _MySeason() when $default != null:
+return $default(_that.first,_that.count);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _MySeason implements MySeason {
+  const _MySeason({required this.first, required this.count});
+  
+
+@override final  DateTime? first;
+@override final  int count;
+
+/// Create a copy of MySeason
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$MySeasonCopyWith<_MySeason> get copyWith => __$MySeasonCopyWithImpl<_MySeason>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MySeason&&(identical(other.first, first) || other.first == first)&&(identical(other.count, count) || other.count == count));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,first,count);
+
+@override
+String toString() {
+  return 'MySeason(first: $first, count: $count)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$MySeasonCopyWith<$Res> implements $MySeasonCopyWith<$Res> {
+  factory _$MySeasonCopyWith(_MySeason value, $Res Function(_MySeason) _then) = __$MySeasonCopyWithImpl;
+@override @useResult
+$Res call({
+ DateTime? first, int count
+});
+
+
+
+
+}
+/// @nodoc
+class __$MySeasonCopyWithImpl<$Res>
+    implements _$MySeasonCopyWith<$Res> {
+  __$MySeasonCopyWithImpl(this._self, this._then);
+
+  final _MySeason _self;
+  final $Res Function(_MySeason) _then;
+
+/// Create a copy of MySeason
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? first = freezed,Object? count = null,}) {
+  return _then(_MySeason(
+first: freezed == first ? _self.first : first // ignore: cast_nullable_to_non_nullable
+as DateTime?,count: null == count ? _self.count : count // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$SeasonCurve {
 
  Bucket get bucket; List<double> get cdf; int get pooledTotal; bool get censored;

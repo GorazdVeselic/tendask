@@ -109,31 +109,43 @@ final class HasPlusProvider extends $FunctionalProvider<bool, bool, bool>
 String _$hasPlusHash() => r'72cdfaf78859094703aa21098a76e668db0f2fc0';
 
 /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
-/// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
+/// sign-in/out so the feed follows the account, and on a profile write so moving
+/// the garden re-scopes it. Empty when no profile/cells yet.
+///
+/// keepAlive: every community read awaits this first, and an autoDispose stream
+/// is torn down mid-flight before the awaiting provider ever sees a value.
 
 @ProviderFor(communityBuckets)
 final communityBucketsProvider = CommunityBucketsProvider._();
 
 /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
-/// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
+/// sign-in/out so the feed follows the account, and on a profile write so moving
+/// the garden re-scopes it. Empty when no profile/cells yet.
+///
+/// keepAlive: every community read awaits this first, and an autoDispose stream
+/// is torn down mid-flight before the awaiting provider ever sees a value.
 
 final class CommunityBucketsProvider
     extends
         $FunctionalProvider<
           AsyncValue<List<Bucket>>,
           List<Bucket>,
-          FutureOr<List<Bucket>>
+          Stream<List<Bucket>>
         >
-    with $FutureModifier<List<Bucket>>, $FutureProvider<List<Bucket>> {
+    with $FutureModifier<List<Bucket>>, $StreamProvider<List<Bucket>> {
   /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
-  /// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
+  /// sign-in/out so the feed follows the account, and on a profile write so moving
+  /// the garden re-scopes it. Empty when no profile/cells yet.
+  ///
+  /// keepAlive: every community read awaits this first, and an autoDispose stream
+  /// is torn down mid-flight before the awaiting provider ever sees a value.
   CommunityBucketsProvider._()
     : super(
         from: null,
         argument: null,
         retry: null,
         name: r'communityBucketsProvider',
-        isAutoDispose: true,
+        isAutoDispose: false,
         dependencies: null,
         $allTransitiveDependencies: null,
       );
@@ -143,17 +155,17 @@ final class CommunityBucketsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<Bucket>> $createElement(
+  $StreamProviderElement<List<Bucket>> $createElement(
     $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  ) => $StreamProviderElement(pointer);
 
   @override
-  FutureOr<List<Bucket>> create(Ref ref) {
+  Stream<List<Bucket>> create(Ref ref) {
     return communityBuckets(ref);
   }
 }
 
-String _$communityBucketsHash() => r'ce99fde933627e559253d577ef3f73a05b9a7e5e';
+String _$communityBucketsHash() => r'4066668f4472558d3b0199ff48763bffc54b9222';
 
 /// The landing "This week" feed for the resolved scope. null = not enough
 /// gardeners yet (cold-start / below privacy threshold).
@@ -401,60 +413,67 @@ final class CommunityFrequencyFamily extends $Family
   String toString() => r'communityFrequencyProvider';
 }
 
-/// My own first completion of the task type in [cohort] this season (drift
-/// only) — the "you" marker on the curve. null = not started yet this year.
+/// The "this week" line for the task type inside [cohort], resolved like
+/// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+/// gardeners are active in any single week — so the UI labels it separately.
+/// null = no level has this cohort in its 7-day slice.
 
-@ProviderFor(myFirstThisSeason)
-final myFirstThisSeasonProvider = MyFirstThisSeasonFamily._();
+@ProviderFor(communityWeekly)
+final communityWeeklyProvider = CommunityWeeklyFamily._();
 
-/// My own first completion of the task type in [cohort] this season (drift
-/// only) — the "you" marker on the curve. null = not started yet this year.
+/// The "this week" line for the task type inside [cohort], resolved like
+/// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+/// gardeners are active in any single week — so the UI labels it separately.
+/// null = no level has this cohort in its 7-day slice.
 
-final class MyFirstThisSeasonProvider
+final class CommunityWeeklyProvider
     extends
         $FunctionalProvider<
-          AsyncValue<DateTime?>,
-          DateTime?,
-          FutureOr<DateTime?>
+          AsyncValue<CommunityWeekly?>,
+          CommunityWeekly?,
+          FutureOr<CommunityWeekly?>
         >
-    with $FutureModifier<DateTime?>, $FutureProvider<DateTime?> {
-  /// My own first completion of the task type in [cohort] this season (drift
-  /// only) — the "you" marker on the curve. null = not started yet this year.
-  MyFirstThisSeasonProvider._({
-    required MyFirstThisSeasonFamily super.from,
+    with $FutureModifier<CommunityWeekly?>, $FutureProvider<CommunityWeekly?> {
+  /// The "this week" line for the task type inside [cohort], resolved like
+  /// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+  /// gardeners are active in any single week — so the UI labels it separately.
+  /// null = no level has this cohort in its 7-day slice.
+  CommunityWeeklyProvider._({
+    required CommunityWeeklyFamily super.from,
     required (String, String) super.argument,
   }) : super(
          retry: null,
-         name: r'myFirstThisSeasonProvider',
+         name: r'communityWeeklyProvider',
          isAutoDispose: true,
          dependencies: null,
          $allTransitiveDependencies: null,
        );
 
   @override
-  String debugGetCreateSourceHash() => _$myFirstThisSeasonHash();
+  String debugGetCreateSourceHash() => _$communityWeeklyHash();
 
   @override
   String toString() {
-    return r'myFirstThisSeasonProvider'
+    return r'communityWeeklyProvider'
         ''
         '$argument';
   }
 
   @$internal
   @override
-  $FutureProviderElement<DateTime?> $createElement($ProviderPointer pointer) =>
-      $FutureProviderElement(pointer);
+  $FutureProviderElement<CommunityWeekly?> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<DateTime?> create(Ref ref) {
+  FutureOr<CommunityWeekly?> create(Ref ref) {
     final argument = this.argument as (String, String);
-    return myFirstThisSeason(ref, argument.$1, argument.$2);
+    return communityWeekly(ref, argument.$1, argument.$2);
   }
 
   @override
   bool operator ==(Object other) {
-    return other is MyFirstThisSeasonProvider && other.argument == argument;
+    return other is CommunityWeeklyProvider && other.argument == argument;
   }
 
   @override
@@ -463,28 +482,120 @@ final class MyFirstThisSeasonProvider
   }
 }
 
-String _$myFirstThisSeasonHash() => r'8c130f92fcf497b80fdf0b6d78f1324a86e917c8';
+String _$communityWeeklyHash() => r'85f6eb86f02c1fc4f008812ea44b84bbb91fc9f4';
 
-/// My own first completion of the task type in [cohort] this season (drift
-/// only) — the "you" marker on the curve. null = not started yet this year.
+/// The "this week" line for the task type inside [cohort], resolved like
+/// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+/// gardeners are active in any single week — so the UI labels it separately.
+/// null = no level has this cohort in its 7-day slice.
 
-final class MyFirstThisSeasonFamily extends $Family
-    with $FunctionalFamilyOverride<FutureOr<DateTime?>, (String, String)> {
-  MyFirstThisSeasonFamily._()
+final class CommunityWeeklyFamily extends $Family
+    with
+        $FunctionalFamilyOverride<
+          FutureOr<CommunityWeekly?>,
+          (String, String)
+        > {
+  CommunityWeeklyFamily._()
     : super(
         retry: null,
-        name: r'myFirstThisSeasonProvider',
+        name: r'communityWeeklyProvider',
         dependencies: null,
         $allTransitiveDependencies: null,
         isAutoDispose: true,
       );
 
-  /// My own first completion of the task type in [cohort] this season (drift
-  /// only) — the "you" marker on the curve. null = not started yet this year.
+  /// The "this week" line for the task type inside [cohort], resolved like
+  /// [communitySeasonCurve]. Its scope can differ from the curve's — fewer
+  /// gardeners are active in any single week — so the UI labels it separately.
+  /// null = no level has this cohort in its 7-day slice.
 
-  MyFirstThisSeasonProvider call(String taskTypeId, String cohort) =>
-      MyFirstThisSeasonProvider._(argument: (taskTypeId, cohort), from: this);
+  CommunityWeeklyProvider call(String taskTypeId, String cohort) =>
+      CommunityWeeklyProvider._(argument: (taskTypeId, cohort), from: this);
 
   @override
-  String toString() => r'myFirstThisSeasonProvider';
+  String toString() => r'communityWeeklyProvider';
+}
+
+/// My own record for the task type in [cohort] this season (drift only) — the
+/// "you" marker on the season chart and the "you" bar on the frequency chart.
+
+@ProviderFor(mySeason)
+final mySeasonProvider = MySeasonFamily._();
+
+/// My own record for the task type in [cohort] this season (drift only) — the
+/// "you" marker on the season chart and the "you" bar on the frequency chart.
+
+final class MySeasonProvider
+    extends
+        $FunctionalProvider<AsyncValue<MySeason>, MySeason, Stream<MySeason>>
+    with $FutureModifier<MySeason>, $StreamProvider<MySeason> {
+  /// My own record for the task type in [cohort] this season (drift only) — the
+  /// "you" marker on the season chart and the "you" bar on the frequency chart.
+  MySeasonProvider._({
+    required MySeasonFamily super.from,
+    required (String, String) super.argument,
+  }) : super(
+         retry: null,
+         name: r'mySeasonProvider',
+         isAutoDispose: true,
+         dependencies: null,
+         $allTransitiveDependencies: null,
+       );
+
+  @override
+  String debugGetCreateSourceHash() => _$mySeasonHash();
+
+  @override
+  String toString() {
+    return r'mySeasonProvider'
+        ''
+        '$argument';
+  }
+
+  @$internal
+  @override
+  $StreamProviderElement<MySeason> $createElement($ProviderPointer pointer) =>
+      $StreamProviderElement(pointer);
+
+  @override
+  Stream<MySeason> create(Ref ref) {
+    final argument = this.argument as (String, String);
+    return mySeason(ref, argument.$1, argument.$2);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is MySeasonProvider && other.argument == argument;
+  }
+
+  @override
+  int get hashCode {
+    return argument.hashCode;
+  }
+}
+
+String _$mySeasonHash() => r'a63b62e00a5882360529e52518acc92a8985a71a';
+
+/// My own record for the task type in [cohort] this season (drift only) — the
+/// "you" marker on the season chart and the "you" bar on the frequency chart.
+
+final class MySeasonFamily extends $Family
+    with $FunctionalFamilyOverride<Stream<MySeason>, (String, String)> {
+  MySeasonFamily._()
+    : super(
+        retry: null,
+        name: r'mySeasonProvider',
+        dependencies: null,
+        $allTransitiveDependencies: null,
+        isAutoDispose: true,
+      );
+
+  /// My own record for the task type in [cohort] this season (drift only) — the
+  /// "you" marker on the season chart and the "you" bar on the frequency chart.
+
+  MySeasonProvider call(String taskTypeId, String cohort) =>
+      MySeasonProvider._(argument: (taskTypeId, cohort), from: this);
+
+  @override
+  String toString() => r'mySeasonProvider';
 }

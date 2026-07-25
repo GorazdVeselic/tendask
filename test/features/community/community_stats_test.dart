@@ -116,6 +116,92 @@ void main() {
     });
   });
 
+  group('season window (what the detail chart draws)', () {
+    /// A curve whose mass sits in weeks 10..16, with a long empty tail.
+    SeasonCurve curve() => buildSeasonCurve(
+      [
+        _week(2025, 10, 2),
+        _week(2025, 12, 6),
+        _week(2025, 14, 8),
+        _week(2025, 16, 4),
+      ],
+      bucket: _bucket,
+      currentYear: 2026,
+    )!;
+
+    test('density sums back to the whole season', () {
+      final density = seasonDensity(curve());
+      expect(density.length, 53);
+      expect(density.reduce((a, b) => a + b), closeTo(1.0, 1e-9));
+      expect(density[9], closeTo(0.1, 1e-9)); // week 10 = 2/20
+    });
+
+    test('covers the mass, never fewer than the minimum width', () {
+      final window = seasonWindow(curve());
+
+      expect(window.density.length, greaterThanOrEqualTo(13));
+      expect(window.myIndex, isNull);
+      // The mass (weeks 10..16) has to be inside the drawn range.
+      expect(window.firstWeek, lessThanOrEqualTo(10));
+      expect(
+        window.firstWeek + window.density.length - 1,
+        greaterThanOrEqualTo(16),
+      );
+    });
+
+    test('always contains my week, however far outside the season', () {
+      final window = seasonWindow(curve(), myWeek: 40);
+
+      expect(window.myIndex, isNotNull);
+      expect(window.firstWeek + window.myIndex!, 40 - 1 + 1);
+      expect(window.density.length, greaterThanOrEqualTo(13));
+    });
+
+    test('a week at the very start does not push the window off the year', () {
+      final window = seasonWindow(curve(), myWeek: 1);
+
+      expect(window.firstWeek, 1);
+      expect(window.myIndex, 0);
+    });
+
+    test('peak weeks bracket the middle half of the season', () {
+      expect(seasonPeakWeeks(curve()), (12, 14));
+    });
+  });
+
+  group('display rounding', () {
+    test('a percentage needs a reliable sample, and is rounded to 10', () {
+      final thin = buildSeasonCurve(
+        [_week(2025, 10, 4), _week(2025, 12, 6)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(seasonPercent(thin, 12), isNull); // n = 10 < kReliab
+
+      final solid = buildSeasonCurve(
+        [_week(2025, 10, 13), _week(2025, 12, 27)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(solid.pooledTotal, 40);
+      expect(seasonPercent(solid, 10), 30); // 13/40 = 32.5 %
+      expect(seasonPercent(solid, 12), 100);
+    });
+  });
+
+  group('mondayOfIsoWeek', () {
+    test('inverts isoWeek', () {
+      for (final week in [1, 5, 20, 52]) {
+        expect(isoWeek(mondayOfIsoWeek(2026, week)), week);
+      }
+    });
+
+    test('week 1 is the week carrying the first Thursday', () {
+      expect(mondayOfIsoWeek(2026, 1), DateTime(2025, 12, 29));
+      expect(mondayOfIsoWeek(2027, 1), DateTime(2027, 1, 4));
+    });
+  });
+
   test('timingBand splits the curve into terciles', () {
     expect(timingBand(0), CommunityTiming.early);
     expect(timingBand(0.33), CommunityTiming.early);
