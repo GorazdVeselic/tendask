@@ -116,6 +116,18 @@
 <body>
 <div class="page">
 
+  <div style="max-width:1000px;margin:0 auto 24px;background:#fff6e6;border:1px solid #ecd9a6;border-radius:14px;padding:16px 20px;">
+    <div style="font-size:15px;font-weight:800;color:#7d5f12;">⚠️ Uskladitev 2026-07-25 — monetizacija presežena (FR-20)</div>
+    <div style="font-size:13.5px;color:#9a7416;line-height:1.6;margin-top:8px;">
+      Skupina <b>C</b> (tease → 14-dnevni preizkul → upgrade s ceno) in vsi »Preizkusi 14 dni« / »9,99 €/leto« nizi
+      so <b>zastareli</b>. Plus je odslej <b>zunanja licenca</b> (nakup na spletni strani + odkupna koda) — v aplikaciji
+      <b>NIKOLI</b> cene, URL-ja, preizkusa ali CTA k nakupu (anti-steering FR-20 §3.1). <b>Veljavni tease</b> =
+      nevtralni <b>»Na voljo v Tendask +«</b> + gumb <b>»Vnesi kodo«</b> (blur nad vsebino). V M11 je »Vnesi kodo«
+      placeholder; pravi podpisani-token gate prižge FR-20. Vse <b>Okolica UI se gradi za temnim flagom</b>
+      (<code>kSuggestionsEnabled</code>), v prod dark. Okvirji C spodaj so posodobljeni na ta model.
+    </div>
+  </div>
+
   <div class="hero">
     <h1>Okolica / skupnost — FLOW v3 ⬡</h1>
     <p>
@@ -124,10 +136,9 @@
       opravilu). Vsak tap na opravilo od koderkoli vodi na <b>isti</b> per-opravilo zaslon → ni »izgubljanja« po podstraneh.
     </p>
     <div class="split">
-      <b class="plus">Celotna »Okolica« = Tendask+</b> (nič trajno brezplačnega; beleženje + jedro app ostanejo free in
-      hranijo agregat). Ne-naročnik vidi <b>tease</b> (predogled vrednosti + »Preizkusi 14 dni«). Preizkus:
-      <b>14 dni, brez kartice, uporabniško sprožen</b> (+ sezonske re-trial kampanje). Cena: <b class="plus">~9,99 €/leto</b>
-      (primarno) ali ~1,99 €/mes.
+      <b class="plus">Celotna »Okolica« = Tendask +</b> (nič trajno brezplačnega; beleženje + jedro app ostanejo free in
+      hranijo agregat). Ne-naročnik vidi <b>tease</b> (predogled vrednosti + nevtralni »Na voljo v Tendask +« +
+      »Vnesi kodo«). <b>Brez cene/URL/preizkusa v aplikaciji</b> — nakup je zunaj (FR-20). Aktivacija = odkupna koda.
     </div>
   </div>
 
@@ -401,9 +412,9 @@
           <a class="block" href="#s-upgrade">
           <div class="tease-card" style="margin-top:6px;">
             <span class="ti">⬡</span>
-            <div style="flex:1;"><div class="tt">Odkleni Okolico</div>
-              <div class="ts">Kaj sosedje delajo · kdaj · kje si ti · frekvenca. Preizkusi 14 dni (brez kartice).</div></div>
-            <span style="color:#9a7416;font-weight:800;">›</span></div></a>
+            <div style="flex:1;"><div class="tt">Na voljo v Tendask +</div>
+              <div class="ts">Kaj sosedje delajo · kdaj · kje si ti · frekvenca.</div></div>
+            <span style="background:var(--accent);color:#fff;font-size:12px;font-weight:700;padding:7px 13px;border-radius:9px;">Vnesi kodo</span></div></a>
 
           <div class="privacy-note"><span class="ico">🔒</span><span>Celotna Okolica je del Tendask+. Beleženje (ki hrani agregat) ostaja brezplačno.</span></div>
         </div>
@@ -438,12 +449,12 @@
                 <div class="bar"><div class="fill" style="height:100%"></div></div><div class="bar"><div class="fill" style="height:48%"></div></div>
                 <div class="bar"><div class="fill" style="height:18%"></div></div></div>
             </div>
-            <div class="lock-cta"><div class="lk">🔒</div>
+            <div class="lock-cta"><div class="lk">＋</div>
               <div class="lt">Časovni percentil + frekvenca</div>
-              <div class="ls">so del Tendask+ · beleženje ostaja brezplačno</div>
-              <div class="minibtn">Odkleni</div></div>
+              <div class="ls">na voljo v Tendask + · beleženje ostaja brezplačno</div>
+              <div class="minibtn">Vnesi kodo</div></div>
           </div></a>
-          <div class="info-card"><span class="ico">⬡</span><div class="it"><b>14-dnevni preizkus</b> odklene vse vpoglede te »Okolice« — brez kartice.</div></div>
+          <div class="info-card"><span class="ico">⬡</span><div class="it">Vsi vpogledi te »Okolice« so del <b>Tendask +</b>. Kodo dobiš ob nakupu (zunaj aplikacije).</div></div>
         </div>
       </div>
       <div class="cap">C2 · Free detail (zaklenjeno / tease)
@@ -459,7 +470,7 @@
         <div class="content">
           <div style="text-align:center;margin:10px 0 4px;">
             <img src="../brand/assets/logomark-mono.svg" alt="" style="width:48px;height:48px;">
-            <h1 style="font-size:23px;margin-top:6px;">Tendask+</h1>
+            <h1 style="font-size:23px;margin-top:6px;">Tendask +</h1>
             <div class="sub" style="font-size:13.5px;">Vpogledi okolice. Beleženje ostaja vedno brezplačno.</div></div>
           <div class="card" style="margin-top:10px;">
             <div class="benefit"><div class="bi">⏱</div><div><div class="bt">Kdaj začeti</div><div class="bs">»Kje si ti« glede na sosede — za vsako opravilo.</div></div></div>
@@ -467,12 +478,17 @@
             <div class="benefit"><div class="bi">🔔</div><div><div class="bt">Namigi okolice</div><div class="bs">»Sosedje sadijo paradižnik«.</div></div></div>
             <div class="benefit"><div class="bi">🔥</div><div><div class="bt">»Ta teden«</div><div class="bs">kaj sosedje delajo zdaj (drseče 7-dnevno okno).</div></div></div>
           </div>
-          <button class="btn" style="margin-top:8px;">Preizkusi 14 dni brezplačno</button>
-          <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:10px;">brez kartice · nato <b>9,99 €/leto</b> ali 1,99 €/mes · kadarkoli prekličeš</div>
+          <div class="section-title" style="margin-top:16px;">Imaš odkupno kodo?</div>
+          <div style="display:flex;gap:8px;">
+            <div style="flex:1;border:1px solid var(--line);border-radius:11px;padding:13px 14px;font-size:14px;color:var(--muted);background:var(--surface);">TENDASK-…</div>
+            <button class="btn" style="width:auto;padding:0 20px;">Aktiviraj</button>
+          </div>
+          <div style="text-align:center;font-size:12px;color:var(--muted);margin-top:12px;line-height:1.5;">Tendask + dobiš zunaj aplikacije. Ob nakupu prejmeš kodo, ki jo vneseš tu.
+            <b>Brez cene ali povezave v aplikaciji</b> (FR-20).</div>
         </div>
       </div>
-      <div class="cap">C3 · Tendask+ (upgrade)
-        <small><span class="flowtag in">← vsak 🔒</span> Cilj vseh tease/zaklenjenih stanj. Jasno: »Ta teden« in beleženje sta brezplačna.</small></div>
+      <div class="cap">C3 · Tendask + — vnos odkupne kode (FR-20)
+        <small><span class="flowtag in">← vsak »Vnesi kodo«</span> Cilj vseh tease stanj. <b>Ni</b> cene/preizkusa/URL-ja/CTA k nakupu (anti-steering). Aktivacija = koda → podpisan token.</small></div>
     </div>
 
   </div>
@@ -570,9 +586,12 @@
 
   <div class="hero" style="margin-top:50px;">
     <p style="font-size:13px;color:var(--muted);">
-      <b>Potrjeno (2026-06-09):</b> celotna Okolica = Tendask+; 14-dnevni preizkus (uporabniško sprožen, brez kartice)
-      + sezonske re-trial kampanje; cena ~9,99 €/leto (primarno) ali ~1,99 €/mes; stalen zavihek (N1) s tease za
-      ne-naročnike; landing privzeto »Ta teden«. Cene/vrednosti vzorčne (potrditi ob trgovinski objavi).
+      <b>Potrjeno (2026-06-09):</b> celotna Okolica = Tendask +; stalen 5. zavihek (⬡) s tease za ne-naročnike;
+      landing privzeto »Ta teden«.<br>
+      <b>Uskladitev (2026-07-25, FR-20):</b> monetizacija = <b>zunanja licenca</b> (nakup na spletni strani +
+      odkupna koda), <b>ne</b> Play Billing/preizkus. V aplikaciji <b>brez cene/URL/preizkusa/CTA k nakupu</b>
+      (anti-steering §3.1). Tease = »Na voljo v Tendask +« + »Vnesi kodo«. Okolica se gradi <b>dark</b>
+      (<code>kSuggestionsEnabled</code>); Plus-gate (podpisan token) prižge FR-20. Skupina C zgoraj = posodobljena.
     </p>
   </div>
 

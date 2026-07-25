@@ -16,10 +16,14 @@
 
 ---
 
-## 1. Spodnja navigacija (StatefulShellRoute — 4 zavihki)
+## 1. Spodnja navigacija (StatefulShellRoute — 4 zavihki; M11 doda 5.)
 
 Shell (`main_shell.dart`) drži spodnjo vrstico: **Domov · Opravila · Dnevnik · Vrt**. Vsak je svoj branch;
 menjava zavihka ohrani stanje (indexedStack).
+
+> **[M11 Okolica] doda 5. zavihek** »Okolica« (⬡ = H3 celica) **za temnim flagom** (`kSuggestionsEnabled`):
+> v prod APK-ju **skrit**, dokler ni prižgan. Ob prižigu je zavihek stalen za vse; brez Plus prikaže **tease**
+> (gl. §1.5). Plus-gate = **FR-20** (podpisan token; v M11 le stub `hasPlus`).
 
 ### 1.1 Domov — `/home` (`home`) [shell]
 Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
@@ -32,6 +36,9 @@ Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
   - tap opravila (DANES/NAZADNJE) → **task-detail** (`/task/:id` ali shell `/tasks/:id`).
   - **+ FAB → `/task-new`** (vnos opravila, wizard — gl. §3.1).
 - **[FR-19] doda:** »moon chip« pod vremensko kartico → `/moon-calendar` (ali `/tendask-plus`, če zaklenjeno).
+- **[M11 Okolica] doda (flag-dark):** sekcija **»V tvoji okolici ⬡«** nad **DANES** — proaktivna kartica
+  (najrelevantnejši namig, npr. »Sosedje sadijo paradižnik«) → `/community/task/:taskTypeId` + »Vse iz okolice ›«
+  → `/community`. Skrito prek `kSuggestionsEnabled`.
 
 ### 1.2 Opravila — `/tasks` (`tasks`) [shell]
 Seznam opravil. Tap opravila → **task-detail** `/tasks/:id` (`task-detail`, znotraj shell-a).
@@ -57,6 +64,18 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
   - »+ Rastlina« → `/plant-add` (`plant-add`).
   - Sredstva / Recepti = zavihka (če `kSuppliesEnabled`).
 - **[FR-19] doda (board D):** na **plant-detail** chip »🌙 Kdaj za …« → `/moon-finder?plant=:id`.
+
+### 1.5 Okolica — `/community` (`community`) [shell] · [M11, flag-dark]
+5. zavihek (⬡), za `kSuggestionsEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + izbirnik
+obsega (📍 okolica / podobna klima / vsi — auto najfinejši nivo nad pragom `kCommunityPrivacyMin=5`).
+- **Ta teden** (privzeto): kvalitativen feed opravil zadnjih 7 dni (`pogosto`/`nekaj`/`redko`), populacija vedra;
+  offline bere včerajšnji dnevni cache (drift `community_cache`). Pod pragom → »še premalo vrtnarjev«.
+- **Kje si ti:** tvoja opravila z oznako zgoden/običajen/pozen (percentil na napravi).
+- **Akcije:** tap opravila → **community-task** `/community/task/:taskTypeId` (`?plant=`) [shell]; »ℹ️ Kako beremo
+  te podatke« → explain sheet.
+- **Gating (M11 stub):** brez Plus → prva vrstica feeda vidna, ostalo `TeaseOverlay` (blur + »Na voljo v
+  Tendask +« + nevtralni **»Vnesi kodo«** — **brez cene/URL/trial/CTA k nakupu**, anti-steering FR-20 §3.1).
+  Pravi token-gate = FR-20; »Vnesi kodo« je v M11 placeholder.
 
 ---
 
@@ -84,6 +103,7 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
 | `/task-new` | **task-new** | Domov +FAB · Dnevnik »+ Dodaj …« (`?date=`) | wizard (gl. §3.1) |
 | `/tasks/:id/edit` | task-edit | task-detail »✏️ Uredi« | wizard v edit-načinu |
 | `/task/:id` | **task-view** | task-detail za klicalce **nad** shell-om (npr. plant-detail) | isti kot task-detail |
+| `/community/task/:taskTypeId` | **community-task** [M11, flag-dark] | Okolica feed · Domov kartica · detajl opravila CTA (`?plant=`) | percentil krivulja + »ti« marker + frekvenca stolpci + »ta teden«; brez Plus → `TeaseOverlay` |
 
 ### 2.1 Nastavitve — `/settings` (dejansko, ADB 2026-07-23)
 Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA oznaka + kartica):
@@ -109,6 +129,8 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
 6. Akcijska vrstica: **Podvoji · Premakni · Na čaka · Izbriši**.
 - **[FR-19] doda (board A):** sekcija **»Lunin koledar«** za VREMENSKIM POSNETKOM — element-dan iz `task.date`
   (**re-izpeljano, ne zamrznjeno**). Info, ni tap (MVP).
+- **[M11 Okolica] doda (flag-dark):** kartica **»V tvoji okolici«** (npr. »Bil si med zgodnejšimi 30 %«) →
+  `/community/task/:taskTypeId` (predloga tega opravila). Skrito prek `kSuggestionsEnabled`.
 
 ### 2.3 Detajl rastline — `/plant/:id` (plant-detail), dejansko
 ← nazaj · ✏️ (uredi). Struktura:

@@ -400,7 +400,15 @@ Naprava enkrat na dan potegne rezino agregata za svoje vedro in jo shrani v drif
 ponovna odprtja berejo lokalno (0 oblaka), pogled deluje offline, ujame se z nočnim ritmom crona.
 Realna obremenitev ≈ **1 majhen pull / uporabnik / dan + 1 cron / noč skupno** → daleč pod free limiti.
 
-### 12.5 Monetizacija (POTRJENO 2026-06-09)
+### 12.5 Monetizacija (POTRJENO 2026-06-09 · ⚠️ delno PRESEŽENO 2026-07-22, FR-20)
+
+> **Uskladitev (FR-20, `tendask-plus-licensing.md`):** ostaja »celotna Okolica = Tendask +« in »stalen
+> 5. zavihek s tease«. **Preseženo je vse okoli plačila:** 14-dnevni preizkus, sezonske re-trial kampanje,
+> cena v aplikaciji in Play Billing **ODPADEJO**. Plus je **zunanja licenca** (nakup na spletni strani +
+> odkupna koda); v aplikaciji **nikoli** cene/URL-ja/preizkusa/CTA k nakupu (anti-steering §3.1). Tease =
+> nevtralno »Na voljo v Tendask +« + »Vnesi kodo«. Lansirni model = 1-letna `granted` licenca vsem obstoječim
+> (§10.4 FR-20). Spodnje alineje o preizkusu/ceni beri kot **zgodovinske**.
+
 - **Celotna »Okolica« = Tendask+** (plačljivo) — **nič trajno brezplačnega** znotraj funkcije. Jedro
   aplikacije (beleženje, vreme, opomniki) ostane brezplačno; **beleženje hrani agregat**, zato gostota
   (prioriteta) ni ogrožena — gradijo jo brezplačni beležniki, ne plačniki pogleda.
