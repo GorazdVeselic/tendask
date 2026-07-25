@@ -73,6 +73,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
 	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
 	@override late final _Translations$suggestions$sl suggestions = _Translations$suggestions$sl._(_root);
+	@override late final _Translations$community$sl community = _Translations$community$sl._(_root);
 }
 
 // Path: splash
@@ -96,6 +97,7 @@ class _Translations$nav$sl extends Translations$nav$en {
 	@override String get journal => 'Dnevnik';
 	@override String get areas => 'Vrt';
 	@override String get tasks => 'Opravila';
+	@override String get community => 'Okolica';
 }
 
 // Path: home
@@ -987,6 +989,31 @@ class _Translations$suggestions$sl extends Translations$suggestions$en {
 	@override late final _Translations$suggestions$zucchini$sl zucchini = _Translations$suggestions$zucchini$sl._(_root);
 }
 
+// Path: community
+class _Translations$community$sl extends Translations$community$en {
+	_Translations$community$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Okolica';
+	@override String get seg_week => 'Ta teden';
+	@override String get seg_you => 'Kje si ti';
+	@override String get window_7d => 'zadnjih 7 dni';
+	@override String population({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
+		one: '~1 vrtnar',
+		two: '~${n} vrtnarja',
+		few: '~${n} vrtnarji',
+		other: '~${n} vrtnarjev',
+	);
+	@override late final _Translations$community$scope$sl scope = _Translations$community$scope$sl._(_root);
+	@override late final _Translations$community$intensity$sl intensity = _Translations$community$intensity$sl._(_root);
+	@override String get empty_feed => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.';
+	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
+	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.';
+	@override late final _Translations$community$tease$sl tease = _Translations$community$tease$sl._(_root);
+}
+
 // Path: suggestions.actions
 class _Translations$suggestions$actions$sl extends Translations$suggestions$actions$en {
 	_Translations$suggestions$actions$sl._(TranslationsSl root) : this._root = root, super.internal(root);
@@ -1312,6 +1339,41 @@ class _Translations$suggestions$zucchini$sl extends Translations$suggestions$zuc
 
 	// Translations
 	@override late final _Translations$suggestions$zucchini$sow_direct$sl sow_direct = _Translations$suggestions$zucchini$sow_direct$sl._(_root);
+}
+
+// Path: community.scope
+class _Translations$community$scope$sl extends Translations$community$scope$en {
+	_Translations$community$scope$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get area => 'v tvoji okolici';
+	@override String get climate => 'v podobni klimi';
+}
+
+// Path: community.intensity
+class _Translations$community$intensity$sl extends Translations$community$intensity$en {
+	_Translations$community$intensity$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get often => 'pogosto';
+	@override String get some => 'nekaj';
+	@override String get rare => 'redko';
+}
+
+// Path: community.tease
+class _Translations$community$tease$sl extends Translations$community$tease$en {
+	_Translations$community$tease$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Na voljo v Tendask +';
+	@override String get body => 'Kaj vrtnarji v okolici delajo, kdaj začnejo, kje si ti in kako pogosto.';
+	@override String get redeem => 'Vnesi kodo';
 }
 
 // Path: suggestions.cadence.overdue
@@ -2042,6 +2104,7 @@ extension on TranslationsSl {
 			'nav.journal' => 'Dnevnik',
 			'nav.areas' => 'Vrt',
 			'nav.tasks' => 'Opravila',
+			'nav.community' => 'Okolica',
 			'home.greeting' => 'Dober dan 🌿',
 			'home.today' => 'Danes',
 			'home.recent' => 'Nazadnje',
@@ -2548,9 +2611,9 @@ extension on TranslationsSl {
 			'weather.m_humidity' => 'Vlažnost',
 			'weather.m_wind' => 'Veter',
 			'weather.m_precipitation' => 'Padavine',
-			'weather.m_soil_temp' => 'Temp. tal',
 			_ => null,
 		} ?? switch (path) {
+			'weather.m_soil_temp' => 'Temp. tal',
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Dež 48 h',
 			'weather.m_no_rain' => 'brez dežja',
@@ -2742,6 +2805,22 @@ extension on TranslationsSl {
 			'suggestions.cucumber.sow_direct.body' => 'Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}.',
 			'suggestions.zucchini.sow_direct.title' => 'Neposredna setev',
 			'suggestions.zucchini.sow_direct.body' => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.',
+			'community.title' => 'Okolica',
+			'community.seg_week' => 'Ta teden',
+			'community.seg_you' => 'Kje si ti',
+			'community.window_7d' => 'zadnjih 7 dni',
+			'community.population' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: '~1 vrtnar', two: '~${n} vrtnarja', few: '~${n} vrtnarji', other: '~${n} vrtnarjev', ), 
+			'community.scope.area' => 'v tvoji okolici',
+			'community.scope.climate' => 'v podobni klimi',
+			'community.intensity.often' => 'pogosto',
+			'community.intensity.some' => 'nekaj',
+			'community.intensity.rare' => 'redko',
+			'community.empty_feed' => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.',
+			'community.empty_standing' => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.',
+			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.',
+			'community.tease.title' => 'Na voljo v Tendask +',
+			'community.tease.body' => 'Kaj vrtnarji v okolici delajo, kdaj začnejo, kje si ti in kako pogosto.',
+			'community.tease.redeem' => 'Vnesi kodo',
 			_ => null,
 		};
 	}

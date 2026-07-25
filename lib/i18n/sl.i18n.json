@@ -6,7 +6,8 @@
     "home": "Domov",
     "journal": "Dnevnik",
     "areas": "Vrt",
-    "tasks": "Opravila"
+    "tasks": "Opravila",
+    "community": "Okolica"
   },
   "home": {
     "greeting": "Dober dan 🌿",
@@ -977,6 +978,35 @@
         "title": "Neposredna setev",
         "body": "Posej {subject} na prosto po pozebi — okoli {frost_date}."
       }
+    }
+  },
+  "community": {
+    "title": "Okolica",
+    "seg_week": "Ta teden",
+    "seg_you": "Kje si ti",
+    "window_7d": "zadnjih 7 dni",
+    "population(n)": {
+      "one": "~1 vrtnar",
+      "two": "~$n vrtnarja",
+      "few": "~$n vrtnarji",
+      "other": "~$n vrtnarjev"
+    },
+    "scope": {
+      "area": "v tvoji okolici",
+      "climate": "v podobni klimi"
+    },
+    "intensity": {
+      "often": "pogosto",
+      "some": "nekaj",
+      "rare": "redko"
+    },
+    "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
+    "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
+    "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.",
+    "tease": {
+      "title": "Na voljo v Tendask +",
+      "body": "Kaj vrtnarji v okolici delajo, kdaj začnejo, kje si ti in kako pogosto.",
+      "redeem": "Vnesi kodo"
     }
   }
 }

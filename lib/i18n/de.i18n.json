@@ -6,7 +6,8 @@
     "home": "Startseite",
     "journal": "Tagebuch",
     "areas": "Garten",
-    "tasks": "Aufgaben"
+    "tasks": "Aufgaben",
+    "community": "Umgebung"
   },
   "home": {
     "greeting": "Guten Tag 🌿",
@@ -967,6 +968,33 @@
         "title": "Direktsaat",
         "body": "Säe {subject} nach dem Frost ins Freie — um {frost_date}."
       }
+    }
+  },
+  "community": {
+    "title": "Umgebung",
+    "seg_week": "Diese Woche",
+    "seg_you": "Wo du stehst",
+    "window_7d": "letzte 7 Tage",
+    "population(n)": {
+      "one": "~1 Gärtner",
+      "other": "~$n Gärtner"
+    },
+    "scope": {
+      "area": "in deiner Umgebung",
+      "climate": "in einem ähnlichen Klima"
+    },
+    "intensity": {
+      "often": "häufig",
+      "some": "einige",
+      "rare": "selten"
+    },
+    "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
+    "empty_standing": "Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.",
+    "privacy_note": "Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.",
+    "tease": {
+      "title": "Verfügbar in Tendask +",
+      "body": "Was Gärtner in der Nähe tun, wann sie beginnen, wo du stehst und wie oft.",
+      "redeem": "Code eingeben"
     }
   }
 }

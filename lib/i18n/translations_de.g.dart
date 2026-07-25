@@ -73,6 +73,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
 	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
 	@override late final _Translations$suggestions$de suggestions = _Translations$suggestions$de._(_root);
+	@override late final _Translations$community$de community = _Translations$community$de._(_root);
 }
 
 // Path: splash
@@ -96,6 +97,7 @@ class _Translations$nav$de extends Translations$nav$en {
 	@override String get journal => 'Tagebuch';
 	@override String get areas => 'Garten';
 	@override String get tasks => 'Aufgaben';
+	@override String get community => 'Umgebung';
 }
 
 // Path: home
@@ -977,6 +979,29 @@ class _Translations$suggestions$de extends Translations$suggestions$en {
 	@override late final _Translations$suggestions$zucchini$de zucchini = _Translations$suggestions$zucchini$de._(_root);
 }
 
+// Path: community
+class _Translations$community$de extends Translations$community$en {
+	_Translations$community$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Umgebung';
+	@override String get seg_week => 'Diese Woche';
+	@override String get seg_you => 'Wo du stehst';
+	@override String get window_7d => 'letzte 7 Tage';
+	@override String population({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n,
+		one: '~1 Gärtner',
+		other: '~${n} Gärtner',
+	);
+	@override late final _Translations$community$scope$de scope = _Translations$community$scope$de._(_root);
+	@override late final _Translations$community$intensity$de intensity = _Translations$community$intensity$de._(_root);
+	@override String get empty_feed => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.';
+	@override String get empty_standing => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.';
+	@override String get privacy_note => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.';
+	@override late final _Translations$community$tease$de tease = _Translations$community$tease$de._(_root);
+}
+
 // Path: suggestions.actions
 class _Translations$suggestions$actions$de extends Translations$suggestions$actions$en {
 	_Translations$suggestions$actions$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -1302,6 +1327,41 @@ class _Translations$suggestions$zucchini$de extends Translations$suggestions$zuc
 
 	// Translations
 	@override late final _Translations$suggestions$zucchini$sow_direct$de sow_direct = _Translations$suggestions$zucchini$sow_direct$de._(_root);
+}
+
+// Path: community.scope
+class _Translations$community$scope$de extends Translations$community$scope$en {
+	_Translations$community$scope$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get area => 'in deiner Umgebung';
+	@override String get climate => 'in einem ähnlichen Klima';
+}
+
+// Path: community.intensity
+class _Translations$community$intensity$de extends Translations$community$intensity$en {
+	_Translations$community$intensity$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get often => 'häufig';
+	@override String get some => 'einige';
+	@override String get rare => 'selten';
+}
+
+// Path: community.tease
+class _Translations$community$tease$de extends Translations$community$tease$en {
+	_Translations$community$tease$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Verfügbar in Tendask +';
+	@override String get body => 'Was Gärtner in der Nähe tun, wann sie beginnen, wo du stehst und wie oft.';
+	@override String get redeem => 'Code eingeben';
 }
 
 // Path: suggestions.cadence.overdue
@@ -2032,6 +2092,7 @@ extension on TranslationsDe {
 			'nav.journal' => 'Tagebuch',
 			'nav.areas' => 'Garten',
 			'nav.tasks' => 'Aufgaben',
+			'nav.community' => 'Umgebung',
 			'home.greeting' => 'Guten Tag 🌿',
 			'home.today' => 'Heute',
 			'home.recent' => 'Zuletzt',
@@ -2538,9 +2599,9 @@ extension on TranslationsDe {
 			'weather.m_humidity' => 'Luftfeuchte',
 			'weather.m_wind' => 'Wind',
 			'weather.m_precipitation' => 'Niederschlag',
-			'weather.m_soil_temp' => 'Bodentemp.',
 			_ => null,
 		} ?? switch (path) {
+			'weather.m_soil_temp' => 'Bodentemp.',
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Regen 48 h',
 			'weather.m_no_rain' => 'kein Regen',
@@ -2732,6 +2793,22 @@ extension on TranslationsDe {
 			'suggestions.cucumber.sow_direct.body' => 'Säe {subject} ins Freie, sobald es warm und frostfrei ist — um {frost_date}.',
 			'suggestions.zucchini.sow_direct.title' => 'Direktsaat',
 			'suggestions.zucchini.sow_direct.body' => 'Säe {subject} nach dem Frost ins Freie — um {frost_date}.',
+			'community.title' => 'Umgebung',
+			'community.seg_week' => 'Diese Woche',
+			'community.seg_you' => 'Wo du stehst',
+			'community.window_7d' => 'letzte 7 Tage',
+			'community.population' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: '~1 Gärtner', other: '~${n} Gärtner', ), 
+			'community.scope.area' => 'in deiner Umgebung',
+			'community.scope.climate' => 'in einem ähnlichen Klima',
+			'community.intensity.often' => 'häufig',
+			'community.intensity.some' => 'einige',
+			'community.intensity.rare' => 'selten',
+			'community.empty_feed' => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.',
+			'community.empty_standing' => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.',
+			'community.privacy_note' => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.',
+			'community.tease.title' => 'Verfügbar in Tendask +',
+			'community.tease.body' => 'Was Gärtner in der Nähe tun, wann sie beginnen, wo du stehst und wie oft.',
+			'community.tease.redeem' => 'Code eingeben',
 			_ => null,
 		};
 	}

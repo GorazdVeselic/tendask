@@ -129,18 +129,16 @@ void main() {
     expect(find.byType(ListTile), findsNWidgets(3));
   });
 
-  testWidgets('the tease carries no price, link or purchase call', (
+  testWidgets('the tease offers only a neutral, inert redeem affordance', (
     tester,
   ) async {
     await _pump(tester, feed: _feed(), hasPlus: false);
 
-    // Neutral redeem affordance only, and it is inert until FR-20 wires it.
+    // Wording is guarded across locales by test/i18n/community_i18n_test.dart;
+    // here the point is that nothing can be tapped towards a purchase.
+    expect(find.text(t.community.tease.redeem), findsOneWidget);
     final button = tester.widget<FilledButton>(find.byType(FilledButton));
     expect(button.onPressed, isNull);
-    expect(find.text(t.community.tease.redeem), findsOneWidget);
-    for (final needle in ['€', 'http', 'trial']) {
-      expect(find.textContaining(needle), findsNothing, reason: needle);
-    }
   });
 
   testWidgets('cold start says there are not enough gardeners yet', (
