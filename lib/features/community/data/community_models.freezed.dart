@@ -1,0 +1,1413 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// coverage:ignore-file
+// ignore_for_file: type=lint
+// ignore_for_file: unused_element, deprecated_member_use, deprecated_member_use_from_same_package, use_function_type_syntax_for_parameters, unnecessary_const, avoid_init_to_null, invalid_override_different_default_values_named, prefer_expression_function_bodies, annotate_overrides, invalid_annotation_target, unnecessary_question_mark
+
+part of 'community_models.dart';
+
+// **************************************************************************
+// FreezedGenerator
+// **************************************************************************
+
+// dart format off
+T _$identity<T>(T value) => value;
+/// @nodoc
+mixin _$Bucket {
+
+ CommunityResolution get resolution; String get key;
+/// Create a copy of Bucket
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$BucketCopyWith<Bucket> get copyWith => _$BucketCopyWithImpl<Bucket>(this as Bucket, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Bucket&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.key, key) || other.key == key));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,resolution,key);
+
+@override
+String toString() {
+  return 'Bucket(resolution: $resolution, key: $key)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $BucketCopyWith<$Res>  {
+  factory $BucketCopyWith(Bucket value, $Res Function(Bucket) _then) = _$BucketCopyWithImpl;
+@useResult
+$Res call({
+ CommunityResolution resolution, String key
+});
+
+
+
+
+}
+/// @nodoc
+class _$BucketCopyWithImpl<$Res>
+    implements $BucketCopyWith<$Res> {
+  _$BucketCopyWithImpl(this._self, this._then);
+
+  final Bucket _self;
+  final $Res Function(Bucket) _then;
+
+/// Create a copy of Bucket
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? resolution = null,Object? key = null,}) {
+  return _then(_self.copyWith(
+resolution: null == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
+as CommunityResolution,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [Bucket].
+extension BucketPatterns on Bucket {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _Bucket value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _Bucket() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _Bucket value)  $default,){
+final _that = this;
+switch (_that) {
+case _Bucket():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _Bucket value)?  $default,){
+final _that = this;
+switch (_that) {
+case _Bucket() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( CommunityResolution resolution,  String key)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _Bucket() when $default != null:
+return $default(_that.resolution,_that.key);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( CommunityResolution resolution,  String key)  $default,) {final _that = this;
+switch (_that) {
+case _Bucket():
+return $default(_that.resolution,_that.key);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( CommunityResolution resolution,  String key)?  $default,) {final _that = this;
+switch (_that) {
+case _Bucket() when $default != null:
+return $default(_that.resolution,_that.key);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _Bucket implements Bucket {
+  const _Bucket({required this.resolution, required this.key});
+  
+
+@override final  CommunityResolution resolution;
+@override final  String key;
+
+/// Create a copy of Bucket
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$BucketCopyWith<_Bucket> get copyWith => __$BucketCopyWithImpl<_Bucket>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Bucket&&(identical(other.resolution, resolution) || other.resolution == resolution)&&(identical(other.key, key) || other.key == key));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,resolution,key);
+
+@override
+String toString() {
+  return 'Bucket(resolution: $resolution, key: $key)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$BucketCopyWith<$Res> implements $BucketCopyWith<$Res> {
+  factory _$BucketCopyWith(_Bucket value, $Res Function(_Bucket) _then) = __$BucketCopyWithImpl;
+@override @useResult
+$Res call({
+ CommunityResolution resolution, String key
+});
+
+
+
+
+}
+/// @nodoc
+class __$BucketCopyWithImpl<$Res>
+    implements _$BucketCopyWith<$Res> {
+  __$BucketCopyWithImpl(this._self, this._then);
+
+  final _Bucket _self;
+  final $Res Function(_Bucket) _then;
+
+/// Create a copy of Bucket
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? resolution = null,Object? key = null,}) {
+  return _then(_Bucket(
+resolution: null == resolution ? _self.resolution : resolution // ignore: cast_nullable_to_non_nullable
+as CommunityResolution,key: null == key ? _self.key : key // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+mixin _$CommunityFeedItem {
+
+ String get taskTypeId; String get plantId; int get distinctUsers7d; CommunityIntensity get intensity;
+/// Create a copy of CommunityFeedItem
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommunityFeedItemCopyWith<CommunityFeedItem> get copyWith => _$CommunityFeedItemCopyWithImpl<CommunityFeedItem>(this as CommunityFeedItem, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.plantId, plantId) || other.plantId == plantId)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,taskTypeId,plantId,distinctUsers7d,intensity);
+
+@override
+String toString() {
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, plantId: $plantId, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CommunityFeedItemCopyWith<$Res>  {
+  factory $CommunityFeedItemCopyWith(CommunityFeedItem value, $Res Function(CommunityFeedItem) _then) = _$CommunityFeedItemCopyWithImpl;
+@useResult
+$Res call({
+ String taskTypeId, String plantId, int distinctUsers7d, CommunityIntensity intensity
+});
+
+
+
+
+}
+/// @nodoc
+class _$CommunityFeedItemCopyWithImpl<$Res>
+    implements $CommunityFeedItemCopyWith<$Res> {
+  _$CommunityFeedItemCopyWithImpl(this._self, this._then);
+
+  final CommunityFeedItem _self;
+  final $Res Function(CommunityFeedItem) _then;
+
+/// Create a copy of CommunityFeedItem
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? plantId = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+  return _then(_self.copyWith(
+taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
+as String,plantId: null == plantId ? _self.plantId : plantId // ignore: cast_nullable_to_non_nullable
+as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
+as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as CommunityIntensity,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CommunityFeedItem].
+extension CommunityFeedItemPatterns on CommunityFeedItem {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommunityFeedItem value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommunityFeedItem() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommunityFeedItem value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityFeedItem():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommunityFeedItem value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityFeedItem() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommunityFeedItem() when $default != null:
+return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
+switch (_that) {
+case _CommunityFeedItem():
+return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
+switch (_that) {
+case _CommunityFeedItem() when $default != null:
+return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _CommunityFeedItem implements CommunityFeedItem {
+  const _CommunityFeedItem({required this.taskTypeId, required this.plantId, required this.distinctUsers7d, required this.intensity});
+  
+
+@override final  String taskTypeId;
+@override final  String plantId;
+@override final  int distinctUsers7d;
+@override final  CommunityIntensity intensity;
+
+/// Create a copy of CommunityFeedItem
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommunityFeedItemCopyWith<_CommunityFeedItem> get copyWith => __$CommunityFeedItemCopyWithImpl<_CommunityFeedItem>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.plantId, plantId) || other.plantId == plantId)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,taskTypeId,plantId,distinctUsers7d,intensity);
+
+@override
+String toString() {
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, plantId: $plantId, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommunityFeedItemCopyWith<$Res> implements $CommunityFeedItemCopyWith<$Res> {
+  factory _$CommunityFeedItemCopyWith(_CommunityFeedItem value, $Res Function(_CommunityFeedItem) _then) = __$CommunityFeedItemCopyWithImpl;
+@override @useResult
+$Res call({
+ String taskTypeId, String plantId, int distinctUsers7d, CommunityIntensity intensity
+});
+
+
+
+
+}
+/// @nodoc
+class __$CommunityFeedItemCopyWithImpl<$Res>
+    implements _$CommunityFeedItemCopyWith<$Res> {
+  __$CommunityFeedItemCopyWithImpl(this._self, this._then);
+
+  final _CommunityFeedItem _self;
+  final $Res Function(_CommunityFeedItem) _then;
+
+/// Create a copy of CommunityFeedItem
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? plantId = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+  return _then(_CommunityFeedItem(
+taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
+as String,plantId: null == plantId ? _self.plantId : plantId // ignore: cast_nullable_to_non_nullable
+as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
+as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as CommunityIntensity,
+  ));
+}
+
+
+}
+
+/// @nodoc
+mixin _$CommunityFeed {
+
+ Bucket get bucket; int get population; List<CommunityFeedItem> get items;
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommunityFeedCopyWith<CommunityFeed> get copyWith => _$CommunityFeedCopyWithImpl<CommunityFeed>(this as CommunityFeed, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other.items, items));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(items));
+
+@override
+String toString() {
+  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CommunityFeedCopyWith<$Res>  {
+  factory $CommunityFeedCopyWith(CommunityFeed value, $Res Function(CommunityFeed) _then) = _$CommunityFeedCopyWithImpl;
+@useResult
+$Res call({
+ Bucket bucket, int population, List<CommunityFeedItem> items
+});
+
+
+$BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class _$CommunityFeedCopyWithImpl<$Res>
+    implements $CommunityFeedCopyWith<$Res> {
+  _$CommunityFeedCopyWithImpl(this._self, this._then);
+
+  final CommunityFeed _self;
+  final $Res Function(CommunityFeed) _then;
+
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? population = null,Object? items = null,}) {
+  return _then(_self.copyWith(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,population: null == population ? _self.population : population // ignore: cast_nullable_to_non_nullable
+as int,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
+as List<CommunityFeedItem>,
+  ));
+}
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [CommunityFeed].
+extension CommunityFeedPatterns on CommunityFeed {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommunityFeed value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommunityFeed() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommunityFeed value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityFeed():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommunityFeed value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityFeed() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommunityFeed() when $default != null:
+return $default(_that.bucket,_that.population,_that.items);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)  $default,) {final _that = this;
+switch (_that) {
+case _CommunityFeed():
+return $default(_that.bucket,_that.population,_that.items);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)?  $default,) {final _that = this;
+switch (_that) {
+case _CommunityFeed() when $default != null:
+return $default(_that.bucket,_that.population,_that.items);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _CommunityFeed implements CommunityFeed {
+  const _CommunityFeed({required this.bucket, required this.population, required final  List<CommunityFeedItem> items}): _items = items;
+  
+
+@override final  Bucket bucket;
+@override final  int population;
+ final  List<CommunityFeedItem> _items;
+@override List<CommunityFeedItem> get items {
+  if (_items is EqualUnmodifiableListView) return _items;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_items);
+}
+
+
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommunityFeedCopyWith<_CommunityFeed> get copyWith => __$CommunityFeedCopyWithImpl<_CommunityFeed>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other._items, _items));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(_items));
+
+@override
+String toString() {
+  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommunityFeedCopyWith<$Res> implements $CommunityFeedCopyWith<$Res> {
+  factory _$CommunityFeedCopyWith(_CommunityFeed value, $Res Function(_CommunityFeed) _then) = __$CommunityFeedCopyWithImpl;
+@override @useResult
+$Res call({
+ Bucket bucket, int population, List<CommunityFeedItem> items
+});
+
+
+@override $BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class __$CommunityFeedCopyWithImpl<$Res>
+    implements _$CommunityFeedCopyWith<$Res> {
+  __$CommunityFeedCopyWithImpl(this._self, this._then);
+
+  final _CommunityFeed _self;
+  final $Res Function(_CommunityFeed) _then;
+
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? population = null,Object? items = null,}) {
+  return _then(_CommunityFeed(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,population: null == population ? _self.population : population // ignore: cast_nullable_to_non_nullable
+as int,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
+as List<CommunityFeedItem>,
+  ));
+}
+
+/// Create a copy of CommunityFeed
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+/// @nodoc
+mixin _$SeasonCurve {
+
+ Bucket get bucket; List<double> get cdf; int get pooledTotal;
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SeasonCurveCopyWith<SeasonCurve> get copyWith => _$SeasonCurveCopyWithImpl<SeasonCurve>(this as SeasonCurve, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other.cdf, cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(cdf),pooledTotal);
+
+@override
+String toString() {
+  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $SeasonCurveCopyWith<$Res>  {
+  factory $SeasonCurveCopyWith(SeasonCurve value, $Res Function(SeasonCurve) _then) = _$SeasonCurveCopyWithImpl;
+@useResult
+$Res call({
+ Bucket bucket, List<double> cdf, int pooledTotal
+});
+
+
+$BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class _$SeasonCurveCopyWithImpl<$Res>
+    implements $SeasonCurveCopyWith<$Res> {
+  _$SeasonCurveCopyWithImpl(this._self, this._then);
+
+  final SeasonCurve _self;
+  final $Res Function(SeasonCurve) _then;
+
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,}) {
+  return _then(_self.copyWith(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,cdf: null == cdf ? _self.cdf : cdf // ignore: cast_nullable_to_non_nullable
+as List<double>,pooledTotal: null == pooledTotal ? _self.pooledTotal : pooledTotal // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [SeasonCurve].
+extension SeasonCurvePatterns on SeasonCurve {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _SeasonCurve value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _SeasonCurve() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _SeasonCurve value)  $default,){
+final _that = this;
+switch (_that) {
+case _SeasonCurve():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _SeasonCurve value)?  $default,){
+final _that = this;
+switch (_that) {
+case _SeasonCurve() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _SeasonCurve() when $default != null:
+return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal)  $default,) {final _that = this;
+switch (_that) {
+case _SeasonCurve():
+return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  List<double> cdf,  int pooledTotal)?  $default,) {final _that = this;
+switch (_that) {
+case _SeasonCurve() when $default != null:
+return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _SeasonCurve implements SeasonCurve {
+  const _SeasonCurve({required this.bucket, required final  List<double> cdf, required this.pooledTotal}): _cdf = cdf;
+  
+
+@override final  Bucket bucket;
+ final  List<double> _cdf;
+@override List<double> get cdf {
+  if (_cdf is EqualUnmodifiableListView) return _cdf;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_cdf);
+}
+
+@override final  int pooledTotal;
+
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$SeasonCurveCopyWith<_SeasonCurve> get copyWith => __$SeasonCurveCopyWithImpl<_SeasonCurve>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other._cdf, _cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(_cdf),pooledTotal);
+
+@override
+String toString() {
+  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$SeasonCurveCopyWith<$Res> implements $SeasonCurveCopyWith<$Res> {
+  factory _$SeasonCurveCopyWith(_SeasonCurve value, $Res Function(_SeasonCurve) _then) = __$SeasonCurveCopyWithImpl;
+@override @useResult
+$Res call({
+ Bucket bucket, List<double> cdf, int pooledTotal
+});
+
+
+@override $BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class __$SeasonCurveCopyWithImpl<$Res>
+    implements _$SeasonCurveCopyWith<$Res> {
+  __$SeasonCurveCopyWithImpl(this._self, this._then);
+
+  final _SeasonCurve _self;
+  final $Res Function(_SeasonCurve) _then;
+
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,}) {
+  return _then(_SeasonCurve(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,cdf: null == cdf ? _self._cdf : cdf // ignore: cast_nullable_to_non_nullable
+as List<double>,pooledTotal: null == pooledTotal ? _self.pooledTotal : pooledTotal // ignore: cast_nullable_to_non_nullable
+as int,
+  ));
+}
+
+/// Create a copy of SeasonCurve
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+/// @nodoc
+mixin _$FrequencyStats {
+
+ Bucket get bucket; double get p25; double get p50; double get p75; String get unit; int get nUsers; Map<String, int> get hist;
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FrequencyStatsCopyWith<FrequencyStats> get copyWith => _$FrequencyStatsCopyWithImpl<FrequencyStats>(this as FrequencyStats, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p50, p50) || other.p50 == p50)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other.hist, hist));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,p25,p50,p75,unit,nUsers,const DeepCollectionEquality().hash(hist));
+
+@override
+String toString() {
+  return 'FrequencyStats(bucket: $bucket, p25: $p25, p50: $p50, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FrequencyStatsCopyWith<$Res>  {
+  factory $FrequencyStatsCopyWith(FrequencyStats value, $Res Function(FrequencyStats) _then) = _$FrequencyStatsCopyWithImpl;
+@useResult
+$Res call({
+ Bucket bucket, double p25, double p50, double p75, String unit, int nUsers, Map<String, int> hist
+});
+
+
+$BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class _$FrequencyStatsCopyWithImpl<$Res>
+    implements $FrequencyStatsCopyWith<$Res> {
+  _$FrequencyStatsCopyWithImpl(this._self, this._then);
+
+  final FrequencyStats _self;
+  final $Res Function(FrequencyStats) _then;
+
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? p25 = null,Object? p50 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
+  return _then(_self.copyWith(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,p25: null == p25 ? _self.p25 : p25 // ignore: cast_nullable_to_non_nullable
+as double,p50: null == p50 ? _self.p50 : p50 // ignore: cast_nullable_to_non_nullable
+as double,p75: null == p75 ? _self.p75 : p75 // ignore: cast_nullable_to_non_nullable
+as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,nUsers: null == nUsers ? _self.nUsers : nUsers // ignore: cast_nullable_to_non_nullable
+as int,hist: null == hist ? _self.hist : hist // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
+  ));
+}
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+
+/// Adds pattern-matching-related methods to [FrequencyStats].
+extension FrequencyStatsPatterns on FrequencyStats {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _FrequencyStats value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _FrequencyStats() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _FrequencyStats value)  $default,){
+final _that = this;
+switch (_that) {
+case _FrequencyStats():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _FrequencyStats value)?  $default,){
+final _that = this;
+switch (_that) {
+case _FrequencyStats() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _FrequencyStats() when $default != null:
+return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)  $default,) {final _that = this;
+switch (_that) {
+case _FrequencyStats():
+return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,) {final _that = this;
+switch (_that) {
+case _FrequencyStats() when $default != null:
+return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _FrequencyStats implements FrequencyStats {
+  const _FrequencyStats({required this.bucket, required this.p25, required this.p50, required this.p75, required this.unit, required this.nUsers, required final  Map<String, int> hist}): _hist = hist;
+  
+
+@override final  Bucket bucket;
+@override final  double p25;
+@override final  double p50;
+@override final  double p75;
+@override final  String unit;
+@override final  int nUsers;
+ final  Map<String, int> _hist;
+@override Map<String, int> get hist {
+  if (_hist is EqualUnmodifiableMapView) return _hist;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(_hist);
+}
+
+
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$FrequencyStatsCopyWith<_FrequencyStats> get copyWith => __$FrequencyStatsCopyWithImpl<_FrequencyStats>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p50, p50) || other.p50 == p50)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other._hist, _hist));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,bucket,p25,p50,p75,unit,nUsers,const DeepCollectionEquality().hash(_hist));
+
+@override
+String toString() {
+  return 'FrequencyStats(bucket: $bucket, p25: $p25, p50: $p50, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$FrequencyStatsCopyWith<$Res> implements $FrequencyStatsCopyWith<$Res> {
+  factory _$FrequencyStatsCopyWith(_FrequencyStats value, $Res Function(_FrequencyStats) _then) = __$FrequencyStatsCopyWithImpl;
+@override @useResult
+$Res call({
+ Bucket bucket, double p25, double p50, double p75, String unit, int nUsers, Map<String, int> hist
+});
+
+
+@override $BucketCopyWith<$Res> get bucket;
+
+}
+/// @nodoc
+class __$FrequencyStatsCopyWithImpl<$Res>
+    implements _$FrequencyStatsCopyWith<$Res> {
+  __$FrequencyStatsCopyWithImpl(this._self, this._then);
+
+  final _FrequencyStats _self;
+  final $Res Function(_FrequencyStats) _then;
+
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? p25 = null,Object? p50 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
+  return _then(_FrequencyStats(
+bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
+as Bucket,p25: null == p25 ? _self.p25 : p25 // ignore: cast_nullable_to_non_nullable
+as double,p50: null == p50 ? _self.p50 : p50 // ignore: cast_nullable_to_non_nullable
+as double,p75: null == p75 ? _self.p75 : p75 // ignore: cast_nullable_to_non_nullable
+as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
+as String,nUsers: null == nUsers ? _self.nUsers : nUsers // ignore: cast_nullable_to_non_nullable
+as int,hist: null == hist ? _self._hist : hist // ignore: cast_nullable_to_non_nullable
+as Map<String, int>,
+  ));
+}
+
+/// Create a copy of FrequencyStats
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$BucketCopyWith<$Res> get bucket {
+  
+  return $BucketCopyWith<$Res>(_self.bucket, (value) {
+    return _then(_self.copyWith(bucket: value));
+  });
+}
+}
+
+// dart format on

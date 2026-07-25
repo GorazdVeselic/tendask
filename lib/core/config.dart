@@ -153,6 +153,24 @@ const kQuietHoursEndHour = 7;
 /// server's app_config.engine.band_max_active — docs/m11/03).
 const kSuggestionBandMax = 3;
 
+/// Community aggregation (V2 Okolica) display thresholds — mirror the server's
+/// app_config (skupnost-agregacija.md §6). RLS already gates rows k-anonymously
+/// server-side; the client knows these only to show an honest scope: below
+/// [kCommunityPrivacyMin] show "not enough gardeners yet"; below
+/// [kCommunityReliabilityMin] show a descriptive band, never a raw percentage.
+const kCommunityPrivacyMin = 5;
+const kCommunityReliabilityMin = 30;
+
+/// How many top task types the community "This week" feed lists (§7.1).
+const kCommunityFeedLimit = 6;
+
+/// Feed intensity cut-offs: a task type's share of the bucket's gardeners over
+/// the sliding 7-day window maps to a qualitative label (often/some/rare) — a
+/// raw % over a 7-day window would be misleading (§7.8), so the feed stays
+/// qualitative. Display tuning; calibrate on real data after launch.
+const kCommunityIntensityOften = 0.33;
+const kCommunityIntensitySome = 0.10;
+
 /// Supabase cloud backend (M5). URL + publishable key arrive ONLY via
 /// --dart-define (never committed — see dart_defines.json, gitignored). When
 /// empty the app stays fully offline (drift is the source of truth), so the
