@@ -53,40 +53,65 @@ void main() {
   });
 
   test('no community string steers the user to a purchase', () {
-    // Prices, links, and buy/try wording in the three shipped languages.
-    const forbidden = [
-      '€',
-      'eur',
+    // Currency and links: plain substrings, they cannot appear innocently.
+    // ('$' alone would hit slang's own '$n' placeholder, so a dollar only
+    // counts as money when a number follows it.)
+    const symbols = ['€', 'http', 'www.', '.com', '.si/'];
+    final dollarAmount = RegExp(r'\$\s*\d');
+    // Buy/try wording in the three shipped languages, matched at a word START so
+    // a stem still catches its inflections ('naročnin' → 'naročnina'). Entries
+    // whose stem also opens an innocent word carry their own guard, because a
+    // word start alone does not: 'eur' opens German 'eurer' (= your) and 'abo'
+    // opens English 'about'.
+    const words = [
+      r'eur\b', // the ISO code, not the start of a longer word
+      'euro(?!p)', // euro/euros — but not Europa
+      'evro(?!p)', // evro/evrov — but not Evropa
       'price',
+      'cost',
       'cena',
+      'ceno',
       'ceni',
+      'cenik',
       'preis',
-      'http',
-      'www.',
-      '.com',
       'buy',
+      'purchase',
       'kupi',
       'nakup',
       'kaufen',
-      'subscri',
+      'subscription',
       'naročnin',
-      'abo',
+      'abonn', // Abonnement / abonnieren
+      'abonma',
       'trial',
       'preizkus',
       'testversion',
       'gratis',
       'kostenlos',
     ];
+    final wordPattern = RegExp(r'\b(' + words.join('|') + r')', unicode: true);
+
     community.forEach((locale, strings) {
       strings.forEach((key, value) {
         final text = value.toLowerCase();
-        for (final needle in forbidden) {
+        for (final symbol in symbols) {
           expect(
-            text.contains(needle),
+            text.contains(symbol),
             isFalse,
-            reason: '$locale $key contains "$needle": $value',
+            reason: '$locale $key contains "$symbol": $value',
           );
         }
+        expect(
+          dollarAmount.hasMatch(text),
+          isFalse,
+          reason: '$locale $key names a price: $value',
+        );
+        final hit = wordPattern.firstMatch(text);
+        expect(
+          hit,
+          isNull,
+          reason: '$locale $key contains "${hit?.group(1)}": $value',
+        );
       });
     });
   });
