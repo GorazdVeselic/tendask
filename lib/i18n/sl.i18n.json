@@ -1008,6 +1008,15 @@
       "see_all": "Vse iz okolice",
       "cta": "Kako je s tem opravilom v okolici"
     },
+    "standing": {
+      "meta": "tvoja opravila",
+      "footnote": "Le opravila, za katera je v okolici dovolj vrtnarjev za primerjavo.",
+      "band": {
+        "early": "zgoden",
+        "typical": "običajen",
+        "late": "pozen"
+      }
+    },
     "detail": {
       "timing_kicker": "Kdaj · tvoj položaj",
       "you_percent": "Bil si med prvimi ~$percent %",

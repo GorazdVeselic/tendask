@@ -996,6 +996,15 @@
       "see_all": "Alles aus der Umgebung",
       "cta": "Wie es um diese Aufgabe in deiner Umgebung steht"
     },
+    "standing": {
+      "meta": "deine Aufgaben",
+      "footnote": "Nur Aufgaben mit genug Gärtnern in der Nähe zum Vergleich.",
+      "band": {
+        "early": "früh",
+        "typical": "üblich",
+        "late": "spät"
+      }
+    },
     "detail": {
       "timing_kicker": "Wann · wo du stehst",
       "you_percent": "Du warst unter den ersten ~$percent %",

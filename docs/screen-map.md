@@ -82,7 +82,16 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
   offline bere včerajšnji dnevni cache (drift `community_cache`). Pod pragom → »še premalo vrtnarjev«.
   **Vrstica = primerjalna skupina** (§7.4): naslov = opravilo, podnaslov = rastlina, kadar skupina ni
   prostorska (»Obrez« + »jablana«; »Košnja« brez podnaslova). Kapica: največ 2 vrstici na tip opravila.
-- **Kje si ti:** tvoja opravila z oznako zgoden/običajen/pozen (percentil na napravi).
+- **Kje si ti:** skupine, ki si jih letos delal, vsaka postavljena ob krivuljo svoje skupine — oznaka
+  **zgoden/običajen/pozen** (percentil na napravi), **nazadnje začeto na vrhu**. Vrstica: naslov = opravilo,
+  podnaslov = rastlina **+ obseg te vrstice** (vsaka skupina se širi po svoje, §7.4, zato obsega ne more
+  razglasiti zaslon). Skupine, za katere noben nivo nima dovolj vrtnarjev, **izpadejo** — zato podnožje pove
+  zakaj; če ni nobene, »še premalo vrtnarjev«. Tap → ista predloga. Tease enak kot »Ta teden«.
+  - **Številke tu ni** (odločitev 2026-07-25, odstopanje od wireframa B2 »zgoden · 30 %«): odstotek brez
+    velikosti vzorca in brez opombe o prvi sezoni je številka brez imenovalca (§7.7) — oboje je na detajlu,
+    kamor vrstica pelje.
+  - **Ena zahteva na nivo, ne na opravilo** (§12.4): rezina se prebere masovno in shrani **razrezana po
+    skupinah, pod istimi ključi kot detajl** — odprtje detajla po seznamu je zato zastonj.
 - **Akcije:** tap opravila → **community-task** `/community/task/:taskTypeId` (`?plant=`) [shell]; »ℹ️ Kako beremo
   te podatke« → explain sheet (pove tudi, **zakaj** je obseg tak).
 - **Gating (M11 stub):** brez Plus → prva vrstica feeda vidna, ostalo `TeaseOverlay` (blur + »Na voljo v

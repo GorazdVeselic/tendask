@@ -11,12 +11,14 @@ import 'community_cohort.dart';
 import 'community_models.dart';
 import 'community_stats.dart';
 
-/// Fetches rows of a public aggregate table filtered by equality on the given
-/// columns. Injected so the repository stays testable without a live Supabase.
+/// Fetches rows of a public aggregate table filtered on the given columns: a
+/// String value means equality, a `List<String>` means "any of these" — the
+/// bulk slice read behind the standings list (§12.4). Injected so the repository
+/// stays testable without a live Supabase.
 typedef RemoteAggFetch =
     Future<List<Map<String, dynamic>>> Function(
       String table,
-      Map<String, String> filter,
+      Map<String, Object> filter,
     );
 
 /// Reads the public community aggregate slices (activity_recent / season /
@@ -137,6 +139,83 @@ class CommunityRepository {
     );
   }
 
+  /// Season curves for MANY cohorts at once, resolved like [seasonCurve] but
+  /// costing **one request per resolution level instead of one per cohort**
+  /// (§12.4): the standings list would otherwise open the day with N round
+  /// trips. Cohorts absent from the returned map have no level with enough
+  /// gardeners. Pairs are `(taskTypeId, cohort)`.
+  Future<Map<(String, String), SeasonCurve>> seasonCurves({
+    required List<Bucket> buckets,
+    required List<(String, String)> pairs,
+  }) async {
+    final out = <(String, String), SeasonCurve>{};
+    for (final bucket in buckets) {
+      final missing = [
+        for (final pair in pairs)
+          if (!out.containsKey(pair)) pair,
+      ];
+      if (missing.isEmpty) break;
+      await _primeSeasonCache(bucket, missing);
+      for (final pair in missing) {
+        final curve = await seasonCurve(
+          bucket: bucket,
+          taskTypeId: pair.$1,
+          cohort: pair.$2,
+        );
+        if (curve != null && curve.pooledTotal >= kCommunityPrivacyMin) {
+          out[pair] = curve;
+        }
+      }
+    }
+    return out;
+  }
+
+  /// Pulls the season slice for [pairs] at [bucket] in ONE request and stores it
+  /// **split per pair, under the very keys [seasonCurve] reads** — so the list
+  /// costs one request per level, and opening a detail afterwards costs nothing.
+  /// A pair with no rows caches an empty slice: "nobody here" is an answer worth
+  /// remembering for the day, not a reason to ask again.
+  ///
+  /// Silent no-op when every pair already has today's slice, when offline, or on
+  /// a failed fetch — the per-pair reads then serve whatever stale rows exist.
+  Future<void> _primeSeasonCache(
+    Bucket bucket,
+    List<(String, String)> pairs,
+  ) async {
+    if (_fetch == null) return;
+    final keys = {
+      for (final pair in pairs)
+        pair: _cacheKey('activity_season', {
+          'resolution': bucket.resolution.name,
+          'bucket_key': bucket.key,
+          'task_type_id': pair.$1,
+          'plant_id': pair.$2,
+        }),
+    };
+    final stale = [
+      for (final pair in pairs)
+        if (!_isFresh(await _readCache(keys[pair]!))) pair,
+    ];
+    if (stale.isEmpty) return;
+
+    final List<Map<String, dynamic>> data;
+    try {
+      data = await _fetch('activity_season', {
+        'resolution': bucket.resolution.name,
+        'bucket_key': bucket.key,
+        'task_type_id': {for (final pair in stale) pair.$1}.toList(),
+      });
+    } catch (_) {
+      return;
+    }
+    for (final pair in stale) {
+      await _writeCache(keys[pair]!, [
+        for (final row in data)
+          if (row['task_type_id'] == pair.$1 && row['plant_id'] == pair.$2) row,
+      ]);
+    }
+  }
+
   /// Frequency stats for one task type in ONE cohort at ONE resolution level.
   /// null = the group is hidden or empty at this level.
   Future<FrequencyStats?> frequency({
@@ -170,7 +249,21 @@ class CommunityRepository {
   Stream<MySeason> watchMySeason(
     String taskTypeId, {
     required String cohort,
-  }) {
+  }) => _watchDoneThisSeason(taskTypeId: taskTypeId).asyncMap((tasks) async {
+    final seasons = await _mySeasonsOf(tasks);
+    return seasons[(taskTypeId, cohort)] ??
+        const MySeason(first: null, count: 0);
+  });
+
+  /// Every (task type, cohort) I did this season — the "where you stand" list.
+  /// Same rule and same season as [watchMySeason]; a task on two plants counts
+  /// in both cohorts, exactly as `agg_event` records it. LOCAL only.
+  Stream<Map<(String, String), MySeason>> watchMySeasons() =>
+      _watchDoneThisSeason().asyncMap(_mySeasonsOf);
+
+  /// Completed, undeleted tasks of the current season, oldest first (so the
+  /// first row of a group is its first execution).
+  Stream<List<Task>> _watchDoneThisSeason({String? taskTypeId}) {
     final year = _clock.now().toLocal().year;
     final from = DateTime(year).toUtc();
     final until = DateTime(year + 1).toUtc();
@@ -178,34 +271,40 @@ class CommunityRepository {
     return (_db.select(_db.tasks)
           ..where(
             (t) =>
-                t.taskTypeId.equals(taskTypeId) &
                 t.status.equalsValue(TaskStatus.done) &
                 t.deleted.equals(false) &
                 t.date.isBiggerOrEqualValue(from) &
-                t.date.isSmallerThanValue(until),
+                t.date.isSmallerThanValue(until) &
+                (taskTypeId == null
+                    ? const Constant(true)
+                    : t.taskTypeId.equals(taskTypeId)),
           )
           ..orderBy([(t) => OrderingTerm(expression: t.date)]))
-        .watch()
-        .asyncMap((tasks) => _mySeasonOf(tasks, cohort));
+        .watch();
   }
 
-  Future<MySeason> _mySeasonOf(List<Task> tasks, String cohort) async {
-    if (tasks.isEmpty) return const MySeason(first: null, count: 0);
+  Future<Map<(String, String), MySeason>> _mySeasonsOf(
+    List<Task> tasks,
+  ) async {
+    if (tasks.isEmpty) return const {};
     final catalogPlantsByTask = await _catalogPlantsByTask(
       tasks.map((t) => t.id).toList(),
     );
-    DateTime? first;
-    var count = 0;
+    final out = <(String, String), MySeason>{};
     for (final task in tasks) {
       final plants = catalogPlantsByTask[task.id] ?? const <String>{};
-      final inCohort = cohort == kCommunityCohortSite
-          ? plants.isEmpty
-          : plants.contains(cohort);
-      if (!inCohort) continue;
-      first ??= task.date; // the query is ordered by date
-      count++;
+      final cohorts = plants.isEmpty ? const {kCommunityCohortSite} : plants;
+      for (final cohort in cohorts) {
+        final previous = out[(task.taskTypeId, cohort)];
+        out[(task.taskTypeId, cohort)] = MySeason(
+          // The query is ordered by date, so the first row seen is the first
+          // execution.
+          first: previous?.first ?? task.date,
+          count: (previous?.count ?? 0) + 1,
+        );
+      }
     }
-    return MySeason(first: first, count: count);
+    return out;
   }
 
   /// Catalog plant ids per task (custom plants excluded, like `agg_event`).
@@ -305,20 +404,38 @@ class CommunityRepository {
     String table,
     Map<String, String> filter,
   ) async {
-    final columns = filter.keys.toList()..sort();
-    final key = [table, for (final c in columns) '$c=${filter[c]}'].join('|');
-    final cached =
-        await (_db.select(
-          _db.communityCaches,
-        )..where((c) => c.key.equals(key))).getSingleOrNull();
-    final today = startOfDay(_clock.now().toLocal());
-    final fresh =
-        cached != null && !startOfDay(cached.fetchedAt.toLocal()).isBefore(today);
-    if (fresh) return _decode(cached.payload);
+    final key = _cacheKey(table, filter);
+    final cached = await _readCache(key);
+    if (_isFresh(cached)) return _decode(cached!.payload);
     if (_fetch == null) return cached == null ? null : _decode(cached.payload);
     try {
       final data = await _fetch(table, filter);
-      await _db
+      await _writeCache(key, data);
+      return data;
+    } catch (_) {
+      // Network fail is a normal offline state, not an error path: fall back to
+      // the last known slice rather than surfacing an exception.
+      return cached == null ? null : _decode(cached.payload);
+    }
+  }
+
+  String _cacheKey(String table, Map<String, String> filter) {
+    final columns = filter.keys.toList()..sort();
+    return [table, for (final c in columns) '$c=${filter[c]}'].join('|');
+  }
+
+  Future<CommunityCache?> _readCache(String key) => (_db.select(
+    _db.communityCaches,
+  )..where((c) => c.key.equals(key))).getSingleOrNull();
+
+  bool _isFresh(CommunityCache? cached) =>
+      cached != null &&
+      !startOfDay(
+        cached.fetchedAt.toLocal(),
+      ).isBefore(startOfDay(_clock.now().toLocal()));
+
+  Future<void> _writeCache(String key, List<Map<String, dynamic>> data) =>
+      _db
           .into(_db.communityCaches)
           .insertOnConflictUpdate(
             CommunityCachesCompanion.insert(
@@ -327,13 +444,6 @@ class CommunityRepository {
               fetchedAt: _clock.now(),
             ),
           );
-      return data;
-    } catch (_) {
-      // Network fail is a normal offline state, not an error path: fall back to
-      // the last known slice rather than surfacing an exception.
-      return cached == null ? null : _decode(cached.payload);
-    }
-  }
 
   List<Map<String, dynamic>> _decode(String payload) =>
       (jsonDecode(payload) as List).cast<Map<String, dynamic>>();

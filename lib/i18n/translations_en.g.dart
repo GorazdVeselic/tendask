@@ -2131,6 +2131,7 @@ class Translations$community$en {
 	String get privacy_note => 'Anonymous, at least 5 gardeners. Your exact location is never shared.';
 
 	late final Translations$community$entry$en entry = Translations$community$entry$en.internal(_root);
+	late final Translations$community$standing$en standing = Translations$community$standing$en.internal(_root);
 	late final Translations$community$detail$en detail = Translations$community$detail$en.internal(_root);
 	late final Translations$community$tease$en tease = Translations$community$tease$en.internal(_root);
 }
@@ -2549,6 +2550,23 @@ class Translations$community$entry$en {
 
 	/// en: 'How this task looks in your area'
 	String get cta => 'How this task looks in your area';
+}
+
+// Path: community.standing
+class Translations$community$standing$en {
+	Translations$community$standing$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'your tasks'
+	String get meta => 'your tasks';
+
+	/// en: 'Only tasks with enough gardeners nearby to compare against.'
+	String get footnote => 'Only tasks with enough gardeners nearby to compare against.';
+
+	late final Translations$community$standing$band$en band = Translations$community$standing$band$en.internal(_root);
 }
 
 // Path: community.detail
@@ -3607,6 +3625,24 @@ class Translations$suggestions$zucchini$sow_direct$en {
 	String get body => 'Sow {subject} outdoors after frost — around {frost_date}.';
 }
 
+// Path: community.standing.band
+class Translations$community$standing$band$en {
+	Translations$community$standing$band$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'early'
+	String get early => 'early';
+
+	/// en: 'usual'
+	String get typical => 'usual';
+
+	/// en: 'late'
+	String get late => 'late';
+}
+
 // Path: community.detail.you_band
 class Translations$community$detail$you_band$en {
 	Translations$community$detail$you_band$en.internal(this._root);
@@ -4406,6 +4442,11 @@ extension on Translations {
 			'community.entry.section' => 'In your area',
 			'community.entry.see_all' => 'All from your area',
 			'community.entry.cta' => 'How this task looks in your area',
+			'community.standing.meta' => 'your tasks',
+			'community.standing.footnote' => 'Only tasks with enough gardeners nearby to compare against.',
+			'community.standing.band.early' => 'early',
+			'community.standing.band.typical' => 'usual',
+			'community.standing.band.late' => 'late',
 			'community.detail.timing_kicker' => 'When · where you stand',
 			'community.detail.you_percent' => ({required Object percent}) => 'You were among the first ~${percent} %',
 			'community.detail.you_band.early' => 'You were among the earlier ones',

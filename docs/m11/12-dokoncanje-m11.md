@@ -93,6 +93,12 @@
   napolnil (8 = detajl, 8b = vstopi, 9 = i18n). Brez tega gre M11 v main z zavihkom, ki je vedno
   prazen. Obsegom je enak koraku 8, ne dodatek k njemu.
 - **Odvisnosti:** korak 8 (ista predloga je cilj tapa) · **Kompleksnost:** M
+- **Izvedeno 2026-07-25.** Vsebina zavihka v `screen-map.md §1.5`, podpisa v `08 §8.3`. Masovno branje
+  je narejeno: `RemoteAggFetch` zna `in` (`List<String>` v filtru), `seasonCurves()` prebere **eno
+  rezino na nivo** in jo shrani **razrezano po skupinah pod ključi, ki jih bere `seasonCurve()`** —
+  zato je odprtje detajla po seznamu zastonj (test to dokazuje s števcem zahtev). Odstopanje od
+  wireframa B2: v vrstici **ni odstotka** (številka brez velikosti vzorca in brez opombe o prvi sezoni
+  je številka brez imenovalca, §7.7) — je na detajlu, kamor vrstica pelje.
 
 ### Korak 9 — i18n Okolica: pregled prevodov (en/sl/de)
 - **Zajema:** ~~pisanje~~ **pregled** `community.detail.*` — nizi so nastali že v koraku 8, ker

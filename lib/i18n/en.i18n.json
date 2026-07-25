@@ -996,6 +996,15 @@
       "see_all": "All from your area",
       "cta": "How this task looks in your area"
     },
+    "standing": {
+      "meta": "your tasks",
+      "footnote": "Only tasks with enough gardeners nearby to compare against.",
+      "band": {
+        "early": "early",
+        "typical": "usual",
+        "late": "late"
+      }
+    },
     "detail": {
       "timing_kicker": "When · where you stand",
       "you_percent": "You were among the first ~$percent %",

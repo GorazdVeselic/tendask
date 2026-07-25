@@ -284,4 +284,86 @@ void main() {
       expect(stats.hist, isEmpty);
     });
   });
+
+  group('buildStandings', () {
+    /// Everyone started in week 20, so a first execution before it is early,
+    /// in it is typical and after it is late.
+    SeasonCurve curve({
+      Bucket bucket = _bucket,
+      int week = 20,
+      int count = 50,
+    }) => buildSeasonCurve(
+      [
+        {'year': 2025, 'iso_week': week, 'first_user_count': count},
+      ],
+      bucket: bucket,
+      currentYear: 2026,
+    )!;
+
+    test('places each cohort against its own curve', () {
+      final rows = buildStandings(
+        {
+          ('sow', 'tomato'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+          ('mow', '@site'): MySeason(first: DateTime(2026, 9, 7), count: 4),
+        },
+        {('sow', 'tomato'): curve(), ('mow', '@site'): curve()},
+      );
+
+      expect(rows.map((r) => (r.cohort, r.band)), [
+        ('@site', CommunityTiming.late), // September, curve peaked in May
+        ('tomato', CommunityTiming.early),
+      ]);
+    });
+
+    test('most recently started comes first', () {
+      final rows = buildStandings(
+        {
+          ('a', '@site'): MySeason(first: DateTime(2026, 1, 5), count: 1),
+          ('b', '@site'): MySeason(first: DateTime(2026, 6, 1), count: 1),
+          ('c', '@site'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+        },
+        {
+          ('a', '@site'): curve(),
+          ('b', '@site'): curve(),
+          ('c', '@site'): curve(),
+        },
+      );
+
+      expect(rows.map((r) => r.taskTypeId), ['b', 'c', 'a']);
+    });
+
+    test('a cohort without a curve is left out, never blended', () {
+      final rows = buildStandings(
+        {
+          ('sow', 'tomato'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+          ('prune', 'pear'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+        },
+        {('sow', 'tomato'): curve()},
+      );
+
+      expect(rows.map((r) => r.cohort), ['tomato']);
+    });
+
+    test('the row carries the level that answered, not the screen', () {
+      const climate = Bucket(
+        resolution: CommunityResolution.climate,
+        key: 'e1_t5',
+      );
+      final rows = buildStandings(
+        {
+          ('sow', 'tomato'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+          ('mow', '@site'): MySeason(first: DateTime(2026, 3, 2), count: 1),
+        },
+        {
+          ('sow', 'tomato'): curve(bucket: climate),
+          ('mow', '@site'): curve(),
+        },
+      );
+
+      expect(
+        {for (final r in rows) r.cohort: r.scope},
+        {'tomato': CommunityResolution.climate, '@site': CommunityResolution.r7},
+      );
+    });
+  });
 }

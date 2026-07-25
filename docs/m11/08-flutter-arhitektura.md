@@ -165,6 +165,13 @@ class CommunityRepository {
   Future<FrequencyStats?> frequency({
     required Bucket bucket, required String taskTypeId, required String cohort});
 
+  /// Season curves for MANY cohorts at once — the 'Where you stand' list would
+  /// otherwise open the day with one request per cohort. ONE request per level;
+  /// each pair is stored under the key seasonCurve() reads, so opening a detail
+  /// afterwards is free (§12.4). CLOUD+CACHE.
+  Future<Map<(String, String), SeasonCurve>> seasonCurves({
+    required List<Bucket> buckets, required List<(String, String)> pairs});
+
   Future<int?> bucketPopulation({required Bucket bucket});
 
   /// My record for the type in this cohort this season: first date ('you'
@@ -172,8 +179,15 @@ class CommunityRepository {
   /// with the screen open moves the marker. LOCAL; cohort membership mirrors
   /// agg_event (custom plant = site).
   Stream<MySeason> watchMySeason(String taskTypeId, {required String cohort});
+
+  /// Every (task type, cohort) I did this season — the 'Where you stand' list.
+  /// Same rule and season as watchMySeason; a task on two plants counts in both
+  /// cohorts, exactly as agg_event records it. LOCAL.
+  Stream<Map<(String, String), MySeason>> watchMySeasons();
 }
 ```
+`RemoteAggFetch` sprejme `Map<String, Object>`: `String` = `eq`, `List<String>` = `in` (edina
+zmožnost, ki jo je rabilo masovno branje).
 
 **Fallback hierarhija (en nivo, brez mešanja — implementirano v `community_providers.dart`):**
 ```dart

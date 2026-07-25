@@ -70,6 +70,20 @@ abstract class MySeason with _$MySeason {
 /// the precision (below `kCommunityReliabilityMin`, §7.7): the three terciles.
 enum CommunityTiming { early, typical, late }
 
+/// One row of "Where you stand": a cohort I worked this season, placed against
+/// that group's curve. [scope] is the level that answered — it differs per row,
+/// because each cohort widens its geography on its own (§7.4), so the row has to
+/// carry it rather than the screen claiming one scope for the whole list.
+@freezed
+abstract class CommunityStanding with _$CommunityStanding {
+  const factory CommunityStanding({
+    required String taskTypeId,
+    required String cohort,
+    required CommunityTiming band,
+    required CommunityResolution scope,
+  }) = _CommunityStanding;
+}
+
 /// Historical seasonal CDF for one task type in one cohort: `cdf[w-1]` is the
 /// cumulative fraction of gardeners whose first execution fell in ISO week ≤ w
 /// (weeks 1..53), pooled over past complete seasons. Built on-device from ~53

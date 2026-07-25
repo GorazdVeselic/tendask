@@ -7,6 +7,7 @@ import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
 import '../data/community_models.dart';
 import '../data/community_repository.dart';
+import '../data/community_stats.dart';
 
 part 'community_providers.g.dart';
 
@@ -19,7 +20,10 @@ CommunityRepository communityRepository(Ref ref) {
   return CommunityRepository(db, (table, filter) async {
     var query = client.from(table).select();
     for (final e in filter.entries) {
-      query = query.eq(e.key, e.value);
+      final value = e.value;
+      query = value is List
+          ? query.inFilter(e.key, value)
+          : query.eq(e.key, value);
     }
     final data = await query;
     return data.cast<Map<String, dynamic>>();
@@ -130,4 +134,28 @@ Stream<MySeason> mySeason(Ref ref, String taskTypeId, String cohort) {
   return ref
       .watch(communityRepositoryProvider)
       .watchMySeason(taskTypeId, cohort: cohort);
+}
+
+/// Every (task type, cohort) I completed this season (drift only).
+///
+/// keepAlive: [communityStandings] awaits this, and an autoDispose stream is
+/// torn down mid-flight before the awaiting provider ever sees a value.
+@Riverpod(keepAlive: true)
+Stream<Map<(String, String), MySeason>> mySeasons(Ref ref) {
+  ref.watch(authStateChangesProvider);
+  return ref.watch(communityRepositoryProvider).watchMySeasons();
+}
+
+/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
+/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// One request per resolution level, not one per cohort (§12.4).
+@riverpod
+Future<List<CommunityStanding>> communityStandings(Ref ref) async {
+  final mine = await ref.watch(mySeasonsProvider.future);
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  if (mine.isEmpty || buckets.isEmpty) return const [];
+  final curves = await ref
+      .watch(communityRepositoryProvider)
+      .seasonCurves(buckets: buckets, pairs: mine.keys.toList());
+  return buildStandings(mine, curves);
 }

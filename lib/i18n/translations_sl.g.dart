@@ -1012,6 +1012,7 @@ class _Translations$community$sl extends Translations$community$en {
 	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
 	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.';
 	@override late final _Translations$community$entry$sl entry = _Translations$community$entry$sl._(_root);
+	@override late final _Translations$community$standing$sl standing = _Translations$community$standing$sl._(_root);
 	@override late final _Translations$community$detail$sl detail = _Translations$community$detail$sl._(_root);
 	@override late final _Translations$community$tease$sl tease = _Translations$community$tease$sl._(_root);
 }
@@ -1376,6 +1377,18 @@ class _Translations$community$entry$sl extends Translations$community$entry$en {
 	@override String get section => 'V tvoji okolici';
 	@override String get see_all => 'Vse iz okolice';
 	@override String get cta => 'Kako je s tem opravilom v okolici';
+}
+
+// Path: community.standing
+class _Translations$community$standing$sl extends Translations$community$standing$en {
+	_Translations$community$standing$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get meta => 'tvoja opravila';
+	@override String get footnote => 'Le opravila, za katera je v okolici dovolj vrtnarjev za primerjavo.';
+	@override late final _Translations$community$standing$band$sl band = _Translations$community$standing$band$sl._(_root);
 }
 
 // Path: community.detail
@@ -2135,6 +2148,18 @@ class _Translations$suggestions$zucchini$sow_direct$sl extends Translations$sugg
 	// Translations
 	@override String get title => 'Neposredna setev';
 	@override String get body => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.';
+}
+
+// Path: community.standing.band
+class _Translations$community$standing$band$sl extends Translations$community$standing$band$en {
+	_Translations$community$standing$band$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get early => 'zgoden';
+	@override String get typical => 'običajen';
+	@override String get late => 'pozen';
 }
 
 // Path: community.detail.you_band
@@ -2908,6 +2933,11 @@ extension on TranslationsSl {
 			'community.entry.section' => 'V tvoji okolici',
 			'community.entry.see_all' => 'Vse iz okolice',
 			'community.entry.cta' => 'Kako je s tem opravilom v okolici',
+			'community.standing.meta' => 'tvoja opravila',
+			'community.standing.footnote' => 'Le opravila, za katera je v okolici dovolj vrtnarjev za primerjavo.',
+			'community.standing.band.early' => 'zgoden',
+			'community.standing.band.typical' => 'običajen',
+			'community.standing.band.late' => 'pozen',
 			'community.detail.timing_kicker' => 'Kdaj · tvoj položaj',
 			'community.detail.you_percent' => ({required Object percent}) => 'Bil si med prvimi ~${percent} %',
 			'community.detail.you_band.early' => 'Bil si med zgodnejšimi',

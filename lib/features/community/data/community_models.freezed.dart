@@ -1368,6 +1368,272 @@ as int,
 }
 
 /// @nodoc
+mixin _$CommunityStanding {
+
+ String get taskTypeId; String get cohort; CommunityTiming get band; CommunityResolution get scope;
+/// Create a copy of CommunityStanding
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CommunityStandingCopyWith<CommunityStanding> get copyWith => _$CommunityStandingCopyWithImpl<CommunityStanding>(this as CommunityStanding, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityStanding&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.band, band) || other.band == band)&&(identical(other.scope, scope) || other.scope == scope));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,band,scope);
+
+@override
+String toString() {
+  return 'CommunityStanding(taskTypeId: $taskTypeId, cohort: $cohort, band: $band, scope: $scope)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CommunityStandingCopyWith<$Res>  {
+  factory $CommunityStandingCopyWith(CommunityStanding value, $Res Function(CommunityStanding) _then) = _$CommunityStandingCopyWithImpl;
+@useResult
+$Res call({
+ String taskTypeId, String cohort, CommunityTiming band, CommunityResolution scope
+});
+
+
+
+
+}
+/// @nodoc
+class _$CommunityStandingCopyWithImpl<$Res>
+    implements $CommunityStandingCopyWith<$Res> {
+  _$CommunityStandingCopyWithImpl(this._self, this._then);
+
+  final CommunityStanding _self;
+  final $Res Function(CommunityStanding) _then;
+
+/// Create a copy of CommunityStanding
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? cohort = null,Object? band = null,Object? scope = null,}) {
+  return _then(_self.copyWith(
+taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
+as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
+as String,band: null == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
+as CommunityTiming,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
+as CommunityResolution,
+  ));
+}
+
+}
+
+
+/// Adds pattern-matching-related methods to [CommunityStanding].
+extension CommunityStandingPatterns on CommunityStanding {
+/// A variant of `map` that fallback to returning `orElse`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeMap<TResult extends Object?>(TResult Function( _CommunityStanding value)?  $default,{required TResult orElse(),}){
+final _that = this;
+switch (_that) {
+case _CommunityStanding() when $default != null:
+return $default(_that);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// Callbacks receives the raw object, upcasted.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case final Subclass2 value:
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult map<TResult extends Object?>(TResult Function( _CommunityStanding value)  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityStanding():
+return $default(_that);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `map` that fallback to returning `null`.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case final Subclass value:
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? mapOrNull<TResult extends Object?>(TResult? Function( _CommunityStanding value)?  $default,){
+final _that = this;
+switch (_that) {
+case _CommunityStanding() when $default != null:
+return $default(_that);case _:
+  return null;
+
+}
+}
+/// A variant of `when` that fallback to an `orElse` callback.
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return orElse();
+/// }
+/// ```
+
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  CommunityTiming band,  CommunityResolution scope)?  $default,{required TResult orElse(),}) {final _that = this;
+switch (_that) {
+case _CommunityStanding() when $default != null:
+return $default(_that.taskTypeId,_that.cohort,_that.band,_that.scope);case _:
+  return orElse();
+
+}
+}
+/// A `switch`-like method, using callbacks.
+///
+/// As opposed to `map`, this offers destructuring.
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case Subclass2(:final field2):
+///     return ...;
+/// }
+/// ```
+
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  CommunityTiming band,  CommunityResolution scope)  $default,) {final _that = this;
+switch (_that) {
+case _CommunityStanding():
+return $default(_that.taskTypeId,_that.cohort,_that.band,_that.scope);case _:
+  throw StateError('Unexpected subclass');
+
+}
+}
+/// A variant of `when` that fallback to returning `null`
+///
+/// It is equivalent to doing:
+/// ```dart
+/// switch (sealedClass) {
+///   case Subclass(:final field):
+///     return ...;
+///   case _:
+///     return null;
+/// }
+/// ```
+
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String cohort,  CommunityTiming band,  CommunityResolution scope)?  $default,) {final _that = this;
+switch (_that) {
+case _CommunityStanding() when $default != null:
+return $default(_that.taskTypeId,_that.cohort,_that.band,_that.scope);case _:
+  return null;
+
+}
+}
+
+}
+
+/// @nodoc
+
+
+class _CommunityStanding implements CommunityStanding {
+  const _CommunityStanding({required this.taskTypeId, required this.cohort, required this.band, required this.scope});
+  
+
+@override final  String taskTypeId;
+@override final  String cohort;
+@override final  CommunityTiming band;
+@override final  CommunityResolution scope;
+
+/// Create a copy of CommunityStanding
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CommunityStandingCopyWith<_CommunityStanding> get copyWith => __$CommunityStandingCopyWithImpl<_CommunityStanding>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityStanding&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.band, band) || other.band == band)&&(identical(other.scope, scope) || other.scope == scope));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,band,scope);
+
+@override
+String toString() {
+  return 'CommunityStanding(taskTypeId: $taskTypeId, cohort: $cohort, band: $band, scope: $scope)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CommunityStandingCopyWith<$Res> implements $CommunityStandingCopyWith<$Res> {
+  factory _$CommunityStandingCopyWith(_CommunityStanding value, $Res Function(_CommunityStanding) _then) = __$CommunityStandingCopyWithImpl;
+@override @useResult
+$Res call({
+ String taskTypeId, String cohort, CommunityTiming band, CommunityResolution scope
+});
+
+
+
+
+}
+/// @nodoc
+class __$CommunityStandingCopyWithImpl<$Res>
+    implements _$CommunityStandingCopyWith<$Res> {
+  __$CommunityStandingCopyWithImpl(this._self, this._then);
+
+  final _CommunityStanding _self;
+  final $Res Function(_CommunityStanding) _then;
+
+/// Create a copy of CommunityStanding
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? cohort = null,Object? band = null,Object? scope = null,}) {
+  return _then(_CommunityStanding(
+taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
+as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
+as String,band: null == band ? _self.band : band // ignore: cast_nullable_to_non_nullable
+as CommunityTiming,scope: null == scope ? _self.scope : scope // ignore: cast_nullable_to_non_nullable
+as CommunityResolution,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$SeasonCurve {
 
  Bucket get bucket; List<double> get cdf; int get pooledTotal; bool get censored;

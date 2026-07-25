@@ -1000,6 +1000,7 @@ class _Translations$community$de extends Translations$community$en {
 	@override String get empty_standing => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.';
 	@override String get privacy_note => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.';
 	@override late final _Translations$community$entry$de entry = _Translations$community$entry$de._(_root);
+	@override late final _Translations$community$standing$de standing = _Translations$community$standing$de._(_root);
 	@override late final _Translations$community$detail$de detail = _Translations$community$detail$de._(_root);
 	@override late final _Translations$community$tease$de tease = _Translations$community$tease$de._(_root);
 }
@@ -1364,6 +1365,18 @@ class _Translations$community$entry$de extends Translations$community$entry$en {
 	@override String get section => 'In deiner Umgebung';
 	@override String get see_all => 'Alles aus der Umgebung';
 	@override String get cta => 'Wie es um diese Aufgabe in deiner Umgebung steht';
+}
+
+// Path: community.standing
+class _Translations$community$standing$de extends Translations$community$standing$en {
+	_Translations$community$standing$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get meta => 'deine Aufgaben';
+	@override String get footnote => 'Nur Aufgaben mit genug Gärtnern in der Nähe zum Vergleich.';
+	@override late final _Translations$community$standing$band$de band = _Translations$community$standing$band$de._(_root);
 }
 
 // Path: community.detail
@@ -2121,6 +2134,18 @@ class _Translations$suggestions$zucchini$sow_direct$de extends Translations$sugg
 	// Translations
 	@override String get title => 'Direktsaat';
 	@override String get body => 'Säe {subject} nach dem Frost ins Freie — um {frost_date}.';
+}
+
+// Path: community.standing.band
+class _Translations$community$standing$band$de extends Translations$community$standing$band$en {
+	_Translations$community$standing$band$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get early => 'früh';
+	@override String get typical => 'üblich';
+	@override String get late => 'spät';
 }
 
 // Path: community.detail.you_band
@@ -2894,6 +2919,11 @@ extension on TranslationsDe {
 			'community.entry.section' => 'In deiner Umgebung',
 			'community.entry.see_all' => 'Alles aus der Umgebung',
 			'community.entry.cta' => 'Wie es um diese Aufgabe in deiner Umgebung steht',
+			'community.standing.meta' => 'deine Aufgaben',
+			'community.standing.footnote' => 'Nur Aufgaben mit genug Gärtnern in der Nähe zum Vergleich.',
+			'community.standing.band.early' => 'früh',
+			'community.standing.band.typical' => 'üblich',
+			'community.standing.band.late' => 'spät',
 			'community.detail.timing_kicker' => 'Wann · wo du stehst',
 			'community.detail.you_percent' => ({required Object percent}) => 'Du warst unter den ersten ~${percent} %',
 			'community.detail.you_band.early' => 'Du warst eher früh dran',

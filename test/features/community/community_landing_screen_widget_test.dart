@@ -68,12 +68,14 @@ Future<void> _pump(
   WidgetTester tester, {
   required CommunityFeed? feed,
   bool hasPlus = true,
+  List<CommunityStanding> standings = const [],
 }) async {
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
         overrides: [
           communityFeedProvider.overrideWith((ref) async => feed),
+          communityStandingsProvider.overrideWith((ref) async => standings),
           taskTypesMapProvider.overrideWith((ref) => Stream.value(_catalog)),
           plantsMapProvider.overrideWith((ref) => Stream.value(_plants)),
           hasPlusProvider.overrideWithValue(hasPlus),
@@ -175,12 +177,35 @@ void main() {
   });
 
   testWidgets('the "where you stand" segment switches the body', (tester) async {
+    await _pump(
+      tester,
+      feed: _feed(),
+      standings: const [
+        CommunityStanding(
+          taskTypeId: 'prune',
+          cohort: 'apple',
+          band: CommunityTiming.early,
+          scope: CommunityResolution.r6,
+        ),
+      ],
+    );
+
+    await tester.tap(find.text(t.community.seg_you));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Pruning'), findsOneWidget);
+    expect(find.text(t.community.standing.band.early), findsOneWidget);
+    expect(find.text('Watering'), findsNothing);
+  });
+
+  testWidgets('nothing comparable yet says so instead of listing blanks', (
+    tester,
+  ) async {
     await _pump(tester, feed: _feed());
 
     await tester.tap(find.text(t.community.seg_you));
     await tester.pumpAndSettle();
 
     expect(find.text(t.community.empty_standing), findsOneWidget);
-    expect(find.text('Watering'), findsNothing);
   });
 }

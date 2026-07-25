@@ -29,18 +29,43 @@ void main() {
 
   // Per-task tables (season/frequency) are keyed by type+plant as well, so a
   // shared cache key between two task types would show up here as a wrong slice.
-  String storeKey(String table, Map<String, String> filter) {
+  String storeKey(String table, Map<String, Object> filter) {
     final base = '$table|${filter['resolution']}|${filter['bucket_key']}';
     final taskTypeId = filter['task_type_id'];
     if (taskTypeId == null) return base;
     return '$base|$taskTypeId|${filter['plant_id'] ?? ''}';
   }
 
+  /// A `task_type_id` list means the bulk slice read: the server answers with
+  /// every cohort of those types in the bucket, full rows — so the fake stamps
+  /// the identifying columns back on, as PostgREST's `select()` would.
+  List<Map<String, dynamic>> bulkSlice(
+    String table,
+    Map<String, Object> filter,
+    List<String> taskTypeIds,
+  ) {
+    final prefix = '$table|${filter['resolution']}|${filter['bucket_key']}|';
+    final out = <Map<String, dynamic>>[];
+    for (final entry in store.entries) {
+      if (!entry.key.startsWith(prefix)) continue;
+      final parts = entry.key.substring(prefix.length).split('|');
+      if (!taskTypeIds.contains(parts.first)) continue;
+      for (final row in entry.value) {
+        out.add({...row, 'task_type_id': parts.first, 'plant_id': parts.last});
+      }
+    }
+    return out;
+  }
+
   Future<List<Map<String, dynamic>>> fetch(
     String table,
-    Map<String, String> filter,
+    Map<String, Object> filter,
   ) async {
     calls++;
+    final taskTypeIds = filter['task_type_id'];
+    if (taskTypeIds is List) {
+      return bulkSlice(table, filter, taskTypeIds.cast<String>());
+    }
     return store[storeKey(table, filter)] ?? const [];
   }
 
@@ -309,54 +334,166 @@ void main() {
     expect(feed!.population, 40);
   });
 
+  /// Inserts a completed task, optionally on a user plant of [plantId].
+  Future<void> addDone(
+    String id,
+    DateTime localDate, {
+    String taskTypeId = 'mow',
+    String plantId = '',
+    TaskStatus status = TaskStatus.done,
+  }) async {
+    await db
+        .into(db.tasks)
+        .insert(
+          TasksCompanion.insert(
+            id: id,
+            userId: 'u1',
+            taskTypeId: taskTypeId,
+            date: localDate.toUtc(),
+            status: Value(status),
+            updatedAt: localDate.toUtc(),
+          ),
+        );
+    if (plantId.isEmpty) return;
+    final userPlantId = 'up-$plantId';
+    await db
+        .into(db.userPlants)
+        .insert(
+          UserPlantsCompanion.insert(
+            id: userPlantId,
+            userId: 'u1',
+            plantId: Value(plantId),
+            updatedAt: localDate.toUtc(),
+          ),
+          mode: InsertMode.insertOrReplace,
+        );
+    await db
+        .into(db.taskSubjects)
+        .insert(
+          TaskSubjectsCompanion.insert(
+            id: 'sub-$id',
+            taskId: id,
+            userPlantId: Value(userPlantId),
+            updatedAt: localDate.toUtc(),
+          ),
+        );
+  }
+
+  group('watchMySeasons + seasonCurves (the standings list)', () {
+    test('groups every cohort I worked this season, first date and count', () async {
+      await addDone('t-site', DateTime(2026, 3, 10, 9));
+      await addDone('t-site2', DateTime(2026, 3, 20, 9));
+      await addDone('t-apple', DateTime(2026, 2, 5, 9), plantId: 'apple');
+      await addDone(
+        't-water',
+        DateTime(2026, 4, 1, 9),
+        taskTypeId: 'water',
+        plantId: 'apple',
+      );
+      await addDone('t-lastyear', DateTime(2025, 3, 1, 9));
+
+      final mine = await repo().watchMySeasons().first;
+
+      expect(mine.keys.toSet(), {
+        ('mow', kCommunityCohortSite),
+        ('mow', 'apple'),
+        ('water', 'apple'),
+      });
+      expect(mine[('mow', kCommunityCohortSite)]!.count, 2);
+      expect(
+        mine[('mow', kCommunityCohortSite)]!.first?.toLocal(),
+        DateTime(2026, 3, 10, 9),
+      );
+      expect(mine[('mow', 'apple')]!.count, 1);
+    });
+
+    test('one request per level, not one per cohort', () async {
+      store['activity_season|r6|cellB|mow|@site'] = const [
+        {'year': 2025, 'iso_week': 12, 'first_user_count': 9},
+      ];
+      store['activity_season|r6|cellB|prune|apple'] = const [
+        {'year': 2025, 'iso_week': 10, 'first_user_count': 8},
+      ];
+      store['activity_season|r6|cellB|water|apple'] = const [
+        {'year': 2025, 'iso_week': 20, 'first_user_count': 7},
+      ];
+
+      final before = calls;
+      final curves = await repo().seasonCurves(
+        buckets: buckets,
+        pairs: const [
+          ('mow', kCommunityCohortSite),
+          ('prune', 'apple'),
+          ('water', 'apple'),
+        ],
+      );
+
+      expect(curves.keys.toSet(), {
+        ('mow', kCommunityCohortSite),
+        ('prune', 'apple'),
+        ('water', 'apple'),
+      });
+      expect(curves[('prune', 'apple')]!.pooledTotal, 8);
+      // One slice for r7 (empty) and one for r6 — three cohorts, two requests.
+      expect(calls - before, 2);
+    });
+
+    test('the list warms the detail: opening one afterwards costs nothing', () async {
+      store['activity_season|r6|cellB|prune|apple'] = const [
+        {'year': 2025, 'iso_week': 10, 'first_user_count': 8},
+      ];
+      await repo().seasonCurves(
+        buckets: buckets,
+        pairs: const [('prune', 'apple')],
+      );
+      final warmed = calls;
+
+      final curve = await repo().seasonCurve(
+        bucket: r6,
+        taskTypeId: 'prune',
+        cohort: 'apple',
+      );
+
+      expect(curve!.pooledTotal, 8);
+      expect(calls, warmed); // the bulk read stored it under this very key
+    });
+
+    test('a cohort nobody nearby does is left out, not blended', () async {
+      store['activity_season|r6|cellB|prune|apple'] = const [
+        {'year': 2025, 'iso_week': 10, 'first_user_count': 8},
+      ];
+
+      final curves = await repo().seasonCurves(
+        buckets: buckets,
+        pairs: const [('prune', 'apple'), ('prune', 'pear')],
+      );
+
+      expect(curves.keys, [('prune', 'apple')]);
+    });
+
+    test('a level that answers stops the widening for that cohort', () async {
+      store['activity_season|r7|cellA|mow|@site'] = const [
+        {'year': 2025, 'iso_week': 12, 'first_user_count': 6},
+      ];
+      store['activity_season|r6|cellB|mow|@site'] = const [
+        {'year': 2025, 'iso_week': 30, 'first_user_count': 99},
+      ];
+
+      final curves = await repo().seasonCurves(
+        buckets: buckets,
+        pairs: const [('mow', kCommunityCohortSite)],
+      );
+
+      // r7 already had enough gardeners, so the coarser r6 never overrides it.
+      expect(curves[('mow', kCommunityCohortSite)]!.bucket.resolution,
+          CommunityResolution.r7);
+      expect(curves[('mow', kCommunityCohortSite)]!.pooledTotal, 6);
+    });
+  });
+
   group('watchMySeason (local only)', () {
     Future<MySeason> mySeason(String cohort, {String type = 'mow'}) =>
         repo().watchMySeason(type, cohort: cohort).first;
-
-    /// Inserts a completed task, optionally on a user plant of [plantId].
-    Future<void> addDone(
-      String id,
-      DateTime localDate, {
-      String taskTypeId = 'mow',
-      String plantId = '',
-      TaskStatus status = TaskStatus.done,
-    }) async {
-      await db
-          .into(db.tasks)
-          .insert(
-            TasksCompanion.insert(
-              id: id,
-              userId: 'u1',
-              taskTypeId: taskTypeId,
-              date: localDate.toUtc(),
-              status: Value(status),
-              updatedAt: localDate.toUtc(),
-            ),
-          );
-      if (plantId.isEmpty) return;
-      final userPlantId = 'up-$plantId';
-      await db
-          .into(db.userPlants)
-          .insert(
-            UserPlantsCompanion.insert(
-              id: userPlantId,
-              userId: 'u1',
-              plantId: Value(plantId),
-              updatedAt: localDate.toUtc(),
-            ),
-            mode: InsertMode.insertOrReplace,
-          );
-      await db
-          .into(db.taskSubjects)
-          .insert(
-            TaskSubjectsCompanion.insert(
-              id: 'sub-$id',
-              taskId: id,
-              userPlantId: Value(userPlantId),
-              updatedAt: localDate.toUtc(),
-            ),
-          );
-    }
 
     test('returns the first date and the count of this calendar season', () async {
       await addDone('t-late', DateTime(2026, 5, 20, 9));

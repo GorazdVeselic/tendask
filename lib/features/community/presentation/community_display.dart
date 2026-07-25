@@ -45,6 +45,15 @@ String communityTimingHeadline(
   return communityTimingLabel(t, timingBand(seasonCdfForWeek(curve, myWeek)));
 }
 
+/// The one-word form of the same tercile, for the "Kje si ti" list, where the
+/// full sentence would not fit and would repeat down every row.
+String communityStandingBandLabel(Translations t, CommunityTiming timing) =>
+    switch (timing) {
+      CommunityTiming.early => t.community.standing.band.early,
+      CommunityTiming.typical => t.community.standing.band.typical,
+      CommunityTiming.late => t.community.standing.band.late,
+    };
+
 /// Where the reader stands, worded without a number — the honest form below
 /// [kCommunityReliabilityMin] (§7.7).
 String communityTimingLabel(Translations t, CommunityTiming timing) =>

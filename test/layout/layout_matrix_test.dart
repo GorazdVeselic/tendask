@@ -20,6 +20,7 @@ import 'package:tendask/features/community/data/community_stats.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
 import 'package:tendask/features/community/presentation/community_task_screen.dart';
 import 'package:tendask/features/community/presentation/widgets/community_home_section.dart';
+import 'package:tendask/features/community/presentation/widgets/community_standing_list.dart';
 import 'package:tendask/features/community/presentation/widgets/community_task_link_card.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
@@ -408,6 +409,53 @@ void main() {
     overrides: () => _communityTaskOverrides(hasPlus: true),
     build: () => const _EntryHost(
       child: CommunityTaskLinkCard(taskTypeId: 'water', cohort: 'tomato'),
+    ),
+  );
+
+  // The landing's second segment. Built directly: the matrix never taps, and
+  // the list is what has to survive long German band words at text×1.3.
+  layoutMatrix(
+    'community/standing',
+    overrides: () => [
+      plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
+    ],
+    build: () => const _StandingHost(hasPlus: true),
+  );
+
+  layoutMatrix(
+    'community/standing (tease)',
+    overrides: () => [
+      plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
+    ],
+    build: () => const _StandingHost(hasPlus: false),
+  );
+}
+
+class _StandingHost extends StatelessWidget {
+  const _StandingHost({required this.hasPlus});
+
+  final bool hasPlus;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: CommunityStandingList(
+      standings: const [
+        CommunityStanding(
+          taskTypeId: 'water',
+          cohort: 'tomato',
+          band: CommunityTiming.early,
+          scope: CommunityResolution.r6,
+        ),
+        CommunityStanding(
+          taskTypeId: 'water',
+          cohort: kCommunityCohortSite,
+          band: CommunityTiming.typical,
+          scope: CommunityResolution.climate,
+        ),
+      ],
+      catalog: {'water': _taskType()},
+      plants: {'tomato': _plant()},
+      hasPlus: hasPlus,
     ),
   );
 }

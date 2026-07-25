@@ -55,7 +55,7 @@ final class CommunityRepositoryProvider
 }
 
 String _$communityRepositoryHash() =>
-    r'fa3466b3576596194c4b1d351838282e59f5d335';
+    r'dd6cceb830e4eaa8d10b30bdae77cb1fb48ce2ec';
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
@@ -599,3 +599,111 @@ final class MySeasonFamily extends $Family
   @override
   String toString() => r'mySeasonProvider';
 }
+
+/// Every (task type, cohort) I completed this season (drift only).
+///
+/// keepAlive: [communityStandings] awaits this, and an autoDispose stream is
+/// torn down mid-flight before the awaiting provider ever sees a value.
+
+@ProviderFor(mySeasons)
+final mySeasonsProvider = MySeasonsProvider._();
+
+/// Every (task type, cohort) I completed this season (drift only).
+///
+/// keepAlive: [communityStandings] awaits this, and an autoDispose stream is
+/// torn down mid-flight before the awaiting provider ever sees a value.
+
+final class MySeasonsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<Map<(String, String), MySeason>>,
+          Map<(String, String), MySeason>,
+          Stream<Map<(String, String), MySeason>>
+        >
+    with
+        $FutureModifier<Map<(String, String), MySeason>>,
+        $StreamProvider<Map<(String, String), MySeason>> {
+  /// Every (task type, cohort) I completed this season (drift only).
+  ///
+  /// keepAlive: [communityStandings] awaits this, and an autoDispose stream is
+  /// torn down mid-flight before the awaiting provider ever sees a value.
+  MySeasonsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'mySeasonsProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$mySeasonsHash();
+
+  @$internal
+  @override
+  $StreamProviderElement<Map<(String, String), MySeason>> $createElement(
+    $ProviderPointer pointer,
+  ) => $StreamProviderElement(pointer);
+
+  @override
+  Stream<Map<(String, String), MySeason>> create(Ref ref) {
+    return mySeasons(ref);
+  }
+}
+
+String _$mySeasonsHash() => r'066d6d2784fb97ed8a8217286f8b94652121c5f5';
+
+/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
+/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// One request per resolution level, not one per cohort (§12.4).
+
+@ProviderFor(communityStandings)
+final communityStandingsProvider = CommunityStandingsProvider._();
+
+/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
+/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// One request per resolution level, not one per cohort (§12.4).
+
+final class CommunityStandingsProvider
+    extends
+        $FunctionalProvider<
+          AsyncValue<List<CommunityStanding>>,
+          List<CommunityStanding>,
+          FutureOr<List<CommunityStanding>>
+        >
+    with
+        $FutureModifier<List<CommunityStanding>>,
+        $FutureProvider<List<CommunityStanding>> {
+  /// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
+  /// left out, so an empty list is the honest "not enough gardeners yet" state.
+  /// One request per resolution level, not one per cohort (§12.4).
+  CommunityStandingsProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'communityStandingsProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$communityStandingsHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<List<CommunityStanding>> $createElement(
+    $ProviderPointer pointer,
+  ) => $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<List<CommunityStanding>> create(Ref ref) {
+    return communityStandings(ref);
+  }
+}
+
+String _$communityStandingsHash() =>
+    r'cdd6481b436a83ea09aee39c3427e98ec91ef653';

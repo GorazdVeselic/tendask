@@ -8,6 +8,7 @@ import '../../../i18n/translations.g.dart';
 import '../application/community_providers.dart';
 import 'widgets/community_explain_sheet.dart';
 import 'widgets/community_feed_list.dart';
+import 'widgets/community_standing_list.dart';
 
 /// Okolica (5th tab, ⬡ = H3 cell): what gardeners around you are doing. Two
 /// views of the same aggregates (skupnost-agregacija.md §12.1) — "This week"
@@ -116,14 +117,34 @@ class _WeekTab extends ConsumerWidget {
   }
 }
 
-/// "Where you stand" — your own timing per task type. The on-device percentile
-/// arrives with M11.18 (step 7–8); until then there is nothing to list.
-class _StandingTab extends StatelessWidget {
+/// "Where you stand" — the cohorts you worked this season, each placed against
+/// its group's curve. Cohorts the neighbourhood cannot answer for are left out,
+/// so an empty list is the honest cold-start, not an error.
+class _StandingTab extends ConsumerWidget {
   const _StandingTab();
 
   @override
-  Widget build(BuildContext context) {
-    // TODO(gorazd, 2026-08-31): list task types with a season curve (M11.18).
-    return EmptyState(context.t.community.empty_standing);
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final standings = ref.watch(communityStandingsProvider);
+    final catalog = ref.watch(taskTypesMapProvider);
+    final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
+    final hasPlus = ref.watch(hasPlusProvider);
+
+    if (standings.hasError || catalog.hasError) {
+      return LoadErrorHint(t.common.load_error);
+    }
+    return switch ((standings, catalog)) {
+      (AsyncData(value: final rows), AsyncData(value: final types))
+          when rows.isNotEmpty =>
+        CommunityStandingList(
+          standings: rows,
+          catalog: types,
+          plants: plants,
+          hasPlus: hasPlus,
+        ),
+      (AsyncData(), AsyncData()) => EmptyState(t.community.empty_standing),
+      _ => const Center(child: CircularProgressIndicator.adaptive()),
+    };
   }
 }

@@ -145,6 +145,33 @@ CommunityTiming timingBand(double cdf) {
   return CommunityTiming.late;
 }
 
+/// The "Where you stand" list: every cohort I worked this season that [curves]
+/// could actually place, most recently started first (this season's activity
+/// reads top-down). A cohort with no curve is left out — no level had enough
+/// gardeners, and a row that says nothing is worse than a shorter list (§7.4).
+List<CommunityStanding> buildStandings(
+  Map<(String, String), MySeason> mine,
+  Map<(String, String), SeasonCurve> curves,
+) {
+  final placed = <(DateTime, CommunityStanding)>[];
+  for (final entry in curves.entries) {
+    final first = mine[entry.key]?.first;
+    if (first == null) continue;
+    final curve = entry.value;
+    placed.add((
+      first,
+      CommunityStanding(
+        taskTypeId: entry.key.$1,
+        cohort: entry.key.$2,
+        band: timingBand(seasonCdfForWeek(curve, isoWeek(first.toLocal()))),
+        scope: curve.bucket.resolution,
+      ),
+    ));
+  }
+  placed.sort((a, b) => b.$1.compareTo(a.$1));
+  return [for (final row in placed) row.$2];
+}
+
 /// Picks the frequency row for [seasonYear] (falling back to the most recent
 /// season the server has published, e.g. before the first nightly refresh of a
 /// new year) and parses it. null = nothing usable.
