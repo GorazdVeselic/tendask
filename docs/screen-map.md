@@ -66,15 +66,18 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
 - **[FR-19] doda (board D):** na **plant-detail** chip »🌙 Kdaj za …« → `/moon-finder?plant=:id`.
 
 ### 1.5 Okolica — `/community` (`community`) [shell] · [M11, flag-dark]
-5. zavihek (⬡), za `kSuggestionsEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + izbirnik
-obsega (📍 okolica / podobna klima / vsi — auto najfinejši nivo nad pragom `kCommunityPrivacyMin=5`).
+5. zavihek (⬡), za `kSuggestionsEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + **oznaka
+obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z oknom in populacijo vedra.
+- **Obseg je oznaka, ne izbirnik** (odločitev A, 2026-07-25): razreši ga fallback veriga — najfinejši nivo nad
+  `kCommunityPrivacyMin=5`, vedno **en** nivo (§7.4). Člen »vsi« ne obstaja (cron ne dela globalnega vedra),
+  izbirnik je **odložen, ne opuščen** (podatkovna plast ga podpira).
 - **Ta teden** (privzeto): kvalitativen feed zadnjih 7 dni (`pogosto`/`nekaj`/`redko`), populacija vedra;
   offline bere včerajšnji dnevni cache (drift `community_cache`). Pod pragom → »še premalo vrtnarjev«.
   **Vrstica = primerjalna skupina** (§7.4): naslov = opravilo, podnaslov = rastlina, kadar skupina ni
   prostorska (»Obrez« + »jablana«; »Košnja« brez podnaslova). Kapica: največ 2 vrstici na tip opravila.
 - **Kje si ti:** tvoja opravila z oznako zgoden/običajen/pozen (percentil na napravi).
 - **Akcije:** tap opravila → **community-task** `/community/task/:taskTypeId` (`?plant=`) [shell]; »ℹ️ Kako beremo
-  te podatke« → explain sheet.
+  te podatke« → explain sheet (pove tudi, **zakaj** je obseg tak).
 - **Gating (M11 stub):** brez Plus → prva vrstica feeda vidna, ostalo `TeaseOverlay` (blur + »Na voljo v
   Tendask +« + nevtralni **»Vnesi kodo«** — **brez cene/URL/trial/CTA k nakupu**, anti-steering FR-20 §3.1).
   Pravi token-gate = FR-20; »Vnesi kodo« je v M11 placeholder.

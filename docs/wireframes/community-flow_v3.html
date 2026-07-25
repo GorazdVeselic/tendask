@@ -254,7 +254,7 @@
           <div class="segmented" style="margin-bottom:6px;">
             <div class="seg active">Ta teden</div>
             <a class="block" href="#s-land-you" style="flex:1;"><div class="seg">Kje si ti</div></a></div>
-          <div class="scope-meta"><span class="dot"></span> zadnjih 7 dni · <span class="scope-chip" style="margin-left:4px;">📍 Okolica ▾</span> ~40 vrtnarjev</div>
+          <div class="scope-meta"><span class="dot"></span> zadnjih 7 dni · <span class="scope-chip" style="margin-left:4px;">📍 v tvoji okolici</span> ~40 vrtnarjev</div>
 
           <div class="card" style="margin-top:12px;">
             <a class="block" href="#s-detail-tomato"><div class="list-item"><div class="avatar">🍅</div><div class="li-main"><div class="li-title">Sajenje paradižnika</div></div><span class="qpill hi">pogosto</span></div></a>
@@ -287,7 +287,7 @@
           <div class="segmented" style="margin-bottom:6px;">
             <a class="block" href="#s-land-week" style="flex:1;"><div class="seg">Ta teden</div></a>
             <div class="seg active">Kje si ti</div></div>
-          <div class="scope-meta"><span class="dot"></span> tvoja opravila · <span class="scope-chip" style="margin-left:4px;">📍 Okolica ▾</span></div>
+          <div class="scope-meta"><span class="dot"></span> tvoja opravila · <span class="scope-chip" style="margin-left:4px;">📍 v tvoji okolici</span></div>
 
           <div class="card" style="margin-top:12px;padding:2px 16px;">
             <a class="block" href="#s-detail-lawn"><div class="stand-row"><div class="av">🌾</div><div class="sm"><div class="st">Prvo gnojenje trate</div><div class="miniband"><span class="on"></span><span></span><span></span></div></div><span class="pos early">zgoden · 30 %</span></div></a>
@@ -315,7 +315,7 @@
         <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
         <div class="appbar"><a class="block" href="#s-land-week"><span class="back">‹ Okolica</span></a><div style="flex:1;"></div><div class="premium-badge">⭐ Tendask+</div></div>
         <div class="content">
-          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:21px;">🌾 Prvo gnojenje trate</h1><div class="sub">v okolici · <span class="scope-chip">📍 Okolica ▾</span></div></div></div>
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:21px;">🌾 Prvo gnojenje trate</h1><div class="sub">v okolici · <span class="scope-chip">📍 v tvoji okolici</span></div></div></div>
 
           <div class="stat-hero" style="margin-top:10px;">
             <div class="kicker">Kdaj · tvoj položaj</div>
@@ -355,7 +355,7 @@
         <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
         <div class="appbar"><a class="block" href="#s-land-week"><span class="back">‹ Okolica</span></a><div style="flex:1;"></div><div class="premium-badge">⭐ Tendask+</div></div>
         <div class="content">
-          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:21px;">🍅 Sajenje paradižnika</h1><div class="sub">v okolici · <span class="scope-chip">📍 Okolica ▾</span></div></div></div>
+          <div class="appbar" style="padding:0 0 2px;"><div><h1 style="font-size:21px;">🍅 Sajenje paradižnika</h1><div class="sub">v okolici · <span class="scope-chip">📍 v tvoji okolici</span></div></div></div>
 
           <div class="stat-hero" style="margin-top:10px;">
             <div class="kicker">Kdaj · tvoj položaj</div>
@@ -597,7 +597,13 @@
       »vsa opravila tega tipa« se <b>ne prikazuje in ne primerja</b>: obrez jablane in obrez maline sta različna
       dogodka z različnim koledarjem. Skupine se pri fallbacku <b>nikoli</b> ne zamenja, širi se samo geografija;
       če za jablano ni dovolj vrtnarjev, pišemo »še premalo vrtnarjev«, ne zlite številke. (Strežnik: `@site`
-      veja v <code>agg_event</code>, migracija 0017.)
+      veja v <code>agg_event</code>, migracija 0017.)<br>
+      <b>Obseg (2026-07-25, odločitev A):</b> obseg je <b>samo oznaka</b>, ne izbirnik — razreši ga fallback veriga
+      (najfinejši nivo nad <code>kCommunityPrivacyMin</code>, §7.4), zato so chipi zgoraj brez »▾«. Člen <b>»vsi«</b>
+      je odpadel: nočni cron (M11.16) globalnega vedra ne materializira, degradacija se ustavi pri <b>podobni klimi</b>.
+      Izbirnik je <b>odložen, ne opuščen</b> — podatkovna plast ga podpira (verige berejo <i>seznam</i> veder, modeli
+      nosijo svoj bucket), zato je kasnejši preklop filter nad obstoječo logiko. Sprožilec za ponovni premislek:
+      kako pogosto ima razrešeno vedro <code>5 ≤ n &lt; 30</code> (torej kako pogosto je opisni pas edina možnost).
     </p>
   </div>
 

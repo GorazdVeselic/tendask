@@ -400,6 +400,13 @@ Vsa konceptualna/shemska vprašanja so razrešena (§0.1). Ostane le:
 **Wireframe (klikabilni flow):** `docs/wireframes/community-flow_v3.html`.
 
 ### 12.1 Informacijska arhitektura — dva zaslona
+> **Uskladitev 2026-07-25 (odločitev A):** obseg je **oznaka, ne izbirnik** — razreši ga fallback veriga (§7.4,
+> najfinejši nivo nad `K_privacy`), UI ga samo poimenuje. Člen **»vsi«** odpade: nočni cron (M11.16) globalnega
+> vedra ne materializira, degradacija se ustavi pri klimatskem košu. Izbirnik je odložen, ne opuščen — verige
+> berejo *seznam* veder in modeli nosijo svoj bucket, zato je kasnejši preklop filter nad obstoječo logiko.
+> Razlog: ročno širjenje pomeni namerno gledanje manj relevantnih podatkov; edini pravi motiv (n med `K_privacy`
+> in `K_reliab` → samo opisni pas) je merljiv šele na pravih podatkih.
+
 - **Okolica (landing)** s preklopom `[ Ta teden | Kje si ti ]` + grob izbirnik obsega
   (📍 okolica / klima / vsi). »Ta teden« = feed (§7.1); »Kje si ti« = osebni pregled tvojih opravil
   z zgoden/običajen/pozen (§7.2).

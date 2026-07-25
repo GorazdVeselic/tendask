@@ -135,7 +135,8 @@ features/community/
 ```
 
 **Struktura zaslonov** (`skupnost-agregacija.md` §12.1): landing s preklopom
-`[ This week | Where you stand ]` + obseg (auto: najfinejši nivo, ki prestane prag); detajl
+`[ This week | Where you stand ]` + obseg = **samo oznaka** (odločitev A, 2026-07-25: brez izbirnika,
+razreši ga fallback veriga; »vsi« ne obstaja); detajl
 opravila = ena predloga (percentil + frekvenca + ta teden). Vsi teksti: i18n predloga +
 lokalni podatek (drift: moja prva izvedba) + agregat (številke).
 
