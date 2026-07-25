@@ -216,6 +216,14 @@ const kSuppliesEnabled = true;
 /// kSuppliesEnabled idiom. See docs/m11/11-poravnava-v-main.md.
 const kSuggestionsEnabled = false;
 
+/// Placeholder Plus entitlement for the community (Okolica) tease while the real
+/// licence does not exist yet: true = treat the device as entitled, so the whole
+/// feature is visible during development behind [kSuggestionsEnabled]. Set false
+/// to see the tease. FR-20 replaces this with a signed licence token read from
+/// drift (docs/feature-requests/tendask-plus-licensing.md) — there is no
+/// in-app purchase, price or store link anywhere.
+const kDevPlusStub = true;
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

@@ -7,6 +7,7 @@ import '../../features/areas/presentation/areas_screen.dart';
 import '../../features/auth/presentation/email_login_screen.dart';
 import '../../features/auth/presentation/location_screen.dart';
 import '../../features/auth/presentation/login_screen.dart';
+import '../../features/community/presentation/community_landing_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
@@ -90,6 +91,19 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
             ),
           ],
         ),
+        // Okolica (M11) — dark until launch (kSuggestionsEnabled). Keep in sync
+        // with MainShell's destinations: the branch and the tab must appear and
+        // disappear together, or the indices no longer line up.
+        if (kSuggestionsEnabled)
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: '/community',
+                name: 'community',
+                builder: (context, state) => const CommunityLandingScreen(),
+              ),
+            ],
+          ),
       ],
     ),
     // Full-screen routes above the shell (no bottom nav)

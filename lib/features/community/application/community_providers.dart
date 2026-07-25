@@ -26,6 +26,12 @@ CommunityRepository communityRepository(Ref ref) {
   });
 }
 
+/// Whether the device may see the full community content. M11 ships a stub
+/// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
+/// for a signed licence token read from drift.
+@riverpod
+bool hasPlus(Ref ref) => kDevPlusStub;
+
 /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
 /// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
 @riverpod

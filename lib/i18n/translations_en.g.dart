@@ -74,6 +74,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
 	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
 	late final Translations$suggestions$en suggestions = Translations$suggestions$en.internal(_root);
+	late final Translations$community$en community = Translations$community$en.internal(_root);
 }
 
 // Path: splash
@@ -107,6 +108,9 @@ class Translations$nav$en {
 
 	/// en: 'Tasks'
 	String get tasks => 'Tasks';
+
+	/// en: 'Nearby'
+	String get community => 'Nearby';
 }
 
 // Path: home
@@ -2088,6 +2092,47 @@ class Translations$suggestions$en {
 	late final Translations$suggestions$zucchini$en zucchini = Translations$suggestions$zucchini$en.internal(_root);
 }
 
+// Path: community
+class Translations$community$en {
+	Translations$community$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Nearby'
+	String get title => 'Nearby';
+
+	/// en: 'This week'
+	String get seg_week => 'This week';
+
+	/// en: 'Where you stand'
+	String get seg_you => 'Where you stand';
+
+	/// en: 'last 7 days'
+	String get window_7d => 'last 7 days';
+
+	/// en: '(one) {~1 gardener} (other) {~$n gardeners}'
+	String population({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n,
+		one: '~1 gardener',
+		other: '~${n} gardeners',
+	);
+
+	late final Translations$community$scope$en scope = Translations$community$scope$en.internal(_root);
+	late final Translations$community$intensity$en intensity = Translations$community$intensity$en.internal(_root);
+
+	/// en: 'Not enough gardeners nearby yet. This fills in as more people log their tasks.'
+	String get empty_feed => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.';
+
+	/// en: 'No task yet has enough gardeners nearby to compare with.'
+	String get empty_standing => 'No task yet has enough gardeners nearby to compare with.';
+
+	/// en: 'Anonymous, at least 5 gardeners. Your exact location is never shared.'
+	String get privacy_note => 'Anonymous, at least 5 gardeners. Your exact location is never shared.';
+
+	late final Translations$community$tease$en tease = Translations$community$tease$en.internal(_root);
+}
+
 // Path: suggestions.actions
 class Translations$suggestions$actions$en {
 	Translations$suggestions$actions$en.internal(this._root);
@@ -2451,6 +2496,57 @@ class Translations$suggestions$zucchini$en {
 
 	// Translations
 	late final Translations$suggestions$zucchini$sow_direct$en sow_direct = Translations$suggestions$zucchini$sow_direct$en.internal(_root);
+}
+
+// Path: community.scope
+class Translations$community$scope$en {
+	Translations$community$scope$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'in your area'
+	String get area => 'in your area';
+
+	/// en: 'in a similar climate'
+	String get climate => 'in a similar climate';
+}
+
+// Path: community.intensity
+class Translations$community$intensity$en {
+	Translations$community$intensity$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'often'
+	String get often => 'often';
+
+	/// en: 'some'
+	String get some => 'some';
+
+	/// en: 'rarely'
+	String get rare => 'rarely';
+}
+
+// Path: community.tease
+class Translations$community$tease$en {
+	Translations$community$tease$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Available in Tendask +'
+	String get title => 'Available in Tendask +';
+
+	/// en: 'What gardeners nearby are doing, when they start, where you stand and how often.'
+	String get body => 'What gardeners nearby are doing, when they start, where you stand and how often.';
+
+	/// en: 'Enter code'
+	String get redeem => 'Enter code';
 }
 
 // Path: suggestions.cadence.overdue
@@ -3441,6 +3537,7 @@ extension on Translations {
 			'nav.journal' => 'Journal',
 			'nav.areas' => 'Garden',
 			'nav.tasks' => 'Tasks',
+			'nav.community' => 'Nearby',
 			'home.greeting' => 'Good day 🌿',
 			'home.today' => 'Today',
 			'home.recent' => 'Recent',
@@ -3947,9 +4044,9 @@ extension on Translations {
 			'weather.m_humidity' => 'Humidity',
 			'weather.m_wind' => 'Wind',
 			'weather.m_precipitation' => 'Precipitation',
-			'weather.m_soil_temp' => 'Soil temp.',
 			_ => null,
 		} ?? switch (path) {
+			'weather.m_soil_temp' => 'Soil temp.',
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Rain 48 h',
 			'weather.m_no_rain' => 'no rain',
@@ -4141,6 +4238,22 @@ extension on Translations {
 			'suggestions.cucumber.sow_direct.body' => 'Sow {subject} outdoors once it is warm and frost-free — around {frost_date}.',
 			'suggestions.zucchini.sow_direct.title' => 'Direct sow',
 			'suggestions.zucchini.sow_direct.body' => 'Sow {subject} outdoors after frost — around {frost_date}.',
+			'community.title' => 'Nearby',
+			'community.seg_week' => 'This week',
+			'community.seg_you' => 'Where you stand',
+			'community.window_7d' => 'last 7 days',
+			'community.population' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: '~1 gardener', other: '~${n} gardeners', ), 
+			'community.scope.area' => 'in your area',
+			'community.scope.climate' => 'in a similar climate',
+			'community.intensity.often' => 'often',
+			'community.intensity.some' => 'some',
+			'community.intensity.rare' => 'rarely',
+			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
+			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
+			'community.privacy_note' => 'Anonymous, at least 5 gardeners. Your exact location is never shared.',
+			'community.tease.title' => 'Available in Tendask +',
+			'community.tease.body' => 'What gardeners nearby are doing, when they start, where you stand and how often.',
+			'community.tease.redeem' => 'Enter code',
 			_ => null,
 		};
 	}

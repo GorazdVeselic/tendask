@@ -9,6 +9,7 @@ import '../../../core/date_format.dart';
 import '../../../core/suggestion_status.dart';
 import '../../../core/widgets/day_header.dart';
 import '../../../core/widgets/empty_state.dart';
+import '../../../core/widgets/load_error_hint.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
@@ -42,7 +43,7 @@ class SuggestionHistoryScreen extends ConsumerWidget {
           ),
           AsyncData(:final value) => _HistoryList(rows: value),
           // A local DB read failure is a bug — surface it quietly, never shrink.
-          AsyncError() => _ErrorHint(t.common.load_error),
+          AsyncError() => LoadErrorHint(t.common.load_error),
           _ => const Center(child: CircularProgressIndicator.adaptive()),
         },
       ),
@@ -281,30 +282,6 @@ class _StatusChip extends StatelessWidget {
         style: theme.textTheme.labelSmall?.copyWith(
           color: fg,
           fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
-  }
-}
-
-/// Quiet centered indicator for a local read failure — not a full error screen.
-class _ErrorHint extends StatelessWidget {
-  const _ErrorHint(this.message);
-
-  final String message;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(32),
-        child: Text(
-          message,
-          textAlign: TextAlign.center,
-          style: theme.textTheme.bodyMedium?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
         ),
       ),
     );

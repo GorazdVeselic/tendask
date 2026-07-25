@@ -6,7 +6,8 @@
     "home": "Home",
     "journal": "Journal",
     "areas": "Garden",
-    "tasks": "Tasks"
+    "tasks": "Tasks",
+    "community": "Nearby"
   },
   "home": {
     "greeting": "Good day 🌿",
@@ -967,6 +968,33 @@
         "title": "Direct sow",
         "body": "Sow {subject} outdoors after frost — around {frost_date}."
       }
+    }
+  },
+  "community": {
+    "title": "Nearby",
+    "seg_week": "This week",
+    "seg_you": "Where you stand",
+    "window_7d": "last 7 days",
+    "population(n)": {
+      "one": "~1 gardener",
+      "other": "~$n gardeners"
+    },
+    "scope": {
+      "area": "in your area",
+      "climate": "in a similar climate"
+    },
+    "intensity": {
+      "often": "often",
+      "some": "some",
+      "rare": "rarely"
+    },
+    "empty_feed": "Not enough gardeners nearby yet. This fills in as more people log their tasks.",
+    "empty_standing": "No task yet has enough gardeners nearby to compare with.",
+    "privacy_note": "Anonymous, at least 5 gardeners. Your exact location is never shared.",
+    "tease": {
+      "title": "Available in Tendask +",
+      "body": "What gardeners nearby are doing, when they start, where you stand and how often.",
+      "redeem": "Enter code"
     }
   }
 }

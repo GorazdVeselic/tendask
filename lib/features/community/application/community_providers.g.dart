@@ -57,6 +57,57 @@ final class CommunityRepositoryProvider
 String _$communityRepositoryHash() =>
     r'fa3466b3576596194c4b1d351838282e59f5d335';
 
+/// Whether the device may see the full community content. M11 ships a stub
+/// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
+/// for a signed licence token read from drift.
+
+@ProviderFor(hasPlus)
+final hasPlusProvider = HasPlusProvider._();
+
+/// Whether the device may see the full community content. M11 ships a stub
+/// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
+/// for a signed licence token read from drift.
+
+final class HasPlusProvider extends $FunctionalProvider<bool, bool, bool>
+    with $Provider<bool> {
+  /// Whether the device may see the full community content. M11 ships a stub
+  /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
+  /// for a signed licence token read from drift.
+  HasPlusProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'hasPlusProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$hasPlusHash();
+
+  @$internal
+  @override
+  $ProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  bool create(Ref ref) {
+    return hasPlus(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(bool value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<bool>(value),
+    );
+  }
+}
+
+String _$hasPlusHash() => r'72cdfaf78859094703aa21098a76e668db0f2fc0';
+
 /// The current profile's aggregation buckets, finest → coarsest. Re-resolves on
 /// sign-in/out so the feed follows the account. Empty when no profile/cells yet.
 

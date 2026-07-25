@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/config.dart';
 import '../../i18n/translations.g.dart';
 
 class MainShell extends StatelessWidget {
@@ -54,6 +55,15 @@ class MainShell extends StatelessWidget {
             selectedIcon: const Icon(Icons.grass),
             label: t.nav.areas,
           ),
+          // Okolica (M11) — dark until launch (kSuggestionsEnabled); the router
+          // gates the matching shell branch with the same flag.
+          if (kSuggestionsEnabled)
+            NavigationDestination(
+              // Hexagon = the H3 cell the aggregates are grouped by (and the logo).
+              icon: const Icon(Icons.hexagon_outlined),
+              selectedIcon: const Icon(Icons.hexagon),
+              label: t.nav.community,
+            ),
         ],
       ),
     );

@@ -13,6 +13,9 @@ import 'package:tendask/core/notifications/reminder_audio.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
+import 'package:tendask/features/community/application/community_providers.dart';
+import 'package:tendask/features/community/data/community_models.dart';
+import 'package:tendask/features/community/presentation/community_landing_screen.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
@@ -121,6 +124,33 @@ List<Override> _taskWorldOverrides() => [
   plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
   suppliesListProvider.overrideWith((ref) => Stream.value(<Supply>[])),
   notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
+];
+
+/// The community landing reads its aggregate slice through a provider, so the
+/// matrix feeds it a resolved feed instead of a database.
+List<Override> _communityOverrides({required bool hasPlus}) => [
+  taskTypesMapProvider.overrideWith((ref) => Stream.value({'water': _taskType()})),
+  hasPlusProvider.overrideWithValue(hasPlus),
+  communityFeedProvider.overrideWith(
+    (ref) async => const CommunityFeed(
+      bucket: Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
+      population: 40,
+      items: [
+        CommunityFeedItem(
+          taskTypeId: 'water',
+          plantId: '',
+          distinctUsers7d: 20,
+          intensity: CommunityIntensity.often,
+        ),
+        CommunityFeedItem(
+          taskTypeId: 'water',
+          plantId: '',
+          distinctUsers7d: 4,
+          intensity: CommunityIntensity.rare,
+        ),
+      ],
+    ),
+  ),
 ];
 
 /// Screens that persist (settings, appearance, note form) read through the
@@ -274,5 +304,20 @@ void main() {
     'note-form',
     overrides: () => [..._dbOverrides(), ..._taskWorldOverrides()],
     build: () => const NoteFormScreen(),
+  );
+
+  // ── community (Okolica) ────────────────────────────────────────────────────
+
+  layoutMatrix(
+    'community/landing',
+    overrides: () => _communityOverrides(hasPlus: true),
+    build: () => const CommunityLandingScreen(),
+  );
+
+  // Teased: the extra card pushes the tightest wording (German, text×1.3).
+  layoutMatrix(
+    'community/landing (tease)',
+    overrides: () => _communityOverrides(hasPlus: false),
+    build: () => const CommunityLandingScreen(),
   );
 }
