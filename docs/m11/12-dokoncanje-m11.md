@@ -63,6 +63,15 @@
 - **Zajema:** `community_task_screen` (percentil krivulja + »ti« marker + frekvenca stolpci + »ta teden«), `kReliab` opisni način (brez % pod 30, zaokroži na 10, n viden), flag-dark. Brez Plus (stub) → celoten zaslon TeaseOverlay. Widget test.
 - **Cilj:** per-opravilo pogled skladen s `skupnost-agregacija.md §7`.
 
+### Korak 8b — Vstopni točki v Okolico (Domov + detajl opravila) 👈 dodano 2026-07-25
+- **Zajema:** po `screen-map.md §1.1` sekcija **»V tvoji okolici ⬡«** nad DANES na Domov
+  (najrelevantnejši namig → `/community/task/:taskTypeId`, plus »Vse iz okolice ›« → `/community`)
+  in po §2.2 kartica **»V tvoji okolici«** na detajlu opravila → predloga tega opravila. Oboje za
+  `kSuggestionsEnabled`, tease enako kot landing. Widget test obeh vstopov.
+- **Zakaj ločen korak:** po `skupnost-agregacija.md §12.1` sta to **glavni poti odkritja** (zavihek je
+  tretja), v prvotnem planu pa nista bili v nobenem koraku (ugotovljeno pri pregledu kode K5–K7).
+- **Odvisnosti:** korak 8 (ista predloga je cilj obeh CTA-jev) · **Kompleksnost:** M
+
 ### Korak 9 — i18n Okolica detajl (en/sl/de)
 - **Zajema:** `community.*` detajl/obseg/opisni nizi; `dart run slang`.
 - **Cilj:** detajl v treh jezikih.
@@ -96,8 +105,8 @@
 ## Odvisnosti
 
 ```
-1 → 2 → (3 → 4 → 5 → 6) → (7 → 7b → 8 → 9) → 10 → 11 → 12 → 13 → 14
-        └─ M11.17 ─────┘   └──── M11.18 ───┘   M11.19  M11.21  merge
+1 → 2 → (3 → 4 → 5 → 6) → (7 → 7b → 8 → 8b → 9) → 10 → 11 → 12 → 13 → 14
+        └─ M11.17 ─────┘   └───── M11.18 ──────┘   M11.19  M11.21  merge
 ```
 
 ## Opombe
