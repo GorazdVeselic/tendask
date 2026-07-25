@@ -174,8 +174,9 @@ class TaskTypes extends Table {
 ## 5.6 V2 dnevni cache okolice (nova, lokalna — brez sync stolpcev)
 
 ```dart
-// lib/features/community/data/ — drift tabela (lokalni dnevni cache rezine agregata,
-// skupnost-agregacija.md §12.4; vzorec kot weather cache)
+// lib/core/database/tables/sync_tables.dart — local-only drift tabela (dnevni
+// cache rezine agregata, skupnost-agregacija.md §12.4; vzorec kot weather cache).
+// V core (ne features/) kot SyncCursors/LocalFlags — sicer core->features import.
 class CommunityCaches extends Table {
   @override
   String get tableName => 'community_cache';
@@ -189,8 +190,9 @@ class CommunityCaches extends Table {
   Set<Column> get primaryKey => {key};
 }
 ```
-- **Migracija:** `m.createTable` (šele v koraku M11.19).
-- **Bere/piše:** `CommunityRepository` (gl. 08 §8.3). Ob odjavi se počisti kot ostale tabele.
+- **Migracija:** `m.createTable` (v koraku M11.17, drift `schemaVersion` v16).
+- **Bere/piše:** `CommunityRepository` (gl. 08 §8.3). Ob odjavi se počisti kot ostale tabele
+  (dodan v `clearUserData`). Local-only → **ni** v push/pull seznamih, ni remote mapperja.
 
 ## 5.7 Povzetek migracije
 
@@ -201,7 +203,7 @@ class CommunityCaches extends Table {
 | `task_type.seasonal` | addColumn + seed | M11.2 |
 | `suggestion`, `suggestion_log` | createTable | M11.2 |
 | `plant_task_rule` | createTable + seed | M11.4 |
-| `community_cache` | createTable | M11.19 |
+| `community_cache` | createTable (v16) | M11.17 |
 
 `schemaVersion`: en bump na korak, ki spreminja shemo (M11.2 → +1, M11.4 → +1, M11.19 → +1);
 `onUpgrade` stopničasto (`from < N`) po obstoječem vzorcu v `app_database.dart`.

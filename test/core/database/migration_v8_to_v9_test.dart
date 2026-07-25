@@ -30,8 +30,8 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 15', () {
-    expect(db.schemaVersion, 15);
+  test('schema version is 16', () {
+    expect(db.schemaVersion, 16);
   });
 
   test('v12: task carries the harvest yield columns (T11)', () async {

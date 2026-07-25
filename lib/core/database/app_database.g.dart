@@ -10189,6 +10189,273 @@ class LocalFlagsCompanion extends UpdateCompanion<LocalFlag> {
   }
 }
 
+class $CommunityCachesTable extends CommunityCaches
+    with TableInfo<$CommunityCachesTable, CommunityCache> {
+  @override
+  final GeneratedDatabase attachedDatabase;
+  final String? _alias;
+  $CommunityCachesTable(this.attachedDatabase, [this._alias]);
+  static const VerificationMeta _keyMeta = const VerificationMeta('key');
+  @override
+  late final GeneratedColumn<String> key = GeneratedColumn<String>(
+    'key',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _payloadMeta = const VerificationMeta(
+    'payload',
+  );
+  @override
+  late final GeneratedColumn<String> payload = GeneratedColumn<String>(
+    'payload',
+    aliasedName,
+    false,
+    type: DriftSqlType.string,
+    requiredDuringInsert: true,
+  );
+  static const VerificationMeta _fetchedAtMeta = const VerificationMeta(
+    'fetchedAt',
+  );
+  @override
+  late final GeneratedColumn<DateTime> fetchedAt = GeneratedColumn<DateTime>(
+    'fetched_at',
+    aliasedName,
+    false,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: true,
+  );
+  @override
+  List<GeneratedColumn> get $columns => [key, payload, fetchedAt];
+  @override
+  String get aliasedName => _alias ?? actualTableName;
+  @override
+  String get actualTableName => $name;
+  static const String $name = 'community_cache';
+  @override
+  VerificationContext validateIntegrity(
+    Insertable<CommunityCache> instance, {
+    bool isInserting = false,
+  }) {
+    final context = VerificationContext();
+    final data = instance.toColumns(true);
+    if (data.containsKey('key')) {
+      context.handle(
+        _keyMeta,
+        key.isAcceptableOrUnknown(data['key']!, _keyMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_keyMeta);
+    }
+    if (data.containsKey('payload')) {
+      context.handle(
+        _payloadMeta,
+        payload.isAcceptableOrUnknown(data['payload']!, _payloadMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_payloadMeta);
+    }
+    if (data.containsKey('fetched_at')) {
+      context.handle(
+        _fetchedAtMeta,
+        fetchedAt.isAcceptableOrUnknown(data['fetched_at']!, _fetchedAtMeta),
+      );
+    } else if (isInserting) {
+      context.missing(_fetchedAtMeta);
+    }
+    return context;
+  }
+
+  @override
+  Set<GeneratedColumn> get $primaryKey => {key};
+  @override
+  CommunityCache map(Map<String, dynamic> data, {String? tablePrefix}) {
+    final effectivePrefix = tablePrefix != null ? '$tablePrefix.' : '';
+    return CommunityCache(
+      key: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}key'],
+      )!,
+      payload: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}payload'],
+      )!,
+      fetchedAt: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}fetched_at'],
+      )!,
+    );
+  }
+
+  @override
+  $CommunityCachesTable createAlias(String alias) {
+    return $CommunityCachesTable(attachedDatabase, alias);
+  }
+}
+
+class CommunityCache extends DataClass implements Insertable<CommunityCache> {
+  final String key;
+  final String payload;
+  final DateTime fetchedAt;
+  const CommunityCache({
+    required this.key,
+    required this.payload,
+    required this.fetchedAt,
+  });
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    map['key'] = Variable<String>(key);
+    map['payload'] = Variable<String>(payload);
+    map['fetched_at'] = Variable<DateTime>(fetchedAt);
+    return map;
+  }
+
+  CommunityCachesCompanion toCompanion(bool nullToAbsent) {
+    return CommunityCachesCompanion(
+      key: Value(key),
+      payload: Value(payload),
+      fetchedAt: Value(fetchedAt),
+    );
+  }
+
+  factory CommunityCache.fromJson(
+    Map<String, dynamic> json, {
+    ValueSerializer? serializer,
+  }) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return CommunityCache(
+      key: serializer.fromJson<String>(json['key']),
+      payload: serializer.fromJson<String>(json['payload']),
+      fetchedAt: serializer.fromJson<DateTime>(json['fetchedAt']),
+    );
+  }
+  @override
+  Map<String, dynamic> toJson({ValueSerializer? serializer}) {
+    serializer ??= driftRuntimeOptions.defaultSerializer;
+    return <String, dynamic>{
+      'key': serializer.toJson<String>(key),
+      'payload': serializer.toJson<String>(payload),
+      'fetchedAt': serializer.toJson<DateTime>(fetchedAt),
+    };
+  }
+
+  CommunityCache copyWith({
+    String? key,
+    String? payload,
+    DateTime? fetchedAt,
+  }) => CommunityCache(
+    key: key ?? this.key,
+    payload: payload ?? this.payload,
+    fetchedAt: fetchedAt ?? this.fetchedAt,
+  );
+  CommunityCache copyWithCompanion(CommunityCachesCompanion data) {
+    return CommunityCache(
+      key: data.key.present ? data.key.value : this.key,
+      payload: data.payload.present ? data.payload.value : this.payload,
+      fetchedAt: data.fetchedAt.present ? data.fetchedAt.value : this.fetchedAt,
+    );
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CommunityCache(')
+          ..write('key: $key, ')
+          ..write('payload: $payload, ')
+          ..write('fetchedAt: $fetchedAt')
+          ..write(')'))
+        .toString();
+  }
+
+  @override
+  int get hashCode => Object.hash(key, payload, fetchedAt);
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is CommunityCache &&
+          other.key == this.key &&
+          other.payload == this.payload &&
+          other.fetchedAt == this.fetchedAt);
+}
+
+class CommunityCachesCompanion extends UpdateCompanion<CommunityCache> {
+  final Value<String> key;
+  final Value<String> payload;
+  final Value<DateTime> fetchedAt;
+  final Value<int> rowid;
+  const CommunityCachesCompanion({
+    this.key = const Value.absent(),
+    this.payload = const Value.absent(),
+    this.fetchedAt = const Value.absent(),
+    this.rowid = const Value.absent(),
+  });
+  CommunityCachesCompanion.insert({
+    required String key,
+    required String payload,
+    required DateTime fetchedAt,
+    this.rowid = const Value.absent(),
+  }) : key = Value(key),
+       payload = Value(payload),
+       fetchedAt = Value(fetchedAt);
+  static Insertable<CommunityCache> custom({
+    Expression<String>? key,
+    Expression<String>? payload,
+    Expression<DateTime>? fetchedAt,
+    Expression<int>? rowid,
+  }) {
+    return RawValuesInsertable({
+      if (key != null) 'key': key,
+      if (payload != null) 'payload': payload,
+      if (fetchedAt != null) 'fetched_at': fetchedAt,
+      if (rowid != null) 'rowid': rowid,
+    });
+  }
+
+  CommunityCachesCompanion copyWith({
+    Value<String>? key,
+    Value<String>? payload,
+    Value<DateTime>? fetchedAt,
+    Value<int>? rowid,
+  }) {
+    return CommunityCachesCompanion(
+      key: key ?? this.key,
+      payload: payload ?? this.payload,
+      fetchedAt: fetchedAt ?? this.fetchedAt,
+      rowid: rowid ?? this.rowid,
+    );
+  }
+
+  @override
+  Map<String, Expression> toColumns(bool nullToAbsent) {
+    final map = <String, Expression>{};
+    if (key.present) {
+      map['key'] = Variable<String>(key.value);
+    }
+    if (payload.present) {
+      map['payload'] = Variable<String>(payload.value);
+    }
+    if (fetchedAt.present) {
+      map['fetched_at'] = Variable<DateTime>(fetchedAt.value);
+    }
+    if (rowid.present) {
+      map['rowid'] = Variable<int>(rowid.value);
+    }
+    return map;
+  }
+
+  @override
+  String toString() {
+    return (StringBuffer('CommunityCachesCompanion(')
+          ..write('key: $key, ')
+          ..write('payload: $payload, ')
+          ..write('fetchedAt: $fetchedAt, ')
+          ..write('rowid: $rowid')
+          ..write(')'))
+        .toString();
+  }
+}
+
 abstract class _$AppDatabase extends GeneratedDatabase {
   _$AppDatabase(QueryExecutor e) : super(e);
   $AppDatabaseManager get managers => $AppDatabaseManager(this);
@@ -10212,6 +10479,9 @@ abstract class _$AppDatabase extends GeneratedDatabase {
   late final $SuggestionLogsTable suggestionLogs = $SuggestionLogsTable(this);
   late final $SyncCursorsTable syncCursors = $SyncCursorsTable(this);
   late final $LocalFlagsTable localFlags = $LocalFlagsTable(this);
+  late final $CommunityCachesTable communityCaches = $CommunityCachesTable(
+    this,
+  );
   @override
   Iterable<TableInfo<Table, Object?>> get allTables =>
       allSchemaEntities.whereType<TableInfo<Table, Object?>>();
@@ -10236,6 +10506,7 @@ abstract class _$AppDatabase extends GeneratedDatabase {
     suggestionLogs,
     syncCursors,
     localFlags,
+    communityCaches,
   ];
 }
 
@@ -18800,6 +19071,174 @@ typedef $$LocalFlagsTableProcessedTableManager =
       LocalFlag,
       PrefetchHooks Function()
     >;
+typedef $$CommunityCachesTableCreateCompanionBuilder =
+    CommunityCachesCompanion Function({
+      required String key,
+      required String payload,
+      required DateTime fetchedAt,
+      Value<int> rowid,
+    });
+typedef $$CommunityCachesTableUpdateCompanionBuilder =
+    CommunityCachesCompanion Function({
+      Value<String> key,
+      Value<String> payload,
+      Value<DateTime> fetchedAt,
+      Value<int> rowid,
+    });
+
+class $$CommunityCachesTableFilterComposer
+    extends Composer<_$AppDatabase, $CommunityCachesTable> {
+  $$CommunityCachesTableFilterComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnFilters<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get payload => $composableBuilder(
+    column: $table.payload,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnFilters(column),
+  );
+}
+
+class $$CommunityCachesTableOrderingComposer
+    extends Composer<_$AppDatabase, $CommunityCachesTable> {
+  $$CommunityCachesTableOrderingComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  ColumnOrderings<String> get key => $composableBuilder(
+    column: $table.key,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get payload => $composableBuilder(
+    column: $table.payload,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<DateTime> get fetchedAt => $composableBuilder(
+    column: $table.fetchedAt,
+    builder: (column) => ColumnOrderings(column),
+  );
+}
+
+class $$CommunityCachesTableAnnotationComposer
+    extends Composer<_$AppDatabase, $CommunityCachesTable> {
+  $$CommunityCachesTableAnnotationComposer({
+    required super.$db,
+    required super.$table,
+    super.joinBuilder,
+    super.$addJoinBuilderToRootComposer,
+    super.$removeJoinBuilderFromRootComposer,
+  });
+  GeneratedColumn<String> get key =>
+      $composableBuilder(column: $table.key, builder: (column) => column);
+
+  GeneratedColumn<String> get payload =>
+      $composableBuilder(column: $table.payload, builder: (column) => column);
+
+  GeneratedColumn<DateTime> get fetchedAt =>
+      $composableBuilder(column: $table.fetchedAt, builder: (column) => column);
+}
+
+class $$CommunityCachesTableTableManager
+    extends
+        RootTableManager<
+          _$AppDatabase,
+          $CommunityCachesTable,
+          CommunityCache,
+          $$CommunityCachesTableFilterComposer,
+          $$CommunityCachesTableOrderingComposer,
+          $$CommunityCachesTableAnnotationComposer,
+          $$CommunityCachesTableCreateCompanionBuilder,
+          $$CommunityCachesTableUpdateCompanionBuilder,
+          (
+            CommunityCache,
+            BaseReferences<
+              _$AppDatabase,
+              $CommunityCachesTable,
+              CommunityCache
+            >,
+          ),
+          CommunityCache,
+          PrefetchHooks Function()
+        > {
+  $$CommunityCachesTableTableManager(
+    _$AppDatabase db,
+    $CommunityCachesTable table,
+  ) : super(
+        TableManagerState(
+          db: db,
+          table: table,
+          createFilteringComposer: () =>
+              $$CommunityCachesTableFilterComposer($db: db, $table: table),
+          createOrderingComposer: () =>
+              $$CommunityCachesTableOrderingComposer($db: db, $table: table),
+          createComputedFieldComposer: () =>
+              $$CommunityCachesTableAnnotationComposer($db: db, $table: table),
+          updateCompanionCallback:
+              ({
+                Value<String> key = const Value.absent(),
+                Value<String> payload = const Value.absent(),
+                Value<DateTime> fetchedAt = const Value.absent(),
+                Value<int> rowid = const Value.absent(),
+              }) => CommunityCachesCompanion(
+                key: key,
+                payload: payload,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          createCompanionCallback:
+              ({
+                required String key,
+                required String payload,
+                required DateTime fetchedAt,
+                Value<int> rowid = const Value.absent(),
+              }) => CommunityCachesCompanion.insert(
+                key: key,
+                payload: payload,
+                fetchedAt: fetchedAt,
+                rowid: rowid,
+              ),
+          withReferenceMapper: (p0) => p0
+              .map((e) => (e.readTable(table), BaseReferences(db, table, e)))
+              .toList(),
+          prefetchHooksCallback: null,
+        ),
+      );
+}
+
+typedef $$CommunityCachesTableProcessedTableManager =
+    ProcessedTableManager<
+      _$AppDatabase,
+      $CommunityCachesTable,
+      CommunityCache,
+      $$CommunityCachesTableFilterComposer,
+      $$CommunityCachesTableOrderingComposer,
+      $$CommunityCachesTableAnnotationComposer,
+      $$CommunityCachesTableCreateCompanionBuilder,
+      $$CommunityCachesTableUpdateCompanionBuilder,
+      (
+        CommunityCache,
+        BaseReferences<_$AppDatabase, $CommunityCachesTable, CommunityCache>,
+      ),
+      CommunityCache,
+      PrefetchHooks Function()
+    >;
 
 class $AppDatabaseManager {
   final _$AppDatabase _db;
@@ -18842,4 +19281,6 @@ class $AppDatabaseManager {
       $$SyncCursorsTableTableManager(_db, _db.syncCursors);
   $$LocalFlagsTableTableManager get localFlags =>
       $$LocalFlagsTableTableManager(_db, _db.localFlags);
+  $$CommunityCachesTableTableManager get communityCaches =>
+      $$CommunityCachesTableTableManager(_db, _db.communityCaches);
 }

@@ -31,3 +31,21 @@ class LocalFlags extends Table {
   @override
   Set<Column> get primaryKey => {key};
 }
+
+/// Daily on-device cache of a community aggregate slice (V2 Okolica) — one pull
+/// per bucket per day, then served locally (offline-friendly), mirroring the
+/// weather-cache pattern (docs/skupnost-agregacija.md §12.4). Public aggregate
+/// data, never synced; cleared with user data on sign-out.
+class CommunityCaches extends Table {
+  @override
+  String get tableName => 'community_cache';
+
+  // Cache key: '<metric>|<resolution>|<bucket_key>|<task_type_id>|<plant_id>'.
+  TextColumn get key => text()();
+  // JSON slice as returned by the aggregate query.
+  TextColumn get payload => text()();
+  DateTimeColumn get fetchedAt => dateTime()();
+
+  @override
+  Set<Column> get primaryKey => {key};
+}

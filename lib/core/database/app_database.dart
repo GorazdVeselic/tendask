@@ -39,6 +39,7 @@ part 'app_database.g.dart';
     // local-only (never synced)
     SyncCursors,
     LocalFlags,
+    CommunityCaches,
   ],
 )
 class AppDatabase extends _$AppDatabase {
@@ -48,7 +49,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 15;
+  int get schemaVersion => 16;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -71,6 +72,7 @@ class AppDatabase extends _$AppDatabase {
         areas,
         profiles,
         syncCursors,
+        communityCaches,
       ]) {
         await delete(table).go();
       }
@@ -213,6 +215,12 @@ class AppDatabase extends _$AppDatabase {
       // catalog sync afterwards. Re-sequenced (was M11 v11).
       if (from < 15) {
         await m.createTable(plantTaskRules);
+      }
+      // v16: community_cache (M11.17) — device-local daily cache of a community
+      // aggregate slice (V2 Okolica). Local-only, never synced, so no Supabase
+      // impact; an old DB just gains an empty table.
+      if (from < 16) {
+        await m.createTable(communityCaches);
       }
     },
   );

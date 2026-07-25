@@ -140,5 +140,17 @@ void main() {
           ),
         );
     expect(await db.select(db.suggestionLogs).get(), hasLength(1));
+
+    // v16: community_cache (M11.17) exists after the full ladder and takes rows.
+    await db
+        .into(db.communityCaches)
+        .insert(
+          CommunityCachesCompanion.insert(
+            key: 'feed|r7|871f1d4ffffffff|water|',
+            payload: '{}',
+            fetchedAt: DateTime.utc(2026, 6, 1),
+          ),
+        );
+    expect(await db.select(db.communityCaches).get(), hasLength(1));
   });
 }
