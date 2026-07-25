@@ -1389,9 +1389,9 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 	@override String get you => 'ti';
 	@override String get frequency_title => 'Kako pogosto';
 	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+	@override String get freq_unit => 'na sezono';
 	@override String get freq_low_n => 'Premalo vrtnarjev za tipičen razpon.';
 	@override String get freq_caption => 'koliko vrtnarjev to naredi N-krat';
-	@override late final _Translations$community$detail$unit$sl unit = _Translations$community$detail$unit$sl._(_root);
 	@override late final _Translations$community$detail$this_week$sl this_week = _Translations$community$detail$this_week$sl._(_root);
 	@override String get no_curve => 'Za to primerjavo je še premalo vrtnarjev.';
 	@override late final _Translations$community$detail$explain$sl explain = _Translations$community$detail$explain$sl._(_root);
@@ -2134,17 +2134,6 @@ class _Translations$community$detail$you_band$sl extends Translations$community$
 	@override String get early => 'Bil si med zgodnejšimi';
 	@override String get typical => 'Bil si približno ob običajnem času';
 	@override String get late => 'Bil si med poznejšimi';
-}
-
-// Path: community.detail.unit
-class _Translations$community$detail$unit$sl extends Translations$community$detail$unit$en {
-	_Translations$community$detail$unit$sl._(TranslationsSl root) : this._root = root, super.internal(root);
-
-	final TranslationsSl _root; // ignore: unused_field
-
-	// Translations
-	@override String get per_month => 'na mesec';
-	@override String get per_season => 'na sezono';
 }
 
 // Path: community.detail.this_week
@@ -2917,10 +2906,9 @@ extension on TranslationsSl {
 			'community.detail.you' => 'ti',
 			'community.detail.frequency_title' => 'Kako pogosto',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_unit' => 'na sezono',
 			'community.detail.freq_low_n' => 'Premalo vrtnarjev za tipičen razpon.',
 			'community.detail.freq_caption' => 'koliko vrtnarjev to naredi N-krat',
-			'community.detail.unit.per_month' => 'na mesec',
-			'community.detail.unit.per_season' => 'na sezono',
 			'community.detail.this_week.often' => 'Ta teden: to dela veliko vrtnarjev v okolici',
 			'community.detail.this_week.some' => 'Ta teden: to dela nekaj vrtnarjev v okolici',
 			'community.detail.this_week.rare' => 'Ta teden: to dela malo vrtnarjev v okolici',

@@ -1011,12 +1011,9 @@
       "you": "du",
       "frequency_title": "Wie oft",
       "freq_range": "$from–$to×",
+      "freq_unit": "pro Saison",
       "freq_low_n": "Zu wenige Gärtner für eine typische Spanne.",
       "freq_caption": "wie viele Gärtner es N-mal machen",
-      "unit": {
-        "per_month": "pro Monat",
-        "per_season": "pro Saison"
-      },
       "this_week": {
         "often": "Diese Woche: viele in der Nähe machen das",
         "some": "Diese Woche: einige in der Nähe machen das",

@@ -61,7 +61,10 @@ class CommunityTimingCard extends StatelessWidget {
             const SizedBox(height: 4),
             Text(
               [
-                _detail(t, myDate, myWeek),
+                // Empty below kCommunityReliabilityMin — a thin sample gets the
+                // band headline and the peak weeks, never a number.
+                if (_detail(t, myDate, myWeek) case final line when line.isNotEmpty)
+                  line,
                 t.community.detail.peak_weeks(
                   from: formatDm(mondayOfIsoWeek(year, peakFrom)),
                   to: formatDm(mondayOfIsoWeek(year, peakTo)),

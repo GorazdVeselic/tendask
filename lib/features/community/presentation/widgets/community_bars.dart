@@ -16,7 +16,8 @@ class CommunityBars extends StatelessWidget {
 
   final List<double> values;
 
-  /// Labels spread under the chart, first to last. Two or three read best.
+  /// Labels under the chart. One per bar puts each label under its own bar;
+  /// fewer (two or three dates over a long season) spread across the width.
   final List<String> axis;
   final int? meIndex;
 
@@ -67,15 +68,34 @@ class CommunityBars extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             for (final label in axis)
-              Text(
-                label,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
-              ),
+              // One label per bar must sit under its own bar, so it shares the
+              // bar's Expanded cell; a sparse axis just spreads across instead.
+              if (axis.length == values.length)
+                Expanded(child: Center(child: _AxisLabel(label)))
+              else
+                _AxisLabel(label),
           ],
         ),
       ],
+    );
+  }
+}
+
+class _AxisLabel extends StatelessWidget {
+  const _AxisLabel(this.label);
+
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Text(
+      label,
+      maxLines: 1,
+      overflow: TextOverflow.ellipsis,
+      style: theme.textTheme.labelSmall?.copyWith(
+        color: theme.colorScheme.onSurfaceVariant,
+      ),
     );
   }
 }

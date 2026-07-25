@@ -1025,12 +1025,9 @@
       "you": "ti",
       "frequency_title": "Kako pogosto",
       "freq_range": "$from–$to×",
+      "freq_unit": "na sezono",
       "freq_low_n": "Premalo vrtnarjev za tipičen razpon.",
       "freq_caption": "koliko vrtnarjev to naredi N-krat",
-      "unit": {
-        "per_month": "na mesec",
-        "per_season": "na sezono"
-      },
       "this_week": {
         "often": "Ta teden: to dela veliko vrtnarjev v okolici",
         "some": "Ta teden: to dela nekaj vrtnarjev v okolici",

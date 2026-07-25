@@ -11,6 +11,7 @@ import '../data/community_models.dart';
 import 'community_display.dart';
 import 'widgets/community_explain_sheet.dart';
 import 'widgets/community_frequency_card.dart';
+import 'widgets/community_privacy_note.dart';
 import 'widgets/community_timing_card.dart';
 import 'widgets/tease_overlay.dart';
 
@@ -167,13 +168,7 @@ class _Body extends StatelessWidget {
         // Without Plus the detail is teased whole: unlike the landing feed there
         // is no first row worth giving away (screen-map §1.5).
         if (hasPlus) content else TeaseOverlay(child: content),
-        const SizedBox(height: 16),
-        Text(
-          t.community.privacy_note,
-          style: theme.textTheme.labelSmall?.copyWith(
-            color: cs.onSurfaceVariant,
-          ),
-        ),
+        const CommunityPrivacyNote(),
       ],
     );
   }

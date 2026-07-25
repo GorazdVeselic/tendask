@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import '../../../../core/config.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
-import '../community_display.dart';
 import 'community_bars.dart';
 
 /// "How often" (§7.3): the typical range among performers plus the distribution
@@ -51,7 +50,10 @@ class CommunityFrequencyCard extends StatelessWidget {
                 ),
               ),
               Text(
-                communityFrequencyUnitLabel(t, stats.unit),
+                // The nightly cron counts whole seasons (migration 0009); a
+                // per-month unit would also need my own count normalised, so it
+                // arrives together with that, not before.
+                t.community.detail.freq_unit,
                 style: theme.textTheme.bodySmall?.copyWith(
                   color: cs.onSurfaceVariant,
                 ),

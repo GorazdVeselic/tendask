@@ -6,6 +6,7 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/load_error_hint.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/community_providers.dart';
+import 'widgets/community_explain_sheet.dart';
 import 'widgets/community_feed_list.dart';
 
 /// Okolica (5th tab, ⬡ = H3 cell): what gardeners around you are doing. Two
@@ -38,6 +39,13 @@ class _CommunityLandingScreenState extends State<CommunityLandingScreen> {
             fontWeight: FontWeight.w700,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            tooltip: t.community.detail.explain.cta,
+            onPressed: () => showCommunityExplainSheet(context),
+          ),
+        ],
       ),
       body: Column(
         children: [

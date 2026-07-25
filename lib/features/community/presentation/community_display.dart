@@ -37,10 +37,3 @@ String communityTimingLabel(Translations t, CommunityTiming timing) =>
       CommunityTiming.typical => t.community.detail.you_band.typical,
       CommunityTiming.late => t.community.detail.you_band.late,
     };
-
-/// The aggregate row's `unit` column. Unknown units fall back to per-season
-/// rather than leaking a raw server string into the UI (tolerant parser).
-String communityFrequencyUnitLabel(Translations t, String unit) =>
-    unit == 'per_month'
-    ? t.community.detail.unit.per_month
-    : t.community.detail.unit.per_season;

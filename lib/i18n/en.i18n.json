@@ -1011,12 +1011,9 @@
       "you": "you",
       "frequency_title": "How often",
       "freq_range": "$from–$to×",
+      "freq_unit": "per season",
       "freq_low_n": "Too few gardeners for a typical range yet.",
       "freq_caption": "gardeners doing it N times",
-      "unit": {
-        "per_month": "per month",
-        "per_season": "per season"
-      },
       "this_week": {
         "often": "This week: many nearby are doing this",
         "some": "This week: some nearby are doing this",

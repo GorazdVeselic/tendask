@@ -1375,9 +1375,9 @@ class _Translations$community$detail$de extends Translations$community$detail$en
 	@override String get you => 'du';
 	@override String get frequency_title => 'Wie oft';
 	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+	@override String get freq_unit => 'pro Saison';
 	@override String get freq_low_n => 'Zu wenige Gärtner für eine typische Spanne.';
 	@override String get freq_caption => 'wie viele Gärtner es N-mal machen';
-	@override late final _Translations$community$detail$unit$de unit = _Translations$community$detail$unit$de._(_root);
 	@override late final _Translations$community$detail$this_week$de this_week = _Translations$community$detail$this_week$de._(_root);
 	@override String get no_curve => 'Für diesen Vergleich sind es noch zu wenige Gärtner.';
 	@override late final _Translations$community$detail$explain$de explain = _Translations$community$detail$explain$de._(_root);
@@ -2120,17 +2120,6 @@ class _Translations$community$detail$you_band$de extends Translations$community$
 	@override String get early => 'Du warst eher früh dran';
 	@override String get typical => 'Du warst etwa zur üblichen Zeit dran';
 	@override String get late => 'Du warst eher spät dran';
-}
-
-// Path: community.detail.unit
-class _Translations$community$detail$unit$de extends Translations$community$detail$unit$en {
-	_Translations$community$detail$unit$de._(TranslationsDe root) : this._root = root, super.internal(root);
-
-	final TranslationsDe _root; // ignore: unused_field
-
-	// Translations
-	@override String get per_month => 'pro Monat';
-	@override String get per_season => 'pro Saison';
 }
 
 // Path: community.detail.this_week
@@ -2903,10 +2892,9 @@ extension on TranslationsDe {
 			'community.detail.you' => 'du',
 			'community.detail.frequency_title' => 'Wie oft',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_unit' => 'pro Saison',
 			'community.detail.freq_low_n' => 'Zu wenige Gärtner für eine typische Spanne.',
 			'community.detail.freq_caption' => 'wie viele Gärtner es N-mal machen',
-			'community.detail.unit.per_month' => 'pro Monat',
-			'community.detail.unit.per_season' => 'pro Saison',
 			'community.detail.this_week.often' => 'Diese Woche: viele in der Nähe machen das',
 			'community.detail.this_week.some' => 'Diese Woche: einige in der Nähe machen das',
 			'community.detail.this_week.rare' => 'Diese Woche: wenige in der Nähe machen das',

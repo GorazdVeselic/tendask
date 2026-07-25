@@ -2578,13 +2578,15 @@ class Translations$community$detail$en {
 	/// en: '$from–$to×'
 	String freq_range({required Object from, required Object to}) => '${from}–${to}×';
 
+	/// en: 'per season'
+	String get freq_unit => 'per season';
+
 	/// en: 'Too few gardeners for a typical range yet.'
 	String get freq_low_n => 'Too few gardeners for a typical range yet.';
 
 	/// en: 'gardeners doing it N times'
 	String get freq_caption => 'gardeners doing it N times';
 
-	late final Translations$community$detail$unit$en unit = Translations$community$detail$unit$en.internal(_root);
 	late final Translations$community$detail$this_week$en this_week = Translations$community$detail$this_week$en.internal(_root);
 
 	/// en: 'Not enough gardeners for this comparison yet.'
@@ -3604,21 +3606,6 @@ class Translations$community$detail$you_band$en {
 	String get late => 'You were among the later ones';
 }
 
-// Path: community.detail.unit
-class Translations$community$detail$unit$en {
-	Translations$community$detail$unit$en.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: 'per month'
-	String get per_month => 'per month';
-
-	/// en: 'per season'
-	String get per_season => 'per season';
-}
-
 // Path: community.detail.this_week
 class Translations$community$detail$this_week$en {
 	Translations$community$detail$this_week$en.internal(this._root);
@@ -4411,10 +4398,9 @@ extension on Translations {
 			'community.detail.you' => 'you',
 			'community.detail.frequency_title' => 'How often',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_unit' => 'per season',
 			'community.detail.freq_low_n' => 'Too few gardeners for a typical range yet.',
 			'community.detail.freq_caption' => 'gardeners doing it N times',
-			'community.detail.unit.per_month' => 'per month',
-			'community.detail.unit.per_season' => 'per season',
 			'community.detail.this_week.often' => 'This week: many nearby are doing this',
 			'community.detail.this_week.some' => 'This week: some nearby are doing this',
 			'community.detail.this_week.rare' => 'This week: a few nearby are doing this',

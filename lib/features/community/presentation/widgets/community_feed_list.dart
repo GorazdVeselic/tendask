@@ -7,6 +7,7 @@ import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
 import '../community_display.dart';
+import 'community_privacy_note.dart';
 import 'tease_overlay.dart';
 
 /// The "This week" feed: what the resolved bucket has been doing over the sliding
@@ -60,7 +61,7 @@ class CommunityFeedList extends StatelessWidget {
                     ),
             ),
           ),
-        const _PrivacyNote(),
+        const CommunityPrivacyNote(),
       ],
     );
   }
@@ -200,20 +201,3 @@ class _MetaRow extends StatelessWidget {
   }
 }
 
-class _PrivacyNote extends StatelessWidget {
-  const _PrivacyNote();
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Padding(
-      padding: const EdgeInsets.fromLTRB(4, 16, 4, 0),
-      child: Text(
-        context.t.community.privacy_note,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: theme.colorScheme.onSurfaceVariant,
-        ),
-      ),
-    );
-  }
-}
