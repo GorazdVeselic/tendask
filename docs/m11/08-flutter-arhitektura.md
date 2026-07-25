@@ -114,7 +114,15 @@ Vse metode so **lokalne** (drift); oblak izključno prek obstoječega sync servi
 sprejema/vrača drift `Companion` tipov na meji (CLAUDE.md) — `SuggestionRow` je drift row
 class (read-only DTO; sprejemljivo kot pri ostalih repo-jih), pisanja sprejmejo gole parametre.
 
-## 8.3 Okolica zavihek (V2 — koraka M11.19/M11.20)
+## 8.3 Okolica zavihek (V2 — koraki M11.17–19; gate → FR-20)
+
+> ⚠️ **Scope popravek (2026-07-25).** Okolico gradimo **za temnim flagom** (kot
+> `kSuggestionsEnabled`), v prod dark. **Paywall del spodaj (`entitlement` provider, `startTrial`,
+> `in_app_purchase`, `verify-purchase`, `play-rtdn`) se NE gradi** — presežen s FR-20 (zunanja
+> licenca, `tendask-plus-licensing.md`). V M11 je gate le **presentation `TeaseOverlay`** na
+> **stub `hasPlus`** (placeholder, dev=true): mirno »Na voljo v Tendask +« + nevtralni »Vnesi
+> kodo«, **brez cene/URL/CTA k nakupu** (anti-steering FR-20 §3.1). Pravo branje podpisanega
+> tokena iz drift + prižig gate = **FR-20**.
 
 ```
 features/community/
@@ -176,28 +184,22 @@ zrcalita `app_config`).
 **CDF izračun na napravi** (§12.3): `SeasonCurve` se zgradi iz ~53 vrstic `activity_season`
 (seštej pretekla leta po tednih, kumulativa / pooled total). Čista funkcija + unit test.
 
-**Paywall gating:**
+**Gating v M11 (stub — pravi gate = FR-20):**
 ```dart
-@riverpod
-Future<Entitlement> entitlement(Ref ref) async {
-  // 1x/day cloud check (entitlement table), cached v drift local_prefs;
-  // offline → zadnja znana vrednost (graceful).
-}
-
-// V presentation:
-final ent = ref.watch(entitlementProvider).value;
-final hasPlus = ent?.isActive ?? false;     // trial ali active, expires_at > now
-// landing: 'This week' prva vrstica vidna, ostalo TeaseOverlay (blur + 'Try 14 days');
-// detail: brez Plus celoten zaslon TeaseOverlay; gumb → startTrial() Edge Function.
+// M11: NE 'entitlement' provider, NE Play Billing. Le stub entitlement.
+// hasPlus = placeholder (dev=true), pravo branje podpisanega tokena iz drift pride s FR-20.
+const bool hasPlus = kDevPlusStub;   // TODO(FR-20): zamenjaj z licenseProvider (podpisan token)
+// landing: 'Ta teden' prva vrstica vidna, ostalo TeaseOverlay (blur);
+// detail: brez Plus celoten zaslon TeaseOverlay.
 ```
-- `startTrial()` = Supabase Edge Function `start-trial` (server preveri: še ni imel triala →
-  `entitlement{status:'trial', trial_started_at:now, expires_at:+14d}`); brez kartice.
-- Nakup: `in_app_purchase` (Play Billing) → Edge Function `verify-purchase` (server-side
-  preverba prek Play Developer API) → `entitlement{status:'active'}`. RTDN webhook
-  (`play-rtdn`) osvežuje podaljšanja/odpovedi. **Paket `in_app_purchase` ni v tech-stack §1 →
-  pred korakom M11.20 vprašaj za potrditev** (zabeleženo tudi v 09).
+- **TeaseOverlay** = presentation widget: blur + mirno »Na voljo v Tendask +« + nevtralni
+  gumb »Vnesi kodo« → (M11: no-op/placeholder; FR-20 poveže na vnos odkupne kode).
+  **Brez cene, URL-ja ali CTA k nakupu** (anti-steering FR-20 §3.1).
+- ⚠️ **NE gradi** (presežek FR-20): `entitlement` provider/tabela, `startTrial()`,
+  `start-trial` Edge Function, `in_app_purchase`, `verify-purchase`, `play-rtdn` — vse to
+  nadomešča FR-20 (zunanja licenca prek spletne strani + odkupna koda).
 - R6 push za ne-naročnike: tease ubeseditev brez številke (»V tvoji okolici se je začelo
-  gnojenje trate« — brez %); številka je premium (skladno z monetizacijo §12.5).
+  gnojenje trate« — brez %); številka je premium (prižge FR-20).
 
 ## 8.4 Nove i18n vsebine (slang)
 

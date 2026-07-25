@@ -44,7 +44,9 @@
    tudi če pogledi pridejo kasneje).
 8. **V2 agregati = nočni `pg_cron`** (SQL funkcije, SECURITY DEFINER), štiri javno-bralne tabele
    z dvema pragoma (`K_privacy=5`, `K_reliab=30`) iz `app_config`.
-9. **Okolica = Tendask+** (paywall); `entitlement` tabela + server-validiran 14-dnevni trial.
+9. **Okolica = Tendask+**, a gate ni v M11: gradimo dark za flagom, gating je le presentation
+   `TeaseOverlay` na stub `hasPlus`. Pravi Plus-gate (podpisan token, zunanja licenca) = **FR-20**
+   — `entitlement`/trial/Play Billing iz prvotnega osnutka se **NE gradi** (`04 §4.9` opozorilo).
 
 ## Konvencije v tej specifikaciji
 

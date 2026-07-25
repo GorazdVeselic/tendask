@@ -207,23 +207,25 @@ leto-1 omejeni način (§7.6).
 community_hints opt-in že iz M11.6.
 - **DoD:** Deno test R6 (CDF nad/pod K_reliab; cooldown); push z odstotkom pride samo
   naročniku z vklopljenim community_hints.
-- **Odvisnosti:** M11.11, M11.16 (+M11.20 za številko; do takrat tease) · **Kompleksnost:** M
+- **Odvisnosti:** M11.11, M11.16 (številka za ne-naročnike ostane tease; Plus-gate = FR-20) · **Kompleksnost:** M
 - **Commit:** `feat(engine): R6 percentil okolice z opt-in obvestili`
 
-### M11.20 — Tendask+ paywall + trial 👤🤖 `[ ]`
-`04` §4.9 (entitlement, 0007) + `08` §8.3 paywall: tease overlay, start-trial Edge Function,
-in_app_purchase + verify-purchase + play-rtdn (👤 Play Console produkt ~9,99 €/leto +
-~1,99 €/mes, RTDN topic). **PRED začetkom: potrditev paketa `in_app_purchase` (ni v
-tech-stack §1) + cen; wireframe za paywall/tease overlay NE obstaja — skiciraj pred kodo.**
-- **DoD:** trial flow e2e na napravi (start → 14 dni → expired → tease); nakup v internem
-  testu (Play sandbox) odklene; RLS: entitlement bere samo lastnik; brez Plus = tease,
-  s Plus = polni pogledi.
-- **Odvisnosti:** M11.17, M11.18 · **Kompleksnost:** XL
-- **Commit:** `feat(billing): Tendask+ naročnina s 14-dnevnim preizkusom`
+### M11.20 — Tendask+ paywall + trial `[PRESEŽEN → FR-20]`
+> **NE GRADI.** Preseženo z odločitvijo 2026-07-22 (`tendask-plus-licensing.md`, FR-20):
+> Plus je **zunanja licenca** (nakup na spletni strani + odkupna koda), **ne Play Billing**.
+> Zato v M11 **ni** `in_app_purchase`, `verify-purchase`, `play-rtdn`, trial Edge Function ne
+> Play Console produkta. Pravi Plus-gate = **podpisan token iz drift** (FR-20), ne `entitlement`
+> tabela iz `04 §4.9`. V M11 gradimo le **presentation `TeaseOverlay`** na **stub entitlementu**
+> (`hasPlus` placeholder, dev=true), z **mirnim** »Na voljo v Tendask +« + nevtralnim
+> »Vnesi kodo« — **brez cene/URL/CTA k nakupu** (anti-steering FR-20 §3.1). Okolica UI (17–19)
+> gre v prod **dark** (flag), gate se prižge s FR-20.
+- **Nadomesti z:** FR-20 (`docs/feature-requests/tendask-plus-licensing.md`,
+  `docs/tendask-plus-rollout-plan.md`).
 
 ### M11.21 — Dokumentacija + koncept sync `[ ]`
 Povzetek v `koncept.md` §7.13/§8 (»implementirano, gl. docs/m11/«), `roadmap.md` dnevnik,
-`tech-stack.md` §1 (firebase paketa iz 'kasneje' v aktivno; in_app_purchase), memory update.
+`tech-stack.md` §1 (firebase paketa iz 'kasneje' v aktivno; **brez** in_app_purchase — Plus je
+FR-20 zunanja licenca), memory update.
 - **DoD:** dokumenti skladni z implementiranim stanjem; brez sklicev na neobstoječe.
 - **Odvisnosti:** vse prejšnje · **Kompleksnost:** S
 - **Commit:** `docs: M11 zaključek — uskladitev koncepta, sklada in roadmapa`
@@ -235,6 +237,6 @@ A: M11.1 → M11.2 → M11.3 → M11.4
 B: M11.5 → M11.6 → M11.7              (vzporedno z A)
 C: (A) → M11.8 → M11.9 → M11.10 → M11.11 → M11.12 (rabi B)
 D: M11.13 (rabi M11.2) → M11.13b → M11.14 → M11.15
-E: M11.16 (rabi M11.1) → M11.17 → M11.18 → M11.19 → M11.20 → M11.21
+E: M11.16 (rabi M11.1) → M11.17 → M11.18 → M11.19 → M11.21   (M11.20 presežen → FR-20)
 ```
 Priporočen kalendarski vrstni red: A → B → C → D → (premor/validacija s testerji) → E.

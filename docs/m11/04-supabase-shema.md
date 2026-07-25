@@ -623,10 +623,16 @@ export async function sendSuggestionPush(opts: {
    (poln slang).
 5. Ob `false` (UNREGISTERED): `update profile set fcm_token = null where user_id = ...`.
 
-## 4.9 Entitlement (Tendask+, za M11.20)
+## 4.9 Entitlement (Tendask+) — ⚠️ PRESEŽENO, NE GRADI (→ FR-20)
+
+> **Ta shema se NE aplicira.** Odločitev 2026-07-22 (FR-20, `tendask-plus-licensing.md`): Plus
+> je **zunanja licenca** — licenčna resnica živi v tabeli `license` (`provider`/`provider_ref`,
+> podpisan token `plus_until`), **ne** v tej `entitlement` tabeli, in **ne** obstaja trial ne
+> Play Billing. Spodnji SQL je zgodovinski osnutek M11.20; kanonična shema licenc pride s FR-20.
+> V M11 (Okolica 17–19) gating dela le **presentation TeaseOverlay** na stub `hasPlus`.
 
 ```sql
--- 0007_entitlement.sql (ob koraku M11.20)
+-- 0007_entitlement.sql — ⚠️ NE APLICIRAJ (nadomešča FR-20 license shema)
 create table entitlement (
   user_id          uuid primary key references auth.users(id) on delete cascade,
   product          text not null default 'tendask_plus',
