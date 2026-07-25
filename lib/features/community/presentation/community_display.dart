@@ -1,5 +1,6 @@
 import '../../../i18n/translations.g.dart';
 import '../data/community_models.dart';
+import '../data/community_stats.dart';
 
 /// Scope wording for a resolved bucket (§7.4: the UI must always say how wide
 /// the comparison is). The three H3 levels read the same to the user — "in your
@@ -28,6 +29,21 @@ String communityThisWeekLabel(Translations t, CommunityIntensity intensity) =>
       CommunityIntensity.some => t.community.detail.this_week.some,
       CommunityIntensity.rare => t.community.detail.this_week.rare,
     };
+
+/// Where the reader stands against the curve, as one sentence: a number when the
+/// sample carries one, the descriptive band when it does not (§7.7), and the
+/// "not started" line when [myWeek] is null. Shared by the detail card and the
+/// task-detail entry card so both phrase the same finding identically.
+String communityTimingHeadline(
+  Translations t,
+  SeasonCurve curve,
+  int? myWeek,
+) {
+  if (myWeek == null) return t.community.detail.not_started;
+  final percent = seasonPercent(curve, myWeek);
+  if (percent != null) return t.community.detail.you_percent(percent: percent);
+  return communityTimingLabel(t, timingBand(seasonCdfForWeek(curve, myWeek)));
+}
 
 /// Where the reader stands, worded without a number — the honest form below
 /// [kCommunityReliabilityMin] (§7.7).

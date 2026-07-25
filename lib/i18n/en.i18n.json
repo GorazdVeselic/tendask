@@ -991,6 +991,11 @@
     "empty_feed": "Not enough gardeners nearby yet. This fills in as more people log their tasks.",
     "empty_standing": "No task yet has enough gardeners nearby to compare with.",
     "privacy_note": "Anonymous, at least 5 gardeners. Your exact location is never shared.",
+    "entry": {
+      "section": "In your area",
+      "see_all": "All from your area",
+      "cta": "How this task looks in your area"
+    },
     "detail": {
       "timing_kicker": "When · where you stand",
       "you_percent": "You were among the first ~$percent %",

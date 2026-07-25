@@ -7,6 +7,7 @@ import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/date_format.dart';
 import '../../../core/task_status.dart';
+import 'community_cohort.dart';
 import 'community_models.dart';
 import 'community_stats.dart';
 
@@ -230,9 +231,9 @@ class CommunityRepository {
             .get();
     final plantOfUserPlant = <String, String>{};
     for (final userPlant in userPlants) {
-      final plantId = userPlant.plantId;
-      if (userPlant.isCustom || plantId == null) continue;
-      plantOfUserPlant[userPlant.id] = plantId;
+      if (catalogPlantOf(userPlant) case final plantId?) {
+        plantOfUserPlant[userPlant.id] = plantId;
+      }
     }
 
     final out = <String, Set<String>>{};

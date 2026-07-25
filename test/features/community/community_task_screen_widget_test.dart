@@ -49,7 +49,7 @@ const _stats = FrequencyStats(
   p25: 2,
   p50: 3,
   p75: 4,
-  unit: 'per_month',
+  unit: 'per_season',
   nUsers: 40,
   hist: {'1': 4, '2': 9, '3': 12, '4': 7, '5+': 3},
 );

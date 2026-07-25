@@ -53,7 +53,7 @@ class CommunityTimingCard extends StatelessWidget {
             ),
             const SizedBox(height: 6),
             Text(
-              _headline(t, myWeek),
+              communityTimingHeadline(t, curve, myWeek),
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w700,
               ),
@@ -99,18 +99,6 @@ class CommunityTimingCard extends StatelessWidget {
           ],
         ),
       ),
-    );
-  }
-
-  /// Number when the sample carries one, descriptive band when it does not
-  /// (§7.7) — never a precise-looking percentage over a thin sample.
-  String _headline(Translations t, int? myWeek) {
-    if (myWeek == null) return t.community.detail.not_started;
-    final percent = seasonPercent(curve, myWeek);
-    if (percent != null) return t.community.detail.you_percent(percent: percent);
-    return communityTimingLabel(
-      t,
-      timingBand(seasonCdfForWeek(curve, myWeek)),
     );
   }
 

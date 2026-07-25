@@ -12,6 +12,7 @@ import '../../../core/date_format.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../features/areas/application/areas_providers.dart';
 import '../../../features/auth/presentation/widgets/account_avatar_button.dart';
+import '../../../features/community/presentation/widgets/community_home_section.dart';
 import '../../../features/plants/application/plants_providers.dart';
 import '../../../features/suggestions/presentation/suggestion_band.dart';
 import '../../../features/tasks/application/tasks_providers.dart';
@@ -206,6 +207,9 @@ class _HomeBody extends ConsumerWidget {
               ),
               const SizedBox(height: 16),
             ],
+            // Proactive way into Okolica, above TODAY (screen-map §1.1) — dark
+            // until launch, and self-hiding when the feed has nothing to say.
+            if (kSuggestionsEnabled) const CommunityHomeSection(),
             SectionLabel(
               t.home.today,
               padding: const EdgeInsets.only(bottom: 8),

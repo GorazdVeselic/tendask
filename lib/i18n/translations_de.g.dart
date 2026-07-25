@@ -999,6 +999,7 @@ class _Translations$community$de extends Translations$community$en {
 	@override String get empty_feed => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.';
 	@override String get empty_standing => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.';
 	@override String get privacy_note => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.';
+	@override late final _Translations$community$entry$de entry = _Translations$community$entry$de._(_root);
 	@override late final _Translations$community$detail$de detail = _Translations$community$detail$de._(_root);
 	@override late final _Translations$community$tease$de tease = _Translations$community$tease$de._(_root);
 }
@@ -1351,6 +1352,18 @@ class _Translations$community$intensity$de extends Translations$community$intens
 	@override String get often => 'häufig';
 	@override String get some => 'einige';
 	@override String get rare => 'selten';
+}
+
+// Path: community.entry
+class _Translations$community$entry$de extends Translations$community$entry$en {
+	_Translations$community$entry$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get section => 'In deiner Umgebung';
+	@override String get see_all => 'Alles aus der Umgebung';
+	@override String get cta => 'Wie es um diese Aufgabe in deiner Umgebung steht';
 }
 
 // Path: community.detail
@@ -2878,6 +2891,9 @@ extension on TranslationsDe {
 			'community.empty_feed' => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.',
 			'community.empty_standing' => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.',
 			'community.privacy_note' => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.',
+			'community.entry.section' => 'In deiner Umgebung',
+			'community.entry.see_all' => 'Alles aus der Umgebung',
+			'community.entry.cta' => 'Wie es um diese Aufgabe in deiner Umgebung steht',
 			'community.detail.timing_kicker' => 'Wann · wo du stehst',
 			'community.detail.you_percent' => ({required Object percent}) => 'Du warst unter den ersten ~${percent} %',
 			'community.detail.you_band.early' => 'Du warst eher früh dran',

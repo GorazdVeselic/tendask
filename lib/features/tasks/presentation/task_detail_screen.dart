@@ -4,12 +4,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/config.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/haptics.dart';
 import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../community/data/community_cohort.dart';
+import '../../community/presentation/widgets/community_task_link_card.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../application/tasks_providers.dart';
@@ -133,6 +136,13 @@ class TaskDetailScreen extends ConsumerWidget {
                         userPlants: userPlants,
                         plants: plantsCatalog,
                       ),
+                      // Contextual way into Okolica, right under the subject it
+                      // compares against (screen-map §2.2) — dark until launch.
+                      if (kSuggestionsEnabled)
+                        CommunityTaskLinkCard(
+                          taskTypeId: task.taskTypeId,
+                          cohort: cohortOfSubjects(subjects, userPlants),
+                        ),
                       SectionLabel(t.task_detail.section_weather),
                       TaskWeatherSection(task: task),
                       if (isHarvest && task.status == TaskStatus.done) ...[

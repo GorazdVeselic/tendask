@@ -1003,6 +1003,11 @@
     "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
     "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
     "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.",
+    "entry": {
+      "section": "V tvoji okolici",
+      "see_all": "Vse iz okolice",
+      "cta": "Kako je s tem opravilom v okolici"
+    },
     "detail": {
       "timing_kicker": "Kdaj · tvoj položaj",
       "you_percent": "Bil si med prvimi ~$percent %",

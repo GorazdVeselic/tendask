@@ -76,6 +76,12 @@
 - **Zakaj ločen korak:** po `skupnost-agregacija.md §12.1` sta to **glavni poti odkritja** (zavihek je
   tretja), v prvotnem planu pa nista bili v nobenem koraku (ugotovljeno pri pregledu kode K5–K7).
 - **Odvisnosti:** korak 8 (ista predloga je cilj obeh CTA-jev) · **Kompleksnost:** M
+- **Izvedeno 2026-07-25.** Vsebina obeh kartic + izbira namiga sta zapisani v `screen-map.md §1.1/§2.2`.
+  Domov bere **samo že predpomnjeno rezino feeda** (brez CDF podnaslova iz wireframa A1 → brez dodatne
+  zahteve); detajl opravila **brez Plus ne poizveduje nič**. Pričakovana javna metoda repozitorija za
+  skupino opravila **ni bila potrebna** — detajl opravila že bere `taskSubjectsForTaskProvider` +
+  `userPlantsMapProvider`, zato je pravilo čista funkcija (`data/community_cohort.dart`), ki jo
+  uporablja tudi repozitorij (`watchMySeason`), da rob ni zapisan dvakrat.
 
 ### Korak 8c — Zavihek »Kje si ti« (landing, 2. segment) 👈 dodano 2026-07-25
 - **Zajema:** seznam **mojih tipov opravil te sezone** (nova drift poizvedba) z oznako

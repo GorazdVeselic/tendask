@@ -2130,6 +2130,7 @@ class Translations$community$en {
 	/// en: 'Anonymous, at least 5 gardeners. Your exact location is never shared.'
 	String get privacy_note => 'Anonymous, at least 5 gardeners. Your exact location is never shared.';
 
+	late final Translations$community$entry$en entry = Translations$community$entry$en.internal(_root);
 	late final Translations$community$detail$en detail = Translations$community$detail$en.internal(_root);
 	late final Translations$community$tease$en tease = Translations$community$tease$en.internal(_root);
 }
@@ -2530,6 +2531,24 @@ class Translations$community$intensity$en {
 
 	/// en: 'rarely'
 	String get rare => 'rarely';
+}
+
+// Path: community.entry
+class Translations$community$entry$en {
+	Translations$community$entry$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'In your area'
+	String get section => 'In your area';
+
+	/// en: 'All from your area'
+	String get see_all => 'All from your area';
+
+	/// en: 'How this task looks in your area'
+	String get cta => 'How this task looks in your area';
 }
 
 // Path: community.detail
@@ -4384,6 +4403,9 @@ extension on Translations {
 			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
 			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
 			'community.privacy_note' => 'Anonymous, at least 5 gardeners. Your exact location is never shared.',
+			'community.entry.section' => 'In your area',
+			'community.entry.see_all' => 'All from your area',
+			'community.entry.cta' => 'How this task looks in your area',
 			'community.detail.timing_kicker' => 'When · where you stand',
 			'community.detail.you_percent' => ({required Object percent}) => 'You were among the first ~${percent} %',
 			'community.detail.you_band.early' => 'You were among the earlier ones',

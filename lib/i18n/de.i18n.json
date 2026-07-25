@@ -991,6 +991,11 @@
     "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
     "empty_standing": "Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.",
     "privacy_note": "Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.",
+    "entry": {
+      "section": "In deiner Umgebung",
+      "see_all": "Alles aus der Umgebung",
+      "cta": "Wie es um diese Aufgabe in deiner Umgebung steht"
+    },
     "detail": {
       "timing_kicker": "Wann · wo du stehst",
       "you_percent": "Du warst unter den ersten ~$percent %",

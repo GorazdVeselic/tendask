@@ -19,6 +19,8 @@ import 'package:tendask/features/community/data/community_models.dart';
 import 'package:tendask/features/community/data/community_stats.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
 import 'package:tendask/features/community/presentation/community_task_screen.dart';
+import 'package:tendask/features/community/presentation/widgets/community_home_section.dart';
+import 'package:tendask/features/community/presentation/widgets/community_task_link_card.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
@@ -189,7 +191,7 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
       p25: 2,
       p50: 3,
       p75: 4,
-      unit: 'per_month',
+      unit: 'per_season',
       nUsers: 40,
       hist: {'1': 4, '2': 9, '3': 12, '4': 7, '5+': 3},
     ),
@@ -386,5 +388,40 @@ void main() {
     overrides: () => _communityTaskOverrides(hasPlus: false),
     build: () =>
         const CommunityTaskScreen(taskTypeId: 'water', plantId: 'tomato'),
+  );
+
+  // The two entry points live inside other screens, so they get the host a
+  // dashboard section gets: a padded scrolling column at the same width.
+  layoutMatrix(
+    'community/home entry',
+    overrides: () => [
+      ..._communityOverrides(hasPlus: true),
+      userPlantsMapProvider.overrideWith(
+        (ref) => Stream.value(<String, UserPlant>{}),
+      ),
+    ],
+    build: () => const _EntryHost(child: CommunityHomeSection()),
+  );
+
+  layoutMatrix(
+    'community/task entry',
+    overrides: () => _communityTaskOverrides(hasPlus: true),
+    build: () => const _EntryHost(
+      child: CommunityTaskLinkCard(taskTypeId: 'water', cohort: 'tomato'),
+    ),
+  );
+}
+
+class _EntryHost extends StatelessWidget {
+  const _EntryHost({required this.child});
+
+  final Widget child;
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: ListView(
+      padding: const EdgeInsets.fromLTRB(16, 8, 16, 100),
+      children: [child],
+    ),
   );
 }

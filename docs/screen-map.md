@@ -36,9 +36,16 @@ Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
   - tap opravila (DANES/NAZADNJE) → **task-detail** (`/task/:id` ali shell `/tasks/:id`).
   - **+ FAB → `/task-new`** (vnos opravila, wizard — gl. §3.1).
 - **[FR-19] doda:** »moon chip« pod vremensko kartico → `/moon-calendar` (ali `/tendask-plus`, če zaklenjeno).
-- **[M11 Okolica] doda (flag-dark):** sekcija **»V tvoji okolici ⬡«** nad **DANES** — proaktivna kartica
-  (najrelevantnejši namig, npr. »Sosedje sadijo paradižnik«) → `/community/task/:taskTypeId` + »Vse iz okolice ›«
-  → `/community`. Skrito prek `kSuggestionsEnabled`.
+- **[M11 Okolica] doda (flag-dark):** sekcija **»V TVOJI OKOLICI ⬡«** nad **DANES** — ena vrstica feeda
+  (naslov = opravilo, podnaslov = rastlina, oznaka intenzitete — **isti widget kot na landingu**) →
+  `/community/task/:taskTypeId` (`?plant=`), pod njo meta vrstica (okno · obseg · populacija) in
+  »Vse iz okolice ›« → `/community`. Skrito prek `kSuggestionsEnabled`.
+  - **Izbira namiga** (odločeno 2026-07-25): prvi element feeda, katerega skupina je **kataloška rastlina
+    v mojem vrtu**; če je ni, prvi element feeda. Prostorska (`@site`) skupina nikoli ne šteje kot »moja«
+    (ustreza vsakemu vrtu), sme pa biti fallback.
+  - **Brez dodatnih zahtev:** bere isto dnevno rezino, ki jo repozitorij že predpomni — sekcija ni
+    dodaten omrežni klic. Če rezine ni (premalo vrtnarjev, offline brez cache, napaka branja), se
+    **ne izriše nič** — ne naslova, ne razmika; Domov ne sme dobiti stalne prazne luknje.
 
 ### 1.2 Opravila — `/tasks` (`tasks`) [shell]
 Seznam opravil. Tap opravila → **task-detail** `/tasks/:id` (`task-detail`, znotraj shell-a).
@@ -139,8 +146,16 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
 6. Akcijska vrstica: **Podvoji · Premakni · Na čaka · Izbriši**.
 - **[FR-19] doda (board A):** sekcija **»Lunin koledar«** za VREMENSKIM POSNETKOM — element-dan iz `task.date`
   (**re-izpeljano, ne zamrznjeno**). Info, ni tap (MVP).
-- **[M11 Okolica] doda (flag-dark):** kartica **»V tvoji okolici«** (npr. »Bil si med zgodnejšimi 30 %«) →
-  `/community/task/:taskTypeId` (predloga tega opravila). Skrito prek `kSuggestionsEnabled`.
+- **[M11 Okolica] doda (flag-dark):** sekcija **»V TVOJI OKOLICI«** + kartica **za kartico subjekta, pred
+  VREMENSKIM POSNETKOM** → `/community/task/:taskTypeId` (`?plant=`, predloga tega opravila).
+  Skrito prek `kSuggestionsEnabled`.
+  - **Skupina** je izpeljana iz subjektov opravila (prva kataloška rastlina; območje, lastna rastlina ali
+    brez subjekta → `@site`) — isto pravilo kot `agg_event` na strežniku.
+  - **S Plus:** naslov je ugotovitev (»Bil si med zgodnejšimi 30 %« / opisni pas pod pragom / »Letos tega
+    še nisi naredil«), podnaslov je CTA.
+  - **Brez Plus:** samo nevtralen CTA »Kako je s tem opravilom v okolici ›« — **brez podatka in brez
+    poizvedbe** (odločeno 2026-07-25: §12.5 »v Okolici ni nič trajno brezplačnega«; tease je na cilju,
+    ne na tuji strani).
 
 ### 2.3 Detajl rastline — `/plant/:id` (plant-detail), dejansko
 ← nazaj · ✏️ (uredi). Struktura:

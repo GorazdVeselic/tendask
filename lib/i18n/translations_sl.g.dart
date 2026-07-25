@@ -1011,6 +1011,7 @@ class _Translations$community$sl extends Translations$community$en {
 	@override String get empty_feed => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.';
 	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
 	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.';
+	@override late final _Translations$community$entry$sl entry = _Translations$community$entry$sl._(_root);
 	@override late final _Translations$community$detail$sl detail = _Translations$community$detail$sl._(_root);
 	@override late final _Translations$community$tease$sl tease = _Translations$community$tease$sl._(_root);
 }
@@ -1363,6 +1364,18 @@ class _Translations$community$intensity$sl extends Translations$community$intens
 	@override String get often => 'pogosto';
 	@override String get some => 'nekaj';
 	@override String get rare => 'redko';
+}
+
+// Path: community.entry
+class _Translations$community$entry$sl extends Translations$community$entry$en {
+	_Translations$community$entry$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get section => 'V tvoji okolici';
+	@override String get see_all => 'Vse iz okolice';
+	@override String get cta => 'Kako je s tem opravilom v okolici';
 }
 
 // Path: community.detail
@@ -2892,6 +2905,9 @@ extension on TranslationsSl {
 			'community.empty_feed' => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.',
 			'community.empty_standing' => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.',
 			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.',
+			'community.entry.section' => 'V tvoji okolici',
+			'community.entry.see_all' => 'Vse iz okolice',
+			'community.entry.cta' => 'Kako je s tem opravilom v okolici',
 			'community.detail.timing_kicker' => 'Kdaj · tvoj položaj',
 			'community.detail.you_percent' => ({required Object percent}) => 'Bil si med prvimi ~${percent} %',
 			'community.detail.you_band.early' => 'Bil si med zgodnejšimi',
