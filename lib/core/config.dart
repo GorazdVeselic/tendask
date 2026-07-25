@@ -161,8 +161,24 @@ const kSuggestionBandMax = 3;
 const kCommunityPrivacyMin = 5;
 const kCommunityReliabilityMin = 30;
 
-/// How many top task types the community "This week" feed lists (§7.1).
+/// Comparison cohort for site work — events with no catalog plant subject
+/// (lawn, bed, soil, and tasks on private custom plants). Mirrors the `@site`
+/// sentinel written by supabase/migrations/0017. A comparison always runs
+/// inside ONE cohort (this one or a single plant) and never swaps to another:
+/// pruning an apple and a raspberry are different acts with different calendars
+/// (skupnost-agregacija.md §7.4). The legacy `plant_id = ''` rows are the
+/// contaminated superset of both and are never read.
+const kCommunityCohortSite = '@site';
+
+/// How many rows the community "This week" feed lists (§7.1), and how many of
+/// them one task type may take — without the cap a single type with many plants
+/// ("Pruning · apple/raspberry/rose…") would fill the whole feed.
 const kCommunityFeedLimit = 6;
+const kCommunityFeedMaxPerType = 2;
+
+/// Length of the season curve: ISO 8601 years have 52 or 53 weeks, and the
+/// aggregate stores `iso_week` 1..53, so the curve always spans 53 slots.
+const kIsoWeeksPerYear = 53;
 
 /// Feed intensity cut-offs: a task type's share of the bucket's gardeners over
 /// the sliding 7-day window maps to a qualitative label (often/some/rare) — a

@@ -82,20 +82,27 @@ class _WeekTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final feed = ref.watch(communityFeedProvider);
-    final catalog = ref.watch(taskTypesMapProvider).asData?.value;
-    if (catalog == null) {
-      return const Center(child: CircularProgressIndicator.adaptive());
+    final catalog = ref.watch(taskTypesMapProvider);
+    // Plant labels name the cohort of a row ("Pruning · apple"), so an empty
+    // plant map only costs the subtitle, never the row.
+    final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
+    final hasPlus = ref.watch(hasPlusProvider);
+
+    // The repository already degrades gracefully offline, so an error on either
+    // side is a local read/decode bug — show it quietly instead of leaving a
+    // spinner that never resolves.
+    if (feed.hasError || catalog.hasError) {
+      return LoadErrorHint(t.common.load_error);
     }
-    return switch (feed) {
-      AsyncData(value: null) => EmptyState(t.community.empty_feed),
-      AsyncData(:final value?) => CommunityFeedList(
-        feed: value,
-        catalog: catalog,
-        hasPlus: ref.watch(hasPlusProvider),
-      ),
-      // The repository already degrades gracefully offline, so an error here is
-      // a local read/decode bug — show it quietly rather than swallow it.
-      AsyncError() => LoadErrorHint(t.common.load_error),
+    return switch ((feed, catalog)) {
+      (AsyncData(value: null), _) => EmptyState(t.community.empty_feed),
+      (AsyncData(:final value?), AsyncData(value: final types)) =>
+        CommunityFeedList(
+          feed: value,
+          catalog: types,
+          plants: plants,
+          hasPlus: hasPlus,
+        ),
       _ => const Center(child: CircularProgressIndicator.adaptive()),
     };
   }

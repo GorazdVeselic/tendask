@@ -274,7 +274,8 @@ as String,
 /// @nodoc
 mixin _$CommunityFeedItem {
 
- String get taskTypeId; String get plantId; int get distinctUsers7d; CommunityIntensity get intensity;
+ String get taskTypeId;/// [kCommunityCohortSite] for site work, else the catalog plant id.
+ String get cohort; int get distinctUsers7d; CommunityIntensity get intensity;
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -285,16 +286,16 @@ $CommunityFeedItemCopyWith<CommunityFeedItem> get copyWith => _$CommunityFeedIte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.plantId, plantId) || other.plantId == plantId)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskTypeId,plantId,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,distinctUsers7d,intensity);
 
 @override
 String toString() {
-  return 'CommunityFeedItem(taskTypeId: $taskTypeId, plantId: $plantId, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
 }
 
 
@@ -305,7 +306,7 @@ abstract mixin class $CommunityFeedItemCopyWith<$Res>  {
   factory $CommunityFeedItemCopyWith(CommunityFeedItem value, $Res Function(CommunityFeedItem) _then) = _$CommunityFeedItemCopyWithImpl;
 @useResult
 $Res call({
- String taskTypeId, String plantId, int distinctUsers7d, CommunityIntensity intensity
+ String taskTypeId, String cohort, int distinctUsers7d, CommunityIntensity intensity
 });
 
 
@@ -322,10 +323,10 @@ class _$CommunityFeedItemCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? plantId = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? cohort = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
   return _then(_self.copyWith(
 taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
-as String,plantId: null == plantId ? _self.plantId : plantId // ignore: cast_nullable_to_non_nullable
+as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
 as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
 as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
@@ -413,10 +414,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem() when $default != null:
-return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
   return orElse();
 
 }
@@ -434,10 +435,10 @@ return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.inten
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem():
-return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -454,10 +455,10 @@ return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.inten
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String plantId,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem() when $default != null:
-return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
   return null;
 
 }
@@ -469,11 +470,12 @@ return $default(_that.taskTypeId,_that.plantId,_that.distinctUsers7d,_that.inten
 
 
 class _CommunityFeedItem implements CommunityFeedItem {
-  const _CommunityFeedItem({required this.taskTypeId, required this.plantId, required this.distinctUsers7d, required this.intensity});
+  const _CommunityFeedItem({required this.taskTypeId, required this.cohort, required this.distinctUsers7d, required this.intensity});
   
 
 @override final  String taskTypeId;
-@override final  String plantId;
+/// [kCommunityCohortSite] for site work, else the catalog plant id.
+@override final  String cohort;
 @override final  int distinctUsers7d;
 @override final  CommunityIntensity intensity;
 
@@ -487,16 +489,16 @@ _$CommunityFeedItemCopyWith<_CommunityFeedItem> get copyWith => __$CommunityFeed
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.plantId, plantId) || other.plantId == plantId)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskTypeId,plantId,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,distinctUsers7d,intensity);
 
 @override
 String toString() {
-  return 'CommunityFeedItem(taskTypeId: $taskTypeId, plantId: $plantId, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
 }
 
 
@@ -507,7 +509,7 @@ abstract mixin class _$CommunityFeedItemCopyWith<$Res> implements $CommunityFeed
   factory _$CommunityFeedItemCopyWith(_CommunityFeedItem value, $Res Function(_CommunityFeedItem) _then) = __$CommunityFeedItemCopyWithImpl;
 @override @useResult
 $Res call({
- String taskTypeId, String plantId, int distinctUsers7d, CommunityIntensity intensity
+ String taskTypeId, String cohort, int distinctUsers7d, CommunityIntensity intensity
 });
 
 
@@ -524,10 +526,10 @@ class __$CommunityFeedItemCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? plantId = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? cohort = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
   return _then(_CommunityFeedItem(
 taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
-as String,plantId: null == plantId ? _self.plantId : plantId // ignore: cast_nullable_to_non_nullable
+as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
 as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
 as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
@@ -827,7 +829,7 @@ $BucketCopyWith<$Res> get bucket {
 /// @nodoc
 mixin _$SeasonCurve {
 
- Bucket get bucket; List<double> get cdf; int get pooledTotal;
+ Bucket get bucket; List<double> get cdf; int get pooledTotal; bool get censored;
 /// Create a copy of SeasonCurve
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -838,16 +840,16 @@ $SeasonCurveCopyWith<SeasonCurve> get copyWith => _$SeasonCurveCopyWithImpl<Seas
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other.cdf, cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other.cdf, cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal)&&(identical(other.censored, censored) || other.censored == censored));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(cdf),pooledTotal);
+int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(cdf),pooledTotal,censored);
 
 @override
 String toString() {
-  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal)';
+  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal, censored: $censored)';
 }
 
 
@@ -858,7 +860,7 @@ abstract mixin class $SeasonCurveCopyWith<$Res>  {
   factory $SeasonCurveCopyWith(SeasonCurve value, $Res Function(SeasonCurve) _then) = _$SeasonCurveCopyWithImpl;
 @useResult
 $Res call({
- Bucket bucket, List<double> cdf, int pooledTotal
+ Bucket bucket, List<double> cdf, int pooledTotal, bool censored
 });
 
 
@@ -875,12 +877,13 @@ class _$SeasonCurveCopyWithImpl<$Res>
 
 /// Create a copy of SeasonCurve
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,Object? censored = null,}) {
   return _then(_self.copyWith(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,cdf: null == cdf ? _self.cdf : cdf // ignore: cast_nullable_to_non_nullable
 as List<double>,pooledTotal: null == pooledTotal ? _self.pooledTotal : pooledTotal // ignore: cast_nullable_to_non_nullable
-as int,
+as int,censored: null == censored ? _self.censored : censored // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 /// Create a copy of SeasonCurve
@@ -974,10 +977,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal,  bool censored)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _SeasonCurve() when $default != null:
-return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+return $default(_that.bucket,_that.cdf,_that.pooledTotal,_that.censored);case _:
   return orElse();
 
 }
@@ -995,10 +998,10 @@ return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  List<double> cdf,  int pooledTotal,  bool censored)  $default,) {final _that = this;
 switch (_that) {
 case _SeasonCurve():
-return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+return $default(_that.bucket,_that.cdf,_that.pooledTotal,_that.censored);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1015,10 +1018,10 @@ return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  List<double> cdf,  int pooledTotal)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  List<double> cdf,  int pooledTotal,  bool censored)?  $default,) {final _that = this;
 switch (_that) {
 case _SeasonCurve() when $default != null:
-return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
+return $default(_that.bucket,_that.cdf,_that.pooledTotal,_that.censored);case _:
   return null;
 
 }
@@ -1030,7 +1033,7 @@ return $default(_that.bucket,_that.cdf,_that.pooledTotal);case _:
 
 
 class _SeasonCurve implements SeasonCurve {
-  const _SeasonCurve({required this.bucket, required final  List<double> cdf, required this.pooledTotal}): _cdf = cdf;
+  const _SeasonCurve({required this.bucket, required final  List<double> cdf, required this.pooledTotal, required this.censored}): _cdf = cdf;
   
 
 @override final  Bucket bucket;
@@ -1042,6 +1045,7 @@ class _SeasonCurve implements SeasonCurve {
 }
 
 @override final  int pooledTotal;
+@override final  bool censored;
 
 /// Create a copy of SeasonCurve
 /// with the given fields replaced by the non-null parameter values.
@@ -1053,16 +1057,16 @@ _$SeasonCurveCopyWith<_SeasonCurve> get copyWith => __$SeasonCurveCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other._cdf, _cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SeasonCurve&&(identical(other.bucket, bucket) || other.bucket == bucket)&&const DeepCollectionEquality().equals(other._cdf, _cdf)&&(identical(other.pooledTotal, pooledTotal) || other.pooledTotal == pooledTotal)&&(identical(other.censored, censored) || other.censored == censored));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(_cdf),pooledTotal);
+int get hashCode => Object.hash(runtimeType,bucket,const DeepCollectionEquality().hash(_cdf),pooledTotal,censored);
 
 @override
 String toString() {
-  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal)';
+  return 'SeasonCurve(bucket: $bucket, cdf: $cdf, pooledTotal: $pooledTotal, censored: $censored)';
 }
 
 
@@ -1073,7 +1077,7 @@ abstract mixin class _$SeasonCurveCopyWith<$Res> implements $SeasonCurveCopyWith
   factory _$SeasonCurveCopyWith(_SeasonCurve value, $Res Function(_SeasonCurve) _then) = __$SeasonCurveCopyWithImpl;
 @override @useResult
 $Res call({
- Bucket bucket, List<double> cdf, int pooledTotal
+ Bucket bucket, List<double> cdf, int pooledTotal, bool censored
 });
 
 
@@ -1090,12 +1094,13 @@ class __$SeasonCurveCopyWithImpl<$Res>
 
 /// Create a copy of SeasonCurve
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? cdf = null,Object? pooledTotal = null,Object? censored = null,}) {
   return _then(_SeasonCurve(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,cdf: null == cdf ? _self._cdf : cdf // ignore: cast_nullable_to_non_nullable
 as List<double>,pooledTotal: null == pooledTotal ? _self.pooledTotal : pooledTotal // ignore: cast_nullable_to_non_nullable
-as int,
+as int,censored: null == censored ? _self.censored : censored // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 

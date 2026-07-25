@@ -63,3 +63,62 @@ Future<CommunityFeed?> communityFeed(Ref ref) async {
   if (buckets.isEmpty) return null;
   return ref.watch(communityRepositoryProvider).feed(buckets: buckets);
 }
+
+/// Season curve for a task type inside [cohort], resolved by widening the
+/// geography only (r7 → r6 → r5 → climate). The cohort is fixed by the subject
+/// and is NEVER swapped: pooling apple and raspberry pruning would answer a
+/// question nobody asked (§7.4). Always exactly ONE level. null = no level
+/// cleared the privacy threshold → "not enough gardeners yet for this".
+@riverpod
+Future<SeasonCurve?> communitySeasonCurve(
+  Ref ref,
+  String taskTypeId,
+  String cohort,
+) async {
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  final repo = ref.watch(communityRepositoryProvider);
+  for (final bucket in buckets) {
+    final curve = await repo.seasonCurve(
+      bucket: bucket,
+      taskTypeId: taskTypeId,
+      cohort: cohort,
+    );
+    if (curve != null && curve.pooledTotal >= kCommunityPrivacyMin) return curve;
+  }
+  return null;
+}
+
+/// Frequency stats for a task type inside [cohort], resolved like
+/// [communitySeasonCurve]. null = no level cleared the privacy threshold.
+@riverpod
+Future<FrequencyStats?> communityFrequency(
+  Ref ref,
+  String taskTypeId,
+  String cohort,
+) async {
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  final repo = ref.watch(communityRepositoryProvider);
+  for (final bucket in buckets) {
+    final stats = await repo.frequency(
+      bucket: bucket,
+      taskTypeId: taskTypeId,
+      cohort: cohort,
+    );
+    if (stats != null && stats.nUsers >= kCommunityPrivacyMin) return stats;
+  }
+  return null;
+}
+
+/// My own first completion of the task type in [cohort] this season (drift
+/// only) — the "you" marker on the curve. null = not started yet this year.
+@riverpod
+Future<DateTime?> myFirstThisSeason(
+  Ref ref,
+  String taskTypeId,
+  String cohort,
+) async {
+  ref.watch(authStateChangesProvider);
+  return ref
+      .watch(communityRepositoryProvider)
+      .myFirstThisSeason(taskTypeId, cohort: cohort);
+}

@@ -14,12 +14,14 @@ class CommunityFeedList extends StatelessWidget {
   const CommunityFeedList({
     required this.feed,
     required this.catalog,
+    required this.plants,
     required this.hasPlus,
     super.key,
   });
 
   final CommunityFeed feed;
   final Map<String, TaskType> catalog;
+  final Map<String, Plant> plants;
   final bool hasPlus;
 
   @override
@@ -37,7 +39,7 @@ class CommunityFeedList extends StatelessWidget {
         Card(
           clipBehavior: Clip.antiAlias,
           margin: EdgeInsets.zero,
-          child: _Rows(items: visible, catalog: catalog),
+          child: _Rows(items: visible, catalog: catalog, plants: plants),
         ),
         if (teased)
           Padding(
@@ -48,7 +50,11 @@ class CommunityFeedList extends StatelessWidget {
                   : Card(
                       clipBehavior: Clip.antiAlias,
                       margin: EdgeInsets.zero,
-                      child: _Rows(items: hidden, catalog: catalog),
+                      child: _Rows(
+                        items: hidden,
+                        catalog: catalog,
+                        plants: plants,
+                      ),
                     ),
             ),
           ),
@@ -59,10 +65,15 @@ class CommunityFeedList extends StatelessWidget {
 }
 
 class _Rows extends StatelessWidget {
-  const _Rows({required this.items, required this.catalog});
+  const _Rows({
+    required this.items,
+    required this.catalog,
+    required this.plants,
+  });
 
   final List<CommunityFeedItem> items;
   final Map<String, TaskType> catalog;
+  final Map<String, Plant> plants;
 
   @override
   Widget build(BuildContext context) {
@@ -72,32 +83,52 @@ class _Rows extends StatelessWidget {
         for (var i = 0; i < items.length; i++) ...[
           if (i > 0)
             Divider(height: 1, indent: 56, color: cs.outlineVariant),
-          _FeedRow(item: items[i], taskType: catalog[items[i].taskTypeId]),
+          _FeedRow(
+            item: items[i],
+            taskType: catalog[items[i].taskTypeId],
+            plant: plants[items[i].cohort],
+          ),
         ],
       ],
     );
   }
 }
 
+/// One cohort: the act (task type) plus the plant it was done on, because the
+/// plant is what makes it comparable — "pruning" alone spans an apple tree and a
+/// raspberry cane. Site work (lawn, bed) has no plant line.
 class _FeedRow extends StatelessWidget {
-  const _FeedRow({required this.item, required this.taskType});
+  const _FeedRow({required this.item, required this.taskType, this.plant});
 
   final CommunityFeedItem item;
   final TaskType? taskType;
+  final Plant? plant;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final type = taskType;
+    final subject = plant;
     // TODO(gorazd, 2026-08-31): tap → community-task (built in M11.18, step 8).
     return ListTile(
       leading: Text(
-        taskType?.icon ?? '🌱',
+        subject?.icon ?? type?.icon ?? '🌱',
         style: const TextStyle(fontSize: 22),
       ),
       title: Text(
-        taskType != null ? catalogLabel(taskType!.labels) : item.taskTypeId,
+        // An unknown id means the catalog pull lags the aggregate — show the id
+        // rather than an empty row.
+        type == null ? item.taskTypeId : catalogLabel(type.labels),
         style: theme.textTheme.bodyMedium,
       ),
+      subtitle: subject == null
+          ? null
+          : Text(
+              catalogLabel(subject.labels),
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: theme.colorScheme.onSurfaceVariant,
+              ),
+            ),
       trailing: _IntensityPill(item.intensity),
       contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
     );

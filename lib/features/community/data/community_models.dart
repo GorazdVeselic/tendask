@@ -21,14 +21,14 @@ abstract class Bucket with _$Bucket {
 /// (§7.8), so the "This week" feed stays qualitative.
 enum CommunityIntensity { often, some, rare }
 
-/// One row of the "This week" landing feed: a task type (optionally scoped to a
-/// plant) and how busy it has been in the bucket over the sliding 7-day window.
+/// One row of the "This week" landing feed: a task type inside ONE comparison
+/// cohort, and how busy that cohort has been over the sliding 7-day window.
 @freezed
 abstract class CommunityFeedItem with _$CommunityFeedItem {
   const factory CommunityFeedItem({
     required String taskTypeId,
-    // '' = across all plants (the landing feed is task-type level).
-    required String plantId,
+    /// [kCommunityCohortSite] for site work, else the catalog plant id.
+    required String cohort,
     required int distinctUsers7d,
     required CommunityIntensity intensity,
   }) = _CommunityFeedItem;
@@ -45,17 +45,26 @@ abstract class CommunityFeed with _$CommunityFeed {
   }) = _CommunityFeed;
 }
 
-/// Historical seasonal CDF for one task type at one scope: `cdf[w-1]` is the
+/// Where a date falls against the season curve when a percentage would overstate
+/// the precision (below `kCommunityReliabilityMin`, §7.7): the three terciles.
+enum CommunityTiming { early, typical, late }
+
+/// Historical seasonal CDF for one task type in one cohort: `cdf[w-1]` is the
 /// cumulative fraction of gardeners whose first execution fell in ISO week ≤ w
-/// (weeks 1..53), pooled over past complete seasons. Built on-device in M11.18
-/// from ~53 `activity_season` rows; [pooledTotal] is the denominator (Σ season
-/// totals) — a %/percentile is only shown when it clears [kCommunityReliabilityMin].
+/// (weeks 1..53), pooled over past complete seasons. Built on-device from ~53
+/// `activity_season` rows; [pooledTotal] is the denominator (Σ season totals) —
+/// a %/percentile is only shown when it clears [kCommunityReliabilityMin].
+///
+/// [censored] means no past season existed yet, so the curve is the *running*
+/// current one (§7.6 year-1 mode): the share keeps moving as latecomers arrive,
+/// so the UI must say "so far this year" and never present it as final.
 @freezed
 abstract class SeasonCurve with _$SeasonCurve {
   const factory SeasonCurve({
     required Bucket bucket,
     required List<double> cdf,
     required int pooledTotal,
+    required bool censored,
   }) = _SeasonCurve;
 }
 

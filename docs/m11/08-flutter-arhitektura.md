@@ -139,44 +139,51 @@ features/community/
 opravila = ena predloga (percentil + frekvenca + ta teden). Vsi teksti: i18n predloga +
 lokalni podatek (drift: moja prva izvedba) + agregat (številke).
 
-**`CommunityRepository` (podpisi):**
+**`CommunityRepository` (podpisi):** `cohort` = primerjalna skupina (`kCommunityCohortSite` ali id
+rastline, `skupnost-agregacija.md §7.4`); zlite `''` vrstice se ne berejo nikoli.
 ```dart
 class CommunityRepository {
   /// Feed slice for the user's buckets; cloud fetch at most 1x/day, served from
   /// the drift community_cache afterwards (offline-friendly).  CLOUD+CACHE.
-  Future<List<CommunityFeedItem>> feed({required List<Bucket> buckets});
+  Future<CommunityFeed?> feed({required List<Bucket> buckets});
 
-  /// Season curve (CDF weeks 1..53) for a task type (+optional plant) at ONE
+  /// Season curve (CDF weeks 1..53) for a task type in ONE cohort at ONE
   /// resolution level. Returns null when below thresholds.  CLOUD+CACHE.
   Future<SeasonCurve?> seasonCurve({
-    required Bucket bucket, required String taskTypeId, String plantId = ''});
+    required Bucket bucket, required String taskTypeId, required String cohort});
 
   Future<FrequencyStats?> frequency({
-    required Bucket bucket, required String taskTypeId, String plantId = ''});
+    required Bucket bucket, required String taskTypeId, required String cohort});
 
   Future<int?> bucketPopulation({required Bucket bucket});
 
-  /// My first completion of the type this season — for the 'you' marker. LOCAL.
-  Future<DateTime?> myFirstThisSeason(String taskTypeId, {String? plantId});
+  /// My first completion of the type in this cohort this season — the 'you'
+  /// marker. LOCAL; cohort membership mirrors agg_event (custom plant = site).
+  Future<DateTime?> myFirstThisSeason(String taskTypeId, {required String cohort});
 }
 ```
 
-**Fallback hierarhija (en nivo, brez mešanja — psevdokoda v providerju):**
+**Fallback hierarhija (en nivo, brez mešanja — implementirano v `community_providers.dart`):**
 ```dart
-Future<(Bucket, SeasonCurve)?> resolveCurve(String taskTypeId, String plantId) async {
-  final buckets = [r7, r6, r5, climateBucket, globalBucket];   // iz profila
-  for (final withPlant in [plantId, '']) {                     // rastlino spusti zadnjo
-    for (final b in buckets) {
-      final curve = await repo.seasonCurve(
-          bucket: b, taskTypeId: taskTypeId, plantId: withPlant);
-      if (curve != null && curve.pooledTotal >= kPrivacy) return (b, curve);
-    }
-  }
-  return null;   // UI: 'not enough gardeners yet' empty state
+// communitySeasonCurve / communityFrequency: skupina je fiksna, širi se le geografija.
+final buckets = [r7, r6, r5, climate];   // iz profila; SeasonCurve nosi svoj bucket
+for (final b in buckets) {
+  final curve = await repo.seasonCurve(
+      bucket: b, taskTypeId: taskTypeId, cohort: cohort);
+  if (curve != null && curve.pooledTotal >= kCommunityPrivacyMin) return curve;
 }
-// % se izpiše le, če pooledTotal >= kReliab (30); sicer opisni tercilni pas.
-// UI VEDNO označi obseg: 'in your area' (r7/6/5) / 'in a similar climate' / 'among all gardeners'.
+return null;   // UI: 'not enough gardeners yet' empty state
+// % se izpiše le, če pooledTotal >= kReliab (30); sicer opisni tercilni pas (timingBand).
+// UI VEDNO označi obseg: 'v tvoji okolici' (r7/6/5) / 'v podobni klimi' (climate).
 ```
+> **Skupine se NE zamenja** (uskladitev 2026-07-25, §7.4): rastlinsko vprašanje dobi rastlinski
+> odgovor ali nič — zlita `''` vrstica bi pomešala obrez jablane in maline. Skupino izpelji iz
+> subjekta opravila (`task_subject → user_plant.plant_id`; brez kataloške rastline →
+> `kCommunityCohortSite`).
+>
+> **Brez `global` vedra** (uskladitev M11.17): nočni cron iz M11.16 materializira samo
+> `r7/r6/r5/climate`, zato se degradacija ustavi pri klimatskem košu. Če bi globalni koš kdaj
+> hoteli, je treba najprej razširiti cron.
 `kPrivacy`/`kReliab` klient NE uveljavlja varnostno (to dela RLS) — pozna ju za pošten prikaz
 (`core/config.dart`: `kCommunityPrivacyMin = 5`, `kCommunityReliabilityMin = 30`; vrednosti
 zrcalita `app_config`).

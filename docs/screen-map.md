@@ -68,8 +68,10 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
 ### 1.5 Okolica — `/community` (`community`) [shell] · [M11, flag-dark]
 5. zavihek (⬡), za `kSuggestionsEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + izbirnik
 obsega (📍 okolica / podobna klima / vsi — auto najfinejši nivo nad pragom `kCommunityPrivacyMin=5`).
-- **Ta teden** (privzeto): kvalitativen feed opravil zadnjih 7 dni (`pogosto`/`nekaj`/`redko`), populacija vedra;
+- **Ta teden** (privzeto): kvalitativen feed zadnjih 7 dni (`pogosto`/`nekaj`/`redko`), populacija vedra;
   offline bere včerajšnji dnevni cache (drift `community_cache`). Pod pragom → »še premalo vrtnarjev«.
+  **Vrstica = primerjalna skupina** (§7.4): naslov = opravilo, podnaslov = rastlina, kadar skupina ni
+  prostorska (»Obrez« + »jablana«; »Košnja« brez podnaslova). Kapica: največ 2 vrstici na tip opravila.
 - **Kje si ti:** tvoja opravila z oznako zgoden/običajen/pozen (percentil na napravi).
 - **Akcije:** tap opravila → **community-task** `/community/task/:taskTypeId` (`?plant=`) [shell]; »ℹ️ Kako beremo
   te podatke« → explain sheet.

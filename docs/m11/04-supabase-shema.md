@@ -318,7 +318,14 @@ plants as (
 )
 select b.*, ''::text as plant_id from base b
 union all
-select b.*, pl.plant_id from base b join plants pl on pl.task_id = b.task_id;
+select b.*, pl.plant_id from base b join plants pl on pl.task_id = b.task_id
+union all
+-- Site cohort (migracija 0017): dogodki brez kataloške rastline — trata, gredica,
+-- tla in opravila na lastnih (custom) rastlinah. Brez te veje bi bila edina
+-- »ne-rastlinska« možnost zlita '' vrstica (skupnost-agregacija.md §7.4).
+select b.*, '@site'::text as plant_id
+from base b
+where not exists (select 1 from plants pl where pl.task_id = b.task_id);
 
 revoke all on agg_event from anon, authenticated;
 ```

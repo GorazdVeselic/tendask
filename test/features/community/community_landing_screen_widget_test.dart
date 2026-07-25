@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
@@ -29,25 +30,34 @@ final _catalog = {
   'prune': _taskType('prune', 'Pruning', '✂️'),
 };
 
+Plant _plant(String id, String en, String icon) => Plant(
+  id: id,
+  labels: '{"sl":"$en","en":"$en","de":"$en"}',
+  category: 'fruit',
+  icon: icon,
+);
+
+final _plants = {'apple': _plant('apple', 'Apple', '🍎')};
+
 CommunityFeed _feed() => const CommunityFeed(
   bucket: _bucket,
   population: 40,
   items: [
     CommunityFeedItem(
       taskTypeId: 'water',
-      plantId: '',
+      cohort: kCommunityCohortSite,
       distinctUsers7d: 20,
       intensity: CommunityIntensity.often,
     ),
     CommunityFeedItem(
       taskTypeId: 'mow',
-      plantId: '',
+      cohort: kCommunityCohortSite,
       distinctUsers7d: 6,
       intensity: CommunityIntensity.some,
     ),
     CommunityFeedItem(
       taskTypeId: 'prune',
-      plantId: '',
+      cohort: 'apple',
       distinctUsers7d: 2,
       intensity: CommunityIntensity.rare,
     ),
@@ -65,6 +75,7 @@ Future<void> _pump(
         overrides: [
           communityFeedProvider.overrideWith((ref) async => feed),
           taskTypesMapProvider.overrideWith((ref) => Stream.value(_catalog)),
+          plantsMapProvider.overrideWith((ref) => Stream.value(_plants)),
           hasPlusProvider.overrideWithValue(hasPlus),
         ],
         child: const MaterialApp(home: CommunityLandingScreen()),
@@ -86,6 +97,8 @@ void main() {
     expect(find.text('Watering'), findsOneWidget);
     expect(find.text('Mowing'), findsOneWidget);
     expect(find.text('Pruning'), findsOneWidget);
+    // A plant cohort names its plant — "pruning" alone spans apple and raspberry.
+    expect(find.text('Apple'), findsOneWidget);
     expect(find.text(t.community.intensity.often), findsOneWidget);
     expect(find.text(t.community.intensity.some), findsOneWidget);
     expect(find.text(t.community.intensity.rare), findsOneWidget);

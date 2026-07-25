@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
+import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/database/database_provider.dart';
@@ -56,6 +57,13 @@ TaskType _taskType() => TaskType(
   consumesSupplies: false,
   seasonal: true,
   defaultCadence: null,
+);
+
+Plant _plant() => Plant(
+  id: 'tomato',
+  labels: jsonEncode({'sl': 'Paradižnik', 'en': 'Tomato', 'de': 'Tomate'}),
+  category: 'vegetable',
+  icon: '🍅',
 );
 
 Area _area() => Area(
@@ -130,6 +138,9 @@ List<Override> _taskWorldOverrides() => [
 /// matrix feeds it a resolved feed instead of a database.
 List<Override> _communityOverrides({required bool hasPlus}) => [
   taskTypesMapProvider.overrideWith((ref) => Stream.value({'water': _taskType()})),
+  plantsMapProvider.overrideWith(
+    (ref) => Stream.value({'tomato': _plant()}),
+  ),
   hasPlusProvider.overrideWithValue(hasPlus),
   communityFeedProvider.overrideWith(
     (ref) async => const CommunityFeed(
@@ -138,13 +149,13 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
       items: [
         CommunityFeedItem(
           taskTypeId: 'water',
-          plantId: '',
+          cohort: kCommunityCohortSite,
           distinctUsers7d: 20,
           intensity: CommunityIntensity.often,
         ),
         CommunityFeedItem(
           taskTypeId: 'water',
-          plantId: '',
+          cohort: 'tomato',
           distinctUsers7d: 4,
           intensity: CommunityIntensity.rare,
         ),

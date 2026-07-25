@@ -117,6 +117,11 @@ operacija; kar je odveč, ostane.
 | `0015` | `supply.category` (NOT NULL default `other` + CHECK) | sredstva (vc14+) |
 | `0016` | drop `supply_quantity_check` | **negativna zaloga** — brez tega `23514` na `supply` **zaklene cel sync** (supply se pusha pred task) |
 
+**Nova, še NE aplicirana:** `0017` (`@site` primerjalna skupina v pogledu `agg_event`, M11 korak 7b,
+2026-07-25) — čaka skupaj z M11 vejo. Sama po sebi je neškodljiva (`create or replace view`, tabel in
+RLS se ne dotakne) in mora biti na PROD **pred prižigom** nočnega agregata, sicer bi cron polnil
+`activity_*` brez `@site` vrstic.
+
 **Pravilo (potrjeno v praksi):** vsak nov prod build najprej `supabase db push`, šele nato upload.
 Pred vc14 je bil prod pri `0013`, medtem ko je koda že pisala `yield_amount`/`category` — živi vc13 je
 bil rešen le zato, ker je bil zgrajen **pred** temi funkcijami. Ne zanašaj se na to; preveri.

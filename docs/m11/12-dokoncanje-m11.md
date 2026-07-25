@@ -41,6 +41,18 @@
 - **Zajema:** `community.*` nizi za landing/empty/obseg/tease; `dart run slang`. **Anti-steering pregled** tease nizov (brez cene/naslova strani).
 - **Cilj:** vsi nizi prek `t.*`, trije jeziki, skladni s politiko.
 
+### Korak 7b — Primerjalne skupine (cohorts) 👈 dodano 2026-07-25
+- **Zajema:** migracija `0017` (`@site` veja v `agg_event`), klient prehod z »rastlina neobvezna«
+  na **skupino** (`kCommunityCohortSite` ali id rastline): feed bere cele rezine in prikaže vrstico na
+  skupino (kapica na tip), `seasonCurve`/`frequency`/`myFirstThisSeason` zahtevajo `cohort`, veriga
+  širi **samo** geografijo. Uskladitev `skupnost-agregacija.md §5.2/§7.1/§7.4`, `04 §4.5`, `08 §8.3`,
+  screen-map, wireframe.
+- **Zakaj:** prejšnja formulacija §7.4 je kot skrajni fallback dovolila zlivanje rastlin — obrez
+  jablane in maline sta različna dogodka, zlita krivulja je večvrhna in percentil meri napačno
+  vprašanje (ugotovljeno pri pregledu K5–K7).
+- **Odvisnosti:** korak 7 · **Kompleksnost:** M · **Migracija:** additivna (`create or replace view`),
+  varno zdaj, ker je nočni cron še server-dark in nič ni materializirano.
+
 ## Faza 3 — M11.18 Okolica: percentil + frekvenca (XL → 3 koraki)
 
 ### Korak 7 — CDF + frekvenca + fallback (čiste funkcije)
@@ -84,8 +96,8 @@
 ## Odvisnosti
 
 ```
-1 → 2 → (3 → 4 → 5 → 6) → (7 → 8 → 9) → 10 → 11 → 12 → 13 → 14
-        └─ M11.17 ─────┘   └─ M11.18 ─┘   M11.19  M11.21  merge
+1 → 2 → (3 → 4 → 5 → 6) → (7 → 7b → 8 → 9) → 10 → 11 → 12 → 13 → 14
+        └─ M11.17 ─────┘   └──── M11.18 ───┘   M11.19  M11.21  merge
 ```
 
 ## Opombe

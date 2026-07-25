@@ -162,6 +162,13 @@ produkti: `eligible_user` + tri agregatne tabele.
 ### 5.1 `eligible_user` (pogled ali nočna materializacija)
 Set `user_id`, ki ustrezajo §4.5. Vse spodnje berejo **samo** te.
 
+> **Primerjalne skupine v vseh treh tabelah (uskladitev 2026-07-25, migracija `0017`).** Stolpec
+> `plant_id` nosi **skupino**, ne le neobvezne rastline: `'<plant>'` = dogodki na tej vrsti,
+> `'@site'` = dogodki **brez** kataloške rastline (trata, gredica, lastne rastline), `''` = zlita
+> nadmnožica, ki ostaja zapisana, a se **za primerjave nikoli ne bere** (§7.4). Sentinel `'@site'`
+> se usede v obstoječi stolpec in PK → migracija je additivna (`create or replace view agg_event`),
+> tabele in RLS ostanejo nedotaknjene.
+
 ### 5.2 `activity_recent` — feed (drseče okno)
 Za vsak nivo, vedro, `task_type_id`, (neobvezno) `plant_id`:
 `distinct_users_7d = COUNT(DISTINCT user_id)` med upravičenimi z ≥1 izvedbo `T` v zadnjih 7 dneh.
@@ -257,6 +264,11 @@ Za uporabnikovo vedro (najfinejši nivo, ki prestane prag, §7.4), drseče okno:
 razvrsti po `distinct_users_7d` padajoče, top N. Prikaz **kvalitativno** ("pogosto / nekaj / redko")
 ali "med ~N vrtnarji". Deluje **takoj**, brez zgodovine.
 
+**Enota vrstice = primerjalna skupina** (§7.4), ne tip opravila: »Obrez · jablana«, »Košnja« (site).
+Zlite `plant_id=''` vrstice se v feedu **ne prikazujejo** — so nadmnožica vrstic pod njimi, zato bi
+isti dogodek šteli dvakrat in bi »obrez« pomešal jablano z malino. Ker ena vrsta opravila lahko
+prispeva več skupin, velja **kapica na tip** (`kCommunityFeedMaxPerType`), da en tip ne zasede feeda.
+
 ### 7.2 Časovni percentil — "kdaj / kje sem jaz"
 1. **Zgodovinska krivulja (CDF)** iz **dokončanih preteklih sezon** `Y`:
    `F(w) = [Σ_{y∈Y} cumulative_y(≤w)] / [Σ_{y∈Y} season_total_y]` (uporabniško-uteženo).
@@ -273,17 +285,31 @@ Beri `activity_frequency` za uporabnikovo vedro: naslov *"V tvoji okolici kosijo
 mesečno**"* (IQR p25–p75) + **stolpčni prikaz porazdelitve** iz `hist` z oznako »ti« (vizualno
 konsistenten s časovnim percentilom). Številčni razpon le ob `n ≥ K_reliab`; sicer opisno/skrito.
 
-### 7.4 Fallback hierarhija (en nivo, brez mešanja)
-Za poizvedbo `(T, neobvezno P)` z uporabnikovimi vedri vzemi **prvi** nivo, ki prestane potrebni
-prag:
+### 7.4 Primerjalna skupina in fallback hierarhija (en nivo, brez mešanja)
+
+> **Uskladitev 2026-07-25 (nadomešča prejšnji korak »spusti rastlino«).** Prejšnja formulacija je
+> kot skrajni fallback dovolila zlivanje rastlin. To je statistično napačno: *obrez jablane* in
+> *obrez maline* sta različna agronomska dogodka z različnima koledarjema, zato bi bila zlita
+> krivulja večvrhna, percentil pa bi meril primerjavo z ljudmi, ki so delali nekaj drugega.
+
+**Primerjalna skupina** (*cohort* v kodi) je enota, znotraj katere je primerjava sploh veljavna.
+Določi jo **subjekt uporabnikovega opravila** in se **nikoli ne zamenja**:
+
+| Skupina | Kaj zajema | `plant_id` v agregatu |
+|---|---|---|
+| **rastlinska** | dogodki na tej kataloški vrsti | `'<plant>'` |
+| **prostorska** (*site*) | dogodki brez kataloške rastline (trata, gredica, tla; tudi lastne rastline) | `'@site'` |
+| ~~zlita~~ | nadmnožica obeh — **za primerjave se ne uporablja nikoli** | `''` |
+
+Znotraj izbrane skupine vzemi **prvi** nivo, ki prestane prag — širi se **samo geografija**:
 ```
-res-7 (P) → res-6 (P) → res-5 (P) → climate (P) → global (P)
-   → šele če tudi global+rastlina ne zadošča: spusti rastlino in ponovi (res-7 … global, brez P)
+res-7 → res-6 → res-5 → climate            (skupina ostane ista!)
 ```
-- **Specifičnost (rastlina) ohranjamo**, geografijo širimo prej ("kdaj sadijo *paradižnik*" ≠ "karkoli").
-- **Klimatski koš pred globalnim** (sezonska opravila klimatsko gnana).
+- **Klimatski koš je zadnji** (globalnega vedra cron ne materializira, gl. §5.6).
 - **Vedno en nivo**; nikoli ne združujemo. UI označi obseg: *"v tvoji okolici"* (7/6/5) /
-  *"v podobni klimi"* (climate) / *"med vsemi vrtnarji"* (global).
+  *"v podobni klimi"* (climate).
+- Če nobena raven ne zadošča, rečemo *"še premalo vrtnarjev za jablano"* — **nikoli** ne padi na
+  zlito primerjavo. Cena tega je pogostejši prazen state; to je cena resnice.
 
 ### 7.5 Sezonska vs nesezonska opravila
 `task_type.seasonal=false` → brez časovne krivulje (§7.2); le feed + frekvenca.
