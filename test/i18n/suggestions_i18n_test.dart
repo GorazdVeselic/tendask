@@ -37,7 +37,11 @@ void main() {
     },
     'suggestions.history.anniversary': {'subject', 'task', 'last_year_date'},
     'suggestions.weather.window_open': {'subject', 'task'},
-    'suggestions.community.most_started': {'task', 'percent'}, // no subject
+    // No subject, and deliberately no {percent}: the engine sends the number as
+    // evidence, but the free Home band must not print it — a share of the
+    // neighbourhood is Plus content (skupnost-agregacija.md §12.5). The number
+    // lives on /community/task, next to its sample size and season caveat.
+    'suggestions.community.most_started': {'task'},
   };
 
   Map<String, dynamic>? entryFor(Map<String, dynamic> sug, String key) {

@@ -2703,8 +2703,8 @@ class Translations$suggestions$community$most_started$en {
 	/// en: '{task} nearby'
 	String get title => '{task} nearby';
 
-	/// en: 'About {percent}% of gardeners near you have started this so far this season.'
-	String get body => 'About {percent}% of gardeners near you have started this so far this season.';
+	/// en: 'Most gardeners near you have already started this this season.'
+	String get body => 'Most gardeners near you have already started this this season.';
 }
 
 // Path: suggestions.lawn.mow_due
@@ -4300,7 +4300,7 @@ extension on Translations {
 			'suggestions.weather.window_open.title' => '{task}: good window',
 			'suggestions.weather.window_open.body' => 'A dry spell is on the way for {subject} — a good time to do it.',
 			'suggestions.community.most_started.title' => '{task} nearby',
-			'suggestions.community.most_started.body' => 'About {percent}% of gardeners near you have started this so far this season.',
+			'suggestions.community.most_started.body' => 'Most gardeners near you have already started this this season.',
 			'suggestions.lawn.mow_due.title' => 'Mowing due',
 			'suggestions.lawn.mow_due.body' => '{subject} is ready for a mow.',
 			'suggestions.lawn.water_drought.title' => 'Water in the dry spell',

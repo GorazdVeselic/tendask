@@ -2,7 +2,7 @@
 // missing/partial row degrades to spec behaviour instead of crashing.
 
 // deno-lint-ignore-file no-explicit-any
-import type { EngineConfig, EngineKnobs, WeatherThresholds } from './types.ts';
+import type { CommunityThresholds, EngineConfig, EngineKnobs, WeatherThresholds } from './types.ts';
 
 // Exported so tests assert against the single source of seed defaults.
 export const kDefaultEngine: EngineKnobs = {
@@ -36,11 +36,23 @@ export const kDefaultThresholds: WeatherThresholds = {
 
 export const kDefaultFrost = { last_frost_doy: 110, first_frost_doy: 293 };
 
+// Mirrors app_config k_privacy / k_reliab (0006 seed) and the client's
+// kCommunityPrivacyMin / kCommunityReliabilityMin.
+export const kDefaultCommunityThresholds: CommunityThresholds = {
+  kPrivacy: 5,
+  kReliab: 30,
+};
+
+function intOr(value: unknown, fallback: number): number {
+  const n = Number(value);
+  return Number.isFinite(n) && n > 0 ? n : fallback;
+}
+
 export async function loadAppConfig(db: any): Promise<EngineConfig> {
   const { data, error } = await db
     .from('app_config')
     .select('key,value')
-    .in('key', ['engine', 'weather_thresholds', 'frost_defaults']);
+    .in('key', ['engine', 'weather_thresholds', 'frost_defaults', 'k_privacy', 'k_reliab']);
   if (error) throw error;
   const map: Record<string, unknown> = Object.fromEntries(
     (data ?? []).map((r: { key: string; value: unknown }) => [r.key, r.value]),
@@ -49,5 +61,9 @@ export async function loadAppConfig(db: any): Promise<EngineConfig> {
     engine: { ...kDefaultEngine, ...(map.engine as object ?? {}) },
     weatherThresholds: { ...kDefaultThresholds, ...(map.weather_thresholds as object ?? {}) },
     frostDefaults: { ...kDefaultFrost, ...(map.frost_defaults as object ?? {}) },
+    thresholds: {
+      kPrivacy: intOr(map.k_privacy, kDefaultCommunityThresholds.kPrivacy),
+      kReliab: intOr(map.k_reliab, kDefaultCommunityThresholds.kReliab),
+    },
   };
 }

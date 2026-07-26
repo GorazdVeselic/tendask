@@ -1475,7 +1475,7 @@ class _Translations$suggestions$community$most_started$sl extends Translations$s
 
 	// Translations
 	@override String get title => '{task} v okolici';
-	@override String get body => 'Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo.';
+	@override String get body => 'Večina vrtnarjev v tvoji okolici je to letos že začela.';
 }
 
 // Path: suggestions.lawn.mow_due
@@ -2793,7 +2793,7 @@ extension on TranslationsSl {
 			'suggestions.weather.window_open.title' => '{task}: ugodno okno',
 			'suggestions.weather.window_open.body' => 'Za {subject} prihaja suho obdobje — primeren čas.',
 			'suggestions.community.most_started.title' => '{task} v okolici',
-			'suggestions.community.most_started.body' => 'Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo.',
+			'suggestions.community.most_started.body' => 'Večina vrtnarjev v tvoji okolici je to letos že začela.',
 			'suggestions.lawn.mow_due.title' => 'Čas za košnjo',
 			'suggestions.lawn.mow_due.body' => '{subject}: čas za košnjo.',
 			'suggestions.lawn.water_drought.title' => 'Zalivanje v suši',

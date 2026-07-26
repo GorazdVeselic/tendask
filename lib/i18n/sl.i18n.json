@@ -696,7 +696,7 @@
     "community": {
       "most_started": {
         "title": "{task} v okolici",
-        "body": "Približno {percent} % vrtnarjev v tvoji okolici je to letos že začelo."
+        "body": "Večina vrtnarjev v tvoji okolici je to letos že začela."
       }
     },
     "lawn": {

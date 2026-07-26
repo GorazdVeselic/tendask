@@ -121,6 +121,14 @@
 ### Korak 10 — R6 (percentil okolice) + opt-in push
 - **Zajema:** pravilo R6 v `smart-engine` (bere agregate, CDF, cooldown), tease ubeseditev brez številke za ne-naročnike, push le ob vklopljenih `community_hints` (opt-in že iz M11.6). Deno testi (CDF nad/pod `kReliab`; cooldown).
 - **Cilj:** motor upošteva okolico; številka ostane za Plus (prižge FR-20).
+- **Izvedeno 2026-07-25.** `community.ts` (branje agregatov + CDF + fallback) in `rules_community.ts`
+  (R6). Uskladitve s §7.4 so zapisane v `03 §R6` (skupina namesto tipa, brez `@site`, ena kartica na
+  vrsto, samo zaključene sezone, odstotek ni na brezplačni kartici). Opt-in za push je že obstajal
+  v `index.ts` (`community_hints`). +20 Deno testov (116 skupaj).
+- **Popravljena pred-obstoječa napaka (M11.12):** `pushTitle()` je vračal surovo predlogo, zato bi
+  potisno obvestilo za R2/R3/R6/`weather.window_open` v obvestilnem oknu pisalo dobesedno
+  `{task} je na vrsti`. Klient markerje polni sam, strežnik jih ni. Novi `push_text.ts` napolni
+  `{task}` iz `task_type.labels` v jeziku profila (fallback en → id); `loadTaskTypes` bere `labels`.
 
 ## Faza 5 — zaključek in merge
 

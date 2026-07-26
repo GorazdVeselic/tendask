@@ -230,6 +230,28 @@ premium — gl. `08` §8.3; ne-naročnik dobi tease različico brez številke).
 params `{task_type_id, percent}` (ubeseditev iz CDF, `skupnost-agregacija.md` §7.8).
 **COOLDOWN:** 14 dni. **DISMISS:** do konca sezone. **validUntil:** `today + 7`.
 
+### Uskladitev ob implementaciji (2026-07-25, `rules_community.ts` + `community.ts`)
+
+Zgornji psevdokod je nastal pred uskladitvijo primerjalnih skupin (§7.4). Kar dejansko teče:
+
+- **Enota je primerjalna skupina, ne tip opravila.** Krivulja se bere za `(task_type_id, plant_id)`,
+  kjer je `plant_id` kataloška vrsta, ki jo uporabnik ima. Fallback širi **samo** geografijo
+  (r7→r6→r5→climate), skupina se nikoli ne zamenja.
+- **Prostorska skupina (`@site`) ne sproži R6.** Predlog mora imenovati subjekt, `@site` pa zliva
+  trato, gredico in lastne rastline v skupino, na katero ni mogoče pokazati.
+- **Ena kartica na vrsto, ne na primerek.** Trije paradižniki so ena vrtnarska odločitev; subjekt je
+  primerek z najmanjšim `id` (determinizem). »Že narejeno letos« se preveri na **vseh** primerkih vrste.
+- **Samo zaključene pretekle sezone.** Klient sme pasti na tekočo krivuljo v označenem cenzuriranem
+  načinu (§7.6); proaktivna trditev »večina je že začela« ne sme — tekoča krivulja po konstrukciji
+  teži k 100 % in bi pravilo sprožila vsakomur vsako leto. Brez pretekle sezone ni R6.
+- **Sam ne doseže praga.** `1.0/1.5 < emit_threshold (2.0)`, enako kot R2: R6 se pokaže šele, ko se
+  strinja tudi suho okno (ojačitev R1) — torej ko je namig tudi izvedljiv danes.
+- **Odstotka na brezplačni površini ni.** Motor `percent` pošlje v `message_params` kot dokazilo
+  (vrstica mora ostati preverljiva), a `suggestions.community.most_started.body` ga **ne** izpiše;
+  številka živi na `/community/task`, ob velikosti vzorca in opombi o prvi sezoni (§12.5, §7.7).
+  Pogodbo uveljavlja `test/i18n/suggestions_i18n_test.dart`.
+- **Pragova bere motor iz `app_config`** (`k_privacy`, `k_reliab`) — ista vira kot RLS in klient.
+
 ---
 
 ## Cevovod (skupni tek — natančen vrstni red)

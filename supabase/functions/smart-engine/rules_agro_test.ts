@@ -2,7 +2,12 @@ import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r5, r7, resolveWindow } from './rules_agro.ts';
 import { dedupAndRank } from './pipeline.ts';
-import { kDefaultEngine, kDefaultFrost, kDefaultThresholds } from './config.ts';
+import {
+  kDefaultCommunityThresholds,
+  kDefaultEngine,
+  kDefaultFrost,
+  kDefaultThresholds,
+} from './config.ts';
 import { addDaysStr, isoWeek, isoWeekMonday } from './dates.ts';
 import type {
   ClimateSignals,
@@ -19,6 +24,7 @@ const kCfg: EngineConfig = {
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,
+  thresholds: kDefaultCommunityThresholds,
 };
 
 const kNow = new Date('2026-06-12T12:00:00Z'); // local today 2026-06-12 (CEST)
@@ -123,6 +129,8 @@ function bundle(over: Partial<UserBundle> = {}): UserBundle {
     profile: {
       user_id: 'u1',
       h3_r7: '871f1d4a9ffffff',
+      h3_r6: null,
+      h3_r5: null,
       timezone: 'Europe/Ljubljana',
       lang: 'sl',
       climate_bucket: 'e1_t6',

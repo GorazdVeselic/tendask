@@ -1,7 +1,12 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r2, r3 } from './rules.ts';
-import { kDefaultEngine, kDefaultFrost, kDefaultThresholds } from './config.ts';
+import {
+  kDefaultCommunityThresholds,
+  kDefaultEngine,
+  kDefaultFrost,
+  kDefaultThresholds,
+} from './config.ts';
 import type {
   EngineConfig,
   PlantTaskRule,
@@ -15,6 +20,7 @@ const kCfg: EngineConfig = {
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,
+  thresholds: kDefaultCommunityThresholds,
 };
 
 // 12:00 UTC = 14:00 Europe/Ljubljana (CEST) → local today 2026-06-12.
@@ -47,6 +53,8 @@ function bundle(tasks: TaskRow[], overrides: Partial<UserBundle> = {}): UserBund
     profile: {
       user_id: 'u1',
       h3_r7: '871f1d4a9ffffff',
+      h3_r6: null,
+      h3_r5: null,
       timezone: 'Europe/Ljubljana',
       lang: 'sl',
       climate_bucket: 'e1_t6',

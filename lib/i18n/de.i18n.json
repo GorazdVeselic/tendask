@@ -686,7 +686,7 @@
     "community": {
       "most_started": {
         "title": "{task} in der Nähe",
-        "body": "Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen."
+        "body": "Die meisten Gärtner in deiner Nähe haben das diese Saison schon begonnen."
       }
     },
     "lawn": {

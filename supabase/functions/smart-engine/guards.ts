@@ -22,8 +22,10 @@ type CodeEval = (w: WeatherSignals, t: WeatherThresholds) => boolean;
 const kCodeEvals: Record<string, CodeEval> = {
   dry12h: (w) => w.forecastDryHours >= 12,
   dry24h: (w) => w.forecastDryHours >= 24,
-  no_rain_forecast_24h: (w, t) => w.forecastRainMm24h != null && w.forecastRainMm24h < t.rain_24h_mm,
-  no_rain_forecast_48h: (w, t) => w.forecastRainMm48h != null && w.forecastRainMm48h < t.rain_48h_mm,
+  no_rain_forecast_24h: (w, t) =>
+    w.forecastRainMm24h != null && w.forecastRainMm24h < t.rain_24h_mm,
+  no_rain_forecast_48h: (w, t) =>
+    w.forecastRainMm48h != null && w.forecastRainMm48h < t.rain_48h_mm,
   no_heavy_rain_24h: (w, t) =>
     w.forecastRainMm24h != null && w.forecastRainMm24h < t.heavy_rain_24h_mm,
   wind_lt_15: (w) => w.windSpeedKmh != null && w.windSpeedKmh < 15,

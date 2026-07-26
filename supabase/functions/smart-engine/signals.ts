@@ -134,7 +134,9 @@ export function buildClimateSignals(
   const fromDefaults = cp == null;
   // Frost-free location (profile present, doy null) stays null on purpose:
   // frost_offset rules skip; only month_window regionalisation falls back (07 §7.3).
-  const lastDoy = fromDefaults ? cfg.frostDefaults.last_frost_doy : cp.frost_last_spring_doy ?? null;
+  const lastDoy = fromDefaults
+    ? cfg.frostDefaults.last_frost_doy
+    : cp.frost_last_spring_doy ?? null;
   const firstDoy = fromDefaults
     ? cfg.frostDefaults.first_frost_doy
     : cp.frost_first_autumn_doy ?? null;

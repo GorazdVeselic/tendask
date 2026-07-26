@@ -1,12 +1,18 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { planHousekeeping, type SuggestionRow } from './housekeep.ts';
-import { kDefaultEngine, kDefaultFrost, kDefaultThresholds } from './config.ts';
+import {
+  kDefaultCommunityThresholds,
+  kDefaultEngine,
+  kDefaultFrost,
+  kDefaultThresholds,
+} from './config.ts';
 import type { ClimateSignals, EngineConfig, PlantTaskRule } from './types.ts';
 
 const kCfg: EngineConfig = {
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,
+  thresholds: kDefaultCommunityThresholds,
 };
 
 const kClimate: ClimateSignals = {

@@ -16,6 +16,10 @@ export interface NotificationSettings {
 export interface Profile {
   user_id: string;
   h3_r7: string | null;
+  // Coarser cells exist only for the community fallback chain (§7.4); weather
+  // always uses the r7 centroid.
+  h3_r6: string | null;
+  h3_r5: string | null;
   timezone: string | null;
   lang: string | null;
   climate_bucket: string | null;
@@ -61,6 +65,9 @@ export interface TaskTypeMeta {
   default_cadence: number | null;
   weather_sensitive: boolean;
   seasonal: boolean;
+  // Catalog labels by language ({"sl":"Setev",…}) — the engine needs them to
+  // fill the {task} marker in a push title, which has no client to render it.
+  labels?: Record<string, string> | null;
 }
 
 export interface Supply {
@@ -110,10 +117,19 @@ export interface EngineKnobs {
   [key: string]: number;
 }
 
+/** Community aggregate gates (app_config `k_privacy` / `k_reliab`, seeded in
+ * 0006). Below kPrivacy nothing is published at all (RLS enforces it); below
+ * kReliab a share stays descriptive instead of a number (§7.7). */
+export interface CommunityThresholds {
+  kPrivacy: number;
+  kReliab: number;
+}
+
 export interface EngineConfig {
   engine: EngineKnobs;
   weatherThresholds: WeatherThresholds;
   frostDefaults: { last_frost_doy: number; first_frost_doy: number };
+  thresholds: CommunityThresholds;
 }
 
 export interface WeatherSignals {

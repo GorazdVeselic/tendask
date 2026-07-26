@@ -11,13 +11,16 @@ import { buildClimateSignals, buildSignals, type Signals } from './signals.ts';
 import { debugGuardCodes } from './guards.ts';
 import { r2, r3 } from './rules.ts';
 import { r5, r7 } from './rules_agro.ts';
+import { r6 } from './rules_community.ts';
+import { bucketsOf, loadSeasonCdfs, type SeasonCdf } from './community.ts';
 import { applyGuards, dedupAndRank, emit, enrichR4 } from './pipeline.ts';
 import { housekeep } from './housekeep.ts';
 import { fetchOpenMeteoWithRetry } from './weather.ts';
 import { localDateStr, safeTimeZone } from './dates.ts';
-import type { EngineConfig } from './types.ts';
+import type { EngineConfig, TaskTypeMeta, UserBundle } from './types.ts';
 import { fcmProjectId, sendSuggestionPush } from '../_shared/fcm.ts';
-import { pushBody, pushTitle } from '../_shared/push_i18n.ts';
+import { pushBody } from '../_shared/push_i18n.ts';
+import { pushTitleFor } from './push_text.ts';
 import { reportError } from '../_shared/report.ts';
 
 function jsonResponse(body: unknown, status = 200): Response {
@@ -78,6 +81,37 @@ async function cellWeather(
   return payload;
 }
 
+/** The community curves R6 needs for this user: the species they grow × the
+ * seasonal task types, resolved through the bucket chain. Empty (and free) for a
+ * profile with no cells or no catalog plants — the common case before launch. */
+// deno-lint-ignore no-explicit-any
+async function seasonCdfsFor(
+  db: any,
+  bundle: UserBundle,
+  taskTypes: Map<string, TaskTypeMeta>,
+  signals: Signals,
+  cfg: EngineConfig,
+  memo: Map<string, Map<string, SeasonCdf>>,
+): Promise<Map<string, SeasonCdf>> {
+  const cohorts = [
+    ...new Set(
+      bundle.plants.filter((p) => !p.is_custom && p.plant_id != null)
+        .map((p) => p.plant_id as string),
+    ),
+  ];
+  if (cohorts.length === 0) return new Map();
+  const seasonal = [...taskTypes.values()].filter((t) => t.seasonal).map((t) => t.id);
+  return await loadSeasonCdfs(
+    db,
+    bucketsOf(bundle.profile),
+    seasonal,
+    cohorts,
+    Number(signals.localToday.slice(0, 4)),
+    cfg.thresholds.kPrivacy,
+    memo,
+  );
+}
+
 function debugSignals(signals: Signals, cfg: EngineConfig): unknown {
   return {
     local_today: signals.localToday,
@@ -118,6 +152,8 @@ Deno.serve(async (req) => {
 
     const results: unknown[] = [];
     const weatherMemo = new Map<string, unknown>();
+    // Neighbours in one cell share a slice: the batch pays for it once.
+    const communityMemo = new Map<string, Map<string, SeasonCdf>>();
     for (const userId of userIds) {
       try {
         const bundle = await loadUserBundle(db, userId, nowUtc);
@@ -132,13 +168,15 @@ Deno.serve(async (req) => {
         await housekeep(db, bundle, cacheDay, nowUtc, climate, rules, cfg);
         const weatherPayload = await cellWeather(db, bundle.profile.h3_r7, cacheDay, weatherMemo);
         const signals = buildSignals(bundle, taskTypes, weatherPayload, cfg, nowUtc);
-        // Order per 03 §Cevovod 4; R1 is folded into R3/R5 (inline dry-window
+        const cdfs = await seasonCdfsFor(db, bundle, taskTypes, signals, cfg, communityMemo);
+        // Order per 03 §Cevovod 4; R1 is folded into R3/R5/R6 (inline dry-window
         // bonus), R4 enriches survivors after the guards.
         const candidates = [
           ...r5(bundle, rules, signals, taskTypes, cfg),
           ...r7(bundle, rules, signals, cfg),
           ...r3(bundle, rules, signals, taskTypes, cfg),
           ...r2(bundle, signals, taskTypes, cfg),
+          ...r6(bundle, signals, taskTypes, cdfs, cfg),
         ];
         const guarded = applyGuards(candidates, signals, cfg, nowUtc);
         const enriched = enrichR4(guarded, signals.inventory, cfg);
@@ -171,7 +209,11 @@ Deno.serve(async (req) => {
                 const ok = await sendSuggestionPush({
                   fcmToken: bundle.profile.fcm_token,
                   projectId: fcmProjectId(),
-                  title: pushTitle(topCandidate.messageKey, bundle.profile.lang),
+                  title: pushTitleFor(
+                    topCandidate.messageKey,
+                    bundle.profile.lang,
+                    taskTypes.get(topCandidate.taskTypeId),
+                  ),
                   body: pushBody(bundle.profile.lang),
                   suggestionId: topId,
                 });
@@ -201,8 +243,13 @@ Deno.serve(async (req) => {
           user_id: userId,
           emitted,
           pushed,
-          candidates: ranked.map((c) => ({ rule_id: c.ruleId, task_type_id: c.taskTypeId,
-            subject_key: c.subjectKey, score: c.score, valid_until: c.validUntil })),
+          candidates: ranked.map((c) => ({
+            rule_id: c.ruleId,
+            task_type_id: c.taskTypeId,
+            subject_key: c.subjectKey,
+            score: c.score,
+            valid_until: c.validUntil,
+          })),
           signals: debugSignals(signals, cfg),
         });
       } catch (e) {

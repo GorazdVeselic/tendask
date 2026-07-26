@@ -14,7 +14,7 @@ function throwIfError(...results: { error: unknown }[]): void {
 export async function loadTaskTypes(db: any): Promise<Map<string, TaskTypeMeta>> {
   const res = await db
     .from('task_type')
-    .select('id,default_cadence,weather_sensitive,seasonal');
+    .select('id,default_cadence,weather_sensitive,seasonal,labels');
   throwIfError(res);
   return new Map((res.data ?? []).map((t: TaskTypeMeta) => [t.id, t]));
 }
@@ -41,7 +41,10 @@ export async function loadUserBundle(
 ): Promise<UserBundle | null> {
   const profileRes = await db
     .from('profile')
-    .select('user_id,h3_r7,timezone,lang,climate_bucket,climate_profile,fcm_token,notification_settings')
+    .select(
+      'user_id,h3_r7,h3_r6,h3_r5,timezone,lang,climate_bucket,climate_profile,' +
+        'fcm_token,notification_settings',
+    )
     .eq('user_id', userId)
     .maybeSingle();
   throwIfError(profileRes);

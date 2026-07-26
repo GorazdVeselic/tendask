@@ -1461,7 +1461,7 @@ class _Translations$suggestions$community$most_started$de extends Translations$s
 
 	// Translations
 	@override String get title => '{task} in der Nähe';
-	@override String get body => 'Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen.';
+	@override String get body => 'Die meisten Gärtner in deiner Nähe haben das diese Saison schon begonnen.';
 }
 
 // Path: suggestions.lawn.mow_due
@@ -2779,7 +2779,7 @@ extension on TranslationsDe {
 			'suggestions.weather.window_open.title' => '{task}: gutes Zeitfenster',
 			'suggestions.weather.window_open.body' => 'Für {subject} steht eine trockene Phase an — ein guter Zeitpunkt.',
 			'suggestions.community.most_started.title' => '{task} in der Nähe',
-			'suggestions.community.most_started.body' => 'Etwa {percent} % der Gärtner in deiner Nähe haben das diese Saison schon begonnen.',
+			'suggestions.community.most_started.body' => 'Die meisten Gärtner in deiner Nähe haben das diese Saison schon begonnen.',
 			'suggestions.lawn.mow_due.title' => 'Mähen fällig',
 			'suggestions.lawn.mow_due.body' => '{subject} ist bereit zum Mähen.',
 			'suggestions.lawn.water_drought.title' => 'Gießen bei Trockenheit',
