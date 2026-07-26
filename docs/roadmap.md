@@ -271,7 +271,13 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 ---
 
-## M11 — *(po MVP / V2)* Pametni motor + FCM + percentili
+## M11 — *(po MVP / V2)* Pametni motor + FCM + percentili ✅ ZAKLJUČEN (2026-07-26)
+
+> ✅ **M11.1–M11.19 + M11.21 narejeni; M11.20 (paywall) presežen s FR-20.** Vse leži v prod **temno**:
+> klient za `kSuggestionsEnabled=false`, strežnik za `app_config.engine_enabled=false`, edge funkcija
+> ni deployana, nočni cron ni omogočen. **Prižig je ločena poteza** (2 stikali + deploy + licence),
+> ne posledica merge-a. Zaključek faze E in usklajitve s specifikacijo: [`m11/09-koraki.md`](m11/09-koraki.md).
+> ⚠️ Migracija `0017` (`@site` veja v `agg_event`) **ni aplicirana nikjer** — mora na PROD pred prižigom crona.
 
 > ⭐ **POLNA PRED-IMPLEMENTACIJSKA SPECIFIKACIJA: [`docs/m11/`](m11/README.md)** (2026-06-11) —
 > agronomska pravila (61, z viri), signalni sloj, formalna pravila R1–R7, točen SQL (0005/0006),
@@ -572,6 +578,17 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
 
 > Agent tu dopisuje zaključene korake (datum · korak · commit hash). Najnovejše zgoraj.
 
+- 2026-07-25/26 — **M11 faza E dokončana → M11 ZAKLJUČEN (temno).** Plan `docs/m11/12-dokoncanje-m11.md`
+  (K1–K11) je XL korake M11.17–19 razbil na commit-velike. Commiti: `5058ad0` primerjalne skupine +
+  časovni percentil + frekvenca (migracija `0017`, `@site` veja), `13aab48` anti-steering test,
+  `941b5bd` detajl opravila (percentil, frekvenca, ta teden), `dc48384` popravki pregleda,
+  `6aac968` vstopni točki v Okolico (Domov + detajl opravila), `c4d75b7` zavihek »Kje si ti«
+  (masovno branje: ena rezina na nivo, ne ena na opravilo), `02f2c76` pregled prevodov
+  (spolno nevtralna slovenščina), `35e0777` R6 v motorju + opt-in push. **Odločitve:** obseg je
+  oznaka in ne izbirnik; primerjava vedno znotraj ene skupine (nikoli zlito); M11.20 presežen s FR-20
+  (v aplikaciji nikoli cena/URL/CTA). **Ob tem popravljeni pred-obstoječi napaki:** potisni naslovi so
+  pošiljali dobesedni `{task}` (strežnik markerjev ni polnil), napaka kataloga na landingu je dala
+  večni spinner. Stanje: `flutter test` 1150 zelenih, `deno test` 116 zelenih, analyze čist.
 - 2026-07-24 — **Uskladitev M11 ↔ main (main→M11, flag-dark; `feat/m11-smart-engine`, pushano).**
   `git merge main` v M11 (branch OSTANE, **NE** merge v main) — da M11 sedi na svežem main in bo kasnejši
   merge-back neboleč. Commita: `e0734ac` (merge, code reconcile) + `c27208e` (chore db). **Flag-dark:**

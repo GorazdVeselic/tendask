@@ -501,6 +501,12 @@ Odprto ostaja le **in-app nabiralnik (da/ne)**.
 
 ## 7.13 Pametni predlogi = sistemska obvestila (plast B) — PRAVILNI MOTOR
 
+> ✅ **IMPLEMENTIRANO (M11, 2026-07)** — pravila R1–R7, signalni sloj, FCM in pas predlogov na Domov
+> stojijo v kodi; specifikacija in odstopanja od nje so v [`m11/`](m11/README.md), koraki z DoD v
+> [`m11/09-koraki.md`](m11/09-koraki.md). **V prod APK-ju spi** za `kSuggestionsEnabled=false`
+> (strežniško zrcalo: `app_config.engine_enabled=false`, edge funkcija ni deployana) — prižig je ena
+> zavestna poteza, ne posledica deploya. To poglavje ostaja koncept; koda je vir resnice o tem, *kako*.
+
 > 📋 **Implementacijski načrt (koraki + inventar podatkov po virih + sloj agronomskih pravil
 > rastlin): [`pametni-motor.md`](pametni-motor.md).** To poglavje = koncept; ta datoteka = roadmap.
 
@@ -685,6 +691,14 @@ tretiranje dobi vseh 5 vodeno. Implementacija: refaktor `quick_log` + `task_form
 
 Agregirani (anonimizirani, GDPR-skladni) signali sosedov po območjih + primerjave.
 Primer: "Sosedje v tvoji okolici so na gredicah že posadili paradižnik."
+
+> ✅ **IMPLEMENTIRANO (M11.16–19, 2026-07)** — nočni agregacijski cron, 5. zavihek »Okolica« (feed
+> »Ta teden«, »Kje si ti«, per-opravilo predloga s časovnim percentilom in frekvenco), vstopni točki na
+> Domov in detajlu opravila, pravilo R6 v motorju. **V prod APK-ju spi** za `kSuggestionsEnabled`;
+> cel Okolica pogled je **Tendask +** (gate prižge FR-20, v M11 je le tease na stub entitlementu).
+> Dve odločitvi, ki nadomeščata spodnji opis: primerjava vedno teče znotraj **ene primerjalne skupine**
+> (ista rastlina ali prostorsko delo — nikoli zlito, §7.4), obseg pa je **oznaka, ne izbirnik**
+> (razreši ga fallback veriga, §12.1).
 
 > **Podroben statistični + podatkovni model:** [`skupnost-agregacija.md`](skupnost-agregacija.md)
 > (natančne definicije, agregacijski cevovod, princip prikaza, statistične pasti, §12 UI/IA). Spodaj je povzetek.

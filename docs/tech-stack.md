@@ -29,7 +29,7 @@
 | H3 (na napravi) | **h3_flutter** (FFI binding) | `h3_flutter` |
 | Lokacija (GPS) | **geolocator** (M7); vpisan kraj → **Open-Meteo Geocoding** (brez ključa, dio) | `geolocator` |
 | Lokalna obvestila (plast A) | **flutter_local_notifications** + tz (IANA cona prek `flutter_timezone`) | `flutter_local_notifications`, `timezone`, `flutter_timezone` |
-| Push (plast B) | **Firebase FCM** — **ODLOŽENO**, ne v prvem MVP | `firebase_messaging` (kasneje) |
+| Push (plast B) | **Firebase FCM** — **v uporabi od M11** (motor pametnih predlogov); v prod APK-ju spi za `kSuggestionsEnabled` do prižiga. **Ni** `in_app_purchase`: Plus je zunanja licenca (FR-20). | `firebase_core`, `firebase_messaging` |
 | Crash/monitoring | **Sentry** (čisti Dart `sentry` — `sentry_flutter` 8.x se ne prevede na svežem Android skladu Kotlin 2.3/AGP 9, 9.x pa poriše `jni` navzdol in zlomi `h3_flutter`; zato Dart paket + ročna `FlutterError`/`PlatformDispatcher` integracija) | `sentry` |
 | GDPR izvoz (deljenje datoteke) | **share_plus** (sistemski share sheet za izvoženo JSON datoteko, M9.7) | `share_plus` |
 | Zunanje povezave (politika zasebnosti) | **url_launcher** (odpre javno politiko zasebnosti v brskalniku — prijava + Nastavitve, M9.5) | `url_launcher` |

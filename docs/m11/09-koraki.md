@@ -182,7 +182,7 @@ Konsolidacija: Deno test suite (signali, vsa pravila, cevovod, regionalizacija) 
 - **Odvisnosti:** M11.1 (agg_context teče že od M11.2 — zgodovina se kopiči!) · **Kompleksnost:** L
 - **Commit:** `feat(db): V2 agregatne tabele + nočni cron (feed, percentil, frekvenca)`
 
-### M11.17 — Okolica: data + landing (feed »Ta teden«) `[ ]`
+### M11.17 — Okolica: data + landing (feed »Ta teden«) `[x]`
 **Wireframe:** preveri, ali `community-flow_v3.html` pokriva landing IN detajl (M11.18) —
 sicer pred kodo dopolni wireframe.
 `08` §8.3: CommunityRepository (feed + population + cache tabela 05 §5.6), 5. zavihek ⬡,
@@ -192,7 +192,7 @@ landing »This week« (kvalitativen feed), obseg label, empty/cold-start stanja.
 - **Odvisnosti:** M11.16 · **Kompleksnost:** XL
 - **Commit:** `feat(community): zavihek Okolica — feed Ta teden z dnevnim cache`
 
-### M11.18 — Okolica: percentil + frekvenca (detajl opravila) `[ ]`
+### M11.18 — Okolica: percentil + frekvenca (detajl opravila) `[x]`
 `08` §8.3: seasonCurve/frequency, CDF na napravi, fallback hierarhija, »Kje si ti« pregled,
 detajl predloga (krivulja + »ti« marker + stolpci frekvence), K_reliab opisni način,
 leto-1 omejeni način (§7.6).
@@ -202,7 +202,7 @@ leto-1 omejeni način (§7.6).
 - **Odvisnosti:** M11.17 · **Kompleksnost:** XL
 - **Commit:** `feat(community): časovni percentil in frekvenca s fallback hierarhijo`
 
-### M11.19 — R6 (percentil okolice) v motorju + opt-in push okolice `[ ]`
+### M11.19 — R6 (percentil okolice) v motorju + opt-in push okolice `[x]`
 `03` R6: engine bere agregate (fallback server-side), tease različica za ne-naročnike,
 community_hints opt-in že iz M11.6.
 - **DoD:** Deno test R6 (CDF nad/pod K_reliab; cooldown); push z odstotkom pride samo
@@ -222,13 +222,34 @@ community_hints opt-in že iz M11.6.
 - **Nadomesti z:** FR-20 (`docs/feature-requests/tendask-plus-licensing.md`,
   `docs/tendask-plus-rollout-plan.md`).
 
-### M11.21 — Dokumentacija + koncept sync `[ ]`
+### M11.21 — Dokumentacija + koncept sync `[x]`
 Povzetek v `koncept.md` §7.13/§8 (»implementirano, gl. docs/m11/«), `roadmap.md` dnevnik,
 `tech-stack.md` §1 (firebase paketa iz 'kasneje' v aktivno; **brez** in_app_purchase — Plus je
 FR-20 zunanja licenca), memory update.
 - **DoD:** dokumenti skladni z implementiranim stanjem; brez sklicev na neobstoječe.
 - **Odvisnosti:** vse prejšnje · **Kompleksnost:** S
 - **Commit:** `docs: M11 zaključek — uskladitev koncepta, sklada in roadmapa`
+
+---
+
+## Zaključek faze E (2026-07-25/26)
+
+M11.17–19 in 21 so izvedeni po planu [`12-dokoncanje-m11.md`](12-dokoncanje-m11.md) (K1–K11), ki je
+XL korake razbil na commit-velike. **Vse Okolica UI gre v prod za `kSuggestionsEnabled=false`**, edge
+funkcija ni deployana in nočni cron ni omogočen — prižig je ločena, zavestna poteza.
+
+Med izvedbo usklajeno s specifikacijo (podrobnosti v povezanih dokumentih):
+- **Primerjalne skupine** (migracija `0017`, `skupnost-agregacija.md §7.4`): enota primerjave je
+  `(tip opravila, rastlina | @site)`, ne tip opravila. Zlita `plant_id=''` vrstica se ne bere nikoli.
+  Prizadene feed, percentil, frekvenco, R6 in obe vstopni točki.
+- **Obseg je oznaka, ne izbirnik** (odločitev A, `§12.1`): razreši ga fallback veriga; člen »vsi« odpade.
+- **M11.20 presežen** s FR-20 — v M11 je le `TeaseOverlay` na stub entitlementu (`kDevPlusStub`).
+- **R6 uskladitve** so zapisane v [`03 §R6`](03-pravila-r1-r7.md) (skupina namesto tipa, brez `@site`,
+  ena kartica na vrsto, samo zaključene sezone, odstotka na brezplačni kartici ni).
+
+**Odprto ob zaključku (ne blokira merge-a):** migracija `0017` ni aplicirana na nobeno bazo — mora na
+PROD **pred** prižigom nočnega agregata, sicer bi cron polnil `activity_*` brez `@site` veje
+(gl. [`../deploy-runbook.md`](../deploy-runbook.md)). `community_cache` nima evikcije.
 
 ## Mini-zemljevid odvisnosti
 

@@ -1,6 +1,10 @@
 # M11 — Pametni motor + FCM + skupnostni percentili — IMPLEMENTACIJSKA SPECIFIKACIJA
 
-> **Status:** POTRJENA pred-implementacijska specifikacija · 2026-06-11
+> **Status:** ✅ **IZVEDENO (2026-07-26)** — M11.1–M11.19 + M11.21; M11.20 presežen s FR-20.
+> Vse leži v prod **temno** (`kSuggestionsEnabled=false` + `app_config.engine_enabled=false`,
+> edge funkcija ni deployana). Ti dokumenti so **specifikacija**; kjer se izvedba od nje razlikuje,
+> je odstopanje zapisano na mestu (gl. `09-koraki.md` §Zaključek faze E, `03 §R6`, `08 §8.3`).
+> Prvotni status: POTRJENA pred-implementacijska specifikacija · 2026-06-11
 > **Vir resnice za izvedbo M11.** Nadgrajuje `docs/pametni-motor.md` (koncept motorja),
 > `docs/skupnost-agregacija.md` (statistični model V2), `docs/koncept.md` §7.12/§7.13/§7.14.
 > Razvijalec sledi korakom v `09-koraki.md`; vsa vsebinska/tehnična vprašanja so razrešena tukaj
