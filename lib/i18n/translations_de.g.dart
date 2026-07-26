@@ -1351,7 +1351,7 @@ class _Translations$community$intensity$de extends Translations$community$intens
 
 	// Translations
 	@override String get often => 'häufig';
-	@override String get some => 'einige';
+	@override String get some => 'manchmal';
 	@override String get rare => 'selten';
 }
 
@@ -1398,7 +1398,6 @@ class _Translations$community$detail$de extends Translations$community$detail$en
 		one: 'unter ~1 Gärtner',
 		other: 'unter ~${n} Gärtnern',
 	);
-	@override String get you => 'du';
 	@override String get frequency_title => 'Wie oft';
 	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
 	@override String get freq_unit => 'pro Saison';
@@ -2182,7 +2181,7 @@ class _Translations$community$detail$explain$de extends Translations$community$d
 	@override String get cta => 'Wie wir diese Zahlen lesen';
 	@override String get title => 'Wie wir diese Zahlen lesen';
 	@override String get source => 'Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.';
-	@override String get cohort => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.';
+	@override String get cohort => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengefasst.';
 	@override String get scope => 'Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.';
 	@override String get thresholds => 'Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.';
 	@override String get descriptive => 'Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.';
@@ -2911,7 +2910,7 @@ extension on TranslationsDe {
 			'community.scope.area' => 'in deiner Umgebung',
 			'community.scope.climate' => 'in einem ähnlichen Klima',
 			'community.intensity.often' => 'häufig',
-			'community.intensity.some' => 'einige',
+			'community.intensity.some' => 'manchmal',
 			'community.intensity.rare' => 'selten',
 			'community.empty_feed' => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.',
 			'community.empty_standing' => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.',
@@ -2935,7 +2934,6 @@ extension on TranslationsDe {
 			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Die meisten beginnen zwischen ${from} und ${to}.',
 			'community.detail.censored_note' => 'Erste Saison: gezählt werden nur die, die dieses Jahr schon begonnen haben — der Anteil verschiebt sich also noch.',
 			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('de'))(n, one: 'unter ~1 Gärtner', other: 'unter ~${n} Gärtnern', ), 
-			'community.detail.you' => 'du',
 			'community.detail.frequency_title' => 'Wie oft',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
 			'community.detail.freq_unit' => 'pro Saison',
@@ -2948,7 +2946,7 @@ extension on TranslationsDe {
 			'community.detail.explain.cta' => 'Wie wir diese Zahlen lesen',
 			'community.detail.explain.title' => 'Wie wir diese Zahlen lesen',
 			'community.detail.explain.source' => 'Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.',
-			'community.detail.explain.cohort' => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.',
+			'community.detail.explain.cohort' => 'Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengefasst.',
 			'community.detail.explain.scope' => 'Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.',
 			'community.detail.explain.thresholds' => 'Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.',
 			'community.detail.explain.descriptive' => 'Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.',

@@ -1010,7 +1010,7 @@ class _Translations$community$sl extends Translations$community$en {
 	@override late final _Translations$community$intensity$sl intensity = _Translations$community$intensity$sl._(_root);
 	@override String get empty_feed => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.';
 	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
-	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.';
+	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.';
 	@override late final _Translations$community$entry$sl entry = _Translations$community$entry$sl._(_root);
 	@override late final _Translations$community$standing$sl standing = _Translations$community$standing$sl._(_root);
 	@override late final _Translations$community$detail$sl detail = _Translations$community$detail$sl._(_root);
@@ -1363,7 +1363,7 @@ class _Translations$community$intensity$sl extends Translations$community$intens
 
 	// Translations
 	@override String get often => 'pogosto';
-	@override String get some => 'nekaj';
+	@override String get some => 'občasno';
 	@override String get rare => 'redko';
 }
 
@@ -1398,10 +1398,10 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get timing_kicker => 'Kdaj · tvoj položaj';
-	@override String you_percent({required Object percent}) => 'Bil si med prvimi ~${percent} %';
+	@override String get timing_kicker => 'Kdaj · kje si ti';
+	@override String you_percent({required Object percent}) => 'Med prvimi ~${percent} %';
 	@override late final _Translations$community$detail$you_band$sl you_band = _Translations$community$detail$you_band$sl._(_root);
-	@override String get not_started => 'Letos tega še nisi naredil';
+	@override String get not_started => 'Letos tega še nimaš zabeleženega';
 	@override String by_now_percent({required Object percent}) => 'Do zdaj je začelo ~${percent} %.';
 	@override String by_date_percent({required Object date, required Object percent}) => 'Do ${date} je začelo ~${percent} %.';
 	@override String peak_weeks({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}.';
@@ -1412,7 +1412,6 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 		few: 'med ~${n} vrtnarji',
 		other: 'med ~${n} vrtnarji',
 	);
-	@override String get you => 'ti';
 	@override String get frequency_title => 'Kako pogosto';
 	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
 	@override String get freq_unit => 'na sezono';
@@ -2169,9 +2168,9 @@ class _Translations$community$detail$you_band$sl extends Translations$community$
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get early => 'Bil si med zgodnejšimi';
-	@override String get typical => 'Bil si približno ob običajnem času';
-	@override String get late => 'Bil si med poznejšimi';
+	@override String get early => 'Med zgodnejšimi';
+	@override String get typical => 'Približno ob običajnem času';
+	@override String get late => 'Med poznejšimi';
 }
 
 // Path: community.detail.this_week
@@ -2197,7 +2196,7 @@ class _Translations$community$detail$explain$sl extends Translations$community$d
 	@override String get title => 'Kako beremo te podatke';
 	@override String get source => 'Številke prihajajo od vrtnarjev na Tendasku, ki beležijo opravila — ne od vseh vrtnarjev in niso agronomski nasvet.';
 	@override String get cohort => 'Primerjava teče vedno znotraj ene skupine: ista rastlina ali delo na površini, npr. trata ali gredica. Obrez jablane in obrez maline sta različni opravili, zato ju nikoli ne združimo.';
-	@override String get scope => 'Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kar razreši, je vedno napisano na zaslonu.';
+	@override String get scope => 'Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kateri obseg je v igri, je vedno napisano na zaslonu.';
 	@override String get thresholds => 'Pod 5 vrtnarji ne pokažemo ničesar; pod 30 ostane delež opisen namesto številke. Odstotke zaokrožimo na 10.';
 	@override String get descriptive => 'To opisuje, kaj ljudje delajo. Nikoli ti ne pove, kaj naj narediš.';
 	@override String get close => 'Razumem';
@@ -2925,11 +2924,11 @@ extension on TranslationsSl {
 			'community.scope.area' => 'v tvoji okolici',
 			'community.scope.climate' => 'v podobni klimi',
 			'community.intensity.often' => 'pogosto',
-			'community.intensity.some' => 'nekaj',
+			'community.intensity.some' => 'občasno',
 			'community.intensity.rare' => 'redko',
 			'community.empty_feed' => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.',
 			'community.empty_standing' => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.',
-			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.',
+			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.',
 			'community.entry.section' => 'V tvoji okolici',
 			'community.entry.see_all' => 'Vse iz okolice',
 			'community.entry.cta' => 'Kako je s tem opravilom v okolici',
@@ -2938,18 +2937,17 @@ extension on TranslationsSl {
 			'community.standing.band.early' => 'zgoden',
 			'community.standing.band.typical' => 'običajen',
 			'community.standing.band.late' => 'pozen',
-			'community.detail.timing_kicker' => 'Kdaj · tvoj položaj',
-			'community.detail.you_percent' => ({required Object percent}) => 'Bil si med prvimi ~${percent} %',
-			'community.detail.you_band.early' => 'Bil si med zgodnejšimi',
-			'community.detail.you_band.typical' => 'Bil si približno ob običajnem času',
-			'community.detail.you_band.late' => 'Bil si med poznejšimi',
-			'community.detail.not_started' => 'Letos tega še nisi naredil',
+			'community.detail.timing_kicker' => 'Kdaj · kje si ti',
+			'community.detail.you_percent' => ({required Object percent}) => 'Med prvimi ~${percent} %',
+			'community.detail.you_band.early' => 'Med zgodnejšimi',
+			'community.detail.you_band.typical' => 'Približno ob običajnem času',
+			'community.detail.you_band.late' => 'Med poznejšimi',
+			'community.detail.not_started' => 'Letos tega še nimaš zabeleženega',
 			'community.detail.by_now_percent' => ({required Object percent}) => 'Do zdaj je začelo ~${percent} %.',
 			'community.detail.by_date_percent' => ({required Object date, required Object percent}) => 'Do ${date} je začelo ~${percent} %.',
 			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}.',
 			'community.detail.censored_note' => 'Prva sezona: šteti so le tisti, ki so letos že začeli, zato se delež še premika.',
 			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: 'med ~1 vrtnarjem', two: 'med ~${n} vrtnarjema', few: 'med ~${n} vrtnarji', other: 'med ~${n} vrtnarji', ), 
-			'community.detail.you' => 'ti',
 			'community.detail.frequency_title' => 'Kako pogosto',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
 			'community.detail.freq_unit' => 'na sezono',
@@ -2963,7 +2961,7 @@ extension on TranslationsSl {
 			'community.detail.explain.title' => 'Kako beremo te podatke',
 			'community.detail.explain.source' => 'Številke prihajajo od vrtnarjev na Tendasku, ki beležijo opravila — ne od vseh vrtnarjev in niso agronomski nasvet.',
 			'community.detail.explain.cohort' => 'Primerjava teče vedno znotraj ene skupine: ista rastlina ali delo na površini, npr. trata ali gredica. Obrez jablane in obrez maline sta različni opravili, zato ju nikoli ne združimo.',
-			'community.detail.explain.scope' => 'Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kar razreši, je vedno napisano na zaslonu.',
+			'community.detail.explain.scope' => 'Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kateri obseg je v igri, je vedno napisano na zaslonu.',
 			'community.detail.explain.thresholds' => 'Pod 5 vrtnarji ne pokažemo ničesar; pod 30 ostane delež opisen namesto številke. Odstotke zaokrožimo na 10.',
 			'community.detail.explain.descriptive' => 'To opisuje, kaj ljudje delajo. Nikoli ti ne pove, kaj naj narediš.',
 			'community.detail.explain.close' => 'Razumem',

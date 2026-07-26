@@ -985,7 +985,7 @@
     },
     "intensity": {
       "often": "often",
-      "some": "some",
+      "some": "sometimes",
       "rare": "rarely"
     },
     "empty_feed": "Not enough gardeners nearby yet. This fills in as more people log their tasks.",
@@ -1022,12 +1022,11 @@
         "one": "among ~1 gardener",
         "other": "among ~$n gardeners"
       },
-      "you": "you",
       "frequency_title": "How often",
       "freq_range": "$from–$to×",
       "freq_unit": "per season",
       "freq_low_n": "Too few gardeners for a typical range yet.",
-      "freq_caption": "gardeners doing it N times",
+      "freq_caption": "how many gardeners do it N times",
       "this_week": {
         "often": "This week: many nearby are doing this",
         "some": "This week: some nearby are doing this",

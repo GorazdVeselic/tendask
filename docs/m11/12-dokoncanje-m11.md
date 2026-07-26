@@ -106,6 +106,15 @@
   samo-EN commit pustil suite rdeč. Ostane: branje prevodov s svežimi očmi (register, dolžina v
   layout matriki, anti-steering), po potrebi popravki + `dart run slang`.
 - **Cilj:** ubeseditev, ki jo je nekdo prebral kot besedilo, ne kot ključe.
+- **Izvedeno 2026-07-25.** Najdeno in popravljeno: (1) **slovenski deležniki so bili moški** (»Bil si med
+  zgodnejšimi«, »Letos tega še nisi naredil«) — 5 od 6 spolno zaznamovanih nizov v celotni aplikaciji je
+  bilo prav v Okolici; zamenjani z brezosebnimi oz. sedanjiškimi oblikami (»Med zgodnejšimi«, »Letos tega
+  še nimaš zabeleženega«). (2) Trojica intenzitete je mešala besedne vrste (»pogosto / **nekaj** / redko«)
+  → »pogosto / občasno / redko«, `§7.1` usklajen. (3) `detail.you` je bil mrtev ključ. (4) SL
+  `timing_kicker` poenoten s segmentom (»Kdaj · kje si ti«), SL `explain.scope` razumljivejši, SL
+  `privacy_note` dobil »Tvoja«, EN `freq_caption` poravnan s SL/DE, DE `explain.cohort` brez pogovornega
+  »zusammengeworfen«. **Ostane odprto (izven K9):** `harvest.sheet_title` »Koliko si pobral?« je zadnji
+  spolno zaznamovan niz v aplikaciji.
 
 ## Faza 4 — M11.19 R6 v motorju
 

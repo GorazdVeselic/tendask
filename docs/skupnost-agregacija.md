@@ -261,7 +261,8 @@ postane del "preteklih celih sezon".
 
 ### 7.1 Feed — "kaj se ta teden dogaja"
 Za uporabnikovo vedro (najfinejši nivo, ki prestane prag, §7.4), drseče okno: beri `activity_recent`,
-razvrsti po `distinct_users_7d` padajoče, top N. Prikaz **kvalitativno** ("pogosto / nekaj / redko")
+razvrsti po `distinct_users_7d` padajoče, top N. Prikaz **kvalitativno** ("pogosto / občasno / redko"
+— ubeseditev usklajena 2026-07-25: prvotni "nekaj" je mešal količinsko besedo med dva prislova)
 ali "med ~N vrtnarji". Deluje **takoj**, brez zgodovine.
 
 **Enota vrstice = primerjalna skupina** (§7.4), ne tip opravila: »Obrez · jablana«, »Košnja« (site).

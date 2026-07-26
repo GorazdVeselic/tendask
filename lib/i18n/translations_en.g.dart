@@ -2527,8 +2527,8 @@ class Translations$community$intensity$en {
 	/// en: 'often'
 	String get often => 'often';
 
-	/// en: 'some'
-	String get some => 'some';
+	/// en: 'sometimes'
+	String get some => 'sometimes';
 
 	/// en: 'rarely'
 	String get rare => 'rarely';
@@ -2606,9 +2606,6 @@ class Translations$community$detail$en {
 		other: 'among ~${n} gardeners',
 	);
 
-	/// en: 'you'
-	String get you => 'you';
-
 	/// en: 'How often'
 	String get frequency_title => 'How often';
 
@@ -2621,8 +2618,8 @@ class Translations$community$detail$en {
 	/// en: 'Too few gardeners for a typical range yet.'
 	String get freq_low_n => 'Too few gardeners for a typical range yet.';
 
-	/// en: 'gardeners doing it N times'
-	String get freq_caption => 'gardeners doing it N times';
+	/// en: 'how many gardeners do it N times'
+	String get freq_caption => 'how many gardeners do it N times';
 
 	late final Translations$community$detail$this_week$en this_week = Translations$community$detail$this_week$en.internal(_root);
 
@@ -4434,7 +4431,7 @@ extension on Translations {
 			'community.scope.area' => 'in your area',
 			'community.scope.climate' => 'in a similar climate',
 			'community.intensity.often' => 'often',
-			'community.intensity.some' => 'some',
+			'community.intensity.some' => 'sometimes',
 			'community.intensity.rare' => 'rarely',
 			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
 			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
@@ -4458,12 +4455,11 @@ extension on Translations {
 			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Most start between ${from} and ${to}.',
 			'community.detail.censored_note' => 'First season: only people who have already started this year are counted, so the share keeps moving.',
 			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'among ~1 gardener', other: 'among ~${n} gardeners', ), 
-			'community.detail.you' => 'you',
 			'community.detail.frequency_title' => 'How often',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
 			'community.detail.freq_unit' => 'per season',
 			'community.detail.freq_low_n' => 'Too few gardeners for a typical range yet.',
-			'community.detail.freq_caption' => 'gardeners doing it N times',
+			'community.detail.freq_caption' => 'how many gardeners do it N times',
 			'community.detail.this_week.often' => 'This week: many nearby are doing this',
 			'community.detail.this_week.some' => 'This week: some nearby are doing this',
 			'community.detail.this_week.rare' => 'This week: a few nearby are doing this',

@@ -985,7 +985,7 @@
     },
     "intensity": {
       "often": "häufig",
-      "some": "einige",
+      "some": "manchmal",
       "rare": "selten"
     },
     "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
@@ -1022,7 +1022,6 @@
         "one": "unter ~1 Gärtner",
         "other": "unter ~$n Gärtnern"
       },
-      "you": "du",
       "frequency_title": "Wie oft",
       "freq_range": "$from–$to×",
       "freq_unit": "pro Saison",
@@ -1038,7 +1037,7 @@
         "cta": "Wie wir diese Zahlen lesen",
         "title": "Wie wir diese Zahlen lesen",
         "source": "Die Zahlen stammen von Tendask-Gärtnern, die ihre Aufgaben erfassen — nicht von allen Gärtnern, und sie sind keine gärtnerische Empfehlung.",
-        "cohort": "Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengeworfen.",
+        "cohort": "Ein Vergleich läuft immer innerhalb einer Gruppe: dieselbe Pflanze oder Flächenarbeit wie Rasen oder Beet. Einen Apfelbaum und eine Himbeere zu schneiden sind verschiedene Arbeiten und werden nie zusammengefasst.",
         "scope": "Der Bereich wird nur so weit gefasst wie nötig — zuerst deine Umgebung, zuletzt ein ähnliches Klima. Was dabei herauskommt, steht auf dem Bildschirm.",
         "thresholds": "Unter 5 Gärtnern zeigen wir gar nichts; unter 30 bleibt der Anteil beschreibend statt einer Zahl. Prozente runden wir auf 10.",
         "descriptive": "Das beschreibt, was Leute tun. Es sagt dir nie, was du tun sollst.",

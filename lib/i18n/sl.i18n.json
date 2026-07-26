@@ -997,12 +997,12 @@
     },
     "intensity": {
       "often": "pogosto",
-      "some": "nekaj",
+      "some": "občasno",
       "rare": "redko"
     },
     "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
     "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
-    "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Točna lokacija ni nikoli razkrita.",
+    "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.",
     "entry": {
       "section": "V tvoji okolici",
       "see_all": "Vse iz okolice",
@@ -1018,14 +1018,14 @@
       }
     },
     "detail": {
-      "timing_kicker": "Kdaj · tvoj položaj",
-      "you_percent": "Bil si med prvimi ~$percent %",
+      "timing_kicker": "Kdaj · kje si ti",
+      "you_percent": "Med prvimi ~$percent %",
       "you_band": {
-        "early": "Bil si med zgodnejšimi",
-        "typical": "Bil si približno ob običajnem času",
-        "late": "Bil si med poznejšimi"
+        "early": "Med zgodnejšimi",
+        "typical": "Približno ob običajnem času",
+        "late": "Med poznejšimi"
       },
-      "not_started": "Letos tega še nisi naredil",
+      "not_started": "Letos tega še nimaš zabeleženega",
       "by_now_percent": "Do zdaj je začelo ~$percent %.",
       "by_date_percent": "Do $date je začelo ~$percent %.",
       "peak_weeks": "Večina začne med $from in $to.",
@@ -1036,7 +1036,6 @@
         "few": "med ~$n vrtnarji",
         "other": "med ~$n vrtnarji"
       },
-      "you": "ti",
       "frequency_title": "Kako pogosto",
       "freq_range": "$from–$to×",
       "freq_unit": "na sezono",
@@ -1053,7 +1052,7 @@
         "title": "Kako beremo te podatke",
         "source": "Številke prihajajo od vrtnarjev na Tendasku, ki beležijo opravila — ne od vseh vrtnarjev in niso agronomski nasvet.",
         "cohort": "Primerjava teče vedno znotraj ene skupine: ista rastlina ali delo na površini, npr. trata ali gredica. Obrez jablane in obrez maline sta različni opravili, zato ju nikoli ne združimo.",
-        "scope": "Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kar razreši, je vedno napisano na zaslonu.",
+        "scope": "Obseg se širi le toliko, kolikor mora — najprej tvoja okolica, na koncu podobna klima. Kateri obseg je v igri, je vedno napisano na zaslonu.",
         "thresholds": "Pod 5 vrtnarji ne pokažemo ničesar; pod 30 ostane delež opisen namesto številke. Odstotke zaokrožimo na 10.",
         "descriptive": "To opisuje, kaj ljudje delajo. Nikoli ti ne pove, kaj naj narediš.",
         "close": "Razumem"
