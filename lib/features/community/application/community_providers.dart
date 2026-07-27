@@ -4,6 +4,7 @@ import 'package:supabase_flutter/supabase_flutter.dart' hide Bucket;
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
+import '../../../core/database/catalog_provider.dart';
 import '../../../core/database/database_provider.dart';
 import '../data/community_models.dart';
 import '../data/community_repository.dart';
@@ -25,10 +26,26 @@ CommunityRepository communityRepository(Ref ref) {
           ? query.inFilter(e.key, value)
           : query.eq(e.key, value);
     }
-    final data = await query;
+    // Order first, then cap: PostgREST cuts at max_rows regardless, so the only
+    // choice is WHICH rows survive. Each table is ordered so the cut drops what
+    // matters least; the repository still refuses a slice that hit the cap.
+    final order = _aggOrder[table];
+    final capped = order == null
+        ? query.limit(kCommunityRowLimit)
+        : query
+              .order(order.$1, ascending: order.$2)
+              .limit(kCommunityRowLimit);
+    final data = await capped;
     return data.cast<Map<String, dynamic>>();
   });
 }
+
+/// Sort key per aggregate table: (column, ascending).
+const _aggOrder = <String, (String, bool)>{
+  'activity_recent': ('distinct_users_7d', false), // busiest cohorts first
+  'activity_season': ('year', false), // newest seasons first
+  'activity_frequency': ('season_year', false),
+};
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
@@ -69,6 +86,7 @@ Future<SeasonCurve?> communitySeasonCurve(
   String taskTypeId,
   String cohort,
 ) async {
+  if (!await _isSeasonal(ref, taskTypeId)) return null;
   final buckets = await ref.watch(communityBucketsProvider.future);
   final repo = ref.watch(communityRepositoryProvider);
   for (final bucket in buckets) {
@@ -154,8 +172,23 @@ Future<List<CommunityStanding>> communityStandings(Ref ref) async {
   final mine = await ref.watch(mySeasonsProvider.future);
   final buckets = await ref.watch(communityBucketsProvider.future);
   if (mine.isEmpty || buckets.isEmpty) return const [];
+  final types = await ref.watch(taskTypesMapProvider.future);
+  final pairs = [
+    for (final pair in mine.keys)
+      if (types[pair.$1]?.seasonal ?? false) pair,
+  ];
+  if (pairs.isEmpty) return const [];
   final curves = await ref
       .watch(communityRepositoryProvider)
-      .seasonCurves(buckets: buckets, pairs: mine.keys.toList());
+      .seasonCurves(buckets: buckets, pairs: pairs);
   return buildStandings(mine, curves);
+}
+
+/// A time percentile only means something for a seasonal act (§7.5): "when in
+/// the season did you first water this year" measures when the gardener joined,
+/// not how they garden. The nightly cron stopped materializing these curves
+/// (migration 0018); this keeps rows from an earlier run out of the UI too.
+Future<bool> _isSeasonal(Ref ref, String taskTypeId) async {
+  final types = await ref.watch(taskTypesMapProvider.future);
+  return types[taskTypeId]?.seasonal ?? false;
 }

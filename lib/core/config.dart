@@ -153,6 +153,13 @@ const kQuietHoursEndHour = 7;
 /// server's app_config.engine.band_max_active — docs/m11/03).
 const kSuggestionBandMax = 3;
 
+/// Row cap on a community aggregate read, mirroring PostgREST's `max_rows`
+/// (`supabase/config.toml`). PostgREST truncates at that number **without an
+/// error and without a signal**, so a slice that comes back exactly this long is
+/// treated as incomplete rather than as data: a season curve is normalised over
+/// the rows received, and silently dropped weeks would re-scale every percentage.
+const kCommunityRowLimit = 1000;
+
 /// Frequency histogram bands, in chart order — mirrors the server's bucketing
 /// (migration 0009: `n_events >= 5 → '5+'`). Fixed rather than read off the
 /// published keys: the aggregate omits empty bands, and a chart drawn from the

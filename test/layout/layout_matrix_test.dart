@@ -64,6 +64,21 @@ TaskType _taskType() => TaskType(
   defaultCadence: null,
 );
 
+/// The detail template needs a seasonal act: a season curve for watering is a
+/// state the engine cannot produce (§7.5), so a layout drawn from it would be
+/// exercising a screen that never ships.
+TaskType _seasonalTaskType() => TaskType(
+  id: 'prune',
+  labels: jsonEncode({'sl': 'Obrez', 'en': 'Pruning', 'de': 'Schnitt'}),
+  icon: '✂️',
+  category: 'care',
+  requiresSubject: true,
+  weatherSensitive: false,
+  consumesSupplies: false,
+  seasonal: true,
+  defaultCadence: null,
+);
+
 Plant _plant() => Plant(
   id: 'tomato',
   labels: jsonEncode({'sl': 'Paradižnik', 'en': 'Tomato', 'de': 'Tomate'}),
@@ -172,10 +187,10 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
 /// The detail template with everything present: curve + frequency + this week,
 /// which is the widest the screen ever gets.
 List<Override> _communityTaskOverrides({required bool hasPlus}) => [
-  taskTypesMapProvider.overrideWith((ref) => Stream.value({'water': _taskType()})),
+  taskTypesMapProvider.overrideWith((ref) => Stream.value({'prune': _seasonalTaskType()})),
   plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
   hasPlusProvider.overrideWithValue(hasPlus),
-  communitySeasonCurveProvider('water', 'tomato').overrideWith(
+  communitySeasonCurveProvider('prune', 'tomato').overrideWith(
     (ref) async => buildSeasonCurve(
       const [
         {'year': 2025, 'iso_week': 18, 'first_user_count': 12},
@@ -186,7 +201,7 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
       currentYear: 2026,
     ),
   ),
-  communityFrequencyProvider('water', 'tomato').overrideWith(
+  communityFrequencyProvider('prune', 'tomato').overrideWith(
     (ref) async => const FrequencyStats(
       bucket: Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
       p25: 2,
@@ -197,14 +212,14 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
       hist: {'1': 4, '2': 9, '3': 12, '4': 7, '5+': 3},
     ),
   ),
-  communityWeeklyProvider('water', 'tomato').overrideWith(
+  communityWeeklyProvider('prune', 'tomato').overrideWith(
     (ref) async => const CommunityWeekly(
       bucket: Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
       distinctUsers7d: 9,
       intensity: CommunityIntensity.some,
     ),
   ),
-  mySeasonProvider('water', 'tomato').overrideWith(
+  mySeasonProvider('prune', 'tomato').overrideWith(
     (ref) => Stream.value(MySeason(first: DateTime(2026, 5, 11), count: 3)),
   ),
 ];
@@ -381,14 +396,14 @@ void main() {
     'community/task',
     overrides: () => _communityTaskOverrides(hasPlus: true),
     build: () =>
-        const CommunityTaskScreen(taskTypeId: 'water', plantId: 'tomato'),
+        const CommunityTaskScreen(taskTypeId: 'prune', plantId: 'tomato'),
   );
 
   layoutMatrix(
     'community/task (tease)',
     overrides: () => _communityTaskOverrides(hasPlus: false),
     build: () =>
-        const CommunityTaskScreen(taskTypeId: 'water', plantId: 'tomato'),
+        const CommunityTaskScreen(taskTypeId: 'prune', plantId: 'tomato'),
   );
 
   // The two entry points live inside other screens, so they get the host a
@@ -408,7 +423,7 @@ void main() {
     'community/task entry',
     overrides: () => _communityTaskOverrides(hasPlus: true),
     build: () => const _EntryHost(
-      child: CommunityTaskLinkCard(taskTypeId: 'water', cohort: 'tomato'),
+      child: CommunityTaskLinkCard(taskTypeId: 'prune', cohort: 'tomato'),
     ),
   );
 

@@ -1,3 +1,4 @@
+import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Refreshable;
@@ -5,6 +6,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
 import 'package:tendask/features/community/data/community_repository.dart';
@@ -40,9 +42,25 @@ void main() {
   late AppDatabase db;
   late Map<String, List<Map<String, dynamic>>> store;
 
-  setUp(() {
+  /// The season curve is published for seasonal acts only (§7.5), so the
+  /// catalog has to be there before any of it resolves.
+  Future<void> seedTaskType(String id, {required bool seasonal}) =>
+      db.into(db.taskTypes).insert(
+        TaskTypesCompanion.insert(
+          id: id,
+          labels: '{"en":"$id"}',
+          icon: '🌱',
+          category: 'care',
+          seasonal: Value(seasonal),
+        ),
+      );
+
+  setUp(() async {
     db = AppDatabase.forTesting(NativeDatabase.memory());
     store = {};
+    await seedTaskType('mow', seasonal: true);
+    await seedTaskType('prune', seasonal: true);
+    await seedTaskType('water', seasonal: false);
   });
 
   tearDown(() => db.close());
@@ -61,6 +79,9 @@ void main() {
 
     final c = ProviderContainer(
       overrides: [
+        // The seasonal guard reads the catalog through the provider graph, so
+        // the in-memory db has to be the one the graph sees too.
+        databaseProvider.overrideWithValue(db),
         communityRepositoryProvider.overrideWithValue(repo),
         communityBucketsProvider.overrideWith((ref) => Stream.value(buckets)),
       ],
@@ -153,6 +174,52 @@ void main() {
 
     expect(stats!.bucket.resolution, CommunityResolution.r5);
     expect(stats.nUsers, 18);
+  });
+
+  test('a non-seasonal act has no season curve, however rich the data', () async {
+    // §7.5: "when in the season did you first water this year" measures when
+    // the gardener joined. The cron stopped materializing these (0018), but a
+    // slice from an earlier run must not reach the UI either.
+    store['activity_season|r7|cellA|water|@site'] = _season(80);
+
+    expect(
+      await readAlive(
+        container(),
+        communitySeasonCurveProvider('water', kCommunityCohortSite).future,
+      ),
+      isNull,
+    );
+  });
+
+  test('frequency is kept for non-seasonal acts — only the curve goes', () async {
+    // "How often per season" is a fair question about watering; only the
+    // time-percentile is not.
+    store['activity_frequency|r7|cellA|water|@site'] = _frequency(40);
+
+    final stats = await readAlive(
+      container(),
+      communityFrequencyProvider('water', kCommunityCohortSite).future,
+    );
+    expect(stats!.nUsers, 40);
+  });
+
+  test('a slice that hit the row cap is refused, not re-scaled', () async {
+    // PostgREST truncates at max_rows silently. The curve is normalised over
+    // the rows received, so a cut slice does not leave a gap — it moves every
+    // percentage, and the result looks perfectly valid.
+    store['activity_season|r7|cellA|mow|@site'] = [
+      for (var i = 0; i < kCommunityRowLimit; i++)
+        {'year': 2025, 'iso_week': (i % 53) + 1, 'first_user_count': 1},
+    ];
+    store['activity_season|r6|cellB|mow|@site'] = _season(20);
+
+    final curve = await readAlive(
+      container(),
+      communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
+    );
+
+    expect(curve!.bucket, _r6); // widened past the truncated level
+    expect(curve.pooledTotal, 20);
   });
 
   test('no buckets (no location yet) resolves to null, not an error', () async {

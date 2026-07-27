@@ -55,7 +55,7 @@ final class CommunityRepositoryProvider
 }
 
 String _$communityRepositoryHash() =>
-    r'dd6cceb830e4eaa8d10b30bdae77cb1fb48ce2ec';
+    r'91b4a52ca65618601677c27c7f0c2b5d9dcb5953';
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
@@ -287,7 +287,7 @@ final class CommunitySeasonCurveProvider
 }
 
 String _$communitySeasonCurveHash() =>
-    r'b4d4fe3389e9c837b1944b4e059a43141b390825';
+    r'7d743898672f54e4f2c4350a8f36b3de00a68163';
 
 /// Season curve for a task type inside [cohort], resolved by widening the
 /// geography only (r7 → r6 → r5 → climate). The cohort is fixed by the subject
@@ -706,4 +706,4 @@ final class CommunityStandingsProvider
 }
 
 String _$communityStandingsHash() =>
-    r'cdd6481b436a83ea09aee39c3427e98ec91ef653';
+    r'da1169842b84d4a61a548dafe3c4e3fbf26ec346';

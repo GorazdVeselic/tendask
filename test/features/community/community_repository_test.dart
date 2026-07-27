@@ -438,6 +438,31 @@ void main() {
       expect(calls - before, 2);
     });
 
+    test('a bulk slice that hit the row cap is not split into the cache', () async {
+      // PostgREST cuts at max_rows with no error, and the cut takes rows we
+      // cannot identify. Splitting such a slice per cohort would cache a curve
+      // that is quietly missing weeks — and the client re-scales what is left,
+      // so every percentage moves while still looking valid.
+      store['activity_season|r6|cellB|mow|@site'] = [
+        for (var i = 0; i < kCommunityRowLimit; i++)
+          {'year': 2025, 'iso_week': (i % 53) + 1, 'first_user_count': 1},
+      ];
+      store['activity_season|r6|cellB|prune|apple'] = const [
+        {'year': 2025, 'iso_week': 10, 'first_user_count': 8},
+      ];
+
+      final curves = await repo().seasonCurves(
+        buckets: buckets,
+        pairs: const [('mow', kCommunityCohortSite), ('prune', 'apple')],
+      );
+
+      // The neighbour cohort is unharmed: dropping the bulk slice sends each
+      // pair to its own exact read instead of a share of a truncated one.
+      expect(curves[('prune', 'apple')]!.pooledTotal, 8);
+      // The capped cohort gets no curve at all — silence beats a re-scaled one.
+      expect(curves.containsKey(('mow', kCommunityCohortSite)), isFalse);
+    });
+
     test('the list warms the detail: opening one afterwards costs nothing', () async {
       store['activity_season|r6|cellB|prune|apple'] = const [
         {'year': 2025, 'iso_week': 10, 'first_user_count': 8},

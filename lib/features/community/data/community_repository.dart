@@ -131,7 +131,7 @@ class CommunityRepository {
       'task_type_id': taskTypeId,
       'plant_id': cohort,
     });
-    if (rows == null) return null;
+    if (rows == null || rows.length >= kCommunityRowLimit) return null;
     return buildSeasonCurve(
       rows,
       bucket: bucket,
@@ -208,6 +208,10 @@ class CommunityRepository {
     } catch (_) {
       return;
     }
+    // A capped slice is missing rows we cannot identify, and splitting it would
+    // cache a truncated curve per pair. Drop it and let the per-pair reads fetch
+    // their own exact (tiny) slices — slower, but never a re-scaled percentage.
+    if (data.length >= kCommunityRowLimit) return;
     for (final pair in stale) {
       await _writeCache(keys[pair]!, [
         for (final row in data)

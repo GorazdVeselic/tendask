@@ -103,6 +103,10 @@ begin
     select v.resolution, v.bucket_key, e.task_type_id, e.plant_id, e.user_id,
            min(e.local_day) as first_day
     from public.agg_event e
+    -- 0018: seasonal types only (§7.5). "When in the season did you first water
+    -- this year" is not a question — the curve would be an artefact of when the
+    -- gardener joined, and the client would put a percentile on it.
+    join public.task_type tt on tt.id = e.task_type_id and tt.seasonal
     cross join lateral (values
         ('r7', e.h3_r7), ('r6', e.h3_r6), ('r5', e.h3_r5), ('climate', e.climate_bucket)
       ) as v(resolution, bucket_key)
@@ -116,13 +120,16 @@ begin
   -- Publishable gate (0018, supersedes decision 6): pooled total over the whole
   -- group ≥ K_reliab. Weekly rows are only k-anonymous as a group, so a group
   -- thin enough to publish a first_user_count = 1 week must not publish at all.
+  -- Non-seasonal types can only appear here as leftovers (the insert above skips
+  -- them) and are held unpublishable rather than deleted.
   update public.activity_season s
   set publishable = g.ok
   from (
-    select resolution, bucket_key, task_type_id, plant_id,
-           sum(first_user_count) >= public.k_reliab() as ok
-    from public.activity_season
-    group by resolution, bucket_key, task_type_id, plant_id
+    select s2.resolution, s2.bucket_key, s2.task_type_id, s2.plant_id,
+           sum(s2.first_user_count) >= public.k_reliab() and tt.seasonal as ok
+    from public.activity_season s2
+    join public.task_type tt on tt.id = s2.task_type_id
+    group by s2.resolution, s2.bucket_key, s2.task_type_id, s2.plant_id, tt.seasonal
   ) g
   where s.resolution = g.resolution and s.bucket_key = g.bucket_key
     and s.task_type_id = g.task_type_id and s.plant_id = g.plant_id
@@ -189,13 +196,16 @@ end;
 $$;
 
 -- Bring existing rows in line at once (no-op while the cron has never run).
+-- Nothing is deleted: a non-seasonal curve left over from a manual run simply
+-- stops being publishable, here and on every nightly pass.
 update public.activity_season s
 set publishable = g.ok
 from (
-  select resolution, bucket_key, task_type_id, plant_id,
-         sum(first_user_count) >= public.k_reliab() as ok
-  from public.activity_season
-  group by resolution, bucket_key, task_type_id, plant_id
+  select s2.resolution, s2.bucket_key, s2.task_type_id, s2.plant_id,
+         sum(s2.first_user_count) >= public.k_reliab() and tt.seasonal as ok
+  from public.activity_season s2
+  join public.task_type tt on tt.id = s2.task_type_id
+  group by s2.resolution, s2.bucket_key, s2.task_type_id, s2.plant_id, tt.seasonal
 ) g
 where s.resolution = g.resolution and s.bucket_key = g.bucket_key
   and s.task_type_id = g.task_type_id and s.plant_id = g.plant_id
