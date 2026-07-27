@@ -211,11 +211,14 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
     (ref) => Stream.value({'tomato': _plant()}),
   ),
   hasPlusProvider.overrideWithValue(hasPlus),
+  communityReachedProvider.overrideWith((ref) async => true),
   communityFeedProvider.overrideWith(
-    (ref) async => const CommunityFeed(
-      bucket: Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
+    (ref) async => CommunityFeed(
+      bucket: const Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
       population: 40,
-      items: [
+      // Stale on purpose: draws the "data from {date}" line in every locale.
+      fetchedAt: DateTime(2026, 7, 24),
+      items: const [
         CommunityFeedItem(
           taskTypeId: 'water',
           cohort: kCommunityCohortSite,
@@ -236,6 +239,7 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
 /// The detail template with everything present: curve + frequency + this week,
 /// which is the widest the screen ever gets.
 List<Override> _communityTaskOverrides({required bool hasPlus}) => [
+  communityReachedProvider.overrideWith((ref) async => true),
   taskTypesMapProvider.overrideWith((ref) => Stream.value({'prune': _seasonalTaskType()})),
   plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
   hasPlusProvider.overrideWithValue(hasPlus),

@@ -54,6 +54,10 @@ const _stats = FrequencyStats(
   hist: {'1': 4, '2': 9, '3': 12, '4': 7, '5+': 3},
 );
 
+/// How many times the screen asked for a slice — a pull-to-refresh that does
+/// not move this number is a gesture with no effect.
+int _reads = 0;
+
 Future<void> _pump(
   WidgetTester tester, {
   SeasonCurve? curve,
@@ -65,7 +69,9 @@ Future<void> _pump(
   ),
   MySeason mine = const MySeason(first: null, count: 0),
   bool hasPlus = true,
+  bool reached = true,
 }) async {
+  _reads = 0;
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
@@ -77,10 +83,14 @@ Future<void> _pump(
             (ref) => Stream.value({'apple': _plant()}),
           ),
           hasPlusProvider.overrideWithValue(hasPlus),
+          communityReachedProvider.overrideWith((ref) async => reached),
           communitySeasonCurveProvider(
             'prune',
             'apple',
-          ).overrideWith((ref) async => curve),
+          ).overrideWith((ref) async {
+            _reads++;
+            return curve;
+          }),
           communityFrequencyProvider(
             'prune',
             'apple',
@@ -192,7 +202,32 @@ void main() {
     await _pump(tester, curve: null, stats: null, weekly: null);
 
     expect(find.text(t.community.detail.no_curve), findsOneWidget);
+    expect(find.text(t.community.empty_offline), findsNothing);
     expect(find.byType(CommunityBars), findsNothing);
+  });
+
+  testWidgets('a device that never read the scope blames itself, not the '
+      'cohort', (tester) async {
+    await _pump(
+      tester,
+      curve: null,
+      stats: null,
+      weekly: null,
+      reached: false,
+    );
+
+    expect(find.text(t.community.empty_offline), findsOneWidget);
+    expect(find.text(t.community.detail.no_curve), findsNothing);
+  });
+
+  testWidgets('the detail re-reads its slices on a pull', (tester) async {
+    await _pump(tester, curve: null, stats: null, weekly: null);
+    final before = _reads;
+
+    await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
+    await tester.pumpAndSettle();
+
+    expect(_reads, greaterThan(before));
   });
 
   testWidgets('without Plus the whole detail is teased', (tester) async {

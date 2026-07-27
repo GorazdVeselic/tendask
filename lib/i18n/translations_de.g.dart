@@ -998,6 +998,8 @@ class _Translations$community$de extends Translations$community$en {
 	@override late final _Translations$community$intensity$de intensity = _Translations$community$intensity$de._(_root);
 	@override String get empty_feed => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.';
 	@override String get empty_standing => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.';
+	@override String get empty_offline => 'Auf diesem Gerät gibt es noch keine Daten aus der Umgebung.';
+	@override String data_from({required Object date}) => 'Daten vom ${date}';
 	@override String get privacy_note => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.';
 	@override late final _Translations$community$entry$de entry = _Translations$community$entry$de._(_root);
 	@override late final _Translations$community$standing$de standing = _Translations$community$standing$de._(_root);
@@ -2914,6 +2916,8 @@ extension on TranslationsDe {
 			'community.intensity.rare' => 'selten',
 			'community.empty_feed' => 'In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.',
 			'community.empty_standing' => 'Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.',
+			'community.empty_offline' => 'Auf diesem Gerät gibt es noch keine Daten aus der Umgebung.',
+			'community.data_from' => ({required Object date}) => 'Daten vom ${date}',
 			'community.privacy_note' => 'Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.',
 			'community.entry.section' => 'In deiner Umgebung',
 			'community.entry.see_all' => 'Alles aus der Umgebung',

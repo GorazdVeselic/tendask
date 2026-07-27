@@ -990,6 +990,8 @@
     },
     "empty_feed": "Not enough gardeners nearby yet. This fills in as more people log their tasks.",
     "empty_standing": "No task yet has enough gardeners nearby to compare with.",
+    "empty_offline": "No neighbourhood data on this device yet.",
+    "data_from": "Data from $date",
     "privacy_note": "Anonymous, at least 5 gardeners. Your exact location is never shared.",
     "entry": {
       "section": "In your area",

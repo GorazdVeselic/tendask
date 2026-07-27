@@ -31,6 +31,8 @@ class CommunityFeedList extends StatelessWidget {
     final hidden = teased ? items.skip(1).toList() : const <CommunityFeedItem>[];
 
     return ListView(
+      // A short feed must still accept the pull-to-refresh gesture.
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
       children: [
         CommunityFeedMeta(feed: feed),

@@ -1002,6 +1002,8 @@
     },
     "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
     "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
+    "empty_offline": "Podatkov o okolici na tej napravi še ni.",
+    "data_from": "Podatki od $date",
     "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.",
     "entry": {
       "section": "V tvoji okolici",

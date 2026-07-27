@@ -42,6 +42,8 @@ class CommunityStandingList extends StatelessWidget {
         : const <CommunityStanding>[];
 
     return ListView(
+      // A short list must still accept the pull-to-refresh gesture.
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 4, 16, 32),
       children: [
         Text(

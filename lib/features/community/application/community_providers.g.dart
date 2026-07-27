@@ -55,7 +55,7 @@ final class CommunityRepositoryProvider
 }
 
 String _$communityRepositoryHash() =>
-    r'91b4a52ca65618601677c27c7f0c2b5d9dcb5953';
+    r'e350feb9bc3a3eb219c12bfcc15a6dcbedcd62eb';
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
@@ -213,6 +213,53 @@ final class CommunityFeedProvider
 }
 
 String _$communityFeedHash() => r'4675b68c5fbcb2c79f3d2ac9758008ae2a91ec64';
+
+/// Whether the device holds any slice for the current scope. Every empty state
+/// asks this before saying "not enough gardeners nearby": with no slice the
+/// emptiness describes the device, and claiming the neighbourhood is thin would
+/// be a fact we never received.
+
+@ProviderFor(communityReached)
+final communityReachedProvider = CommunityReachedProvider._();
+
+/// Whether the device holds any slice for the current scope. Every empty state
+/// asks this before saying "not enough gardeners nearby": with no slice the
+/// emptiness describes the device, and claiming the neighbourhood is thin would
+/// be a fact we never received.
+
+final class CommunityReachedProvider
+    extends $FunctionalProvider<AsyncValue<bool>, bool, FutureOr<bool>>
+    with $FutureModifier<bool>, $FutureProvider<bool> {
+  /// Whether the device holds any slice for the current scope. Every empty state
+  /// asks this before saying "not enough gardeners nearby": with no slice the
+  /// emptiness describes the device, and claiming the neighbourhood is thin would
+  /// be a fact we never received.
+  CommunityReachedProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'communityReachedProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$communityReachedHash();
+
+  @$internal
+  @override
+  $FutureProviderElement<bool> $createElement($ProviderPointer pointer) =>
+      $FutureProviderElement(pointer);
+
+  @override
+  FutureOr<bool> create(Ref ref) {
+    return communityReached(ref);
+  }
+}
+
+String _$communityReachedHash() => r'c0fab875bb31148242f6dc6d4450789aa24a2c96';
 
 /// Season curve for a task type inside [cohort], resolved by widening the
 /// geography only (r7 → r6 → r5 → climate). The cohort is fixed by the subject

@@ -542,7 +542,7 @@ as CommunityIntensity,
 /// @nodoc
 mixin _$CommunityFeed {
 
- Bucket get bucket; int get population; List<CommunityFeedItem> get items;
+ Bucket get bucket; int get population; List<CommunityFeedItem> get items; DateTime get fetchedAt;
 /// Create a copy of CommunityFeed
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -553,16 +553,16 @@ $CommunityFeedCopyWith<CommunityFeed> get copyWith => _$CommunityFeedCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other.items, items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other.items, items)&&(identical(other.fetchedAt, fetchedAt) || other.fetchedAt == fetchedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(items));
+int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(items),fetchedAt);
 
 @override
 String toString() {
-  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items)';
+  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items, fetchedAt: $fetchedAt)';
 }
 
 
@@ -573,7 +573,7 @@ abstract mixin class $CommunityFeedCopyWith<$Res>  {
   factory $CommunityFeedCopyWith(CommunityFeed value, $Res Function(CommunityFeed) _then) = _$CommunityFeedCopyWithImpl;
 @useResult
 $Res call({
- Bucket bucket, int population, List<CommunityFeedItem> items
+ Bucket bucket, int population, List<CommunityFeedItem> items, DateTime fetchedAt
 });
 
 
@@ -590,12 +590,13 @@ class _$CommunityFeedCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeed
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? population = null,Object? items = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? population = null,Object? items = null,Object? fetchedAt = null,}) {
   return _then(_self.copyWith(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,population: null == population ? _self.population : population // ignore: cast_nullable_to_non_nullable
 as int,items: null == items ? _self.items : items // ignore: cast_nullable_to_non_nullable
-as List<CommunityFeedItem>,
+as List<CommunityFeedItem>,fetchedAt: null == fetchedAt ? _self.fetchedAt : fetchedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 /// Create a copy of CommunityFeed
@@ -689,10 +690,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items,  DateTime fetchedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommunityFeed() when $default != null:
-return $default(_that.bucket,_that.population,_that.items);case _:
+return $default(_that.bucket,_that.population,_that.items,_that.fetchedAt);case _:
   return orElse();
 
 }
@@ -710,10 +711,10 @@ return $default(_that.bucket,_that.population,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  int population,  List<CommunityFeedItem> items,  DateTime fetchedAt)  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeed():
-return $default(_that.bucket,_that.population,_that.items);case _:
+return $default(_that.bucket,_that.population,_that.items,_that.fetchedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -730,10 +731,10 @@ return $default(_that.bucket,_that.population,_that.items);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  int population,  List<CommunityFeedItem> items)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  int population,  List<CommunityFeedItem> items,  DateTime fetchedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeed() when $default != null:
-return $default(_that.bucket,_that.population,_that.items);case _:
+return $default(_that.bucket,_that.population,_that.items,_that.fetchedAt);case _:
   return null;
 
 }
@@ -745,7 +746,7 @@ return $default(_that.bucket,_that.population,_that.items);case _:
 
 
 class _CommunityFeed implements CommunityFeed {
-  const _CommunityFeed({required this.bucket, required this.population, required final  List<CommunityFeedItem> items}): _items = items;
+  const _CommunityFeed({required this.bucket, required this.population, required final  List<CommunityFeedItem> items, required this.fetchedAt}): _items = items;
   
 
 @override final  Bucket bucket;
@@ -757,6 +758,7 @@ class _CommunityFeed implements CommunityFeed {
   return EqualUnmodifiableListView(_items);
 }
 
+@override final  DateTime fetchedAt;
 
 /// Create a copy of CommunityFeed
 /// with the given fields replaced by the non-null parameter values.
@@ -768,16 +770,16 @@ _$CommunityFeedCopyWith<_CommunityFeed> get copyWith => __$CommunityFeedCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other._items, _items));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeed&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.population, population) || other.population == population)&&const DeepCollectionEquality().equals(other._items, _items)&&(identical(other.fetchedAt, fetchedAt) || other.fetchedAt == fetchedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(_items));
+int get hashCode => Object.hash(runtimeType,bucket,population,const DeepCollectionEquality().hash(_items),fetchedAt);
 
 @override
 String toString() {
-  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items)';
+  return 'CommunityFeed(bucket: $bucket, population: $population, items: $items, fetchedAt: $fetchedAt)';
 }
 
 
@@ -788,7 +790,7 @@ abstract mixin class _$CommunityFeedCopyWith<$Res> implements $CommunityFeedCopy
   factory _$CommunityFeedCopyWith(_CommunityFeed value, $Res Function(_CommunityFeed) _then) = __$CommunityFeedCopyWithImpl;
 @override @useResult
 $Res call({
- Bucket bucket, int population, List<CommunityFeedItem> items
+ Bucket bucket, int population, List<CommunityFeedItem> items, DateTime fetchedAt
 });
 
 
@@ -805,12 +807,13 @@ class __$CommunityFeedCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeed
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? population = null,Object? items = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? population = null,Object? items = null,Object? fetchedAt = null,}) {
   return _then(_CommunityFeed(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,population: null == population ? _self.population : population // ignore: cast_nullable_to_non_nullable
 as int,items: null == items ? _self._items : items // ignore: cast_nullable_to_non_nullable
-as List<CommunityFeedItem>,
+as List<CommunityFeedItem>,fetchedAt: null == fetchedAt ? _self.fetchedAt : fetchedAt // ignore: cast_nullable_to_non_nullable
+as DateTime,
   ));
 }
 

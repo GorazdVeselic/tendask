@@ -38,6 +38,7 @@ class CommunityTaskScreen extends ConsumerWidget {
     final frequency = ref.watch(communityFrequencyProvider(taskTypeId, cohort));
     final weekly = ref.watch(communityWeeklyProvider(taskTypeId, cohort));
     final mine = ref.watch(mySeasonProvider(taskTypeId, cohort));
+    final reached = ref.watch(communityReachedProvider);
     final hasPlus = ref.watch(hasPlusProvider);
 
     final taskType = catalog.asData?.value[taskTypeId];
@@ -57,28 +58,42 @@ class CommunityTaskScreen extends ConsumerWidget {
           ),
         ],
       ),
-      body: switch ((curve, frequency, weekly, mine)) {
-        (AsyncError(), _, _, _) ||
-        (_, AsyncError(), _, _) ||
-        (_, _, AsyncError(), _) ||
-        (_, _, _, AsyncError()) => LoadErrorHint(t.common.load_error),
-        (
-          AsyncData(value: final seasonCurve),
-          AsyncData(value: final stats),
-          AsyncData(value: final thisWeek),
-          AsyncData(value: final myRecord),
-        ) =>
-          _Body(
-            subject: plant == null ? null : catalogLabel(plant.labels),
-            icon: plant?.icon ?? taskType?.icon ?? '🌱',
-            curve: seasonCurve,
-            stats: stats,
-            weekly: thisWeek,
-            mine: myRecord,
-            hasPlus: hasPlus,
-          ),
-        _ => const Center(child: CircularProgressIndicator.adaptive()),
-      },
+      body: RefreshIndicator(
+        onRefresh: () async {
+          ref.invalidate(communityReachedProvider);
+          ref.invalidate(communitySeasonCurveProvider(taskTypeId, cohort));
+          ref.invalidate(communityFrequencyProvider(taskTypeId, cohort));
+          ref.invalidate(communityWeeklyProvider(taskTypeId, cohort));
+          await ref.read(
+            communitySeasonCurveProvider(taskTypeId, cohort).future,
+          );
+        },
+        child: switch ((curve, frequency, weekly, mine)) {
+          (AsyncError(), _, _, _) ||
+          (_, AsyncError(), _, _) ||
+          (_, _, AsyncError(), _) ||
+          (_, _, _, AsyncError()) => LoadErrorHint(t.common.load_error),
+          (
+            AsyncData(value: final seasonCurve),
+            AsyncData(value: final stats),
+            AsyncData(value: final thisWeek),
+            AsyncData(value: final myRecord),
+          ) =>
+            _Body(
+              subject: plant == null ? null : catalogLabel(plant.labels),
+              icon: plant?.icon ?? taskType?.icon ?? '🌱',
+              curve: seasonCurve,
+              stats: stats,
+              weekly: thisWeek,
+              mine: myRecord,
+              hasPlus: hasPlus,
+              // Unknown while it loads: the cold-start line waits rather than
+              // guessing which of the two truths to tell.
+              reached: reached.asData?.value ?? true,
+            ),
+          _ => const Center(child: CircularProgressIndicator.adaptive()),
+        },
+      ),
     );
   }
 }
@@ -92,6 +107,7 @@ class _Body extends StatelessWidget {
     required this.weekly,
     required this.mine,
     required this.hasPlus,
+    required this.reached,
   });
 
   final String? subject;
@@ -101,6 +117,7 @@ class _Body extends StatelessWidget {
   final CommunityWeekly? weekly;
   final MySeason mine;
   final bool hasPlus;
+  final bool reached;
 
   @override
   Widget build(BuildContext context) {
@@ -145,12 +162,13 @@ class _Body extends StatelessWidget {
             ),
           ),
         // Everything null is the honest cold-start, not an error: this cohort
-        // has too few gardeners at any level (§7.4).
+        // has too few gardeners at any level (§7.4) — unless the device has
+        // never read the scope at all, which says nothing about the cohort.
         if (season == null && frequency == null && week == null)
           Padding(
             padding: const EdgeInsets.symmetric(vertical: 24),
             child: Text(
-              t.community.detail.no_curve,
+              reached ? t.community.detail.no_curve : t.community.empty_offline,
               textAlign: TextAlign.center,
               style: theme.textTheme.bodyMedium?.copyWith(
                 color: cs.onSurfaceVariant,
@@ -161,6 +179,8 @@ class _Body extends StatelessWidget {
     );
 
     return ListView(
+      // A short detail must still accept the pull-to-refresh gesture.
+      physics: const AlwaysScrollableScrollPhysics(),
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
       children: [
         _Header(icon: icon, subject: subject, scope: _scopeLabel(t)),

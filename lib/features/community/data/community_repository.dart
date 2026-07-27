@@ -21,6 +21,10 @@ typedef RemoteAggFetch =
       Map<String, Object> filter,
     );
 
+/// A cached slice and when it was read from the cloud. Most callers only want
+/// the rows; the landing feed also dates them.
+typedef _Slice = ({List<Map<String, dynamic>> rows, DateTime fetchedAt});
+
 /// Reads the public community aggregate slices (activity_recent / season /
 /// frequency / bucket_population) and caches each slice on-device for the local
 /// day (`community_cache`). Repeat opens read locally (0 cloud), and offline
@@ -64,26 +68,46 @@ class CommunityRepository {
   /// time, never mixing (§7.4). null = not enough gardeners at any level.
   Future<CommunityFeed?> feed({required List<Bucket> buckets}) async {
     for (final bucket in buckets) {
-      final population = await bucketPopulation(bucket: bucket);
+      final scope = {
+        'resolution': bucket.resolution.name,
+        'bucket_key': bucket.key,
+      };
+      final populationSlice = await _cachedSlice('bucket_population', scope);
+      if (populationSlice == null) continue;
+      final population = _populationOf(populationSlice.rows);
       if (population == null || population < kCommunityPrivacyMin) continue;
       // Whole bucket slice in one daily pull (§12.4): site rows, plant rows and
       // the legacy superset arrive together and are split locally.
-      final rows = await _cachedRows('activity_recent', {
-        'resolution': bucket.resolution.name,
-        'bucket_key': bucket.key,
-      });
-      if (rows == null) continue;
+      final slice = await _cachedSlice('activity_recent', scope);
+      if (slice == null) continue;
       // Emptiness is judged on the cohorts, not the raw slice: a bucket holding
       // only superset/malformed rows has nothing to show and must widen too.
-      final items = _feedItems(rows, population);
+      final items = _feedItems(slice.rows, population);
       if (items.isEmpty) continue;
       return CommunityFeed(
         bucket: bucket,
         population: population,
         items: items,
+        fetchedAt: populationSlice.fetchedAt.isBefore(slice.fetchedAt)
+            ? populationSlice.fetchedAt
+            : slice.fetchedAt,
       );
     }
     return null;
+  }
+
+  /// Whether the device has ever read this scope from the cloud. Without a
+  /// slice, an empty answer is a fact about the device, not about the
+  /// neighbourhood — and the screen must not claim the latter.
+  Future<bool> hasCachedScope(List<Bucket> buckets) async {
+    for (final bucket in buckets) {
+      final key = _cacheKey('bucket_population', {
+        'resolution': bucket.resolution.name,
+        'bucket_key': bucket.key,
+      });
+      if (await _readCache(key) != null) return true;
+    }
+    return false;
   }
 
   /// The "this week" line for ONE cohort at ONE resolution level, read from the
@@ -212,11 +236,12 @@ class CommunityRepository {
     // cache a truncated curve per pair. Drop it and let the per-pair reads fetch
     // their own exact (tiny) slices — slower, but never a re-scaled percentage.
     if (data.length >= kCommunityRowLimit) return;
+    final now = _clock.now();
     for (final pair in stale) {
       await _writeCache(keys[pair]!, [
         for (final row in data)
           if (row['task_type_id'] == pair.$1 && row['plant_id'] == pair.$2) row,
-      ]);
+      ], now);
     }
   }
 
@@ -354,7 +379,11 @@ class CommunityRepository {
       'resolution': bucket.resolution.name,
       'bucket_key': bucket.key,
     });
-    if (rows == null || rows.isEmpty) return null;
+    return rows == null ? null : _populationOf(rows);
+  }
+
+  int? _populationOf(List<Map<String, dynamic>> rows) {
+    if (rows.isEmpty) return null;
     final value = rows.first['distinct_users'];
     return value is num ? value.toInt() : null;
   }
@@ -404,24 +433,32 @@ class CommunityRepository {
   /// (graceful degrade), else null. The table plus the whole filter IS the cache
   /// key, so two slices that differ in any column can never collide and no
   /// caller has to remember to name its own scope.
-  Future<List<Map<String, dynamic>>?> _cachedRows(
+  Future<_Slice?> _cachedSlice(
     String table,
     Map<String, String> filter,
   ) async {
     final key = _cacheKey(table, filter);
     final cached = await _readCache(key);
-    if (_isFresh(cached)) return _decode(cached!.payload);
-    if (_fetch == null) return cached == null ? null : _decode(cached.payload);
+    final local = cached == null
+        ? null
+        : (rows: _decode(cached.payload), fetchedAt: cached.fetchedAt);
+    if (_isFresh(cached) || _fetch == null) return local;
     try {
+      final now = _clock.now();
       final data = await _fetch(table, filter);
-      await _writeCache(key, data);
-      return data;
+      await _writeCache(key, data, now);
+      return (rows: data, fetchedAt: now);
     } catch (_) {
       // Network fail is a normal offline state, not an error path: fall back to
       // the last known slice rather than surfacing an exception.
-      return cached == null ? null : _decode(cached.payload);
+      return local;
     }
   }
+
+  Future<List<Map<String, dynamic>>?> _cachedRows(
+    String table,
+    Map<String, String> filter,
+  ) async => (await _cachedSlice(table, filter))?.rows;
 
   String _cacheKey(String table, Map<String, String> filter) {
     final columns = filter.keys.toList()..sort();
@@ -438,16 +475,19 @@ class CommunityRepository {
         cached.fetchedAt.toLocal(),
       ).isBefore(startOfDay(_clock.now().toLocal()));
 
-  Future<void> _writeCache(String key, List<Map<String, dynamic>> data) =>
-      _db
-          .into(_db.communityCaches)
-          .insertOnConflictUpdate(
-            CommunityCachesCompanion.insert(
-              key: key,
-              payload: jsonEncode(data),
-              fetchedAt: _clock.now(),
-            ),
-          );
+  Future<void> _writeCache(
+    String key,
+    List<Map<String, dynamic>> data,
+    DateTime now,
+  ) => _db
+      .into(_db.communityCaches)
+      .insertOnConflictUpdate(
+        CommunityCachesCompanion.insert(
+          key: key,
+          payload: jsonEncode(data),
+          fetchedAt: now,
+        ),
+      );
 
   List<Map<String, dynamic>> _decode(String payload) =>
       (jsonDecode(payload) as List).cast<Map<String, dynamic>>();

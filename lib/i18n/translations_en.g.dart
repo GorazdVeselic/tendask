@@ -2127,6 +2127,12 @@ class Translations$community$en {
 	/// en: 'No task yet has enough gardeners nearby to compare with.'
 	String get empty_standing => 'No task yet has enough gardeners nearby to compare with.';
 
+	/// en: 'No neighbourhood data on this device yet.'
+	String get empty_offline => 'No neighbourhood data on this device yet.';
+
+	/// en: 'Data from $date'
+	String data_from({required Object date}) => 'Data from ${date}';
+
 	/// en: 'Anonymous, at least 5 gardeners. Your exact location is never shared.'
 	String get privacy_note => 'Anonymous, at least 5 gardeners. Your exact location is never shared.';
 
@@ -4435,6 +4441,8 @@ extension on Translations {
 			'community.intensity.rare' => 'rarely',
 			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
 			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
+			'community.empty_offline' => 'No neighbourhood data on this device yet.',
+			'community.data_from' => ({required Object date}) => 'Data from ${date}',
 			'community.privacy_note' => 'Anonymous, at least 5 gardeners. Your exact location is never shared.',
 			'community.entry.section' => 'In your area',
 			'community.entry.see_all' => 'All from your area',

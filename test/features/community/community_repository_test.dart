@@ -96,6 +96,31 @@ void main() {
 
   tearDown(() => db.close());
 
+  test('watchBuckets resolves the scope finest → coarsest, skipping gaps', () async {
+    await db
+        .into(db.profiles)
+        .insert(
+          ProfilesCompanion.insert(
+            userId: 'u',
+            h3R7: const Value('cellA'),
+            // No r6 cell: the ladder must close the gap, not stop at it.
+            h3R5: const Value('cellC'),
+            climateBucket: const Value('e1_t5'),
+            updatedAt: DateTime(2026, 6, 1),
+          ),
+        );
+
+    expect(await repo().watchBuckets('u').first, const [
+      Bucket(resolution: CommunityResolution.r7, key: 'cellA'),
+      Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
+      Bucket(resolution: CommunityResolution.climate, key: 'e1_t5'),
+    ]);
+  });
+
+  test('watchBuckets on a device with no profile has no scope at all', () async {
+    expect(await repo().watchBuckets('u').first, isEmpty);
+  });
+
   test('feedIntensity maps share of bucket to a qualitative label', () {
     expect(feedIntensity(20, 40), CommunityIntensity.often); // 0.50
     expect(feedIntensity(15, 40), CommunityIntensity.often); // 0.375
@@ -190,6 +215,37 @@ void main() {
     expect(feed!.bucket.resolution, CommunityResolution.r6);
     expect(feed.items.first.taskTypeId, 'water');
     expect(calls, before); // no network touched
+  });
+
+  test('a feed dates itself by its stalest slice', () async {
+    await repo().feed(buckets: buckets);
+    final fresh = await repo().feed(buckets: buckets);
+    expect(fresh!.fetchedAt, DateTime(2026, 6, 1, 9));
+
+    // Two days on with no signal: the rows survive, the date moves with them.
+    clock._now = DateTime(2026, 6, 3, 9);
+    final stale = await repo(online: false).feed(buckets: buckets);
+    expect(stale!.fetchedAt, DateTime(2026, 6, 1, 9));
+  });
+
+  test('hasCachedScope tells an empty neighbourhood from an unread one', () async {
+    // Never reached: the emptiness is a fact about the device.
+    expect(await repo(online: false).hasCachedScope(buckets), isFalse);
+
+    await repo().feed(buckets: buckets);
+
+    // Reached once — the answer stays available offline, and so does the right
+    // to say "not enough gardeners nearby".
+    expect(await repo(online: false).hasCachedScope(buckets), isTrue);
+  });
+
+  test('hasCachedScope ignores slices of another scope', () async {
+    await repo().feed(buckets: buckets);
+
+    const elsewhere = [
+      Bucket(resolution: CommunityResolution.r7, key: 'somewhere-else'),
+    ];
+    expect(await repo(online: false).hasCachedScope(elsewhere), isFalse);
   });
 
   test('seasonCurve builds the CDF from the slice for that type+plant', () async {
@@ -332,6 +388,22 @@ void main() {
     final feed = await throwing.feed(buckets: buckets);
     expect(feed, isNotNull); // yesterday's slice, not an exception
     expect(feed!.population, 40);
+    expect(feed.fetchedAt, DateTime(2026, 6, 1, 9)); // dated as yesterday's
+  });
+
+  test('a feed is dated by its stalest slice, not its freshest', () async {
+    await repo().feed(buckets: buckets); // both slices read on day 1
+    clock._now = DateTime(2026, 6, 2, 9);
+
+    // Only the feed slice fails today: the population refreshes, the cohorts
+    // stay yesterday's — so the screen must say yesterday.
+    final partial = CommunityRepository(db, (table, filter) async {
+      if (table == 'activity_recent') throw Exception('network down');
+      return fetch(table, filter);
+    }, clock: clock);
+
+    final feed = await partial.feed(buckets: buckets);
+    expect(feed!.fetchedAt, DateTime(2026, 6, 1, 9));
   });
 
   /// Inserts a completed task, optionally on a user plant of [plantId].

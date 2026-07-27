@@ -51,10 +51,11 @@ UserPlant _userPlant(String id, String plantId) => UserPlant(
   syncStatus: 'synced',
 );
 
-CommunityFeed _feed() => const CommunityFeed(
+CommunityFeed _feed() => CommunityFeed(
   bucket: _bucket,
   population: 40,
-  items: [
+  fetchedAt: DateTime.now(),
+  items: const [
     CommunityFeedItem(
       taskTypeId: 'water',
       cohort: kCommunityCohortSite,

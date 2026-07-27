@@ -1010,6 +1010,8 @@ class _Translations$community$sl extends Translations$community$en {
 	@override late final _Translations$community$intensity$sl intensity = _Translations$community$intensity$sl._(_root);
 	@override String get empty_feed => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.';
 	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
+	@override String get empty_offline => 'Podatkov o okolici na tej napravi še ni.';
+	@override String data_from({required Object date}) => 'Podatki od ${date}';
 	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.';
 	@override late final _Translations$community$entry$sl entry = _Translations$community$entry$sl._(_root);
 	@override late final _Translations$community$standing$sl standing = _Translations$community$standing$sl._(_root);
@@ -2928,6 +2930,8 @@ extension on TranslationsSl {
 			'community.intensity.rare' => 'redko',
 			'community.empty_feed' => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.',
 			'community.empty_standing' => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.',
+			'community.empty_offline' => 'Podatkov o okolici na tej napravi še ni.',
+			'community.data_from' => ({required Object date}) => 'Podatki od ${date}',
 			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.',
 			'community.entry.section' => 'V tvoji okolici',
 			'community.entry.see_all' => 'Vse iz okolice',

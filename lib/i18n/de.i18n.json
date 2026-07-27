@@ -990,6 +990,8 @@
     },
     "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
     "empty_standing": "Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.",
+    "empty_offline": "Auf diesem Gerät gibt es noch keine Daten aus der Umgebung.",
+    "data_from": "Daten vom $date",
     "privacy_note": "Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.",
     "entry": {
       "section": "In deiner Umgebung",

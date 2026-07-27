@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
+import 'package:tendask/core/date_format.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
@@ -39,10 +40,11 @@ Plant _plant(String id, String en, String icon) => Plant(
 
 final _plants = {'apple': _plant('apple', 'Apple', '🍎')};
 
-CommunityFeed _feed() => const CommunityFeed(
+CommunityFeed _feed({DateTime? fetchedAt}) => CommunityFeed(
   bucket: _bucket,
   population: 40,
-  items: [
+  fetchedAt: fetchedAt ?? DateTime.now(),
+  items: const [
     CommunityFeedItem(
       taskTypeId: 'water',
       cohort: kCommunityCohortSite,
@@ -64,18 +66,31 @@ CommunityFeed _feed() => const CommunityFeed(
   ],
 );
 
+/// How many times the screen asked for a slice — a pull-to-refresh that does
+/// not move this number is a gesture with no effect.
+int _reads = 0;
+
 Future<void> _pump(
   WidgetTester tester, {
   required CommunityFeed? feed,
   bool hasPlus = true,
+  bool reached = true,
   List<CommunityStanding> standings = const [],
 }) async {
+  _reads = 0;
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
         overrides: [
-          communityFeedProvider.overrideWith((ref) async => feed),
-          communityStandingsProvider.overrideWith((ref) async => standings),
+          communityFeedProvider.overrideWith((ref) async {
+            _reads++;
+            return feed;
+          }),
+          communityReachedProvider.overrideWith((ref) async => reached),
+          communityStandingsProvider.overrideWith((ref) async {
+            _reads++;
+            return standings;
+          }),
           taskTypesMapProvider.overrideWith((ref) => Stream.value(_catalog)),
           plantsMapProvider.overrideWith((ref) => Stream.value(_plants)),
           hasPlusProvider.overrideWithValue(hasPlus),
@@ -174,6 +189,86 @@ void main() {
     await _pump(tester, feed: null);
 
     expect(find.text(t.community.empty_feed), findsOneWidget);
+    expect(find.text(t.community.empty_offline), findsNothing);
+  });
+
+  testWidgets('a device that never reached the cloud claims nothing about '
+      'the neighbourhood', (tester) async {
+    await _pump(tester, feed: null, reached: false);
+
+    expect(find.text(t.community.empty_offline), findsOneWidget);
+    expect(find.text(t.community.empty_feed), findsNothing);
+  });
+
+  testWidgets('the same distinction holds on "where you stand"', (tester) async {
+    await _pump(tester, feed: null, reached: false);
+    await tester.tap(find.text(t.community.seg_you));
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.community.empty_offline), findsOneWidget);
+    expect(find.text(t.community.empty_standing), findsNothing);
+  });
+
+  testWidgets('a slice read today carries no date line', (tester) async {
+    await _pump(tester, feed: _feed());
+
+    expect(find.textContaining(t.community.data_from(date: '')), findsNothing);
+  });
+
+  testWidgets('a slice from another day says which day it is from', (
+    tester,
+  ) async {
+    final stale = DateTime.now().subtract(const Duration(days: 2));
+    await _pump(tester, feed: _feed(fetchedAt: stale));
+
+    expect(
+      find.text(t.community.data_from(date: formatDmy(stale))),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('an empty state still accepts the pull-to-refresh gesture', (
+    tester,
+  ) async {
+    await _pump(tester, feed: null, reached: false);
+    final before = _reads;
+
+    await tester.fling(
+      find.text(t.community.empty_offline),
+      const Offset(0, 300),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    // The state a user is most likely to pull on: a bare Center would swallow
+    // the gesture and the slice would never be re-read.
+    expect(_reads, greaterThan(before));
+  });
+
+  testWidgets('a fed list can be pulled too', (tester) async {
+    await _pump(tester, feed: _feed());
+    final before = _reads;
+
+    await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
+    await tester.pumpAndSettle();
+
+    expect(_reads, greaterThan(before));
+  });
+
+  testWidgets('"where you stand" refreshes on its own pull', (tester) async {
+    await _pump(tester, feed: _feed());
+    await tester.tap(find.text(t.community.seg_you));
+    await tester.pumpAndSettle();
+    final before = _reads;
+
+    await tester.fling(
+      find.text(t.community.empty_standing),
+      const Offset(0, 300),
+      1000,
+    );
+    await tester.pumpAndSettle();
+
+    expect(_reads, greaterThan(before));
   });
 
   testWidgets('the "where you stand" segment switches the body', (tester) async {

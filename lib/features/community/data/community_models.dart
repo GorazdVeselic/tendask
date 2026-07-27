@@ -36,12 +36,17 @@ abstract class CommunityFeedItem with _$CommunityFeedItem {
 
 /// The landing "This week" feed for the resolved scope — the bucket that passed
 /// the privacy threshold, the bucket population, and the ranked feed items.
+///
+/// [fetchedAt] is when the slices behind it were last read from the cloud (the
+/// older of the two, since the feed is only as fresh as its stalest input). Not
+/// today = the screen says so instead of passing yesterday off as now.
 @freezed
 abstract class CommunityFeed with _$CommunityFeed {
   const factory CommunityFeed({
     required Bucket bucket,
     required int population,
     required List<CommunityFeedItem> items,
+    required DateTime fetchedAt,
   }) = _CommunityFeed;
 }
 

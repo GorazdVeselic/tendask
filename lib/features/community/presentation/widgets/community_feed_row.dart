@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
 import '../community_display.dart';
@@ -110,13 +111,24 @@ class CommunityFeedMeta extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    return Text(
-      '${t.community.window_7d} · '
-      '${communityScopeLabel(t, feed.bucket.resolution)} · '
-      '${t.community.population(n: feed.population)}',
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
+    final style = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final fetchedAt = feed.fetchedAt.toLocal();
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          '${t.community.window_7d} · '
+          '${communityScopeLabel(t, feed.bucket.resolution)} · '
+          '${t.community.population(n: feed.population)}',
+          style: style,
+        ),
+        // Offline the last slice stays on screen (CLAUDE.md § Network): date it
+        // rather than pass yesterday's neighbourhood off as today's.
+        if (!isSameDay(fetchedAt, DateTime.now()))
+          Text(t.community.data_from(date: formatDmy(fetchedAt)), style: style),
+      ],
     );
   }
 }

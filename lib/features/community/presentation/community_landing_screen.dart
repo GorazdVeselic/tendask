@@ -83,7 +83,8 @@ class _CommunityLandingScreenState extends State<CommunityLandingScreen> {
 
 /// "This week" — the feed for the finest bucket that cleared the privacy
 /// threshold. A null feed is the honest cold-start state, not an error: either
-/// too few gardeners nearby yet or no slice cached while offline.
+/// too few gardeners nearby yet or no slice cached while offline — and the two
+/// say very different things, so [communityReachedProvider] tells them apart.
 class _WeekTab extends ConsumerWidget {
   const _WeekTab();
 
@@ -92,6 +93,7 @@ class _WeekTab extends ConsumerWidget {
     final t = context.t;
     final feed = ref.watch(communityFeedProvider);
     final catalog = ref.watch(taskTypesMapProvider);
+    final reached = ref.watch(communityReachedProvider);
     // Plant labels name the cohort of a row ("Pruning · apple"), so an empty
     // plant map only costs the subtitle, never the row.
     final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
@@ -103,18 +105,35 @@ class _WeekTab extends ConsumerWidget {
     if (feed.hasError || catalog.hasError) {
       return LoadErrorHint(t.common.load_error);
     }
-    return switch ((feed, catalog)) {
-      (AsyncData(value: null), _) => EmptyState(t.community.empty_feed),
-      (AsyncData(:final value?), AsyncData(value: final types)) =>
-        CommunityFeedList(
-          feed: value,
-          catalog: types,
-          plants: plants,
-          hasPlus: hasPlus,
+    return RefreshIndicator(
+      onRefresh: () => _refreshCommunity(ref),
+      child: switch ((feed, catalog, reached)) {
+        (AsyncData(value: null), _, AsyncData(value: false)) => PullableEmpty(
+          t.community.empty_offline,
         ),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
-    };
+        (AsyncData(value: null), _, AsyncData()) => PullableEmpty(
+          t.community.empty_feed,
+        ),
+        (AsyncData(:final value?), AsyncData(value: final types), _) =>
+          CommunityFeedList(
+            feed: value,
+            catalog: types,
+            plants: plants,
+            hasPlus: hasPlus,
+          ),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
+      },
+    );
   }
+}
+
+/// Re-reads the daily slices. A no-op when today's are already cached — the
+/// gesture earns its keep exactly when the device was offline earlier.
+Future<void> _refreshCommunity(WidgetRef ref) async {
+  ref.invalidate(communityFeedProvider);
+  ref.invalidate(communityReachedProvider);
+  ref.invalidate(communityStandingsProvider);
+  await ref.read(communityFeedProvider.future);
 }
 
 /// "Where you stand" — the cohorts you worked this season, each placed against
@@ -128,23 +147,32 @@ class _StandingTab extends ConsumerWidget {
     final t = context.t;
     final standings = ref.watch(communityStandingsProvider);
     final catalog = ref.watch(taskTypesMapProvider);
+    final reached = ref.watch(communityReachedProvider);
     final plants = ref.watch(plantsMapProvider).asData?.value ?? const {};
     final hasPlus = ref.watch(hasPlusProvider);
 
     if (standings.hasError || catalog.hasError) {
       return LoadErrorHint(t.common.load_error);
     }
-    return switch ((standings, catalog)) {
-      (AsyncData(value: final rows), AsyncData(value: final types))
-          when rows.isNotEmpty =>
-        CommunityStandingList(
-          standings: rows,
-          catalog: types,
-          plants: plants,
-          hasPlus: hasPlus,
+    return RefreshIndicator(
+      onRefresh: () => _refreshCommunity(ref),
+      child: switch ((standings, catalog, reached)) {
+        (AsyncData(value: final rows), AsyncData(value: final types), _)
+            when rows.isNotEmpty =>
+          CommunityStandingList(
+            standings: rows,
+            catalog: types,
+            plants: plants,
+            hasPlus: hasPlus,
+          ),
+        (AsyncData(), AsyncData(), AsyncData(value: false)) => PullableEmpty(
+          t.community.empty_offline,
         ),
-      (AsyncData(), AsyncData()) => EmptyState(t.community.empty_standing),
-      _ => const Center(child: CircularProgressIndicator.adaptive()),
-    };
+        (AsyncData(), AsyncData(), AsyncData()) => PullableEmpty(
+          t.community.empty_standing,
+        ),
+        _ => const Center(child: CircularProgressIndicator.adaptive()),
+      },
+    );
   }
 }

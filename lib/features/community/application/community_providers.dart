@@ -48,6 +48,17 @@ Future<CommunityFeed?> communityFeed(Ref ref) async {
   return ref.watch(communityRepositoryProvider).feed(buckets: buckets);
 }
 
+/// Whether the device holds any slice for the current scope. Every empty state
+/// asks this before saying "not enough gardeners nearby": with no slice the
+/// emptiness describes the device, and claiming the neighbourhood is thin would
+/// be a fact we never received.
+@riverpod
+Future<bool> communityReached(Ref ref) async {
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  if (buckets.isEmpty) return false;
+  return ref.watch(communityRepositoryProvider).hasCachedScope(buckets);
+}
+
 /// Season curve for a task type inside [cohort], resolved by widening the
 /// geography only (r7 → r6 → r5 → climate). The cohort is fixed by the subject
 /// and is NEVER swapped: pooling apple and raspberry pruning would answer a

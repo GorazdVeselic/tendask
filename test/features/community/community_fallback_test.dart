@@ -304,4 +304,23 @@ void main() {
       isNull,
     );
   });
+
+  group('reach — whether an empty answer may be blamed on the neighbourhood', () {
+    test('false until the device has actually read the scope', () async {
+      final c = container();
+      expect(await readAlive(c, communityReachedProvider.future), isFalse);
+
+      await readAlive(c, communityFeedProvider.future); // one read of the scope
+      c.invalidate(communityReachedProvider);
+
+      // An answer arrived, even an empty one — now "not enough gardeners
+      // nearby" is a claim we have a basis for.
+      expect(await readAlive(c, communityReachedProvider.future), isTrue);
+    });
+
+    test('a device with no garden cell has nothing to reach', () async {
+      final c = container(buckets: const []);
+      expect(await readAlive(c, communityReachedProvider.future), isFalse);
+    });
+  });
 }
