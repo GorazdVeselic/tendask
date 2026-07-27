@@ -162,6 +162,8 @@ class _Body extends ConsumerWidget {
                 subtitle: Text(t.notif_settings.type_community_sub),
                 value: settings.communityHintsEnabled,
                 // Dark until launch (kSuggestionsEnabled) — see weather toggle.
+                // Deliberately NOT kCommunityEnabled: this opts into an engine
+                // push (R6), which lands on the free Home band, not into Okolica.
                 onChanged: kSuggestionsEnabled
                     ? (v) => v
                           ? unawaited(

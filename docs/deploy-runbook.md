@@ -164,6 +164,28 @@ vrtijo a takoj no-op (server-mirror klientskega `kSuggestionsEnabled`). **Ob PRI
 deploy edge fn + `kSuggestionsEnabled=true`): `update app_config set value='true' where key='engine_enabled';`.
 Opomba: `engine_endpoint` je seedan na real edge fn, zato server-dark drži **flag**, ne odsotnost endpointa.
 
+### Prižig M11 — dva ločena dogodka
+
+Predlogi in Okolica imata **vsak svoj flag** v `lib/core/config.dart` in **različna pogoja
+pripravljenosti**. Prižgeta se lahko neodvisno; nikoli ju ne prižgi »zato ker sta oba M11«.
+
+| | Pametni predlogi | Okolica (skupnost) |
+|---|---|---|
+| Klientski flag | `kSuggestionsEnabled = true` | `kCommunityEnabled = true` |
+| Strežnik | deploy `smart-engine` edge fn + `engine_enabled='true'` | nočni `agg_refresh_all()` je tekel vsaj enkrat |
+| Migracije | `0017`, `0018` aplicirane | `0017`, `0018` aplicirane |
+| Plačljivost | brezplačno | **`kDevPlusStub = false`** ⬅ obvezno |
+
+> ⚠️ **`kDevPlusStub = false` je pogoj prižiga Okolice, ne opcija.** Dokler je `true`, je naprava
+> obravnavana kot upravičena in **plačljiva funkcija se podari vsem** — tease se ne pokaže nikoli.
+> Tega se ne da vzeti nazaj tiho. FR-20 to konstanto nadomesti s podpisano licenco iz drifta.
+
+> ⚠️ **Drugi pogoj prižiga Okolice: spodnja vrstica pri petih zavihkih.** Peti zavihek stisne reže
+> na 64 dp; nemške oznake (`Startseite`, `Aufgaben`, `Tagebuch`, `Umgebung`) in slovenska
+> `Opravila` se pri text×1,3 prelomijo **sredi besede** na 320 in 360 dp. Izmerjeno, ne ocenjeno —
+> gl. `docs/prelomi-besed.md` §3. Vnos `'nav (five tabs)'` v `kAcceptedWordBreaks` mora pred
+> prižigom izginiti.
+
 ---
 
 ## 3. App deploy — `deploy.bat` matrika

@@ -138,7 +138,7 @@ class TaskDetailScreen extends ConsumerWidget {
                       ),
                       // Contextual way into Okolica, right under the subject it
                       // compares against (screen-map §2.2) — dark until launch.
-                      if (kSuggestionsEnabled)
+                      if (kCommunityEnabled)
                         CommunityTaskLinkCard(
                           taskTypeId: task.taskTypeId,
                           cohort: cohortOfSubjects(subjects, userPlants),

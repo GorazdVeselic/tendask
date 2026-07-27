@@ -260,16 +260,29 @@ const kSuppliesEnabled = true;
 
 /// Smart-suggestion (M11) feature gate — dark by default so M11 rides into the
 /// production APK without surfacing until the deliberate launch (kSuggestionsEnabled=true
-/// + smart-engine edge/cron deploy + Plus gate). Flip to true to reveal. Wraps
-/// the Home suggestion band + deep-link highlight, the /suggestions history route,
-/// the settings engine section, the M11 notification-settings rows, and FCM
-/// token registration (a token is pointless while nothing pushes). Mirrors the
+/// + smart-engine edge/cron deploy). Flip to true to reveal. Wraps the Home
+/// suggestion band + deep-link highlight, the /suggestions history route, the
+/// settings engine section, the M11 notification-settings rows, and FCM token
+/// registration (a token is pointless while nothing pushes). Mirrors the
 /// kSuppliesEnabled idiom. See docs/m11/11-poravnava-v-main.md.
+///
+/// Does NOT cover Okolica — that is [kCommunityEnabled]. The two are separate
+/// launches with separate readiness conditions: suggestions are free and ride on
+/// the engine, Okolica is paid and rides on the aggregate cron.
 const kSuggestionsEnabled = false;
+
+/// Community (Okolica) feature gate — dark by default, and independent of
+/// [kSuggestionsEnabled]: Okolica reads nothing from the engine, its aggregates
+/// run on their own cron, and turning the free suggestions on must not hand out
+/// the paid feature. Wraps the Okolica shell branch + its tab, the Home "in your
+/// area" section, and the community card on task detail.
+///
+/// Launch also requires [kDevPlusStub] = false — see docs/deploy-runbook.md.
+const kCommunityEnabled = false;
 
 /// Placeholder Plus entitlement for the community (Okolica) tease while the real
 /// licence does not exist yet: true = treat the device as entitled, so the whole
-/// feature is visible during development behind [kSuggestionsEnabled]. Set false
+/// feature is visible during development behind [kCommunityEnabled]. Set false
 /// to see the tease. FR-20 replaces this with a signed licence token read from
 /// drift (docs/feature-requests/tendask-plus-licensing.md) — there is no
 /// in-app purchase, price or store link anywhere.

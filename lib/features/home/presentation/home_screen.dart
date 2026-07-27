@@ -209,7 +209,7 @@ class _HomeBody extends ConsumerWidget {
             ],
             // Proactive way into Okolica, above TODAY (screen-map §1.1) — dark
             // until launch, and self-hiding when the feed has nothing to say.
-            if (kSuggestionsEnabled) const CommunityHomeSection(),
+            if (kCommunityEnabled) const CommunityHomeSection(),
             SectionLabel(
               t.home.today,
               padding: const EdgeInsets.only(bottom: 8),

@@ -5,9 +5,18 @@ import '../../core/config.dart';
 import '../../i18n/translations.g.dart';
 
 class MainShell extends StatelessWidget {
-  const MainShell({required this.shell, super.key});
+  const MainShell({
+    required this.shell,
+    this.community = kCommunityEnabled,
+    super.key,
+  });
 
   final StatefulNavigationShell shell;
+
+  /// Passed down by the router rather than read here, so the tab and the shell
+  /// branch can never disagree: one destination too many and every index after
+  /// it points at the wrong branch.
+  final bool community;
 
   @override
   Widget build(BuildContext context) {
@@ -34,38 +43,44 @@ class MainShell extends StatelessWidget {
         // so an open detail/entity is never shown when switching tabs.
         onDestinationSelected: (index) =>
             shell.goBranch(index, initialLocation: true),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
-            label: t.nav.home,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.check_box_outlined),
-            selectedIcon: const Icon(Icons.check_box),
-            label: t.nav.tasks,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.calendar_today_outlined),
-            selectedIcon: const Icon(Icons.calendar_today),
-            label: t.nav.journal,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.grass_outlined),
-            selectedIcon: const Icon(Icons.grass),
-            label: t.nav.areas,
-          ),
-          // Okolica (M11) — dark until launch (kSuggestionsEnabled); the router
-          // gates the matching shell branch with the same flag.
-          if (kSuggestionsEnabled)
-            NavigationDestination(
-              // Hexagon = the H3 cell the aggregates are grouped by (and the logo).
-              icon: const Icon(Icons.hexagon_outlined),
-              selectedIcon: const Icon(Icons.hexagon),
-              label: t.nav.community,
-            ),
-        ],
+        destinations: mainShellDestinations(t, community: community),
       ),
     );
   }
 }
+
+/// The bottom-nav destinations, in branch order. Top-level so the layout matrix
+/// can render the real labels: a NavigationBar clips its labels instead of
+/// overflowing, so five German words at 320 dp is a break no screen test sees.
+List<NavigationDestination> mainShellDestinations(
+  Translations t, {
+  required bool community,
+}) => [
+  NavigationDestination(
+    icon: const Icon(Icons.home_outlined),
+    selectedIcon: const Icon(Icons.home),
+    label: t.nav.home,
+  ),
+  NavigationDestination(
+    icon: const Icon(Icons.check_box_outlined),
+    selectedIcon: const Icon(Icons.check_box),
+    label: t.nav.tasks,
+  ),
+  NavigationDestination(
+    icon: const Icon(Icons.calendar_today_outlined),
+    selectedIcon: const Icon(Icons.calendar_today),
+    label: t.nav.journal,
+  ),
+  NavigationDestination(
+    icon: const Icon(Icons.grass_outlined),
+    selectedIcon: const Icon(Icons.grass),
+    label: t.nav.areas,
+  ),
+  if (community)
+    NavigationDestination(
+      // Hexagon = the H3 cell the aggregates are grouped by (and the logo).
+      icon: const Icon(Icons.hexagon_outlined),
+      selectedIcon: const Icon(Icons.hexagon),
+      label: t.nav.community,
+    ),
+];

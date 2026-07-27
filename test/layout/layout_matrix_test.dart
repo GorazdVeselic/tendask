@@ -7,6 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
+import 'package:tendask/app/router/main_shell.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/notifications/notification_settings.dart';
@@ -518,6 +519,24 @@ void main() {
       plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
     ],
     build: () => const _StandingHost(hasPlus: false),
+  );
+
+  // The bottom nav with Okolica on: five German words on a 320 dp bar at
+  // text×1.3 is the tightest row in the app, and it is only reachable once
+  // kCommunityEnabled flips.
+  layoutMatrix('nav (five tabs)', build: () => const _NavBarHost());
+}
+
+/// Renders the real destinations, so a relabelled tab is caught here.
+class _NavBarHost extends StatelessWidget {
+  const _NavBarHost();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    bottomNavigationBar: NavigationBar(
+      selectedIndex: 0,
+      destinations: mainShellDestinations(context.t, community: true),
+    ),
   );
 }
 

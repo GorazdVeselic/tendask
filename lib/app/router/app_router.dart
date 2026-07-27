@@ -30,11 +30,17 @@ import 'main_shell.dart';
 
 /// Builds the app router. [initialLocation] depends on first-run state (M7.2):
 /// '/onboarding' until the intro is seen, '/home' afterwards (resolved in main).
-GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
+/// [community] exists so a test can build the real route tree with Okolica on
+/// while the feature is still flag-dark.
+GoRouter createAppRouter({
+  String initialLocation = '/home',
+  bool community = kCommunityEnabled,
+}) => GoRouter(
   initialLocation: initialLocation,
   routes: [
     StatefulShellRoute.indexedStack(
-      builder: (context, state, shell) => MainShell(shell: shell),
+      builder: (context, state, shell) =>
+          MainShell(shell: shell, community: community),
       branches: [
         StatefulShellBranch(
           routes: [
@@ -92,10 +98,9 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
             ),
           ],
         ),
-        // Okolica (M11) — dark until launch (kSuggestionsEnabled). Keep in sync
-        // with MainShell's destinations: the branch and the tab must appear and
-        // disappear together, or the indices no longer line up.
-        if (kSuggestionsEnabled)
+        // Okolica (M11) — dark until launch. The tab is gated by the same
+        // value, handed to MainShell above, so the two cannot drift apart.
+        if (community)
           StatefulShellBranch(
             routes: [
               GoRoute(
