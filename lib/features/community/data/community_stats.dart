@@ -37,6 +37,7 @@ SeasonCurve? buildSeasonCurve(
       : past;
 
   final weekly = List<int>.filled(kIsoWeeksPerYear, 0);
+  final perYear = <int, int>{};
   for (final row in used) {
     final week = (row['iso_week'] as num?)?.toInt();
     final count = (row['first_user_count'] as num?)?.toInt();
@@ -44,6 +45,8 @@ SeasonCurve? buildSeasonCurve(
     if (week == null || count == null) continue;
     if (week < 1 || week > kIsoWeeksPerYear) continue;
     weekly[week - 1] += count;
+    final year = yearOf(row) ?? currentYear;
+    perYear[year] = (perYear[year] ?? 0) + count;
   }
 
   final total = weekly.fold(0, (sum, c) => sum + c);
@@ -51,8 +54,13 @@ SeasonCurve? buildSeasonCurve(
   var running = 0;
   return SeasonCurve(
     bucket: bucket,
+    // The shape pools every past season — more seasons, steadier curve.
     cdf: [for (final c in weekly) (running += c) / total],
-    pooledTotal: total,
+    // The denominator must not: pooling counts the same gardener once per
+    // season, so three seasons of the same twelve neighbours would read as 36
+    // and cross the reliability bar. The busiest single season is the honest
+    // lower bound on how many distinct people stand behind the curve.
+    pooledTotal: perYear.values.reduce((a, b) => a > b ? a : b),
     censored: censored,
   );
 }
@@ -129,13 +137,32 @@ SeasonWindow seasonWindow(SeasonCurve curve, {int? myWeek}) {
   );
 }
 
-/// Cumulative share rounded for display (§7.7), or null when the sample is too
-/// thin for a number and only [timingBand] may be shown.
-int? seasonPercent(SeasonCurve curve, int week) {
-  if (curve.pooledTotal < kCommunityReliabilityMin) return null;
-  final raw = seasonCdfForWeek(curve, week) * 100;
-  return (raw / kCommunityPercentStep).round() * kCommunityPercentStep;
+/// Where a first completion in ISO [week] sits on the curve, as a share in
+/// 0..1: `F(w−1) + f(w)/2`. Mid-rank, not the inclusive `F(w)` — when a whole
+/// neighbourhood starts in one week, `F(w) = 1.0` would place every one of them
+/// in the last tercile, the first of them included.
+double seasonRank(SeasonCurve curve, int week) {
+  final w = week.clamp(1, kIsoWeeksPerYear);
+  final before = w >= 2 ? curve.cdf[w - 2] : 0.0;
+  return (before + curve.cdf[w - 1]) / 2;
 }
+
+int? _percentOf(SeasonCurve curve, double share) {
+  if (curve.pooledTotal < kCommunityReliabilityMin) return null;
+  return (share * 100 / kCommunityPercentStep).round() * kCommunityPercentStep;
+}
+
+/// Cumulative share rounded for display (§7.7) — "by that date ~X % had started".
+/// null when the sample is too thin for a number and only [timingBand] may show.
+int? seasonPercent(SeasonCurve curve, int week) =>
+    _percentOf(curve, seasonCdfForWeek(curve, week));
+
+/// The reader's own place in the field, rounded (§7.7). Separate from
+/// [seasonPercent] because the two answer different questions: the cumulative
+/// share is about a DATE, this is about a PERSON, and only the latter may be
+/// worded as a rank.
+int? seasonRankPercent(SeasonCurve curve, int week) =>
+    _percentOf(curve, seasonRank(curve, week));
 
 /// Descriptive band for a CDF value — the honest form below
 /// [kCommunityReliabilityMin], where a percentage would fake precision (§7.7).
@@ -163,7 +190,7 @@ List<CommunityStanding> buildStandings(
       CommunityStanding(
         taskTypeId: entry.key.$1,
         cohort: entry.key.$2,
-        band: timingBand(seasonCdfForWeek(curve, isoWeek(first.toLocal()))),
+        band: timingBand(seasonRank(curve, isoWeek(first.toLocal()))),
         scope: curve.bucket.resolution,
       ),
     ));

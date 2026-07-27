@@ -153,6 +153,12 @@ const kQuietHoursEndHour = 7;
 /// server's app_config.engine.band_max_active — docs/m11/03).
 const kSuggestionBandMax = 3;
 
+/// Frequency histogram bands, in chart order — mirrors the server's bucketing
+/// (migration 0009: `n_events >= 5 → '5+'`). Fixed rather than read off the
+/// published keys: the aggregate omits empty bands, and a chart drawn from the
+/// present keys alone both skips gaps and misplaces the reader's own bar.
+const kCommunityFrequencyBands = ['1', '2', '3', '4', '5+'];
+
 /// How long the mirrored FCM token may sit untouched before the client writes it
 /// again. The engine clears `profile.fcm_token` on a dead device WITHOUT bumping
 /// `updated_at` (bumping would let that null clobber a freshly registered token

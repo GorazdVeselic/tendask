@@ -120,14 +120,21 @@ void main() {
   testWidgets('a reliable sample states the rounded percentage', (
     tester,
   ) async {
-    // First completion in week 20 → cdf 40/50 = 80 %.
+    // First completion in week 20: 15 of 50 started before it, 25 during it →
+    // mid-rank 0.55 → ~60 % started before the reader. (The cumulative 80 % is
+    // the answer to a different question and still appears in the "by <date>"
+    // line below the headline.)
     await _pump(
       tester,
       curve: _curve(),
       mine: MySeason(first: DateTime(2026, 5, 11), count: 3),
     );
 
-    expect(find.text(t.community.detail.you_percent(percent: 80)), findsOneWidget);
+    expect(find.text(t.community.detail.you_percent(percent: 60)), findsOneWidget);
+    expect(
+      find.textContaining(t.community.detail.by_date_percent(date: '11. 5.', percent: 80)),
+      findsOneWidget,
+    );
     expect(find.byType(CommunityBars), findsNWidgets(2)); // season + frequency
   });
 
@@ -149,7 +156,10 @@ void main() {
       mine: MySeason(first: DateTime(2026, 5, 11), count: 1),
     );
 
-    expect(find.text(t.community.detail.you_band.late), findsOneWidget);
+    // All 8 of them started in week 20 and so did the reader: the inclusive
+    // F(20) = 1.0 used to call every single one of them "late", the first
+    // included. Mid-rank puts them where they belong — in the middle.
+    expect(find.text(t.community.detail.you_band.typical), findsOneWidget);
     expect(find.textContaining('%'), findsNothing);
   });
 

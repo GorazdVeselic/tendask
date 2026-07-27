@@ -1007,7 +1007,7 @@
     },
     "detail": {
       "timing_kicker": "When · where you stand",
-      "you_percent": "You were among the first ~$percent %",
+      "you_percent": "~$percent % of gardeners started before you",
       "you_band": {
         "early": "You were among the earlier ones",
         "typical": "You were around the usual time",

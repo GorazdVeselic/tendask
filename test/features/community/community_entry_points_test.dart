@@ -271,13 +271,15 @@ void main() {
         overrides: _linkOverrides(
           hasPlus: true,
           curve: _curve(),
-          // First completion in week 20 → cdf 40/50 = 80 %.
+          // First completion in week 20: 15 of 50 started before that week and
+          // 25 during it → mid-rank 0.55 → "~60 % started before you". The
+          // cumulative 80 % answers a different question (by that date).
           mine: MySeason(first: DateTime(2026, 5, 11), count: 1),
         ),
       );
 
       expect(
-        find.text(t.community.detail.you_percent(percent: 80)),
+        find.text(t.community.detail.you_percent(percent: 60)),
         findsOneWidget,
       );
       expect(find.text(t.community.entry.cta), findsOneWidget);

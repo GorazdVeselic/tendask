@@ -344,6 +344,24 @@ Deno.test('the finest level that clears k_privacy answers, and coarser never ove
   assertEquals(widened.get(cdfKey('sow', 'tomato'))!.resolution, 'r6');
 });
 
+Deno.test('the same neighbours over three seasons are not three times as many', () => {
+  // Pooled the counts summed to 90 and cleared k_reliab, so R6 claimed "most of
+  // ~90 gardeners" for a group that may be thirty people who came back.
+  const seasons = [2023, 2024, 2025].flatMap((year) => [
+    ...rows('sow', 'tomato', 22, 22, year),
+    ...rows('sow', 'tomato', 25, 8, year),
+  ]);
+  const cdf = cdfsOf(seasons).get(cdfKey('sow', 'tomato'))!;
+
+  assertEquals(cdf.pooledTotal, 30); // the busiest single season, not 90
+  assertEquals(cdf.shareBy(24) > 0.5, true); // the shape still pools all three
+
+  const b = bundle();
+  const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(seasons), kCfg);
+  assertEquals(out.length, 1);
+  assertEquals(out[0].messageParams.n, 30);
+});
+
 Deno.test('server nonsense is skipped, never thrown on', () => {
   const built = buildSeasonCdfs(
     [

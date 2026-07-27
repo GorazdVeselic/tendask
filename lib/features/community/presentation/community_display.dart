@@ -40,9 +40,14 @@ String communityTimingHeadline(
   int? myWeek,
 ) {
   if (myWeek == null) return t.community.detail.not_started;
-  final percent = seasonPercent(curve, myWeek);
-  if (percent != null) return t.community.detail.you_percent(percent: percent);
-  return communityTimingLabel(t, timingBand(seasonCdfForWeek(curve, myWeek)));
+  final percent = seasonRankPercent(curve, myWeek);
+  // Only a percentage that carries information: rounded to 0 or 100 it claims
+  // nobody/everybody started before the reader, which the rounding invented.
+  // The band says the same thing in words — the form §7.7 asks for anyway.
+  if (percent != null && percent > 0 && percent < 100) {
+    return t.community.detail.you_percent(percent: percent);
+  }
+  return communityTimingLabel(t, timingBand(seasonRank(curve, myWeek)));
 }
 
 /// The one-word form of the same tercile, for the "Kje si ti" list, where the

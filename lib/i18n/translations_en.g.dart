@@ -2580,8 +2580,8 @@ class Translations$community$detail$en {
 	/// en: 'When · where you stand'
 	String get timing_kicker => 'When · where you stand';
 
-	/// en: 'You were among the first ~$percent %'
-	String you_percent({required Object percent}) => 'You were among the first ~${percent} %';
+	/// en: '~$percent % of gardeners started before you'
+	String you_percent({required Object percent}) => '~${percent} % of gardeners started before you';
 
 	late final Translations$community$detail$you_band$en you_band = Translations$community$detail$you_band$en.internal(_root);
 
@@ -4445,7 +4445,7 @@ extension on Translations {
 			'community.standing.band.typical' => 'usual',
 			'community.standing.band.late' => 'late',
 			'community.detail.timing_kicker' => 'When · where you stand',
-			'community.detail.you_percent' => ({required Object percent}) => 'You were among the first ~${percent} %',
+			'community.detail.you_percent' => ({required Object percent}) => '~${percent} % of gardeners started before you',
 			'community.detail.you_band.early' => 'You were among the earlier ones',
 			'community.detail.you_band.typical' => 'You were around the usual time',
 			'community.detail.you_band.late' => 'You were among the later ones',

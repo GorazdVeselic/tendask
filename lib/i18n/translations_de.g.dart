@@ -1387,7 +1387,7 @@ class _Translations$community$detail$de extends Translations$community$detail$en
 
 	// Translations
 	@override String get timing_kicker => 'Wann · wo du stehst';
-	@override String you_percent({required Object percent}) => 'Du warst unter den ersten ~${percent} %';
+	@override String you_percent({required Object percent}) => '~${percent} % der Gärtner haben vor dir angefangen';
 	@override late final _Translations$community$detail$you_band$de you_band = _Translations$community$detail$you_band$de._(_root);
 	@override String get not_started => 'Das hast du diese Saison noch nicht gemacht';
 	@override String by_now_percent({required Object percent}) => 'Bis jetzt haben ~${percent} % begonnen.';
@@ -2924,7 +2924,7 @@ extension on TranslationsDe {
 			'community.standing.band.typical' => 'üblich',
 			'community.standing.band.late' => 'spät',
 			'community.detail.timing_kicker' => 'Wann · wo du stehst',
-			'community.detail.you_percent' => ({required Object percent}) => 'Du warst unter den ersten ~${percent} %',
+			'community.detail.you_percent' => ({required Object percent}) => '~${percent} % der Gärtner haben vor dir angefangen',
 			'community.detail.you_band.early' => 'Du warst eher früh dran',
 			'community.detail.you_band.typical' => 'Du warst etwa zur üblichen Zeit dran',
 			'community.detail.you_band.late' => 'Du warst eher spät dran',

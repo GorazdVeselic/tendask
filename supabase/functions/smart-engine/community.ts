@@ -14,8 +14,9 @@
 
 // deno-lint-ignore-file no-explicit-any
 
-/** One resolved comparison group: the level that answered, its denominator and
- * the cumulative share by ISO week. */
+/** One resolved comparison group: the level that answered, how many distinct
+ * gardeners it stands for (at least — see buildSeasonCdfs) and the cumulative
+ * share by ISO week. */
 export interface SeasonCdf {
   taskTypeId: string;
   cohort: string;
@@ -69,6 +70,7 @@ export function buildSeasonCdfs(
   resolution: string,
 ): Map<string, SeasonCdf> {
   const weekly = new Map<string, number[]>();
+  const perYear = new Map<string, Map<number, number>>();
   for (const row of rows) {
     const taskTypeId = row.task_type_id;
     const cohort = row.plant_id;
@@ -87,6 +89,12 @@ export function buildSeasonCdfs(
       weekly.set(key, bins);
     }
     bins[week - 1] += count;
+    let years = perYear.get(key);
+    if (!years) {
+      years = new Map<number, number>();
+      perYear.set(key, years);
+    }
+    years.set(year, (years.get(year) ?? 0) + count);
   }
 
   const out = new Map<string, SeasonCdf>();
@@ -107,7 +115,12 @@ export function buildSeasonCdfs(
       taskTypeId,
       cohort,
       resolution,
-      pooledTotal: total,
+      // Shape pools every past season; the denominator cannot. Pooling counts
+      // the same gardener once per season, so three seasons of the same twelve
+      // neighbours would read as 36 and clear k_reliab. The busiest single
+      // season is the honest lower bound on the distinct people behind it, and
+      // it is the number R6 puts in message_params.n.
+      pooledTotal: Math.max(...[...(perYear.get(key)?.values() ?? [total])]),
       shareBy: at,
       shareIn: (from, to) => at(to) - at(from - 1),
     });

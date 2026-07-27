@@ -1007,7 +1007,7 @@
     },
     "detail": {
       "timing_kicker": "Wann · wo du stehst",
-      "you_percent": "Du warst unter den ersten ~$percent %",
+      "you_percent": "~$percent % der Gärtner haben vor dir angefangen",
       "you_band": {
         "early": "Du warst eher früh dran",
         "typical": "Du warst etwa zur üblichen Zeit dran",

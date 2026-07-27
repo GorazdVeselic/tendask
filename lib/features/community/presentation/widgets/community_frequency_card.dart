@@ -22,7 +22,10 @@ class CommunityFrequencyCard extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    final bands = _bands();
+    // Always the full band set: the aggregate omits bands nobody landed in, so
+    // reading the chart off the published keys drew a gapped distribution as a
+    // continuous one — and dropped the reader's own bar onto the wrong band.
+    const bands = kCommunityFrequencyBands;
 
     return Card(
       margin: EdgeInsets.zero,
@@ -63,7 +66,7 @@ class CommunityFrequencyCard extends StatelessWidget {
                 t.community.detail.freq_low_n,
                 style: theme.textTheme.bodyMedium,
               ),
-            if (bands.isNotEmpty) ...[
+            if (stats.hist.isNotEmpty) ...[
               const SizedBox(height: 14),
               Text(
                 t.community.detail.freq_caption,
@@ -96,21 +99,11 @@ class CommunityFrequencyCard extends StatelessWidget {
     );
   }
 
-  /// Histogram bands in the server's order ('1'..'4', then '5+'); an unknown
-  /// key from a future server sorts last rather than breaking the chart.
-  List<String> _bands() {
-    final bands = stats.hist.keys.toList()
-      ..sort((a, b) => (int.tryParse(a) ?? 99).compareTo(int.tryParse(b) ?? 99));
-    return bands;
-  }
-
-  /// Which bar is mine — the exact band, else the capped one the cron uses
-  /// ('5+'). null when I have not done it, or the band is not in this histogram.
+  /// Which bar is mine — the exact band, or the capped one the cron uses ('5+').
+  /// null when I have not done it at all.
   int? _myIndex(List<String> bands) {
     if (myCount <= 0) return null;
-    final index = bands.indexOf(
-      bands.contains('$myCount') ? '$myCount' : '5+',
-    );
+    final index = bands.indexOf(myCount >= 5 ? '5+' : '$myCount');
     return index < 0 ? null : index;
   }
 

@@ -1399,7 +1399,7 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 
 	// Translations
 	@override String get timing_kicker => 'Kdaj · kje si ti';
-	@override String you_percent({required Object percent}) => 'Med prvimi ~${percent} %';
+	@override String you_percent({required Object percent}) => 'Pred tabo je začelo ~${percent} % vrtnarjev';
 	@override late final _Translations$community$detail$you_band$sl you_band = _Translations$community$detail$you_band$sl._(_root);
 	@override String get not_started => 'Letos tega še nimaš zabeleženega';
 	@override String by_now_percent({required Object percent}) => 'Do zdaj je začelo ~${percent} %.';
@@ -2938,7 +2938,7 @@ extension on TranslationsSl {
 			'community.standing.band.typical' => 'običajen',
 			'community.standing.band.late' => 'pozen',
 			'community.detail.timing_kicker' => 'Kdaj · kje si ti',
-			'community.detail.you_percent' => ({required Object percent}) => 'Med prvimi ~${percent} %',
+			'community.detail.you_percent' => ({required Object percent}) => 'Pred tabo je začelo ~${percent} % vrtnarjev',
 			'community.detail.you_band.early' => 'Med zgodnejšimi',
 			'community.detail.you_band.typical' => 'Približno ob običajnem času',
 			'community.detail.you_band.late' => 'Med poznejšimi',

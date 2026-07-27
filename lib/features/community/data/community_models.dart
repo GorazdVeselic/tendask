@@ -87,8 +87,10 @@ abstract class CommunityStanding with _$CommunityStanding {
 /// Historical seasonal CDF for one task type in one cohort: `cdf[w-1]` is the
 /// cumulative fraction of gardeners whose first execution fell in ISO week ≤ w
 /// (weeks 1..53), pooled over past complete seasons. Built on-device from ~53
-/// `activity_season` rows; [pooledTotal] is the denominator (Σ season totals) —
-/// a %/percentile is only shown when it clears [kCommunityReliabilityMin].
+/// `activity_season` rows; [pooledTotal] is how many distinct gardeners stand
+/// behind it — at least, since it is the busiest single season rather than the
+/// sum (which would count a returning gardener once per season). A %/percentile
+/// is only shown when it clears [kCommunityReliabilityMin].
 ///
 /// [censored] means no past season existed yet, so the curve is the *running*
 /// current one (§7.6 year-1 mode): the share keeps moving as latecomers arrive,

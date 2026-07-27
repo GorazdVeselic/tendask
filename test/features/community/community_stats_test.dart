@@ -49,7 +49,9 @@ void main() {
       );
 
       expect(curve, isNotNull);
-      expect(curve!.pooledTotal, 20);
+      // Two seasons of ten gardeners each is not twenty gardeners — the same
+      // ten may have come back. The denominator is the busiest single season.
+      expect(curve!.pooledTotal, 10);
       expect(curve.censored, isFalse);
       expect(curve.cdf.length, 53);
       expect(seasonCdfForWeek(curve, 9), 0);
@@ -186,6 +188,84 @@ void main() {
       expect(solid.pooledTotal, 40);
       expect(seasonPercent(solid, 10), 30); // 13/40 = 32.5 %
       expect(seasonPercent(solid, 12), 100);
+    });
+
+    test('a rank is not the cumulative share it sits on', () {
+      // 13 start in week 10, 27 in week 12. By the end of week 12 everyone has
+      // started (100 %) — but someone starting in week 12 is not last: 13 were
+      // ahead and 27 shared the week, so ~65 % of the field started before them.
+      final curve = buildSeasonCurve(
+        [_week(2025, 10, 13), _week(2025, 12, 27)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(seasonPercent(curve, 12), 100);
+      expect(seasonRankPercent(curve, 12), 70); // mid-rank 0.325 + 0.675/2
+      expect(seasonRankPercent(curve, 10), 20); // 0 + 0.325/2
+    });
+
+    test('a single-week season does not make everyone late', () {
+      // The whole neighbourhood starts in week 20. The inclusive F(20) = 1.0
+      // put every one of them in the last tercile, the first one included.
+      final curve = buildSeasonCurve(
+        [_week(2025, 20, 40)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(seasonCdfForWeek(curve, 20), 1.0);
+      expect(seasonRank(curve, 20), 0.5);
+      expect(timingBand(seasonRank(curve, 20)), CommunityTiming.typical);
+      expect(seasonRankPercent(curve, 20), 50);
+    });
+
+    test('the tercile still separates early from late', () {
+      final curve = buildSeasonCurve(
+        [_week(2025, 10, 20), _week(2025, 20, 20), _week(2025, 30, 20)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(timingBand(seasonRank(curve, 10)), CommunityTiming.early);
+      expect(timingBand(seasonRank(curve, 20)), CommunityTiming.typical);
+      expect(timingBand(seasonRank(curve, 30)), CommunityTiming.late);
+    });
+  });
+
+  group('how many gardeners stand behind the curve', () {
+    test('the same neighbours over three seasons are not three times as many', () {
+      // 12 gardeners × 3 seasons summed to 36 and crossed the reliability bar,
+      // so the screen put a percentage on a group of twelve — and said "~36".
+      final curve = buildSeasonCurve(
+        [
+          _week(2023, 20, 12),
+          _week(2024, 20, 12),
+          _week(2025, 20, 12),
+        ],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(curve.pooledTotal, 12);
+      expect(seasonPercent(curve, 20), isNull); // below kReliab → band only
+    });
+
+    test('a growing neighbourhood counts by its busiest season', () {
+      final curve = buildSeasonCurve(
+        [_week(2024, 20, 8), _week(2025, 20, 31)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(curve.pooledTotal, 31);
+      expect(seasonPercent(curve, 20), 100); // clears kReliab on its own
+    });
+
+    test('pooling still shapes the curve, only the denominator changes', () {
+      final curve = buildSeasonCurve(
+        [_week(2024, 10, 10), _week(2025, 30, 10)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+      expect(curve.pooledTotal, 10);
+      expect(seasonCdfForWeek(curve, 10), closeTo(0.5, 1e-9)); // both seasons
+      expect(seasonCdfForWeek(curve, 30), closeTo(1.0, 1e-9));
     });
   });
 
