@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:drift/drift.dart';
 
 import '../../../core/clock.dart';
+import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/notifications/notification_settings.dart';
 import '../../../core/sync/profile_write_guard.dart';
@@ -122,10 +123,18 @@ class ProfileRepository {
     final exists = await (_db.select(
       _db.profiles,
     )..where((p) => p.userId.equals(userId))).getSingleOrNull();
+    if (exists == null) return;
+    final now = _clock.now();
+    // The engine clears a dead token in the cloud without bumping updated_at, so
+    // the pull can never tell us it is gone. Re-asserting the same token once
+    // per [kFcmTokenReassert] is the only way back — see config.dart.
+    final mirrorStale =
+        token != null &&
+        now.difference(exists.fcmTokenUpdatedAt ?? DateTime.utc(1970)) >
+            kFcmTokenReassert;
     // getToken() yields the same value on every app start — skip the no-op
     // write so boot doesn't bump updated_at and trigger a pointless push.
-    if (exists == null || exists.fcmToken == token) return;
-    final now = _clock.now();
+    if (exists.fcmToken == token && !mirrorStale) return;
     // Update only the token fields — never clobber lang / settings / h3*.
     await (_db.update(
       _db.profiles,

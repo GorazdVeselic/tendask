@@ -2,6 +2,11 @@
 // Legacy server key ukinjen jun. 2024 → service account OAuth JWT.
 // Env: FCM_SERVICE_ACCOUNT_JSON (supabase secrets set).
 import { importPKCS8, SignJWT } from 'jose';
+import { isDeadTokenResponse } from './fcm_errors.ts';
+
+// Without a deadline a hung Google endpoint holds the whole batch: every user
+// after this one waits, and the edge function's own budget runs out.
+const kFcmTimeoutMs = 10_000;
 
 let cachedToken: { token: string; exp: number } | null = null;
 let cachedProjectId: string | null = null;
@@ -35,6 +40,7 @@ async function oauthToken(): Promise<string> {
       grant_type: 'urn:ietf:params:oauth:grant-type:jwt-bearer',
       assertion: jwt,
     }),
+    signal: AbortSignal.timeout(kFcmTimeoutMs),
   });
   if (!res.ok) throw new Error(`FCM OAuth ${res.status}: ${await res.text()}`);
   const { access_token, expires_in } = (await res.json()) as {
@@ -54,7 +60,8 @@ export function fcmProjectId(): string {
 }
 
 /** Sends one suggestion push.
- * Returns false when the token is UNREGISTERED/invalid (caller should null it). */
+ * Returns false ONLY when the device is gone (the caller nulls the token); a
+ * rejected message throws instead, so a bad payload never costs a token. */
 export async function sendSuggestionPush(opts: {
   fcmToken: string;
   projectId: string;
@@ -78,9 +85,14 @@ export async function sendSuggestionPush(opts: {
           android: { notification: { channel_id: 'suggestions' } },
         },
       }),
+      signal: AbortSignal.timeout(kFcmTimeoutMs),
     },
   );
-  if (res.status === 404 || res.status === 400) return false; // UNREGISTERED / invalid token
-  if (!res.ok) throw new Error(`FCM ${res.status}: ${await res.text()}`);
-  return true;
+  if (res.ok) {
+    await res.body?.cancel(); // an unread body keeps the connection open
+    return true;
+  }
+  const body = await res.text();
+  if (isDeadTokenResponse(res.status, body)) return false;
+  throw new Error(`FCM ${res.status}: ${body}`);
 }

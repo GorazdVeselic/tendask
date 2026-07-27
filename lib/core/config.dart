@@ -153,6 +153,14 @@ const kQuietHoursEndHour = 7;
 /// server's app_config.engine.band_max_active — docs/m11/03).
 const kSuggestionBandMax = 3;
 
+/// How long the mirrored FCM token may sit untouched before the client writes it
+/// again. The engine clears `profile.fcm_token` on a dead device WITHOUT bumping
+/// `updated_at` (bumping would let that null clobber a freshly registered token
+/// on LWW), so the clear is invisible to the pull and the device would never
+/// re-register. Re-asserting on the next cold start after this window heals it
+/// for the cost of one small row push.
+const kFcmTokenReassert = Duration(days: 14);
+
 /// Community aggregation (V2 Okolica) display thresholds — mirror the server's
 /// app_config (skupnost-agregacija.md §6). RLS already gates rows k-anonymously
 /// server-side; the client knows these only to show an honest scope: below

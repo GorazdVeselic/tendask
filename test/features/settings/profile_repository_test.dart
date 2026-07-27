@@ -159,6 +159,32 @@ void main() {
     expect(row.syncStatus, 'pending');
   });
 
+  test('updateFcmToken re-asserts a stale mirror so a cleared token heals', () async {
+    // The engine nulls a dead token in the cloud without bumping updated_at, so
+    // the pull never tells us. Without this the no-op guard would keep the
+    // device silent forever.
+    await repo.setLang(userId, 'sl');
+    await repo.updateFcmToken(userId, 'tok-1');
+    clock.advance(kFcmTokenReassert + const Duration(days: 1));
+    await repo.updateFcmToken(userId, 'tok-1');
+
+    final row = await db.select(db.profiles).getSingle();
+    expect(row.fcmToken, 'tok-1');
+    expect(row.updatedAt.toUtc(), clock.now()); // pushes the token back up
+    expect(row.syncStatus, 'pending');
+  });
+
+  test('updateFcmToken(null) on a stale row stays a no-op', () async {
+    // Signed out and already cleared locally — nothing to re-assert.
+    await repo.setLang(userId, 'sl');
+    clock.advance(kFcmTokenReassert + const Duration(days: 1));
+    await repo.updateFcmToken(userId, null);
+
+    final row = await db.select(db.profiles).getSingle();
+    expect(row.updatedAt.toUtc(), t0);
+    expect(row.fcmTokenUpdatedAt, isNull);
+  });
+
   test('updateFcmToken never inserts a bare row (LWW safety)', () async {
     await repo.updateFcmToken(userId, 'tok-1');
     expect(await db.select(db.profiles).get(), isEmpty);

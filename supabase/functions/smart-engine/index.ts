@@ -220,7 +220,9 @@ Deno.serve(async (req) => {
                 if (ok) {
                   pushed = true;
                 } else {
-                  // UNREGISTERED or invalid token — clear it so we stop sending.
+                  // The device is gone (UNREGISTERED / foreign sender) — clear
+                  // the token so we stop sending. A rejected message throws
+                  // instead and is reported below, token untouched.
                   // Deliberately does NOT bump updated_at: if the client has since
                   // registered a fresh token (newer updated_at), bumping here would
                   // let this null win the LWW pull and clobber the live token.
