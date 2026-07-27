@@ -10,6 +10,7 @@ import {
 import type { ClimateSignals, EngineConfig, PlantTaskRule, SuggestionLogRow } from './types.ts';
 
 const kCfg: EngineConfig = {
+  enabled: true,
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,

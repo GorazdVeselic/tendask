@@ -57,12 +57,22 @@ export async function loadAppConfig(db: any): Promise<EngineConfig> {
   const { data, error } = await db
     .from('app_config')
     .select('key,value')
-    .in('key', ['engine', 'weather_thresholds', 'frost_defaults', 'k_privacy', 'k_reliab']);
+    .in('key', [
+      'engine',
+      'weather_thresholds',
+      'frost_defaults',
+      'k_privacy',
+      'k_reliab',
+      'engine_enabled',
+    ]);
   if (error) throw error;
   const map: Record<string, unknown> = Object.fromEntries(
     (data ?? []).map((r: { key: string; value: unknown }) => [r.key, r.value]),
   );
   return {
+    // Fail closed: a missing or non-true flag keeps the engine dark, so a fresh
+    // project or a partial seed cannot start pushing at anyone.
+    enabled: map.engine_enabled === true || map.engine_enabled === 'true',
     engine: { ...kDefaultEngine, ...(map.engine as object ?? {}) },
     weatherThresholds: { ...kDefaultThresholds, ...(map.weather_thresholds as object ?? {}) },
     frostDefaults: { ...kDefaultFrost, ...(map.frost_defaults as object ?? {}) },

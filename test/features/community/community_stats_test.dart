@@ -1,4 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/config.dart';
 import 'package:tendask/features/community/data/community_models.dart';
 import 'package:tendask/features/community/data/community_stats.dart';
 
@@ -188,6 +189,20 @@ void main() {
       expect(solid.pooledTotal, 40);
       expect(seasonPercent(solid, 10), 30); // 13/40 = 32.5 %
       expect(seasonPercent(solid, 12), 100);
+    });
+
+    test('the reliability threshold is exact: 29 stays a band, 30 gets a number', () {
+      SeasonCurve of(int n) => buildSeasonCurve(
+        [_week(2025, 10, n)],
+        bucket: _bucket,
+        currentYear: 2026,
+      )!;
+
+      expect(of(kCommunityReliabilityMin - 1).pooledTotal, 29);
+      expect(seasonPercent(of(kCommunityReliabilityMin - 1), 10), isNull);
+      expect(seasonRankPercent(of(kCommunityReliabilityMin - 1), 10), isNull);
+      expect(seasonPercent(of(kCommunityReliabilityMin), 10), 100);
+      expect(seasonRankPercent(of(kCommunityReliabilityMin), 10), 50);
     });
 
     test('a rank is not the cumulative share it sits on', () {

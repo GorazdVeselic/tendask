@@ -19,6 +19,7 @@ import type {
 } from './types.ts';
 
 const kCfg: EngineConfig = {
+  enabled: true,
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,
@@ -190,6 +191,46 @@ Deno.test('guard c: a recent suggestion within cooldown drops it', () => {
     }),
     0,
   );
+});
+
+// Guard 5d: after an execution, wait max(3, cadence/2) days before suggesting
+// the same act again — the only guard with no test until now. The candidate is
+// built directly: R3 fires only once something is overdue, which is past the
+// cooldown by definition, so no rule can exercise this guard on its own.
+function cooldownSurvives(
+  lastDoneDay: string,
+  declaredCadence: number | null,
+  taskTypeId = 'treat',
+): boolean {
+  const types = new Map<string, TaskTypeMeta>([
+    [taskTypeId, {
+      id: taskTypeId,
+      default_cadence: declaredCadence,
+      weather_sensitive: false,
+      seasonal: true,
+    }],
+  ]);
+  const b = bundle([done(taskTypeId, lastDoneDay)]);
+  const signals = buildSignals(b, types, null, kCfg, kNow);
+  return applyGuards([cand({ taskTypeId, score: 5 })], signals, kCfg, kNow).length === 1;
+}
+
+Deno.test('guard d: the cooldown after doing it is half the cadence', () => {
+  // Declared cadence 14 → wait 7 days. Today is 2026-06-12.
+  assertEquals(cooldownSurvives('2026-06-05', 14), true); // exactly at the bound
+  assertEquals(cooldownSurvives('2026-06-06', 14), false); // 6 days — too soon
+});
+
+Deno.test('guard d: a short cadence still keeps a 3-day floor', () => {
+  // cadence/2 would be 2, but nothing is suggested again within three days.
+  assertEquals(cooldownSurvives('2026-06-09', 4), true);
+  assertEquals(cooldownSurvives('2026-06-10', 4), false);
+});
+
+Deno.test('guard d: without a cadence there is nothing to wait for', () => {
+  // No declared cadence and too few executions to learn one → the guard is
+  // skipped, and an event-driven rule may follow the very next day.
+  assertEquals(cooldownSurvives('2026-06-11', null, 'prune'), true);
 });
 
 Deno.test('guard e: a planned waiting task of the same type+subject drops it', () => {

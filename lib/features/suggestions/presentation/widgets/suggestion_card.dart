@@ -151,7 +151,12 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
                   ),
                 ],
               ),
-              Row(
+              // OverflowBar, not Row: the two action labels do not fit side by
+              // side in German at text×1.3 on a 320 dp screen, and this stacks
+              // them instead of overflowing.
+              OverflowBar(
+                alignment: MainAxisAlignment.spaceBetween,
+                overflowAlignment: OverflowBarAlignment.end,
                 children: [
                   TextButton(
                     onPressed: _busy
@@ -159,7 +164,6 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
                         : () => _run(() => _dismiss(ref, suggestion)),
                     child: Text(t.suggestions.actions.dismiss),
                   ),
-                  const Spacer(),
                   FilledButton(
                     onPressed: _busy
                         ? null

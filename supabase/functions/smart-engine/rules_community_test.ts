@@ -18,6 +18,7 @@ import type {
 } from './types.ts';
 
 const kCfg: EngineConfig = {
+  enabled: true,
   engine: kDefaultEngine,
   weatherThresholds: kDefaultThresholds,
   frostDefaults: kDefaultFrost,

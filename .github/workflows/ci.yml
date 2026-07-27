@@ -2,7 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    # Feature branches too: a 50-commit branch that never ran CI is a branch
+    # whose first red build lands in the merge.
+    branches: [main, 'feat/**', 'fix/**']
   pull_request:
     branches: [main]
 
@@ -45,3 +47,10 @@ jobs:
 
       - name: Test smart-engine (signals, rules R1–R7, guards, pipeline, housekeeping)
         run: deno test supabase/functions/
+
+      # `deno test` only type-checks what the tests import. index.ts and the npm
+      # -backed modules are reachable from nothing, so a type error there ships.
+      # Run from the function directory: the import map lives in its deno.json.
+      - name: Type-check every engine module (incl. index.ts)
+        working-directory: supabase/functions/smart-engine
+        run: deno check *.ts ../_shared/*.ts

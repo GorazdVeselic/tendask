@@ -126,6 +126,8 @@ export interface CommunityThresholds {
 }
 
 export interface EngineConfig {
+  /** app_config.engine_enabled — the server-dark master switch (0007/0009). */
+  enabled: boolean;
   engine: EngineKnobs;
   weatherThresholds: WeatherThresholds;
   frostDefaults: { last_frost_doy: number; first_frost_doy: number };

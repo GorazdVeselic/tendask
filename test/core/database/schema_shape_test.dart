@@ -3,10 +3,12 @@ import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/database/app_database.dart';
 
-// The real on-disk upgrade is verified on-device (a drift schema-verifier
-// harness isn't set up here). These lock down the parts a unit test can reach:
-// the version is bumped, device_location is gone (FR-8, v9), and the smart-engine
-// tables are present (M11, v14/v15) in the current schema.
+// Shape of a FRESHLY CREATED database (onCreate), not an upgrade — the file was
+// named migration_v8_to_v9 but never ran a migration. The real upgrade paths are
+// migration_v9_test.dart (v8 → current) and migration_v13_to_v16_test.dart (the
+// one released devices run). These lock down what a fresh install must have: the
+// version is bumped, device_location is gone (FR-8, v9), and the smart-engine
+// tables exist (M11, v14/v15).
 void main() {
   late AppDatabase db;
 

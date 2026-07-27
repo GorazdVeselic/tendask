@@ -158,6 +158,32 @@ void main() {
     );
   });
 
+  test('one gardener below the privacy threshold widens the scope', () async {
+    // Every earlier test sat comfortably on one side of the bound; the bound
+    // itself is where an off-by-one hides. (Each case needs its own test: the
+    // day cache would otherwise serve the first slice to the second.)
+    store['activity_season|r7|cellA|mow|@site'] = _season(kCommunityPrivacyMin - 1);
+    store['activity_season|r6|cellB|mow|@site'] = _season(20);
+
+    final curve = await readAlive(
+      container(),
+      communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
+    );
+    expect(curve!.bucket, _r6);
+  });
+
+  test('exactly at the privacy threshold the finest scope answers', () async {
+    store['activity_season|r7|cellA|mow|@site'] = _season(kCommunityPrivacyMin);
+    store['activity_season|r6|cellB|mow|@site'] = _season(20);
+
+    final curve = await readAlive(
+      container(),
+      communitySeasonCurveProvider('mow', kCommunityCohortSite).future,
+    );
+    expect(curve!.bucket, _r7);
+    expect(curve.pooledTotal, kCommunityPrivacyMin);
+  });
+
   test('frequency resolves down the same hierarchy', () async {
     store['activity_frequency|r7|cellA|mow|@site'] = _frequency(3);
     store['activity_frequency|r5|cellC|mow|@site'] = _frequency(18);

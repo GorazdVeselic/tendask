@@ -16,6 +16,9 @@ import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
+import 'package:tendask/features/suggestions/application/suggestion_providers.dart';
+import 'package:tendask/features/suggestions/presentation/suggestion_band.dart';
+import 'package:tendask/features/suggestions/presentation/suggestion_history_screen.dart';
 import 'package:tendask/features/community/data/community_stats.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
 import 'package:tendask/features/community/presentation/community_task_screen.dart';
@@ -63,6 +66,52 @@ TaskType _taskType() => TaskType(
   seasonal: true,
   defaultCadence: null,
 );
+
+Suggestion _suggestion(String id, String messageKey, String params) => Suggestion(
+  id: id,
+  userId: 'local',
+  ruleId: 'R5',
+  taskTypeId: 'prune',
+  subjectKey: 'up:p1',
+  userPlantId: 'p1',
+  messageKey: messageKey,
+  messageParams: params,
+  score: 3,
+  status: 'new',
+  dismissScope: 'season',
+  validUntil: DateTime(2026, 7, 1),
+  createdAt: DateTime(2026, 6, 1),
+  updatedAt: DateTime(2026, 6, 1),
+  deleted: false,
+  syncStatus: 'synced',
+);
+
+/// A full band: the three cards it caps at, with the params that make the
+/// sentences their longest (a named subject, a date, a low-supply nudge).
+List<Override> _suggestionOverrides() {
+  final rows = [
+    _suggestion('s1', 'suggestions.season.window_open',
+        '{"subject_label_key":"tomato","suggested_date":"2026-06-20","window_end_date":"2026-07-15"}'),
+    _suggestion('s2', 'suggestions.cadence.overdue',
+        '{"subject_label_raw":"Babičina vrtnica","days_overdue":21,"cadence_days":14,'
+        '"suggested_date":"2026-06-20","low_supply":true,"supply_name":"Kompost"}'),
+    _suggestion('s3', 'suggestions.community.most_started',
+        '{"subject_label_key":"tomato","task_type_id":"prune","percent":70,"scope":"r6"}'),
+  ];
+  return [
+    taskTypesMapProvider.overrideWith(
+      (ref) => Stream.value({'prune': _seasonalTaskType()}),
+    ),
+    plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
+    // Left live, these open real drift streams (and leave their timers behind).
+    userPlantsMapProvider.overrideWith(
+      (ref) => Stream.value(<String, UserPlant>{}),
+    ),
+    areasMapProvider.overrideWith((ref) => Stream.value(<String, Area>{})),
+    activeSuggestionsProvider.overrideWith((ref) => Stream.value(rows)),
+    suggestionHistoryProvider.overrideWith((ref) => Stream.value(rows)),
+  ];
+}
 
 /// The detail template needs a seasonal act: a season curve for watering is a
 /// state the engine cannot produce (§7.5), so a layout drawn from it would be
@@ -404,6 +453,28 @@ void main() {
     overrides: () => _communityTaskOverrides(hasPlus: false),
     build: () =>
         const CommunityTaskScreen(taskTypeId: 'prune', plantId: 'tomato'),
+  );
+
+  // ---- smart suggestions (M11) ----
+  // The band and the history list were outside the matrix entirely, and they
+  // carry the longest generated sentences in the app: a rule message plus a
+  // subject label plus a date, in German, at text×1.3.
+  layoutMatrix(
+    'suggestions/band',
+    overrides: _suggestionOverrides,
+    // The card's 400 ms highlight animation is still running when the
+    // harness disposes the tree; settle it or every case fails on a timer.
+    after: (tester) => tester.pumpAndSettle(),
+    build: () => const _EntryHost(child: SuggestionBand()),
+  );
+
+  layoutMatrix(
+    'suggestions/history',
+    overrides: _suggestionOverrides,
+    // The card's 400 ms highlight animation is still running when the
+    // harness disposes the tree; settle it or every case fails on a timer.
+    after: (tester) => tester.pumpAndSettle(),
+    build: () => const SuggestionHistoryScreen(),
   );
 
   // The two entry points live inside other screens, so they get the host a
