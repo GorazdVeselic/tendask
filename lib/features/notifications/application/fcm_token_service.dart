@@ -9,6 +9,25 @@ import '../../settings/application/profile_providers.dart';
 
 part 'fcm_token_service.g.dart';
 
+/// The slice of FirebaseMessaging the token sync needs. A seam, not an
+/// abstraction: the plugin talks over a platform channel, so a test can only
+/// reach the sync logic by standing in here.
+class FcmMessaging {
+  const FcmMessaging();
+
+  Future<bool> isAuthorized() async {
+    final settings = await FirebaseMessaging.instance.getNotificationSettings();
+    return settings.authorizationStatus == AuthorizationStatus.authorized;
+  }
+
+  Stream<String> get onTokenRefresh => FirebaseMessaging.instance.onTokenRefresh;
+
+  Future<String?> getToken() => FirebaseMessaging.instance.getToken();
+}
+
+@Riverpod(keepAlive: true)
+FcmMessaging fcmMessaging(Ref ref) => const FcmMessaging();
+
 /// Keeps profile.fcm_token in sync with the device's FCM registration token
 /// (docs/m11/06-fcm.md §6.2). The token is acquired only after sign-in (the
 /// engine never pushes to guests) and once POST_NOTIFICATIONS is granted —
@@ -35,11 +54,8 @@ class FcmTokenService extends _$FcmTokenService {
     // FCM is only a bell: a failed Firebase init or an offline registration
     // must never surface — suggestions still arrive via sync pull.
     try {
-      final messaging = FirebaseMessaging.instance;
-      final settings = await messaging.getNotificationSettings();
-      if (settings.authorizationStatus != AuthorizationStatus.authorized) {
-        return;
-      }
+      final messaging = ref.read(fcmMessagingProvider);
+      if (!await messaging.isAuthorized()) return;
       // Subscribe before getToken so a registration that completes late
       // (offline boot) still lands in the profile.
       _refreshSub =

@@ -8,6 +8,48 @@ part of 'fcm_token_service.dart';
 
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
+
+@ProviderFor(fcmMessaging)
+final fcmMessagingProvider = FcmMessagingProvider._();
+
+final class FcmMessagingProvider
+    extends $FunctionalProvider<FcmMessaging, FcmMessaging, FcmMessaging>
+    with $Provider<FcmMessaging> {
+  FcmMessagingProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'fcmMessagingProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$fcmMessagingHash();
+
+  @$internal
+  @override
+  $ProviderElement<FcmMessaging> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  FcmMessaging create(Ref ref) {
+    return fcmMessaging(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(FcmMessaging value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<FcmMessaging>(value),
+    );
+  }
+}
+
+String _$fcmMessagingHash() => r'd3ee4789bf05126d60663c8f0b7cf31a9df1e5b9';
+
 /// Keeps profile.fcm_token in sync with the device's FCM registration token
 /// (docs/m11/06-fcm.md §6.2). The token is acquired only after sign-in (the
 /// engine never pushes to guests) and once POST_NOTIFICATIONS is granted —
@@ -48,7 +90,7 @@ final class FcmTokenServiceProvider
   FcmTokenService create() => FcmTokenService();
 }
 
-String _$fcmTokenServiceHash() => r'311b3107e3a1d305471f6633c6cd31a414442a73';
+String _$fcmTokenServiceHash() => r'ead035e2471c2db887fcc053c0577bb6ccf5ab80';
 
 /// Keeps profile.fcm_token in sync with the device's FCM registration token
 /// (docs/m11/06-fcm.md §6.2). The token is acquired only after sign-in (the

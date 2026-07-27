@@ -21,11 +21,18 @@ class FcmHandler {
   FcmHandler({
     required Future<void> Function() pull,
     required NotificationService notifications,
+    Stream<RemoteMessage>? onMessage,
+    Stream<RemoteMessage>? onMessageOpenedApp,
   }) : _pull = pull,
-       _notifications = notifications;
+       _notifications = notifications,
+       _onMessage = onMessage,
+       _onMessageOpenedApp = onMessageOpenedApp;
 
   final Future<void> Function() _pull;
   final NotificationService _notifications;
+  // Test seams; null = the real plugin streams, resolved lazily in start().
+  final Stream<RemoteMessage>? _onMessage;
+  final Stream<RemoteMessage>? _onMessageOpenedApp;
   StreamSubscription<RemoteMessage>? _messageSub;
   StreamSubscription<RemoteMessage>? _openedSub;
 
@@ -40,8 +47,15 @@ class FcmHandler {
   /// Subscribes to the FCM streams. Call once at bootstrap, after a successful
   /// Firebase.initializeApp. Idempotent.
   void start() {
-    _messageSub ??= FirebaseMessaging.onMessage.listen(_onForeground);
-    _openedSub ??= FirebaseMessaging.onMessageOpenedApp.listen(_onOpened);
+    // The plugin streams are read here, not in the constructor: the provider is
+    // built before Firebase.initializeApp on some paths.
+    _messageSub ??= (_onMessage ?? FirebaseMessaging.onMessage).listen(
+      _onForeground,
+    );
+    _openedSub ??=
+        (_onMessageOpenedApp ?? FirebaseMessaging.onMessageOpenedApp).listen(
+          _onOpened,
+        );
   }
 
   /// Suggestion id of the push that cold-started the app, or null when the app

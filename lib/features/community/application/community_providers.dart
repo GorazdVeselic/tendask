@@ -1,12 +1,12 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-// hide Bucket: supabase's storage_client also exports a `Bucket` — ours wins.
-import 'package:supabase_flutter/supabase_flutter.dart' hide Bucket;
+import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/database/database_provider.dart';
 import '../data/community_models.dart';
+import '../data/community_remote_fetch.dart';
 import '../data/community_repository.dart';
 import '../data/community_stats.dart';
 
@@ -17,35 +17,8 @@ CommunityRepository communityRepository(Ref ref) {
   final db = ref.watch(databaseProvider);
   // Offline / no backend → stale-cache-only repository (fetch = null).
   if (kSupabaseUrl.isEmpty) return CommunityRepository(db, null);
-  final client = Supabase.instance.client;
-  return CommunityRepository(db, (table, filter) async {
-    var query = client.from(table).select();
-    for (final e in filter.entries) {
-      final value = e.value;
-      query = value is List
-          ? query.inFilter(e.key, value)
-          : query.eq(e.key, value);
-    }
-    // Order first, then cap: PostgREST cuts at max_rows regardless, so the only
-    // choice is WHICH rows survive. Each table is ordered so the cut drops what
-    // matters least; the repository still refuses a slice that hit the cap.
-    final order = _aggOrder[table];
-    final capped = order == null
-        ? query.limit(kCommunityRowLimit)
-        : query
-              .order(order.$1, ascending: order.$2)
-              .limit(kCommunityRowLimit);
-    final data = await capped;
-    return data.cast<Map<String, dynamic>>();
-  });
+  return CommunityRepository(db, supabaseAggFetch(Supabase.instance.client));
 }
-
-/// Sort key per aggregate table: (column, ascending).
-const _aggOrder = <String, (String, bool)>{
-  'activity_recent': ('distinct_users_7d', false), // busiest cohorts first
-  'activity_season': ('year', false), // newest seasons first
-  'activity_frequency': ('season_year', false),
-};
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body
