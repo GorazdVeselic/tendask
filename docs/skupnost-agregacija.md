@@ -35,7 +35,7 @@
 | 3 | Vir klime | Open-Meteo normals (klic ob lokaciji); bogato-omejen **owner-only** `profile.climate_profile` jsonb; **javni** `climate_bucket` ostane grob |
 | 4 | Sezonsko sidro | **Koledarsko leto (severna polobla)**; sezona = **izpeljava** iz absolutnih datumov (brez zapečenja → nadgradnja brez migracije) |
 | 5 | Datum za binning | **`profile.timezone` (IANA)** → uvrsti v uporabnikov **lokalni dan**; tedenska granulacija |
-| 6 | RLS gate `activity_season` | Denormaliziran **gate-stolpec** (`publishable`), ki ga piše cron |
+| 6 | RLS gate `activity_season` | Denormaliziran **gate-stolpec** (`publishable`), ki ga piše cron; prag skupine dvignjen s `K_privacy` na **`K_reliab`** (migracija `0018`, 2026-07-27) |
 | 7 | Frekvenčna metrika | **V2** (tri metrike skupaj) |
 | 8 | Zrelost `X/N/M` | Konservativni server-nastavljivi privzetki (X=14 dni, N=10 opravil, M=5 dni); kalibriraj po podatkih |
 
@@ -220,13 +220,19 @@ activity_season(
   resolution text, bucket_key text, task_type_id text, plant_id text NULL,
   year int, iso_week int,           -- 1..53
   first_user_count int,
-  publishable bool,                 -- gate (odločitev 6): cron postavi true, ko pooled total ≥ K_privacy
+  publishable bool,                 -- gate (odločitev 6): cron postavi true, ko pooled total ≥ K_reliab
   PRIMARY KEY (resolution, bucket_key, task_type_id, plant_id, year, iso_week)
 )
 ```
-RLS (odločitev 6): gate na **skupnem naboru**, ne tedenski celici (tedenski bar 1–2 osebi je OK,
-anonimnostni set je cela sezona). Cron izračuna `pooled_total = Σ` čez uporabljena pretekla leta in
-postavi **`publishable`** na vse vrstice vedra+tipa; RLS `using (publishable)`.
+RLS (odločitev 6): gate na **skupnem naboru**, ne tedenski celici — anonimnostni set je cela sezona.
+Cron izračuna `pooled_total = Σ` čez uporabljena pretekla leta in postavi **`publishable`** na vse
+vrstice vedra+tipa; RLS `using (publishable)`.
+
+**Popravek 2026-07-27 (migracija `0018`):** prag skupine je `K_reliab`, ne `K_privacy`. Tedenska
+vrstica z `first_user_count = 1` je znotraj skupine petih preveč zgovorna, filtriranje takih vrstic
+pa bi bilo hujše od razkritja: klient krivuljo normalizira na **prejete** vrstice, zato skrite ne
+pustijo vrzeli, ampak tiho prerazporedijo vse odstotke. Zato gate ostane na skupini, le višji —
+tanka okolica ne dobi krivulje, ampak se razširi na naslednjo raven (§7.4).
 
 ### 5.5 `bucket_population` — koliko vrtnarjev je v vedru (vrzel iz wireframe verifikacije)
 Za prikaz »~40 vrtnarjev v tvoji okolici« in cold-start gating (»še premalo«) rabimo **populacijo

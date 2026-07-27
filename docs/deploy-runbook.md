@@ -122,6 +122,18 @@ operacija; kar je odveč, ostane.
 RLS se ne dotakne) in mora biti na PROD **pred prižigom** nočnega agregata, sicer bi cron polnil
 `activity_*` brez `@site` vrstic.
 
+**Nova, še NE aplicirana:** `0018` (granti motorskih funkcij + `k_reliab()` + frekvenčni prag,
+2026-07-27, plan popravkov §P5). Pred aplikacijo poženi sondo **S1** (`tmp/probe_p5.sql`), po njej
+**S1 + S3b** za potrditev. Vsebina: revoke `engine_dispatch()`/`agg_refresh_all()` za
+`anon`/`authenticated` (`revoke … from public` v `0007`/`0009` **ne** odstrani Supabase privzetih
+grantov — isti razlog kot `0010` za tabele), nova `k_reliab()` (zrcalo `k_privacy()`), politika
+`activity_frequency` dvignjena s `k_privacy` (5) na `k_reliab` (30), revoke na `engine_run`,
+`weather_cache`, `app_config`, in **`agg_refresh_all()` znova deklarirana** (telo iz `0009` dobesedno,
+razen praga `publishable`, ki gre s `k_privacy` na `k_reliab` — od zdaj je `0018` merodajna kopija).
+⚠️ **`k_privacy()` ostane izvršljiv za `anon`/`authenticated`** — kličejo ga RLS politike vseh štirih
+agregatnih tabel v kontekstu klicoče vloge; revoke bi zaprl branje Okolice v celoti. Isto zdaj velja
+za `k_reliab()`. Po aplikaciji preveri, da branje agregatov z anon ključem še deluje.
+
 **Pravilo (potrjeno v praksi):** vsak nov prod build najprej `supabase db push`, šele nato upload.
 Pred vc14 je bil prod pri `0013`, medtem ko je koda že pisala `yield_amount`/`category` — živi vc13 je
 bil rešen le zato, ker je bil zgrajen **pred** temi funkcijami. Ne zanašaj se na to; preveri.
