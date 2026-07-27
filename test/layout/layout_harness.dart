@@ -106,6 +106,59 @@ Future<void> pumpScreen(
   await tester.pump(const Duration(milliseconds: 400));
 }
 
+/// Strings that already break mid-word today, per matrix screen — the backlog
+/// the word-break rule uncovered the day it was written (docs/prelomi-besed.md).
+///
+/// Listed so the rule can stay ON while the backlog is worked off: a NEW break
+/// fails immediately, these do not. Delete an entry when its screen is fixed;
+/// never add one without filing it in that document. Chunks only — never
+/// pixel widths, which move with every font or padding change.
+const kAcceptedWordBreaks = <String, Set<String>>{
+  'appearance': {'Dunkel', 'Sistemsko', 'Svetlo', 'System', 'Temno'},
+  'areas': {'Bereiche', 'Območja', 'Sredstva', 'Supplies'},
+  'entry/review': {
+    'ERINNERUNG',
+    'PONAVLJANJE',
+    'WIEDERHOLUNG',
+    'Wöchentlich',
+    'Zelenjavni',
+  },
+  'entry/when': {
+    'Custom',
+    'Dnevno',
+    'Eigene',
+    'Tedensko',
+    'Tomorrow',
+    'Täglich',
+    'Weekly',
+    'Wöchentlich',
+  },
+  'entry/when (custom recurrence)': {
+    'Custom',
+    'Dnevno',
+    'Eigene',
+    'Tedensko',
+    'Tomorrow',
+    'Täglich',
+    'Weekly',
+    'Wöchentlich',
+  },
+  // Not shipped: the fifth tab is flag-dark, so this one is a precondition for
+  // turning kCommunityEnabled on, not a backlog item (docs/deploy-runbook.md).
+  'nav (five tabs)': {
+    'Aufgaben',
+    'Opravila',
+    'Startseite',
+    'Tagebuch',
+    'Umgebung',
+  },
+  'note-form': {'Yesterday'},
+  'notifications': {'Erinnerungen', 'dogodku'},
+  'settings': {'Benachrichtigungen', 'Slovenščina'},
+  'task-detail': {'Wiederholung'},
+  'tasks': {'Gießen', 'Watering', 'Zalivanje', 'Zelenjavni'},
+};
+
 /// Everything the matrix considers a layout break, in one place.
 ///
 /// Two distinct failures, because the app has two distinct ways of breaking:
@@ -122,9 +175,16 @@ Future<void> pumpScreen(
 /// getMinIntrinsicWidth alone is not a clip signal — it over-reports the width
 /// of freely-wrapping titles that in fact wrap to two lines and look fine.
 ///
+/// That word-breaking is the third failure: nothing is clipped, nothing throws,
+/// and the result reads "Startsei / te". It is checked FIRST, for every
+/// paragraph, because it is the one break freely-wrapping text can still have.
+///
 /// Text that opts into ellipsis or fade is *designed* to shrink (see
 /// task_action_bar), so it is never a break.
-List<String> layoutBreaks(WidgetTester tester) {
+List<String> layoutBreaks(
+  WidgetTester tester, {
+  Set<String> acceptedWordBreaks = const {},
+}) {
   final breaks = <String>[];
 
   // Drain every exception, not just the first: one pump can throw several
@@ -147,6 +207,25 @@ List<String> layoutBreaks(WidgetTester tester) {
       continue;
     }
     if (paragraph.size.isEmpty || !paragraph.hasSize) continue;
+
+    // A box narrower than the longest unbreakable chunk forces Flutter to break
+    // INSIDE a word ("Startsei / te"). Nothing is clipped and nothing throws,
+    // so neither check below sees it — but it is unreadable, and it is how a
+    // bottom-nav label or a chip breaks when a fifth tab or a long German word
+    // arrives.
+    final chunk = _widestChunk(paragraph);
+    // An accepted break must not hide a clip in the same paragraph, so only a
+    // reported one ends the checks below.
+    if (chunk != null &&
+        chunk.width > paragraph.size.width + 0.5 &&
+        !acceptedWordBreaks.contains(chunk.text)) {
+      breaks.add(
+        'word-broken text "${paragraph.text.toPlainText().replaceAll('\n', ' ')}": '
+        '"${chunk.text}" needs ${chunk.width.round()}px, box is '
+        '${paragraph.size.width.round()}px',
+      );
+      continue;
+    }
 
     // Free-wrapping text always fits — skip it, or every long title trips a
     // false positive.
@@ -205,10 +284,52 @@ void layoutMatrix(
             );
             if (after != null) await after(tester);
 
-            expect(layoutBreaks(tester), isEmpty);
+            expect(
+              layoutBreaks(
+                tester,
+                acceptedWordBreaks: kAcceptedWordBreaks[screen] ?? const {},
+              ),
+              isEmpty,
+            );
           },
         );
       }
     }
   }
+}
+
+/// The widest chunk of [paragraph] that Flutter cannot break, and its width.
+///
+/// `getMinIntrinsicWidth` is not usable here: it reports the longest
+/// whitespace-delimited run, treating "Aufgaben-Erinnerungen" as unbreakable
+/// even though Flutter happily breaks after the hyphen. Measuring the chunks
+/// with the paragraph's own style and scaler is what tells a clean wrap from a
+/// word torn in half.
+({String text, double width})? _widestChunk(RenderParagraph paragraph) {
+  final span = paragraph.text;
+  // Per-chunk styling would need per-run measurement; the app's wrapping text
+  // is single-styled, and a mixed span is left to the checks below.
+  if (span is! TextSpan || span.children != null) return null;
+  final plain = span.toPlainText();
+  if (plain.trim().isEmpty) return null;
+
+  ({String text, double width})? widest;
+  for (final word in plain.split(RegExp(r'\s+'))) {
+    // Keep the hyphen on the chunk before it: that is the line Flutter draws.
+    final parts = word.split('-');
+    for (var i = 0; i < parts.length; i++) {
+      final chunk = i == parts.length - 1 ? parts[i] : '${parts[i]}-';
+      if (chunk.isEmpty) continue;
+      final painter = TextPainter(
+        text: TextSpan(text: chunk, style: span.style),
+        textDirection: paragraph.textDirection,
+        textScaler: paragraph.textScaler,
+        locale: paragraph.locale,
+      )..layout();
+      if (widest == null || painter.width > widest.width) {
+        widest = (text: chunk, width: painter.width);
+      }
+    }
+  }
+  return widest;
 }
