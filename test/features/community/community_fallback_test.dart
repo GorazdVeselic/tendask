@@ -1,7 +1,7 @@
 import 'package:drift/drift.dart' show Value;
 import 'package:drift/native.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_riverpod/misc.dart' show Refreshable;
+import 'package:flutter_riverpod/misc.dart' show Override, Refreshable;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/clock.dart';
 import 'package:tendask/core/config.dart';
@@ -69,12 +69,28 @@ void main() {
   /// '<table>|<resolution>|<bucket>|<task_type>|<plant>'.
   ProviderContainer container({
     List<Bucket> buckets = const [_r7, _r6, _climate],
+    List<Override> extra = const [],
   }) {
     final repo = CommunityRepository(db, (table, filter) async {
-      final key =
-          '$table|${filter['resolution']}|${filter['bucket_key']}'
-          '|${filter['task_type_id']}|${filter['plant_id']}';
-      return store[key] ?? const [];
+      final prefix = '$table|${filter['resolution']}|${filter['bucket_key']}|';
+      final types = filter['task_type_id'];
+      // A list of types is the bulk slice read behind the standings list: the
+      // server answers with every cohort of those types, full rows.
+      if (types is List) {
+        return [
+          for (final entry in store.entries)
+            if (entry.key.startsWith(prefix))
+              for (final row in entry.value)
+                if (types.contains(entry.key.substring(prefix.length).split('|').first))
+                  {
+                    ...row,
+                    'task_type_id':
+                        entry.key.substring(prefix.length).split('|').first,
+                    'plant_id': entry.key.substring(prefix.length).split('|').last,
+                  },
+        ];
+      }
+      return store['$prefix$types|${filter['plant_id']}'] ?? const [];
     }, clock: const _FakeClock());
 
     final c = ProviderContainer(
@@ -84,6 +100,7 @@ void main() {
         databaseProvider.overrideWithValue(db),
         communityRepositoryProvider.overrideWithValue(repo),
         communityBucketsProvider.overrideWith((ref) => Stream.value(buckets)),
+        ...extra,
       ],
     );
     addTearDown(c.dispose);
@@ -227,6 +244,36 @@ void main() {
       communityFrequencyProvider('water', kCommunityCohortSite).future,
     );
     expect(stats!.nUsers, 40);
+  });
+
+  test('the standings list leaves non-seasonal acts out', () async {
+    // The same §7.5 rule as the detail screen, on the other surface: without it
+    // the list would put a timing band on watering.
+    store['activity_season|r7|cellA|mow|@site'] = _season(40);
+    store['activity_season|r7|cellA|water|@site'] = _season(40);
+
+    final standings = await readAlive(
+      container(
+        buckets: const [_r7],
+        extra: [
+          mySeasonsProvider.overrideWith(
+            (ref) => Stream.value({
+              ('mow', kCommunityCohortSite): MySeason(
+                first: DateTime(2026, 4, 1),
+                count: 2,
+              ),
+              ('water', kCommunityCohortSite): MySeason(
+                first: DateTime(2026, 4, 2),
+                count: 9,
+              ),
+            }),
+          ),
+        ],
+      ),
+      communityStandingsProvider.future,
+    );
+
+    expect(standings.map((s) => s.taskTypeId), ['mow']);
   });
 
   test('a slice that hit the row cap is refused, not re-scaled', () async {

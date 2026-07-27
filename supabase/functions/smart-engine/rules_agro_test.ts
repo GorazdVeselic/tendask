@@ -1,6 +1,8 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { isRuleUsable, r5, r7, resolveWindow } from './rules_agro.ts';
+import { loadRules } from './bundle.ts';
+import { FakeDb } from './fake_db.ts';
 import { dedupAndRank } from './pipeline.ts';
 import {
   kDefaultCommunityThresholds,
@@ -329,6 +331,21 @@ Deno.test('isRuleUsable: a window that cannot resolve is rejected, not thrown on
     rule({ timing_anchor: 'cadence_only', window: { season_start_week: 12, season_end_week: 40 } }),
   ];
   for (const r of usable) assertEquals(isRuleUsable(r), true);
+});
+
+Deno.test('loadRules drops the unusable rule and reports it once', async () => {
+  // isRuleUsable is pure and covered above; this is the wiring that decides
+  // whether a bad catalog row ever reaches a user's run.
+  const db = new FakeDb();
+  db.rows = {
+    plant_task_rule: [
+      { id: 'a.good', timing_anchor: 'month_window', window: { start_week: 14, end_week: 17 } },
+      { id: 'a.broken', timing_anchor: 'frost_offset', window: { anchor: 'last_frost' } },
+    ],
+  };
+
+  const loaded = await loadRules(db);
+  assertEquals(loaded.map((r) => r.id), ['a.good']);
 });
 
 Deno.test('a rule with no offset_max_days is skipped instead of failing the run', () => {

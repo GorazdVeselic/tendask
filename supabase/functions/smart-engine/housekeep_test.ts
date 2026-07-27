@@ -1,5 +1,6 @@
 import { assertEquals } from 'jsr:@std/assert@1';
-import { planHousekeeping, type SuggestionRow } from './housekeep.ts';
+import { housekeep, planHousekeeping, type SuggestionRow } from './housekeep.ts';
+import { FakeDb } from './fake_db.ts';
 import {
   kDefaultCommunityThresholds,
   kDefaultEngine,
@@ -69,6 +70,57 @@ function plan(rows: SuggestionRow[], log: SuggestionLogRow[] = []) {
     kCfg,
   );
 }
+
+Deno.test('housekeep writes the plan and honours the mute in the same run', async () => {
+  // planHousekeeping was covered from the start; the executor around it — the
+  // writes and the in-memory reflection the guards then read — was not.
+  const db = new FakeDb();
+  db.rows = {
+    suggestion: [
+      row({ id: 'd1', status: 'dismissed', subject_key: 'up:p1' }),
+      row({ id: 'e1', status: 'new', valid_until: '2026-06-01' }), // past valid_until
+      row({ id: 'r1', status: 'planned', updated_at: '2024-01-01T00:00:00+00:00' }),
+    ],
+  };
+  const bundle = {
+    profile: { user_id: 'u1' },
+    areas: [],
+    plants: [{ id: 'p1' }],
+    tasks: [],
+    supplies: [],
+    suggestionLog: [emitted('R3:treat|up:p1')],
+    activeSuggestions: [],
+    // deno-lint-ignore no-explicit-any
+  } as any;
+
+  await housekeep(db, bundle, kToday, new Date('2026-06-12T12:00:00Z'), kClimate, [], kCfg);
+
+  const expire = db.writes.find((w) => w.table === 'suggestion' && w.payload.status === 'expired');
+  assertEquals(expire?.op, 'update');
+  assertEquals(db.writes.some((w) => w.table === 'suggestion' && w.payload.deleted === true), true);
+
+  const mute = db.writes.find((w) => w.table === 'suggestion_log')!;
+  assertEquals(mute.op, 'upsert');
+  assertEquals(mute.payload[0].guard_key, 'R3:treat');
+  assertEquals(mute.payload[0].dismissed_until, '2026-06-20T00:00:00Z');
+  // updated_at must be explicit: the Postgres default only fires on INSERT, so
+  // an upsert that merges into an existing row would keep yesterday's stamp.
+  assertEquals(typeof mute.payload[0].updated_at, 'string');
+
+  // Reflected in the bundle, so a dismiss made minutes ago silences this run.
+  assertEquals(bundle.suggestionLog.length, 2);
+  assertEquals(bundle.suggestionLog[1].dismissed_until, '2026-06-20T00:00:00Z');
+});
+
+Deno.test('housekeep on an empty suggestion table writes nothing', async () => {
+  const db = new FakeDb();
+  db.rows = { suggestion: [] };
+  // deno-lint-ignore no-explicit-any
+  const bundle = { profile: { user_id: 'u1' }, areas: [], plants: [], suggestionLog: [] } as any;
+
+  await housekeep(db, bundle, kToday, new Date('2026-06-12T12:00:00Z'), kClimate, [], kCfg);
+  assertEquals(db.writes.length, 0);
+});
 
 Deno.test('housekeep 2c: a new suggestion past valid_until expires', () => {
   const r = row({ status: 'new', valid_until: '2026-06-01' });
