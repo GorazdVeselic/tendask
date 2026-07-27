@@ -4,6 +4,8 @@
 
 // deno-lint-ignore-file no-explicit-any
 import type { PlantTaskRule, TaskRow, TaskTypeMeta, UserBundle } from './types.ts';
+import { isRuleUsable } from './rules_agro.ts';
+import { reportError } from '../_shared/report.ts';
 
 function throwIfError(...results: { error: unknown }[]): void {
   for (const r of results) {
@@ -22,7 +24,10 @@ export async function loadTaskTypes(db: any): Promise<Map<string, TaskTypeMeta>>
 /** All agronomy rules, cached once per invocation (docs/m11/03 §Cevovod step 1).
  * "window" jsonb arrives already parsed; the tolerant resolver reads it per anchor.
  * Ordered by id so a score-tie between two rules for the same (task_type, subject)
- * resolves deterministically in dedupAndRank (03 §Determinizem). */
+ * resolves deterministically in dedupAndRank (03 §Determinizem).
+ *
+ * A rule whose window cannot resolve is dropped here and reported once, rather
+ * than throwing later inside every user's run. */
 export async function loadRules(db: any): Promise<PlantTaskRule[]> {
   const res = await db
     .from('plant_task_rule')
@@ -31,7 +36,14 @@ export async function loadRules(db: any): Promise<PlantTaskRule[]> {
     )
     .order('id', { ascending: true });
   throwIfError(res);
-  return (res.data ?? []) as PlantTaskRule[];
+  const rules = (res.data ?? []) as PlantTaskRule[];
+  const usable = rules.filter(isRuleUsable);
+  if (usable.length !== rules.length) {
+    reportError('plant_task_rule_window', 'unresolvable window, rule skipped', {
+      ruleIds: rules.filter((r) => !isRuleUsable(r)).map((r) => r.id),
+    });
+  }
+  return usable;
 }
 
 export async function loadUserBundle(

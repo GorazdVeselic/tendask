@@ -17,9 +17,9 @@ import { addDaysStr, muteEndMs } from './dates.ts';
 import { kMuteForeverDate } from './config.ts';
 
 // dismiss_scope='season' mute length per engine rule (docs/m11/03 §R* DISMISS).
-// R5 uses the regionalised window end instead (computed below); this covers the
-// rules with no window (R1–R3/R6) and R7's event-driven chain.
-const kDismissDays: Record<string, number> = { R1: 7, R2: 60, R3: 10, R6: 90, R7: 14 };
+// R5 uses the regionalised window end instead, R6 the season end (both below);
+// this covers the rules with no window (R1–R3) and R7's event-driven chain.
+const kDismissDays: Record<string, number> = { R1: 7, R2: 60, R3: 10, R7: 14 };
 const kDefaultDismissDays = 30;
 
 export interface SuggestionRow {
@@ -48,6 +48,11 @@ function dismissedUntil(
   localToday: string,
 ): string {
   if (row.dismiss_scope === 'forever') return kMuteForeverDate;
+  // R6 carries no rule window; its season is the calendar year the community
+  // curve is built on (rules_community.ts §seasonStart). Anchored to the year of
+  // the dismissal, never to localToday — the latter would push the mute one
+  // season further on every run and silence the next season too.
+  if (row.rule_id === 'R6') return row.updated_at.slice(0, 4) + '-12-31T23:59:59Z';
   const rule = row.plant_task_rule_id ? ruleById.get(row.plant_task_rule_id) : undefined;
   if (
     rule != null && (rule.timing_anchor === 'month_window' || rule.timing_anchor === 'frost_offset')

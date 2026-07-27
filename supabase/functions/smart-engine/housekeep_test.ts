@@ -107,6 +107,22 @@ Deno.test('housekeep 2a: dismissed season → updated_at + dismissDays mute', ()
   assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z'); // +10 days (R3)
 });
 
+Deno.test('housekeep 2a: dismissing R6 mutes it for the rest of that season', () => {
+  // R6 has no rule window, and a fixed day count would either expire inside the
+  // season or bleed into the next one.
+  const p = plan([
+    row({ status: 'dismissed', rule_id: 'R6', updated_at: '2026-06-10T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.newMutes[0].dismissed_until, '2026-12-31T23:59:59Z');
+
+  // Anchored to the dismissal, not to the run: a December dismissal must not
+  // grow into next season when housekeeping runs again in January.
+  const december = plan([
+    row({ status: 'dismissed', rule_id: 'R6', updated_at: '2026-12-20T07:00:00+00:00' }),
+  ], [emitted('R6:treat|up:p1', '2026-12-31T23:59:59Z')]);
+  assertEquals(december.newMutes.length, 0);
+});
+
 Deno.test('housekeep 2a: the log row emit wrote does not block the mute', () => {
   // Every dismissed suggestion was emitted first, so its guard key is always in
   // the log — keying on row existence muted nothing at all.

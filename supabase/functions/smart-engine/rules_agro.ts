@@ -26,6 +26,36 @@ function clamp(n: number, lo: number, hi: number): number {
   return Math.max(lo, Math.min(hi, n));
 }
 
+function finiteNumber(v: unknown): boolean {
+  if (v == null || v === '') return false;
+  return Number.isFinite(Number(v));
+}
+
+/** Can this rule's window resolve to real dates? A missing or non-numeric field
+ * turns into NaN, and a NaN day throws RangeError out of Date — which fails the
+ * run for EVERY user in the batch, on every dispatch, until the row is fixed.
+ * Unknown anchors pass: no rule reads them, so they are inert. */
+export function isRuleUsable(rule: PlantTaskRule): boolean {
+  const w = rule.window ?? {};
+  switch (rule.timing_anchor) {
+    case 'month_window':
+      return finiteNumber(w.start_week) && finiteNumber(w.end_week);
+    case 'frost_offset':
+      return (w.anchor === 'last_frost' || w.anchor === 'first_frost') &&
+        finiteNumber(w.offset_min_days) && finiteNumber(w.offset_max_days);
+    case 'growth_stage':
+      return typeof w.after_event === 'string' && w.after_event !== '' &&
+        finiteNumber(w.offset_min_days) && finiteNumber(w.offset_max_days);
+    case 'cadence_only':
+      // The season gate is optional; present means both bounds must resolve.
+      return w.season_start_week == null && w.season_end_week == null
+        ? true
+        : finiteNumber(w.season_start_week) && finiteNumber(w.season_end_week);
+    default:
+      return true;
+  }
+}
+
 function deriveReg(startWeek: number): 'spring' | 'autumn' | 'none' {
   if (startWeek <= 6) return 'none'; // winter dormancy — not frost-sensitive (01 §0)
   return startWeek <= 26 ? 'spring' : 'autumn';

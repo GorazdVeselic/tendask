@@ -1,6 +1,6 @@
 import { assertEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
-import { r5, r7, resolveWindow } from './rules_agro.ts';
+import { isRuleUsable, r5, r7, resolveWindow } from './rules_agro.ts';
 import { dedupAndRank } from './pipeline.ts';
 import {
   kDefaultCommunityThresholds,
@@ -297,6 +297,56 @@ Deno.test('R5 window: frost-free location skips frost_offset (anchor null)', () 
     2026,
   );
   assertEquals(w.start, null);
+});
+
+// ==================== rule window validation ====================
+
+Deno.test('isRuleUsable: a window that cannot resolve is rejected, not thrown on', () => {
+  // A missing numeric field becomes NaN, and a NaN day throws RangeError out of
+  // Date — failing the run for every user in the batch, on every dispatch.
+  const broken = [
+    rule({ timing_anchor: 'month_window', window: { start_week: 14 } }),
+    rule({ timing_anchor: 'month_window', window: { start_week: 14, end_week: 'soon' } }),
+    rule({ timing_anchor: 'frost_offset', window: { anchor: 'last_frost', offset_min_days: -10 } }),
+    rule({ timing_anchor: 'frost_offset', window: { offset_min_days: -10, offset_max_days: 0 } }),
+    rule({ timing_anchor: 'growth_stage', window: { offset_min_days: 14, offset_max_days: 28 } }),
+    rule({ timing_anchor: 'cadence_only', window: { season_start_week: 12 } }),
+  ];
+  for (const r of broken) assertEquals(isRuleUsable(r), false);
+
+  const usable = [
+    rule({ timing_anchor: 'month_window', window: { start_week: 14, end_week: '17' } }),
+    rule({
+      timing_anchor: 'frost_offset',
+      window: { anchor: 'last_frost', offset_min_days: -10, offset_max_days: 0 },
+    }),
+    rule({
+      timing_anchor: 'growth_stage',
+      window: { after_event: 'sow', offset_min_days: 14, offset_max_days: 28 },
+    }),
+    rule({ timing_anchor: 'cadence_only', window: {} }), // no season gate is fine
+    rule({ timing_anchor: 'cadence_only', window: { season_start_week: 12, season_end_week: 40 } }),
+  ];
+  for (const r of usable) assertEquals(isRuleUsable(r), true);
+});
+
+Deno.test('a rule with no offset_max_days is skipped instead of failing the run', () => {
+  const b = bundle({ plants: [plant('p1', 'apple', 'fruit_tree')] });
+  const good = rule({
+    id: 'a.good',
+    ref_id: 'apple',
+    window: { start_week: 22, end_week: 28, regionalize: 'none', climate_bucket_filter: null },
+  });
+  const broken = rule({
+    id: 'a.broken',
+    ref_id: 'apple',
+    timing_anchor: 'frost_offset',
+    window: { anchor: 'last_frost', offset_min_days: -10 }, // offset_max_days lost
+  });
+  const loaded = [good, broken].filter(isRuleUsable);
+
+  assertEquals(loaded.map((r) => r.id), ['a.good']);
+  assertEquals(r5(b, loaded, signalsOf(b), kTaskTypes, kCfg).length, 1);
 });
 
 // ==================== R5 emit behaviour ====================

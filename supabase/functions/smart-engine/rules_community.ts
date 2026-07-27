@@ -15,6 +15,9 @@ const kStrongShare = 0.68; // §R6 OCENA — a clear majority earns the boost
 const kScoreBase = 1.0;
 const kScoreStrong = 0.5;
 const kPercentStep = 10; // §7.7 — never a precise-looking percentage
+const kClosedShare = 0.9; // entering the week with this much done = the window is over
+const kAheadWeeks = 3; // horizon the neighbourhood must still be starting in
+const kMinAheadShare = 0.05; // …with at least this share of them
 
 /** The catalog species this garden grows, each with the plant that will carry
  * the card. One card per species, not one per specimen: three tomato plants are
@@ -59,6 +62,13 @@ export function r6(
       if (cdf == null || cdf.pooledTotal < cfg.thresholds.kReliab) continue;
       const share = cdf.shareBy(week);
       if (share < kStartedShare) continue;
+      // F is cumulative and stays at 1.0 once the season is over, so "most have
+      // started" alone fires all autumn and winter — and for every seasonal type
+      // at once at the year turn, where isoWeek('2027-01-01') = 53. Judge the
+      // window on the week we entered, then require that people are still
+      // starting: a bimodal curve can sit mid-plateau in a dead month.
+      if (cdf.shareBy(week - 1) > kClosedShare) continue;
+      if (cdf.shareIn(week, week + kAheadWeeks) < kMinAheadShare) continue;
       // Already started this season on ANY specimen of the species — the answer
       // is "yes, and so have you", which is not a suggestion.
       const started = bundle.plants.some((p) =>

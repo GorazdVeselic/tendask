@@ -23,6 +23,9 @@ export interface SeasonCdf {
   pooledTotal: number;
   /** F(w) in §7.2 — share whose FIRST execution fell in ISO week ≤ w. */
   shareBy(week: number): number;
+  /** f summed over ISO weeks [from, to] — how many are starting around now.
+   * F alone cannot answer that: it stays at 1.0 for the rest of the year. */
+  shareIn(from: number, to: number): number;
 }
 
 export interface AggBucket {
@@ -97,12 +100,16 @@ export function buildSeasonCdfs(
       cdf.push(running / total);
     }
     const [taskTypeId, cohort] = key.split('|');
+    // Below week 1 nothing has happened yet — 0, not the first bin, so a window
+    // that opens in week 1 is not read as "already closed".
+    const at = (week: number) => week < 1 ? 0 : cdf[Math.min(week, kIsoWeeksPerYear) - 1];
     out.set(key, {
       taskTypeId,
       cohort,
       resolution,
       pooledTotal: total,
-      shareBy: (week) => cdf[Math.min(Math.max(week, 1), kIsoWeeksPerYear) - 1],
+      shareBy: at,
+      shareIn: (from, to) => at(to) - at(from - 1),
     });
   }
   return out;

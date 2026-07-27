@@ -177,6 +177,26 @@ Deno.test('history: cadence falls back to default_cadence under 3 executions', (
   assertEquals(s.history.cadenceDays('up:p1', 'water'), null); // no default either
 });
 
+Deno.test('history: a same-day burst is not a 0-day cadence', () => {
+  // Logging three mows on one day gives a 0 median. Left as 0, R3 reads every
+  // day since as overdue and the card says "every 0 days", forever.
+  const s = signalsOf(bundle({
+    tasks: ['2026-05-01', '2026-05-01', '2026-05-01'].map((d) =>
+      task('mow', d + 'T10:00:00Z', 'done', kPlantSubject)
+    ),
+  }));
+  assertEquals(s.history.cadenceDays('up:p1', 'mow'), 10); // the declared cadence, not 0
+});
+
+Deno.test('history: with no declared cadence a same-day burst yields none', () => {
+  const s = signalsOf(bundle({
+    tasks: ['2026-05-01', '2026-05-01', '2026-05-01'].map((d) =>
+      task('water', d + 'T10:00:00Z', 'done', kPlantSubject)
+    ),
+  }));
+  assertEquals(s.history.cadenceDays('up:p1', 'water'), null);
+});
+
 Deno.test('history: chainStepDate sees only the current season (calendar year)', () => {
   const s = signalsOf(bundle({
     tasks: [

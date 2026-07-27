@@ -190,13 +190,21 @@ function buildHistorySignals(
 
   const lastDone = (subjectKey: string, taskTypeId: string) =>
     last(byPair.get(subjectKey + '|' + taskTypeId));
+  const declaredCadence = (taskTypeId: string): number | null => {
+    const days = taskTypes.get(taskTypeId)?.default_cadence;
+    return days != null && days > 0 ? days : null;
+  };
   const cadenceDays = (subjectKey: string, taskTypeId: string): number | null => {
     const dates = byPair.get(subjectKey + '|' + taskTypeId) ?? [];
-    if (dates.length < 3) return taskTypes.get(taskTypeId)?.default_cadence ?? null;
+    if (dates.length < 3) return declaredCadence(taskTypeId);
     const recent = dates.slice(-5);
     const gaps = recent.slice(1).map((d, i) => dayDiff(d, recent[i])).sort((a, b) => a - b);
     const mid = Math.floor(gaps.length / 2);
-    return gaps.length % 2 === 1 ? gaps[mid] : (gaps[mid - 1] + gaps[mid]) / 2;
+    const median = gaps.length % 2 === 1 ? gaps[mid] : (gaps[mid - 1] + gaps[mid]) / 2;
+    // Three executions logged on one day give a 0-day median, which is not a
+    // cadence: R3 would read every day since as overdue, forever, and print
+    // "21 days late, every 0 days".
+    return median > 0 ? median : declaredCadence(taskTypeId);
   };
   const chainStepDate = (subjectKey: string, stepTypeId: string): string | null => {
     // Current season = local calendar year (north; southern-hemisphere season

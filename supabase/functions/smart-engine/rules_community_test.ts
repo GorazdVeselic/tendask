@@ -94,6 +94,17 @@ function rows(taskTypeId: string, cohort: string, week: number, count: number, y
   }];
 }
 
+/** A window still open at today's week 24: most of the group already started
+ * (week 22), the rest are still starting (week 25). Both halves matter — R6
+ * needs "most have started" AND "people are starting right now". */
+function openWindow(taskTypeId: string, cohort: string, count: number) {
+  const started = Math.round(count * 0.75);
+  return [
+    ...rows(taskTypeId, cohort, 22, started),
+    ...rows(taskTypeId, cohort, 25, count - started),
+  ];
+}
+
 function cdfsOf(
   raw: Record<string, unknown>[],
   resolution = 'r7',
@@ -101,47 +112,102 @@ function cdfsOf(
   return buildSeasonCdfs(raw, 2026, resolution);
 }
 
-function signalsOf(b: UserBundle) {
-  return buildSignals(b, kTaskTypes, null, kCfg, kNow);
+function signalsOf(b: UserBundle, now = kNow) {
+  return buildSignals(b, kTaskTypes, null, kCfg, now);
 }
 
 Deno.test('fires when most nearby have started and you have not', () => {
   const b = bundle();
-  // 40 gardeners, all started in week 10 → F(24) = 1.0.
-  const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg);
+  const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg);
 
   assertEquals(out.length, 1);
   assertEquals(out[0].ruleId, 'R6');
   assertEquals(out[0].taskTypeId, 'sow');
   assertEquals(out[0].subjectKey, 'up:p1');
   assertEquals(out[0].messageKey, 'suggestions.community.most_started');
-  assertEquals(out[0].messageParams.percent, 100);
+  assertEquals(out[0].messageParams.percent, 80); // F(24) = 0.75, rounded to the 10 % step
   assertEquals(out[0].messageParams.subject_label_key, 'tomato');
   assertEquals(out[0].cooldownDays, 14);
+});
+
+Deno.test('a season that is over is not "most have started"', () => {
+  const b = bundle();
+  // Everyone started in week 10 and nobody since: F(24) = 1.0 — true, and
+  // useless. Left ungated it also fires every week until New Year.
+  assertEquals(
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg).length,
+    0,
+  );
+  const november = new Date('2026-11-10T12:00:00Z');
+  assertEquals(
+    r6(b, signalsOf(b, november), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg).length,
+    0,
+  );
+});
+
+Deno.test('the year turn does not fire every seasonal type at once', () => {
+  // isoWeek('2027-01-01') = 53 (ISO week 53 of 2026), where F = 1.0 for every
+  // finished curve — the one day that would push all seasonal types together.
+  const b = bundle();
+  const newYear = new Date('2027-01-01T12:00:00Z');
+  for (const raw of [openWindow('sow', 'tomato', 40), rows('sow', 'tomato', 10, 40)]) {
+    assertEquals(r6(b, signalsOf(b, newYear), kTaskTypes, cdfsOf(raw), kCfg).length, 0);
+  }
+});
+
+Deno.test('closed-window gate: entering the week at 0.9 still fires, above it does not', () => {
+  const b = bundle();
+  // 90 of 100 started by week 23, the last 10 during weeks 24–25.
+  const atBound = [
+    ...rows('sow', 'tomato', 23, 90),
+    ...rows('sow', 'tomato', 24, 5),
+    ...rows('sow', 'tomato', 25, 5),
+  ];
+  assertEquals(r6(b, signalsOf(b), kTaskTypes, cdfsOf(atBound), kCfg).length, 1);
+
+  const overBound = [
+    ...rows('sow', 'tomato', 23, 91),
+    ...rows('sow', 'tomato', 24, 4),
+    ...rows('sow', 'tomato', 25, 5),
+  ];
+  assertEquals(r6(b, signalsOf(b), kTaskTypes, cdfsOf(overBound), kCfg).length, 0);
+});
+
+Deno.test('a bimodal species is silent between its two peaks', () => {
+  const b = bundle();
+  // Spring sowing (weeks 8–12) then an autumn one (weeks 35–38). In week 24 the
+  // cumulative share says "most have started" while nobody is sowing at all.
+  const bimodal = [
+    ...rows('sow', 'tomato', 8, 30),
+    ...rows('sow', 'tomato', 12, 30),
+    ...rows('sow', 'tomato', 35, 20),
+    ...rows('sow', 'tomato', 38, 20),
+  ];
+  assertEquals(r6(b, signalsOf(b), kTaskTypes, cdfsOf(bimodal), kCfg).length, 0);
 });
 
 Deno.test('a thin sample never becomes a claim (k_reliab)', () => {
   const b = bundle();
   // 29 < k_reliab (30): publishable, but not enough to say "most".
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 29)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 29)), kCfg).length,
     0,
   );
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 30)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 30)), kCfg).length,
     1,
   );
 });
 
 Deno.test('below half started is not "most" yet', () => {
   const b = bundle();
-  // 20 in week 10 (past) + 30 in week 40 (future) → F(24) = 0.4.
+  // 20 in week 10 (past) + 30 still to come in week 25 → F(24) = 0.4.
   const early = rows('sow', 'tomato', 10, 20);
-  const late = rows('sow', 'tomato', 40, 30);
+  const late = rows('sow', 'tomato', 25, 30);
   assertEquals(r6(b, signalsOf(b), kTaskTypes, cdfsOf([...early, ...late]), kCfg).length, 0);
 
-  // 30 early + 20 late → F(24) = 0.6 → fires, but below the 0.68 boost.
-  const majority = [...rows('sow', 'tomato', 10, 30), ...rows('sow', 'tomato', 40, 20)];
+  // 30 early + 20 still to come → F(24) = 0.6 → fires, but below the 0.68 boost.
+  const majority = [...rows('sow', 'tomato', 10, 30), ...rows('sow', 'tomato', 25, 20)];
   const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(majority), kCfg);
   assertEquals(out.length, 1);
   assertEquals(out[0].score, 1.0);
@@ -150,8 +216,8 @@ Deno.test('below half started is not "most" yet', () => {
 
 Deno.test('a clear majority earns the score boost', () => {
   const b = bundle();
-  // 35 early + 15 late → F(24) = 0.7 ≥ 0.68.
-  const raw = [...rows('sow', 'tomato', 10, 35), ...rows('sow', 'tomato', 40, 15)];
+  // 35 early + 15 still to come → F(24) = 0.7 ≥ 0.68.
+  const raw = [...rows('sow', 'tomato', 10, 35), ...rows('sow', 'tomato', 25, 15)];
   const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(raw), kCfg);
 
   assertEquals(out[0].score, 1.5);
@@ -161,14 +227,14 @@ Deno.test('a clear majority earns the score boost', () => {
 Deno.test('already done this season is not a suggestion', () => {
   const b = bundle({ tasks: [done('sow', '2026-04-01', 'p1')] });
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg).length,
     0,
   );
 
   // Last season does not count — that is exactly the case R6 is for.
   const lastYear = bundle({ tasks: [done('sow', '2025-04-01', 'p1')] });
   assertEquals(
-    r6(lastYear, signalsOf(lastYear), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg)
+    r6(lastYear, signalsOf(lastYear), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg)
       .length,
     1,
   );
@@ -180,14 +246,14 @@ Deno.test('doing it on one specimen answers for the whole species', () => {
     tasks: [done('sow', '2026-04-01', 'p2')],
   });
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg).length,
     0,
   );
 });
 
 Deno.test('three tomato plants are one card, not three', () => {
   const b = bundle({ plants: [plant('p3', 'tomato'), plant('p1', 'tomato'), plant('p2', 'tomato')] });
-  const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg);
+  const out = r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg);
 
   assertEquals(out.length, 1);
   assertEquals(out[0].subjectKey, 'up:p1'); // lowest id — deterministic across runs
@@ -196,7 +262,7 @@ Deno.test('three tomato plants are one card, not three', () => {
 Deno.test('non-seasonal types have no curve to stand against', () => {
   const b = bundle();
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('water', 'tomato', 10, 40)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('water', 'tomato', 40)), kCfg).length,
     0,
   );
 });
@@ -204,7 +270,7 @@ Deno.test('non-seasonal types have no curve to stand against', () => {
 Deno.test('a private plant is never compared — it would be a group of one', () => {
   const b = bundle({ plants: [plant('p9', null, true)] });
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg).length,
     0,
   );
 });
@@ -212,7 +278,7 @@ Deno.test('a private plant is never compared — it would be a group of one', ()
 Deno.test('the cohort is never swapped for another species', () => {
   const b = bundle(); // grows tomato
   assertEquals(
-    r6(b, signalsOf(b), kTaskTypes, cdfsOf(rows('sow', 'apple', 10, 40)), kCfg).length,
+    r6(b, signalsOf(b), kTaskTypes, cdfsOf(openWindow('sow', 'apple', 40)), kCfg).length,
     0,
   );
 });
@@ -220,7 +286,7 @@ Deno.test('the cohort is never swapped for another species', () => {
 Deno.test('alone it stays under the emit threshold — it needs a dry window', () => {
   const b = bundle();
   const signals = signalsOf(b); // no weather payload → no dry window
-  const out = r6(b, signals, kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg);
+  const out = r6(b, signals, kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg);
 
   assertEquals(out[0].score < kCfg.engine.emit_threshold, true);
   assertEquals(applyGuards(out, signals, kCfg, kNow).length, 0);
@@ -237,7 +303,7 @@ Deno.test('cooldown holds the card back for 14 days', () => {
   });
   const signals = signalsOf(b);
   // Score it past the threshold so only the cooldown can stop it.
-  const out = r6(b, signals, kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg)
+  const out = r6(b, signals, kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg)
     .map((c) => ({ ...c, score: 5 }));
 
   assertEquals(applyGuards(out, signals, kCfg, kNow).length, 0);
@@ -251,7 +317,7 @@ Deno.test('cooldown holds the card back for 14 days', () => {
     }],
   });
   const oldSignals = signalsOf(old);
-  const oldOut = r6(old, oldSignals, kTaskTypes, cdfsOf(rows('sow', 'tomato', 10, 40)), kCfg)
+  const oldOut = r6(old, oldSignals, kTaskTypes, cdfsOf(openWindow('sow', 'tomato', 40)), kCfg)
     .map((c) => ({ ...c, score: 5 }));
   assertEquals(applyGuards(oldOut, oldSignals, kCfg, kNow).length, 1);
 });

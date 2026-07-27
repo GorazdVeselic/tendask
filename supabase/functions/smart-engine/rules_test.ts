@@ -160,6 +160,20 @@ Deno.test('R3: not overdue until days > cadence × 1.25', () => {
   assertEquals(r3(b, [], signalsOf(b), kTaskTypes, kCfg).length, 0);
 });
 
+Deno.test('R3: a same-day burst falls back to the declared cadence, not 0', () => {
+  // A 0-day cadence makes anything after it permanently overdue. 'prune' has no
+  // declared cadence, so the pair yields no candidate at all.
+  const burst = (type: string) =>
+    ['2026-05-01', '2026-05-01', '2026-05-01'].map((d) => done(type, d));
+  const treat = bundle(burst('treat')); // declared cadence 7 → 42 days ago is genuinely overdue
+  const c = r3(treat, [], signalsOf(treat), kTaskTypes, kCfg);
+  assertEquals(c.length, 1);
+  assertEquals(c[0].messageParams.cadence_days, 7);
+
+  const prune = bundle(burst('prune')); // no declared cadence
+  assertEquals(r3(prune, [], signalsOf(prune), kTaskTypes, kCfg).length, 0);
+});
+
 // ---------- R2 (anniversary) ----------
 
 Deno.test('R2: anniversary alone scores 1.0 (stays below threshold)', () => {
