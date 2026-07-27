@@ -537,6 +537,46 @@ void main() {
     expect(minimal.defaultGardenSeeded.value, isFalse);
   });
 
+  test('suggestionLogFromRemote: parses the mute end, null stays null', () {
+    final c = suggestionLogFromRemote({
+      'user_id': 'u1',
+      'guard_key': 'R3:treat',
+      'subject_key': 'up:p1',
+      'last_suggested_at': '2026-06-05T10:00:00.000Z',
+      'dismissed_until': '2026-06-20T00:00:00.000Z',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(c.lastSuggestedAt.value!.isAtSameMomentAs(t0), isTrue);
+    expect(c.dismissedUntil.value, DateTime.utc(2026, 6, 20));
+
+    final none = suggestionLogFromRemote({
+      'user_id': 'u1',
+      'guard_key': 'R3:treat',
+      'subject_key': 'up:p1',
+      'last_suggested_at': null,
+      'dismissed_until': null,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(none.dismissedUntil.value, isNull);
+  });
+
+  test('timestamptz "infinity" parses instead of aborting the pull', () {
+    // Engine builds before kMuteForeverDate wrote Postgres `infinity` here; a
+    // throw escapes pull() and freezes the cursor for every table.
+    DateTime? until(Object? v) => suggestionLogFromRemote({
+      'user_id': 'u1',
+      'guard_key': 'R3:treat',
+      'subject_key': 'up:p1',
+      'dismissed_until': v,
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    }).dismissedUntil.value;
+
+    expect(until('infinity'), DateTime.utc(9999, 12, 31, 23, 59, 59));
+    expect(until('-infinity'), DateTime.utc(1));
+    // Same instant the engine writes today, so old and new rows agree.
+    expect(until('9999-12-31T23:59:59Z'), until('infinity'));
+  });
+
   test('parsers ignore unknown/extra keys without throwing (tolerant)', () {
     final c = taskFromRemote({
       'id': 't1',

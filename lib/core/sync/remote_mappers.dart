@@ -181,7 +181,17 @@ Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
 //   * enum string → enum, tolerantly (unknown value falls back to the default).
 // Tolerant by design: unknown keys are ignored, missing optionals default.
 
-DateTime _dt(Object? v) => DateTime.parse(v as String);
+// Postgres timestamptz may be 'infinity'/'-infinity' — DateTime.parse throws on
+// both, and an escaped throw aborts the whole pull and freezes its cursor. The
+// far-future value equals the engine's kMuteForeverDate (config.ts).
+final _kFarFuture = DateTime.utc(9999, 12, 31, 23, 59, 59);
+final _kFarPast = DateTime.utc(1);
+
+DateTime _dt(Object? v) => switch (v) {
+  'infinity' => _kFarFuture,
+  '-infinity' => _kFarPast,
+  _ => DateTime.parse(v as String),
+};
 
 DateTime? _dtOrNull(Object? v) => v == null ? null : _dt(v);
 

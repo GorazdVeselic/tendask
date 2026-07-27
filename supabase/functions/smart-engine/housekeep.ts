@@ -13,7 +13,8 @@ import type {
 } from './types.ts';
 import { guardKey } from './candidate.ts';
 import { resolveWindow } from './rules_agro.ts';
-import { addDaysStr } from './dates.ts';
+import { addDaysStr, muteEndMs } from './dates.ts';
+import { kMuteForeverDate } from './config.ts';
 
 // dismiss_scope='season' mute length per engine rule (docs/m11/03 §R* DISMISS).
 // R5 uses the regionalised window end instead (computed below); this covers the
@@ -46,7 +47,7 @@ function dismissedUntil(
   cfg: EngineConfig,
   localToday: string,
 ): string {
-  if (row.dismiss_scope === 'forever') return 'infinity';
+  if (row.dismiss_scope === 'forever') return kMuteForeverDate;
   const rule = row.plant_task_rule_id ? ruleById.get(row.plant_task_rule_id) : undefined;
   if (
     rule != null && (rule.timing_anchor === 'month_window' || rule.timing_anchor === 'frost_offset')
@@ -61,7 +62,7 @@ function dismissedUntil(
 /** Pure planner — decides the writes from the loaded suggestion rows. */
 export function planHousekeeping(
   rows: SuggestionRow[],
-  logKeys: Set<string>,
+  logByKey: Map<string, SuggestionLogRow>,
   ownedSubjects: Set<string>,
   localToday: string,
   cutoffMs: number,
@@ -70,6 +71,7 @@ export function planHousekeeping(
   cfg: EngineConfig,
 ): HousekeepPlan {
   const plan: HousekeepPlan = { expireIds: [], retentionIds: [], newMutes: [] };
+  const mutes = new Map<string, SuggestionLogRow>();
   for (const row of rows) {
     if (row.status === 'new') {
       const subjectGone =
@@ -81,16 +83,23 @@ export function planHousekeeping(
     if (Date.parse(row.updated_at) < cutoffMs) plan.retentionIds.push(row.id);
     if (row.status === 'dismissed') {
       const gk = guardKey(row.plant_task_rule_id, row.rule_id, row.task_type_id);
-      if (!logKeys.has(gk + '|' + row.subject_key)) {
-        plan.newMutes.push({
-          guard_key: gk,
-          subject_key: row.subject_key,
-          last_suggested_at: null,
-          dismissed_until: dismissedUntil(row, climate, ruleById, cfg, localToday),
-        });
-      }
+      const key = gk + '|' + row.subject_key;
+      const until = dismissedUntil(row, climate, ruleById, cfg, localToday);
+      // Keyed on the stored mute END, not on the log row's existence: emit always
+      // stamps a log row (without dismissed_until) for the very suggestion that is
+      // being dismissed here, so an existence check would mute nothing, ever.
+      // A mute never moves backwards, which also makes re-running a no-op.
+      const prev = mutes.get(key) ?? logByKey.get(key);
+      if (muteEndMs(until) <= muteEndMs(prev?.dismissed_until)) continue;
+      mutes.set(key, {
+        guard_key: gk,
+        subject_key: row.subject_key,
+        last_suggested_at: logByKey.get(key)?.last_suggested_at ?? null,
+        dismissed_until: until,
+      });
     }
   }
+  plan.newMutes = [...mutes.values()];
   return plan;
 }
 
@@ -121,12 +130,14 @@ export async function housekeep(
     ...bundle.plants.map((p) => 'up:' + p.id),
     ...bundle.areas.map((a) => 'ar:' + a.id),
   ]);
-  const logKeys = new Set(bundle.suggestionLog.map((l) => l.guard_key + '|' + l.subject_key));
+  const logByKey = new Map(
+    bundle.suggestionLog.map((l) => [l.guard_key + '|' + l.subject_key, l]),
+  );
   const ruleById = new Map(rules.map((r) => [r.id, r]));
   const cutoffMs = nowUtc.getTime() - cfg.engine.suggestion_retention_days * 86_400_000;
   const plan = planHousekeeping(
     rows,
-    logKeys,
+    logByKey,
     ownedSubjects,
     localToday,
     cutoffMs,

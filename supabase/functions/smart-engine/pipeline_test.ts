@@ -2,6 +2,7 @@ import { assertEquals, assertNotEquals } from 'jsr:@std/assert@1';
 import { buildSignals } from './signals.ts';
 import { r2, r3 } from './rules.ts';
 import { applyGuards, dedupAndRank, emit, enrichR4 } from './pipeline.ts';
+import { planHousekeeping } from './housekeep.ts';
 import {
   kDefaultCommunityThresholds,
   kDefaultEngine,
@@ -135,6 +136,46 @@ Deno.test('guard b: a future dismissed_until drops the candidate', () => {
     }),
     0,
   );
+});
+
+Deno.test('guard b: a dismiss made through housekeeping silences the next run', () => {
+  // The chain neither unit covers on its own: dismissing writes a mute only if
+  // housekeeping looks past the log row emit already stamped for that candidate.
+  const { b, signals, candidates } = overdueDry({
+    suggestionLog: [{
+      guard_key: 'R3:treat',
+      subject_key: 'up:p1',
+      last_suggested_at: '2026-06-01T07:00:00+00:00', // emitted, then dismissed
+      dismissed_until: null,
+    }],
+  });
+  assertEquals(applyGuards(candidates, signals, kCfg, kNow).length, 1); // before
+
+  const plan = planHousekeeping(
+    [{
+      id: 's1',
+      rule_id: 'R3',
+      plant_task_rule_id: null,
+      task_type_id: 'treat',
+      subject_key: 'up:p1',
+      status: 'dismissed',
+      dismiss_scope: 'season',
+      valid_until: '2026-06-30',
+      updated_at: '2026-06-11T18:00:00+00:00',
+    }],
+    new Map(b.suggestionLog.map((l) => [l.guard_key + '|' + l.subject_key, l])),
+    new Set(['up:p1']),
+    '2026-06-12',
+    Date.parse('2025-06-12T00:00:00Z'),
+    signals.climate,
+    new Map(),
+    kCfg,
+  );
+  assertEquals(plan.newMutes.length, 1);
+
+  b.suggestionLog.push(...plan.newMutes); // what housekeep() reflects in-memory
+  const after = buildSignals(b, kTaskTypes, dryPayload(), kCfg, kNow);
+  assertEquals(applyGuards(candidates, after, kCfg, kNow).length, 0); // after
 });
 
 Deno.test('guard c: a recent suggestion within cooldown drops it', () => {

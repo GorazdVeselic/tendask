@@ -36,6 +36,11 @@ export const kDefaultThresholds: WeatherThresholds = {
 
 export const kDefaultFrost = { last_frost_doy: 110, first_frost_doy: 293 };
 
+// "Not interested" mute end. A far-future date rather than Postgres `infinity`:
+// the client pulls suggestion_log and DateTime.parse('infinity') throws, which
+// would abort the whole pull and freeze its cursor (docs/m11/17 §P1).
+export const kMuteForeverDate = '9999-12-31T23:59:59Z';
+
 // Mirrors app_config k_privacy / k_reliab (0006 seed) and the client's
 // kCommunityPrivacyMin / kCommunityReliabilityMin.
 export const kDefaultCommunityThresholds: CommunityThresholds = {

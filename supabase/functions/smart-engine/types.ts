@@ -81,7 +81,7 @@ export interface SuggestionLogRow {
   guard_key: string;
   subject_key: string;
   last_suggested_at: string | null;
-  dismissed_until: string | null; // timestamptz; Postgres 'infinity' arrives as the string "infinity"
+  dismissed_until: string | null; // timestamptz; read through muteEndMs (legacy 'infinity' rows)
 }
 
 export interface ActiveSuggestionRow {

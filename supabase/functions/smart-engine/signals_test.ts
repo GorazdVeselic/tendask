@@ -5,6 +5,7 @@ import {
   kDefaultEngine,
   kDefaultFrost,
   kDefaultThresholds,
+  kMuteForeverDate,
 } from './config.ts';
 import type {
   EngineConfig,
@@ -311,13 +312,20 @@ Deno.test('state: dismissed honours dismissed_until incl. infinity', () => {
         guard_key: 'apple.prune.winter',
         subject_key: 'up:p1',
         last_suggested_at: null,
-        dismissed_until: 'infinity',
+        dismissed_until: 'infinity', // legacy rows written before kMuteForeverDate
+      },
+      {
+        guard_key: 'R6:sow',
+        subject_key: 'up:p1',
+        last_suggested_at: null,
+        dismissed_until: kMuteForeverDate,
       },
     ],
   }));
   assertEquals(s.state.dismissed('R3:mow', 'up:p1'), true);
   assertEquals(s.state.dismissed('R3:mow', 'up:p2'), false); // already elapsed
   assertEquals(s.state.dismissed('apple.prune.winter', 'up:p1'), true);
+  assertEquals(s.state.dismissed('R6:sow', 'up:p1'), true); // what housekeep writes today
   assertEquals(s.state.dismissed('R3:mow', 'up:p9'), false); // no row
   assertEquals(s.state.lastSuggestedAt('R3:mow', 'up:p1'), '2026-06-01T07:00:00+00:00');
   assertEquals(s.state.lastSuggestedAt('R3:mow', 'up:p9'), null);

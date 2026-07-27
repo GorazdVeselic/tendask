@@ -54,6 +54,16 @@ export function dayDiff(a: string, b: string): number {
   return Math.round((dayMs(a) - dayMs(b)) / kDayMs);
 }
 
+/** End of a `suggestion_log` mute as epoch ms, ordered so "no mute" always loses
+ * a comparison. Postgres timestamptz `infinity` (written before kMuteForeverDate
+ * replaced it) arrives as the literal string. */
+export function muteEndMs(value: string | null | undefined): number {
+  if (value == null || value === '-infinity') return -Infinity;
+  if (value === 'infinity') return Infinity;
+  const ms = Date.parse(value);
+  return Number.isNaN(ms) ? -Infinity : ms;
+}
+
 /** DOY (1-based) → date in the given year. DOY uses the non-leap convention
  * (docs/m11/07 §7.3); the ±1 day drift in leap years is below noise. */
 export function doyToDateStr(year: number, doy: number): string {

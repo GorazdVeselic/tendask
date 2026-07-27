@@ -5,8 +5,9 @@ import {
   kDefaultEngine,
   kDefaultFrost,
   kDefaultThresholds,
+  kMuteForeverDate,
 } from './config.ts';
-import type { ClimateSignals, EngineConfig, PlantTaskRule } from './types.ts';
+import type { ClimateSignals, EngineConfig, PlantTaskRule, SuggestionLogRow } from './types.ts';
 
 const kCfg: EngineConfig = {
   engine: kDefaultEngine,
@@ -44,10 +45,21 @@ function row(o: Partial<SuggestionRow>): SuggestionRow {
   };
 }
 
-function plan(rows: SuggestionRow[], logKeys = new Set<string>()) {
+/** The log row emit stamps for every suggestion it writes: cooldown only, no mute. */
+function emitted(key: string, dismissedUntil: string | null = null): SuggestionLogRow {
+  const [guard_key, subject_key] = key.split('|');
+  return {
+    guard_key,
+    subject_key,
+    last_suggested_at: '2026-06-10T03:00:00+00:00',
+    dismissed_until: dismissedUntil,
+  };
+}
+
+function plan(rows: SuggestionRow[], log: SuggestionLogRow[] = []) {
   return planHousekeeping(
     rows,
-    logKeys,
+    new Map(log.map((l) => [l.guard_key + '|' + l.subject_key, l])),
     new Set(['up:p1']),
     kToday,
     kCutoffMs,
@@ -78,11 +90,13 @@ Deno.test('housekeep 2e: a terminal row older than retention is soft-deleted', (
   assertEquals(plan([r]).retentionIds, [r.id]);
 });
 
-Deno.test('housekeep 2a: dismissed forever → infinity mute', () => {
+Deno.test('housekeep 2a: dismissed forever → far-future mute, not "infinity"', () => {
   const p = plan([row({ status: 'dismissed', dismiss_scope: 'forever', subject_key: 'up:p1' })]);
   assertEquals(p.newMutes.length, 1);
-  assertEquals(p.newMutes[0].dismissed_until, 'infinity');
+  assertEquals(p.newMutes[0].dismissed_until, kMuteForeverDate);
   assertEquals(p.newMutes[0].guard_key, 'R3:treat');
+  // The client parses this column; 'infinity' would throw and freeze the pull.
+  assertEquals(Number.isNaN(Date.parse(p.newMutes[0].dismissed_until!)), false);
 });
 
 Deno.test('housekeep 2a: dismissed season → updated_at + dismissDays mute', () => {
@@ -93,10 +107,49 @@ Deno.test('housekeep 2a: dismissed season → updated_at + dismissDays mute', ()
   assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z'); // +10 days (R3)
 });
 
-Deno.test('housekeep 2a: a dismissal already in the log is not re-muted', () => {
+Deno.test('housekeep 2a: the log row emit wrote does not block the mute', () => {
+  // Every dismissed suggestion was emitted first, so its guard key is always in
+  // the log — keying on row existence muted nothing at all.
   const p = plan(
     [row({ status: 'dismissed', subject_key: 'up:p1' })],
-    new Set(['R3:treat|up:p1']),
+    [emitted('R3:treat|up:p1')],
+  );
+  assertEquals(p.newMutes.length, 1);
+  assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z');
+  // The cooldown stamp survives the merge (the upsert omits it, so must the plan).
+  assertEquals(p.newMutes[0].last_suggested_at, '2026-06-10T03:00:00+00:00');
+});
+
+Deno.test('housekeep 2a: a mute that still covers the dismissal is not rewritten', () => {
+  const p = plan(
+    [row({ status: 'dismissed', subject_key: 'up:p1' })],
+    [emitted('R3:treat|up:p1', '2026-06-20T00:00:00Z')], // exactly what this run computes
   );
   assertEquals(p.newMutes.length, 0);
+});
+
+Deno.test('housekeep 2a: a legacy "infinity" mute is never shortened', () => {
+  const p = plan(
+    [row({ status: 'dismissed', subject_key: 'up:p1' })],
+    [emitted('R3:treat|up:p1', 'infinity')],
+  );
+  assertEquals(p.newMutes.length, 0);
+});
+
+Deno.test('housekeep 2a: an elapsed mute is refreshed by a new dismissal', () => {
+  const p = plan(
+    [row({ status: 'dismissed', subject_key: 'up:p1' })],
+    [emitted('R3:treat|up:p1', '2026-01-01T00:00:00Z')],
+  );
+  assertEquals(p.newMutes.length, 1);
+  assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z');
+});
+
+Deno.test('housekeep 2a: two dismissals of one guard key mute once, to the later end', () => {
+  const p = plan([
+    row({ status: 'dismissed', updated_at: '2026-06-10T07:00:00+00:00' }),
+    row({ status: 'dismissed', updated_at: '2026-06-02T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.newMutes.length, 1);
+  assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z');
 });

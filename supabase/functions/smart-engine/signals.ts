@@ -21,6 +21,7 @@ import {
   doyToDateStr,
   isoWeek,
   localDateStr,
+  muteEndMs,
   offsetDateStr,
   safeTimeZone,
   sameDateLastYear,
@@ -336,13 +337,8 @@ function buildStateSignals(
   const logMap = new Map(
     bundle.suggestionLog.map((r) => [r.guard_key + '|' + r.subject_key, r]),
   );
-  const dismissed = (guardKey: string, subjectKey: string): boolean => {
-    const row = logMap.get(guardKey + '|' + subjectKey);
-    if (row?.dismissed_until == null) return false;
-    // Postgres timestamptz 'infinity' (dismiss forever) serialises as "infinity".
-    if (row.dismissed_until === 'infinity') return true;
-    return Date.parse(row.dismissed_until) > nowUtc.getTime();
-  };
+  const dismissed = (guardKey: string, subjectKey: string): boolean =>
+    muteEndMs(logMap.get(guardKey + '|' + subjectKey)?.dismissed_until) > nowUtc.getTime();
 
   return {
     planned: (subjectKey, taskTypeId, withinDays) =>
