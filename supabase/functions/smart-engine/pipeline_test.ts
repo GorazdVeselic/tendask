@@ -408,3 +408,48 @@ Deno.test('emit: inserts suggestion rows and stamps suggestion_log with updated_
   assertEquals(log.updated_at, kNow.toISOString()); // explicit (PG default only on INSERT)
   assertEquals('dismissed_until' in log, false); // omitted → a prior mute survives the merge
 });
+
+// ---------- guard c: ignore back-off (O7) ----------
+
+/** Same overdue+dry candidate as above, with a chosen ignore streak and last
+ * emission time — the two inputs guard 5c multiplies together. */
+function guardedWithIgnores(ignored: number, lastSuggestedAt: string | null): number {
+  const b = bundle([done('treat', '2026-05-26')], {
+    suggestionLog: lastSuggestedAt == null ? [] : [{
+      guard_key: 'R3:treat',
+      subject_key: 'up:p1',
+      last_suggested_at: lastSuggestedAt,
+      dismissed_until: null,
+    }],
+  });
+  const signals = buildSignals(
+    b,
+    kTaskTypes,
+    dryPayload(),
+    kCfg,
+    kNow,
+    new Map([['R3:treat|up:p1', ignored]]),
+  );
+  return applyGuards(r3(b, [], signals, kTaskTypes, kCfg), signals, kCfg, kNow).length;
+}
+
+Deno.test('guard c: the first ignore costs the user nothing', () => {
+  // Deliberate: one missed card is not a signal, and a rule that backed off
+  // immediately would feel broken to someone who was simply away for a week.
+  assertEquals(guardedWithIgnores(0, '2026-06-06T12:00:00Z'), 1); // 6 days > 5
+  assertEquals(guardedWithIgnores(0, '2026-06-09T12:00:00Z'), 0); // 3 days < 5
+  assertEquals(guardedWithIgnores(1, '2026-06-06T12:00:00Z'), 1); // still the rule's own pace
+});
+
+Deno.test('guard c: repeated ignores stretch the cooldown instead of repeating it', () => {
+  // The same 6-day gap that passes at streak 0 is too soon at streak 2 (5 → 10).
+  assertEquals(guardedWithIgnores(2, '2026-06-06T12:00:00Z'), 0);
+  assertEquals(guardedWithIgnores(2, '2026-05-30T12:00:00Z'), 1); // 13 days > 10
+  assertEquals(guardedWithIgnores(3, '2026-05-30T12:00:00Z'), 0); // 13 days < 20
+});
+
+Deno.test('guard c: the fourth ignore in a row ends the season for that guard key', () => {
+  // No cooldown left to wait out — the mute holds even with nothing suggested yet.
+  assertEquals(guardedWithIgnores(3, null), 1);
+  assertEquals(guardedWithIgnores(4, null), 0);
+});

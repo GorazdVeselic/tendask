@@ -11,6 +11,17 @@ import { dayDiff } from './dates.ts';
 
 const kCooldownDoneMinDays = 3; // docs/m11/03 §Cevovod 5d
 
+// Ignoring a card is a signal, not a no-op (docs/m11/03 §R3 odmik, finding N25).
+// Without this, one cadence pair the user never acts on costs ~60 cards and ~40
+// pushes a year, because the cooldown is the same on the fortieth card as on the
+// first. The ladder is the multiple of the rule's OWN cooldown applied after n
+// consecutive ignores — index n, so 0 and 1 ignores keep the rule's own pace and
+// only a repeat offender is slowed down. From kIgnoreMuteAfter on, the guard key
+// stays silent until the next season (the streak is season-scoped, so it
+// re-arms on its own). Any action — planned, logged or dismissed — resets it.
+const kIgnoreBackoff = [1, 1, 2, 4];
+const kIgnoreMuteAfter = kIgnoreBackoff.length;
+
 // Task types that consume a supply — R4 piggybacks a low-stock nudge onto these
 // (docs/m11/03 §R4). Inert until the client enables supplies (no supply rows →
 // no enrichment), so the engine always computes it; the client hides the param.
@@ -57,9 +68,13 @@ export function applyGuards(
     if (!eligibility.subjectExists(c.subjectKey)) return false;
     // b. dismissed (season mute or "not interested" forever).
     if (state.dismissed(guardKey, c.subjectKey)) return false;
-    // c. cooldown since the last suggestion of this guard key + subject.
+    // c. cooldown since the last suggestion of this guard key + subject,
+    //    stretched by how many of these the user has already let expire unacted.
+    const ignored = state.ignoredStreak(guardKey, c.subjectKey);
+    if (ignored >= kIgnoreMuteAfter) return false;
+    const cooldownDays = c.cooldownDays * kIgnoreBackoff[ignored];
     const lastAt = state.lastSuggestedAt(guardKey, c.subjectKey);
-    if (lastAt != null && now - Date.parse(lastAt) < c.cooldownDays * 86_400_000) return false;
+    if (lastAt != null && now - Date.parse(lastAt) < cooldownDays * 86_400_000) return false;
     // d. cooldown after a recent execution (cadence types: max(3, cadence/2)).
     const lastDone = history.lastDone(c.subjectKey, c.taskTypeId);
     if (lastDone != null) {

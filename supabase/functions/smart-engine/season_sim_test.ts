@@ -37,13 +37,12 @@ const kRunHourUtc = 7;
 // straddles a cooldown without letting a rule become a weekly habit.
 const kMaxSeasonalPerYear = 6;
 
-// R3 is the cadence rule, and this ceiling is NOT a target — it is the measured
-// high-water mark of an unresolved finding (N25 in 19-najdbe-med-izvedbo.md):
-// an ignored cadence pair produces ~40–60 cards a year, because R3 has no
-// per-season budget and no back-off for cards the user keeps ignoring. The cap
-// is here so the number cannot grow unnoticed while the product decision is
-// pending; it is meant to come DOWN, not to be raised.
-const kMaxCadencePerYear = 70;
+// A cadence rule may repeat within a season, but the ignore back-off (O7) bounds
+// an uninterrupted streak at four: emit, ignore, emit, ignore … then silence
+// until next season. The headroom is for the one way the streak legitimately
+// restarts — a user who keeps PLANNING the card and never doing the task.
+// Before the back-off this measured 61.
+const kMaxCadencePerYear = 8;
 
 const maxFor = (ruleId: string) => ruleId === 'R3' ? kMaxCadencePerYear : kMaxSeasonalPerYear;
 

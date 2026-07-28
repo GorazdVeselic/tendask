@@ -222,3 +222,55 @@ Deno.test('housekeep 2a: two dismissals of one guard key mute once, to the later
   assertEquals(p.newMutes.length, 1);
   assertEquals(p.newMutes[0].dismissed_until, '2026-06-20T00:00:00Z');
 });
+
+// ---------- ignore streaks (O7 back-off, feeds guard 5c) ----------
+
+Deno.test('ignore streak: consecutive expired cards count for one guard key', () => {
+  const p = plan([
+    row({ status: 'expired', updated_at: '2026-06-10T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2026-06-04T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2026-05-29T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.ignoredStreaks.get('R3:treat|up:p1'), 3);
+});
+
+Deno.test('ignore streak: acting on the newest card ends it', () => {
+  // Planning one card must not merely decrement — it means the user is engaged
+  // with this guard key again, so the ladder restarts from the bottom.
+  const p = plan([
+    row({ status: 'planned', updated_at: '2026-06-10T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2026-06-04T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2026-05-29T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.ignoredStreaks.get('R3:treat|up:p1'), undefined);
+});
+
+Deno.test('ignore streak: a card expiring in this very run already counts', () => {
+  const p = plan([
+    row({ status: 'new', valid_until: '2026-06-01', updated_at: '2026-05-28T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2026-05-20T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.expireIds.length, 1);
+  assertEquals(p.ignoredStreaks.get('R3:treat|up:p1'), 2);
+});
+
+Deno.test('ignore streak: a card still on screen is neither an ignore nor an action', () => {
+  const p = plan([
+    row({ status: 'new', valid_until: '2026-06-30' }),
+    row({ status: 'expired', updated_at: '2026-06-01T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.expireIds.length, 0);
+  assertEquals(p.ignoredStreaks.get('R3:treat|up:p1'), 1);
+});
+
+Deno.test('ignore streak: last season does not silence this one', () => {
+  // Season-scoped on purpose: a gardener who skipped mowing all of last year
+  // still gets the first reminder of the new one.
+  const p = plan([
+    row({ status: 'expired', updated_at: '2025-09-10T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2025-08-10T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2025-07-10T07:00:00+00:00' }),
+    row({ status: 'expired', updated_at: '2025-06-20T07:00:00+00:00' }),
+  ]);
+  assertEquals(p.ignoredStreaks.get('R3:treat|up:p1'), undefined);
+});

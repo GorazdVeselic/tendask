@@ -24,24 +24,25 @@
 | Pokritost testov | N2, ~~N8~~ ✅, N11 | ne sama po sebi |
 | Opazljivost | N5, N6, N12 | ne — tiho, ne narobe |
 | **Podatki** | **N1, N9, N14, N15** | **da** |
-| **Frekvenca predlogov** | **N25** | ne — pove **prevečkrat** pravilno |
+| Frekvenca predlogov | ~~N25~~ ✅ O7 | ne — je povedalo **prevečkrat** pravilno |
 | Po zasnovi / sprejeto | N10, N24 | ne |
 
 **Bistvo:** napačen rezultat lahko dajo **štiri** od petindvajsetih, in tri od njih so ista
 stvar — prazen `profile.timezone` (N14 je vzrok, N1 simptom, N15 sorodna asimetrija). Motor ne
 računa narobe; računa pravilno na napačnem vhodu.
 
-**Dopolnilo po sezonski simulaciji (N8 → N25):** obstaja pa peta vrsta škode, ki je ta tabela do
-zdaj ni imela stolpca — **pravilen izračun, ponovljen prevečkrat**. Agronomska pravila so mirna
-(R5 1–4× na leto, R6 ×2, R2 ×1); R3 ni (61× in 41× na eno leto). Za uporabnika je 129 pushov na
-leto enako slabo kot napačen podatek, le da se pokaže kasneje — ko obvestila že izklopi.
+**Dopolnilo po sezonski simulaciji (N8 → N25 → O7):** obstaja pa peta vrsta škode, ki je ta
+tabela do zdaj ni imela stolpca — **pravilen izračun, ponovljen prevečkrat**. Agronomska pravila
+so bila mirna že prej (R5 1–4× na leto, R6 ×2, R2 ×1); R3 ni bil (61× in 41× na eno leto). Za
+uporabnika je 129 pushov na leto enako slabo kot napačen podatek, le da se pokaže kasneje — ko
+obvestila že izklopi. **Zaprto z O7**: 52 predlogov, 38 pushov, nobena straža nad 4× na leto.
 
 ### Kdaj kaj
 
 | Kup | Najdbe | Zakaj ta kup |
 |---|---|---|
-| **✅ narejeno** | N7 `2b1cd49` · N16, N18 `bdf3384` · N19, N22 (delno) `9fb8d69` · **N8** (simulacija zgrajena, izvid = N25) | |
-| **A · pred prižigom** | **N14 + N1** (cona) · **N9** (`agg_context` brez DB straže) · **N13**, **N17**, **N20** (besedilo, ki laže) · **N23** (+R4, pogoj prižiga) · **N12** (odpovedan push se ne šteje) · **N4** (blokira O4/P10) · **N25** (129 pushov na leto — potrebuje odločitev, ne popravka) | vsaka od teh se ob prižigu takoj pokaže uporabniku ali onemogoči, da bi opazili težavo |
+| **✅ narejeno** | N7 `2b1cd49` · N16, N18 `bdf3384` · N19, N22 (delno) `9fb8d69` · **N8** (simulacija zgrajena) · **N25** (odmik ob ignoriranju, O7) | |
+| **A · pred prižigom** | **N14 + N1** (cona) · **N9** (`agg_context` brez DB straže) · **N13**, **N17**, **N20** (besedilo, ki laže) · **N23** (+R4, pogoj prižiga) · **N12** (odpovedan push se ne šteje) · **N4** (blokira O4/P10) | vsaka od teh se ob prižigu takoj pokaže uporabniku ali onemogoči, da bi opazili težavo |
 | **B · po prižigu** | N2, N3, N11, N15, N21 | popravljivo brez pritiska; nič od tega ni vidno ali napačno |
 | **C · sprejeto, brez ukrepa** | N5, N6 (staging, zapisano v runbooku) · N10 (zabeležena odložitev) · N24 (po zasnovi) · ostanek N22 | zavestna odločitev, ne dolg |
 
@@ -56,7 +57,7 @@ ni sprejeta, `config.dart` in ta dnevnik povesta resnico: **številke ali nič**
 
 | # | Najdba | Dokaz | Kam | Zakaj ni kozmetika |
 |---|---|---|---|---|
-| **N25** | **R3 nima sezonske kvote in nima odmika ob ignoriranju** — en spregledan par (subjekt, tip opravila) proizvede **40–60 kartic na leto**, in to pri uporabniku, ki ni ničesar zavrnil, samo ni ukrepal. | Sezonska simulacija (N8), 365 dni, tri vremenska semena, golden `testdata/season_calendar.ts`: **156 predlogov, 129 pushov**. Od tega **R3 `water`/bazilika ×61** in **R3 `mow`/trata ×41** = **65 % vseh kartic** in **95 od 129 pushov (74 %)**. Vsa agronomska pravila skupaj so mirna: R5 med 1× in 4× na pravilo, R6 ×2, R2 ×1. | **produktna odločitev** (meja v testu je visoka voda, ne cilj) | Motor ne računa narobe — enkrat na 5 dni je natanko to, kar `03 §R3` predpisuje (`COOLDOWN: 5 dni`, `validUntil: today + 5`). Napačna je odsotnost stropa: nikjer v R1–R7 ni proračuna na sezono, in **ignoriranje ne stane nič** — `dismissed_until` nastane samo ob izrecni zavrnitvi, zato štirideseta kartica pride z enako pravico kot prva. Trije ločeni robovi: **(a)** brez `cadence_only` pravila R3 **nima nobene sezonske omejitve** — `water` na zelišču/zelenjavi nima pravila (ima ga le `lawn.water`, tedni 22–35), zato zalivanje bazilike zvoni **tudi decembra**, 5× na mesec; **(b)** besedilo kartice se izrodi: `days_overdue` raste neomejeno, januarja piše »Zalivanje zamuja **205** dni (ritem ~4 dni)«, kar je za bralca očitna okvara; **(c)** push je posledica — pri 129 pushih na leto je to obvestilo vsake 2,8 dneva, kar je natanko vzorec, po katerem uporabnik izklopi obvestila. Simulacija je edina stvar, ki to pokaže: vsak od 159 obstoječih testov gleda en `runDate`, kjer je »enkrat na 5 dni« videti razumno. |
+| ~~N25~~ ✅ **O7** | **R3 nima sezonske kvote in nima odmika ob ignoriranju** — en spregledan par (subjekt, tip opravila) proizvede **40–60 kartic na leto**, in to pri uporabniku, ki ni ničesar zavrnil, samo ni ukrepal. | Sezonska simulacija (N8), 365 dni, tri vremenska semena, golden `testdata/season_calendar.ts`: **156 predlogov, 129 pushov**. Od tega **R3 `water`/bazilika ×61** in **R3 `mow`/trata ×41** = **65 % vseh kartic** in **95 od 129 pushov (74 %)**. Vsa agronomska pravila skupaj so mirna: R5 med 1× in 4× na pravilo, R6 ×2, R2 ×1. | **zaprto z O7** — odmik ob ignoriranju (`pipeline.ts` straža 5c + `housekeep.ts` `ignoredStreaks`); po popravku **52 predlogov / 38 pushov**, vsaka straža ≤ 4× na leto, R3 iz 95 na **8** pushov, R5 pa iz 31/129 na 25/38 (koristno pravilo ne tekmuje več s hrupnim za isti kanal). Decembrsko zalivanje je izginilo skupaj s tem — junij, julij, november in december so v koledarju zdaj prazni | Motor ne računa narobe — enkrat na 5 dni je natanko to, kar `03 §R3` predpisuje (`COOLDOWN: 5 dni`, `validUntil: today + 5`). Napačna je odsotnost stropa: nikjer v R1–R7 ni proračuna na sezono, in **ignoriranje ne stane nič** — `dismissed_until` nastane samo ob izrecni zavrnitvi, zato štirideseta kartica pride z enako pravico kot prva. Trije ločeni robovi: **(a)** brez `cadence_only` pravila R3 **nima nobene sezonske omejitve** — `water` na zelišču/zelenjavi nima pravila (ima ga le `lawn.water`, tedni 22–35), zato zalivanje bazilike zvoni **tudi decembra**, 5× na mesec; **(b)** besedilo kartice se izrodi: `days_overdue` raste neomejeno, januarja piše »Zalivanje zamuja **205** dni (ritem ~4 dni)«, kar je za bralca očitna okvara; **(c)** push je posledica — pri 129 pushih na leto je to obvestilo vsake 2,8 dneva, kar je natanko vzorec, po katerem uporabnik izklopi obvestila. Simulacija je edina stvar, ki to pokaže: vsak od 159 obstoječih testov gleda en `runDate`, kjer je »enkrat na 5 dni« videti razumno. |
 | N1 | **`profile.timezone` je prazen** pri uporabnikih, ki so vrt nastavili pred to funkcijo. Klient ga piše **samo** v `saveGardenLocation`. | Oba staging profila `timezone = NULL` (2026-07-28) | **P11** | `engine_dispatch()` izbira po `(now() at time zone coalesce(p.timezone,'UTC'))::time between 07:00 and 12:00` → tak uporabnik dobi okno **09:00–14:00 po svojem času** (poleti). `agg_event` po istem `coalesce` binira v **lokalni dan** → opravilo po 22:00 pade v napačen dan in napačen ISO teden sezonske krivulje. Strežniški backfill ni mogoč (cone ne ve); popravek je na napravi. |
 | N2 | **`communityWeekly` nima testa.** | `flutter test --coverage`: vrstice 112–121 `community_providers.dart` nepokrite | **P11** | Ni scaffolding — je zanka širjenja obsega (r7→r6→r5→climate), enaka tisti, ki jo `communitySeasonCurve` ima pokrito. |
 | N3 | **Detajlni zaslon Okolice nima vrstice svežine.** P8 jo je dobil samo pas na Domov. | `CommunityFeed.fetchedAt` obstaja; `SeasonCurve`/`FrequencyStats`/`CommunityWeekly` ne | lasten paket | Tri kartice pridejo iz treh ločenih rezin; uporabnik vidi številke, ne pa, iz katerega dne so. Odloženo zavestno: zahteva polje na treh modelih in predelavo `community_stats_test.dart`. |

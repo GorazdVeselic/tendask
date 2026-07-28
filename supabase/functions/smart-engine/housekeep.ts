@@ -38,6 +38,51 @@ export interface HousekeepPlan {
   expireIds: string[]; // 2c + 2d: status 'new' → 'expired'
   retentionIds: string[]; // 2e: terminal + old → deleted = true
   newMutes: SuggestionLogRow[]; // 2a: dismissed without an existing log mute
+  /** '<guard_key>|<subject_key>' → cards that expired unacted in a row this
+   * season, newest first (docs/m11/03 §R3 odmik). Feeds guard 5c. */
+  ignoredStreaks: Map<string, number>;
+}
+
+/** The user did something with the card — any of these ends an ignore streak. */
+const kActedStatuses = new Set(['planned', 'logged', 'dismissed']);
+
+/** Consecutive ignores per guard key + subject.
+ *
+ * Derived from the suggestion rows rather than kept in a counter column, which
+ * removes the whole class of reset bugs: "acted" is simply the newest row for
+ * that key, so planning one card in March cannot un-ignore ten in April.
+ *
+ * Season-scoped (calendar year, same boundary R2/R6 use) so a guard key that
+ * went quiet speaks again next season instead of being muted for good — a
+ * gardener who skipped mowing all of last year still deserves the first
+ * reminder of the new one. */
+function ignoredStreaks(
+  rows: SuggestionRow[],
+  expiringNow: Set<string>,
+  localToday: string,
+): Map<string, number> {
+  const season = localToday.slice(0, 4);
+  const streaks = new Map<string, number>();
+  const closed = new Set<string>();
+  // Independent of the caller's ordering: the streak is only meaningful newest
+  // → oldest.
+  const newestFirst = [...rows].sort((a, b) => b.updated_at.localeCompare(a.updated_at));
+  for (const row of newestFirst) {
+    if (row.updated_at.slice(0, 4) !== season) continue;
+    const key = guardKey(row.plant_task_rule_id, row.rule_id, row.task_type_id) + '|' +
+      row.subject_key;
+    if (closed.has(key)) continue;
+    if (kActedStatuses.has(row.status)) {
+      closed.add(key);
+      continue;
+    }
+    // A card expiring in THIS run counts — the ignore has just completed.
+    if (row.status === 'expired' || expiringNow.has(row.id)) {
+      streaks.set(key, (streaks.get(key) ?? 0) + 1);
+    }
+    // status 'new' and still live: pending, neither an ignore nor an action.
+  }
+  return streaks;
 }
 
 function dismissedUntil(
@@ -75,7 +120,12 @@ export function planHousekeeping(
   ruleById: Map<string, PlantTaskRule>,
   cfg: EngineConfig,
 ): HousekeepPlan {
-  const plan: HousekeepPlan = { expireIds: [], retentionIds: [], newMutes: [] };
+  const plan: HousekeepPlan = {
+    expireIds: [],
+    retentionIds: [],
+    newMutes: [],
+    ignoredStreaks: new Map(),
+  };
   const mutes = new Map<string, SuggestionLogRow>();
   for (const row of rows) {
     if (row.status === 'new') {
@@ -105,12 +155,17 @@ export function planHousekeeping(
     }
   }
   plan.newMutes = [...mutes.values()];
+  plan.ignoredStreaks = ignoredStreaks(rows, new Set(plan.expireIds), localToday);
   return plan;
 }
 
 /** Executor — loads the user's live suggestions, applies the plan, and reflects
  * new mutes into bundle.suggestionLog so this run's guards honour a just-made
- * dismiss. Every UPDATE stamps updated_at (PG default fires only on INSERT). */
+ * dismiss. Every UPDATE stamps updated_at (PG default fires only on INSERT).
+ *
+ * Returns the ignore streaks the guards need: housekeeping is the only step
+ * that reads the full suggestion history, so counting here saves a second
+ * query. */
 export async function housekeep(
   db: any,
   bundle: UserBundle,
@@ -119,7 +174,7 @@ export async function housekeep(
   climate: ClimateSignals,
   rules: PlantTaskRule[],
   cfg: EngineConfig,
-): Promise<void> {
+): Promise<Map<string, number>> {
   const userId = bundle.profile.user_id;
   const res = await db.from('suggestion')
     .select(
@@ -129,7 +184,7 @@ export async function housekeep(
     .order('updated_at', { ascending: false }).limit(1000);
   if (res.error) throw res.error;
   const rows: SuggestionRow[] = res.data ?? [];
-  if (rows.length === 0) return;
+  if (rows.length === 0) return new Map();
 
   const ownedSubjects = new Set<string>([
     ...bundle.plants.map((p) => 'up:' + p.id),
@@ -180,4 +235,5 @@ export async function housekeep(
     if (up.error) throw up.error;
     for (const m of plan.newMutes) bundle.suggestionLog.push(m);
   }
+  return plan.ignoredStreaks;
 }

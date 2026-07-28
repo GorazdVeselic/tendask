@@ -66,6 +66,9 @@ export interface StateSignals {
   dismissed(guardKey: string, subjectKey: string): boolean;
   lastSuggestedAt(guardKey: string, subjectKey: string): string | null;
   activeSuggestion(taskTypeId: string, subjectKey: string): boolean;
+  /** Cards for this guard key + subject that expired unacted in a row this
+   * season — guard 5c stretches the cooldown by it (docs/m11/03 §R3 odmik). */
+  ignoredStreak(guardKey: string, subjectKey: string): number;
   debug(): unknown;
 }
 
@@ -90,12 +93,17 @@ export function subjectKeysOf(subjects: TaskSubjectRef[]): string[] {
   return keys;
 }
 
+/** [ignoredStreaks] comes from housekeeping, which is the only step that reads
+ * the full suggestion history. Defaults to empty — a caller with no history
+ * (and every rule unit test) means "nothing ignored yet", which is the correct
+ * reading, not a missing input. */
 export function buildSignals(
   bundle: UserBundle,
   taskTypes: Map<string, TaskTypeMeta>,
   weatherPayload: unknown,
   cfg: EngineConfig,
   nowUtc: Date,
+  ignoredStreaks: Map<string, number> = new Map(),
 ): Signals {
   const tz = bundle.profile.timezone;
   const tzValid = tz != null && safeTimeZone(tz) === tz;
@@ -116,7 +124,7 @@ export function buildSignals(
     history: buildHistorySignals(bundle.tasks, taskTypes, dayOf, localToday),
     inventory: buildInventorySignals(bundle),
     eligibility: buildEligibilitySignals(bundle),
-    state: buildStateSignals(bundle, dayOf, localToday, nowUtc),
+    state: buildStateSignals(bundle, dayOf, localToday, nowUtc, ignoredStreaks),
     noLocation: bundle.profile.h3_r7 == null,
     localToday,
     timeZone,
@@ -324,6 +332,7 @@ function buildStateSignals(
   dayOf: DayFn,
   localToday: string,
   nowUtc: Date,
+  ignoredStreaks: Map<string, number>,
 ): StateSignals {
   const waiting = bundle.tasks
     .filter((t) => t.status === 'waiting')
@@ -361,10 +370,13 @@ function buildStateSignals(
         s.task_type_id === taskTypeId && s.subject_key === subjectKey &&
         s.valid_until >= localToday
       ),
+    ignoredStreak: (guardKey, subjectKey) =>
+      ignoredStreaks.get(guardKey + '|' + subjectKey) ?? 0,
     debug: () => ({
       waiting_tasks: waiting,
       suggestion_log: bundle.suggestionLog,
       active_suggestions: bundle.activeSuggestions,
+      ignored_streaks: Object.fromEntries(ignoredStreaks),
     }),
   };
 }

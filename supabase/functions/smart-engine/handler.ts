@@ -169,7 +169,7 @@ export async function runUser(userId: string, ctx: BatchContext): Promise<unknow
   // Housekeeping (03 §Cevovod 2) runs before signals so a just-dismissed
   // suggestion's mute is reflected in this run's guards.
   const climate = buildClimateSignals(bundle.profile, cfg, cacheDay);
-  await housekeep(db, bundle, cacheDay, nowUtc, climate, rules, cfg);
+  const ignoredStreaks = await housekeep(db, bundle, cacheDay, nowUtc, climate, rules, cfg);
   const weatherPayload = await cellWeather(
     db,
     bundle.profile.h3_r7,
@@ -177,7 +177,7 @@ export async function runUser(userId: string, ctx: BatchContext): Promise<unknow
     ctx.weatherMemo,
     deps.latLngOf,
   );
-  const signals = buildSignals(bundle, taskTypes, weatherPayload, cfg, nowUtc);
+  const signals = buildSignals(bundle, taskTypes, weatherPayload, cfg, nowUtc, ignoredStreaks);
   const cdfs = await seasonCdfsFor(db, bundle, taskTypes, signals, cfg, ctx.communityMemo);
   // Order per 03 §Cevovod 4; R1 is folded into R3/R5/R6 (inline dry-window
   // bonus), R4 enriches survivors after the guards.

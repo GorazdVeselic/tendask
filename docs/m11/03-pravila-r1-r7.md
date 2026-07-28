@@ -130,7 +130,24 @@ Izjema: `mow` z `days_overdue >= 4` dobi `+1.0` (trata je core persona; vrednost
 **SPOROČILO:** `suggestions.cadence.overdue` — params `{subject_label_key, task_type_id,
 days_overdue, cadence_days}` (»Košnja zamuja {days_overdue} dni (ritem ~{cadence_days}).«).
 **AKCIJA ob Načrtuj:** task na `tomorrow 09:00`.
-**COOLDOWN:** 5 dni. **DISMISS:** 10 dni. **validUntil:** `today + 5`.
+**COOLDOWN:** 5 dni, pomnožen z odmikom ob ignoriranju (straža 5c). **DISMISS:** 10 dni.
+**validUntil:** `today + 5`.
+
+> **Odmik ob ignoriranju (O7, sprejeto 2026-07-28).** R3 je edino pravilo, ki se sme
+> ponavljati znotraj sezone, in prav zato je bilo brez stropa nevarno: sezonska simulacija
+> (`season_sim_test.ts`) je izmerila **61 kartic na leto** za en spregledan par in **95 od
+> 129 pushov** — kar je 74 % vseh obvestil iz enega pravila. Zato ignoriranje odslej nekaj
+> stane: `[1, 1, 2, 4]`-krat lasten cooldown po `n` zaporednih ignoriranjih, po četrtem
+> tiho do konca sezone. **Prvo ignoriranje je zastonj** namenoma — kdor je bil teden dni
+> odsoten, ne sme dobiti občutka, da se je funkcija pokvarila.
+>
+> »Ignorirano« ni novo sledenje: kartica, ki gre `new → expired`, ne da bi se je uporabnik
+> dotaknil, je **že danes** zapisana v `suggestion`. Niz se šteje iz teh vrstic (ne iz
+> stolpca s števcem), zato ni resetne logike, ki bi se lahko pokvarila — »ukrepal« je
+> preprosto najnovejša vrstica tega ključa. Vsako dejanje (`planned`/`logged`/`dismissed`)
+> niz prekine, niz pa je omejen na koledarsko sezono, da se pravilo naslednje leto samo
+> od sebe spet oglasi. Po odmiku: **52 kartic in 38 pushov** na leto, R5 pa je iz 31/129
+> pushov postal 25/38 — koristno pravilo je nehalo tekmovati s hrupnim za isti kanal.
 
 ## R4 — Nizka zaloga ob predlogu (piggyback; aktivno šele ob `kSuppliesEnabled=true`)
 
@@ -284,7 +301,10 @@ runForUser(userId):
  5. STRAŽE za vsak kandidat (vrstni red, fail-fast; cooldown/mute po GUARD KEY):
     a. upravičenost (subjekt obstaja, ni deleted)        — vgrajeno v emit
     b. state.dismissed(guardKey, subjectKey)             → drop
-    c. cooldown: now - state.lastSuggestedAt(guardKey, subjectKey) < cooldown → drop
+    c. cooldown × ODMIK OB IGNORIRANJU (O7): ignored = state.ignoredStreak(guardKey,
+       subjectKey) = zaporedne kartice tega ključa, ki so LETOS potekle brez dejanja;
+       če ignored >= 4 → drop (tiho do konca sezone), sicer
+       now - state.lastSuggestedAt(...) < cooldown * [1,1,2,4][ignored] → drop
     d. cooldown po izvedbi: history.lastDone(subject, taskType) > today - cooldownDone
        (cooldownDone = max(3 dni, cadence/2) za cadence tipe; za R5 'v tem oknu/sezoni')
     e. dedup: state.planned(subjectKey, taskTypeId, 14)  → drop

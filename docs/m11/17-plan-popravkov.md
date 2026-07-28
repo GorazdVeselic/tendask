@@ -72,6 +72,7 @@ Te so produktne, ne tehnične. Dokler niso odgovorjene, se paketi v desnem stolp
 | **O3** | (a) ločen `kCommunityEnabled` | ✅ P9 `7d06944` |
 | **O4** | **(b) R1 ostane ojačevalec** | mrtvi ključ `suggestions.weather.window_open` ven; kartica dobi **pripono**, ko je `dry_window` postavljen — motor parameter že pošilja (N4), zdaj dobi bralca. Popravi tudi `03 §R1` in `00-pregled-za-laika.md`. |
 | **O5** | **(a) odstrani s klienta** | seed (1127 vrstic) + catalog-sync pot + drift tabela `plant_task_rule` ven. Pravila živijo na strežniku, kjer jih motor bere; ob offline motorju se vrne iz git zgodovine — takrat **z bralcem in testom**. |
+| **O7** | **odmik ob ignoriranju** (ne kvota na sezono) | `[1,1,2,4]`× lasten cooldown po `n` zaporednih ignoriranjih, po 4. tiho do konca sezone; vsako dejanje niz prekine. Vir je `suggestion.status = 'expired'` — brez nove tabele, stolpca ali migracije. Kvota na sezono je bila zavrnjena, ker ne loči »kosi vsak teden, opomni ga« od »ne kosi nikoli«. Merjeno: 156→52 kartic, 129→38 pushov, R3 iz 95 na 8 pushov. |
 | **O6** | **(a) opisno** | »Večina vrtnarjev v tvoji okolici je to letos že začela.« Brez odstotka; anti-steering varovalo se razširi na `suggestions.community.*`. Razlog: P4 je isto uokvirjanje odstranil s plačljivih kartic, brezplačni pas ga ne sme vrniti skozi zadnja vrata — in v prvi sezoni se delež itak še premika (N24). |
 
 **S tem P10 in P11 nista več blokirana.**
