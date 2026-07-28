@@ -192,7 +192,8 @@ export async function runUser(userId: string, ctx: BatchContext): Promise<unknow
   const enriched = enrichR4(guarded, signals.inventory, cfg);
   const ranked = dedupAndRank(enriched, cfg);
   const { count: emitted, topId } = await emit(db, bundle, ranked, nowUtc);
-  const pushed = await maybePush(userId, bundle, ranked, topId, signals, ctx);
+  const push = await maybePush(userId, bundle, ranked, topId, signals, ctx);
+  const pushed = push === 'sent';
 
   const runUp = await db.from('engine_run').upsert({
     user_id: userId,
@@ -205,6 +206,9 @@ export async function runUser(userId: string, ctx: BatchContext): Promise<unknow
     user_id: userId,
     emitted,
     pushed,
+    // Only when it happened: a `false` on every other run would bury the signal
+    // the dispatcher's stored response exists to surface (N12).
+    ...(push === 'rejected' ? { push_rejected: true } : {}),
     candidates: ranked.map((c) => ({
       rule_id: c.ruleId,
       task_type_id: c.taskTypeId,
@@ -218,6 +222,10 @@ export async function runUser(userId: string, ctx: BatchContext): Promise<unknow
   };
 }
 
+/** What the push step did. 'rejected' is its own outcome, not a flavour of
+ * 'skipped': it is the only one that means a live user just went silent. */
+type PushOutcome = 'sent' | 'rejected' | 'skipped';
+
 /** Step 8c: at most one push per local day, for the top candidate only. */
 async function maybePush(
   userId: string,
@@ -226,13 +234,13 @@ async function maybePush(
   topId: string | null,
   signals: Signals,
   ctx: BatchContext,
-): Promise<boolean> {
-  const { db, deps, cfg, taskTypes } = ctx;
+): Promise<PushOutcome> {
+  const { db, deps, cfg, taskTypes, nowUtc } = ctx;
   // push_cap_per_day = 0 is an ops kill-switch: suggestions still emit, the
   // bell goes quiet. The per-day cap itself is structural (one dispatcher run
   // per day + the last_push_date gate below).
   const pushCap = cfg.engine.push_cap_per_day ?? 1;
-  if (pushCap < 1 || !topId || !bundle.profile.fcm_token) return false;
+  if (pushCap < 1 || !topId || !bundle.profile.fcm_token) return 'skipped';
 
   const ns = bundle.profile.notification_settings;
   const top = ranked[0];
@@ -240,12 +248,12 @@ async function maybePush(
   const hintAllowed = top.ruleId === 'R6'
     ? (ns?.community_hints ?? false)
     : (ns?.weather_hints ?? false);
-  if (!hintAllowed) return false;
+  if (!hintAllowed) return 'skipped';
 
   const runRes = await db.from('engine_run')
     .select('last_push_date').eq('user_id', userId).maybeSingle();
   const lastPush: string | null = runRes.data?.last_push_date ?? null;
-  if (lastPush && lastPush >= signals.localToday) return false;
+  if (lastPush && lastPush >= signals.localToday) return 'skipped';
 
   // A push failure must never abort the user's run: the suggestion is already
   // emitted and engine_run must still record the run. projectId() can throw
@@ -259,17 +267,30 @@ async function maybePush(
       body: pushBody(bundle.profile.lang),
       suggestionId: topId,
     });
-    if (ok) return true;
+    if (ok) return 'sent';
     // The device is gone (UNREGISTERED / foreign sender) — clear the token so we
     // stop sending. A rejected message throws instead and is reported below.
     // Deliberately does NOT bump updated_at: if the client has since registered
     // a fresh token (newer updated_at), bumping here would let this null win the
     // LWW pull and clobber the live token.
     await db.from('profile').update({ fcm_token: null }).eq('user_id', userId);
+    // N12: from here on the user is silent, and until this stamp existed nothing
+    // said so — not a row, not a line. Decision #9 turns on the rate of this
+    // happening, so it has to outlive log retention. The later engine_run upsert
+    // does not carry this column, so it cannot overwrite the stamp.
+    //
+    // Not reportError: a device that was uninstalled is an expected lifecycle
+    // event, and filing it under evt="engine_error" would blunt the one filter
+    // that is supposed to mean something is broken. A failure to RECORD it is an
+    // engine error, and that one is reported.
+    const stamp = await db.from('engine_run')
+      .upsert({ user_id: userId, push_rejected_at: nowUtc.toISOString() });
+    if (stamp.error) reportError('push_rejected_stamp', stamp.error, { userId });
+    return 'rejected';
   } catch (e) {
     reportError('fcm_send', e, { userId });
   }
-  return false;
+  return 'skipped';
 }
 
 /** Supabase errors are plain objects, and String() renders those as

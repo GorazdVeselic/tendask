@@ -24,7 +24,7 @@
 | | **#2** | Vremenski pragovi se popravljajo po dejanskih dismissih R1, ki jih pred prižigom ni. |
 | | **#6** | Digest se odloči po poročilih »premalo vidim« oz. deležu `expired` — oboje nastane šele v rabi. |
 | | **#7** | `bucket_population = 3` na stagingu ničesar ne pove (sintetični sosedje so bili **narejeni** upravičeni); prva poštena meritev je ob prižigu. |
-| | **#9** | Privzetek je robustnejši, kot trdi besedilo (odjava in motor žeton počistita), a **metrika, na kateri drevo visi, se nikjer ne zbira**. |
+| | **#9** | Privzetek je robustnejši, kot trdi besedilo (odjava in motor žeton počistita); metrika, na kateri drevo visi, **se zdaj zbira** (`push_rejected_at`, N12) — čaka le prižig, da dobi vrednosti. |
 | **C · ni aktualno** | **#3** | Odvisen od izida #2 — dokler kalibracija vremena ni tekla, ni signala, da je 72 h premalo. |
 | | **#4** | Potrebuje ≥ ~200 registriranih z lokacijo; realnih uporabnikov z vrtom je danes 2. |
 | | **#10** | Potrebuje `activity_season.pooled_total ≥ 30` iz **realnih** dokončanih sezon; sintetika za kalibracijo pravil ne šteje. |
@@ -150,6 +150,15 @@ Tabletne bombe torej ni. **Kar manjka, je druga veja drevesa:** »telemetrija UN
 > 10 %/mes« se **nikjer ne meri** — veja `ok === false` žeton tiho počisti in ne zabeleži ničesar
 (`reportError` steče samo ob vrženi napaki). Pogoj, ki ga sproži lastno drevo, je torej
 neopazljiv. Gl. **N12**; opazljivost postane potrebna šele, ko pushi res tečejo → prižig.
+
+**Dopolnilo 2026-07-28 (N12 zaprt).** Merjenje zdaj obstaja: `engine_run.push_rejected_at`
+(migracija `0022`, **staging**) dobi žig v istem trenutku, ko motor počisti žeton, poizvedba pa je
+`supabase/probe/push_rejection_rate.sql` (read-only, varna na prod). Vprašanje **ostaja odprto in
+ostaja YAGNI** — spremenilo se je le to, da je njegov sprožilec zdaj **merljiv** namesto namišljen.
+Prag beri **per uporabnik, ne per sporočilo**: »koliko uporabnikov je utihnilo ta mesec« je oblika
+praga iz te točke. Tabelo `device` gradi šele, ko sonda dvakrat zapored pokaže > 10 % — en skok je
+navadno en tester, ki je aplikacijo ponovno namestil. **Ni signala pred prižigom:** dokler pushi ne
+tečejo, sonda vrne ničle (na stagingu 2026-07-28: `rejected_30d = 0`, `pushable_now = 0`).
 
 ## 10. Skupnostna kalibracija pravil (post-V2 ritem)
 

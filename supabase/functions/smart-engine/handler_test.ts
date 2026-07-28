@@ -260,6 +260,31 @@ Deno.test('a dead token is cleared with exactly {fcm_token: null}', async () => 
   assertEquals(update.payload, { fcm_token: null });
 });
 
+Deno.test('a dead token leaves a trace, not just silence (N12)', async () => {
+  const fake = db();
+  const { writes, json } = await run(fake, { push: false });
+
+  // Without this the user simply stops getting notifications and nothing —
+  // no row, no log line — says why. Decision #9 turns on the rate of it.
+  const stamp = writes.find(
+    (w) => w.table === 'engine_run' && 'push_rejected_at' in (w.payload ?? {}),
+  );
+  assertEquals(typeof (stamp?.payload as { push_rejected_at?: unknown })?.push_rejected_at, 'string');
+  assertEquals(json.results[0].push_rejected, true);
+  assertEquals(json.results[0].pushed, false);
+});
+
+Deno.test('a delivered push leaves no rejection stamp', async () => {
+  const { writes, json } = await run(db());
+
+  assertEquals(json.results[0].pushed, true);
+  assertEquals('push_rejected' in json.results[0], false);
+  assertEquals(
+    writes.some((w) => 'push_rejected_at' in (w.payload ?? {})),
+    false,
+  );
+});
+
 Deno.test('a send that throws is our fault — the token survives', async () => {
   const fake = db();
   const { writes, json } = await run(fake, {

@@ -12,12 +12,13 @@ Delovno drevo je **čisto**. Zadnji trije commiti:
 
 | Hash | Kaj |
 |---|---|
+| ``2c02ef9`` | **N12** — zavrnjena dostava pusha pusti žig (`engine_run.push_rejected_at`) |
+| `a1c861b` | predaja za paket 6 |
 | `1719415` | **Paket 5** — P11 higiena: O5, mrtva koda, imena kanalov, dispose, Dart↔Deno |
 | `adb3928` | geo orodje (**druga seja**, ni M11 — pristalo je vmes) |
-| `202bc6e` | predaja za paket 5 |
 
-Stanje: **1333 Flutter + 174 Deno zelenih**, `flutter analyze` čist, parity testi zeleni.
-Migraciji **0020/0021 sta samo na stagingu**; produkcija jih nima in tako ostane.
+Stanje: **1333 Flutter + 176 Deno zelenih**, `flutter analyze` čist, parity testi zeleni.
+Migracije **0020/0021/0022 so samo na stagingu**; produkcija jih nima in tako ostane.
 
 **Vsi paketi razen enega so zaprti. Ostane Paket 6 (naprava).**
 
@@ -121,9 +122,9 @@ To je jedro paketa — trije paketi popravkov so šli skozi teste, ne skozi oči
 | **N26 ostanek** — `Auspflanzen` se lomi sredi besede na `suggestions/history` | predlogi |
 | sonda `supabase/probe/m11_shape.sql` + diff proti stagingu, `agg_context_invariants.sql` (teče v `rollback`, varna tudi na prod) | pred `db push` na prod |
 
-**Priporočilo:** **N12** (zavrnjena dostava pusha se nikjer ne šteje) je edina odprta najdba, ki jo
-je pametno rešiti **pred** prižigom — brez nje ne boš vedel, da se je pokvarilo. Ni nujna tabela;
-dovolj je števec ali polje na `engine_run`.
+**N12 je zaprt** (migracija `0022` + `supabase/probe/push_rejection_rate.sql`): zavrnjena dostava
+zdaj pusti žig na `engine_run.push_rejected_at`. Sonda pred prižigom vrne same ničle — to ni okvara.
+Kontrolna točka je v `deploy-runbook.md` §»Odprta vprašanja, ki oživijo ob prižigu«.
 
 ## 5 · Kar ostane po tem
 
@@ -136,7 +137,8 @@ isti razmislek) · dvojno dekodiranje `messageParams` · magične vrednosti (`ru
 
 **Odprte najdbe, ki niso dolg:** N3 (detajl Okolice brez vrstice svežine) · N11 (klimatski normali
 brez testa na realnih lokacijah — blokira vprašanje #5) · strežniški backfill cone (po N14 **ni
-več nujen**, odločitev ločeno).
+več nujen**, odločitev ločeno). **Odprtih najdb, ki bi jih bilo pametno rešiti pred prižigom, ni
+več** — N12 je bila zadnja.
 
 ## 6 · Kako testirati na napravi
 

@@ -285,8 +285,11 @@ Iz triaže `docs/m11/10-odprta-vprasanja.md` (2026-07-28), kup B. Vsa imajo delo
       ne pomenijo nič — sintetični sosedje so bili narejeni upravičeni.
 - [ ] **#12 → N8 — sezonska simulacija ni zgrajena.** Dokler je ni, letne frekvence pravil ne
       pokriva noben test. Če prižig teče brez nje, to velja za znano vrzel, ne za presenečenje.
-- [ ] **#9 → N12 — pusha, ki je odpovedal, nihče ne šteje.** Preden se zaneseš na »push dela«,
-      dodaj števec zavrnjenih dostav (`handler.ts:262–268`); brez njega je edini simptom tišina.
+- [ ] **#9 → N12 — delež zavrnjenih dostav.** Merjenje **obstaja** (`engine_run.push_rejected_at`,
+      migracija `0022`): mesec dni po prižigu poženi `supabase/probe/push_rejection_rate.sql`
+      (read-only, varna na prod). Beri **per uporabnik**: nad 10 % **dva meseca zapored** je
+      sprožilec za tabelo `device` iz #9; en skok je navadno tester, ki je aplikacijo ponovno
+      namestil. Pred prižigom sonda vrne same ničle — to ni okvara.
 - [ ] **#1, #2, #6 — po ~4 tednih** poglej statuse `suggestion` (`dismissed` / `expired` /
       `planned` deleže po pravilih) in šele nato premikaj prage. En parameter naenkrat, teden
       opazovanja.
