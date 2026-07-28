@@ -8,9 +8,9 @@
 
 ## 0 · Stanje v eni vrstici
 
-P1–P9 commitani · **triaža 14 odprtih vprašanj opravljena** · **test na napravi proti stagingu
-tekel** in dal **12 novih najdb (N13–N24)** · 1285 Flutter + 159 Deno zelenih · ostaja **P10, P11**
-in dokončanje kontrolnega seznama (offline, jezikovna matrika, nekaj zaslonov).
+P1–P9 commitani · **triaža 14 vprašanj opravljena** · **test na napravi proti stagingu tekel** in
+dal **12 novih najdb (N13–N24)**, od tega **5 že zaprtih** · **vse odločitve O1–O6 sprejete** →
+P10 in P11 nista blokirana · **1293 Flutter + 159 Deno zelenih**, analyze čist.
 
 ## 1 · Commiti te seje
 
@@ -19,6 +19,10 @@ in dokončanje kontrolnega seznama (offline, jezikovna matrika, nekaj zaslonov).
 | `8d7e96d` | triaža odprtih vprašanj + najdbe N13–N23 + kontrolni seznam ob prižigu v runbooku |
 | `bdf3384` | **seed**: 70 sosedov, 35 `@site` + 35 `apple`, tie-break celice, `water` med tipi |
 | `190fd7d` | **`tool/adb_run.ps1`**: `-Steps`, `-Vars NAME=VALUE`, korak `shot` |
+| `2b1cd49` | predaja seje (ta dokument) |
+| `9fb8d69` | **N19 + N22**: poteg doseže mrežo; pragova povesta resnico + straži v testih |
+| `64e85d0` | pregled najdb po teži, zaprte vrstice s hashi |
+| `b9c4eb4` | sprejete odločitve O4, O5, O6 |
 
 ## 2 · Naloga A — rezultat triaže
 
@@ -58,8 +62,8 @@ na kateri drevo visi (**N12**). **#13 je najhujši** — njegov pogoj se je ures
 
 | # | Kaj | Kam |
 |---|---|---|
-| **N22** | »Opisni pas« med 5 in 30 **ne obstaja**; prag zapisan dvakrat (strežnik `app_config`, klient zapečen `30`), zato je veja `freq_low_n` mrtva | P10 |
-| **N19** | Pull-to-refresh v Okolici je znotraj dneva **placebo** — `ref.invalidate()` bere isti dnevni cache | P10 |
+| ~~N22~~ | »Opisni pas« med 5 in 30 **ne obstaja**; prag zapisan dvakrat | ✅ delno `9fb8d69` — ostanek je odločitev, gl. dnevnik |
+| ~~N19~~ | Pull-to-refresh v Okolici je bil znotraj dneva **placebo** | ✅ `9fb8d69`, dokazano na napravi (39 → 70 z eno gesto) |
 | **N18** | Seed ni prestopil praga za nobeno kohorto (`0017` razdelil, `0018` dvignil na 30) | ✅ `bdf3384` |
 | **N14** | Tihi klimatski osvežilnik je za `kSuggestionsEnabled`; prod tega ključa nima → **nikoli ne teče**. Pravi vzrok za prazne `timezone` (N1) | P11 |
 | **N17** | »Kje si ti« ob 40 sosedih trdi, da jih je premalo — zliti `mine.isEmpty` in `buckets.isEmpty` | P10 |
@@ -88,7 +92,8 @@ na kateri drevo visi (**N12**). **#13 je najhujši** — njegov pogoj se je ures
 wsl -e bash -lc "cat .../supabase/seed/staging_test_data.sql | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
 docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -v keep=64 -U postgres -d postgres < tmp/staging_keep_neighbours.sql
 
-# 2) OBVEZNO po vsaki spremembi podatkov — pull-to-refresh NE dela (N19)
+# 2) po spremembi podatkov zadošča poteg v aplikaciji (N19 popravljen v 9fb8d69).
+#    pm clear rabiš le, ko hočeš testirati onboarding od začetka.
 adb shell pm clear app.tendask && adb shell monkey -p app.tendask -c android.intent.category.LAUNCHER 1
 
 # 3) prijava (koda iz Mailpita)
@@ -110,7 +115,8 @@ korak `shot <ime>` shrani `tmp/shots/<ime>.png`.
 
 ### Pasti, ki so me stale časa
 
-- **Pull-to-refresh ne osveži** (N19) → `pm clear` + ponovna prijava; drugače vse izgleda pokvarjeno.
+- ~~Pull-to-refresh ne osveži~~ — popravljeno (`9fb8d69`). Pred tem popravkom je vsaka sprememba
+  podatkov med testiranjem izgledala kot okvara funkcije; če kdaj spet tako izgleda, preveri to prvo.
 - **Vnos OTP se pripne** k stari kodi — pred vnosom pobriši polje (scenariji to že delajo).
 - **Poteg za osvežitev z `y=700` odpre obvestilno vrstico** — začni pri `y=900`.
 - **Ročni GPS takoj po dodelitvi dovoljenja tiho ne shrani** — drugi pritisk deluje.
@@ -120,8 +126,10 @@ korak `shot <ime>` shrani `tmp/shots/<ime>.png`.
 
 ## 7 · Kaj ostane
 
-- **P10** (O4, O6): jezik, N13, N17, N19, N20, N21, N22, mrtvi ključ, `screen-map.md`, #13/#14
-- **P11** (O5): higiena; **N1 + N14** (cona), **N2** (`communityWeekly` test), **N15**
+- **P10** — jezik in besedila: **N13**, **N17**, **N20**, N21 · **O4** (pripona za suho okno +
+  mrtvi ključ ven) · **O6** (opisno) · **N9** (`agg_context` DB straža) · `screen-map.md`
+- **P11** — higiena: **N14 + N1** (cona; brez tega je backfill brez pomena) · **O5**
+  (`plant_task_rule` s klienta ven) · **N2** · **N15**
 - **Dokončaj kontrolni seznam** iz §3 (offline, jezikovna matrika, preostali zasloni)
 - **Pred prižigom Okolice:** spodnja vrstica pri petih zavihkih (R4) **in N23** · `kDevPlusStub=false`
 - **Pred `db push` na prod:** sonda `supabase/probe/m11_shape.sql` + diff proti stagingu
