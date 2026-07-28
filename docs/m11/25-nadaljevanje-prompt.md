@@ -8,11 +8,12 @@
 
 ## 0 · Kje sva
 
-Delovno drevo je **čisto**. Zadnji trije commiti:
+Delovno drevo je **čisto**. Zadnji commiti na veji (dva sta iz vzporednih sej, nista M11):
 
 | Hash | Kaj |
 |---|---|
-| ``2c02ef9`` | **N12** — zavrnjena dostava pusha pusti žig (`engine_run.push_rejected_at`) |
+| `4df0957` | **N12** — zavrnjena dostava pusha pusti žig (`engine_run.push_rejected_at`) |
+| `b0ed9d0` | FR-22 poziv za lokacijo (**druga seja**, ni M11) |
 | `a1c861b` | predaja za paket 6 |
 | `1719415` | **Paket 5** — P11 higiena: O5, mrtva koda, imena kanalov, dispose, Dart↔Deno |
 | `adb3928` | geo orodje (**druga seja**, ni M11 — pristalo je vmes) |
