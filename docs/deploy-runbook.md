@@ -272,6 +272,25 @@ pripravljenosti**. Prižgeta se lahko neodvisno; nikoli ju ne prižgi »zato ker
 > gl. `docs/prelomi-besed.md` §3. Vnos `'nav (five tabs)'` v `kAcceptedWordBreaks` mora pred
 > prižigom izginiti.
 
+### Odprta vprašanja, ki oživijo ob prižigu
+
+Iz triaže `docs/m11/10-odprta-vprasanja.md` (2026-07-28), kup B. Vsa imajo delovni privzetek in
+**ne** blokirajo prižiga — blokirajo pa jih zamujene meritve, ker se večina ne da izmeriti nazaj.
+
+- [ ] **Zapiši datum prižiga.** #1 in #2 se odločata »po 4–6 tednih«; brez zabeleženega dneva nič
+      ne odšteva. Vpiši ga sem, ne v glavo.
+- [ ] **#7 — prva poštena meritev upravičenosti.** Takoj po prvem `agg_refresh_all()` nad
+      realnimi računi: `select count(*) from bucket_population`. Če je prazen, spusti `N` na 5;
+      **K-jev ne nižaj** (`K_privacy` je nepogajalski). Staging številke (`bucket_population = 3`)
+      ne pomenijo nič — sintetični sosedje so bili narejeni upravičeni.
+- [ ] **#12 → N8 — sezonska simulacija ni zgrajena.** Dokler je ni, letne frekvence pravil ne
+      pokriva noben test. Če prižig teče brez nje, to velja za znano vrzel, ne za presenečenje.
+- [ ] **#9 → N12 — pusha, ki je odpovedal, nihče ne šteje.** Preden se zaneseš na »push dela«,
+      dodaj števec zavrnjenih dostav (`handler.ts:262–268`); brez njega je edini simptom tišina.
+- [ ] **#1, #2, #6 — po ~4 tednih** poglej statuse `suggestion` (`dismissed` / `expired` /
+      `planned` deleže po pravilih) in šele nato premikaj prage. En parameter naenkrat, teden
+      opazovanja.
+
 ---
 
 ## 3. App deploy — `deploy.bat` matrika
