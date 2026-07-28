@@ -1,4 +1,4 @@
-# M11 — predaja seje (Paket 5 zaključen, **P11 zaprt**)
+# M11 — predaja seje (**P11 in N12 zaprta**, ostane samo naprava)
 
 > **Datum:** 2026-07-28 · veja `feat/m11-smart-engine` · **nič pushano, produkcija nedotaknjena**
 > **Vstopna točka za novo sejo.** `18-` do `24-nadaljevanje-prompt.md` so zastareli.
@@ -21,7 +21,8 @@ Delovno drevo je **čisto**. Zadnji commiti na veji (dva sta iz vzporednih sej, 
 Stanje: **1333 Flutter + 176 Deno zelenih**, `flutter analyze` čist, parity testi zeleni.
 Migracije **0020/0021/0022 so samo na stagingu**; produkcija jih nima in tako ostane.
 
-**Vsi paketi razen enega so zaprti. Ostane Paket 6 (naprava).**
+**Vsi paketi razen enega so zaprti, in odprtih najdb, ki bi jih bilo pametno rešiti pred
+prižigom, ni več.** Ostane **Paket 6 (naprava)** — to je cilj te seje.
 
 ## 1 · Kaj je paket 5 naredil
 
@@ -41,6 +42,22 @@ Migracije **0020/0021/0022 so samo na stagingu**; produkcija jih nima in tako os
 
 Neto **−1988 vrstic**.
 
+## 1b · Kaj je naredil N12 (za paketom 5, lasten commit)
+
+Zavrnjena dostava pusha ni pustila **ničesar** — motor je počistil `profile.fcm_token`, uporabnik je
+nehal dobivati obvestila, in nikjer ni nastala vrstica, ki bi to povedala. Odločitveno drevo **#9**
+(»telemetrija UNREGISTERED > 10 %/mes → tabela `device`«) je viselo na številki, ki se ni zbirala.
+
+| Kaj | Kje |
+|---|---|
+| `engine_run.push_rejected_at` — en nullable stolpec, **brez** nove tabele | migracija `0022`, **staging** |
+| `maybePush` vrne `'sent' \| 'rejected' \| 'skipped'`; ob zavrnitvi žig + `push_rejected: true` v odgovoru, ki ga dispatcher shrani | `handler.ts` |
+| Poizvedba, ki odgovori na #9 (read-only, **varna na prod**) | `supabase/probe/push_rejection_rate.sql` |
+| Kontrolna točka mesec po prižigu | `deploy-runbook.md` §»Odprta vprašanja, ki oživijo ob prižigu« |
+
+GRANT ni bil potreben: `0019` je dal `insert, update` na `engine_run` na **ravni tabele**. Preverjeno
+na stagingu s `has_column_privilege`, ne po spominu.
+
 ## 2 · Odločitve, ki jih ne smeš »popraviti«
 
 - **Nov `channelId` je bil zavrnjen (N30).** Opozorilo, da Android ime kanala ob spremembi ne
@@ -55,6 +72,13 @@ Neto **−1988 vrstic**.
   odpade, tabela nima ne pisca ne bralca in argument je dobesedno isti kot pri O5, zato je v istem
   v17. Strežnik jo piše in bere naprej — šla je samo klientova kopija.
 - **`NotificationService.isReady` in SQL stolpci `refreshed_at`/`unit` ostajajo (N31).** Nista dolg.
+- **Žig zavrnitve je per-uporabnik, ne per-sporočilo (N12).** Prag iz #9 sprašuje »koliko
+  uporabnikov je utihnilo ta mesec«, in časovni žig ne rabi read-modify-write na vrstici, ki jo
+  motor tako ali tako upsertira. Kdor to obrne v števce, naj najprej pove, katero vprašanje s tem
+  odgovori — tabela `device` iz #9 **ostaja YAGNI**, dokler sonda dvakrat zapored ne pokaže > 10 %.
+- **Zavrnitev se namenoma NE poroča prek `reportError` (N12).** Ta helper piše `evt="engine_error"`,
+  kar je edini filter, ki naj pomeni, da je nekaj pokvarjeno. Odstranjena aplikacija je pričakovan
+  dogodek. Napaka pri **zapisu** žiga pa je engine error in se poroča.
 - **Toleranca za `'infinity'` je bila preusmerjena, ne izbrisana (N29).**
 - Iz prejšnjih sej velja naprej: **push nosi naslov, ne telesa** · **zajem generatorja je seznam,
   ne vzorec** · **test markerjev bere surov katalog** · `gendered_wording_test.dart` ima namenoma
@@ -79,6 +103,12 @@ je torej drugo vprašanje: *kaj ta vrstica stane, če ostane?*
 Ustavitev pulla `suggestion_log` bi s seboj vzela edini test tolerance za Postgres `'infinity'` —
 ta pa ni lastnost stolpca, ampak **skupnega parserja**: `throw` uide iz `pull()` in zamrzne kurzor
 **vseh** tabel. Test je preusmerjen na `profileFromRemote`, ne izbrisan.
+
+> **Kanal za napake je alarm, ne dnevnik.** (N12)
+
+Prva verzija je zavrnjen žeton javila prek `reportError` — s sintetičnim `new Error('UNREGISTERED')`,
+katerega stack je kazal v našo kodo in ni pomenil ničesar. Pričakovan dogodek pod `evt="engine_error"`
+otopi filter, ki je edini alarm. Durable signal sodi v **vrstico**, ne v log.
 
 **Kar ostaja nepreverjeno:** `kAcceptedWordBreaks` (če se niz spremeni, vnos ostane in tiho dovoli
 nov prelom) in anti-steering varovalo (bere `community.*` + `suggestions.community.*`; nov niz s
@@ -123,9 +153,23 @@ To je jedro paketa — trije paketi popravkov so šli skozi teste, ne skozi oči
 | **N26 ostanek** — `Auspflanzen` se lomi sredi besede na `suggestions/history` | predlogi |
 | sonda `supabase/probe/m11_shape.sql` + diff proti stagingu, `agg_context_invariants.sql` (teče v `rollback`, varna tudi na prod) | pred `db push` na prod |
 
-**N12 je zaprt** (migracija `0022` + `supabase/probe/push_rejection_rate.sql`): zavrnjena dostava
-zdaj pusti žig na `engine_run.push_rejected_at`. Sonda pred prižigom vrne same ničle — to ni okvara.
-Kontrolna točka je v `deploy-runbook.md` §»Odprta vprašanja, ki oživijo ob prižigu«.
+> **N12 ni na tem seznamu**, ker je zaprt (§1b). Ena past ostane zapisana: `push_rejection_rate.sql`
+> pred prižigom vrne same ničle — to **ni** okvara sonde, ampak odsotnost pushov.
+
+### 4.4 · Kdaj je paket 6 končan
+
+Ne »ko sem vse pogledal«, ampak:
+
+- vsaka postavka iz 4.1 ima **posnetek** v `tmp/shots/` z govorečim imenom (ne opis po spominu);
+- vsako **odstopanje** je vrstica v `19-najdbe-med-izvedbo.md`, vpisana ob odkritju, s kupom
+  (A = pred prižigom / B = po / C = sprejeto);
+- tabela 4.3 ima pri vsaki vrstici bodisi ✅ bodisi zapisan razlog, zakaj ostaja odprta;
+- `flutter test` + `deno test supabase/functions/` + `flutter analyze` zeleni **po** morebitnih
+  popravkih z naprave.
+
+**Vrstni red, ki prihrani ponovne zagone:** najprej jezik + gostota (`wm density 540`, Deutsch,
+`font_scale 1.3`) in z njo vse postavitvene stvari naenkrat (4.2 + R4 + N23 + kanali), šele nato
+nazaj na privzeto in vsebinske poti iz 4.1. Menjava jezika na napravi je dražja od menjave zaslona.
 
 ## 5 · Kar ostane po tem
 
@@ -158,6 +202,9 @@ powershell -ExecutionPolicy Bypass -File tool\adb_run.ps1 -Steps tmp\scenarios\p
 # 4) migracije na staging + preverba invariant
 wsl -e bash -lc "tendask migrate"
 wsl -e bash -lc "cat .../supabase/probe/agg_context_invariants.sql | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
+
+# 5) poljubna sonda po isti poti (npr. N12 / #9)
+wsl -e bash -lc "cat /mnt/c/Users/Uporabnik/StudioProjects/tendask/supabase/probe/push_rejection_rate.sql | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
 ```
 
 Runner: `-Steps <pot>`, `-Vars A=1,B=2` (**z vejico**), korak `shot <ime>` shrani `tmp/shots/<ime>.png`.
