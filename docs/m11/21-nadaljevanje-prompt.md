@@ -134,6 +134,63 @@ korak `shot <ime>` shrani `tmp/shots/<ime>.png`.
 - **Pred prižigom Okolice:** spodnja vrstica pri petih zavihkih (R4) **in N23** · `kDevPlusStub=false`
 - **Pred `db push` na prod:** sonda `supabase/probe/m11_shape.sql` + diff proti stagingu
 
+## 9 · Delovni nalog: zapri, kar je odprto (naslednja seja)
+
+Cilj: zapreti **vse** odprte najdbe in nedorečenosti, ne le najlažjih. Vrstni red ni poljuben —
+najprej meritev, potem podatki, šele nato besedilo, ker popravek besedila na napačnih podatkih
+samo lepše laže.
+
+### Paket 1 · N8 — sezonska simulacija (najprej, ker je meritev)
+
+Edina stvar, ki trditev »motor ne spama« spremeni iz obljube v podatek. 159 obstoječih testov
+gleda vsako pravilo pri **enem** `runDate`.
+
+**Naredi:** test, ki premakne `runDate` čez 365 dni nad fiksnim sintetičnim `UserBundle` in
+posnetimi Open-Meteo odgovori, šteje emisije po pravilih in pade, če katero preseže pričakovano
+zgornjo mejo na sezono. Izpis = golden »koledar predlogov za leto«.
+
+**Past, ki odloči, ali test sploh kaj dokazuje:** cooldowni in straže (`suggestion_log`,
+`engine_run.last_run_date`, `dismissed_until`) so **stanje med dnevi**. Zanka, ki stanje ob vsakem
+dnevu ponastavi, izmeri nič — dokazala bo le, da se pravilo lahko sproži, ne kolikokrat se res.
+Simulacija mora stanje nositi naprej skozi vseh 365 iteracij, tako kot ga nosi produkcija.
+
+**Done:** golden file commitan · test pade, če se meja zviša · v `19-najdbe-med-izvedbo.md`
+zapisano, **kaj je meritev pokazala** (tudi če je vse v mejah — to je rezultat, ne odsotnost
+rezultata).
+
+### Paket 2 · Podatki — edine najdbe, ki dajo napačen rezultat
+
+| Najdba | Kaj |
+|---|---|
+| **N14 + N1** | `refreshClimateIfStale` je v `main.dart:162` za `kSuggestionsEnabled`, prod tega ključa nima → na produkciji **ne teče nikoli**. Vezava je napačna po vsebini: cona in klimatski koš hranita tudi Okolico (`agg_event.local_day`), ne le predlogov. Popravi pogoj **in** poskrbi, da se klic ponovi po prijavi (danes teče samo ob zagonu, ko je uporabnik še gost). Šele nato se pogovoriva o strežniškem backfillu — ta je mogoč (strežnik ima `h3_r7` → centroid → cona), a brez tega popravka bi se luknja jutri napolnila nazaj. |
+| **N9** | `agg_context` write-once nima DB straže, agregati pa nanj že štejejo. Dodaj `before update` trigger, ki zavrne spremembo, ko je stara vrednost ne-null. Preveri, ali kak backfill rabi izjemo. |
+| **N15** | `agg_context` zamrzne celico, ne pa cone → sprememba cone tiho prepiše `local_day` cele zgodovine. Odloči: cona **v** posnetek, ali zapisano zakaj ne. |
+
+### Paket 3 · P10 — besedilo, ki laže
+
+**N13** (pet mest obljublja »kmalu (V2)«, medtem ko funkcija dela — uvod in zaslon lokacije nista
+vezana na noben flag) · **N17** (»Kje si ti« krivi okolico za uporabnikovo prazno zgodovino; manjka
+tretja veja `mine.isEmpty`, in past je širša: laže tudi tistemu, ki ima zgodovino napačne vrste) ·
+**N20** (dvojna pika za vsakim datumom, ~52 predlog, gre tudi v push) · **N21** (`2–2×`) ·
+**O4** (pripona za suho okno + mrtvi ključ ven) · **O6** (opisno, brez odstotka).
+
+### Paket 4 · P11 — higiena
+
+**O5**: `plant_task_rule` s klienta ven (seed, catalog-sync pot, drift tabela) · **N2**
+(`communityWeekly` brez testa).
+
+### Paket 5 · Dokončaj test na napravi
+
+Offline stanja iz P8 · polna matrika sl/en/de × 1,0/1,3 po vseh M11 zaslonih (**N23**: pri tem
+upoštevaj, da matrika Domov riše z `weather: null`, torej realnih vremenskih nizov ne vidi) ·
+»Pretekli predlogi« · stikali obvestil · `band_max_active` (rabiš ≥4 hkratne predloge).
+
+### Česa NE zapiraj
+
+N5, N6 (staging, zapisano v runbooku) · N10 (zabeležena odložitev) · N24 (po zasnovi) · ostanek
+N22 (odločitev o zasebnosti, ne popravek). Te so **sprejete**, ne dolg — če jih kdo »popravi«,
+je to regresija.
+
 ## 8 · Sklici
 
 `19-najdbe-med-izvedbo.md` (**beri prvi**) · `17-plan-popravkov.md` · `docs/deploy-runbook.md`
