@@ -7,6 +7,18 @@
 -- cards and cannot tell a working feature from a broken one. This creates
 -- enough of a neighbourhood to cross BOTH thresholds.
 --
+-- The head count is NOT the number that matters — the COHORT count is (0017):
+--   plant_id = '<plant>'  events on that catalog plant
+--   plant_id = '@site'    events with no catalog plant subject
+--   plant_id = ''         the contaminated superset, NEVER used for comparison
+-- and 0018 raised the season/frequency gate from k_privacy (5) to k_reliab (30).
+-- So a neighbourhood spread thin across cohorts publishes NOTHING comparable
+-- while every counter still reads healthy. An earlier version of this file split
+-- 40 neighbours 20/20 and the plant half across five species (4 each): the only
+-- group over 30 was the one cohort 0017 forbids, so the whole paid surface was
+-- empty and no output said why. Hence the deliberate shape below — two cohorts,
+-- each comfortably over k_reliab, and nothing else.
+--
 -- On top of that the aggregates only count ELIGIBLE users (0009 eligible_user):
 -- account older than min_account_days, at least min_done_tasks completions on
 -- at least min_active_days distinct days. A neighbour that misses any of the
@@ -38,7 +50,13 @@ end $$;
 
 do $$
 declare
-  n_neighbours constant int := 40;   -- > k_reliab (30), so percentages appear
+  -- Split so BOTH comparison cohorts clear k_reliab (30) on their own:
+  -- 1..n_site have no plant subject at all (the '@site' cohort), the rest all
+  -- garden the SAME plant. Spreading the plant half over several species is what
+  -- broke this before — five cohorts of four publish nothing.
+  n_neighbours constant int := 70;
+  n_site       constant int := 35;   -- @site = 35, cohort_plant = 35, both > 30
+  cohort_plant constant text := 'apple';
   -- Synthetic ids all share this prefix, which is what makes the re-run safe:
   -- nothing outside it is ever touched.
   id_prefix constant text := '00000000-0000-4000-8000-';
@@ -55,18 +73,26 @@ declare
   k         int;
   v_first_week int;
   d         date;
-  types     constant text[] := array['prune', 'fertilize', 'mow'];
-  plants    constant text[] := array['apple', 'raspberry', 'tomato', 'pear', 'lettuce'];
+  -- 'water' is seasonal = false in the catalog, and the client drops the timing
+  -- curve for such a type before it ever queries (community_providers.dart:73).
+  -- Seeding it gives that path a visible proof: frequency card present, timing
+  -- card absent. Without it the screen says "not enough gardeners" instead, and
+  -- the two causes are indistinguishable. Five executions per season cover all
+  -- four types per user, so every cohort keeps its full head count.
+  types     constant text[] := array['prune', 'fertilize', 'mow', 'water'];
 begin
   -- The neighbourhood has to be the tester's own, or the app widens past it and
   -- shows nothing. Taken from the real profile rather than pasted in.
+  -- The freshest profile breaks the tie: with two test accounts in two cells
+  -- every group has count(*) = 1, and picking arbitrarily seeds the OTHER
+  -- tester's neighbourhood — 40 neighbours reported, an empty screen on device.
   select p.h3_r7, p.h3_r6, p.h3_r5, coalesce(p.timezone, 'Europe/Ljubljana')
     into v_cell_r7, v_cell_r6, v_cell_r5, v_tz
     from public.profile p
    where p.h3_r7 is not null
      and p.user_id::text not like id_prefix || '%'
    group by p.h3_r7, p.h3_r6, p.h3_r5, p.timezone
-   order by count(*) desc
+   order by count(*) desc, max(p.updated_at) desc
    limit 1;
 
   if v_cell_r7 is null then
@@ -95,10 +121,10 @@ begin
     insert into public.profile (user_id, h3_r7, h3_r6, h3_r5, timezone, updated_at)
     values (v_uid, v_cell_r7, v_cell_r6, v_cell_r5, v_tz, now());
 
-    -- Half the neighbourhood gardens a catalog plant (per-plant cohorts), the
-    -- rest is site work — both cohorts have to be populated or the detail
-    -- screen answers for one and not the other.
-    v_plant_id := case when i % 2 = 0 then plants[1 + (i / 2) % array_length(plants, 1)] end;
+    -- The first n_site neighbours get NO plant subject, so their events land in
+    -- the '@site' cohort; the rest all garden cohort_plant. One plant, not five:
+    -- a cohort only publishes once it clears k_reliab on its own.
+    v_plant_id := case when i > n_site then cohort_plant end;
     if v_plant_id is not null then
       v_up_id := (id_prefix || lpad((1000 + i)::text, 12, '0'))::uuid;
       insert into public.user_plant (id, user_id, plant_id, is_custom, updated_at)
