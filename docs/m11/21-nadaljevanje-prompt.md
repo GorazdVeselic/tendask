@@ -1,3 +1,6 @@
+> **ZASTARELO — veljavna vstopna točka je `22-nadaljevanje-prompt.md`.** Paketa 1 in 2 iz §9
+> sta izvedena (`f3e4bd0`, `c7b7033`, `b837c5f`); ostane P10 → P11 → naprava.
+
 # M11 — predaja seje (triaža opravljena, test na napravi tekel, 12 novih najdb)
 
 > **Datum:** 2026-07-28 · veja `feat/m11-smart-engine` · **nič pushano, produkcija nedotaknjena**
