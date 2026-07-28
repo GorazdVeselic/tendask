@@ -4,7 +4,17 @@
 #
 #   powershell -ExecutionPolicy Bypass -File tool\adb_run.ps1
 #
-# tmp/steps.txt - one step per line, '#' starts a comment:
+# -Steps runs a saved scenario instead, for sequences repeated across a session
+# (sign-in, a threshold pass). -Vars fills {{NAME}} markers in it, so a scenario
+# that needs a fresh value each run - an OTP code - stays a file, not a rewrite:
+#
+#   ... -File tool\adb_run.ps1 -Steps tmp\scenarios\login_code.txt -Vars OTP=123456
+#
+# -Vars takes NAME=VALUE pairs, not a hashtable: powershell -File passes every
+# argument as a string, so a @{...} literal would arrive as the text
+# "System.Collections.Hashtable".
+#
+# steps file - one step per line, '#' starts a comment:
 #   taptext Nadaljuj         tap the element carrying this exact label (preferred)
 #   tap 540 1916             tap a point (only for unlabelled elements, e.g. FAB)
 #   text Bazilika            type into the focused field
@@ -12,6 +22,7 @@
 #   swipe 540 1700 540 700   drag
 #   wait 2                   pause, seconds
 #   dump                     print every visible label with its bounds
+#   shot 07_detail           save tmp/shots/07_detail.png (screencap)
 #   echo some text           print a marker into the report
 #
 # A failing taptext stops the run and says which label was missing - a silent
@@ -19,12 +30,32 @@
 #
 # Keep this file ASCII-only: PowerShell 5.1 reads .ps1 as ANSI, so a UTF-8 dash
 # would decode into a smart quote and break the parse.
+param(
+  [string]$Steps = '',
+  [string[]]$Vars = @()
+)
 $ErrorActionPreference = 'Stop'
+$varMap = @{}
+# Split on commas as well as across arguments: powershell -File binds every
+# argument as ONE string, so "-Vars A=1,B=2" arrives as a single element and
+# repeating -Vars is a binding error. Values therefore cannot contain a comma.
+foreach ($entry in $Vars) {
+  foreach ($pair in $entry.Split(',')) {
+    if (-not $pair) { continue }
+    $i = $pair.IndexOf('=')
+    if ($i -lt 1) { throw "Bad -Vars entry '$pair' - expected NAME=VALUE." }
+    $varMap[$pair.Substring(0, $i)] = $pair.Substring($i + 1)
+  }
+}
 $root = Split-Path -Parent $PSScriptRoot
-$stepsFile = Join-Path $root 'tmp\steps.txt'
+$stepsFile = if ($Steps) {
+  if ([System.IO.Path]::IsPathRooted($Steps)) { $Steps } else { Join-Path $root $Steps }
+} else {
+  Join-Path $root 'tmp\steps.txt'
+}
 $uiFile = Join-Path $root 'tmp\ui.xml'
 
-if (-not (Test-Path $stepsFile)) { throw "No tmp/steps.txt to run." }
+if (-not (Test-Path $stepsFile)) { throw "No steps file to run: $stepsFile" }
 
 function Get-UiNodes {
   # No 2>&1 on these: PowerShell 5.1 turns a native command's stderr into a
@@ -48,6 +79,10 @@ function Show-Screen {
 foreach ($line in Get-Content $stepsFile -Encoding UTF8) {
   $step = $line.Trim()
   if (-not $step -or $step.StartsWith('#')) { continue }
+  foreach ($k in $varMap.Keys) { $step = $step.Replace("{{$k}}", $varMap[$k]) }
+  # An unfilled marker would be typed verbatim into the app, and a wrong OTP
+  # fails three screens later - stop where the cause is still visible.
+  if ($step -match '\{\{(\w+)\}\}') { throw "Unfilled marker {{$($Matches[1])}} in $stepsFile" }
 
   $verb, $rest = $step -split '\s+', 2
   switch ($verb.ToLower()) {
@@ -108,6 +143,15 @@ foreach ($line in Get-Content $stepsFile -Encoding UTF8) {
       Write-Output "ok   wait $rest"
     }
     'echo' { Write-Output "--- $rest" }
+    'shot' {
+      $shotDir = Join-Path $root 'tmp\shots'
+      if (-not (Test-Path $shotDir)) { New-Item -ItemType Directory $shotDir | Out-Null }
+      $path = Join-Path $shotDir "$rest.png"
+      # cmd /c, not a PowerShell redirect: PS 5.1 pipes native output through a
+      # text encoder and corrupts the PNG.
+      cmd /c "adb exec-out screencap -p > `"$path`"" | Out-Null
+      Write-Output "ok   shot tmp/shots/$rest.png"
+    }
     'dump' {
       Write-Output "screen:"
       Show-Screen
