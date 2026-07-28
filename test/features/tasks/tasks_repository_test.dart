@@ -275,17 +275,19 @@ void main() {
   });
 
   group('agg_context snapshot', () {
-    Future<void> seedProfile({String? h3r7, String? bucket}) => db
-        .into(db.profiles)
-        .insert(
-          ProfilesCompanion.insert(
-            userId: userId,
-            h3R7: Value(h3r7),
-            h3R6: const Value('861f1d4ffffffff'),
-            climateBucket: Value(bucket),
-            updatedAt: t0,
-          ),
-        );
+    Future<void> seedProfile({String? h3r7, String? bucket, String? timezone}) =>
+        db
+            .into(db.profiles)
+            .insert(
+              ProfilesCompanion.insert(
+                userId: userId,
+                h3R7: Value(h3r7),
+                h3R6: const Value('861f1d4ffffffff'),
+                climateBucket: Value(bucket),
+                timezone: Value(timezone),
+                updatedAt: t0,
+              ),
+            );
 
     test('complete() freezes the profile buckets, write-once', () async {
       await seedProfile(h3r7: '871f1d4ffffffff', bucket: 'e1_t5');
@@ -313,6 +315,41 @@ void main() {
           .write(const ProfilesCompanion(climateBucket: Value('e9_t9')));
       await repo.complete(id);
       expect((await repo.byId(id))!.aggContext, done.aggContext);
+    });
+
+    test('freezes the timezone too — moving must not re-bin history', () async {
+      // N15: the cells were frozen but local_day was recomputed from the LIVE
+      // profile, so a move silently moved every past event to another day (and
+      // another ISO week of the season curve).
+      await seedProfile(h3r7: '871f1d4ffffffff', timezone: 'Europe/Ljubljana');
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        status: TaskStatus.done,
+      );
+
+      final context =
+          jsonDecode((await repo.byId(id))!.aggContext!) as Map<String, dynamic>;
+      expect(context['timezone'], 'Europe/Ljubljana');
+    });
+
+    test('omits the timezone when the profile has none, so it can still heal', () async {
+      // Deliberate: a task stamped before the profile had a timezone must keep
+      // reading the live one, or the N14 fix could never repair its local_day.
+      await seedProfile(h3r7: '871f1d4ffffffff');
+      final id = await repo.create(
+        userId: userId,
+        subjects: const [TaskSubjectSpec.area(areaId)],
+        taskTypeId: 'mow',
+        date: t0,
+        status: TaskStatus.done,
+      );
+
+      final context =
+          jsonDecode((await repo.byId(id))!.aggContext!) as Map<String, dynamic>;
+      expect(context.containsKey('timezone'), isFalse);
     });
 
     test('create() with status=done stamps the snapshot too', () async {

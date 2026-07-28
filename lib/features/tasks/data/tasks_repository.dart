@@ -567,6 +567,11 @@ class TasksRepository {
       'h3_r6': profile.h3R6,
       'h3_r5': profile.h3R5,
       'climate_bucket': profile.climateBucket,
+      // "When" is as historical as "where" (N15): without it, moving the garden
+      // re-bins agg_event.local_day for the WHOLE history. Absent when the
+      // profile has none yet, so those tasks keep reading the live profile and
+      // still heal retroactively once it is filled in.
+      'timezone': profile.timezone,
     }..removeWhere((_, v) => v == null);
     if (context.isEmpty) return;
     await (_db.update(_db.tasks)..where(

@@ -16,7 +16,7 @@ import 'core/config.dart';
 import 'core/database/database_provider.dart';
 import 'core/database/seed_service.dart';
 import 'core/local_prefs/local_prefs.dart';
-import 'core/location/location_repository.dart';
+import 'core/location/climate_refresh_service.dart';
 import 'core/notifications/fcm_handler.dart';
 import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
@@ -158,13 +158,16 @@ Future<void> _bootstrap() async {
   // listen, not read: an unlistened keepAlive provider rebuilds lazily, so the
   // auth-change re-run (sign-in after boot) would otherwise never fire.
   // Dark until launch (kSuggestionsEnabled): a token is pointless while nothing
-  // pushes; the silent climate refresh (M11.3) only feeds the engine, so skip it too.
+  // pushes.
   if (kSuggestionsEnabled) {
     container.listen(fcmTokenServiceProvider, (_, _) {});
-    unawaited(
-      container.read(locationRepositoryProvider).refreshClimateIfStale(userId),
-    );
   }
+
+  // Timezone + climate top-up. Deliberately NOT behind kSuggestionsEnabled: the
+  // timezone also bins agg_event.local_day and picks the engine_dispatch send
+  // window, so gating it on suggestions left every production profile without
+  // one (N14 → N1). listen, not read: it must re-run when a guest signs in.
+  container.listen(climateRefreshServiceProvider, (_, _) {});
 
   // Local notifications (M8): init the plugin (timezone + plugin), needed to
   // resolve a cold-start deep-link below. The permission prompt stays deferred to
