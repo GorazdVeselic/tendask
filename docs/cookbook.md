@@ -105,6 +105,7 @@ Staging je **on-demand** — če je stack dol, API ne dela.
 | aplikacija pending migracij | `supabase db push` |
 | verifikacija ledgerja | `supabase migration list --linked` |
 | dejanska shema (ne le ledger) | read-only Python sonda v `tmp/probe_*.py` (psycopg, geslo iz `.env`) |
+| kje so uporabniki (H3 → zemljevid) | `python tool/geo_user_map.py` → `tmp/geo/map.html`; pravila: `docs/analitika-geo.md` |
 
 - **Na produkciji ničesar ne brišemo** — niti kot predlog. Skripte proti prod so **read-only sonde**.
 - Vrstni red: napiši migracijo → staging (`tendask migrate`) → test → potrditev → `db push` → verifikacija.
