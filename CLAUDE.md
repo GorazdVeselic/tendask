@@ -172,6 +172,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 ## Stvari, ki jih VEDNO delam
 
 - Pred edit-om: preberem file.
+- **Pred ad-hoc ukazom (psql, adb, wsl, deploy, seed, migracija): pogledam `docs/cookbook.md`** in uporabim točno tisto pot — brez improvizacije. Če recept pade, popravim vrstico (ne dodam druge variante); nov recept vpišem šele, ko je enkrat delal.
 - Pred implementacijo feature-a: pogledam pripadajočo sekcijo v `docs/koncept.md` / `docs/tech-stack.md` + ustrezni wireframe, ne ugibam.
 - Pred spremembo sheme: preverim §7.14 koncepta in poskrbim, da drift + Supabase ostaneta zrcalna.
 - Pred dodajanjem zaslona: preverim ustrezni `docs/wireframes/*`; če odstopam, najprej posodobim wireframe + koncept.
