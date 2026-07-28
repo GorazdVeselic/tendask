@@ -71,14 +71,15 @@ na kateri drevo visi (**N12**). **#13 je najhujši** — njegov pogoj se je ures
 | **N21** | Frekvenca izpiše `2–2×`, ko sta kvartila enaka | P10 |
 | **N16** | Seed je izbiral celico po izenačenju | ✅ `bdf3384` |
 
-## 5 · Odprte odločitve — zdaj s podatki
+## 5 · Odločitve — vse sprejete 2026-07-28
 
-- **O4 (»suho okno«, blokira P10).** Zdaj je vidno: motor je poslal `dry_window: true, dry_hours: 48`,
-  kartica pa je izpisala samo »Greda 1: zamuda približno 23 dni (običajni ritem ~7 dni)«. Torej
-  parameter res **ne pride nikamor** (N4). Priporočilo ostaja **(c)**: R1 ostane ojačevalec, mrtvi
-  ključ `suggestions.weather.window_open` ven, kartica dobi pripono, ko je `dry_window` postavljen.
-- **O5** (`plant_task_rule` na klientu, blokira P11) — nespremenjeno; brez bralca ven.
-- **O6** (`suggestions.community.most_started`) — nespremenjeno, priporočilo **(a) opisno**.
+| # | Sprejeto | Kaj naredi |
+|---|---|---|
+| **O4** | R1 ostane **ojačevalec** | mrtvi ključ `suggestions.weather.window_open` ven; kartica dobi **pripono**, ko motor postavi `dry_window` (že ga pošilja — N4). Popravi `03 §R1` + `00-pregled-za-laika.md`. |
+| **O5** | `plant_task_rule` **s klienta ven** | seed + catalog-sync pot + drift tabela. Vrne se z bralcem in testom, če bo offline motor. |
+| **O6** | **opisno** | »Večina vrtnarjev v tvoji okolici je to letos že začela.« Brez odstotka; anti-steering varovalo razširi na `suggestions.community.*`. |
+
+**P10 in P11 s tem nista več blokirana.**
 
 ## 6 · Kako testirati na napravi (naučeno v tej seji)
 
