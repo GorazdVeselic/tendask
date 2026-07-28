@@ -702,29 +702,29 @@ final class MySeasonsProvider
 
 String _$mySeasonsHash() => r'066d6d2784fb97ed8a8217286f8b94652121c5f5';
 
-/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
-/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// The "Where you stand" list plus, when it is empty, which of the three causes
+/// applies. Cohorts the neighbourhood cannot answer for are left out.
 /// One request per resolution level, not one per cohort (§12.4).
 
 @ProviderFor(communityStandings)
 final communityStandingsProvider = CommunityStandingsProvider._();
 
-/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
-/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// The "Where you stand" list plus, when it is empty, which of the three causes
+/// applies. Cohorts the neighbourhood cannot answer for are left out.
 /// One request per resolution level, not one per cohort (§12.4).
 
 final class CommunityStandingsProvider
     extends
         $FunctionalProvider<
-          AsyncValue<List<CommunityStanding>>,
-          List<CommunityStanding>,
-          FutureOr<List<CommunityStanding>>
+          AsyncValue<({StandingsGap? gap, List<CommunityStanding> rows})>,
+          ({StandingsGap? gap, List<CommunityStanding> rows}),
+          FutureOr<({StandingsGap? gap, List<CommunityStanding> rows})>
         >
     with
-        $FutureModifier<List<CommunityStanding>>,
-        $FutureProvider<List<CommunityStanding>> {
-  /// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
-  /// left out, so an empty list is the honest "not enough gardeners yet" state.
+        $FutureModifier<({StandingsGap? gap, List<CommunityStanding> rows})>,
+        $FutureProvider<({StandingsGap? gap, List<CommunityStanding> rows})> {
+  /// The "Where you stand" list plus, when it is empty, which of the three causes
+  /// applies. Cohorts the neighbourhood cannot answer for are left out.
   /// One request per resolution level, not one per cohort (§12.4).
   CommunityStandingsProvider._()
     : super(
@@ -742,15 +742,16 @@ final class CommunityStandingsProvider
 
   @$internal
   @override
-  $FutureProviderElement<List<CommunityStanding>> $createElement(
-    $ProviderPointer pointer,
-  ) => $FutureProviderElement(pointer);
+  $FutureProviderElement<({StandingsGap? gap, List<CommunityStanding> rows})>
+  $createElement($ProviderPointer pointer) => $FutureProviderElement(pointer);
 
   @override
-  FutureOr<List<CommunityStanding>> create(Ref ref) {
+  FutureOr<({StandingsGap? gap, List<CommunityStanding> rows})> create(
+    Ref ref,
+  ) {
     return communityStandings(ref);
   }
 }
 
 String _$communityStandingsHash() =>
-    r'da1169842b84d4a61a548dafe3c4e3fbf26ec346';
+    r'a455e0740c6c36464d1b2281d1a25832a0453e4b';

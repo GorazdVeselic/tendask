@@ -91,8 +91,12 @@ Suggestion _suggestion(String id, String messageKey, String params) => Suggestio
 /// sentences their longest (a named subject, a date, a low-supply nudge).
 List<Override> _suggestionOverrides() {
   final rows = [
-    _suggestion('s1', 'suggestions.season.window_open',
-        '{"subject_label_key":"tomato","suggested_date":"2026-06-20","window_end_date":"2026-07-15"}'),
+    // A real key: 'suggestions.season.window_open' never existed, so this card
+    // rendered a bare fallback title and the matrix measured nothing (N26).
+    _suggestion('s1', 'suggestions.vegetable.plant_out',
+        '{"subject_label_key":"tomato","suggested_date":"2026-06-20",'
+        '"window_end_date":"2026-07-15","frost_date":"2026-05-15",'
+        '"dry_window":true,"dry_hours":30}'),
     _suggestion('s2', 'suggestions.cadence.overdue',
         '{"subject_label_raw":"Babičina vrtnica","days_overdue":21,"cadence_days":14,'
         '"suggested_date":"2026-06-20","low_supply":true,"supply_name":"Kompost"}'),

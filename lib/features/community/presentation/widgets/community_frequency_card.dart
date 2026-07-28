@@ -44,10 +44,7 @@ class CommunityFrequencyCard extends StatelessWidget {
             const SizedBox(height: 6),
             if (stats.nUsers >= kCommunityReliabilityMin) ...[
               Text(
-                t.community.detail.freq_range(
-                  from: _round(stats.p25),
-                  to: _round(stats.p75),
-                ),
+                _range(t, _round(stats.p25), _round(stats.p75)),
                 style: theme.textTheme.headlineSmall?.copyWith(
                   fontWeight: FontWeight.w700,
                 ),
@@ -77,8 +74,7 @@ class CommunityFrequencyCard extends StatelessWidget {
               const SizedBox(height: 8),
               CommunityBars(
                 values: [
-                  for (final band in bands)
-                    (stats.hist[band] ?? 0).toDouble(),
+                  for (final band in bands) (stats.hist[band] ?? 0).toDouble(),
                 ],
                 meIndex: _myIndex(bands),
                 // Every band is labelled: with only the ends, the bar the
@@ -110,4 +106,11 @@ class CommunityFrequencyCard extends StatelessWidget {
   /// Quartiles arrive as reals (percentile_cont interpolates); a gardener reads
   /// "2–4×", not "2.25–3.75×".
   String _round(double value) => value.round().toString();
+
+  /// A range whose ends are equal is not a range — and this is the settled
+  /// habit, not the exception: when everyone does it equally often, p25 and p75
+  /// land on the same number and the card printed "2–2×" (najdba N21).
+  String _range(Translations t, String from, String to) => from == to
+      ? t.community.detail.freq_single(count: from)
+      : t.community.detail.freq_range(from: from, to: to);
 }

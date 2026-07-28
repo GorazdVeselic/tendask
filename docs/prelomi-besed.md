@@ -75,6 +75,7 @@ uporabnika.
 | `notifications` | `dogodku` | sl | 320 | ×1.3 |
 | `settings` | `Benachrichtigungen` | de | 320/360 | ×1.0/1.3 |
 | `settings` | `Slovenščina` | de/en/sl | 320/360/411 | ×1.0/1.3 |
+| `suggestions/history` | `Auspflanzen` | de | 320 | ×1.3 |
 | `task-detail` | `Wiederholung` | de | 320/360/411 | ×1.3 |
 | `tasks` | `Gießen` | de | 320/360 | ×1.0/1.3 |
 | `tasks` | `Watering` | en | 320/360 | ×1.0/1.3 |
@@ -90,6 +91,9 @@ uporabnika.
 3. **`areas`, `notifications`, `note-form`, `task-detail`** — samo ×1.3.
 4. **`nav (five tabs)`** — ni v produkciji (flag-dark), zato **ni** del tega bremena, ampak
    **pogoj za prižig** `kCommunityEnabled` (gl. `docs/deploy-runbook.md`).
+5. **`suggestions/history`** — enako: flag-dark (`kSuggestionsEnabled`), zato pogoj za prižig, ne
+   breme. Dodano 2026-07-28, ko je matrika nehala hraniti pas z **neobstoječim** `message_key`-em
+   (`suggestions.season.window_open`) in je začela izrisovati resnične naslove pravil — najdba N26.
 
 ## 4 · Vzorci popravkov
 

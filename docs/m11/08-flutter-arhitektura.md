@@ -244,8 +244,9 @@ const bool hasPlus = kDevPlusStub;   // TODO(FR-20): zamenjaj z licenseProvider 
   `suggestions.actions.plan/.dismiss/.already_done/.never/.remove_subject`,
   `suggestions.toast.planned/.logged`, `suggestions.history_status.*`,
   `suggestions.disclaimer`,
-  `suggestions.weather.window_open`, `suggestions.history.anniversary`,
-  `suggestions.cadence.overdue`, `suggestions.community.most_started`.
+  `suggestions.history.anniversary`, `suggestions.cadence.overdue`,
+  `suggestions.community.most_started`, `suggestions.dry_window` (pripona R1 —
+  ne kartica; `suggestions.weather.window_open` je bil odstranjen z O4).
 - `community.*` — landing/detajl/tease/empty state.
 - Po dodajanju: `dart run slang` (ločen CLI!).
 

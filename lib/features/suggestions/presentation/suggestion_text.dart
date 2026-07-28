@@ -40,15 +40,31 @@ Map<String, String> suggestionDisplayParams(
 }
 
 /// Fills `{placeholder}` markers in a localized suggestion template with display
-/// values. A missing key collapses to empty — the engine omits optional params
-/// (e.g. `frost_date` only for frost rules), and the template tolerates that.
+/// values.
+///
+/// A clause the engine may or may not be able to fill is wrapped in `[...]` and
+/// drops out whole when a marker inside it has no value. Collapsing the marker
+/// alone left the frost templates ending in "— okoli ." whenever the rule had
+/// no frost anchor (najdba N20); the sentence has to lose the clause, not just
+/// the date. Outside brackets a missing marker still collapses to empty.
 ///
 /// Markers are deliberately `{...}`, not slang params: slang's dart
 /// interpolation leaves `{...}` untouched, so the message catalog stays a plain
 /// string and the client does pure substitution from `message_params`. The
 /// client never computes message content (docs/m11/03 §Sporočila).
-String fillTemplate(String template, Map<String, String> values) => template
-    .replaceAllMapped(RegExp(r'\{(\w+)\}'), (m) => values[m.group(1)] ?? '');
+String fillTemplate(String template, Map<String, String> values) {
+  final resolved = template.replaceAllMapped(_clause, (m) {
+    final clause = m.group(1)!;
+    final filled = _marker
+        .allMatches(clause)
+        .every((k) => (values[k.group(1)] ?? '').isNotEmpty);
+    return filled ? clause : '';
+  });
+  return resolved.replaceAllMapped(_marker, (m) => values[m.group(1)] ?? '');
+}
+
+final _marker = RegExp(r'\{(\w+)\}');
+final _clause = RegExp(r'\[([^\[\]]*)\]');
 
 /// Looks up a localized template by its dynamic message_key (flat slang access)
 /// and fills its markers; null when the key is missing (caller falls back).

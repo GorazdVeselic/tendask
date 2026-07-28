@@ -301,11 +301,17 @@ class Translations$notif_settings$en {
 	/// en: 'soon · via server'
 	String get type_weather_sub => 'soon · via server';
 
+	/// en: 'via server · needs internet'
+	String get type_weather_sub_live => 'via server · needs internet';
+
 	/// en: 'Nearby hints'
 	String get type_community => 'Nearby hints';
 
 	/// en: 'soon (V2)'
 	String get type_community_sub => 'soon (V2)';
+
+	/// en: 'via server · what your area is doing'
+	String get type_community_sub_live => 'via server · what your area is doing';
 
 	/// en: 'Default reminder offset'
 	String get section_default_offset => 'Default reminder offset';
@@ -462,6 +468,9 @@ class Translations$onboarding$en {
 
 	/// en: 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.'
 	String get nearby_body => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.';
+
+	/// en: 'See what gardeners in a similar climate near you are doing — anonymous and private.'
+	String get nearby_body_live => 'See what gardeners in a similar climate near you are doing — anonymous and private.';
 }
 
 // Path: auth
@@ -606,6 +615,9 @@ class Translations$location$en {
 
 	/// en: 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.'
 	String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
+
+	/// en: 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.'
+	String get why_live => 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.';
 
 	/// en: 'Use my location'
 	String get use_gps => 'Use my location';
@@ -2068,9 +2080,11 @@ class Translations$suggestions$en {
 	/// en: 'Suggestions older than a year are cleared automatically.'
 	String get past_retention => 'Suggestions older than a year are cleared automatically.';
 
+	/// en: 'Dry window[ (~{dry_hours} h)] — a good time.'
+	String get dry_window => 'Dry window[ (~{dry_hours} h)] — a good time.';
+
 	late final Translations$suggestions$cadence$en cadence = Translations$suggestions$cadence$en.internal(_root);
 	late final Translations$suggestions$history$en history = Translations$suggestions$history$en.internal(_root);
-	late final Translations$suggestions$weather$en weather = Translations$suggestions$weather$en.internal(_root);
 	late final Translations$suggestions$community$en community = Translations$suggestions$community$en.internal(_root);
 	late final Translations$suggestions$lawn$en lawn = Translations$suggestions$lawn$en.internal(_root);
 	late final Translations$suggestions$fruit_tree$en fruit_tree = Translations$suggestions$fruit_tree$en.internal(_root);
@@ -2126,6 +2140,12 @@ class Translations$community$en {
 
 	/// en: 'No task yet has enough gardeners nearby to compare with.'
 	String get empty_standing => 'No task yet has enough gardeners nearby to compare with.';
+
+	/// en: 'Nothing logged this season yet. Log a seasonal task — pruning, fertilising, sowing — and this will show where you stand against your area.'
+	String get empty_standing_no_history => 'Nothing logged this season yet. Log a seasonal task — pruning, fertilising, sowing — and this will show where you stand against your area.';
+
+	/// en: 'This season's tasks (watering, for example) are not seasonal, so their timing is not compared. Log a seasonal task such as pruning or fertilising.'
+	String get empty_standing_no_seasonal => 'This season\'s tasks (watering, for example) are not seasonal, so their timing is not compared. Log a seasonal task such as pruning or fertilising.';
 
 	/// en: 'No neighbourhood data on this device yet.'
 	String get empty_offline => 'No neighbourhood data on this device yet.';
@@ -2262,16 +2282,6 @@ class Translations$suggestions$history$en {
 
 	// Translations
 	late final Translations$suggestions$history$anniversary$en anniversary = Translations$suggestions$history$anniversary$en.internal(_root);
-}
-
-// Path: suggestions.weather
-class Translations$suggestions$weather$en {
-	Translations$suggestions$weather$en.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-	late final Translations$suggestions$weather$window_open$en window_open = Translations$suggestions$weather$window_open$en.internal(_root);
 }
 
 // Path: suggestions.community
@@ -2600,8 +2610,8 @@ class Translations$community$detail$en {
 	/// en: 'By $date ~$percent % had started.'
 	String by_date_percent({required Object date, required Object percent}) => 'By ${date} ~${percent} % had started.';
 
-	/// en: 'Most start between $from and $to.'
-	String peak_weeks({required Object from, required Object to}) => 'Most start between ${from} and ${to}.';
+	/// en: 'Most start between $from and $to'
+	String peak_weeks({required Object from, required Object to}) => 'Most start between ${from} and ${to}';
 
 	/// en: 'First season: only people who have already started this year are counted, so the share keeps moving.'
 	String get censored_note => 'First season: only people who have already started this year are counted, so the share keeps moving.';
@@ -2617,6 +2627,9 @@ class Translations$community$detail$en {
 
 	/// en: '$from–$to×'
 	String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+
+	/// en: '$count×'
+	String freq_single({required Object count}) => '${count}×';
 
 	/// en: 'per season'
 	String get freq_unit => 'per season';
@@ -2681,21 +2694,6 @@ class Translations$suggestions$history$anniversary$en {
 
 	/// en: 'Last year around {last_year_date} — {task} for {subject}. Worth repeating?'
 	String get body => 'Last year around {last_year_date} — {task} for {subject}. Worth repeating?';
-}
-
-// Path: suggestions.weather.window_open
-class Translations$suggestions$weather$window_open$en {
-	Translations$suggestions$weather$window_open$en.internal(this._root);
-
-	final Translations _root; // ignore: unused_field
-
-	// Translations
-
-	/// en: '{task}: good window'
-	String get title => '{task}: good window';
-
-	/// en: 'A dry spell is on the way for {subject} — a good time to do it.'
-	String get body => 'A dry spell is on the way for {subject} — a good time to do it.';
 }
 
 // Path: suggestions.community.most_started
@@ -3144,8 +3142,8 @@ class Translations$suggestions$vegetable$plant_out$en {
 	/// en: 'Plant out'
 	String get title => 'Plant out';
 
-	/// en: 'Plant {subject} outside once frost has passed — around {frost_date}.'
-	String get body => 'Plant {subject} outside once frost has passed — around {frost_date}.';
+	/// en: 'Plant {subject} outside once frost has passed[ — around {frost_date}].'
+	String get body => 'Plant {subject} outside once frost has passed[ — around {frost_date}].';
 }
 
 // Path: suggestions.vegetable.transplant
@@ -3159,8 +3157,8 @@ class Translations$suggestions$vegetable$transplant$en {
 	/// en: 'Transplant'
 	String get title => 'Transplant';
 
-	/// en: 'Move {subject} to its final spot after frost — around {frost_date}.'
-	String get body => 'Move {subject} to its final spot after frost — around {frost_date}.';
+	/// en: 'Move {subject} to its final spot after frost[ — around {frost_date}].'
+	String get body => 'Move {subject} to its final spot after frost[ — around {frost_date}].';
 }
 
 // Path: suggestions.vegetable.sow_direct
@@ -3249,8 +3247,8 @@ class Translations$suggestions$herbs$plant_out$en {
 	/// en: 'Plant out'
 	String get title => 'Plant out';
 
-	/// en: 'Plant {subject} outside once frost has passed — around {frost_date}.'
-	String get body => 'Plant {subject} outside once frost has passed — around {frost_date}.';
+	/// en: 'Plant {subject} outside once frost has passed[ — around {frost_date}].'
+	String get body => 'Plant {subject} outside once frost has passed[ — around {frost_date}].';
 }
 
 // Path: suggestions.tomato.start_seedlings
@@ -3609,8 +3607,8 @@ class Translations$suggestions$cucumber$sow_direct$en {
 	/// en: 'Direct sow'
 	String get title => 'Direct sow';
 
-	/// en: 'Sow {subject} outdoors once it is warm and frost-free — around {frost_date}.'
-	String get body => 'Sow {subject} outdoors once it is warm and frost-free — around {frost_date}.';
+	/// en: 'Sow {subject} outdoors once it is warm and frost-free[ — around {frost_date}].'
+	String get body => 'Sow {subject} outdoors once it is warm and frost-free[ — around {frost_date}].';
 }
 
 // Path: suggestions.zucchini.sow_direct
@@ -3624,8 +3622,8 @@ class Translations$suggestions$zucchini$sow_direct$en {
 	/// en: 'Direct sow'
 	String get title => 'Direct sow';
 
-	/// en: 'Sow {subject} outdoors after frost — around {frost_date}.'
-	String get body => 'Sow {subject} outdoors after frost — around {frost_date}.';
+	/// en: 'Sow {subject} outdoors after frost[ — around {frost_date}].'
+	String get body => 'Sow {subject} outdoors after frost[ — around {frost_date}].';
 }
 
 // Path: community.standing.band
@@ -3769,8 +3767,10 @@ extension on Translations {
 			'notif_settings.type_journal_nudge_sub' => 'local · a gentle nudge if you go quiet',
 			'notif_settings.type_weather' => 'Smart hints (weather)',
 			'notif_settings.type_weather_sub' => 'soon · via server',
+			'notif_settings.type_weather_sub_live' => 'via server · needs internet',
 			'notif_settings.type_community' => 'Nearby hints',
 			'notif_settings.type_community_sub' => 'soon (V2)',
+			'notif_settings.type_community_sub_live' => 'via server · what your area is doing',
 			'notif_settings.section_default_offset' => 'Default reminder offset',
 			'notif_settings.default_offset_hint' => 'Prefills new tasks; you can always change it.',
 			'notif_settings.section_quiet' => 'So you\'re not overwhelmed',
@@ -3814,6 +3814,7 @@ extension on Translations {
 			'onboarding.remind_body' => 'Plan tasks, get a reminder on your phone and a weather hint — "dry tomorrow morning, a good time to spray".',
 			'onboarding.nearby_title' => 'Your area',
 			'onboarding.nearby_body' => 'Later: see what gardeners in a similar climate near you are doing — anonymous and private.',
+			'onboarding.nearby_body_live' => 'See what gardeners in a similar climate near you are doing — anonymous and private.',
 			'auth.title' => 'Welcome to Tendask',
 			'auth.value_prop' => 'Save your garden journal and don\'t lose your history when you change phones.',
 			'auth.continue_apple' => 'Continue with Apple',
@@ -3850,6 +3851,7 @@ extension on Translations {
 			'email_login.skip_for_now' => 'Continue without signing in',
 			'location.title' => 'Where do you garden?',
 			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
+			'location.why_live' => 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.',
 			'location.use_gps' => 'Use my location',
 			'location.enter_place' => 'Enter a place',
 			'location.or' => 'or',
@@ -4231,12 +4233,12 @@ extension on Translations {
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
 			'weather.loading' => 'Loading weather…',
+			_ => null,
+		} ?? switch (path) {
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			'weather.m_humidity' => 'Humidity',
 			'weather.m_wind' => 'Wind',
 			'weather.m_precipitation' => 'Precipitation',
-			_ => null,
-		} ?? switch (path) {
 			'weather.m_soil_temp' => 'Soil temp.',
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Rain 48 h',
@@ -4299,12 +4301,11 @@ extension on Translations {
 			'suggestions.past_intro' => 'What Tendask suggested and how you responded.',
 			'suggestions.past_empty' => 'No history yet. When you respond to a suggestion — plan it, skip it or log it as done — it appears here.',
 			'suggestions.past_retention' => 'Suggestions older than a year are cleared automatically.',
+			'suggestions.dry_window' => 'Dry window[ (~{dry_hours} h)] — a good time.',
 			'suggestions.cadence.overdue.title' => '{task} is due',
 			'suggestions.cadence.overdue.body' => '{subject} is about {days_overdue} days past the usual ~{cadence_days}-day rhythm.',
 			'suggestions.history.anniversary.title' => '{task} — a year ago',
 			'suggestions.history.anniversary.body' => 'Last year around {last_year_date} — {task} for {subject}. Worth repeating?',
-			'suggestions.weather.window_open.title' => '{task}: good window',
-			'suggestions.weather.window_open.body' => 'A dry spell is on the way for {subject} — a good time to do it.',
 			'suggestions.community.most_started.title' => '{task} nearby',
 			'suggestions.community.most_started.body' => 'Most gardeners near you have already started this this season.',
 			'suggestions.lawn.mow_due.title' => 'Mowing due',
@@ -4364,9 +4365,9 @@ extension on Translations {
 			'suggestions.vegetable.harden_off.title' => 'Harden off',
 			'suggestions.vegetable.harden_off.body' => 'Acclimatise {subject} outdoors before planting out — window open until ~{window_end_date}.',
 			'suggestions.vegetable.plant_out.title' => 'Plant out',
-			'suggestions.vegetable.plant_out.body' => 'Plant {subject} outside once frost has passed — around {frost_date}.',
+			'suggestions.vegetable.plant_out.body' => 'Plant {subject} outside once frost has passed[ — around {frost_date}].',
 			'suggestions.vegetable.transplant.title' => 'Transplant',
-			'suggestions.vegetable.transplant.body' => 'Move {subject} to its final spot after frost — around {frost_date}.',
+			'suggestions.vegetable.transplant.body' => 'Move {subject} to its final spot after frost[ — around {frost_date}].',
 			'suggestions.vegetable.sow_direct.title' => 'Direct sow',
 			'suggestions.vegetable.sow_direct.body' => 'Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Feed',
@@ -4378,7 +4379,7 @@ extension on Translations {
 			'suggestions.herbs.sow_direct.title' => 'Direct sow',
 			'suggestions.herbs.sow_direct.body' => 'Sow {subject} directly outdoors once it turns mild — window open until ~{window_end_date}.',
 			'suggestions.herbs.plant_out.title' => 'Plant out',
-			'suggestions.herbs.plant_out.body' => 'Plant {subject} outside once frost has passed — around {frost_date}.',
+			'suggestions.herbs.plant_out.body' => 'Plant {subject} outside once frost has passed[ — around {frost_date}].',
 			'suggestions.tomato.start_seedlings.title' => 'Start seedlings',
 			'suggestions.tomato.start_seedlings.body' => 'Sow {subject} indoors for a head start — by about {window_end_date}.',
 			'suggestions.tomato.prick_out.title' => 'Prick out',
@@ -4426,9 +4427,9 @@ extension on Translations {
 			'suggestions.rose.overwinter.title' => 'Winter protection',
 			'suggestions.rose.overwinter.body' => 'Mound or wrap {subject} before hard frost — by about {window_end_date}.',
 			'suggestions.cucumber.sow_direct.title' => 'Direct sow',
-			'suggestions.cucumber.sow_direct.body' => 'Sow {subject} outdoors once it is warm and frost-free — around {frost_date}.',
+			'suggestions.cucumber.sow_direct.body' => 'Sow {subject} outdoors once it is warm and frost-free[ — around {frost_date}].',
 			'suggestions.zucchini.sow_direct.title' => 'Direct sow',
-			'suggestions.zucchini.sow_direct.body' => 'Sow {subject} outdoors after frost — around {frost_date}.',
+			'suggestions.zucchini.sow_direct.body' => 'Sow {subject} outdoors after frost[ — around {frost_date}].',
 			'community.title' => 'Nearby',
 			'community.seg_week' => 'This week',
 			'community.seg_you' => 'Where you stand',
@@ -4441,6 +4442,8 @@ extension on Translations {
 			'community.intensity.rare' => 'rarely',
 			'community.empty_feed' => 'Not enough gardeners nearby yet. This fills in as more people log their tasks.',
 			'community.empty_standing' => 'No task yet has enough gardeners nearby to compare with.',
+			'community.empty_standing_no_history' => 'Nothing logged this season yet. Log a seasonal task — pruning, fertilising, sowing — and this will show where you stand against your area.',
+			'community.empty_standing_no_seasonal' => 'This season\'s tasks (watering, for example) are not seasonal, so their timing is not compared. Log a seasonal task such as pruning or fertilising.',
 			'community.empty_offline' => 'No neighbourhood data on this device yet.',
 			'community.data_from' => ({required Object date}) => 'Data from ${date}',
 			'community.privacy_note' => 'Anonymous, at least 5 gardeners. Your exact location is never shared.',
@@ -4460,11 +4463,12 @@ extension on Translations {
 			'community.detail.not_started' => 'You haven\'t done this yet this season',
 			'community.detail.by_now_percent' => ({required Object percent}) => 'By now ~${percent} % have started.',
 			'community.detail.by_date_percent' => ({required Object date, required Object percent}) => 'By ${date} ~${percent} % had started.',
-			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Most start between ${from} and ${to}.',
+			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Most start between ${from} and ${to}',
 			'community.detail.censored_note' => 'First season: only people who have already started this year are counted, so the share keeps moving.',
 			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('en'))(n, one: 'among ~1 gardener', other: 'among ~${n} gardeners', ), 
 			'community.detail.frequency_title' => 'How often',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_single' => ({required Object count}) => '${count}×',
 			'community.detail.freq_unit' => 'per season',
 			'community.detail.freq_low_n' => 'Too few gardeners for a typical range yet.',
 			'community.detail.freq_caption' => 'how many gardeners do it N times',

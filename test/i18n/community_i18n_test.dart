@@ -10,6 +10,10 @@ import 'package:flutter_test/flutter_test.dart';
 /// 2. Anti-steering (FR-20 §3.1): Plus is bought outside the app, so no string
 ///    here may carry a price, a link or a call to buy/try. Breaking this risks
 ///    the Play listing, not just the wording.
+///
+/// The anti-steering check covers `suggestions.community.*` too (O6): those
+/// strings ride the free Home band, far from the "never tells you what to do"
+/// explainer, which makes them the easiest place to slip a nudge back in.
 void main() {
   Map<String, dynamic> load(String locale) =>
       jsonDecode(File('lib/i18n/$locale.i18n.json').readAsStringSync())
@@ -34,6 +38,20 @@ void main() {
       l: flatten(load(l)['community'] as Map<String, dynamic>),
   };
 
+  /// Everything the anti-steering rule covers: the Okolica screens plus the
+  /// engine's community message, which lands on the free Home band.
+  final steerable = {
+    for (final l in ['en', 'sl', 'de'])
+      l: {
+        ...community[l]!,
+        ...flatten(
+          (load(l)['suggestions'] as Map<String, dynamic>)['community']
+              as Map<String, dynamic>,
+          'suggestions.community',
+        ),
+      },
+  };
+
   test('every community key is translated in sl and de', () {
     for (final locale in ['sl', 'de']) {
       final missing = community['en']!.keys
@@ -44,6 +62,23 @@ void main() {
     // Slovene needs the two/few forms its plural resolver selects.
     expect(community['sl']!.keys, contains('population(n).two'));
     expect(community['sl']!.keys, contains('population(n).few'));
+  });
+
+  test('the free band states no share of the neighbourhood', () {
+    // O6: a percentage without its sample size and first-season caveat is a
+    // number with no denominator (§7.7), and both of those live on the Plus
+    // detail screen. P4 took this framing off the paid cards; the free band
+    // must not bring it back through the side door.
+    for (final locale in ['en', 'sl', 'de']) {
+      steerable[locale]!.forEach((key, value) {
+        if (!key.startsWith('suggestions.community.')) return;
+        expect(
+          value.contains('%') || value.contains('{percent}'),
+          isFalse,
+          reason: '$locale $key names a share: $value',
+        );
+      });
+    }
   });
 
   test('the nav label exists in every locale', () {
@@ -91,7 +126,7 @@ void main() {
     ];
     final wordPattern = RegExp(r'\b(' + words.join('|') + r')', unicode: true);
 
-    community.forEach((locale, strings) {
+    steerable.forEach((locale, strings) {
       strings.forEach((key, value) {
         final text = value.toLowerCase();
         for (final symbol in symbols) {

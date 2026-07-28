@@ -148,24 +148,59 @@ Stream<Map<(String, String), MySeason>> mySeasons(Ref ref) {
   return ref.watch(communityRepositoryProvider).watchMySeasons();
 }
 
-/// The "Where you stand" list. Cohorts the neighbourhood cannot answer for are
-/// left out, so an empty list is the honest "not enough gardeners yet" state.
+/// Why "Where you stand" has no rows. Only [thinNeighbourhood] is a claim about
+/// other gardeners; making it when the gap is in my own history was measurably
+/// false — 40 neighbours and three watered plants still read "not enough
+/// gardeners nearby" (najdba N17).
+enum StandingsGap {
+  /// Nothing logged this season at all.
+  noHistory,
+
+  /// Logged work, but none of it seasonal. A timing percentile on watering
+  /// would measure when the gardener joined, not how they garden (§7.5).
+  noSeasonalHistory,
+
+  /// Seasonal history exists; no cohort of mine cleared the privacy threshold.
+  thinNeighbourhood,
+}
+
+/// The "Where you stand" list plus, when it is empty, which of the three causes
+/// applies. Cohorts the neighbourhood cannot answer for are left out.
 /// One request per resolution level, not one per cohort (§12.4).
 @riverpod
-Future<List<CommunityStanding>> communityStandings(Ref ref) async {
+Future<({List<CommunityStanding> rows, StandingsGap? gap})> communityStandings(
+  Ref ref,
+) async {
   final mine = await ref.watch(mySeasonsProvider.future);
-  final buckets = await ref.watch(communityBucketsProvider.future);
-  if (mine.isEmpty || buckets.isEmpty) return const [];
+  if (mine.isEmpty) {
+    return (rows: const <CommunityStanding>[], gap: StandingsGap.noHistory);
+  }
   final types = await ref.watch(taskTypesMapProvider.future);
   final pairs = [
     for (final pair in mine.keys)
       if (types[pair.$1]?.seasonal ?? false) pair,
   ];
-  if (pairs.isEmpty) return const [];
+  if (pairs.isEmpty) {
+    return (
+      rows: const <CommunityStanding>[],
+      gap: StandingsGap.noSeasonalHistory,
+    );
+  }
+  final buckets = await ref.watch(communityBucketsProvider.future);
+  if (buckets.isEmpty) {
+    return (
+      rows: const <CommunityStanding>[],
+      gap: StandingsGap.thinNeighbourhood,
+    );
+  }
   final curves = await ref
       .watch(communityRepositoryProvider)
       .seasonCurves(buckets: buckets, pairs: pairs);
-  return buildStandings(mine, curves);
+  final rows = buildStandings(mine, curves);
+  return (
+    rows: rows,
+    gap: rows.isEmpty ? StandingsGap.thinNeighbourhood : null,
+  );
 }
 
 /// A time percentile only means something for a seasonal act (§7.5): "when in

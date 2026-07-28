@@ -1,5 +1,8 @@
 # M11 — predaja seje (Paketa 1 in 2 zaključena, na vrsti P10)
 
+> ⚠️ **ZASTARELO od 2026-07-28.** Paket 3 (§4 tega dokumenta) je narejen.
+> Veljavna vstopna točka je **`23-nadaljevanje-prompt.md`**.
+
 > **Datum:** 2026-07-28 · veja `feat/m11-smart-engine` · **nič pushano, produkcija nedotaknjena**
 > **Vstopna točka za novo sejo.** `18-`, `20-` in `21-nadaljevanje-prompt.md` so zastareli.
 > Beri tega, nato `19-najdbe-med-izvedbo.md` (pregled na vrhu) in `17-plan-popravkov.md` §3.

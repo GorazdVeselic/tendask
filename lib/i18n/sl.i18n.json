@@ -72,8 +72,10 @@
     "type_journal_nudge_sub": "lokalno · nežno povabilo, ko utihneš",
     "type_weather": "Pametni namigi (vreme)",
     "type_weather_sub": "kmalu · prek strežnika",
+    "type_weather_sub_live": "prek strežnika · potrebuje internet",
     "type_community": "Namigi okolice",
     "type_community_sub": "kmalu (V2)",
+    "type_community_sub_live": "prek strežnika · kaj se dogaja v okolici",
     "section_default_offset": "Privzeti zamik opomnika",
     "default_offset_hint": "Predizpolni nova opravila; vedno lahko spremeniš.",
     "section_quiet": "Da te ne zasipa",
@@ -122,7 +124,8 @@
     "remind_title": "Opomniki + vreme",
     "remind_body": "Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.",
     "nearby_title": "Tvoja okolica",
-    "nearby_body": "Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno."
+    "nearby_body": "Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.",
+    "nearby_body_live": "Poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno."
   },
   "auth": {
     "title": "Dobrodošel v Tendask",
@@ -167,6 +170,7 @@
   "location": {
     "title": "Kje vrtnariš?",
     "why": "Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.",
+    "why_live": "Lokacijo potrebujemo za lokalno vremensko napoved in da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.",
     "use_gps": "Uporabi mojo lokacijo",
     "enter_place": "Vpiši kraj",
     "or": "ali",
@@ -675,6 +679,7 @@
     "past_intro": "Kaj ti je Tendask predlagal in kako si se odzval.",
     "past_empty": "Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.",
     "past_retention": "Predloge starejše od enega leta samodejno počistimo.",
+    "dry_window": "Suho okno[ (~{dry_hours} h)] — primeren čas.",
     "cadence": {
       "overdue": {
         "title": "{task} je na vrsti",
@@ -685,12 +690,6 @@
       "anniversary": {
         "title": "{task} — pred letom dni",
         "body": "Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?"
-      }
-    },
-    "weather": {
-      "window_open": {
-        "title": "{task}: ugodno okno",
-        "body": "Za {subject} prihaja suho obdobje — primeren čas."
       }
     },
     "community": {
@@ -820,11 +819,11 @@
       },
       "plant_out": {
         "title": "Saditev na prosto",
-        "body": "Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}."
+        "body": "Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}]."
       },
       "transplant": {
         "title": "Presaditev",
-        "body": "Presadi {subject} na končno mesto po pozebi — okoli {frost_date}."
+        "body": "Presadi {subject} na končno mesto po pozebi[ — okoli {frost_date}]."
       },
       "sow_direct": {
         "title": "Neposredna setev",
@@ -850,7 +849,7 @@
       },
       "plant_out": {
         "title": "Saditev na prosto",
-        "body": "Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}."
+        "body": "Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}]."
       }
     },
     "tomato": {
@@ -970,13 +969,13 @@
     "cucumber": {
       "sow_direct": {
         "title": "Neposredna setev",
-        "body": "Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}."
+        "body": "Posej {subject} na prosto, ko je toplo in brez pozebe[ — okoli {frost_date}]."
       }
     },
     "zucchini": {
       "sow_direct": {
         "title": "Neposredna setev",
-        "body": "Posej {subject} na prosto po pozebi — okoli {frost_date}."
+        "body": "Posej {subject} na prosto po pozebi[ — okoli {frost_date}]."
       }
     }
   },
@@ -1002,6 +1001,8 @@
     },
     "empty_feed": "V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.",
     "empty_standing": "Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.",
+    "empty_standing_no_history": "Letos še ni zabeleženega nobenega opravila. Zabeleži sezonsko opravilo — obrez, gnojenje, setev — in tu bo pisalo, kje si v primerjavi z okolico.",
+    "empty_standing_no_seasonal": "Letošnja opravila (npr. zalivanje) niso sezonska, zato se čas začetka pri njih ne primerja. Zabeleži sezonsko opravilo, npr. obrez ali gnojenje.",
     "empty_offline": "Podatkov o okolici na tej napravi še ni.",
     "data_from": "Podatki od $date",
     "privacy_note": "Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.",
@@ -1030,7 +1031,7 @@
       "not_started": "Letos tega še nimaš zabeleženega",
       "by_now_percent": "Do zdaj je začelo ~$percent %.",
       "by_date_percent": "Do $date je začelo ~$percent %.",
-      "peak_weeks": "Večina začne med $from in $to.",
+      "peak_weeks": "Večina začne med $from in $to",
       "censored_note": "Prva sezona: šteti so le tisti, ki so letos že začeli, zato se delež še premika.",
       "among(n)": {
         "one": "med ~1 vrtnarjem",
@@ -1040,6 +1041,7 @@
       },
       "frequency_title": "Kako pogosto",
       "freq_range": "$from–$to×",
+      "freq_single": "$count×",
       "freq_unit": "na sezono",
       "freq_low_n": "Premalo vrtnarjev za tipičen razpon.",
       "freq_caption": "koliko vrtnarjev to naredi N-krat",

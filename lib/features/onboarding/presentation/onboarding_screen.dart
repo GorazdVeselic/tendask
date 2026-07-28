@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/config.dart';
 import '../../../core/local_prefs/local_prefs.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -60,11 +61,15 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         t.onboarding.remind_title,
         t.onboarding.remind_body,
       ),
+      // The "soon (V2)" promise must not outlive the feature: with Okolica live
+      // the reader finds it in the fifth tab minutes later (najdba N13).
       _Slide(
         Icons.public,
         t.onboarding.nearby_title,
-        t.onboarding.nearby_body,
-        badge: t.onboarding.soon_badge,
+        kCommunityEnabled
+            ? t.onboarding.nearby_body_live
+            : t.onboarding.nearby_body,
+        badge: kCommunityEnabled ? null : t.onboarding.soon_badge,
       ),
     ];
     final last = slides.length - 1;

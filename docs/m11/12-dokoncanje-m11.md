@@ -126,7 +126,7 @@
   vrsto, samo zaključene sezone, odstotek ni na brezplačni kartici). Opt-in za push je že obstajal
   v `index.ts` (`community_hints`). +20 Deno testov (116 skupaj).
 - **Popravljena pred-obstoječa napaka (M11.12):** `pushTitle()` je vračal surovo predlogo, zato bi
-  potisno obvestilo za R2/R3/R6/`weather.window_open` v obvestilnem oknu pisalo dobesedno
+  potisno obvestilo za R2/R3/R6 (in takrat še obstoječi `weather.window_open`) pisalo dobesedno
   `{task} je na vrsti`. Klient markerje polni sam, strežnik jih ni. Novi `push_text.ts` napolni
   `{task}` iz `task_type.labels` v jeziku profila (fallback en → id); `loadTaskTypes` bere `labels`.
 

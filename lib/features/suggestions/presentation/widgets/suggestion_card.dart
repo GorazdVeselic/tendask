@@ -92,8 +92,14 @@ class _SuggestionCardState extends ConsumerState<SuggestionCard> {
     final title =
         suggestionMessage(t, '${suggestion.messageKey}.title', params) ??
         taskLabel;
-    final body =
-        suggestionMessage(t, '${suggestion.messageKey}.body', params) ?? '';
+    final body = [
+      suggestionMessage(t, '${suggestion.messageKey}.body', params) ?? '',
+      // R1 never emits a card of its own — it reinforces the rule that did
+      // (docs/m11/03 §R1). The engine stamps dry_window on that card's params;
+      // without this suffix the reader never learns why it surfaced today (O4).
+      if (params['dry_window'] == 'true')
+        fillTemplate(t.suggestions.dry_window, params),
+    ].where((line) => line.isNotEmpty).join(' ');
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 400),

@@ -140,8 +140,8 @@ Future<void> _refreshCommunity(WidgetRef ref) async {
 }
 
 /// "Where you stand" — the cohorts you worked this season, each placed against
-/// its group's curve. Cohorts the neighbourhood cannot answer for are left out,
-/// so an empty list is the honest cold-start, not an error.
+/// its group's curve. Cohorts the neighbourhood cannot answer for are left out;
+/// an empty list is a cold start, not an error, and [_gapText] says which one.
 class _StandingTab extends ConsumerWidget {
   const _StandingTab();
 
@@ -160,10 +160,10 @@ class _StandingTab extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () => _refreshCommunity(ref),
       child: switch ((standings, catalog, reached)) {
-        (AsyncData(value: final rows), AsyncData(value: final types), _)
-            when rows.isNotEmpty =>
+        (AsyncData(value: final s), AsyncData(value: final types), _)
+            when s.rows.isNotEmpty =>
           CommunityStandingList(
-            standings: rows,
+            standings: s.rows,
             catalog: types,
             plants: plants,
             hasPlus: hasPlus,
@@ -171,11 +171,20 @@ class _StandingTab extends ConsumerWidget {
         (AsyncData(), AsyncData(), AsyncData(value: false)) => PullableEmpty(
           t.community.empty_offline,
         ),
-        (AsyncData(), AsyncData(), AsyncData()) => PullableEmpty(
-          t.community.empty_standing,
+        (AsyncData(value: final s), AsyncData(), AsyncData()) => PullableEmpty(
+          _gapText(t, s.gap),
         ),
         _ => const Center(child: CircularProgressIndicator.adaptive()),
       },
     );
   }
 }
+
+/// The neighbourhood is only to blame for one of the three empty states — the
+/// other two are about my own history, and saying "too few gardeners" there is
+/// a claim about other people that the next tab contradicts (najdba N17).
+String _gapText(Translations t, StandingsGap? gap) => switch (gap) {
+  StandingsGap.noHistory => t.community.empty_standing_no_history,
+  StandingsGap.noSeasonalHistory => t.community.empty_standing_no_seasonal,
+  StandingsGap.thinNeighbourhood || null => t.community.empty_standing,
+};

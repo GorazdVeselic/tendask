@@ -465,6 +465,14 @@ prikaže datum · layout matrika prenese novo vrstico v vseh treh jezikih.
 
 ### P10 · Jezik, besedila in dokumentacija *(blokira O4, O6)*
 
+> **Stanje 2026-07-28 (paket 3):** narejeni so koraki **3** (O6), **4** (O4) in **5**
+> (`screen-map.md`) ter najdbe **N13, N17, N20, N21** in nova **N26**. **Odprti ostajajo koraki
+> 1** (spolno nevtralna slovenščina — `suggestions.past_intro` »kako si se odzval«,
+> `settings.suggestions_history_sub`, `community.standing.band` `zgoden/običajen/pozen`,
+> `onboarding.welcome_title` / `auth.title`, `onboarding.log_body`), **2** (push telesa v i18n in
+> v tikanje; `tool/gen_push_i18n.dart` ima še trdo zapisan vikalni fallback), **6** (#13, #14 v
+> `10-odprta-vprasanja.md`) in **7** (manjši doc-dolg). Ti niso bili del delovnega naloga te seje.
+
 **Koraki**
 
 1. **Spolno nevtralna slovenščina** (pravilo postavljeno v `02f2c76`, dva nova niza sta ga takoj

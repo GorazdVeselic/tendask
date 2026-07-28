@@ -80,6 +80,46 @@ void main() {
       );
     });
 
+    test('an unfillable [clause] drops out whole, not just its marker', () {
+      // The engine sends frost_date only for frost-gated rules, and collapsing
+      // the marker alone left "… ko mine pozeba — okoli ." on screen (N20).
+      expect(
+        fillTemplate(
+          'Plant out once frost has passed[ — around {frost_date}].',
+          const {},
+        ),
+        'Plant out once frost has passed.',
+      );
+    });
+
+    test('a clause the engine could fill stays, without its brackets', () {
+      expect(
+        fillTemplate(
+          'Plant out once frost has passed[ — around {frost_date}].',
+          {'frost_date': '15. 5. 2026'},
+        ),
+        'Plant out once frost has passed — around 15. 5. 2026.',
+      );
+    });
+
+    test('an empty value counts as missing, so the clause still goes', () {
+      expect(
+        fillTemplate('Dry window[ (~{dry_hours} h)] — a good time.', {
+          'dry_hours': '',
+        }),
+        'Dry window — a good time.',
+      );
+    });
+
+    test('brackets arriving inside a value are never read as a clause', () {
+      // Values are substituted after the clause pass, so a subject called
+      // "Rose [old]" cannot delete part of the sentence around it.
+      expect(
+        fillTemplate('Care for {subject}', {'subject': 'Rose [old]'}),
+        'Care for Rose [old]',
+      );
+    });
+
     test('leaves text without markers untouched', () {
       expect(fillTemplate('No markers here', const {}), 'No markers here');
     });

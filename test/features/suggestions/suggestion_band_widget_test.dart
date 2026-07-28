@@ -227,6 +227,47 @@ void main() {
     expect(find.text(body), findsOneWidget);
   });
 
+  testWidgets('a dry window is spelled out on the card that carries it', (
+    tester,
+  ) async {
+    // R1 never emits a card of its own; it stamps dry_window on the rule that
+    // did. Until O4 the client read neither param, so the reason the card
+    // surfaced today was invisible (najdba N4).
+    final db = await _buildDb();
+    addTearDown(db.close);
+    final sug = await _suggestion(db);
+    await _pumpBand(
+      tester,
+      db,
+      content: Stream.value([
+        sug.copyWith(
+          messageParams:
+              '{"suggested_date":"2026-06-20","dry_window":true,"dry_hours":30}',
+        ),
+      ]),
+    );
+
+    expect(
+      find.textContaining(
+        fillTemplate(t.suggestions.dry_window, {'dry_hours': '30'}),
+      ),
+      findsOneWidget,
+    );
+  });
+
+  testWidgets('without a dry window the card says nothing about the weather', (
+    tester,
+  ) async {
+    final db = await _buildDb();
+    addTearDown(db.close);
+    await _pumpBand(tester, db);
+
+    expect(
+      find.textContaining(fillTemplate(t.suggestions.dry_window, const {})),
+      findsNothing,
+    );
+  });
+
   testWidgets('empty list renders no band at all (no hole on Home)', (
     tester,
   ) async {

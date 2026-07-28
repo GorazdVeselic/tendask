@@ -136,7 +136,13 @@ class _Body extends ConsumerWidget {
               SwitchListTile(
                 secondary: const Text('🌤️', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_weather),
-                subtitle: Text(t.notif_settings.type_weather_sub),
+                // The subtitle follows the same flag as onChanged: a live
+                // switch under a "soon" caption reads as broken (najdba N13).
+                subtitle: Text(
+                  kSuggestionsEnabled
+                      ? t.notif_settings.type_weather_sub_live
+                      : t.notif_settings.type_weather_sub,
+                ),
                 value: settings.weatherHintsEnabled,
                 // Dark until launch (kSuggestionsEnabled): the hint pushes are
                 // server-side (FCM/engine), so keep the toggle inert — enabling
@@ -159,7 +165,11 @@ class _Body extends ConsumerWidget {
               SwitchListTile(
                 secondary: const Text('🌍', style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_community),
-                subtitle: Text(t.notif_settings.type_community_sub),
+                subtitle: Text(
+                  kSuggestionsEnabled
+                      ? t.notif_settings.type_community_sub_live
+                      : t.notif_settings.type_community_sub,
+                ),
                 value: settings.communityHintsEnabled,
                 // Dark until launch (kSuggestionsEnabled) — see weather toggle.
                 // Deliberately NOT kCommunityEnabled: this opts into an engine

@@ -273,7 +273,53 @@ void main() {
       communityStandingsProvider.future,
     );
 
-    expect(standings.map((s) => s.taskTypeId), ['mow']);
+    expect(standings.rows.map((s) => s.taskTypeId), ['mow']);
+  });
+
+  group('an empty standings list names its own cause (najdba N17)', () {
+    Future<StandingsGap?> gapFor(Map<(String, String), MySeason> mine) async {
+      final result = await readAlive(
+        container(
+          buckets: const [_r7],
+          extra: [mySeasonsProvider.overrideWith((ref) => Stream.value(mine))],
+        ),
+        communityStandingsProvider.future,
+      );
+      expect(result.rows, isEmpty);
+      return result.gap;
+    }
+
+    test('nothing logged at all', () async {
+      store['activity_season|r7|cellA|mow|@site'] = _season(40);
+
+      expect(await gapFor(const {}), StandingsGap.noHistory);
+    });
+
+    test('logged work, but none of it seasonal', () async {
+      // The measured case: three waterings and 40 neighbours still produced
+      // "not enough gardeners nearby" — a claim about other people.
+      store['activity_season|r7|cellA|mow|@site'] = _season(40);
+
+      final gap = await gapFor({
+        ('water', kCommunityCohortSite): MySeason(
+          first: DateTime(2026, 4, 2),
+          count: 3,
+        ),
+      });
+
+      expect(gap, StandingsGap.noSeasonalHistory);
+    });
+
+    test('seasonal history, but no cohort clears the threshold', () async {
+      final gap = await gapFor({
+        ('mow', kCommunityCohortSite): MySeason(
+          first: DateTime(2026, 4, 1),
+          count: 2,
+        ),
+      });
+
+      expect(gap, StandingsGap.thinNeighbourhood);
+    });
   });
 
   test('a slice that hit the row cap is refused, not re-scaled', () async {

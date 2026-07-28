@@ -211,8 +211,10 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get type_journal_nudge_sub => 'lokalno · nežno povabilo, ko utihneš';
 	@override String get type_weather => 'Pametni namigi (vreme)';
 	@override String get type_weather_sub => 'kmalu · prek strežnika';
+	@override String get type_weather_sub_live => 'prek strežnika · potrebuje internet';
 	@override String get type_community => 'Namigi okolice';
 	@override String get type_community_sub => 'kmalu (V2)';
+	@override String get type_community_sub_live => 'prek strežnika · kaj se dogaja v okolici';
 	@override String get section_default_offset => 'Privzeti zamik opomnika';
 	@override String get default_offset_hint => 'Predizpolni nova opravila; vedno lahko spremeniš.';
 	@override String get section_quiet => 'Da te ne zasipa';
@@ -283,6 +285,7 @@ class _Translations$onboarding$sl extends Translations$onboarding$en {
 	@override String get remind_body => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.';
 	@override String get nearby_title => 'Tvoja okolica';
 	@override String get nearby_body => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
+	@override String get nearby_body_live => 'Poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.';
 }
 
 // Path: auth
@@ -355,6 +358,7 @@ class _Translations$location$sl extends Translations$location$en {
 	// Translations
 	@override String get title => 'Kje vrtnariš?';
 	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
+	@override String get why_live => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
 	@override String get use_gps => 'Uporabi mojo lokacijo';
 	@override String get enter_place => 'Vpiši kraj';
 	@override String get or => 'ali';
@@ -965,9 +969,9 @@ class _Translations$suggestions$sl extends Translations$suggestions$en {
 	@override String get past_intro => 'Kaj ti je Tendask predlagal in kako si se odzval.';
 	@override String get past_empty => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.';
 	@override String get past_retention => 'Predloge starejše od enega leta samodejno počistimo.';
+	@override String get dry_window => 'Suho okno[ (~{dry_hours} h)] — primeren čas.';
 	@override late final _Translations$suggestions$cadence$sl cadence = _Translations$suggestions$cadence$sl._(_root);
 	@override late final _Translations$suggestions$history$sl history = _Translations$suggestions$history$sl._(_root);
-	@override late final _Translations$suggestions$weather$sl weather = _Translations$suggestions$weather$sl._(_root);
 	@override late final _Translations$suggestions$community$sl community = _Translations$suggestions$community$sl._(_root);
 	@override late final _Translations$suggestions$lawn$sl lawn = _Translations$suggestions$lawn$sl._(_root);
 	@override late final _Translations$suggestions$fruit_tree$sl fruit_tree = _Translations$suggestions$fruit_tree$sl._(_root);
@@ -1010,6 +1014,8 @@ class _Translations$community$sl extends Translations$community$en {
 	@override late final _Translations$community$intensity$sl intensity = _Translations$community$intensity$sl._(_root);
 	@override String get empty_feed => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.';
 	@override String get empty_standing => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.';
+	@override String get empty_standing_no_history => 'Letos še ni zabeleženega nobenega opravila. Zabeleži sezonsko opravilo — obrez, gnojenje, setev — in tu bo pisalo, kje si v primerjavi z okolico.';
+	@override String get empty_standing_no_seasonal => 'Letošnja opravila (npr. zalivanje) niso sezonska, zato se čas začetka pri njih ne primerja. Zabeleži sezonsko opravilo, npr. obrez ali gnojenje.';
 	@override String get empty_offline => 'Podatkov o okolici na tej napravi še ni.';
 	@override String data_from({required Object date}) => 'Podatki od ${date}';
 	@override String get privacy_note => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.';
@@ -1101,16 +1107,6 @@ class _Translations$suggestions$history$sl extends Translations$suggestions$hist
 
 	// Translations
 	@override late final _Translations$suggestions$history$anniversary$sl anniversary = _Translations$suggestions$history$anniversary$sl._(_root);
-}
-
-// Path: suggestions.weather
-class _Translations$suggestions$weather$sl extends Translations$suggestions$weather$en {
-	_Translations$suggestions$weather$sl._(TranslationsSl root) : this._root = root, super.internal(root);
-
-	final TranslationsSl _root; // ignore: unused_field
-
-	// Translations
-	@override late final _Translations$suggestions$weather$window_open$sl window_open = _Translations$suggestions$weather$window_open$sl._(_root);
 }
 
 // Path: suggestions.community
@@ -1406,7 +1402,7 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 	@override String get not_started => 'Letos tega še nimaš zabeleženega';
 	@override String by_now_percent({required Object percent}) => 'Do zdaj je začelo ~${percent} %.';
 	@override String by_date_percent({required Object date, required Object percent}) => 'Do ${date} je začelo ~${percent} %.';
-	@override String peak_weeks({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}.';
+	@override String peak_weeks({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}';
 	@override String get censored_note => 'Prva sezona: šteti so le tisti, ki so letos že začeli, zato se delež še premika.';
 	@override String among({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n,
 		one: 'med ~1 vrtnarjem',
@@ -1416,6 +1412,7 @@ class _Translations$community$detail$sl extends Translations$community$detail$en
 	);
 	@override String get frequency_title => 'Kako pogosto';
 	@override String freq_range({required Object from, required Object to}) => '${from}–${to}×';
+	@override String freq_single({required Object count}) => '${count}×';
 	@override String get freq_unit => 'na sezono';
 	@override String get freq_low_n => 'Premalo vrtnarjev za tipičen razpon.';
 	@override String get freq_caption => 'koliko vrtnarjev to naredi N-krat';
@@ -1456,17 +1453,6 @@ class _Translations$suggestions$history$anniversary$sl extends Translations$sugg
 	// Translations
 	@override String get title => '{task} — pred letom dni';
 	@override String get body => 'Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?';
-}
-
-// Path: suggestions.weather.window_open
-class _Translations$suggestions$weather$window_open$sl extends Translations$suggestions$weather$window_open$en {
-	_Translations$suggestions$weather$window_open$sl._(TranslationsSl root) : this._root = root, super.internal(root);
-
-	final TranslationsSl _root; // ignore: unused_field
-
-	// Translations
-	@override String get title => '{task}: ugodno okno';
-	@override String get body => 'Za {subject} prihaja suho obdobje — primeren čas.';
 }
 
 // Path: suggestions.community.most_started
@@ -1796,7 +1782,7 @@ class _Translations$suggestions$vegetable$plant_out$sl extends Translations$sugg
 
 	// Translations
 	@override String get title => 'Saditev na prosto';
-	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.';
+	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}].';
 }
 
 // Path: suggestions.vegetable.transplant
@@ -1807,7 +1793,7 @@ class _Translations$suggestions$vegetable$transplant$sl extends Translations$sug
 
 	// Translations
 	@override String get title => 'Presaditev';
-	@override String get body => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.';
+	@override String get body => 'Presadi {subject} na končno mesto po pozebi[ — okoli {frost_date}].';
 }
 
 // Path: suggestions.vegetable.sow_direct
@@ -1873,7 +1859,7 @@ class _Translations$suggestions$herbs$plant_out$sl extends Translations$suggesti
 
 	// Translations
 	@override String get title => 'Saditev na prosto';
-	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.';
+	@override String get body => 'Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}].';
 }
 
 // Path: suggestions.tomato.start_seedlings
@@ -2137,7 +2123,7 @@ class _Translations$suggestions$cucumber$sow_direct$sl extends Translations$sugg
 
 	// Translations
 	@override String get title => 'Neposredna setev';
-	@override String get body => 'Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}.';
+	@override String get body => 'Posej {subject} na prosto, ko je toplo in brez pozebe[ — okoli {frost_date}].';
 }
 
 // Path: suggestions.zucchini.sow_direct
@@ -2148,7 +2134,7 @@ class _Translations$suggestions$zucchini$sow_direct$sl extends Translations$sugg
 
 	// Translations
 	@override String get title => 'Neposredna setev';
-	@override String get body => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.';
+	@override String get body => 'Posej {subject} na prosto po pozebi[ — okoli {frost_date}].';
 }
 
 // Path: community.standing.band
@@ -2258,8 +2244,10 @@ extension on TranslationsSl {
 			'notif_settings.type_journal_nudge_sub' => 'lokalno · nežno povabilo, ko utihneš',
 			'notif_settings.type_weather' => 'Pametni namigi (vreme)',
 			'notif_settings.type_weather_sub' => 'kmalu · prek strežnika',
+			'notif_settings.type_weather_sub_live' => 'prek strežnika · potrebuje internet',
 			'notif_settings.type_community' => 'Namigi okolice',
 			'notif_settings.type_community_sub' => 'kmalu (V2)',
+			'notif_settings.type_community_sub_live' => 'prek strežnika · kaj se dogaja v okolici',
 			'notif_settings.section_default_offset' => 'Privzeti zamik opomnika',
 			'notif_settings.default_offset_hint' => 'Predizpolni nova opravila; vedno lahko spremeniš.',
 			'notif_settings.section_quiet' => 'Da te ne zasipa',
@@ -2303,6 +2291,7 @@ extension on TranslationsSl {
 			'onboarding.remind_body' => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.',
 			'onboarding.nearby_title' => 'Tvoja okolica',
 			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
+			'onboarding.nearby_body_live' => 'Poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
 			'auth.title' => 'Dobrodošel v Tendask',
 			'auth.value_prop' => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.',
 			'auth.continue_apple' => 'Nadaljuj z Apple',
@@ -2339,6 +2328,7 @@ extension on TranslationsSl {
 			'email_login.skip_for_now' => 'Nadaljuj brez prijave',
 			'location.title' => 'Kje vrtnariš?',
 			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
+			'location.why_live' => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
 			'location.enter_place' => 'Vpiši kraj',
 			'location.or' => 'ali',
@@ -2720,12 +2710,12 @@ extension on TranslationsSl {
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
 			'weather.loading' => 'Nalagam vreme…',
+			_ => null,
+		} ?? switch (path) {
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			'weather.m_humidity' => 'Vlažnost',
 			'weather.m_wind' => 'Veter',
 			'weather.m_precipitation' => 'Padavine',
-			_ => null,
-		} ?? switch (path) {
 			'weather.m_soil_temp' => 'Temp. tal',
 			'weather.m_et0' => 'ET₀',
 			'weather.m_rain48h' => 'Dež 48 h',
@@ -2788,12 +2778,11 @@ extension on TranslationsSl {
 			'suggestions.past_intro' => 'Kaj ti je Tendask predlagal in kako si se odzval.',
 			'suggestions.past_empty' => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.',
 			'suggestions.past_retention' => 'Predloge starejše od enega leta samodejno počistimo.',
+			'suggestions.dry_window' => 'Suho okno[ (~{dry_hours} h)] — primeren čas.',
 			'suggestions.cadence.overdue.title' => '{task} je na vrsti',
 			'suggestions.cadence.overdue.body' => '{subject}: zamuda približno {days_overdue} dni (običajni ritem ~{cadence_days} dni).',
 			'suggestions.history.anniversary.title' => '{task} — pred letom dni',
 			'suggestions.history.anniversary.body' => 'Lani okoli {last_year_date} — {task} pri {subject}. Morda spet?',
-			'suggestions.weather.window_open.title' => '{task}: ugodno okno',
-			'suggestions.weather.window_open.body' => 'Za {subject} prihaja suho obdobje — primeren čas.',
 			'suggestions.community.most_started.title' => '{task} v okolici',
 			'suggestions.community.most_started.body' => 'Večina vrtnarjev v tvoji okolici je to letos že začela.',
 			'suggestions.lawn.mow_due.title' => 'Čas za košnjo',
@@ -2853,9 +2842,9 @@ extension on TranslationsSl {
 			'suggestions.vegetable.harden_off.title' => 'Utrjevanje sadik',
 			'suggestions.vegetable.harden_off.body' => 'Utrdi {subject} na prostem pred saditvijo — okno odprto do ~{window_end_date}.',
 			'suggestions.vegetable.plant_out.title' => 'Saditev na prosto',
-			'suggestions.vegetable.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.',
+			'suggestions.vegetable.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}].',
 			'suggestions.vegetable.transplant.title' => 'Presaditev',
-			'suggestions.vegetable.transplant.body' => 'Presadi {subject} na končno mesto po pozebi — okoli {frost_date}.',
+			'suggestions.vegetable.transplant.body' => 'Presadi {subject} na končno mesto po pozebi[ — okoli {frost_date}].',
 			'suggestions.vegetable.sow_direct.title' => 'Neposredna setev',
 			'suggestions.vegetable.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
 			'suggestions.vegetable.fertilize_season.title' => 'Dognojevanje',
@@ -2867,7 +2856,7 @@ extension on TranslationsSl {
 			'suggestions.herbs.sow_direct.title' => 'Neposredna setev',
 			'suggestions.herbs.sow_direct.body' => 'Posej {subject} naravnost na prosto, ko se otopli — okno odprto do ~{window_end_date}.',
 			'suggestions.herbs.plant_out.title' => 'Saditev na prosto',
-			'suggestions.herbs.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba — okoli {frost_date}.',
+			'suggestions.herbs.plant_out.body' => 'Posadi {subject} na prosto, ko mine pozeba[ — okoli {frost_date}].',
 			'suggestions.tomato.start_seedlings.title' => 'Setev za sadike',
 			'suggestions.tomato.start_seedlings.body' => 'Posej {subject} v zavetju za prednost — do približno {window_end_date}.',
 			'suggestions.tomato.prick_out.title' => 'Pikiranje',
@@ -2915,9 +2904,9 @@ extension on TranslationsSl {
 			'suggestions.rose.overwinter.title' => 'Zimska zaščita',
 			'suggestions.rose.overwinter.body' => 'Pred močno pozebo osuj ali zaščiti {subject} — do približno {window_end_date}.',
 			'suggestions.cucumber.sow_direct.title' => 'Neposredna setev',
-			'suggestions.cucumber.sow_direct.body' => 'Posej {subject} na prosto, ko je toplo in brez pozebe — okoli {frost_date}.',
+			'suggestions.cucumber.sow_direct.body' => 'Posej {subject} na prosto, ko je toplo in brez pozebe[ — okoli {frost_date}].',
 			'suggestions.zucchini.sow_direct.title' => 'Neposredna setev',
-			'suggestions.zucchini.sow_direct.body' => 'Posej {subject} na prosto po pozebi — okoli {frost_date}.',
+			'suggestions.zucchini.sow_direct.body' => 'Posej {subject} na prosto po pozebi[ — okoli {frost_date}].',
 			'community.title' => 'Okolica',
 			'community.seg_week' => 'Ta teden',
 			'community.seg_you' => 'Kje si ti',
@@ -2930,6 +2919,8 @@ extension on TranslationsSl {
 			'community.intensity.rare' => 'redko',
 			'community.empty_feed' => 'V tvoji okolici je še premalo vrtnarjev. Ko jih bo več beležilo opravila, se bo tu napolnilo.',
 			'community.empty_standing' => 'Za nobeno opravilo še ni dovolj vrtnarjev v okolici za primerjavo.',
+			'community.empty_standing_no_history' => 'Letos še ni zabeleženega nobenega opravila. Zabeleži sezonsko opravilo — obrez, gnojenje, setev — in tu bo pisalo, kje si v primerjavi z okolico.',
+			'community.empty_standing_no_seasonal' => 'Letošnja opravila (npr. zalivanje) niso sezonska, zato se čas začetka pri njih ne primerja. Zabeleži sezonsko opravilo, npr. obrez ali gnojenje.',
 			'community.empty_offline' => 'Podatkov o okolici na tej napravi še ni.',
 			'community.data_from' => ({required Object date}) => 'Podatki od ${date}',
 			'community.privacy_note' => 'Anonimno, vsaj 5 vrtnarjev. Tvoja točna lokacija ni nikoli razkrita.',
@@ -2949,11 +2940,12 @@ extension on TranslationsSl {
 			'community.detail.not_started' => 'Letos tega še nimaš zabeleženega',
 			'community.detail.by_now_percent' => ({required Object percent}) => 'Do zdaj je začelo ~${percent} %.',
 			'community.detail.by_date_percent' => ({required Object date, required Object percent}) => 'Do ${date} je začelo ~${percent} %.',
-			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}.',
+			'community.detail.peak_weeks' => ({required Object from, required Object to}) => 'Večina začne med ${from} in ${to}',
 			'community.detail.censored_note' => 'Prva sezona: šteti so le tisti, ki so letos že začeli, zato se delež še premika.',
 			'community.detail.among' => ({required num n}) => (_root.$meta.cardinalResolver ?? PluralResolvers.cardinal('sl'))(n, one: 'med ~1 vrtnarjem', two: 'med ~${n} vrtnarjema', few: 'med ~${n} vrtnarji', other: 'med ~${n} vrtnarji', ), 
 			'community.detail.frequency_title' => 'Kako pogosto',
 			'community.detail.freq_range' => ({required Object from, required Object to}) => '${from}–${to}×',
+			'community.detail.freq_single' => ({required Object count}) => '${count}×',
 			'community.detail.freq_unit' => 'na sezono',
 			'community.detail.freq_low_n' => 'Premalo vrtnarjev za tipičen razpon.',
 			'community.detail.freq_caption' => 'koliko vrtnarjev to naredi N-krat',

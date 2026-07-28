@@ -155,6 +155,9 @@ const kAcceptedWordBreaks = <String, Set<String>>{
   'note-form': {'Yesterday'},
   'notifications': {'Erinnerungen', 'dogodku'},
   'settings': {'Benachrichtigungen', 'Slovenščina'},
+  // Not shipped: the suggestion screens are flag-dark. Surfaced only once the
+  // matrix stopped feeding them a message_key that does not exist (N26).
+  'suggestions/history': {'Auspflanzen'},
   'task-detail': {'Wiederholung'},
   'tasks': {'Gießen', 'Watering', 'Zalivanje', 'Zelenjavni'},
 };

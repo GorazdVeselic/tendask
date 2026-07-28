@@ -91,6 +91,7 @@ Future<void> _pump(
   bool hasPlus = true,
   bool reached = true,
   List<CommunityStanding> standings = const [],
+  StandingsGap? gap = StandingsGap.thinNeighbourhood,
   CommunityRepository? repo,
 }) async {
   _reads = 0;
@@ -106,7 +107,7 @@ Future<void> _pump(
           communityReachedProvider.overrideWith((ref) async => reached),
           communityStandingsProvider.overrideWith((ref) async {
             _reads++;
-            return standings;
+            return (rows: standings, gap: standings.isEmpty ? gap : null);
           }),
           taskTypesMapProvider.overrideWith((ref) => Stream.value(_catalog)),
           plantsMapProvider.overrideWith((ref) => Stream.value(_plants)),
@@ -336,5 +337,31 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(t.community.empty_standing), findsOneWidget);
+  });
+
+  testWidgets('an empty own history does not blame the neighbourhood', (
+    tester,
+  ) async {
+    await _pump(tester, feed: _feed(), gap: StandingsGap.noHistory);
+
+    await tester.tap(find.text(t.community.seg_you));
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.community.empty_standing_no_history), findsOneWidget);
+    expect(find.text(t.community.empty_standing), findsNothing);
+  });
+
+  testWidgets('history of the wrong kind does not blame it either', (
+    tester,
+  ) async {
+    // The measured case (najdba N17): three waterings, 40 neighbours, and the
+    // screen still said there were too few gardeners.
+    await _pump(tester, feed: _feed(), gap: StandingsGap.noSeasonalHistory);
+
+    await tester.tap(find.text(t.community.seg_you));
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.community.empty_standing_no_seasonal), findsOneWidget);
+    expect(find.text(t.community.empty_standing), findsNothing);
   });
 }

@@ -21,9 +21,14 @@
 Shell (`main_shell.dart`) drži spodnjo vrstico: **Domov · Opravila · Dnevnik · Vrt**. Vsak je svoj branch;
 menjava zavihka ohrani stanje (indexedStack).
 
-> **[M11 Okolica] doda 5. zavihek** »Okolica« (⬡ = H3 celica) **za temnim flagom** (`kSuggestionsEnabled`):
+> **[M11 Okolica] doda 5. zavihek** »Okolica« (⬡ = H3 celica) **za temnim flagom** (`kCommunityEnabled`):
 > v prod APK-ju **skrit**, dokler ni prižgan. Ob prižigu je zavihek stalen za vse; brez Plus prikaže **tease**
 > (gl. §1.5). Plus-gate = **FR-20** (podpisan token; v M11 le stub `hasPlus`).
+>
+> **Dva ločena flaga** (odločitev O3, `7d06944`): `kSuggestionsEnabled` prižge **brezplačne pametne
+> predloge** (pas na Domov, `/suggestions/history`, sekcija PAMETNI PREDLOGI, stikali obvestil),
+> `kCommunityEnabled` pa **plačljivo Okolico** (5. zavihek, `/community/task`, kartici na Domov in
+> na detajlu opravila). Prižig enega ne prižge drugega.
 
 ### 1.1 Domov — `/home` (`home`) [shell]
 Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
@@ -36,10 +41,22 @@ Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
   - tap opravila (DANES/NAZADNJE) → **task-detail** (`/task/:id` ali shell `/tasks/:id`).
   - **+ FAB → `/task-new`** (vnos opravila, wizard — gl. §3.1).
 - **[FR-19] doda:** »moon chip« pod vremensko kartico → `/moon-calendar` (ali `/tendask-plus`, če zaklenjeno).
-- **[M11 Okolica] doda (flag-dark):** sekcija **»V TVOJI OKOLICI ⬡«** nad **DANES** — ena vrstica feeda
+- **[M11 predlogi] doda (flag-dark, `kSuggestionsEnabled`):** **pas »PREDLOGI ZATE«** takoj pod vremensko
+  kartico, nad zamujenimi. Največ **3 kartice** (`kSuggestionBandMax`) + ena skupna izjava o odgovornosti
+  pod pasom. Kartica: ikona tipa + naslov + telo (napolnjeno iz `message_params`; ob `dry_window` še
+  pripona »Suho okno (~N h) — primeren čas.«) + **Opusti** / **Načrtuj** + ⋯.
+  - **Načrtuj** → `/task-new` predizpolnjen (`?type=&date=&plant=|area=`); shranjen task predlog označi
+    kot `planned`, preklic ga pusti na pasu.
+  - **Opusti** → dismiss za sezono. ⋯ sheet: »Že opravljeno« (mini-sheet Danes / Včeraj / Izberi →
+    ustvari `done` opravilo) · »Ne predlagaj več« (dismiss forever) · »Tega nimam več« (soft-delete
+    subjekta, potrditveni dialog).
+  - **Prazen seznam ne izriše ničesar** — ne naslova, ne razmika (Domov ne sme dobiti prazne luknje).
+    Napaka lokalnega branja pokaže miren `LoadErrorHint`.
+  - Tap potisnega obvestila odpre Domov z `?suggestion=<id>` — kartica je ~2 s obrobljena.
+- **[M11 Okolica] doda (flag-dark, `kCommunityEnabled`):** sekcija **»V TVOJI OKOLICI ⬡«** nad **DANES** — ena vrstica feeda
   (naslov = opravilo, podnaslov = rastlina, oznaka intenzitete — **isti widget kot na landingu**) →
   `/community/task/:taskTypeId` (`?plant=`), pod njo meta vrstica (okno · obseg · populacija) in
-  »Vse iz okolice ›« → `/community`. Skrito prek `kSuggestionsEnabled`.
+  »Vse iz okolice ›« → `/community`. Skrito prek `kCommunityEnabled`.
   - **Izbira namiga** (odločeno 2026-07-25): prvi element feeda, katerega skupina je **kataloška rastlina
     v mojem vrtu**; če je ni, prvi element feeda. Prostorska (`@site`) skupina nikoli ne šteje kot »moja«
     (ustreza vsakemu vrtu), sme pa biti fallback.
@@ -73,7 +90,7 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
 - **[FR-19] doda (board D):** na **plant-detail** chip »🌙 Kdaj za …« → `/moon-finder?plant=:id`.
 
 ### 1.5 Okolica — `/community` (`community`) [shell] · [M11, flag-dark]
-5. zavihek (⬡), za `kSuggestionsEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + **oznaka
+5. zavihek (⬡), za `kCommunityEnabled`. Naslov »Okolica«. Segmented **[Ta teden | Kje si ti]** + **oznaka
 obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z oknom in populacijo vedra.
 - **Obseg je oznaka, ne izbirnik** (odločitev A, 2026-07-25): razreši ga fallback veriga — najfinejši nivo nad
   `kCommunityPrivacyMin=5`, vedno **en** nivo (§7.4). Člen »vsi« ne obstaja (cron ne dela globalnega vedra),
@@ -86,7 +103,12 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
   **zgoden/običajen/pozen** (percentil na napravi), **nazadnje začeto na vrhu**. Vrstica: naslov = opravilo,
   podnaslov = rastlina **+ obseg te vrstice** (vsaka skupina se širi po svoje, §7.4, zato obsega ne more
   razglasiti zaslon). Skupine, za katere noben nivo nima dovolj vrtnarjev, **izpadejo** — zato podnožje pove
-  zakaj; če ni nobene, »še premalo vrtnarjev«. Tap → ista predloga. Tease enak kot »Ta teden«.
+  zakaj. Tap → ista predloga. Tease enak kot »Ta teden«.
+  - **Prazen seznam ima štiri različne razloge in štiri različna besedila** (najdba N17): naprava še ni
+    dobila nobene rezine (offline) · **letos nimam nobenega opravila** · imam opravila, a nobeno ni
+    **sezonsko** (zalivanje se po §7.5 ne primerja) · imam sezonsko zgodovino, a nobena skupina ne prestopi
+    praga. Samo zadnji je trditev o **drugih** vrtnarjih — ostale so o moji zgodovini in je ne smejo
+    pripisati soseski.
   - **Številke tu ni** (odločitev 2026-07-25, odstopanje od wireframa B2 »zgoden · 30 %«): odstotek brez
     velikosti vzorca in brez opombe o prvi sezoni je številka brez imenovalca (§7.7) — oboje je na detajlu,
     kamor vrstica pelje.
@@ -115,8 +137,9 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
 | `/plant/:id/edit` | plant-edit | plant-detail ✏️ | shrani/izbriši → nazaj |
 | `/settings` | **settings** | Domov ⚙️ | gl. §2.1 |
 | `/appearance` | appearance | Nastavitve »Tema in barve« | paleta+način → nazaj |
-| `/notification-settings` | notification-settings | Nastavitve »Obvestila in opomniki« | tihe ure, kapica … |
+| `/notification-settings` | notification-settings | Nastavitve »Obvestila in opomniki« | vrste (opomniki · povabilo k dnevniku · **pametni namigi (vreme)** · **namigi okolice** — zadnji dve strežniški, stikali inertni brez `kSuggestionsEnabled`, podnapis se s flagom zamenja) · privzeti zamik · tihe ure · predogled · sistemsko dovoljenje |
 | `/notification-preview` | notification-preview | (razvoj/preview) | — |
+| `/suggestions/history` | **suggestion-history** [M11, flag-dark `kSuggestionsEnabled`] | Nastavitve → PAMETNI PREDLOGI → »Pretekli predlogi« | samo za branje: predlogi, združeni po dnevu odziva (novejši zgoraj), s statusom (Načrtovano · Zabeleženo · Opuščeno · Utišano · Zamujeno); vrstica `planned`/`logged` → task-detail. Ni obvestilni center — obstaja zaradi pojasnljivosti. Prazno: »Še ni zgodovine …« |
 | `/area-new` | area-new | Vrt (dodaj območje) | shrani → nazaj |
 | `/areas/:id/edit` | area-edit | area-detail uredi | shrani → nazaj |
 | `/notes/new` | note-new | »Le zapis brez opravila« / dnevnik | shrani → nazaj |
@@ -138,9 +161,11 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
 3. **JEZIK:** segmented **[English · Deutsch · Slovenščina]** (inline, ne vrstica).
 4. **VIDEZ:** »🎨 Tema in barve« → `/appearance`.
 5. **OBVESTILA:** »🔔 Obvestila in opomniki« → `/notification-settings`.
-6. **RAČUN & PODATKI:** »Izvozi podatke (GDPR)« · »Odjava« · »Izbriši račun in vse podatke« (terakota).
-7. **O APLIKACIJI:** »🛡 Politika zasebnosti« ↗ (zunanja povezava).
-8. Footer: »Tendask · 1.0.1+16«.
+6. **PAMETNI PREDLOGI** [M11, flag-dark `kSuggestionsEnabled`]: »💡 Pretekli predlogi« →
+   `/suggestions/history`. Sekcija se brez flaga ne izriše (tudi ruta ne obstaja).
+7. **RAČUN & PODATKI:** »Izvozi podatke (GDPR)« · »Odjava« · »Izbriši račun in vse podatke« (terakota).
+8. **O APLIKACIJI:** »🛡 Politika zasebnosti« ↗ (zunanja povezava).
+9. Footer: »Tendask · 1.0.1+16«.
 - **[FR-19] doda (board E):** poudarjena kartica **»✦ Tendask+«** takoj pod profilom (pred LOKACIJA) →
   `/tendask-plus`. Skrita prek `kTendaskPlusEnabled`, dokler ni monetizacije.
 
@@ -157,7 +182,7 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
   (**re-izpeljano, ne zamrznjeno**). Info, ni tap (MVP).
 - **[M11 Okolica] doda (flag-dark):** sekcija **»V TVOJI OKOLICI«** + kartica **za kartico subjekta, pred
   VREMENSKIM POSNETKOM** → `/community/task/:taskTypeId` (`?plant=`, predloga tega opravila).
-  Skrito prek `kSuggestionsEnabled`.
+  Skrito prek `kCommunityEnabled`.
   - **Skupina** je izpeljana iz subjektov opravila (prva kataloška rastlina; območje, lastna rastlina ali
     brez subjekta → `@site`) — isto pravilo kot `agg_event` na strežniku.
   - **S Plus:** naslov je ugotovitev (»Bil si med zgodnejšimi 30 %« / opisni pas pod pragom / »Letos tega

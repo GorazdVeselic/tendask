@@ -68,8 +68,10 @@
     "type_journal_nudge_sub": "lokal · ein sanfter Anstoß, wenn es still wird",
     "type_weather": "Smarte Hinweise (Wetter)",
     "type_weather_sub": "demnächst · über Server",
+    "type_weather_sub_live": "über Server · braucht Internet",
     "type_community": "Hinweise aus der Umgebung",
     "type_community_sub": "demnächst (V2)",
+    "type_community_sub_live": "über Server · was in deiner Umgebung läuft",
     "section_default_offset": "Standard-Vorlaufzeit",
     "default_offset_hint": "Füllt neue Aufgaben vor; jederzeit änderbar.",
     "section_quiet": "Damit du nicht überflutet wirst",
@@ -118,7 +120,8 @@
     "remind_title": "Erinnerungen + Wetter",
     "remind_body": "Plane Aufgaben, erhalte eine Erinnerung auf dein Handy und einen Wetterhinweis — „morgen früh trocken, gute Zeit zum Spritzen“.",
     "nearby_title": "Deine Umgebung",
-    "nearby_body": "Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat."
+    "nearby_body": "Später: sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat.",
+    "nearby_body_live": "Sieh, was Gärtner mit ähnlichem Klima in deiner Nähe tun — anonym und privat."
   },
   "auth": {
     "title": "Willkommen bei Tendask",
@@ -163,6 +166,7 @@
   "location": {
     "title": "Wo gärtnerst du?",
     "why": "Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.",
+    "why_live": "Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.",
     "use_gps": "Meinen Standort verwenden",
     "enter_place": "Ort eingeben",
     "or": "oder",
@@ -665,6 +669,7 @@
     "past_intro": "Was Tendask vorgeschlagen hat und wie du reagiert hast.",
     "past_empty": "Noch kein Verlauf. Sobald du auf einen Vorschlag reagierst — einplanen, überspringen oder als erledigt erfassen — erscheint er hier.",
     "past_retention": "Vorschläge, die älter als ein Jahr sind, werden automatisch entfernt.",
+    "dry_window": "Trockenes Zeitfenster[ (~{dry_hours} h)] — guter Zeitpunkt.",
     "cadence": {
       "overdue": {
         "title": "{task} ist fällig",
@@ -675,12 +680,6 @@
       "anniversary": {
         "title": "{task} — vor einem Jahr",
         "body": "Letztes Jahr um den {last_year_date} — {task} bei {subject}. Wieder fällig?"
-      }
-    },
-    "weather": {
-      "window_open": {
-        "title": "{task}: gutes Zeitfenster",
-        "body": "Für {subject} steht eine trockene Phase an — ein guter Zeitpunkt."
       }
     },
     "community": {
@@ -810,11 +809,11 @@
       },
       "plant_out": {
         "title": "Auspflanzen",
-        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}."
+        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht[ — um {frost_date}]."
       },
       "transplant": {
         "title": "Umpflanzen",
-        "body": "Setze {subject} nach dem Frost an den endgültigen Platz — um {frost_date}."
+        "body": "Setze {subject} nach dem Frost an den endgültigen Platz[ — um {frost_date}]."
       },
       "sow_direct": {
         "title": "Direktsaat",
@@ -840,7 +839,7 @@
       },
       "plant_out": {
         "title": "Auspflanzen",
-        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht — um {frost_date}."
+        "body": "Pflanze {subject} aus, sobald kein Frost mehr droht[ — um {frost_date}]."
       }
     },
     "tomato": {
@@ -960,13 +959,13 @@
     "cucumber": {
       "sow_direct": {
         "title": "Direktsaat",
-        "body": "Säe {subject} ins Freie, sobald es warm und frostfrei ist — um {frost_date}."
+        "body": "Säe {subject} ins Freie, sobald es warm und frostfrei ist[ — um {frost_date}]."
       }
     },
     "zucchini": {
       "sow_direct": {
         "title": "Direktsaat",
-        "body": "Säe {subject} nach dem Frost ins Freie — um {frost_date}."
+        "body": "Säe {subject} nach dem Frost ins Freie[ — um {frost_date}]."
       }
     }
   },
@@ -990,6 +989,8 @@
     },
     "empty_feed": "In deiner Umgebung sind noch zu wenige Gärtner. Sobald mehr Leute Aufgaben erfassen, füllt sich das hier.",
     "empty_standing": "Noch keine Aufgabe hat genug Gärtner in der Nähe für einen Vergleich.",
+    "empty_standing_no_history": "Diese Saison ist noch nichts erfasst. Erfasse eine saisonale Aufgabe — Schnitt, Düngen, Aussaat — dann steht hier, wo du im Vergleich zur Umgebung stehst.",
+    "empty_standing_no_seasonal": "Deine Aufgaben dieser Saison (z. B. Gießen) sind nicht saisonal, deshalb wird ihr Zeitpunkt nicht verglichen. Erfasse eine saisonale Aufgabe wie Schnitt oder Düngen.",
     "empty_offline": "Auf diesem Gerät gibt es noch keine Daten aus der Umgebung.",
     "data_from": "Daten vom $date",
     "privacy_note": "Anonym, mindestens 5 Gärtner. Dein genauer Standort wird nie geteilt.",
@@ -1018,7 +1019,7 @@
       "not_started": "Das hast du diese Saison noch nicht gemacht",
       "by_now_percent": "Bis jetzt haben ~$percent % begonnen.",
       "by_date_percent": "Bis $date hatten ~$percent % begonnen.",
-      "peak_weeks": "Die meisten beginnen zwischen $from und $to.",
+      "peak_weeks": "Die meisten beginnen zwischen $from und $to",
       "censored_note": "Erste Saison: gezählt werden nur die, die dieses Jahr schon begonnen haben — der Anteil verschiebt sich also noch.",
       "among(n)": {
         "one": "unter ~1 Gärtner",
@@ -1026,6 +1027,7 @@
       },
       "frequency_title": "Wie oft",
       "freq_range": "$from–$to×",
+      "freq_single": "$count×",
       "freq_unit": "pro Saison",
       "freq_low_n": "Zu wenige Gärtner für eine typische Spanne.",
       "freq_caption": "wie viele Gärtner es N-mal machen",

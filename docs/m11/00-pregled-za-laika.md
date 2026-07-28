@@ -47,6 +47,12 @@ nastaja.
 Če pravil za neko rastlino ni (ali ni zanesljivega vira), avtomat raje molči. Manj predlogov je
 boljše od napačnega.
 
+**Vreme samo ojača, nikoli ne predlaga samo.** »Jutri bo suho« ni razlog za predlog — razlog je
+vedno pravilo iz knjige (ritem ali sezonsko okno). Kadar suha napoved sovpade s tako potrebo,
+predlog dobi višjo prioriteto in eno vrstico več (»Suho okno (~30 h) — primeren čas.«). Če potrebe
+ni, suhega vremena uporabnik ne vidi: sicer bi vsak lep teden proizvedel opomnike za opravila,
+ki niso na vrsti. (V specifikaciji je to pravilo **R1**; odločitev O4, 2026-07-28.)
+
 ## 0.3 Kako motor ve, kdaj je »čas«? Sezonska okna in pozeba kot sidro
 
 Težava: »obrezuj jablano februarja« drži v Ljubljani, ne pa v Helsinkih. Namesto da bi vzdrževali

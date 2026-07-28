@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/data/seed/plant_task_rules_seed.dart';
+import 'package:tendask/features/suggestions/presentation/suggestion_text.dart';
 
 /// Guards the suggestion message catalog against the engine's emit contract:
 /// a template must only reference {markers} that the engine actually sends for
@@ -27,7 +28,8 @@ void main() {
     _ => {'subject', 'task'}, // cadence_only — not emitted; lenient
   };
 
-  // Generic keys (R3/R2/R1/R6) and their params from docs/m11/03.
+  // Generic keys (R3/R2/R6) and their params from docs/m11/03. R1 is not here:
+  // it never emits a card of its own, only the dry_window suffix (O4).
   final generic = {
     'suggestions.cadence.overdue': {
       'subject',
@@ -36,7 +38,6 @@ void main() {
       'cadence_days',
     },
     'suggestions.history.anniversary': {'subject', 'task', 'last_year_date'},
-    'suggestions.weather.window_open': {'subject', 'task'},
     // No subject, and deliberately no {percent}: the engine sends the number as
     // evidence, but the free Home band must not print it — a share of the
     // neighbourhood is Plus content (skupnost-agregacija.md §12.5). The number
@@ -87,6 +88,50 @@ void main() {
 
   test('generic R1/R2/R3/R6 keys exist with valid markers', () {
     generic.forEach(checkKey);
+  });
+
+  test('an optional marker sits in a [clause], so its sentence survives', () {
+    // frost_date only ships when the rule is frost-gated AND the climate has a
+    // last-frost date; five bodies ended as "… ko mine pozeba — okoli ." (N20).
+    for (final r in PlantTaskRulesSeed.rules) {
+      final markers = ruleMarkers(r);
+      if (!markers.contains('frost_date')) continue;
+      for (final entry in locales.entries) {
+        final body = entryFor(entry.value, r.messageKey)!['body'] as String;
+        if (!body.contains('{frost_date}')) continue;
+        final filled = fillTemplate(body, {
+          for (final m in markers)
+            if (m != 'frost_date') m: 'X',
+        });
+        expect(
+          filled,
+          isNot(anyOf(contains(' .'), contains('  '))),
+          reason: '${entry.key}: ${r.messageKey} without frost_date → "$filled"',
+        );
+      }
+    }
+  });
+
+  test('R1 has no card of its own, only the dry-window suffix', () {
+    for (final entry in locales.entries) {
+      // suggestions.weather.window_open was never emitted by the engine (O4).
+      expect(
+        entry.value['weather'],
+        isNull,
+        reason: '${entry.key}: R1 emits no card — the key is dead',
+      );
+      final suffix = entry.value['dry_window'];
+      expect(suffix, isA<String>(), reason: '${entry.key}: dry_window missing');
+      final markers = markerRe
+          .allMatches(suffix as String)
+          .map((m) => m.group(1)!)
+          .toSet();
+      expect(
+        markers,
+        {'dry_hours'},
+        reason: '${entry.key}: dry_window uses unsent markers $markers',
+      );
+    }
   });
 
   test('no suggestion value contains a literal \$ (slang would interpolate it)', () {

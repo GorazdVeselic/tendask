@@ -53,37 +53,34 @@ ki ga engine pošlje kot `subject_label_raw`).
 
 ---
 
-## R1 — Vremensko okno za vremensko občutljiva opravila
+## R1 — Vremensko okno kot **ojačevalec** (ne samostojno pravilo)
 
-**Namen:** »jutri/danes je suho okno — primeren čas za škropljenje/gnojenje/košnjo.«
-R1 NE uvaja sezone — vremensko okno samo OJAČA že obstoječo potrebo (cadence/sezona).
+> **Odločitev O4 (2026-07-28):** R1 **ne emitira lastne kartice**. Nima svojega `message_key`,
+> cooldowna, `dismiss` roka ne `validUntil` — vse to podeduje od pravila, ki ga ojača. Prejšnja
+> različica tega odstavka je opisovala samostojno pravilo, ki v kodi ni nikoli obstajalo, in ključ
+> `suggestions.weather.window_open` je bil mrtev v vseh treh jezikih (najdba N4). Ključ je
+> odstranjen; kartica izvornega pravila namesto tega dobi **pripono** (`suggestions.dry_window`).
+
+**Namen:** »danes/jutri je suho okno — primeren čas.« Suho okno **ne uvaja** potrebe; samo ojača
+tisto, ki že obstaja (cadence R3 ali sezonsko okno R5).
 
 ```
-SPROŽILEC (psevdokoda):
-  for taskType in taskTypes where weather_sensitive = true:
-    for subject in eligibleSubjects(taskType):           // §Cevovod, upravičenost
-      needsDoing =
-        (ruleFor(subject, taskType, anchor='cadence_only') is in window)   // R3 logika
-        OR (seasonWindowOpen(subject, taskType))                           // R5 logika
-      if not needsDoing: continue
-      if weather.forecastDryHours == null: continue       // vreme nedosegljivo → preskoči
-      if weather.forecastDryHours >= 24
-         and weather.recentRainMm24h < 2.0
-         and (taskType != 'treat' or weather.windSpeedKmh < 15):
-        emit candidate
+OJAČITEV (psevdokoda, candidate.ts dryWindowBonus):
+  za vsakega kandidata, ki ga je proizvedel R3 ali R5:
+    if not taskType.weather_sensitive: brez ojačitve
+    if subject v 'protected' območju: brez ojačitve   // pod streho je okno brezpredmetno
+    if not isDryWindow(weather, thresholds, taskType): brez ojačitve
+    score += score_weather_window (2.0)
+    message_params += { dry_window: true, dry_hours: <forecastDryHours> }
 ```
 **KONTEKST:** `weather.forecastDryHours`, `recentRainMm24h`, `windSpeedKmh`, R3/R5 stanje.
-**STRAŽE (poleg skupnih):** subjekt v `protected` območju → R1 zanj NE velja (vremensko okno je
-brezpredmetno). `treat` dodatno `no_rain_forecast_24h` (odpornost nanosa).
-**OCENA:** `score_weather_window (2.0) + (R3 zamuda ? min(days_overdue*0.1, 2.0) : 0)
-+ (R5 okno odprto ? 1.0 : 0)`.
-**SPOROČILO:** `suggestions.weather.window_open` — params `{subject_label_key, task_type_id,
-dry_hours}`; če izvira iz R3/R5, engine uporabi specifičnejši `message_key` IZVORNEGA pravila in
-doda param `dry_window: true` (predloga doda »jutri kaže suho«).
-**AKCIJA ob Načrtuj:** task `{task_type_id, subjects: [subject], date: tomorrow 09:00 local,
-status: waiting}`.
-**COOLDOWN:** 3 dni po emitu (per guard key+subjekt — §Guard key). **DISMISS:** 7 dni.
-**validUntil:** `today + 2 dni` (vremensko okno hitro zastara).
+**STRAŽE:** subjekt v `protected` območju → ojačitve ni. `treat` dodatno `wind_treat_kmh` in
+`rain_24h_mm` (odpornost nanosa).
+**OCENA:** kandidat obdrži svoj `message_key` in svojo oceno **plus** `score_weather_window (2.0)`.
+**SPOROČILO:** `message_key` **izvornega** pravila; klient telesu doda pripono
+`suggestions.dry_window` (»Suho okno (~30 h) — primeren čas.«), kadar je `dry_window: true`.
+Vremena, ki potrebe ni ojačalo, uporabnik ne vidi — po zasnovi.
+**AKCIJA / COOLDOWN / DISMISS / validUntil:** vse od izvornega pravila (R3 oz. R5).
 
 ## R2 — Osebna obletnica (»lani tačas si …«)
 
@@ -296,8 +293,10 @@ runForUser(userId):
        sync jih počisti tudi lokalno). Eno leto pokrije »lani tačas« kontekst in zaslon
        Pretekli predlogi; tabela ostane drobna.
  3. signals = buildSignals(...)          // Poglavje 2 (weather_cache po celici!)
- 4. candidates = R5() + R7() + R3() + R2() + R1()       // R1 zadnji (bere R3/R5 stanje)
-    → R4 obogatitev.
+ 4. candidates = R5() + R7() + R3() + R2() + R6()
+    // R1 ni v seznamu: `dryWindowBonus` je vgrajen v R3/R5/R7/R6 in kandidata samo
+    // ojača (score + `dry_window`/`dry_hours` param), nikoli ne doda novega.
+    → R4 obogatitev (po stražah).
  5. STRAŽE za vsak kandidat (vrstni red, fail-fast; cooldown/mute po GUARD KEY):
     a. upravičenost (subjekt obstaja, ni deleted)        — vgrajeno v emit
     b. state.dismissed(guardKey, subjectKey)             → drop
