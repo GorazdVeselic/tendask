@@ -218,6 +218,26 @@ curl -s -X POST https://api-staging.tendask.app/functions/v1/smart-engine \
 > app_config`. Popravlja **`0019_m11_engine_service_grants.sql`** (aditivna, idempotentna).
 > Preverba: sonda `m11_shape.sql` zdaj izpisuje tudi `GRANT|` vrstice.
 
+**Testni podatki:** `supabase/seed/staging_test_data.sql` ustvari **40 sintetičnih sosedov** v
+celici, ki jo prebere iz **tvojega** profila (če jih postaviš drugam, aplikacija ne vidi nič).
+Zakaj 40 in ne 5: pod `k_privacy` (5) bucket ne vrne **ničesar**, pod `k_reliab` (30) pa vrne
+opisne pasove namesto številk — s premalo sosedi ne moreš ločiti delujoče funkcije od pokvarjene.
+Vsak sosed je »upravičen« (`eligible_user`: račun >14 dni, ≥10 opravil, ≥5 različnih dni), ima tri
+sezone (dve zaključeni, sicer je krivulja `censored`) **in dve opravili v zadnjih 7 dneh**, sicer
+`activity_recent` ostane prazen in pas »Ta teden« ne pokaže ničesar.
+
+```bash
+# enkrat na stack: marker, brez katerega se skripta odkloni izvesti
+insert into app_config(key,value) values ('env','"staging"') on conflict (key) do update set value=excluded.value;
+
+wsl -e bash -lc "cat .../supabase/seed/staging_test_data.sql | docker exec -i supabase-db psql -v ON_ERROR_STOP=1 -U postgres -d postgres"
+docker exec supabase-db psql -U postgres -d postgres -c "select public.agg_refresh_all()"
+```
+
+Po zagonu (preverjeno 2026-07-28): `bucket_population` 3 · `activity_recent` 63 · `activity_season`
+423 · `activity_frequency` 63; skozi RLS kot `anon` pa 3 / 18 / 144 / 9 — **pragovi res režejo**.
+`refresh materialized view eligible_user` je del skripte: brez njega je vseh 40 sosedov nevidnih.
+
 **Avtorizacija funkcije na stagingu je slabša kot na produkciji — namerno, a vedeti je treba.**
 `isServiceRole` (`handler.ts`) žeton **dekodira, podpisa pa ne preveri**; naslanja se na
 platformo, zato ima `supabase/config.toml` `[functions.smart-engine] verify_jwt = true` z
