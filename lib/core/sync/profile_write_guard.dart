@@ -34,13 +34,24 @@ Future<bool> profileRowReadyForWrite(
       userId != kLocalUserId && (await isOnline?.call() ?? false);
   if (!remotePossible) return false;
 
+  // `firstWhere(...).timeout(...)` would leave the drift query stream
+  // subscribed after the timeout — the timeout lands on the future, not on the
+  // subscription behind it, and that stream re-runs on every write to profile
+  // for the rest of the session. The subscription is therefore held explicitly
+  // and cancelled on both paths.
+  final arrived = Completer<void>();
+  final sub =
+      (db.select(db.profiles)..where((p) => p.userId.equals(userId)))
+          .watchSingleOrNull()
+          .listen((row) {
+            if (row != null && !arrived.isCompleted) arrived.complete();
+          });
   try {
-    await (db.select(db.profiles)..where((p) => p.userId.equals(userId)))
-        .watchSingleOrNull()
-        .firstWhere((row) => row != null)
-        .timeout(grace);
+    await arrived.future.timeout(grace);
     return true;
   } on TimeoutException {
     return false; // pull did not land in time — the caller inserts
+  } finally {
+    await sub.cancel();
   }
 }

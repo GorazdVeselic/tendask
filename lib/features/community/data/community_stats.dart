@@ -234,7 +234,6 @@ FrequencyStats? parseFrequency(
   return FrequencyStats(
     bucket: bucket,
     p25: (best['per_user_p25'] as num?)?.toDouble() ?? p50,
-    p50: p50,
     p75: (best['per_user_p75'] as num?)?.toDouble() ?? p50,
     unit: (best['unit'] as String?) ?? 'per_season',
     nUsers: nUsers,

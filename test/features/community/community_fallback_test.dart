@@ -276,7 +276,7 @@ void main() {
     expect(standings.rows.map((s) => s.taskTypeId), ['mow']);
   });
 
-  group('an empty standings list names its own cause (najdba N17)', () {
+  group('an empty standings list names its own cause (N17)', () {
     Future<StandingsGap?> gapFor(Map<(String, String), MySeason> mine) async {
       final result = await readAlive(
         container(
@@ -349,6 +349,52 @@ void main() {
       ),
       isNull,
     );
+  });
+
+  group('communityWeekly widens the same ladder as the curve', () {
+    // Same shape of loop as communitySeasonCurve, and until now the only one of
+    // the two without a test (N2). Its scope can settle a level coarser than the
+    // curve's, so the two cannot cover for each other.
+    test('skips a level whose population is below the privacy floor', () async {
+      store['bucket_population|r7|cellA|null|null'] = [
+        {'distinct_users': kCommunityPrivacyMin - 1},
+      ];
+      store['activity_recent|r7|cellA|null|null'] = const [
+        {'task_type_id': 'prune', 'plant_id': 'apple', 'distinct_users_7d': 3},
+      ];
+      store['bucket_population|r6|cellB|null|null'] = const [
+        {'distinct_users': 40},
+      ];
+      store['activity_recent|r6|cellB|null|null'] = const [
+        {'task_type_id': 'prune', 'plant_id': 'apple', 'distinct_users_7d': 4},
+      ];
+
+      final weekly = await readAlive(
+        container(),
+        communityWeeklyProvider('prune', 'apple').future,
+      );
+
+      expect(weekly, isNotNull);
+      expect(weekly!.bucket, _r6);
+      expect(weekly.intensity, CommunityIntensity.some); // 4/40
+    });
+
+    test('null when no level carries the cohort at all', () async {
+      store['bucket_population|r6|cellB|null|null'] = const [
+        {'distinct_users': 40},
+      ];
+      store['activity_recent|r6|cellB|null|null'] = const [
+        {'task_type_id': 'prune', 'plant_id': 'raspberry', 'distinct_users_7d': 9},
+      ];
+
+      expect(
+        await readAlive(
+          container(),
+          communityWeeklyProvider('prune', 'apple').future,
+        ),
+        isNull,
+      );
+    });
   });
 
   group('reach — whether an empty answer may be blamed on the neighbourhood', () {

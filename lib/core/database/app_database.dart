@@ -22,7 +22,6 @@ part 'app_database.g.dart';
     Plants,
     PlantSynonyms,
     CategoryTaskTypes,
-    PlantTaskRules,
     // user data (sync-ready: uuid / updated_at / deleted / sync_status)
     Profiles,
     Areas,
@@ -35,7 +34,6 @@ part 'app_database.g.dart';
     Recipes,
     TaskSupplies,
     Suggestions,
-    SuggestionLogs,
     // local-only (never synced)
     SyncCursors,
     LocalFlags,
@@ -49,7 +47,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 16;
+  int get schemaVersion => 17;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -60,7 +58,6 @@ class AppDatabase extends _$AppDatabase {
     await transaction(() async {
       for (final table in <TableInfo<Table, dynamic>>[
         suggestions,
-        suggestionLogs,
         taskSupplies,
         taskReminders,
         taskSubjects,
@@ -84,8 +81,7 @@ class AppDatabase extends _$AppDatabase {
   /// in profile are exported. Excludes device-local-only tables (local_flag/
   /// sync_cursor are internal); the public catalog is omitted (not user data).
   /// sync_status and the FCM token are stripped — an internal sync detail / a
-  /// technical device identifier, not user content. suggestion_log is a
-  /// server-side derivative of the same decisions — not exported.
+  /// technical device identifier, not user content.
   Future<Map<String, dynamic>> exportUserData() async {
     List<Map<String, dynamic>> rows<D extends DataClass>(
       List<D> data,
@@ -208,19 +204,24 @@ class AppDatabase extends _$AppDatabase {
           "WHERE id IN ('water', 'weed', 'stake', 'repot')",
         );
         await m.createTable(suggestions);
-        await m.createTable(suggestionLogs);
       }
-      // v15: plant_task_rule catalog (M11.4) — seeded by SeedService on the
-      // next startup (it backfills any empty catalog table), pulled by
-      // catalog sync afterwards. Re-sequenced (was M11 v11).
-      if (from < 15) {
-        await m.createTable(plantTaskRules);
-      }
+      // v14 also created suggestion_log and v15 created plant_task_rule; v17
+      // drops both (below), so a device arriving from v13 skips those steps
+      // rather than building tables it would immediately lose.
       // v16: community_cache (M11.17) — device-local daily cache of a community
       // aggregate slice (V2 Okolica). Local-only, never synced, so no Supabase
       // impact; an old DB just gains an empty table.
       if (from < 16) {
         await m.createTable(communityCaches);
+      }
+      // v17: drop the two engine tables the device never read (O5). The rules
+      // live in Supabase, where the engine reads them — on the device the table
+      // only ever held 1127 seeded rows; the seed itself lives on as a
+      // build-time source under tool/. suggestion_log is server guard state
+      // that was mirrored in on every sync for no reader at all.
+      if (from < 17) {
+        await customStatement('DROP TABLE IF EXISTS plant_task_rule');
+        await customStatement('DROP TABLE IF EXISTS suggestion_log');
       }
     },
   );

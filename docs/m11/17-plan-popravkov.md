@@ -545,6 +545,30 @@ trije generični): 66 → **64** vnosov na jezik, `done_sheet` in `remove` ven.
 
 ### P11 · Higiena kode *(blokira O5)*
 
+> **Stanje po paketu 5 (2026-07-28).** Spodnji seznam je izvirni; kaj je zaprto in kaj ne:
+>
+> **Zaprto z artefaktom:** **O5** (`plant_task_rule` iz drift/sync/APK, seed v `tool/seed/`,
+> drift v17 ga skupaj s `suggestion_log` odvrže) · pull `suggestion_log` ustavljen (P1 korak 5) ·
+> `activeSuggestionsCountProvider` + `watchActiveCount()` · `suggestions.toast.planned` ·
+> `CommunityFeedItem/CommunityWeekly.distinctUsers7d`, `FrequencyStats.p50` · `community_cache`
+> se pri vsakem pisanju obreže (`kCommunityCacheMaxAge`) · **N2** (`communityWeekly` dobil testa) ·
+> imena Android kanalov v katalog (**N30**) · `dispose`: `FcmHandler`, `_archiveDio`,
+> `profileRowReadyForWrite`, `waitForProfile` · retry Dart↔Deno poenoten na »maks 3« +
+> `kFetchTimeoutMs` z zapisanim razlogom za razliko · `wind_transplant_kmh`/`wind_treat_kmh`
+> knoba dobila bralca · pill ×3 → `StatusPill`, `_Rows` ×2 + tease ×2 → `TeasedRowCards<T>` ·
+> Supabase klient iz `application/` v `data/` (`liveAggFetch`) · `_exactAlarmsAllowedProvider`
+> v `application/` · `communityTimingLabel` privatiziran · slovensko ime testa (»najdba N17«).
+>
+> **Zavestno pustimo:** `NotificationService.isReady` in SQL stolpci `refreshed_at`/`unit`
+> (**N31**) · `FrequencyStats.unit` (**N10**).
+>
+> **Ostane odprto (ni se dotaknilo):** razrez `community_repository.dart` in `suggestion_card.dart`
+> (>300 vrstic) · privatizacija `seasonDensity` / `CommunityRepository.bucketPopulation` /
+> `NotificationService.suggestionPayload` (vse tri ima test kot edinega zunanjega klicalca — glej
+> N31, isti razmislek) · dvojno dekodiranje `messageParams` in `Map<String,dynamic>` v presentation ·
+> preostale magične vrednosti (`rules.ts`, `rules_community.ts`, `pipeline.ts`, `housekeep.ts`;
+> Dart 400 ms, `fontSize: 22`, emoji fallbacki) · `kSupplyTaskTypes` proti `task_type.consumes_supplies`.
+
 **Mrtva koda** (vse potrjeno z grepom čez `lib`, `test`, `tool`, `supabase`):
 
 | Kaj | Opomba |

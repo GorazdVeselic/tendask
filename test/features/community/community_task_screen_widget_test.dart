@@ -49,7 +49,6 @@ SeasonCurve _curve({bool censored = false}) => buildSeasonCurve(
 const _stats = FrequencyStats(
   bucket: _r6,
   p25: 2,
-  p50: 3,
   p75: 4,
   unit: 'per_season',
   nUsers: 40,
@@ -79,7 +78,6 @@ Future<void> _pump(
   FrequencyStats? stats = _stats,
   CommunityWeekly? weekly = const CommunityWeekly(
     bucket: _r5,
-    distinctUsers7d: 9,
     intensity: CommunityIntensity.some,
   ),
   MySeason mine = const MySeason(first: null, count: 0),

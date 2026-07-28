@@ -13,6 +13,8 @@ final kDefaultLongitude = _lonEnv.isEmpty ? 14.5058 : double.parse(_lonEnv);
 
 /// Open-Meteo is retried at most 3 times (one initial attempt + these waits),
 /// with exponential backoff, before giving up gracefully (offline = null).
+/// The engine's `weather.ts` runs the same ladder — the two used to differ by
+/// one attempt for no reason anyone had written down.
 const kWeatherRetryDelays = <Duration>[
   Duration(seconds: 1),
   Duration(seconds: 3),
@@ -159,6 +161,13 @@ const kSuggestionBandMax = 3;
 /// treated as incomplete rather than as data: a season curve is normalised over
 /// the rows received, and silently dropped weeks would re-scale every percentage.
 const kCommunityRowLimit = 1000;
+
+/// How long a cached community slice is kept before the next write prunes it.
+/// The cache key carries the H3 bucket, so every garden the user ever set — and
+/// every cell they travelled through — leaves rows behind that nothing reads
+/// again. A slice is only ever used on the day it was fetched, so anything older
+/// than this is dead weight, not a fallback.
+const kCommunityCacheMaxAge = Duration(days: 7);
 
 /// Frequency histogram bands, in chart order — mirrors the server's bucketing
 /// (migration 0009: `n_events >= 5 → '5+'`). Fixed rather than read off the

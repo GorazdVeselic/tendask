@@ -6,13 +6,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/database/app_database.dart';
 
 /// The upgrade a released device actually performs. Play carries `1.0.1+16` at
-/// drift v13, so v13 → v16 (engine tables, plant_task_rule, community_cache) is
-/// the path every existing install runs on first launch of the M11 build — while
-/// the only migration test so far started at v8, a version nobody has.
+/// drift v13, so v13 → v17 (engine tables, community_cache) is the path every
+/// existing install runs on first launch of the M11 build — while the only
+/// migration test so far started at v8, a version nobody has.
 ///
 /// The v13 fixture is not hand-written DDL: it is the real current schema with
-/// exactly what steps 14–16 add removed again, so it cannot drift out of sync
-/// with the table definitions the way a copied CREATE TABLE would.
+/// exactly what steps 14–17 add removed again, so it cannot drift out of sync
+/// with the table definitions the way a copied CREATE TABLE would. The one
+/// exception is plant_task_rule in the second test: v17 *drops* it, so the only
+/// way to have a device that still carries it is to write the DDL out.
 void main() {
   late Directory dir;
   late File file;
@@ -47,9 +49,7 @@ void main() {
     );
     for (final stmt in [
       'DROP TABLE community_cache', // v16
-      'DROP TABLE plant_task_rule', // v15
-      'DROP TABLE suggestion_log', // v14
-      'DROP TABLE suggestion',
+      'DROP TABLE suggestion', // v14
       'ALTER TABLE profile DROP COLUMN timezone',
       'ALTER TABLE profile DROP COLUMN climate_bucket',
       'ALTER TABLE profile DROP COLUMN climate_profile',
@@ -64,7 +64,7 @@ void main() {
     await db.close();
   }
 
-  test('a v13 device upgrades to v16 and keeps its rows', () async {
+  test('a v13 device upgrades to v17 and keeps its rows', () async {
     await rewindToV13();
 
     final db = AppDatabase.forTesting(NativeDatabase(file));
@@ -89,11 +89,57 @@ void main() {
     );
     expect((await db.select(db.profiles).getSingle()).timezone, 'Europe/Ljubljana');
 
-    // The four tables the M11 build reads on its first frame exist.
+    // The two tables the M11 build reads on its first frame exist.
     expect(await db.select(db.suggestions).get(), isEmpty);
-    expect(await db.select(db.suggestionLogs).get(), isEmpty);
-    expect(await db.select(db.plantTaskRules).get(), isEmpty);
     expect(await db.select(db.communityCaches).get(), isEmpty);
+  });
+
+  test('a v16 device loses the two unread engine tables on the way to v17', () async {
+    final seeded = AppDatabase.forTesting(NativeDatabase(file));
+    await seeded.customStatement('select 1');
+    // The tables as v14/v15 created them — nothing reads these columns on the
+    // device, which is the whole point of dropping them (O5). Rows go in so the
+    // drop has to survive a non-empty table, not just an empty one.
+    await seeded.customStatement(
+      'CREATE TABLE plant_task_rule ('
+      'id TEXT NOT NULL PRIMARY KEY, scope TEXT NOT NULL, '
+      'ref_id TEXT NOT NULL, task_type_id TEXT NOT NULL, '
+      'timing_anchor TEXT NOT NULL, window TEXT NOT NULL, cadence TEXT, '
+      'frost_gate INTEGER NOT NULL DEFAULT 0, weather_guard TEXT, '
+      'source_ref TEXT NOT NULL, confidence TEXT NOT NULL, '
+      'message_key TEXT NOT NULL)',
+    );
+    await seeded.customStatement(
+      "INSERT INTO plant_task_rule VALUES ('apple.prune.winter', 'plant', "
+      "'apple', 'prune', 'month_window', '{}', NULL, 0, NULL, 'rhs', "
+      "'high', 'suggestions.fruit_tree.prune_winter')",
+    );
+    await seeded.customStatement(
+      'CREATE TABLE suggestion_log ('
+      'user_id TEXT NOT NULL, guard_key TEXT NOT NULL, '
+      'subject_key TEXT NOT NULL, last_suggested_at INTEGER, '
+      'dismissed_until INTEGER, updated_at INTEGER NOT NULL, '
+      'PRIMARY KEY (user_id, guard_key, subject_key))',
+    );
+    await seeded.customStatement(
+      "INSERT INTO suggestion_log VALUES ('u1', 'R3:water', 'up:p1', "
+      'NULL, NULL, 0)',
+    );
+    await seeded.customStatement('PRAGMA user_version = 16');
+    await seeded.close();
+
+    final db = AppDatabase.forTesting(NativeDatabase(file));
+    addTearDown(db.close);
+    // Touch it so the migration runs before the shape is read back.
+    await db.customStatement('select 1');
+
+    final tables = await db
+        .customSelect(
+          "select name from sqlite_master where type = 'table' "
+          "and name in ('plant_task_rule', 'suggestion_log')",
+        )
+        .get();
+    expect(tables, isEmpty);
   });
 
   test('the seasonal backfill runs on the v13 catalog, not just on v8', () async {

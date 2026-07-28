@@ -32,8 +32,8 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 16', () {
-    expect(db.schemaVersion, 16);
+  test('schema version is 17', () {
+    expect(db.schemaVersion, 17);
   });
 
   test('v12: task carries the harvest yield columns (T11)', () async {
@@ -47,10 +47,12 @@ void main() {
     expect(await tableExists('profile'), isTrue);
     expect(await tableExists('area'), isTrue);
     expect(await tableExists('task'), isTrue);
-    // Smart-engine tables grafted in by the merge (M11, v14/v15).
+    // Smart-engine tables grafted in by the merge (M11, v14).
     expect(await tableExists('suggestion'), isTrue);
-    expect(await tableExists('suggestion_log'), isTrue);
-    expect(await tableExists('plant_task_rule'), isTrue);
+    // v17 dropped these two again: rules and guard state live in Supabase,
+    // where the engine reads them, and the device never had a reader (O5).
+    expect(await tableExists('plant_task_rule'), isFalse);
+    expect(await tableExists('suggestion_log'), isFalse);
   });
 
   test('v10: profile carries the per-account default_garden_seeded flag', () async {

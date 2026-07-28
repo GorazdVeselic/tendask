@@ -28,8 +28,12 @@ const kCodeEvals: Record<string, CodeEval> = {
     w.forecastRainMm48h != null && w.forecastRainMm48h < t.rain_48h_mm,
   no_heavy_rain_24h: (w, t) =>
     w.forecastRainMm24h != null && w.forecastRainMm24h < t.heavy_rain_24h_mm,
-  wind_lt_15: (w) => w.windSpeedKmh != null && w.windSpeedKmh < 15,
-  wind_lt_20: (w) => w.windSpeedKmh != null && w.windSpeedKmh < 20,
+  // The code names carry the seeded default, not the live value: both read the
+  // app_config knob, which exists so ops can retune without a deploy.
+  wind_lt_15: (w, t) =>
+    w.windSpeedKmh != null && w.windSpeedKmh < t.wind_treat_kmh,
+  wind_lt_20: (w, t) =>
+    w.windSpeedKmh != null && w.windSpeedKmh < t.wind_transplant_kmh,
   temp_gt_0: (w) => w.minTempC48h != null && w.minTempC48h > 0,
   temp_gt_5: (w) => w.minTempC48h != null && w.minTempC48h > 5,
   temp_lt_30: (w) => w.maxTempCToday != null && w.maxTempCToday < 30,

@@ -77,6 +77,20 @@ Deno.test('all §G codes evaluate per spec', () => {
   }
 });
 
+Deno.test('the wind codes read the knob, not the number in their name', () => {
+  // wind_treat_kmh / wind_transplant_kmh existed in app_config while the guards
+  // compared against literal 15 and 20, so retuning them changed nothing.
+  const tuned = { ...kDefaultThresholds, wind_treat_kmh: 25, wind_transplant_kmh: 8 };
+  const at = (code: string, kmh: number, t = tuned) =>
+    evaluateWeatherGuard(code, weather({ windSpeedKmh: kmh }), t, kEval).pass;
+
+  assertEquals(at('wind_lt_15', 20), true); // 20 < 25 → passes on the raised knob
+  assertEquals(at('wind_lt_20', 10), false); // 10 >= 8 → fails on the lowered one
+  // The seeded defaults still behave exactly as the code names read.
+  assertEquals(at('wind_lt_15', 20, kDefaultThresholds), false);
+  assertEquals(at('wind_lt_20', 10, kDefaultThresholds), true);
+});
+
 Deno.test('unknown code fails closed and is reported', () => {
   const r = evaluateWeatherGuard('dry24h,not_a_code', weather(), kDefaultThresholds, kEval);
   assertEquals(r.pass, false);

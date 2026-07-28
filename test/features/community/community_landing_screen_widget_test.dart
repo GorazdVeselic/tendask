@@ -50,19 +50,16 @@ CommunityFeed _feed({DateTime? fetchedAt}) => CommunityFeed(
     CommunityFeedItem(
       taskTypeId: 'water',
       cohort: kCommunityCohortSite,
-      distinctUsers7d: 20,
       intensity: CommunityIntensity.often,
     ),
     CommunityFeedItem(
       taskTypeId: 'mow',
       cohort: kCommunityCohortSite,
-      distinctUsers7d: 6,
       intensity: CommunityIntensity.some,
     ),
     CommunityFeedItem(
       taskTypeId: 'prune',
       cohort: 'apple',
-      distinctUsers7d: 2,
       intensity: CommunityIntensity.rare,
     ),
   ],

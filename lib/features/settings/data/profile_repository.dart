@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:drift/drift.dart';
@@ -153,14 +154,25 @@ class ProfileRepository {
   /// Bounded so a never-arriving profile (permanent offline, RLS quirk) can't
   /// hang the caller forever; on timeout it throws TimeoutException and the
   /// caller (FCM token sync) retries on the next auth change / cold start.
+  /// The subscription is held explicitly: a `.timeout` on the future that
+  /// `firstWhere` returns leaves the drift query stream listening for the rest
+  /// of the session, re-running on every write to profile.
   Future<void> waitForProfile(
     String userId, {
     Duration timeout = const Duration(seconds: 20),
   }) async {
-    await (_db.select(_db.profiles)..where((p) => p.userId.equals(userId)))
-        .watchSingleOrNull()
-        .firstWhere((row) => row != null)
-        .timeout(timeout);
+    final arrived = Completer<void>();
+    final sub =
+        (_db.select(_db.profiles)..where((p) => p.userId.equals(userId)))
+            .watchSingleOrNull()
+            .listen((row) {
+              if (row != null && !arrived.isCompleted) arrived.complete();
+            });
+    try {
+      await arrived.future.timeout(timeout);
+    } finally {
+      await sub.cancel();
+    }
   }
 
   NotificationSettings _decode(String? json) {

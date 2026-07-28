@@ -128,20 +128,14 @@ class SyncPullService {
         taskSupplyFromRemote,
         updatedAt: (t) => t.updatedAt,
       ),
-      // Smart engine (M11): suggestion is two-way (status changes push back),
-      // suggestion_log is a pull-only mirror of server guard state.
+      // Smart engine (M11): suggestion is two-way — status changes push back.
+      // suggestion_log stays on the server: it is guard state the engine reads,
+      // and the device never did (O5, P1 step 5).
       await _pull(
         _db.suggestions,
         userId: uid,
         since: since,
         suggestionFromRemote,
-        updatedAt: (t) => t.updatedAt,
-      ),
-      await _pull(
-        _db.suggestionLogs,
-        userId: uid,
-        since: since,
-        suggestionLogFromRemote,
         updatedAt: (t) => t.updatedAt,
       ),
     ]) {

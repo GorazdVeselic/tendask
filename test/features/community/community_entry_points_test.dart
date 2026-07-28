@@ -59,13 +59,11 @@ CommunityFeed _feed() => CommunityFeed(
     CommunityFeedItem(
       taskTypeId: 'water',
       cohort: kCommunityCohortSite,
-      distinctUsers7d: 20,
       intensity: CommunityIntensity.often,
     ),
     CommunityFeedItem(
       taskTypeId: 'prune',
       cohort: 'apple',
-      distinctUsers7d: 6,
       intensity: CommunityIntensity.some,
     ),
   ],

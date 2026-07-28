@@ -1,5 +1,5 @@
-import { assertEquals } from 'jsr:@std/assert@1';
-import { computeWeatherSignals } from './weather.ts';
+import { assert, assertEquals } from 'jsr:@std/assert@1';
+import { computeWeatherSignals, fetchOpenMeteoWithRetry } from './weather.ts';
 
 // Synthetic payload: 6 local days (past_days=3 + today + 2 forecast), offset
 // UTC+2. nowUtc 05:30Z → local 07:30 → nowIdx = 79 (today 07:00).
@@ -128,4 +128,23 @@ Deno.test('null precipitation hour ends the dry streak and nulls affected sums',
   assertEquals(s?.forecastDryHours, 3);
   assertEquals(s?.forecastRainMm24h, null); // unknown hour inside the window → fail-closed
   assertEquals(s?.recentRainMm24h, 0); // past window unaffected
+});
+
+Deno.test('a persistent failure stops at 3 attempts, like the client', async () => {
+  // The engine used to allow one more attempt than the app for no recorded
+  // reason. Neither side had a test, so the ladders drifted apart unnoticed.
+  let attempts = 0;
+  const failing = () => {
+    attempts++;
+    return Promise.reject(new Error('open-meteo down'));
+  };
+
+  const started = Date.now();
+  const result = await fetchOpenMeteoWithRetry(46.05, 14.5, failing as typeof fetch);
+
+  assertEquals(result, null); // graceful, not a throw
+  assertEquals(attempts, 3);
+  // 1s + 3s of backoff between them, and no third wait before giving up.
+  assert(Date.now() - started >= 4000, 'backoff was skipped');
+  assert(Date.now() - started < 12_000, 'a 9s wait is still in the ladder');
 });

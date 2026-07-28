@@ -35,7 +35,6 @@ TaskSubject _subject(
 CommunityFeedItem _item(String taskTypeId, String cohort) => CommunityFeedItem(
   taskTypeId: taskTypeId,
   cohort: cohort,
-  distinctUsers7d: 5,
   intensity: CommunityIntensity.some,
 );
 

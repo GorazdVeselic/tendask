@@ -275,7 +275,7 @@ as String,
 mixin _$CommunityFeedItem {
 
  String get taskTypeId;/// [kCommunityCohortSite] for site work, else the catalog plant id.
- String get cohort; int get distinctUsers7d; CommunityIntensity get intensity;
+ String get cohort; CommunityIntensity get intensity;
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -286,16 +286,16 @@ $CommunityFeedItemCopyWith<CommunityFeedItem> get copyWith => _$CommunityFeedIte
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,intensity);
 
 @override
 String toString() {
-  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, intensity: $intensity)';
 }
 
 
@@ -306,7 +306,7 @@ abstract mixin class $CommunityFeedItemCopyWith<$Res>  {
   factory $CommunityFeedItemCopyWith(CommunityFeedItem value, $Res Function(CommunityFeedItem) _then) = _$CommunityFeedItemCopyWithImpl;
 @useResult
 $Res call({
- String taskTypeId, String cohort, int distinctUsers7d, CommunityIntensity intensity
+ String taskTypeId, String cohort, CommunityIntensity intensity
 });
 
 
@@ -323,12 +323,11 @@ class _$CommunityFeedItemCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? cohort = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? taskTypeId = null,Object? cohort = null,Object? intensity = null,}) {
   return _then(_self.copyWith(
 taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
 as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
-as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
-as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
   ));
 }
@@ -414,10 +413,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem() when $default != null:
-return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.intensity);case _:
   return orElse();
 
 }
@@ -435,10 +434,10 @@ return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intens
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String taskTypeId,  String cohort,  CommunityIntensity intensity)  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem():
-return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.intensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -455,10 +454,10 @@ return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intens
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String cohort,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String taskTypeId,  String cohort,  CommunityIntensity intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CommunityFeedItem() when $default != null:
-return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.taskTypeId,_that.cohort,_that.intensity);case _:
   return null;
 
 }
@@ -470,13 +469,12 @@ return $default(_that.taskTypeId,_that.cohort,_that.distinctUsers7d,_that.intens
 
 
 class _CommunityFeedItem implements CommunityFeedItem {
-  const _CommunityFeedItem({required this.taskTypeId, required this.cohort, required this.distinctUsers7d, required this.intensity});
+  const _CommunityFeedItem({required this.taskTypeId, required this.cohort, required this.intensity});
   
 
 @override final  String taskTypeId;
 /// [kCommunityCohortSite] for site work, else the catalog plant id.
 @override final  String cohort;
-@override final  int distinctUsers7d;
 @override final  CommunityIntensity intensity;
 
 /// Create a copy of CommunityFeedItem
@@ -489,16 +487,16 @@ _$CommunityFeedItemCopyWith<_CommunityFeedItem> get copyWith => __$CommunityFeed
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityFeedItem&&(identical(other.taskTypeId, taskTypeId) || other.taskTypeId == taskTypeId)&&(identical(other.cohort, cohort) || other.cohort == cohort)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,taskTypeId,cohort,intensity);
 
 @override
 String toString() {
-  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityFeedItem(taskTypeId: $taskTypeId, cohort: $cohort, intensity: $intensity)';
 }
 
 
@@ -509,7 +507,7 @@ abstract mixin class _$CommunityFeedItemCopyWith<$Res> implements $CommunityFeed
   factory _$CommunityFeedItemCopyWith(_CommunityFeedItem value, $Res Function(_CommunityFeedItem) _then) = __$CommunityFeedItemCopyWithImpl;
 @override @useResult
 $Res call({
- String taskTypeId, String cohort, int distinctUsers7d, CommunityIntensity intensity
+ String taskTypeId, String cohort, CommunityIntensity intensity
 });
 
 
@@ -526,12 +524,11 @@ class __$CommunityFeedItemCopyWithImpl<$Res>
 
 /// Create a copy of CommunityFeedItem
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? cohort = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? taskTypeId = null,Object? cohort = null,Object? intensity = null,}) {
   return _then(_CommunityFeedItem(
 taskTypeId: null == taskTypeId ? _self.taskTypeId : taskTypeId // ignore: cast_nullable_to_non_nullable
 as String,cohort: null == cohort ? _self.cohort : cohort // ignore: cast_nullable_to_non_nullable
-as String,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
-as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as String,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
   ));
 }
@@ -832,7 +829,7 @@ $BucketCopyWith<$Res> get bucket {
 /// @nodoc
 mixin _$CommunityWeekly {
 
- Bucket get bucket; int get distinctUsers7d; CommunityIntensity get intensity;
+ Bucket get bucket; CommunityIntensity get intensity;
 /// Create a copy of CommunityWeekly
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -843,16 +840,16 @@ $CommunityWeeklyCopyWith<CommunityWeekly> get copyWith => _$CommunityWeeklyCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,bucket,intensity);
 
 @override
 String toString() {
-  return 'CommunityWeekly(bucket: $bucket, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityWeekly(bucket: $bucket, intensity: $intensity)';
 }
 
 
@@ -863,7 +860,7 @@ abstract mixin class $CommunityWeeklyCopyWith<$Res>  {
   factory $CommunityWeeklyCopyWith(CommunityWeekly value, $Res Function(CommunityWeekly) _then) = _$CommunityWeeklyCopyWithImpl;
 @useResult
 $Res call({
- Bucket bucket, int distinctUsers7d, CommunityIntensity intensity
+ Bucket bucket, CommunityIntensity intensity
 });
 
 
@@ -880,11 +877,10 @@ class _$CommunityWeeklyCopyWithImpl<$Res>
 
 /// Create a copy of CommunityWeekly
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? intensity = null,}) {
   return _then(_self.copyWith(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
-as Bucket,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
-as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as Bucket,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
   ));
 }
@@ -979,10 +975,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  CommunityIntensity intensity)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _CommunityWeekly() when $default != null:
-return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.bucket,_that.intensity);case _:
   return orElse();
 
 }
@@ -1000,10 +996,10 @@ return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  CommunityIntensity intensity)  $default,) {final _that = this;
 switch (_that) {
 case _CommunityWeekly():
-return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.bucket,_that.intensity);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -1020,10 +1016,10 @@ return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  int distinctUsers7d,  CommunityIntensity intensity)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  CommunityIntensity intensity)?  $default,) {final _that = this;
 switch (_that) {
 case _CommunityWeekly() when $default != null:
-return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
+return $default(_that.bucket,_that.intensity);case _:
   return null;
 
 }
@@ -1035,11 +1031,10 @@ return $default(_that.bucket,_that.distinctUsers7d,_that.intensity);case _:
 
 
 class _CommunityWeekly implements CommunityWeekly {
-  const _CommunityWeekly({required this.bucket, required this.distinctUsers7d, required this.intensity});
+  const _CommunityWeekly({required this.bucket, required this.intensity});
   
 
 @override final  Bucket bucket;
-@override final  int distinctUsers7d;
 @override final  CommunityIntensity intensity;
 
 /// Create a copy of CommunityWeekly
@@ -1052,16 +1047,16 @@ _$CommunityWeeklyCopyWith<_CommunityWeekly> get copyWith => __$CommunityWeeklyCo
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.distinctUsers7d, distinctUsers7d) || other.distinctUsers7d == distinctUsers7d)&&(identical(other.intensity, intensity) || other.intensity == intensity));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CommunityWeekly&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.intensity, intensity) || other.intensity == intensity));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,distinctUsers7d,intensity);
+int get hashCode => Object.hash(runtimeType,bucket,intensity);
 
 @override
 String toString() {
-  return 'CommunityWeekly(bucket: $bucket, distinctUsers7d: $distinctUsers7d, intensity: $intensity)';
+  return 'CommunityWeekly(bucket: $bucket, intensity: $intensity)';
 }
 
 
@@ -1072,7 +1067,7 @@ abstract mixin class _$CommunityWeeklyCopyWith<$Res> implements $CommunityWeekly
   factory _$CommunityWeeklyCopyWith(_CommunityWeekly value, $Res Function(_CommunityWeekly) _then) = __$CommunityWeeklyCopyWithImpl;
 @override @useResult
 $Res call({
- Bucket bucket, int distinctUsers7d, CommunityIntensity intensity
+ Bucket bucket, CommunityIntensity intensity
 });
 
 
@@ -1089,11 +1084,10 @@ class __$CommunityWeeklyCopyWithImpl<$Res>
 
 /// Create a copy of CommunityWeekly
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? distinctUsers7d = null,Object? intensity = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? intensity = null,}) {
   return _then(_CommunityWeekly(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
-as Bucket,distinctUsers7d: null == distinctUsers7d ? _self.distinctUsers7d : distinctUsers7d // ignore: cast_nullable_to_non_nullable
-as int,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
+as Bucket,intensity: null == intensity ? _self.intensity : intensity // ignore: cast_nullable_to_non_nullable
 as CommunityIntensity,
   ));
 }
@@ -1929,7 +1923,7 @@ $BucketCopyWith<$Res> get bucket {
 /// @nodoc
 mixin _$FrequencyStats {
 
- Bucket get bucket; double get p25; double get p50; double get p75; String get unit; int get nUsers; Map<String, int> get hist;
+ Bucket get bucket; double get p25; double get p75; String get unit; int get nUsers; Map<String, int> get hist;
 /// Create a copy of FrequencyStats
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -1940,16 +1934,16 @@ $FrequencyStatsCopyWith<FrequencyStats> get copyWith => _$FrequencyStatsCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p50, p50) || other.p50 == p50)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other.hist, hist));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other.hist, hist));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,p25,p50,p75,unit,nUsers,const DeepCollectionEquality().hash(hist));
+int get hashCode => Object.hash(runtimeType,bucket,p25,p75,unit,nUsers,const DeepCollectionEquality().hash(hist));
 
 @override
 String toString() {
-  return 'FrequencyStats(bucket: $bucket, p25: $p25, p50: $p50, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
+  return 'FrequencyStats(bucket: $bucket, p25: $p25, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
 }
 
 
@@ -1960,7 +1954,7 @@ abstract mixin class $FrequencyStatsCopyWith<$Res>  {
   factory $FrequencyStatsCopyWith(FrequencyStats value, $Res Function(FrequencyStats) _then) = _$FrequencyStatsCopyWithImpl;
 @useResult
 $Res call({
- Bucket bucket, double p25, double p50, double p75, String unit, int nUsers, Map<String, int> hist
+ Bucket bucket, double p25, double p75, String unit, int nUsers, Map<String, int> hist
 });
 
 
@@ -1977,11 +1971,10 @@ class _$FrequencyStatsCopyWithImpl<$Res>
 
 /// Create a copy of FrequencyStats
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? p25 = null,Object? p50 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? bucket = null,Object? p25 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
   return _then(_self.copyWith(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,p25: null == p25 ? _self.p25 : p25 // ignore: cast_nullable_to_non_nullable
-as double,p50: null == p50 ? _self.p50 : p50 // ignore: cast_nullable_to_non_nullable
 as double,p75: null == p75 ? _self.p75 : p75 // ignore: cast_nullable_to_non_nullable
 as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as String,nUsers: null == nUsers ? _self.nUsers : nUsers // ignore: cast_nullable_to_non_nullable
@@ -2080,10 +2073,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _FrequencyStats() when $default != null:
-return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+return $default(_that.bucket,_that.p25,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
   return orElse();
 
 }
@@ -2101,10 +2094,10 @@ return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUse
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( Bucket bucket,  double p25,  double p75,  String unit,  int nUsers,  Map<String, int> hist)  $default,) {final _that = this;
 switch (_that) {
 case _FrequencyStats():
-return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+return $default(_that.bucket,_that.p25,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -2121,10 +2114,10 @@ return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUse
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  double p25,  double p50,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( Bucket bucket,  double p25,  double p75,  String unit,  int nUsers,  Map<String, int> hist)?  $default,) {final _that = this;
 switch (_that) {
 case _FrequencyStats() when $default != null:
-return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
+return $default(_that.bucket,_that.p25,_that.p75,_that.unit,_that.nUsers,_that.hist);case _:
   return null;
 
 }
@@ -2136,12 +2129,11 @@ return $default(_that.bucket,_that.p25,_that.p50,_that.p75,_that.unit,_that.nUse
 
 
 class _FrequencyStats implements FrequencyStats {
-  const _FrequencyStats({required this.bucket, required this.p25, required this.p50, required this.p75, required this.unit, required this.nUsers, required final  Map<String, int> hist}): _hist = hist;
+  const _FrequencyStats({required this.bucket, required this.p25, required this.p75, required this.unit, required this.nUsers, required final  Map<String, int> hist}): _hist = hist;
   
 
 @override final  Bucket bucket;
 @override final  double p25;
-@override final  double p50;
 @override final  double p75;
 @override final  String unit;
 @override final  int nUsers;
@@ -2163,16 +2155,16 @@ _$FrequencyStatsCopyWith<_FrequencyStats> get copyWith => __$FrequencyStatsCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p50, p50) || other.p50 == p50)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other._hist, _hist));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FrequencyStats&&(identical(other.bucket, bucket) || other.bucket == bucket)&&(identical(other.p25, p25) || other.p25 == p25)&&(identical(other.p75, p75) || other.p75 == p75)&&(identical(other.unit, unit) || other.unit == unit)&&(identical(other.nUsers, nUsers) || other.nUsers == nUsers)&&const DeepCollectionEquality().equals(other._hist, _hist));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,bucket,p25,p50,p75,unit,nUsers,const DeepCollectionEquality().hash(_hist));
+int get hashCode => Object.hash(runtimeType,bucket,p25,p75,unit,nUsers,const DeepCollectionEquality().hash(_hist));
 
 @override
 String toString() {
-  return 'FrequencyStats(bucket: $bucket, p25: $p25, p50: $p50, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
+  return 'FrequencyStats(bucket: $bucket, p25: $p25, p75: $p75, unit: $unit, nUsers: $nUsers, hist: $hist)';
 }
 
 
@@ -2183,7 +2175,7 @@ abstract mixin class _$FrequencyStatsCopyWith<$Res> implements $FrequencyStatsCo
   factory _$FrequencyStatsCopyWith(_FrequencyStats value, $Res Function(_FrequencyStats) _then) = __$FrequencyStatsCopyWithImpl;
 @override @useResult
 $Res call({
- Bucket bucket, double p25, double p50, double p75, String unit, int nUsers, Map<String, int> hist
+ Bucket bucket, double p25, double p75, String unit, int nUsers, Map<String, int> hist
 });
 
 
@@ -2200,11 +2192,10 @@ class __$FrequencyStatsCopyWithImpl<$Res>
 
 /// Create a copy of FrequencyStats
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? p25 = null,Object? p50 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? bucket = null,Object? p25 = null,Object? p75 = null,Object? unit = null,Object? nUsers = null,Object? hist = null,}) {
   return _then(_FrequencyStats(
 bucket: null == bucket ? _self.bucket : bucket // ignore: cast_nullable_to_non_nullable
 as Bucket,p25: null == p25 ? _self.p25 : p25 // ignore: cast_nullable_to_non_nullable
-as double,p50: null == p50 ? _self.p50 : p50 // ignore: cast_nullable_to_non_nullable
 as double,p75: null == p75 ? _self.p75 : p75 // ignore: cast_nullable_to_non_nullable
 as double,unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as String,nUsers: null == nUsers ? _self.nUsers : nUsers // ignore: cast_nullable_to_non_nullable

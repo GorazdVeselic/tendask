@@ -134,31 +134,14 @@ void main() {
     expect(subjectCall.userId, isNull);
   });
 
-  test('a timestamptz "infinity" mute does not abort the pull', () async {
-    // suggestion_log is pulled last and the cursor is written after the whole
-    // loop, so a throw here would strand every table's cursor forever.
+  test('suggestion_log is never asked for', () async {
     fetch.byTable['area'] = [areaRow('a1', at: t1)];
-    fetch.byTable['suggestion_log'] = [
-      {
-        'user_id': 'u1',
-        'guard_key': 'R3:treat',
-        'subject_key': 'up:p1',
-        'last_suggested_at': null,
-        'dismissed_until': 'infinity', // written by engine builds before the sentinel date
-        'updated_at': t2.toIso8601String(),
-      },
-    ];
 
-    final n = await service.pull();
+    await service.pull();
 
-    expect(n, 2);
-    final log = await db.select(db.suggestionLogs).getSingle();
-    expect(
-      log.dismissedUntil!.isAtSameMomentAs(DateTime.utc(9999, 12, 31, 23, 59, 59)),
-      isTrue,
-    );
-    final cursor = await db.select(db.syncCursors).getSingle();
-    expect(cursor.lastPulledAt.isAtSameMomentAs(t2), isTrue);
+    // It used to be pulled on every sync — every table the loop touches costs a
+    // round trip, and nothing on the device ever read this one (O5).
+    expect(fetch.calls.map((c) => c.table), isNot(contains('suggestion_log')));
   });
 
   test('cursor makes the next pull incremental (inclusive since)', () async {

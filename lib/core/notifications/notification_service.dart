@@ -8,18 +8,23 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:timezone/data/latest_all.dart' as tz_data;
 import 'package:timezone/timezone.dart' as tz;
 
+import '../../i18n/translations.g.dart';
 import '../config.dart';
 
 part 'notification_service.g.dart';
 
+// Channel names are what the system notification settings show, so they follow
+// the app language like any other user-facing string. Android caches the name
+// from the moment a channel is first created, so a device that later switches
+// language keeps the old one — the rename would need a new channel id, which
+// would leave the old channel stranded next to it under the same name.
 /// Channel for deterministic, offline task reminders (tech-stack §4, layer A).
 const _kReminderChannelId = 'task_reminders';
-const _kReminderChannelName = 'Opomniki opravil';
 
-const _reminderDetails = NotificationDetails(
+NotificationDetails _reminderDetails() => NotificationDetails(
   android: AndroidNotificationDetails(
     _kReminderChannelId,
-    _kReminderChannelName,
+    t.notif_channel.reminders,
     importance: Importance.high,
     priority: Priority.high,
   ),
@@ -28,20 +33,19 @@ const _reminderDetails = NotificationDetails(
 /// Channel for smart-engine suggestion pushes (tech-stack §4, layer B). Created
 /// eagerly at init so FCM background messages (manifest meta-data) land on it.
 const _kSuggestionChannelId = 'suggestions';
-const _kSuggestionChannelName = 'Pametni predlogi';
 
 // Default importance: suggestions are hints, not alarms — tray entry without
 // heads-up, unlike high-importance task reminders.
-const _suggestionChannel = AndroidNotificationChannel(
+AndroidNotificationChannel _suggestionChannel() => AndroidNotificationChannel(
   _kSuggestionChannelId,
-  _kSuggestionChannelName,
+  t.notif_channel.suggestions,
   importance: Importance.defaultImportance,
 );
 
-const _suggestionDetails = NotificationDetails(
+NotificationDetails _suggestionDetails() => NotificationDetails(
   android: AndroidNotificationDetails(
     _kSuggestionChannelId,
-    _kSuggestionChannelName,
+    t.notif_channel.suggestions,
     importance: Importance.defaultImportance,
     priority: Priority.defaultPriority,
   ),
@@ -52,12 +56,11 @@ const _suggestionDetails = NotificationDetails(
 /// cancelling one never touches the other. Default importance — it must never
 /// feel as urgent as a task reminder.
 const _kNudgeChannelId = 'journal_nudge';
-const _kNudgeChannelName = 'Nežna povabila k dnevniku';
 
-const _nudgeDetails = NotificationDetails(
+NotificationDetails _nudgeDetails() => NotificationDetails(
   android: AndroidNotificationDetails(
     _kNudgeChannelId,
-    _kNudgeChannelName,
+    t.notif_channel.journal_nudge,
     importance: Importance.defaultImportance,
     priority: Priority.defaultPriority,
   ),
@@ -108,7 +111,7 @@ class NotificationService {
       // while suggestions are off, so the channel would only surface an unused
       // entry in the system notification settings.
       if (kSuggestionsEnabled) {
-        await _android?.createNotificationChannel(_suggestionChannel);
+        await _android?.createNotificationChannel(_suggestionChannel());
       }
       _ready = true;
     } on Object catch (e) {
@@ -168,7 +171,7 @@ class NotificationService {
     title: title,
     body: body,
     payload: payload,
-    details: _reminderDetails,
+    details: _reminderDetails(),
     mode: AndroidScheduleMode.exactAllowWhileIdle,
   );
 
@@ -186,7 +189,7 @@ class NotificationService {
     when: when,
     title: title,
     body: body,
-    details: _nudgeDetails,
+    details: _nudgeDetails(),
     mode: AndroidScheduleMode.inexactAllowWhileIdle,
   );
 
@@ -227,7 +230,7 @@ class NotificationService {
       id: suggestionId.hashCode & 0x7fffffff,
       title: title,
       body: body,
-      notificationDetails: _suggestionDetails,
+      notificationDetails: _suggestionDetails(),
       payload: suggestionPayload(suggestionId),
     );
   }

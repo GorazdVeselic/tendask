@@ -88,6 +88,11 @@
     "system_permission_off": "exakte Erinnerungen nicht erlaubt — für Einstellungen tippen",
     "hints_perm_denied": "Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden."
   },
+  "notif_channel": {
+    "reminders": "Aufgaben-Erinnerungen",
+    "suggestions": "Smarte Hinweise",
+    "journal_nudge": "Tagebuch-Erinnerung"
+  },
   "reminder_sound": {
     "silent_volume": "Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.",
     "silent_mode": "Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.",
@@ -646,7 +651,6 @@
       "remove_subject": "Habe ich nicht mehr"
     },
     "toast": {
-      "planned": "Zu deinen Aufgaben hinzugefügt",
       "logged": "Als erledigt erfasst"
     },
     "disclaimer": "Vorschläge sind allgemeine Hinweise — deinen Garten kennst du am besten.",

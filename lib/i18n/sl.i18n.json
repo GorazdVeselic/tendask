@@ -92,6 +92,11 @@
     "system_permission_off": "točni opomniki niso dovoljeni — tapni za nastavitve",
     "hints_perm_denied": "Obvestila so onemogočena, zato namigov ni mogoče vklopiti."
   },
+  "notif_channel": {
+    "reminders": "Opomniki opravil",
+    "suggestions": "Pametni predlogi",
+    "journal_nudge": "Nežna povabila k dnevniku"
+  },
   "reminder_sound": {
     "silent_volume": "Opomniki bodo tihi — glasnost obvestil je na 0.",
     "silent_mode": "Opomniki bodo tihi — telefon je na tihem načinu.",
@@ -656,7 +661,6 @@
       "remove_subject": "Tega nimam več"
     },
     "toast": {
-      "planned": "Dodano med opravila",
       "logged": "Zabeleženo kot opravljeno"
     },
     "disclaimer": "Predlogi so splošna usmeritev — tvoj vrt najbolje poznaš ti.",

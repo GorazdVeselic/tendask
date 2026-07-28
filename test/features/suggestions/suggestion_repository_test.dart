@@ -225,11 +225,4 @@ void main() {
     final rows = await repo.watchHistory().first;
     expect(rows.map((r) => r.id), ['kept']);
   });
-
-  test('watchActiveCount mirrors the active band size', () async {
-    await insertSuggestion('a');
-    await insertSuggestion('b');
-    await insertSuggestion('decided', status: kSuggestionPlanned);
-    expect(await repo.watchActiveCount().first, 2);
-  });
 }

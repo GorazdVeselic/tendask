@@ -48,6 +48,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$journal_nudge$sl journal_nudge = _Translations$journal_nudge$sl._(_root);
 	@override late final _Translations$notif_priming$sl notif_priming = _Translations$notif_priming$sl._(_root);
 	@override late final _Translations$notif_settings$sl notif_settings = _Translations$notif_settings$sl._(_root);
+	@override late final _Translations$notif_channel$sl notif_channel = _Translations$notif_channel$sl._(_root);
 	@override late final _Translations$reminder_sound$sl reminder_sound = _Translations$reminder_sound$sl._(_root);
 	@override late final _Translations$notif_preview$sl notif_preview = _Translations$notif_preview$sl._(_root);
 	@override late final _Translations$onboarding$sl onboarding = _Translations$onboarding$sl._(_root);
@@ -231,6 +232,18 @@ class _Translations$notif_settings$sl extends Translations$notif_settings$en {
 	@override String get system_permission_on => 'naprava: dovoljeno';
 	@override String get system_permission_off => 'točni opomniki niso dovoljeni — tapni za nastavitve';
 	@override String get hints_perm_denied => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.';
+}
+
+// Path: notif_channel
+class _Translations$notif_channel$sl extends Translations$notif_channel$en {
+	_Translations$notif_channel$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get reminders => 'Opomniki opravil';
+	@override String get suggestions => 'Pametni predlogi';
+	@override String get journal_nudge => 'Nežna povabila k dnevniku';
 }
 
 // Path: reminder_sound
@@ -1059,7 +1072,6 @@ class _Translations$suggestions$toast$sl extends Translations$suggestions$toast$
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get planned => 'Dodano med opravila';
 	@override String get logged => 'Zabeleženo kot opravljeno';
 }
 
@@ -2276,6 +2288,9 @@ extension on TranslationsSl {
 			'notif_settings.system_permission_on' => 'naprava: dovoljeno',
 			'notif_settings.system_permission_off' => 'točni opomniki niso dovoljeni — tapni za nastavitve',
 			'notif_settings.hints_perm_denied' => 'Obvestila so onemogočena, zato namigov ni mogoče vklopiti.',
+			'notif_channel.reminders' => 'Opomniki opravil',
+			'notif_channel.suggestions' => 'Pametni predlogi',
+			'notif_channel.journal_nudge' => 'Nežna povabila k dnevniku',
 			'reminder_sound.silent_volume' => 'Opomniki bodo tihi — glasnost obvestil je na 0.',
 			'reminder_sound.silent_mode' => 'Opomniki bodo tihi — telefon je na tihem načinu.',
 			'reminder_sound.enable' => 'Vklopi zvok',
@@ -2720,11 +2735,11 @@ extension on TranslationsSl {
 			'weather.band_forecast' => 'Napoved',
 			'weather.rain_past48h' => 'Dež zadnjih 48 h:',
 			'weather.detail_waiting' => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.',
+			_ => null,
+		} ?? switch (path) {
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
-			_ => null,
-		} ?? switch (path) {
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			'weather.m_humidity' => 'Vlažnost',
@@ -2773,7 +2788,6 @@ extension on TranslationsSl {
 			'suggestions.actions.already_done' => 'Že opravljeno',
 			'suggestions.actions.never' => 'Ne predlagaj več',
 			'suggestions.actions.remove_subject' => 'Tega nimam več',
-			'suggestions.toast.planned' => 'Dodano med opravila',
 			'suggestions.toast.logged' => 'Zabeleženo kot opravljeno',
 			'suggestions.disclaimer' => 'Predlogi so splošna usmeritev — tvoj vrt najbolje poznaš ti.',
 			'suggestions.done_sheet.title' => 'Kdaj je bilo opravljeno?',

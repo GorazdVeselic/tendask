@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/data/seed/catalog_seed.dart';
-import 'package:tendask/data/seed/plant_task_rules_seed.dart';
+import '../../tool/seed/plant_task_rules_seed.dart';
 
 // Guard code dictionary — docs/m11/02-signalni-sloj.md §G.
 const _guardCodes = {

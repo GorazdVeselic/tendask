@@ -176,12 +176,17 @@ double _round1(double v) => (v * 10).roundToDouble() / 10;
 
 /// Own Dio: core must not import the weather feature's client providers.
 @riverpod
-Dio _archiveDio(Ref ref) => Dio(
-  BaseOptions(
-    connectTimeout: kWeatherConnectTimeout,
-    receiveTimeout: kWeatherReceiveTimeout,
-  ),
-);
+Dio _archiveDio(Ref ref) {
+  final dio = Dio(
+    BaseOptions(
+      connectTimeout: kWeatherConnectTimeout,
+      receiveTimeout: kWeatherReceiveTimeout,
+    ),
+  );
+  // Dio keeps an HttpClient with a live connection pool behind it.
+  ref.onDispose(dio.close);
+  return dio;
+}
 
 @riverpod
 ClimateService climateService(Ref ref) =>

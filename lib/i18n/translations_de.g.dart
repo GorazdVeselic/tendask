@@ -48,6 +48,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$journal_nudge$de journal_nudge = _Translations$journal_nudge$de._(_root);
 	@override late final _Translations$notif_priming$de notif_priming = _Translations$notif_priming$de._(_root);
 	@override late final _Translations$notif_settings$de notif_settings = _Translations$notif_settings$de._(_root);
+	@override late final _Translations$notif_channel$de notif_channel = _Translations$notif_channel$de._(_root);
 	@override late final _Translations$reminder_sound$de reminder_sound = _Translations$reminder_sound$de._(_root);
 	@override late final _Translations$notif_preview$de notif_preview = _Translations$notif_preview$de._(_root);
 	@override late final _Translations$onboarding$de onboarding = _Translations$onboarding$de._(_root);
@@ -227,6 +228,18 @@ class _Translations$notif_settings$de extends Translations$notif_settings$en {
 	@override String get system_permission_on => 'Gerät: erlaubt';
 	@override String get system_permission_off => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen';
 	@override String get hints_perm_denied => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.';
+}
+
+// Path: notif_channel
+class _Translations$notif_channel$de extends Translations$notif_channel$en {
+	_Translations$notif_channel$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get reminders => 'Aufgaben-Erinnerungen';
+	@override String get suggestions => 'Smarte Hinweise';
+	@override String get journal_nudge => 'Tagebuch-Erinnerung';
 }
 
 // Path: reminder_sound
@@ -1047,7 +1060,6 @@ class _Translations$suggestions$toast$de extends Translations$suggestions$toast$
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get planned => 'Zu deinen Aufgaben hinzugefügt';
 	@override String get logged => 'Als erledigt erfasst';
 }
 
@@ -2262,6 +2274,9 @@ extension on TranslationsDe {
 			'notif_settings.system_permission_on' => 'Gerät: erlaubt',
 			'notif_settings.system_permission_off' => 'exakte Erinnerungen nicht erlaubt — für Einstellungen tippen',
 			'notif_settings.hints_perm_denied' => 'Benachrichtigungen sind deaktiviert, daher können Hinweise nicht aktiviert werden.',
+			'notif_channel.reminders' => 'Aufgaben-Erinnerungen',
+			'notif_channel.suggestions' => 'Smarte Hinweise',
+			'notif_channel.journal_nudge' => 'Tagebuch-Erinnerung',
 			'reminder_sound.silent_volume' => 'Erinnerungen sind stumm — die Benachrichtigungslautstärke ist auf 0.',
 			'reminder_sound.silent_mode' => 'Erinnerungen sind stumm — das Telefon ist im Stumm-Modus.',
 			'reminder_sound.enable' => 'Ton einschalten',
@@ -2706,11 +2721,11 @@ extension on TranslationsDe {
 			'weather.band_forecast' => 'Vorhersage',
 			'weather.rain_past48h' => 'Regen letzte 48 h:',
 			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
+			_ => null,
+		} ?? switch (path) {
 			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
-			_ => null,
-		} ?? switch (path) {
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
 			'weather.m_humidity' => 'Luftfeuchte',
@@ -2759,7 +2774,6 @@ extension on TranslationsDe {
 			'suggestions.actions.already_done' => 'Schon erledigt',
 			'suggestions.actions.never' => 'Nicht mehr vorschlagen',
 			'suggestions.actions.remove_subject' => 'Habe ich nicht mehr',
-			'suggestions.toast.planned' => 'Zu deinen Aufgaben hinzugefügt',
 			'suggestions.toast.logged' => 'Als erledigt erfasst',
 			'suggestions.disclaimer' => 'Vorschläge sind allgemeine Hinweise — deinen Garten kennst du am besten.',
 			'suggestions.done_sheet.title' => 'Wann hast du es gemacht?',

@@ -22,10 +22,17 @@ export function forecastUrl(lat: number, lon: number): string {
   return `https://api.open-meteo.com/v1/forecast?${params}`;
 }
 
-// Backoff 1s/3s/9s (CLAUDE.md network rules). Worst case incl. per-attempt 10s
-// timeouts is ~53s — callers must share one in-flight result per cell
-// (per-invocation memo in index.ts), or an outage multiplies this per user.
-const kRetryDelaysMs = [1000, 3000, 9000];
+// At most 3 attempts with 1s/3s backoff — the same ladder as the client's
+// kWeatherRetryDelays (CLAUDE.md network rules: "maks 3 poskusi"). Worst case
+// incl. per-attempt timeouts is ~34s; callers must still share one in-flight
+// result per cell (per-invocation memo in index.ts), or an outage multiplies
+// this per user.
+const kRetryDelaysMs = [1000, 3000];
+
+// Per-attempt cap. Lower than the client's connect 10 + receive 20: this runs in
+// a data centre on a batch schedule, not on a garden's mobile signal, and a
+// missing forecast only makes weather-gated rules skip today.
+const kFetchTimeoutMs = 10_000;
 
 export async function fetchOpenMeteoWithRetry(
   lat: number,
@@ -34,7 +41,9 @@ export async function fetchOpenMeteoWithRetry(
 ): Promise<Record<string, unknown> | null> {
   for (let attempt = 0;; attempt++) {
     try {
-      const res = await fetchFn(forecastUrl(lat, lon), { signal: AbortSignal.timeout(10_000) });
+      const res = await fetchFn(forecastUrl(lat, lon), {
+        signal: AbortSignal.timeout(kFetchTimeoutMs),
+      });
       if (!res.ok) throw new Error(`open-meteo ${res.status}`);
       return await res.json();
     } catch (e) {

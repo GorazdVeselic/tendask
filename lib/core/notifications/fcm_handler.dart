@@ -84,6 +84,18 @@ class FcmHandler {
     final id = suggestionIdOf(msg);
     if (id != null) _taps.add(id);
   }
+
+  /// Drops the FCM subscriptions and closes the tap stream. The provider is
+  /// keepAlive, so in the app this only runs when the container itself goes —
+  /// but a test that builds a handler per case would otherwise leave both
+  /// subscriptions live on a shared stream.
+  Future<void> dispose() async {
+    await _messageSub?.cancel();
+    await _openedSub?.cancel();
+    _messageSub = null;
+    _openedSub = null;
+    await _taps.close();
+  }
 }
 
 /// The suggestion id of a smart-engine push, or null for any other message.
@@ -96,10 +108,12 @@ String? suggestionIdOf(RemoteMessage? msg) {
 @Riverpod(keepAlive: true)
 FcmHandler fcmHandler(Ref ref) {
   final sync = ref.watch(syncServiceProvider);
-  return FcmHandler(
+  final handler = FcmHandler(
     // Reuses the serialized sync cycle (08 §8.5) — pull brings the suggestion
     // row; the extra push of pending rows is harmless.
     pull: sync.sync,
     notifications: ref.watch(notificationServiceProvider),
   );
+  ref.onDispose(() => unawaited(handler.dispose()));
+  return handler;
 }

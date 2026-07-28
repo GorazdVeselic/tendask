@@ -206,6 +206,26 @@ void main() {
     expect(calls, 6); // re-fetched
   });
 
+  test('a write prunes slices nobody can reach any more', () async {
+    await repo().feed(buckets: buckets);
+    final before = await db.select(db.communityCaches).get();
+    expect(before, isNotEmpty);
+
+    // The user moves: the old cell's keys can never be rebuilt or read again,
+    // and until now only clearAllData removed them.
+    clock._now = DateTime(2026, 6, 1, 9).add(
+      kCommunityCacheMaxAge + const Duration(days: 1),
+    );
+    await repo().feed(buckets: buckets);
+
+    final after = await db.select(db.communityCaches).get();
+    expect(
+      after.every((c) => c.fetchedAt.isAfter(before.first.fetchedAt)),
+      isTrue,
+      reason: 'stale rows survived the write: ${after.map((c) => c.key)}',
+    );
+  });
+
   test('requestRefresh reaches past the day cache (N19)', () async {
     // One instance for the whole test: the request is repository state, and a
     // fresh repo per call would hide a regression by starting empty.
@@ -380,8 +400,7 @@ void main() {
       );
 
       expect(weekly, isNotNull);
-      expect(weekly!.distinctUsers7d, 4);
-      expect(weekly.intensity, CommunityIntensity.some); // 4/40
+      expect(weekly!.intensity, CommunityIntensity.some); // 4/40
       expect(calls, warmed); // same daily slice, no extra request
       expect(warmed, greaterThan(before));
     });

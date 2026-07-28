@@ -148,7 +148,6 @@ class CommunityRepository {
       if (users is! num) continue;
       return CommunityWeekly(
         bucket: bucket,
-        distinctUsers7d: users.toInt(),
         intensity: feedIntensity(users.toInt(), population),
       );
     }
@@ -433,7 +432,6 @@ class CommunityRepository {
         CommunityFeedItem(
           taskTypeId: row.taskTypeId,
           cohort: row.cohort,
-          distinctUsers7d: row.users,
           intensity: feedIntensity(row.users, population),
         ),
       );
@@ -509,6 +507,14 @@ class CommunityRepository {
             fetchedAt: now,
           ),
         );
+    // Keys carry the H3 bucket, so a move or a trip strands the old ones for
+    // good — and only clearAllData ever removed them.
+    await (_db.delete(_db.communityCaches)..where(
+          (c) => c.fetchedAt.isSmallerThanValue(
+            now.subtract(kCommunityCacheMaxAge),
+          ),
+        ))
+        .go();
   }
 
   List<Map<String, dynamic>> _decode(String payload) =>

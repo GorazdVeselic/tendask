@@ -1,5 +1,4 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart' show Supabase;
 
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
@@ -13,12 +12,9 @@ import '../data/community_stats.dart';
 part 'community_providers.g.dart';
 
 @Riverpod(keepAlive: true)
-CommunityRepository communityRepository(Ref ref) {
-  final db = ref.watch(databaseProvider);
-  // Offline / no backend → stale-cache-only repository (fetch = null).
-  if (kSupabaseUrl.isEmpty) return CommunityRepository(db, null);
-  return CommunityRepository(db, supabaseAggFetch(Supabase.instance.client));
-}
+CommunityRepository communityRepository(Ref ref) =>
+    // No backend → stale-cache-only repository (fetch = null).
+    CommunityRepository(ref.watch(databaseProvider), liveAggFetch());
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body

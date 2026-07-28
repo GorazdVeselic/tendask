@@ -88,6 +88,11 @@
     "system_permission_off": "exact reminders not allowed — tap for settings",
     "hints_perm_denied": "Notifications are disabled, so hints can't be turned on."
   },
+  "notif_channel": {
+    "reminders": "Task reminders",
+    "suggestions": "Smart hints",
+    "journal_nudge": "Journal nudge"
+  },
   "reminder_sound": {
     "silent_volume": "Reminders will be silent — notification volume is at 0.",
     "silent_mode": "Reminders will be silent — the phone is in silent mode.",
@@ -646,7 +651,6 @@
       "remove_subject": "I no longer have this"
     },
     "toast": {
-      "planned": "Added to your tasks",
       "logged": "Logged as done"
     },
     "disclaimer": "Suggestions are general guidance — you know your garden best.",

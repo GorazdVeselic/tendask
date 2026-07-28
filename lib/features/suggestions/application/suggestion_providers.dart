@@ -26,8 +26,3 @@ final suggestionHistoryProvider =
     StreamProvider.autoDispose<List<Suggestion>>((ref) {
       return ref.watch(suggestionRepositoryProvider).watchHistory();
     });
-
-/// Count of active suggestions (mirrors the Home band) — a badge helper.
-final activeSuggestionsCountProvider = StreamProvider.autoDispose<int>((ref) {
-  return ref.watch(suggestionRepositoryProvider).watchActiveCount();
-});

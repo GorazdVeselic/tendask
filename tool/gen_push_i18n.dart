@@ -16,7 +16,7 @@
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:tendask/data/seed/plant_task_rules_seed.dart';
+import 'seed/plant_task_rules_seed.dart';
 
 void main() {
   File(

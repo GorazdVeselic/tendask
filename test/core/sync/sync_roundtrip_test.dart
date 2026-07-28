@@ -279,26 +279,24 @@ void main() {
     },
   );
 
-  test('suggestion_log mirrors in as pull-only guard state', () async {
+  test('suggestion_log stays on the server, however full it is', () async {
     cloud.store['suggestion_log'] = [
-      {
-        'user_id': uid,
-        'guard_key': 'R5:prune',
-        'subject_key': 'cat:fruit_tree',
-        'last_suggested_at': t1.toIso8601String(),
-        'dismissed_until': null,
-        'updated_at': t1.toIso8601String(),
-      },
+      for (var i = 0; i < 5; i++)
+        {
+          'user_id': uid,
+          'guard_key': 'R5:prune',
+          'subject_key': 'cat:fruit_tree$i',
+          'last_suggested_at': t1.toIso8601String(),
+          'dismissed_until': null,
+          'updated_at': t1.toIso8601String(),
+        },
     ];
+    await putArea(dbA, 'a1', name: 'Zelenjava', at: t1);
+    await pushA.push();
 
-    await pullA.pull();
-    final log = await dbA.select(dbA.suggestionLogs).getSingle();
-    expect(log.guardKey, 'R5:prune');
-    expect(log.lastSuggestedAt, isNotNull);
-    expect(log.dismissedUntil, isNull);
-
-    // Nothing to push back — the table has no syncStatus column at all.
-    expect(await pushA.push(), 0);
+    // One row applied, not six: guard state is what the engine reads, and the
+    // device carried it across every sync for no reader of its own (O5).
+    expect(await pullA.pull(), 1);
   });
 
   test('a soft delete propagates as a tombstone to the other device', () async {

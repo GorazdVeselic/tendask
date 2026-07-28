@@ -35,3 +35,10 @@ RemoteAggFetch supabaseAggFetch(SupabaseClient client) {
     return data.cast<Map<String, dynamic>>();
   };
 }
+
+/// The reader the app runs with, or null when there is no backend configured
+/// (tests, a build without `--dart-define` secrets) — the repository then serves
+/// the stale cache only. Resolving the client here keeps `supabase_flutter` out
+/// of the application layer, which must not know where rows come from.
+RemoteAggFetch? liveAggFetch() =>
+    kSupabaseUrl.isEmpty ? null : supabaseAggFetch(Supabase.instance.client);

@@ -129,18 +129,6 @@ void main() {
     expect(suggestion.dismissScope, kDismissScopeSeason);
     expect(suggestion.syncStatus, 'synced');
 
-    await db
-        .into(db.suggestionLogs)
-        .insert(
-          SuggestionLogsCompanion.insert(
-            userId: 'u1',
-            guardKey: 'R5:prune',
-            subjectKey: 'cat:fruit_tree',
-            updatedAt: DateTime.utc(2026, 6, 1),
-          ),
-        );
-    expect(await db.select(db.suggestionLogs).get(), hasLength(1));
-
     // v16: community_cache (M11.17) exists after the full ladder and takes rows.
     await db
         .into(db.communityCaches)

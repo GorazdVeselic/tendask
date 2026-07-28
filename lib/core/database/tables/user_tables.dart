@@ -271,22 +271,6 @@ class Suggestions extends Table {
 
 /// Read-only mirror of the engine's guard state (cooldown / dismissed_until).
 /// Pull-only: no syncStatus column — the client NEVER pushes this table.
-class SuggestionLogs extends Table {
-  @override
-  String get tableName => 'suggestion_log';
-
-  TextColumn get userId => text()();
-  // Fine-grained guard key (docs/m11/03 §Guard key), mirrors Supabase.
-  TextColumn get guardKey => text()();
-  TextColumn get subjectKey => text()();
-  DateTimeColumn get lastSuggestedAt => dateTime().nullable()();
-  DateTimeColumn get dismissedUntil => dateTime().nullable()();
-  DateTimeColumn get updatedAt => dateTime()();
-
-  @override
-  Set<Column> get primaryKey => {userId, guardKey, subjectKey};
-}
-
 class TaskSupplies extends Table {
   @override
   String get tableName => 'task_supply';

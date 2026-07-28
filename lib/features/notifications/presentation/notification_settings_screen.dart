@@ -11,6 +11,7 @@ import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
+import '../application/exact_alarms_provider.dart';
 import '../application/fcm_token_service.dart';
 import 'notification_priming_sheet.dart';
 import 'widgets/reminder_sound_banner.dart';
@@ -23,11 +24,6 @@ String _quietHoursRange() {
   String hh(int h) => '${h.toString().padLeft(2, '0')}:00';
   return '${hh(kQuietHoursStartHour)} – ${hh(kQuietHoursEndHour)}';
 }
-
-/// Whether the OS currently allows exact alarms — drives the permission row.
-final _exactAlarmsAllowedProvider = FutureProvider.autoDispose<bool>(
-  (ref) => ref.watch(notificationServiceProvider).canScheduleExactAlarms(),
-);
 
 /// Screen 22 — notification settings. Task reminders are local; weather and
 /// community hints are server-side pushes (M11) — their opt-ins are stored in
@@ -274,7 +270,7 @@ class _PermissionTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final theme = Theme.of(context);
-    final allowed = ref.watch(_exactAlarmsAllowedProvider).asData?.value;
+    final allowed = ref.watch(exactAlarmsAllowedProvider).asData?.value;
 
     return ListTile(
       title: Text(t.notif_settings.system_permission),
@@ -292,7 +288,7 @@ class _PermissionTile extends ConsumerWidget {
               await ref
                   .read(notificationServiceProvider)
                   .openExactAlarmSettings();
-              ref.invalidate(_exactAlarmsAllowedProvider);
+              ref.invalidate(exactAlarmsAllowedProvider);
             }
           : null,
     );

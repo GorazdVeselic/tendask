@@ -49,6 +49,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$journal_nudge$en journal_nudge = Translations$journal_nudge$en.internal(_root);
 	late final Translations$notif_priming$en notif_priming = Translations$notif_priming$en.internal(_root);
 	late final Translations$notif_settings$en notif_settings = Translations$notif_settings$en.internal(_root);
+	late final Translations$notif_channel$en notif_channel = Translations$notif_channel$en.internal(_root);
 	late final Translations$reminder_sound$en reminder_sound = Translations$reminder_sound$en.internal(_root);
 	late final Translations$notif_preview$en notif_preview = Translations$notif_preview$en.internal(_root);
 	late final Translations$onboarding$en onboarding = Translations$onboarding$en.internal(_root);
@@ -358,6 +359,24 @@ class Translations$notif_settings$en {
 
 	/// en: 'Notifications are disabled, so hints can't be turned on.'
 	String get hints_perm_denied => 'Notifications are disabled, so hints can\'t be turned on.';
+}
+
+// Path: notif_channel
+class Translations$notif_channel$en {
+	Translations$notif_channel$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Task reminders'
+	String get reminders => 'Task reminders';
+
+	/// en: 'Smart hints'
+	String get suggestions => 'Smart hints';
+
+	/// en: 'Journal nudge'
+	String get journal_nudge => 'Journal nudge';
 }
 
 // Path: reminder_sound
@@ -2213,9 +2232,6 @@ class Translations$suggestions$toast$en {
 
 	// Translations
 
-	/// en: 'Added to your tasks'
-	String get planned => 'Added to your tasks';
-
 	/// en: 'Logged as done'
 	String get logged => 'Logged as done';
 }
@@ -3805,6 +3821,9 @@ extension on Translations {
 			'notif_settings.system_permission_on' => 'device: allowed',
 			'notif_settings.system_permission_off' => 'exact reminders not allowed — tap for settings',
 			'notif_settings.hints_perm_denied' => 'Notifications are disabled, so hints can\'t be turned on.',
+			'notif_channel.reminders' => 'Task reminders',
+			'notif_channel.suggestions' => 'Smart hints',
+			'notif_channel.journal_nudge' => 'Journal nudge',
 			'reminder_sound.silent_volume' => 'Reminders will be silent — notification volume is at 0.',
 			'reminder_sound.silent_mode' => 'Reminders will be silent — the phone is in silent mode.',
 			'reminder_sound.enable' => 'Turn on sound',
@@ -4249,11 +4268,11 @@ extension on Translations {
 			'weather.band_forecast' => 'Forecast',
 			'weather.rain_past48h' => 'Rain last 48 h:',
 			'weather.detail_waiting' => 'Weather will be recorded when you mark the task done.',
+			_ => null,
+		} ?? switch (path) {
 			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
-			_ => null,
-		} ?? switch (path) {
 			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			'weather.m_humidity' => 'Humidity',
@@ -4302,7 +4321,6 @@ extension on Translations {
 			'suggestions.actions.already_done' => 'Already done',
 			'suggestions.actions.never' => 'Don\'t suggest this again',
 			'suggestions.actions.remove_subject' => 'I no longer have this',
-			'suggestions.toast.planned' => 'Added to your tasks',
 			'suggestions.toast.logged' => 'Logged as done',
 			'suggestions.disclaimer' => 'Suggestions are general guidance — you know your garden best.',
 			'suggestions.done_sheet.title' => 'When did you do it?',

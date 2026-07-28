@@ -29,7 +29,6 @@ abstract class CommunityFeedItem with _$CommunityFeedItem {
     required String taskTypeId,
     /// [kCommunityCohortSite] for site work, else the catalog plant id.
     required String cohort,
-    required int distinctUsers7d,
     required CommunityIntensity intensity,
   }) = _CommunityFeedItem;
 }
@@ -57,7 +56,6 @@ abstract class CommunityFeed with _$CommunityFeed {
 abstract class CommunityWeekly with _$CommunityWeekly {
   const factory CommunityWeekly({
     required Bucket bucket,
-    required int distinctUsers7d,
     required CommunityIntensity intensity,
   }) = _CommunityWeekly;
 }
@@ -118,7 +116,6 @@ abstract class FrequencyStats with _$FrequencyStats {
   const factory FrequencyStats({
     required Bucket bucket,
     required double p25,
-    required double p50,
     required double p75,
     // e.g. 'per_season' / 'per_month' — the aggregate row's unit.
     required String unit,

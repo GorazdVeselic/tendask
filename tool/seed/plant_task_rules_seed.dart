@@ -1,7 +1,11 @@
 /// Curated agronomy rules seed — source: docs/m11/01-agronomska-pravila.md.
 /// Every source_ref was verified against the live page in M11.4 (no rule ships
 /// without a confirmed citation). Rule ids are stable slugs, add-only — same
-/// contract as catalog ids. Cloud mirror: tool/gen_rules_sql.dart.
+/// contract as catalog ids.
+///
+/// Build-time only — it lives under tool/ because the app never reads these
+/// rules: the engine reads them from Supabase. Three generators consume it
+/// (gen_rules_sql, gen_engine_fixture, gen_push_i18n), each with a parity test.
 library;
 
 class PlantTaskRuleSeed {

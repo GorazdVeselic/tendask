@@ -76,10 +76,6 @@ class SuggestionRepository {
     return query.watch();
   }
 
-  /// Count of currently active suggestions — mirrors [watchActive] exactly (same
-  /// filter, no drift), so a badge can never disagree with the Home band. LOCAL.
-  Stream<int> watchActiveCount() => watchActive().map((rows) => rows.length);
-
   /// Links the created waiting task and retires the suggestion (status=planned).
   Future<void> markPlanned(String id, {required String plannedTaskId}) =>
       _setStatus(id, status: kSuggestionPlanned, plannedTaskId: plannedTaskId);

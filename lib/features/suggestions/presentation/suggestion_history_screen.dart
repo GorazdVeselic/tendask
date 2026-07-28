@@ -10,6 +10,7 @@ import '../../../core/suggestion_status.dart';
 import '../../../core/widgets/day_header.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/load_error_hint.dart';
+import '../../../core/widgets/status_pill.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
 import '../../plants/application/plants_providers.dart';
@@ -244,47 +245,21 @@ class _StatusChip extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final cs = Theme.of(context).colorScheme;
     final hs = context.t.suggestions.history_status;
 
-    final (String label, Color? bg, Color fg, bool outlined) = switch (suggestion
-        .status) {
-      kSuggestionPlanned => (
-        hs.planned,
-        cs.primaryContainer,
-        cs.onPrimaryContainer,
-        false,
-      ),
-      kSuggestionLogged => (
-        hs.logged,
-        cs.primaryContainer,
-        cs.onPrimaryContainer,
-        false,
-      ),
-      kSuggestionExpired => (hs.missed, cs.secondary, cs.onSecondary, false),
+    final (String label, Color? bg, Color fg) = switch (suggestion.status) {
+      kSuggestionPlanned => (hs.planned, cs.primaryContainer, cs.onPrimaryContainer),
+      kSuggestionLogged => (hs.logged, cs.primaryContainer, cs.onPrimaryContainer),
+      kSuggestionExpired => (hs.missed, cs.secondary, cs.onSecondary),
       kSuggestionDismissed
           when suggestion.dismissScope == kDismissScopeForever =>
-        (hs.muted, null, cs.onSurfaceVariant, true),
+        (hs.muted, null, cs.onSurfaceVariant),
       // dismissed for the season (and any unexpected status, defensively).
-      _ => (hs.dismissed, null, cs.onSurfaceVariant, true),
+      _ => (hs.dismissed, null, cs.onSurfaceVariant),
     };
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: bg,
-        border: outlined ? Border.all(color: cs.outline) : null,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        label,
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: fg,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
-    );
+    return StatusPill(label: label, background: bg, foreground: fg);
   }
 }
 

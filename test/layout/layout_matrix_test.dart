@@ -227,13 +227,11 @@ List<Override> _communityOverrides({required bool hasPlus}) => [
         CommunityFeedItem(
           taskTypeId: 'water',
           cohort: kCommunityCohortSite,
-          distinctUsers7d: 20,
           intensity: CommunityIntensity.often,
         ),
         CommunityFeedItem(
           taskTypeId: 'water',
           cohort: 'tomato',
-          distinctUsers7d: 4,
           intensity: CommunityIntensity.rare,
         ),
       ],
@@ -263,7 +261,6 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
     (ref) async => const FrequencyStats(
       bucket: Bucket(resolution: CommunityResolution.r6, key: 'cellB'),
       p25: 2,
-      p50: 3,
       p75: 4,
       unit: 'per_season',
       nUsers: 40,
@@ -273,7 +270,6 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
   communityWeeklyProvider('prune', 'tomato').overrideWith(
     (ref) async => const CommunityWeekly(
       bucket: Bucket(resolution: CommunityResolution.r5, key: 'cellC'),
-      distinctUsers7d: 9,
       intensity: CommunityIntensity.some,
     ),
   ),

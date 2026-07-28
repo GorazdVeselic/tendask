@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_test/flutter_test.dart';
-import 'package:tendask/data/seed/plant_task_rules_seed.dart';
+import '../../tool/seed/plant_task_rules_seed.dart';
 import 'package:tendask/features/suggestions/presentation/suggestion_text.dart';
 
 /// Guards the suggestion message catalog against the engine's emit contract:

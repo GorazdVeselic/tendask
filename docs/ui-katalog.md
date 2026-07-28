@@ -22,6 +22,8 @@ Za vsak ponavljajoč se UI vzorec obstaja EN skupni widget. Lokalna `_SectionTit
 - **Neuspelo lokalno branje** (drift napaka = bug) → `LoadErrorHint` (`core/widgets/load_error_hint.dart`) — miren centriran napis, ne `SizedBox.shrink()`. **Mrežna napaka ni to** — offline je normalno stanje in ima svoje besedilo.
 - **Datumski naslov nad dnevno skupino** (dnevnik, pretekli predlogi) → `DayHeader` (`core/widgets/day_header.dart`) — »Danes«/»Včeraj« za zadnja dva dneva, sicer datum. En sam stil dnevnih skupin.
 - **Kratko sporočilo po dejanju** → `showTopToast(context, …)` (`core/widgets/top_toast.dart`) — na **vrhu** zaslona, samodejno izgine; `error: true` ga obarva. Privzeti spodnji `SnackBar` je pod prsti in ga na temni temi zlahka spregledaš.
+- **Kvalitativna oznaka na koncu vrstice** (intenzivnost Okolice, pas zgodaj/običajno/pozno, status predloga) → `StatusPill` (`core/widgets/status_pill.dart`) — zaobljena značka; `background: null` = obrobljena različica za mirni konec lestvice. Klicalec izbere le trojico (napis, ozadje, ospredje); oblika, radij in `labelSmall`/w700 živijo na enem mestu, da se tri liste berejo kot en besednjak.
+- **Seznam vrstic z brezplačnim odsekom** (Okolica: »Ta teden«, »Kje si ti«) → `TeasedRowCards<T>` (`features/community/presentation/widgets/teased_row_cards.dart`) — prva vrstica v svoji kartici, ostale zamegljene pod `TeaseOverlay`; s Plusom ena navadna kartica. Vsebuje tudi `Divider` med vrsticami, zato **ne** gradi svoje `Column` + `Card` kombinacije.
 
 ## Barve in stil samo prek teme
 

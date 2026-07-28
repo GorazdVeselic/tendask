@@ -47,7 +47,7 @@ String communityTimingHeadline(
   if (percent != null && percent > 0 && percent < 100) {
     return t.community.detail.you_percent(percent: percent);
   }
-  return communityTimingLabel(t, timingBand(seasonRank(curve, myWeek)));
+  return _communityTimingLabel(t, timingBand(seasonRank(curve, myWeek)));
 }
 
 /// The one-word form of the same tercile, for the "Kje si ti" list, where the
@@ -61,7 +61,7 @@ String communityStandingBandLabel(Translations t, CommunityTiming timing) =>
 
 /// Where the reader stands, worded without a number — the honest form below
 /// [kCommunityReliabilityMin] (§7.7).
-String communityTimingLabel(Translations t, CommunityTiming timing) =>
+String _communityTimingLabel(Translations t, CommunityTiming timing) =>
     switch (timing) {
       CommunityTiming.early => t.community.detail.you_band.early,
       CommunityTiming.typical => t.community.detail.you_band.typical,

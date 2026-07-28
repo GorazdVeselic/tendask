@@ -537,44 +537,22 @@ void main() {
     expect(minimal.defaultGardenSeeded.value, isFalse);
   });
 
-  test('suggestionLogFromRemote: parses the mute end, null stays null', () {
-    final c = suggestionLogFromRemote({
-      'user_id': 'u1',
-      'guard_key': 'R3:treat',
-      'subject_key': 'up:p1',
-      'last_suggested_at': '2026-06-05T10:00:00.000Z',
-      'dismissed_until': '2026-06-20T00:00:00.000Z',
-      'updated_at': '2026-06-05T10:00:00.000Z',
-    });
-    expect(c.lastSuggestedAt.value!.isAtSameMomentAs(t0), isTrue);
-    expect(c.dismissedUntil.value, DateTime.utc(2026, 6, 20));
-
-    final none = suggestionLogFromRemote({
-      'user_id': 'u1',
-      'guard_key': 'R3:treat',
-      'subject_key': 'up:p1',
-      'last_suggested_at': null,
-      'dismissed_until': null,
-      'updated_at': '2026-06-05T10:00:00.000Z',
-    });
-    expect(none.dismissedUntil.value, isNull);
-  });
-
   test('timestamptz "infinity" parses instead of aborting the pull', () {
-    // Engine builds before kMuteForeverDate wrote Postgres `infinity` here; a
-    // throw escapes pull() and freezes the cursor for every table.
-    DateTime? until(Object? v) => suggestionLogFromRemote({
+    // A throw escapes pull() and freezes the cursor for every table, so the
+    // tolerance belongs to the shared parser, not to one column. It was written
+    // for suggestion_log.dismissed_until (P1); that pull is gone, the parser is
+    // not, and any nullable timestamp can still arrive as a Postgres infinity.
+    DateTime? at(Object? v) => profileFromRemote({
       'user_id': 'u1',
-      'guard_key': 'R3:treat',
-      'subject_key': 'up:p1',
-      'dismissed_until': v,
+      'fcm_token_updated_at': v,
       'updated_at': '2026-06-05T10:00:00.000Z',
-    }).dismissedUntil.value;
+    }).fcmTokenUpdatedAt.value;
 
-    expect(until('infinity'), DateTime.utc(9999, 12, 31, 23, 59, 59));
-    expect(until('-infinity'), DateTime.utc(1));
+    expect(at('infinity'), DateTime.utc(9999, 12, 31, 23, 59, 59));
+    expect(at('-infinity'), DateTime.utc(1));
     // Same instant the engine writes today, so old and new rows agree.
-    expect(until('9999-12-31T23:59:59Z'), until('infinity'));
+    expect(at('9999-12-31T23:59:59Z'), at('infinity'));
+    expect(at(null), isNull);
   });
 
   test('parsers ignore unknown/extra keys without throwing (tolerant)', () {

@@ -15,7 +15,6 @@ FrequencyStats _stats(
 }) => FrequencyStats(
   bucket: _bucket,
   p25: p25,
-  p50: 3,
   p75: p75,
   unit: 'per_season',
   nUsers: 40,

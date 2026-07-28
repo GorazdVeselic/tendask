@@ -17,7 +17,6 @@ const _bucket = Bucket(resolution: CommunityResolution.r6, key: 'cellB');
 FrequencyStats _stats(int nUsers) => FrequencyStats(
   bucket: _bucket,
   p25: 2,
-  p50: 3,
   p75: 4,
   unit: 'per_season',
   nUsers: nUsers,

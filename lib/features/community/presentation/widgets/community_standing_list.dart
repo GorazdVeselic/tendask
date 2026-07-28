@@ -4,11 +4,12 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/widgets/status_pill.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
 import '../community_display.dart';
 import 'community_privacy_note.dart';
-import 'tease_overlay.dart';
+import 'teased_row_cards.dart';
 
 /// "Kje si ti" (§7.2, wireframe B2): the cohorts I worked this season, each
 /// placed against its group's curve as early / usual / late. The number behind
@@ -35,12 +36,6 @@ class CommunityStandingList extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final teased = !hasPlus && standings.isNotEmpty;
-    final visible = teased ? standings.take(1).toList() : standings;
-    final hidden = teased
-        ? standings.skip(1).toList()
-        : const <CommunityStanding>[];
-
     return ListView(
       // A short list must still accept the pull-to-refresh gesture.
       physics: const AlwaysScrollableScrollPhysics(),
@@ -53,28 +48,15 @@ class CommunityStandingList extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 10),
-        Card(
-          clipBehavior: Clip.antiAlias,
-          margin: EdgeInsets.zero,
-          child: _Rows(rows: visible, catalog: catalog, plants: plants),
-        ),
-        if (teased)
-          Padding(
-            padding: const EdgeInsets.only(top: 8),
-            child: TeaseOverlay(
-              child: hidden.isEmpty
-                  ? null
-                  : Card(
-                      clipBehavior: Clip.antiAlias,
-                      margin: EdgeInsets.zero,
-                      child: _Rows(
-                        rows: hidden,
-                        catalog: catalog,
-                        plants: plants,
-                      ),
-                    ),
-            ),
+        TeasedRowCards<CommunityStanding>(
+          items: standings,
+          hasPlus: hasPlus,
+          rowBuilder: (standing) => _StandingRow(
+            standing: standing,
+            taskType: catalog[standing.taskTypeId],
+            plant: plants[standing.cohort],
           ),
+        ),
         Padding(
           padding: const EdgeInsets.fromLTRB(4, 12, 4, 0),
           child: Text(
@@ -85,31 +67,6 @@ class CommunityStandingList extends StatelessWidget {
           ),
         ),
         const CommunityPrivacyNote(),
-      ],
-    );
-  }
-}
-
-class _Rows extends StatelessWidget {
-  const _Rows({required this.rows, required this.catalog, required this.plants});
-
-  final List<CommunityStanding> rows;
-  final Map<String, TaskType> catalog;
-  final Map<String, Plant> plants;
-
-  @override
-  Widget build(BuildContext context) {
-    final cs = Theme.of(context).colorScheme;
-    return Column(
-      children: [
-        for (var i = 0; i < rows.length; i++) ...[
-          if (i > 0) Divider(height: 1, indent: 56, color: cs.outlineVariant),
-          _StandingRow(
-            standing: rows[i],
-            taskType: catalog[rows[i].taskTypeId],
-            plant: plants[rows[i].cohort],
-          ),
-        ],
       ],
     );
   }
@@ -176,8 +133,7 @@ class _BandPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final cs = Theme.of(context).colorScheme;
     final (Color? bg, Color fg) = switch (band) {
       CommunityTiming.early => (cs.primaryContainer, cs.onPrimaryContainer),
       CommunityTiming.typical => (
@@ -186,20 +142,10 @@ class _BandPill extends StatelessWidget {
       ),
       CommunityTiming.late => (null, cs.onSurfaceVariant),
     };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: bg,
-        border: bg == null ? Border.all(color: cs.outline) : null,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        communityStandingBandLabel(context.t, band),
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: fg,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+    return StatusPill(
+      label: communityStandingBandLabel(context.t, band),
+      background: bg,
+      foreground: fg,
     );
   }
 }

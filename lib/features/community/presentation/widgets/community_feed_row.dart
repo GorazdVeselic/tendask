@@ -5,6 +5,7 @@ import '../../../../core/catalog_labels.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/date_format.dart';
+import '../../../../core/widgets/status_pill.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../data/community_models.dart';
 import '../community_display.dart';
@@ -72,8 +73,7 @@ class _IntensityPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final cs = theme.colorScheme;
+    final cs = Theme.of(context).colorScheme;
     final (Color? bg, Color fg) = switch (intensity) {
       CommunityIntensity.often => (cs.primaryContainer, cs.onPrimaryContainer),
       CommunityIntensity.some => (
@@ -82,20 +82,10 @@ class _IntensityPill extends StatelessWidget {
       ),
       CommunityIntensity.rare => (null, cs.onSurfaceVariant),
     };
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: bg,
-        border: bg == null ? Border.all(color: cs.outline) : null,
-        borderRadius: BorderRadius.circular(999),
-      ),
-      child: Text(
-        communityIntensityLabel(context.t, intensity),
-        style: theme.textTheme.labelSmall?.copyWith(
-          color: fg,
-          fontWeight: FontWeight.w700,
-        ),
-      ),
+    return StatusPill(
+      label: communityIntensityLabel(context.t, intensity),
+      background: bg,
+      foreground: fg,
     );
   }
 }
