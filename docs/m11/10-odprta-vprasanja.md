@@ -136,6 +136,17 @@ Vault secret (ujemi vzorec `engine_service_key`), ali z ročnim `update app_conf
 okolja (kot je za ključ že dokumentirano v `0006`). Tako migracija postane okoljsko-nevtralna.
 Prej ne (enoprojektni MVP — hardcodan URL je za edino okolje pravilen).
 
+**RAZREŠENO 2026-07-28 (postopkovno, ne s spremembo migracije).** Sprožilec je nastopil: ob
+`tendask migrate` je `0006` na staging vpisal produkcijski URL. Popravljeno z
+`update app_config` na staging vrednost; postopek je zdaj korak v `docs/deploy-runbook.md`
+(»Testni vklop M11 na stagingu«) skupaj s sondo za preverbo. Migracija ostane nespremenjena,
+ker je `on conflict do nothing` in je na prod že aplicirana — ponovno pisanje bi bilo tveganje
+brez koristi. **Ob vsakem novem okolju je preverba `engine_endpoint` obvezen korak.**
+
+Izmerjeni doseg, če bi ostalo nepopravljeno: **nič na produkciji** — ustavijo ga tri neodvisne
+stvari (manjkajoč `engine_service_key` v staging Vaultu, stražar izvora v `0007`, in
+`verify_jwt = true` na prod funkciji). Cena bi bil staging test, ki tiho ne naredi nič.
+
 ## 15. Profile pull `<=` tie-break lahko povozi še-ne-pushan `pending` profil
 
 **Privzetek:** inkrementalni pull (`sync_pull_service.dart`) uporablja generično

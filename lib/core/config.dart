@@ -258,27 +258,30 @@ const kVersionChannel = '';
 /// to re-enable. See entry_screen (step list) and settings_screen.
 const kSuppliesEnabled = true;
 
-/// Smart-suggestion (M11) feature gate — dark by default so M11 rides into the
-/// production APK without surfacing until the deliberate launch (kSuggestionsEnabled=true
-/// + smart-engine edge/cron deploy). Flip to true to reveal. Wraps the Home
-/// suggestion band + deep-link highlight, the /suggestions history route, the
-/// settings engine section, the M11 notification-settings rows, and FCM token
-/// registration (a token is pointless while nothing pushes). Mirrors the
-/// kSuppliesEnabled idiom. See docs/m11/11-poravnava-v-main.md.
+/// Smart-suggestion (M11) feature gate. Wraps the Home suggestion band +
+/// deep-link highlight, the /suggestions history route, the settings engine
+/// section, the M11 notification-settings rows, and FCM token registration (a
+/// token is pointless while nothing pushes).
+///
+/// Read from the build environment rather than edited by hand: the staging
+/// defines set it, the production defines do not, so a prod build is dark
+/// **by construction** and nobody has to remember to flip it back. Still a
+/// compile-time constant, so the dark code is tree-shaken exactly as before.
 ///
 /// Does NOT cover Okolica — that is [kCommunityEnabled]. The two are separate
 /// launches with separate readiness conditions: suggestions are free and ride on
 /// the engine, Okolica is paid and rides on the aggregate cron.
-const kSuggestionsEnabled = false;
+const kSuggestionsEnabled = bool.fromEnvironment('SUGGESTIONS_ENABLED');
 
-/// Community (Okolica) feature gate — dark by default, and independent of
-/// [kSuggestionsEnabled]: Okolica reads nothing from the engine, its aggregates
-/// run on their own cron, and turning the free suggestions on must not hand out
-/// the paid feature. Wraps the Okolica shell branch + its tab, the Home "in your
-/// area" section, and the community card on task detail.
+/// Community (Okolica) feature gate, independent of [kSuggestionsEnabled]:
+/// Okolica reads nothing from the engine, its aggregates run on their own cron,
+/// and turning the free suggestions on must not hand out the paid feature.
+/// Wraps the Okolica shell branch + its tab, the Home "in your area" section,
+/// and the community card on task detail.
 ///
-/// Launch also requires [kDevPlusStub] = false — see docs/deploy-runbook.md.
-const kCommunityEnabled = false;
+/// Environment-driven like [kSuggestionsEnabled]. Launch also requires
+/// [kDevPlusStub] = false and the five-tab nav fix — see docs/deploy-runbook.md.
+const kCommunityEnabled = bool.fromEnvironment('COMMUNITY_ENABLED');
 
 /// Placeholder Plus entitlement for the community (Okolica) tease while the real
 /// licence does not exist yet: true = treat the device as entitled, so the whole

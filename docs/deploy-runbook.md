@@ -164,6 +164,50 @@ vrtijo a takoj no-op (server-mirror klientskega `kSuggestionsEnabled`). **Ob PRI
 deploy edge fn + `kSuggestionsEnabled=true`): `update app_config set value='true' where key='engine_enabled';`.
 Opomba: `engine_endpoint` je seedan na real edge fn, zato server-dark drži **flag**, ne odsotnost endpointa.
 
+### Testni vklop M11 na stagingu (2026-07-28)
+
+Aplikacija dobi flaga iz okolja, ne iz ročnega urejanja `config.dart`:
+`SUGGESTIONS_ENABLED` / `COMMUNITY_ENABLED` sta v `dart_defines.staging.json` (`"true"`) in
+**nista** v `dart_defines.json`. `deploy.bat hot` → M11 prižgan, `deploy.bat` → prod build temen
+**po zasnovi**. Ker je `bool.fromEnvironment` compile-time konstanta, se temna koda v prod buildu
+še vedno odreže. Straža: `test/core/feature_flags_test.dart`.
+
+**Stanje staginga po `tendask migrate` (7 novih: `0006`–`0010`, `0017`, `0018`):**
+
+| Preverjeno | Ugotovitev |
+|---|---|
+| `app_config.engine_endpoint` | `0006` ga zaseeda s **produkcijskim** URL-jem — na stagingu **popravljen** na `https://api-staging.tendask.app/functions/v1/smart-engine`. Brez tega bi staging cron POST-al na prod funkcijo. |
+| `cron.job` | `agg-nightly` (02:30) in `engine-dispatch` (*/30) sta **aktivna**, a no-op dokler je `engine_enabled=false`. |
+| `engine_dispatch()` na stagingu | **ne dispatcha** — glej spodaj. |
+
+**Cron na self-hosted stagingu ne bo tekel, in to je pričakovano.** Preverjeno z izvedbo:
+
+1. `vault.decrypted_secrets` nima `engine_service_key` → funkcija javi
+   `WARNING: missing engine_endpoint or engine_service_key — skipping` in se vrne.
+2. Tudi po dodanem ključu bi jo ustavil stražar izvora
+   `endpoint !~ '^https://[a-z0-9]+\.functions\.supabase\.co/'` (`0007`) — namerna obramba, ki
+   samohostanega staginga ne pozna.
+
+Za testiranje zato funkcijo **kličemo neposredno**, ne prek crona: dobiš popoln nadzor nad tem,
+kateri uporabniki tečejo in kdaj, brez čakanja na časovno okno 07:00–12:00. Če bi kdaj hotel
+cron tudi na stagingu, naj dovoljeni izvor postane **podatek** (`app_config`), ne vzorec v kodi —
+prod vedenje ostane isto, ker se privzeta vrednost ne spremeni.
+
+> ⚠️ Zapisano zato, ker ta razred napake **ne pove ničesar**: cron se vrti, `engine_run` ostaja
+> prazen, aplikacija kaže prazen pas — brez ene same napake, ki bi kazala na vzrok.
+
+**Avtorizacija funkcije na stagingu je slabša kot na produkciji — namerno, a vedeti je treba.**
+`isServiceRole` (`handler.ts`) žeton **dekodira, podpisa pa ne preveri**; naslanja se na
+platformo, zato ima `supabase/config.toml` `[functions.smart-engine] verify_jwt = true` z
+izrecnim opozorilom, da se nikoli ne deploya z `--no-verify-jwt`. Na produkciji to drži.
+Samohostani staging teče z **`VERIFY_JWT=false`** (preverjeno v `supabase-edge-functions`), zato
+je tam `isServiceRole` edini stražar in sprejme **katerikoli nepodpisan** žeton s
+`role: service_role`. Posledici:
+
+- za lastnimi vrati je to sprejemljivo, a **funkcija na stagingu je praktično odprta**;
+- **noben test avtorizacije na stagingu ni dokaz**, da avtorizacija na produkciji deluje —
+  za to sta merodajna `handler_test.ts` (401/405/400) in `verify_jwt = true` ob deployu.
+
 ### Prižig M11 — dva ločena dogodka
 
 Predlogi in Okolica imata **vsak svoj flag** v `lib/core/config.dart` in **različna pogoja
