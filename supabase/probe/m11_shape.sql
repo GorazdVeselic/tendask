@@ -43,6 +43,22 @@ select 'POLICY|' || tablename || '|' || policyname || '|' || cmd ||
  where schemaname = 'public'
  order by tablename, policyname;
 
+-- Table privileges, not just policies. RLS gates ROWS, grants gate the TABLE,
+-- and `service_role` skips only the first — the engine died on a missing grant
+-- (migration 0019), which no policy or RLS flag would have shown. `default`
+-- means no explicit ACL: the owner has everything, nobody else has anything.
+select 'GRANT|' || c.relname || '|' ||
+       coalesce(array_to_string(c.relacl::text[], ' '), 'default')
+  from pg_class c
+  join pg_namespace n on n.oid = c.relnamespace
+ where n.nspname = 'public' and c.relkind in ('r', 'v', 'm')
+   and c.relname in ('plant_task_rule','suggestion','suggestion_log','engine_run',
+                     'weather_cache','app_config','activity_recent','activity_season',
+                     'activity_frequency','bucket_population','eligible_user','agg_event',
+                     'profile','task','task_subject','task_reminder','task_supply',
+                     'user_plant','plant','area','supply','task_type')
+ order by c.relname;
+
 select 'RLS|' || relname || '|enabled=' || relrowsecurity || '|forced=' || relforcerowsecurity
   from pg_class c
   join pg_namespace n on n.oid = c.relnamespace

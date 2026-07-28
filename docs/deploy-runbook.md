@@ -196,6 +196,28 @@ prod vedenje ostane isto, ker se privzeta vrednost ne spremeni.
 > ⚠️ Zapisano zato, ker ta razred napake **ne pove ničesar**: cron se vrti, `engine_run` ostaja
 > prazen, aplikacija kaže prazen pas — brez ene same napake, ki bi kazala na vzrok.
 
+**Deploy funkcije na staging:** `tool/staging_deploy_engine.sh` (poženi po vsaki spremembi motorja).
+Kopira `smart-engine/` + `_shared/` v `volumes/functions/` in **prepiše gola imena uvozov** v
+`npm:` specifikatorje — samohostani usmerjevalnik spawna delavce z `importMapPath = null`, zato
+`deno.json` uvozna mapa tam ne velja. Omejitvi delavca: **150 MB** in **60 s** na zahtevo, kar pri
+paketu 25 uporabnikov z vremenskimi klici ni veliko.
+
+```bash
+wsl -e bash -lc "/mnt/c/Users/Uporabnik/StudioProjects/tendask/tool/staging_deploy_engine.sh"
+# klic (service-role žeton iz containerja, brez izpisa):
+KEY=$(docker inspect supabase-edge-functions --format '{{range .Config.Env}}{{println .}}{{end}}' \
+      | grep '^SUPABASE_SERVICE_ROLE_KEY=' | cut -d= -f2-)
+curl -s -X POST https://api-staging.tendask.app/functions/v1/smart-engine \
+     -H "Authorization: Bearer $KEY" -H 'Content-Type: application/json' \
+     -d '{"user_ids":["<uuid>"]}'
+```
+
+> ⚠️ **`service_role` NE obide GRANT-ov** (obide samo RLS). `0008` trdi nasprotno in na tem je
+> slonel cel načrt pravic M11. Na gostovanem Supabase je to zakrito s privzetimi privilegiji
+> projekta; na stagingu je motor umrl na prvem branju z `42501 permission denied for table
+> app_config`. Popravlja **`0019_m11_engine_service_grants.sql`** (aditivna, idempotentna).
+> Preverba: sonda `m11_shape.sql` zdaj izpisuje tudi `GRANT|` vrstice.
+
 **Avtorizacija funkcije na stagingu je slabša kot na produkciji — namerno, a vedeti je treba.**
 `isServiceRole` (`handler.ts`) žeton **dekodira, podpisa pa ne preveri**; naslanja se na
 platformo, zato ima `supabase/config.toml` `[functions.smart-engine] verify_jwt = true` z
