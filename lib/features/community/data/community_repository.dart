@@ -43,6 +43,20 @@ class CommunityRepository {
   final RemoteAggFetch? _fetch;
   final Clock _clock;
 
+  /// How many times the user has asked for fresh data, and the count each slice
+  /// was last fetched under. A counter rather than a timestamp on purpose: a
+  /// refresh moments after a fetch shares its second (drift stores seconds), and
+  /// a time comparison would call the slice fresh and swallow the gesture.
+  /// Both live in memory — a refresh is a gesture inside one session, and a
+  /// restart already refetches through the ordinary daily rule.
+  int _refreshEpoch = 0;
+  final Map<String, int> _fetchedUnderEpoch = {};
+
+  /// Makes the next read of every slice go to the network. Deliberately does NOT
+  /// touch the cached rows: a refresh that finds no signal must still degrade to
+  /// the last known slice, with its real date (P8), not to an empty screen.
+  void requestRefresh() => _refreshEpoch++;
+
   /// The profile's aggregation buckets, finest → coarsest. A stream so moving
   /// the garden (new H3 cells) re-resolves the scope without a restart.
   Stream<List<Bucket>> watchBuckets(String userId) =>
@@ -218,7 +232,7 @@ class CommunityRepository {
     };
     final stale = [
       for (final pair in pairs)
-        if (!_isFresh(await _readCache(keys[pair]!))) pair,
+        if (!_isFresh(keys[pair]!, await _readCache(keys[pair]!))) pair,
     ];
     if (stale.isEmpty) return;
 
@@ -442,7 +456,7 @@ class CommunityRepository {
     final local = cached == null
         ? null
         : (rows: _decode(cached.payload), fetchedAt: cached.fetchedAt);
-    if (_isFresh(cached) || _fetch == null) return local;
+    if (_isFresh(key, cached) || _fetch == null) return local;
     try {
       final now = _clock.now();
       final data = await _fetch(table, filter);
@@ -469,25 +483,33 @@ class CommunityRepository {
     _db.communityCaches,
   )..where((c) => c.key.equals(key))).getSingleOrNull();
 
-  bool _isFresh(CommunityCache? cached) =>
-      cached != null &&
-      !startOfDay(
-        cached.fetchedAt.toLocal(),
-      ).isBefore(startOfDay(_clock.now().toLocal()));
+  /// A slice not yet refetched under the current refresh epoch is stale whatever
+  /// its date says. On a cold start the map is empty and the epoch is 0, so the
+  /// ordinary once-a-day rule applies unchanged.
+  bool _isFresh(String key, CommunityCache? cached) {
+    if (cached == null) return false;
+    if ((_fetchedUnderEpoch[key] ?? 0) < _refreshEpoch) return false;
+    return !startOfDay(
+      cached.fetchedAt.toLocal(),
+    ).isBefore(startOfDay(_clock.now().toLocal()));
+  }
 
   Future<void> _writeCache(
     String key,
     List<Map<String, dynamic>> data,
     DateTime now,
-  ) => _db
-      .into(_db.communityCaches)
-      .insertOnConflictUpdate(
-        CommunityCachesCompanion.insert(
-          key: key,
-          payload: jsonEncode(data),
-          fetchedAt: now,
-        ),
-      );
+  ) async {
+    _fetchedUnderEpoch[key] = _refreshEpoch;
+    await _db
+        .into(_db.communityCaches)
+        .insertOnConflictUpdate(
+          CommunityCachesCompanion.insert(
+            key: key,
+            payload: jsonEncode(data),
+            fetchedAt: now,
+          ),
+        );
+  }
 
   List<Map<String, dynamic>> _decode(String payload) =>
       (jsonDecode(payload) as List).cast<Map<String, dynamic>>();

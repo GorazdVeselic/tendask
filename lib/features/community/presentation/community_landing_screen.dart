@@ -130,6 +130,9 @@ class _WeekTab extends ConsumerWidget {
 /// Re-reads the daily slices. A no-op when today's are already cached — the
 /// gesture earns its keep exactly when the device was offline earlier.
 Future<void> _refreshCommunity(WidgetRef ref) async {
+  // Invalidating alone re-runs the providers against the same day-cached slice,
+  // so the spinner turns and nothing changes until midnight.
+  ref.read(communityRepositoryProvider).requestRefresh();
   ref.invalidate(communityFeedProvider);
   ref.invalidate(communityReachedProvider);
   ref.invalidate(communityStandingsProvider);

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:drift/native.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
@@ -7,6 +8,7 @@ import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/date_format.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
+import 'package:tendask/features/community/data/community_repository.dart';
 import 'package:tendask/features/community/presentation/community_landing_screen.dart';
 import 'package:tendask/features/community/presentation/widgets/tease_overlay.dart';
 import 'package:tendask/i18n/translations.g.dart';
@@ -70,18 +72,33 @@ CommunityFeed _feed({DateTime? fetchedAt}) => CommunityFeed(
 /// not move this number is a gesture with no effect.
 int _reads = 0;
 
+/// Counts the one thing re-running the providers cannot prove: that the pull
+/// reached the data layer. Invalidation alone re-reads the same day-cached
+/// slice, so `_reads` moves while nothing refetches (najdba N19).
+class _SpyRepository extends CommunityRepository {
+  _SpyRepository(super.db, super.fetch);
+  int refreshRequests = 0;
+  @override
+  void requestRefresh() {
+    refreshRequests++;
+    super.requestRefresh();
+  }
+}
+
 Future<void> _pump(
   WidgetTester tester, {
   required CommunityFeed? feed,
   bool hasPlus = true,
   bool reached = true,
   List<CommunityStanding> standings = const [],
+  CommunityRepository? repo,
 }) async {
   _reads = 0;
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
         overrides: [
+          if (repo != null) communityRepositoryProvider.overrideWithValue(repo),
           communityFeedProvider.overrideWith((ref) async {
             _reads++;
             return feed;
@@ -138,16 +155,10 @@ void main() {
   ) async {
     await _pump(tester, feed: _feed());
 
-    expect(
-      find.textContaining(t.community.window_7d),
-      findsOneWidget,
-    );
+    expect(find.textContaining(t.community.window_7d), findsOneWidget);
     // r6 reads as "in your area", and the population must be visible (§7.4/7.7).
     expect(find.textContaining(t.community.scope.area), findsOneWidget);
-    expect(
-      find.textContaining(t.community.population(n: 40)),
-      findsOneWidget,
-    );
+    expect(find.textContaining(t.community.population(n: 40)), findsOneWidget);
   });
 
   testWidgets('with Plus nothing is teased', (tester) async {
@@ -200,7 +211,9 @@ void main() {
     expect(find.text(t.community.empty_feed), findsNothing);
   });
 
-  testWidgets('the same distinction holds on "where you stand"', (tester) async {
+  testWidgets('the same distinction holds on "where you stand"', (
+    tester,
+  ) async {
     await _pump(tester, feed: null, reached: false);
     await tester.tap(find.text(t.community.seg_you));
     await tester.pumpAndSettle();
@@ -255,6 +268,25 @@ void main() {
     expect(_reads, greaterThan(before));
   });
 
+  testWidgets('the pull also tells the data layer to leave the cache', (
+    tester,
+  ) async {
+    // The assertion above passes even when the pull is a placebo: the providers
+    // re-run and read the very slice they meant to replace. This is the half
+    // that actually failed on device.
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(db.close);
+    final spy = _SpyRepository(db, null);
+
+    await _pump(tester, feed: _feed(), repo: spy);
+    expect(spy.refreshRequests, 0);
+
+    await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
+    await tester.pumpAndSettle();
+
+    expect(spy.refreshRequests, 1);
+  });
+
   testWidgets('"where you stand" refreshes on its own pull', (tester) async {
     await _pump(tester, feed: _feed());
     await tester.tap(find.text(t.community.seg_you));
@@ -271,7 +303,9 @@ void main() {
     expect(_reads, greaterThan(before));
   });
 
-  testWidgets('the "where you stand" segment switches the body', (tester) async {
+  testWidgets('the "where you stand" segment switches the body', (
+    tester,
+  ) async {
     await _pump(
       tester,
       feed: _feed(),

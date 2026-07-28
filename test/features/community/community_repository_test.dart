@@ -206,6 +206,39 @@ void main() {
     expect(calls, 6); // re-fetched
   });
 
+  test('requestRefresh reaches past the day cache (N19)', () async {
+    // One instance for the whole test: the request is repository state, and a
+    // fresh repo per call would hide a regression by starting empty.
+    final r = repo();
+    await r.feed(buckets: buckets);
+    expect(calls, 3);
+
+    await r.feed(buckets: buckets);
+    expect(calls, 3); // same day, no gesture → cache, as before
+
+    r.requestRefresh();
+    await r.feed(buckets: buckets);
+    expect(calls, 6); // the gesture went to the network
+
+    // And it does not latch: once refetched, the day cache applies again.
+    await r.feed(buckets: buckets);
+    expect(calls, 6);
+  });
+
+  test('a refresh with no signal keeps the last slice and its date', () async {
+    await repo().feed(buckets: buckets);
+
+    // Same cache, offline repository, refresh requested: the rows must survive
+    // with their real date — a refresh must never empty the screen (P8).
+    final r = repo(online: false);
+    r.requestRefresh();
+    final feed = await r.feed(buckets: buckets);
+
+    expect(feed, isNotNull);
+    expect(feed!.items.first.taskTypeId, 'water');
+    expect(feed.fetchedAt, DateTime(2026, 6, 1, 9));
+  });
+
   test('offline serves the last cached slice (graceful degrade)', () async {
     await repo().feed(buckets: buckets); // populate cache while online
     final before = calls;

@@ -60,6 +60,9 @@ class CommunityTaskScreen extends ConsumerWidget {
       ),
       body: RefreshIndicator(
         onRefresh: () async {
+          // Without this the invalidated providers re-read the same day-cached
+          // slice and the gesture changes nothing (see the landing screen).
+          ref.read(communityRepositoryProvider).requestRefresh();
           ref.invalidate(communityReachedProvider);
           ref.invalidate(communitySeasonCurveProvider(taskTypeId, cohort));
           ref.invalidate(communityFrequencyProvider(taskTypeId, cohort));

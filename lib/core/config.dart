@@ -174,11 +174,20 @@ const kCommunityFrequencyBands = ['1', '2', '3', '4', '5+'];
 /// for the cost of one small row push.
 const kFcmTokenReassert = Duration(days: 14);
 
-/// Community aggregation (V2 Okolica) display thresholds — mirror the server's
-/// app_config (skupnost-agregacija.md §6). RLS already gates rows k-anonymously
-/// server-side; the client knows these only to show an honest scope: below
-/// [kCommunityPrivacyMin] show "not enough gardeners yet"; below
-/// [kCommunityReliabilityMin] show a descriptive band, never a raw percentage.
+/// Community aggregation (V2 Okolica) display thresholds. These are a **client
+/// floor, not the source of truth**: the server owns the real values in
+/// `app_config` (`k_privacy`, `k_reliab`) and its RLS already refuses to send a
+/// row that misses them, so with the shipped config every delivered row clears
+/// these too and the low-n branches below never render. They exist for the one
+/// case RLS cannot cover — an operator lowering `app_config.k_reliab` below the
+/// value baked in here — where the client still refuses to print a percentage
+/// off a thin sample. Consequence to state plainly: a user sees **numbers or
+/// nothing**, never a descriptive middle band (najdba N22).
+///
+/// The client cannot read `app_config` (RLS-enabled, no policy), so this mirror
+/// is maintained by hand and pinned by `community_thresholds_test.dart`. The
+/// invariant is one-directional: these may be **higher** than the server's, never
+/// lower — lower would print numbers the server thought too thin to trust.
 const kCommunityPrivacyMin = 5;
 const kCommunityReliabilityMin = 30;
 

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
+import 'package:drift/native.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
+import 'package:tendask/features/community/data/community_repository.dart';
 import 'package:tendask/features/community/data/community_stats.dart';
 import 'package:tendask/features/community/presentation/community_task_screen.dart';
 import 'package:tendask/features/community/presentation/widgets/community_bars.dart';
@@ -58,6 +60,19 @@ const _stats = FrequencyStats(
 /// not move this number is a gesture with no effect.
 int _reads = 0;
 
+/// Counts the one thing re-running the providers cannot prove: that the pull
+/// reached the data layer. Invalidation alone re-reads the same day-cached
+/// slice, so `_reads` moves while nothing refetches (najdba N19).
+class _SpyRepository extends CommunityRepository {
+  _SpyRepository(super.db, super.fetch);
+  int refreshRequests = 0;
+  @override
+  void requestRefresh() {
+    refreshRequests++;
+    super.requestRefresh();
+  }
+}
+
 Future<void> _pump(
   WidgetTester tester, {
   SeasonCurve? curve,
@@ -70,12 +85,14 @@ Future<void> _pump(
   MySeason mine = const MySeason(first: null, count: 0),
   bool hasPlus = true,
   bool reached = true,
+  CommunityRepository? repo,
 }) async {
   _reads = 0;
   await tester.pumpWidget(
     TranslationProvider(
       child: ProviderScope(
         overrides: <Override>[
+          if (repo != null) communityRepositoryProvider.overrideWithValue(repo),
           taskTypesMapProvider.overrideWith(
             (ref) => Stream.value({'prune': _taskType()}),
           ),
@@ -84,10 +101,9 @@ Future<void> _pump(
           ),
           hasPlusProvider.overrideWithValue(hasPlus),
           communityReachedProvider.overrideWith((ref) async => reached),
-          communitySeasonCurveProvider(
-            'prune',
-            'apple',
-          ).overrideWith((ref) async {
+          communitySeasonCurveProvider('prune', 'apple').overrideWith((
+            ref,
+          ) async {
             _reads++;
             return curve;
           }),
@@ -140,9 +156,14 @@ void main() {
       mine: MySeason(first: DateTime(2026, 5, 11), count: 3),
     );
 
-    expect(find.text(t.community.detail.you_percent(percent: 60)), findsOneWidget);
     expect(
-      find.textContaining(t.community.detail.by_date_percent(date: '11. 5.', percent: 80)),
+      find.text(t.community.detail.you_percent(percent: 60)),
+      findsOneWidget,
+    );
+    expect(
+      find.textContaining(
+        t.community.detail.by_date_percent(date: '11. 5.', percent: 80),
+      ),
       findsOneWidget,
     );
     expect(find.byType(CommunityBars), findsNWidgets(2)); // season + frequency
@@ -190,10 +211,7 @@ void main() {
   testWidgets('this week keeps its own scope label', (tester) async {
     await _pump(tester, curve: _curve());
 
-    expect(
-      find.text(t.community.detail.this_week.some),
-      findsOneWidget,
-    );
+    expect(find.text(t.community.detail.this_week.some), findsOneWidget);
   });
 
   testWidgets('nothing anywhere is the honest empty state, not an error', (
@@ -208,13 +226,7 @@ void main() {
 
   testWidgets('a device that never read the scope blames itself, not the '
       'cohort', (tester) async {
-    await _pump(
-      tester,
-      curve: null,
-      stats: null,
-      weekly: null,
-      reached: false,
-    );
+    await _pump(tester, curve: null, stats: null, weekly: null, reached: false);
 
     expect(find.text(t.community.empty_offline), findsOneWidget);
     expect(find.text(t.community.detail.no_curve), findsNothing);
@@ -228,6 +240,25 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(_reads, greaterThan(before));
+  });
+
+  testWidgets('the pull also tells the data layer to leave the cache', (
+    tester,
+  ) async {
+    // The assertion above passes even when the pull is a placebo: the providers
+    // re-run and read the very slice they meant to replace. This is the half
+    // that actually failed on device.
+    final db = AppDatabase.forTesting(NativeDatabase.memory());
+    addTearDown(db.close);
+    final spy = _SpyRepository(db, null);
+
+    await _pump(tester, curve: null, stats: null, weekly: null, repo: spy);
+    expect(spy.refreshRequests, 0);
+
+    await tester.fling(find.byType(ListView), const Offset(0, 300), 1000);
+    await tester.pumpAndSettle();
+
+    expect(spy.refreshRequests, 1);
   });
 
   testWidgets('without Plus the whole detail is teased', (tester) async {
