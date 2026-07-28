@@ -72,6 +72,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
 	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
 	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
+	@override late final _Translations$push$sl push = _Translations$push$sl._(_root);
 	@override late final _Translations$suggestions$sl suggestions = _Translations$suggestions$sl._(_root);
 	@override late final _Translations$community$sl community = _Translations$community$sl._(_root);
 }
@@ -186,10 +187,11 @@ class _Translations$notif_priming$sl extends Translations$notif_priming$en {
 
 	// Translations
 	@override String get title => 'Naj te pravočasno opozorim?';
-	@override String get why => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.';
+	@override String get why => 'Da ti opravilo ne uide — opomnik pride točno ob času, ki ga nastaviš.';
 	@override String get benefit_reminders => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.';
 	@override String get benefit_weather => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)';
 	@override String get benefit_nearby => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)';
+	@override String get benefit_nearby_live => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (neobvezno)';
 	@override String get privacy => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.';
 	@override String get enable => 'Vklopi obvestila';
 	@override String get later => 'Mogoče kasneje';
@@ -277,10 +279,10 @@ class _Translations$onboarding$sl extends Translations$onboarding$en {
 	@override String get next => 'Naprej';
 	@override String get start => 'Začni 🌿';
 	@override String get soon_badge => 'kmalu (V2)';
-	@override String get welcome_title => 'Dobrodošel v Tendask';
+	@override String get welcome_title => 'Lepo, da si tu';
 	@override String get welcome_body => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.';
 	@override String get log_title => 'Beleži v sekundi';
-	@override String get log_body => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.';
+	@override String get log_body => 'Košnja, zalivanje, gnojenje? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.';
 	@override String get remind_title => 'Opomniki + vreme';
 	@override String get remind_body => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.';
 	@override String get nearby_title => 'Tvoja okolica';
@@ -295,7 +297,7 @@ class _Translations$auth$sl extends Translations$auth$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Dobrodošel v Tendask';
+	@override String get title => 'Tendask — lepo, da si tu';
 	@override String get value_prop => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.';
 	@override String get continue_apple => 'Nadaljuj z Apple';
 	@override String get continue_google => 'Nadaljuj z Google';
@@ -830,7 +832,7 @@ class _Translations$settings$sl extends Translations$settings$en {
 	@override String get section_about => 'O aplikaciji';
 	@override String get privacy_policy => 'Politika zasebnosti';
 	@override String get section_suggestions => 'Predlogi';
-	@override String get suggestions_history_sub => 'Kaj je bilo predlagano in kako si se odzval';
+	@override String get suggestions_history_sub => 'Kaj je bilo predlagano in kakšen je bil tvoj odziv';
 	@override String get section_garden => 'Vrt';
 	@override String get supplies => '📦 Zaloge & sredstva';
 	@override String get supplies_sub => 'urea, alge, gnojila, oprema';
@@ -932,7 +934,7 @@ class _Translations$harvest$sl extends Translations$harvest$en {
 
 	// Translations
 	@override String get yield_section => 'Pridelek';
-	@override String get sheet_title => 'Koliko si pobral?';
+	@override String get sheet_title => 'Koliko pridelka?';
 	@override String get amount_label => 'Količina';
 	@override String get amount_hint => 'npr. 2,5';
 	@override String get unit_label => 'Enota';
@@ -948,6 +950,17 @@ class _Translations$harvest$sl extends Translations$harvest$en {
 	@override String get unit_pieces => 'kom';
 	@override String get unit_l => 'l';
 	@override String get unit_bunch => 'šop';
+}
+
+// Path: push
+class _Translations$push$sl extends Translations$push$en {
+	_Translations$push$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get fallback_title => 'Tvoj vrt te čaka';
+	@override String get fallback_body => 'Tapni za predlog dneva';
 }
 
 // Path: suggestions
@@ -966,7 +979,7 @@ class _Translations$suggestions$sl extends Translations$suggestions$en {
 	@override String get band_title => 'Predlogi zate';
 	@override String get past_link => 'Zgodovina';
 	@override String get past_title => 'Pretekli predlogi';
-	@override String get past_intro => 'Kaj ti je Tendask predlagal in kako si se odzval.';
+	@override String get past_intro => 'Kaj ti je Tendask predlagal in kakšen je bil tvoj odziv.';
 	@override String get past_empty => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.';
 	@override String get past_retention => 'Predloge starejše od enega leta samodejno počistimo.';
 	@override String get dry_window => 'Suho okno[ (~{dry_hours} h)] — primeren čas.';
@@ -2144,9 +2157,9 @@ class _Translations$community$standing$band$sl extends Translations$community$st
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get early => 'zgoden';
-	@override String get typical => 'običajen';
-	@override String get late => 'pozen';
+	@override String get early => 'zgodaj';
+	@override String get typical => 'običajno';
+	@override String get late => 'pozno';
 }
 
 // Path: community.detail.you_band
@@ -2228,10 +2241,11 @@ extension on TranslationsSl {
 			'journal_nudge.title_b' => 'Kaj se dogaja na vrtu?',
 			'journal_nudge.body_b' => 'Zabeleži, kaj si ta teden počel na vrtu.',
 			'notif_priming.title' => 'Naj te pravočasno opozorim?',
-			'notif_priming.why' => 'Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.',
+			'notif_priming.why' => 'Da ti opravilo ne uide — opomnik pride točno ob času, ki ga nastaviš.',
 			'notif_priming.benefit_reminders' => 'Opomniki opravil — npr. »1 dan prej ob 18:00«.',
 			'notif_priming.benefit_weather' => 'Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)',
 			'notif_priming.benefit_nearby' => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)',
+			'notif_priming.benefit_nearby_live' => 'Namigi okolice — kaj počnejo drugi v tvoji bližini. (neobvezno)',
 			'notif_priming.privacy' => 'Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.',
 			'notif_priming.enable' => 'Vklopi obvestila',
 			'notif_priming.later' => 'Mogoče kasneje',
@@ -2283,16 +2297,16 @@ extension on TranslationsSl {
 			'onboarding.next' => 'Naprej',
 			'onboarding.start' => 'Začni 🌿',
 			'onboarding.soon_badge' => 'kmalu (V2)',
-			'onboarding.welcome_title' => 'Dobrodošel v Tendask',
+			'onboarding.welcome_title' => 'Lepo, da si tu',
 			'onboarding.welcome_body' => 'Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.',
 			'onboarding.log_title' => 'Beleži v sekundi',
-			'onboarding.log_body' => 'Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.',
+			'onboarding.log_body' => 'Košnja, zalivanje, gnojenje? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.',
 			'onboarding.remind_title' => 'Opomniki + vreme',
 			'onboarding.remind_body' => 'Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.',
 			'onboarding.nearby_title' => 'Tvoja okolica',
 			'onboarding.nearby_body' => 'Pozneje poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
 			'onboarding.nearby_body_live' => 'Poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno.',
-			'auth.title' => 'Dobrodošel v Tendask',
+			'auth.title' => 'Tendask — lepo, da si tu',
 			'auth.value_prop' => 'Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.',
 			'auth.continue_apple' => 'Nadaljuj z Apple',
 			'auth.continue_google' => 'Nadaljuj z Google',
@@ -2668,7 +2682,7 @@ extension on TranslationsSl {
 			'settings.section_about' => 'O aplikaciji',
 			'settings.privacy_policy' => 'Politika zasebnosti',
 			'settings.section_suggestions' => 'Predlogi',
-			'settings.suggestions_history_sub' => 'Kaj je bilo predlagano in kako si se odzval',
+			'settings.suggestions_history_sub' => 'Kaj je bilo predlagano in kakšen je bil tvoj odziv',
 			'settings.section_garden' => 'Vrt',
 			'settings.supplies' => '📦 Zaloge & sredstva',
 			'settings.supplies_sub' => 'urea, alge, gnojila, oprema',
@@ -2709,9 +2723,9 @@ extension on TranslationsSl {
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
-			'weather.loading' => 'Nalagam vreme…',
 			_ => null,
 		} ?? switch (path) {
+			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			'weather.m_humidity' => 'Vlažnost',
 			'weather.m_wind' => 'Veter',
@@ -2736,7 +2750,7 @@ extension on TranslationsSl {
 			'recipes.pick_title' => 'Izberi recept',
 			'recipes.item_removed' => 'Odstranjeno sredstvo',
 			'harvest.yield_section' => 'Pridelek',
-			'harvest.sheet_title' => 'Koliko si pobral?',
+			'harvest.sheet_title' => 'Koliko pridelka?',
 			'harvest.amount_label' => 'Količina',
 			'harvest.amount_hint' => 'npr. 2,5',
 			'harvest.unit_label' => 'Enota',
@@ -2752,6 +2766,8 @@ extension on TranslationsSl {
 			'harvest.unit_pieces' => 'kom',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'šop',
+			'push.fallback_title' => 'Tvoj vrt te čaka',
+			'push.fallback_body' => 'Tapni za predlog dneva',
 			'suggestions.actions.plan' => 'Načrtuj',
 			'suggestions.actions.dismiss' => 'Preskoči',
 			'suggestions.actions.already_done' => 'Že opravljeno',
@@ -2775,7 +2791,7 @@ extension on TranslationsSl {
 			'suggestions.band_title' => 'Predlogi zate',
 			'suggestions.past_link' => 'Zgodovina',
 			'suggestions.past_title' => 'Pretekli predlogi',
-			'suggestions.past_intro' => 'Kaj ti je Tendask predlagal in kako si se odzval.',
+			'suggestions.past_intro' => 'Kaj ti je Tendask predlagal in kakšen je bil tvoj odziv.',
 			'suggestions.past_empty' => 'Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.',
 			'suggestions.past_retention' => 'Predloge starejše od enega leta samodejno počistimo.',
 			'suggestions.dry_window' => 'Suho okno[ (~{dry_hours} h)] — primeren čas.',
@@ -2929,9 +2945,9 @@ extension on TranslationsSl {
 			'community.entry.cta' => 'Kako je s tem opravilom v okolici',
 			'community.standing.meta' => 'tvoja opravila',
 			'community.standing.footnote' => 'Le opravila, za katera je v okolici dovolj vrtnarjev za primerjavo.',
-			'community.standing.band.early' => 'zgoden',
-			'community.standing.band.typical' => 'običajen',
-			'community.standing.band.late' => 'pozen',
+			'community.standing.band.early' => 'zgodaj',
+			'community.standing.band.typical' => 'običajno',
+			'community.standing.band.late' => 'pozno',
 			'community.detail.timing_kicker' => 'Kdaj · kje si ti',
 			'community.detail.you_percent' => ({required Object percent}) => 'Pred tabo je začelo ~${percent} % vrtnarjev',
 			'community.detail.you_band.early' => 'Med zgodnejšimi',

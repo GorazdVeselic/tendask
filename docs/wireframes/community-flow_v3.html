@@ -119,12 +119,15 @@
   <div style="max-width:1000px;margin:0 auto 24px;background:#fff6e6;border:1px solid #ecd9a6;border-radius:14px;padding:16px 20px;">
     <div style="font-size:15px;font-weight:800;color:#7d5f12;">⚠️ Uskladitev 2026-07-25 — monetizacija presežena (FR-20)</div>
     <div style="font-size:13.5px;color:#9a7416;line-height:1.6;margin-top:8px;">
-      Skupina <b>C</b> (tease → 14-dnevni preizkul → upgrade s ceno) in vsi »Preizkusi 14 dni« / »9,99 €/leto« nizi
+      Skupina <b>C</b> (tease → 14-dnevni preizkus → upgrade s ceno) in vsi »Preizkusi 14 dni« / »9,99 €/leto« nizi
       so <b>zastareli</b>. Plus je odslej <b>zunanja licenca</b> (nakup na spletni strani + odkupna koda) — v aplikaciji
       <b>NIKOLI</b> cene, URL-ja, preizkusa ali CTA k nakupu (anti-steering FR-20 §3.1). <b>Veljavni tease</b> =
       nevtralni <b>»Na voljo v Tendask +«</b> + gumb <b>»Vnesi kodo«</b> (blur nad vsebino). V M11 je »Vnesi kodo«
       placeholder; pravi podpisani-token gate prižge FR-20. Vse <b>Okolica UI se gradi za temnim flagom</b>
-      (<code>kSuggestionsEnabled</code>), v prod dark. Okvirji C spodaj so posodobljeni na ta model.
+      — od <code>7d06944</code> je to <b><code>kCommunityEnabled</code></b>, ločen od
+      <code>kSuggestionsEnabled</code> (predlogi so brezplačni, Okolica je Plus; en flag je prej
+      prižgal oboje). Okvirji C spodaj so posodobljeni na ta model, vključno z napisi nad njimi
+      (do 2026-07-28 sta dva še oglaševala preizkus).
     </div>
   </div>
 
@@ -384,7 +387,7 @@
   </div>
 
   <!-- ============================================================ -->
-  <div class="group-title">C · Ne-naročnik (tease → preizkus) <span>celotna Okolica = Tendask+; predogled + »Preizkusi 14 dni«</span></div>
+  <div class="group-title">C · Ne-naročnik (tease → koda) <span>celotna Okolica = Tendask+; predogled + »Vnesi kodo« (brez cene, URL-ja in preizkusa — FR-20)</span></div>
   <div class="grid">
 
     <!-- FREE LANDING -->
@@ -408,7 +411,7 @@
             </div>
           </div>
 
-          <!-- glavni CTA: preizkus celotne Okolice -->
+          <!-- glavni CTA: nevtralni tease + »Vnesi kodo« (nikoli cena ali preizkus) -->
           <a class="block" href="#s-upgrade">
           <div class="tease-card" style="margin-top:6px;">
             <span class="ti">⬡</span>
@@ -427,7 +430,7 @@
         </nav>
       </div>
       <div class="cap">C1 · Tease landing (ne-naročnik)
-        <small><span class="flowtag out">→ upgrade</span> Stalen zavihek (N1) → predogled »Ta teden« (prva vrstica vab, ostalo zamegljeno) + »Preizkusi 14 dni«.</small></div>
+        <small><span class="flowtag out">→ upgrade</span> Stalen zavihek (N1) → predogled »Ta teden« (prva vrstica vab, ostalo zamegljeno) + »Na voljo v Tendask +« / »Vnesi kodo«.</small></div>
     </div>
 
     <!-- FREE DETAIL (LOCKED) -->

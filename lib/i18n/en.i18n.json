@@ -54,6 +54,7 @@
     "benefit_reminders": "Task reminders — e.g. \"1 day before at 18:00\".",
     "benefit_weather": "Smart weather hint — \"dry tomorrow, a good time\". (optional)",
     "benefit_nearby": "Neighbourhood hints — what others nearby are doing. (V2, optional)",
+    "benefit_nearby_live": "Neighbourhood hints — what others nearby are doing. (optional)",
     "privacy": "You can turn each type on or off separately, set quiet hours and cap frequency. No spam.",
     "enable": "Turn on notifications",
     "later": "Maybe later"
@@ -631,6 +632,10 @@
     "unit_pieces": "pcs",
     "unit_l": "l",
     "unit_bunch": "bunch"
+  },
+  "push": {
+    "fallback_title": "Your garden needs attention",
+    "fallback_body": "Tap to see today's suggestion"
   },
   "suggestions": {
     "actions": {

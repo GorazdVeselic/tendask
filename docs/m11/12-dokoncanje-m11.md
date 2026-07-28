@@ -129,6 +129,10 @@
   potisno obvestilo za R2/R3/R6 (in takrat še obstoječi `weather.window_open`) pisalo dobesedno
   `{task} je na vrsti`. Klient markerje polni sam, strežnik jih ni. Novi `push_text.ts` napolni
   `{task}` iz `task_type.labels` v jeziku profila (fallback en → id); `loadTaskTypes` bere `labels`.
+  **Dopolnjeno v P10.2 (2026-07-28):** ista past velja za **telesa**, zato ta v push **ne gredo** —
+  `{subject}`/`{frost_date}` zna napolniti samo klient. Push ima specifičen naslov in generično telo
+  (`push.fallback_*`, zdaj v `lib/i18n/` in v tikanju); varovalo je test, da je `{task}` **edini**
+  marker v push katalogu. Utemeljitev: `03 §Sporočila`.
 
 ## Faza 5 — zaključek in merge
 

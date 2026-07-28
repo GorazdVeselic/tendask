@@ -414,9 +414,11 @@ Vsa konceptualna/shemska vprašanja so razrešena (§0.1). Ostane le:
 > Razlog: ročno širjenje pomeni namerno gledanje manj relevantnih podatkov; edini pravi motiv (n med `K_privacy`
 > in `K_reliab` → samo opisni pas) je merljiv šele na pravih podatkih.
 
-- **Okolica (landing)** s preklopom `[ Ta teden | Kje si ti ]` + grob izbirnik obsega
-  (📍 okolica / klima / vsi). »Ta teden« = feed (§7.1); »Kje si ti« = osebni pregled tvojih opravil
-  z zgoden/običajen/pozen (§7.2).
+- **Okolica (landing)** s preklopom `[ Ta teden | Kje si ti ]` in **oznako** dosežene ravni
+  (📍 v tvoji okolici / v tvojem podnebju) — po odločitvi A zgoraj **ni izbirnika**; raven izbere
+  fallback veriga, UI jo samo poimenuje. »Ta teden« = feed (§7.1); »Kje si ti« = osebni pregled
+  tvojih opravil s prislovi zgodaj/običajno/pozno (§7.2; enobesedna oznaka je od P10.1 spolno
+  nevtralna — `community.standing.band`).
 - **Opravilo v okolici (predloga)** — en zaslon, vsebina se prilagodi izbranemu opravilu; združuje
   percentil (§7.2) + frekvenco (§7.3) + »ta teden« (§7.1). **Vsi vstopi se stekajo sem** (ne »druga
   podstran« — ista predloga, drugi podatki).

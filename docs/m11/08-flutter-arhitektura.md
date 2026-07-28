@@ -48,19 +48,22 @@ return switch (suggestions) {
   subjekta) nimajo ne `user_plant_id` ne `area_id`; INNER join bi jih požrl. Pogoj:
   `(user_plant_id IS NULL OR user_plant.deleted = 0) AND (area_id IS NULL OR area.deleted = 0)`.
   `Clock` injectan (testabilnost).
-- **Načrtuj:**
+- **Načrtuj** (`b9e5b3f`, koncept §0.5): kartica opravila **ne ustvari sama**. Tiho ustvarjeno
+  opravilo brez izbire termina in brez vidne potrditve je na napravi padlo na preverbi M11.14,
+  zato gumb odpre **predizpolnjen** čarovnik Novo opravilo (tip, rastlina/območje, predlagani
+  datum, odprt na koraku »Kdaj«). Predlog postane `planned` šele, ko čarovnik vrne id
+  shranjenega opravila; **preklic pusti kartico na pasu**:
 ```dart
-Future<void> planSuggestion(SuggestionRow s) async {
-  final date = DateTime.tryParse(s.messageParams['suggested_date'] ?? '') ?? tomorrowAt9();
-  final taskId = await tasksRepository.create(            // OBSTOJEČA metoda — task + subject
-    taskTypeId: s.taskTypeId,
-    date: date,
-    subjects: [if (s.userPlantId != null) PlantSubject(s.userPlantId!)
-               else if (s.areaId != null) AreaSubject(s.areaId!)],
-    status: TaskStatus.waiting,
-  );
-  await suggestionRepository.markPlanned(s.id, plannedTaskId: taskId);
-  // → top toast 'suggestions.toast.planned' + pas se osveži prek streama
+Future<void> _plan(BuildContext context, WidgetRef ref, Suggestion s) async {
+  final repo = ref.read(suggestionRepositoryProvider);   // pred await: kartica lahko odpade
+  final taskId = await context.pushNamed<String>('task-new', queryParameters: {
+    'type': s.taskTypeId,
+    'date': _suggestedDate(s).toIso8601String(),         // suggested_date, sicer jutri 09:00
+    if (s.userPlantId != null) 'plant': s.userPlantId!,
+    if (s.areaId != null) 'area': s.areaId!,
+  });
+  if (taskId == null) return;                            // preklic — predlog ostane
+  await repo.markPlanned(s.id, plannedTaskId: taskId);
 }
 ```
 - **Opusti:** `suggestionRepository.dismiss(s.id)` → kartica izgine (stream), sync push odnese

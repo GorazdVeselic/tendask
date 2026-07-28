@@ -19,7 +19,7 @@
 | **A · že nastopil** | **#5** | DoD se sklicuje na test petih lokacij s posnetimi odgovori, ki **ne obstaja** — pogoja »> 10 dni odstopanja« se ne da izmeriti. |
 | | **#8** | Sprožilec je »ob M11.18 UI validaciji« = ta test na napravi; ob tem se je pokazalo, da kartica `unit` iz agregata sploh ne bere. |
 | | **#12** | M11.15/16 sta narejena in seed obstaja, a **točka 2 (sezonska simulacija 365 dni)** ni bila nikoli zgrajena — dokument tega ne ve. |
-| | **#13** | Njegov lastni pogoj (»Ob M11.16, **preden** agregati štejejo na to polje«) je nastopil: `agg_event` polje že bere, triggerja ni. |
+| | ~~**#13**~~ ✅ | Sprožilec je nastopil in vprašanje je **zaprto**: `0020` postavi `before update of agg_context` (ohrani staro vrednost), sonda `agg_context_invariants.sql` to dokaže na stagingu. |
 | **B · nastopi ob prižigu** | **#1** | Kalibracija pragov potrebuje 4–6 tednov statusov `suggestion` od realnih uporabnikov — ura se zažene ob prižigu. |
 | | **#2** | Vremenski pragovi se popravljajo po dejanskih dismissih R1, ki jih pred prižigom ni. |
 | | **#6** | Digest se odloči po poročilih »premalo vidim« oz. deležu `expired` — oboje nastane šele v rabi. |
@@ -226,6 +226,26 @@ guard obstaja samo v `tasks_repository.dart:574` kot `where … and agg_context 
 Supabase strani ga ne varuje nič: RLS uporabniku dovoli update lastne vrstice, torej lahko star
 APK ali napaka v klientu zamrznjeni posnetek prepiše, agregati pa isto opravilo naslednjič
 preštejejo v **drugo celico**. Gl. **N9**.
+
+**RAZREŠENO 2026-07-28 z migracijo `0020_task_agg_context_write_once.sql` (`b837c5f`).**
+`before update of agg_context on public.task` **ohrani staro vrednost** namesto da bi stavek
+zavrnil — `raise exception` je bil zavrnjen zavestno: klient potiska celo vrstico (opomba, status,
+pridelek), zato bi padec zataknil sinhronizacijo te vrstice zaradi stolpca, ki ga uporabnik ne
+vidi. Koerciranje agregat zaščiti v celoti, ker `agg_event` iz tega stolpca ne bere nič drugega;
+`raise warning` ostane opazovalni šiv. Namerni ops poseg ima izhod v sili:
+`set local app.agg_context_rewrite = 'on'`.
+
+Zajeta sta **oba** pisalca iz triaže zgoraj: sync pull (`remote_mappers.dart:272`) in vsak
+neposreden update prek RLS — trigger je pod obema. Dokaz ni branje migracije, ampak sonda
+`supabase/probe/agg_context_invariants.sql` (teče v `rollback`, varna tudi na produkciji):
+prvi žig dovoljen · prepis blokiran · ponovni push iste vrednosti brez napake · izhod v sili
+deluje. Aplicirano na stagingu, na produkciji **še ne** — gl. kontrolni seznam pred `db push`
+v `docs/deploy-runbook.md`.
+
+Sorodno: `0021_agg_event_frozen_timezone.sql` je v isti sapi v posnetek dodal `timezone`
+(**N15**), ker je `agg_event` `local_day` prej računal iz **živega** profila — polovica posnetka
+je bila zgodovinska, polovica ne. **Triager naj to vrstico prestavi iz kupa A: sprožilec je
+nastopil in odgovor je vgrajen v shemo.**
 
 ## 14. `engine_endpoint` URL hardcodan v migraciji (okoljsko specifičen)
 

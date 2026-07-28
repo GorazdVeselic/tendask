@@ -54,6 +54,7 @@
     "benefit_reminders": "Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.",
     "benefit_weather": "Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)",
     "benefit_nearby": "Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)",
+    "benefit_nearby_live": "Hinweise aus der Umgebung — was andere in deiner Nähe tun. (optional)",
     "privacy": "Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.",
     "enable": "Benachrichtigungen aktivieren",
     "later": "Vielleicht später"
@@ -631,6 +632,10 @@
     "unit_pieces": "Stk.",
     "unit_l": "l",
     "unit_bunch": "Bund"
+  },
+  "push": {
+    "fallback_title": "Dein Garten braucht Aufmerksamkeit",
+    "fallback_body": "Tippe für den heutigen Vorschlag"
   },
   "suggestions": {
     "actions": {

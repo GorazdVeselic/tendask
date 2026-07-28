@@ -54,10 +54,11 @@
   },
   "notif_priming": {
     "title": "Naj te pravočasno opozorim?",
-    "why": "Da ti opravilo ne uide — opomnik pride takrat, ko si ga nastavil.",
+    "why": "Da ti opravilo ne uide — opomnik pride točno ob času, ki ga nastaviš.",
     "benefit_reminders": "Opomniki opravil — npr. »1 dan prej ob 18:00«.",
     "benefit_weather": "Pametni namig vremena — »jutri suho, primeren čas«. (neobvezno)",
     "benefit_nearby": "Namigi okolice — kaj počnejo drugi v tvoji bližini. (V2, neobvezno)",
+    "benefit_nearby_live": "Namigi okolice — kaj počnejo drugi v tvoji bližini. (neobvezno)",
     "privacy": "Vsako vrsto lahko ločeno vklopiš ali izklopiš, nastaviš tihe ure in omejiš pogostost. Brez zasipavanja.",
     "enable": "Vklopi obvestila",
     "later": "Mogoče kasneje"
@@ -117,10 +118,10 @@
     "next": "Naprej",
     "start": "Začni 🌿",
     "soon_badge": "kmalu (V2)",
-    "welcome_title": "Dobrodošel v Tendask",
+    "welcome_title": "Lepo, da si tu",
     "welcome_body": "Tvoj preprost dnevnik za vrt, trato in živo mejo — vsa opravila na enem mestu.",
     "log_title": "Beleži v sekundi",
-    "log_body": "Pokosil, zalil, pognojil? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.",
+    "log_body": "Košnja, zalivanje, gnojenje? Zabeleži kaj, kdaj in kje — z nekaj dotiki. Vreme se shrani samodejno.",
     "remind_title": "Opomniki + vreme",
     "remind_body": "Načrtuj opravila, prejmi opomnik na telefon in vremenski namig — »jutri zjutraj bo suho, primeren čas za škropljenje«.",
     "nearby_title": "Tvoja okolica",
@@ -128,7 +129,7 @@
     "nearby_body_live": "Poglej, kaj počnejo vrtnarji v podobnem podnebju blizu tebe — anonimno in zasebno."
   },
   "auth": {
-    "title": "Dobrodošel v Tendask",
+    "title": "Tendask — lepo, da si tu",
     "value_prop": "Shrani svoj vrtni dnevnik in ne izgubi zgodovine ob menjavi telefona.",
     "continue_apple": "Nadaljuj z Apple",
     "continue_google": "Nadaljuj z Google",
@@ -551,7 +552,7 @@
     "section_about": "O aplikaciji",
     "privacy_policy": "Politika zasebnosti",
     "section_suggestions": "Predlogi",
-    "suggestions_history_sub": "Kaj je bilo predlagano in kako si se odzval",
+    "suggestions_history_sub": "Kaj je bilo predlagano in kakšen je bil tvoj odziv",
     "section_garden": "Vrt",
     "supplies": "📦 Zaloge & sredstva",
     "supplies_sub": "urea, alge, gnojila, oprema"
@@ -625,7 +626,7 @@
   },
   "harvest": {
     "yield_section": "Pridelek",
-    "sheet_title": "Koliko si pobral?",
+    "sheet_title": "Koliko pridelka?",
     "amount_label": "Količina",
     "amount_hint": "npr. 2,5",
     "unit_label": "Enota",
@@ -641,6 +642,10 @@
     "unit_pieces": "kom",
     "unit_l": "l",
     "unit_bunch": "šop"
+  },
+  "push": {
+    "fallback_title": "Tvoj vrt te čaka",
+    "fallback_body": "Tapni za predlog dneva"
   },
   "suggestions": {
     "actions": {
@@ -676,7 +681,7 @@
     "band_title": "Predlogi zate",
     "past_link": "Zgodovina",
     "past_title": "Pretekli predlogi",
-    "past_intro": "Kaj ti je Tendask predlagal in kako si se odzval.",
+    "past_intro": "Kaj ti je Tendask predlagal in kakšen je bil tvoj odziv.",
     "past_empty": "Še ni zgodovine. Ko se odzoveš na predlog — ga načrtuješ, opustiš ali zabeležiš kot opravljeno — se zapis pojavi tukaj.",
     "past_retention": "Predloge starejše od enega leta samodejno počistimo.",
     "dry_window": "Suho okno[ (~{dry_hours} h)] — primeren čas.",
@@ -1015,9 +1020,9 @@
       "meta": "tvoja opravila",
       "footnote": "Le opravila, za katera je v okolici dovolj vrtnarjev za primerjavo.",
       "band": {
-        "early": "zgoden",
-        "typical": "običajen",
-        "late": "pozen"
+        "early": "zgodaj",
+        "typical": "običajno",
+        "late": "pozno"
       }
     },
     "detail": {

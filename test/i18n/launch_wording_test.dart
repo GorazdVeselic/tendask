@@ -19,9 +19,10 @@ void main() {
   };
 
   /// Words that promise a feature is not here yet, in the three shipped
-  /// languages. '(V2)' is the badge the intro used.
+  /// languages. 'V2' is the badge the intro used; the priming sheet wrote it as
+  /// '(V2, optional)', which an exact '(V2)' match walked straight past (N27).
   final promise = RegExp(
-    r'\b(soon|later|kmalu|pozneje|kasneje|demnächst|später|bald)\b|\(v2\)',
+    r'\b(soon|later|kmalu|pozneje|kasneje|demnächst|später|bald)\b|\(v2\b',
     caseSensitive: false,
     unicode: true,
   );
@@ -43,6 +44,7 @@ void main() {
     'notif_settings.type_weather_sub': 'notif_settings.type_weather_sub_live',
     'notif_settings.type_community_sub':
         'notif_settings.type_community_sub_live',
+    'notif_priming.benefit_nearby': 'notif_priming.benefit_nearby_live',
   };
 
   test('every dark string has a live twin in all three locales', () {

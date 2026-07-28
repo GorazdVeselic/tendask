@@ -72,6 +72,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
 	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
 	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
+	@override late final _Translations$push$de push = _Translations$push$de._(_root);
 	@override late final _Translations$suggestions$de suggestions = _Translations$suggestions$de._(_root);
 	@override late final _Translations$community$de community = _Translations$community$de._(_root);
 }
@@ -186,6 +187,7 @@ class _Translations$notif_priming$de extends Translations$notif_priming$en {
 	@override String get benefit_reminders => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.';
 	@override String get benefit_weather => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)';
 	@override String get benefit_nearby => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)';
+	@override String get benefit_nearby_live => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (optional)';
 	@override String get privacy => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.';
 	@override String get enable => 'Benachrichtigungen aktivieren';
 	@override String get later => 'Vielleicht später';
@@ -938,6 +940,17 @@ class _Translations$harvest$de extends Translations$harvest$en {
 	@override String get unit_pieces => 'Stk.';
 	@override String get unit_l => 'l';
 	@override String get unit_bunch => 'Bund';
+}
+
+// Path: push
+class _Translations$push$de extends Translations$push$en {
+	_Translations$push$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get fallback_title => 'Dein Garten braucht Aufmerksamkeit';
+	@override String get fallback_body => 'Tippe für den heutigen Vorschlag';
 }
 
 // Path: suggestions
@@ -2218,6 +2231,7 @@ extension on TranslationsDe {
 			'notif_priming.benefit_reminders' => 'Aufgaben-Erinnerungen — z. B. „1 Tag vorher um 18:00“.',
 			'notif_priming.benefit_weather' => 'Smarter Wetter-Hinweis — „morgen trocken, guter Zeitpunkt“. (optional)',
 			'notif_priming.benefit_nearby' => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (V2, optional)',
+			'notif_priming.benefit_nearby_live' => 'Hinweise aus der Umgebung — was andere in deiner Nähe tun. (optional)',
 			'notif_priming.privacy' => 'Du kannst jede Art einzeln ein- oder ausschalten, Ruhezeiten festlegen und die Häufigkeit begrenzen. Kein Spam.',
 			'notif_priming.enable' => 'Benachrichtigungen aktivieren',
 			'notif_priming.later' => 'Vielleicht später',
@@ -2695,9 +2709,9 @@ extension on TranslationsDe {
 			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
-			'weather.loading' => 'Wetter wird geladen…',
 			_ => null,
 		} ?? switch (path) {
+			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
 			'weather.m_humidity' => 'Luftfeuchte',
 			'weather.m_wind' => 'Wind',
@@ -2738,6 +2752,8 @@ extension on TranslationsDe {
 			'harvest.unit_pieces' => 'Stk.',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'Bund',
+			'push.fallback_title' => 'Dein Garten braucht Aufmerksamkeit',
+			'push.fallback_body' => 'Tippe für den heutigen Vorschlag',
 			'suggestions.actions.plan' => 'Einplanen',
 			'suggestions.actions.dismiss' => 'Überspringen',
 			'suggestions.actions.already_done' => 'Schon erledigt',

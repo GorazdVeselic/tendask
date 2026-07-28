@@ -51,6 +51,29 @@ ga samo prebere — nikoli ne računa sam, fallback `tomorrow 09:00` le ob manjk
 **katalog ID** (klient prevede prek `catalogLabel()`; custom rastlina → `personal alias/custom_name`,
 ki ga engine pošlje kot `subject_label_raw`).
 
+### Push nosi naslov, ne telesa (odločitev P10.2, 2026-07-28)
+
+Obvestilo na zaklenjenem zaslonu pride iz `_shared/push_i18n.ts` — generirane kopije kataloga —
+in ima **specifičen naslov** (`{task}` napolni strežnik iz `task_type.labels`) ter **generično
+telo** (`push.fallback_body`, npr. »Tapni za predlog dneva«). Telesa predlogov v push **ne gredo**.
+
+Razlog ni lenoba, ampak to, kdo zna napolniti markerje. Telo nosi `{subject}`, `{frost_date}`,
+`{days_overdue}`, `{window_end_date}` — vse tri stvari, ki jih zna samo klient: katalozne oznake,
+**uporabnikovo lastno ime rastline** in obliko datuma v njegovem jeziku (`formatDmy`). Strežnik bi
+moral vse troje podvojiti, drugače na zaklenjenem zaslonu piše dobesedni `{subject}` (napaka, ki je
+bila pri naslovih že popravljena, `12-dokoncanje-m11.md` §M11.12). Poleg tega bi šla imena
+uporabnikovih rastlin skozi FCM za vrstico, ki jo bralec ob dotiku itak vidi v celoti.
+
+Zavrnjeni možnosti: **(a)** strežnik napolni več markerjev — drugi vir resnice za besedilo
+sporočil, prav to, kar `klient NE računa ničesar` zgoraj prepoveduje z druge strani; **(b)** v push
+samo telesa brez markerjev — dve vrsti pushov brez pravila, ki bi bralcu povedalo, katero dobi.
+
+Pogodba, ki jo varujeta testa: v push katalog gre **samo** `message_key`, ki ga motor lahko emitira
+(pravila iz `PlantTaskRulesSeed` + `cadence.overdue`, `history.anniversary`,
+`community.most_started` — UI dialogi kot `done_sheet` ne), in **edini dovoljen marker v naslovu je
+`{task}`**. Oba fallbacka živita v `lib/i18n/*.i18n.json` pod `push.*`, v **tikanju** kot ostala
+aplikacija — prej sta bila trdo zapisana v generatorju in v vikanju, kjer ju ni videl noben i18n test.
+
 ---
 
 ## R1 — Vremensko okno kot **ojačevalec** (ne samostojno pravilo)
@@ -337,7 +360,7 @@ Tri resnice »ne kaži mi tega« → tri ločene poti (+ Načrtuj). Vidna gumba 
 
 | Akcija | Kje | Klient zapiše | Strežniški učinek |
 |---|---|---|---|
-| **Načrtuj** | gumb | `status='planned'`, `planned_task_id` (+ ustvari waiting task) | dedup straža 5e prevzame |
+| **Načrtuj** | gumb | odpre **predizpolnjen** čarovnik Novo opravilo (tip/rastlina/območje/predlagani datum, korak »Kdaj«); šele **shranjeno** opravilo da `status='planned'` + `planned_task_id`, preklic pusti kartico na pasu (`b9e5b3f`) | dedup straža 5e prevzame |
 | **Opusti** (»letos ne«) | gumb | `status='dismissed'`, `dismiss_scope='season'` | housekeeping 2a → `dismissed_until` do konca okna/`dismissDays` |
 | **✓ Že opravljeno** | ⋯ | mini-sheet danes/včeraj/izberi datum → ustvari **done** task (z `agg_context`!) → `status='logged'`, `planned_task_id` | history + cooldown po izvedbi utišata; dnevnik in V2 agregat dobita dogodek |
 | **Ne predlagaj več tega** (»not interested«) | ⋯ | `status='dismissed'`, `dismiss_scope='forever'` | housekeeping 2a → `dismissed_until='infinity'` za (guard key, subjekt) |

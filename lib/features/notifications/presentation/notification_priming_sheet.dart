@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/config.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/sheet_handle.dart';
@@ -19,7 +20,12 @@ Future<bool?> showNotificationPriming(BuildContext context) {
 }
 
 /// Outcome of the reminder permission flow ([requestReminderPermissions]).
-enum ReminderPermission { granted, primingDeclined, notifDenied, exactAlarmMissing }
+enum ReminderPermission {
+  granted,
+  primingDeclined,
+  notifDenied,
+  exactAlarmMissing,
+}
 
 /// Full permission flow for a reminder that must fire on time: priming (21) +
 /// notifications (Android 13+) + the exact-alarm gate (Android 14+). Returns
@@ -106,7 +112,14 @@ class _NotificationPrimingSheet extends StatelessWidget {
             const SizedBox(height: 16),
             _Benefit(icon: '⏰', text: p.benefit_reminders),
             _Benefit(icon: '🌤️', text: p.benefit_weather),
-            _Benefit(icon: '🌍', text: p.benefit_nearby),
+            // Same flag as the settings toggle it primes for: these are engine
+            // pushes, so "(V2)" here outlives the feature too (najdba N27).
+            _Benefit(
+              icon: '🌍',
+              text: kSuggestionsEnabled
+                  ? p.benefit_nearby_live
+                  : p.benefit_nearby,
+            ),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),

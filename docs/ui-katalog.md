@@ -18,6 +18,10 @@ Za vsak ponavljajoč se UI vzorec obstaja EN skupni widget. Lokalna `_SectionTit
 - **Potrditev izbrisa** → `showConfirmDialog(..., destructive: true)` (`core/widgets/confirm_dialog.dart`) — rdeč `FilledButton`.
 - **Shrani/potrdi gumb**: full-screen obrazec → `SaveBar`; bottom sheet → `FilledButton` (48h, full-width) — isti videz.
 - **Bottom sheet** → vedno `SheetHandle` na vrhu.
+- **Kompakten namig na Domov** (»danes nič«) → `DashboardHint` (`features/home/presentation/widgets/dashboard_hint.dart`) — kartica z `bodySmall` v `onSurfaceVariant`. To je tista »dashboard/inline« izjema od `EmptyState` iz vrstice zgoraj; ne piši je lokalno znova.
+- **Neuspelo lokalno branje** (drift napaka = bug) → `LoadErrorHint` (`core/widgets/load_error_hint.dart`) — miren centriran napis, ne `SizedBox.shrink()`. **Mrežna napaka ni to** — offline je normalno stanje in ima svoje besedilo.
+- **Datumski naslov nad dnevno skupino** (dnevnik, pretekli predlogi) → `DayHeader` (`core/widgets/day_header.dart`) — »Danes«/»Včeraj« za zadnja dva dneva, sicer datum. En sam stil dnevnih skupin.
+- **Kratko sporočilo po dejanju** → `showTopToast(context, …)` (`core/widgets/top_toast.dart`) — na **vrhu** zaslona, samodejno izgine; `error: true` ga obarva. Privzeti spodnji `SnackBar` je pod prsti in ga na temni temi zlahka spregledaš.
 
 ## Barve in stil samo prek teme
 

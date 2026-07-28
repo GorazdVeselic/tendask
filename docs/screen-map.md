@@ -100,7 +100,8 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
   **Vrstica = primerjalna skupina** (§7.4): naslov = opravilo, podnaslov = rastlina, kadar skupina ni
   prostorska (»Obrez« + »jablana«; »Košnja« brez podnaslova). Kapica: največ 2 vrstici na tip opravila.
 - **Kje si ti:** skupine, ki si jih letos delal, vsaka postavljena ob krivuljo svoje skupine — oznaka
-  **zgoden/običajen/pozen** (percentil na napravi), **nazadnje začeto na vrhu**. Vrstica: naslov = opravilo,
+  **zgodaj/običajno/pozno** (percentil na napravi; prislov, ne pridevnik — oznaka nagovarja bralca in
+  je od P10.1 spolno nevtralna), **nazadnje začeto na vrhu**. Vrstica: naslov = opravilo,
   podnaslov = rastlina **+ obseg te vrstice** (vsaka skupina se širi po svoje, §7.4, zato obsega ne more
   razglasiti zaslon). Skupine, za katere noben nivo nima dovolj vrtnarjev, **izpadejo** — zato podnožje pove
   zakaj. Tap → ista predloga. Tease enak kot »Ta teden«.

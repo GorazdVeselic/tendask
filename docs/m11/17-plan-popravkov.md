@@ -465,13 +465,14 @@ prikaže datum · layout matrika prenese novo vrstico v vseh treh jezikih.
 
 ### P10 · Jezik, besedila in dokumentacija *(blokira O4, O6)*
 
-> **Stanje 2026-07-28 (paket 3):** narejeni so koraki **3** (O6), **4** (O4) in **5**
-> (`screen-map.md`) ter najdbe **N13, N17, N20, N21** in nova **N26**. **Odprti ostajajo koraki
-> 1** (spolno nevtralna slovenščina — `suggestions.past_intro` »kako si se odzval«,
-> `settings.suggestions_history_sub`, `community.standing.band` `zgoden/običajen/pozen`,
-> `onboarding.welcome_title` / `auth.title`, `onboarding.log_body`), **2** (push telesa v i18n in
-> v tikanje; `tool/gen_push_i18n.dart` ima še trdo zapisan vikalni fallback), **6** (#13, #14 v
-> `10-odprta-vprasanja.md`) in **7** (manjši doc-dolg). Ti niso bili del delovnega naloga te seje.
+> **Stanje 2026-07-28 (paket 4): P10 je ZAKLJUČEN.** Paket 3 je opravil korake **3** (O6),
+> **4** (O4) in **5** (`screen-map.md`) + najdbe **N13, N17, N20, N21, N26**; paket 4 je zaprl
+> še **1, 2, 6, 7** + novi **N27, N28**.
+>
+> Kar je pri tem odstopalo od naloga: spolno zaznamovanih nizov je bilo **devet, ne sedem**
+> (N28 — `harvest.sheet_title`, `notif_priming.why`), in obljuba »(V2)« je imela **šesto** mesto,
+> ki ga varovalo iz N13 ni videlo, ker je iskalo dobesedni `(V2)`, niz pa piše `(V2, neobvezno)`
+> (N27). Korak 2 je bil **odločitev, ne prevod** — gl. spodaj.
 
 **Koraki**
 
@@ -515,8 +516,27 @@ prikaže datum · layout matrika prenese novo vrstico v vseh treh jezikih.
    `DayHeader`, `TopToast`, `DashboardHint` · `skupnost-agregacija.md §12.1` še omenja izbirnik
    obsega, ki je z odločitvijo A odpadel.
 
-**DoD:** i18n testi zeleni v vseh treh jezikih · anti-steering varovalo pokriva
-`suggestions.community.*` · `screen-map.md` in `10-odprta-vprasanja.md` posodobljena.
+**Kako je bil zaprt korak 2 (odločitev, 2026-07-28).** Od treh možnosti — več markerjev na
+strežniku · v push samo telesa brez markerjev · generično telo, a v tikanju in v i18n — je izbrana
+**tretja**. Razlog je, kdo zna napolniti marker: telo nosi `{subject}`, `{frost_date}`,
+`{window_end_date}`, torej katalozne oznake, **uporabnikovo lastno ime rastline** in obliko datuma
+v njegovem jeziku — strežnik bi moral podvojiti vse tri, sicer na zaklenjenem zaslonu piše
+dobesedni `{subject}` (M11.12 že enkrat). Naslov specifičnost obdrži (`{task}` napolni strežnik),
+telo je generično in `push.fallback_*` živita v `lib/i18n/`. Zapisano v `03 §Sporočila`.
+Zajem generatorja je zožen na `message_key`, ki jih motor lahko emitira (`PlantTaskRulesSeed` +
+trije generični): 66 → **64** vnosov na jezik, `done_sheet` in `remove` ven.
+
+**DoD — izpolnjen, z artefaktom pri vsaki postavki:**
+- i18n testi zeleni v treh jezikih · anti-steering varovalo pokriva `suggestions.community.*`
+  (paket 3) · `screen-map.md` in `10-odprta-vprasanja.md` posodobljena
+- `gendered_wording_test.dart` — pregleda **cel** `sl.i18n.json`; na verziji izpred popravka
+  najde **9** zadetkov, po njem 0
+- `launch_wording_test.dart` — par `notif_priming.benefit_nearby(_live)` in vzorec `\(v2\b`
+- `test_fixture_keys_test.dart` — vsak i18n ključ iz kateregakoli testa obstaja v vseh treh
+  katalogih; na `layout_matrix_test.dart` izpred paketa 3 pade na `suggestions.season.window_open`
+- `push_text_test.ts` — edini marker v push naslovu je `{task}` (surov katalog, ne napolnjen niz:
+  `pushTitleFor()` požre vsak marker, zato bi test nad napolnjenim nizom ničesar ne dokazal),
+  telo brez markerjev, UI ključa nista v paketu · parity test `push_i18n.ts` zelen
 
 **Commit:** ločeno — `fix(i18n): spolno nevtralni novi nizi in push v tikanju` +
 `docs(m11): uskladi screen-map, R1 in odprti vprašanji`

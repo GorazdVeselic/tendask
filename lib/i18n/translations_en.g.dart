@@ -73,6 +73,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
 	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
 	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
+	late final Translations$push$en push = Translations$push$en.internal(_root);
 	late final Translations$suggestions$en suggestions = Translations$suggestions$en.internal(_root);
 	late final Translations$community$en community = Translations$community$en.internal(_root);
 }
@@ -255,6 +256,9 @@ class Translations$notif_priming$en {
 
 	/// en: 'Neighbourhood hints — what others nearby are doing. (V2, optional)'
 	String get benefit_nearby => 'Neighbourhood hints — what others nearby are doing. (V2, optional)';
+
+	/// en: 'Neighbourhood hints — what others nearby are doing. (optional)'
+	String get benefit_nearby_live => 'Neighbourhood hints — what others nearby are doing. (optional)';
 
 	/// en: 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.'
 	String get privacy => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.';
@@ -2045,6 +2049,21 @@ class Translations$harvest$en {
 	String get unit_bunch => 'bunch';
 }
 
+// Path: push
+class Translations$push$en {
+	Translations$push$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Your garden needs attention'
+	String get fallback_title => 'Your garden needs attention';
+
+	/// en: 'Tap to see today's suggestion'
+	String get fallback_body => 'Tap to see today\'s suggestion';
+}
+
 // Path: suggestions
 class Translations$suggestions$en {
 	Translations$suggestions$en.internal(this._root);
@@ -3755,6 +3774,7 @@ extension on Translations {
 			'notif_priming.benefit_reminders' => 'Task reminders — e.g. "1 day before at 18:00".',
 			'notif_priming.benefit_weather' => 'Smart weather hint — "dry tomorrow, a good time". (optional)',
 			'notif_priming.benefit_nearby' => 'Neighbourhood hints — what others nearby are doing. (V2, optional)',
+			'notif_priming.benefit_nearby_live' => 'Neighbourhood hints — what others nearby are doing. (optional)',
 			'notif_priming.privacy' => 'You can turn each type on or off separately, set quiet hours and cap frequency. No spam.',
 			'notif_priming.enable' => 'Turn on notifications',
 			'notif_priming.later' => 'Maybe later',
@@ -4232,9 +4252,9 @@ extension on Translations {
 			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
-			'weather.loading' => 'Loading weather…',
 			_ => null,
 		} ?? switch (path) {
+			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			'weather.m_humidity' => 'Humidity',
 			'weather.m_wind' => 'Wind',
@@ -4275,6 +4295,8 @@ extension on Translations {
 			'harvest.unit_pieces' => 'pcs',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'bunch',
+			'push.fallback_title' => 'Your garden needs attention',
+			'push.fallback_body' => 'Tap to see today\'s suggestion',
 			'suggestions.actions.plan' => 'Plan',
 			'suggestions.actions.dismiss' => 'Skip',
 			'suggestions.actions.already_done' => 'Already done',
