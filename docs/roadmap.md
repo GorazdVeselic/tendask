@@ -564,6 +564,14 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   **»Tendask vodič« = Tendask+** (veže se na FR-19 + M11). Pravno: kuriran LLM tekst = lastna vsebina, **ne**
   prepisujemo posadi.si; slike lastne ali Wikimedia z licenco/pripisom. Polni spec:
   [`docs/feature-requests/plant-knowledge-catalog.md`](feature-requests/plant-knowledge-catalog.md).
+- **FR-22 — Kontekstualni poziv za lokacijo na Domov.** 🔴 **Merjeno na PROD (28. 7. 2026): 55 % uporabnikov
+  (44/80) nima lokacije vrta.** Ni mrtvih profilov ne tehnične napake — vsi so prešli onboarding, preskok je
+  le najlažja poteza (edini gumb na zaslonu 16 je primarni in gre naprej). Od Play izdaje 20. 7. je brez
+  lokacije **75 %** novih (junijska beta: 4 %). **Ni le vrzel v statistiki:** brez celice `gardenLocation`
+  tiho vrne **Ljubljano** → napačno vreme, motor računa na tuji lokaciji, Okolica prazna. Predlog = tretje
+  stanje vremenske kartice (pove, čigavo vreme je, + CTA), brez modalnih oken in pusha. Merilo: 25 % → ≥60 %
+  novih v 30 dneh, merljivo z `tool/geo_user_map.py` brez nove analitike. Polni spec:
+  [`docs/feature-requests/location-adoption.md`](feature-requests/location-adoption.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
   Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj
   specificirana v FR-20 (zunanja licenca, ne Play Billing) — spodnje velja le, če bi se kdaj vrnila na Play
