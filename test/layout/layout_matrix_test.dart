@@ -8,6 +8,7 @@ import 'package:tendask/core/area_type.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/catalog_provider.dart';
 import 'package:tendask/core/database/database_provider.dart';
+import 'package:tendask/core/location/location_repository.dart';
 import 'package:tendask/core/notifications/notification_settings.dart';
 import 'package:tendask/core/notifications/reminder_audio.dart';
 import 'package:tendask/core/task_status.dart';
@@ -217,6 +218,11 @@ void main() {
       taskSuppliesProvider(
         _taskId,
       ).overrideWith((ref) => Stream.value(<TaskSupply>[])),
+      // Unset, which is both the new branch and the wordiest: the weather
+      // section then carries the explanation plus its CTA. Overridden rather
+      // than faked at the repository, because the real provider derives the
+      // centroid through the native H3 library, whose FFI cannot load here.
+      gardenLocationProvider.overrideWith((ref) => Stream.value(null)),
     ],
     build: () => const TaskDetailScreen(id: _taskId),
   );

@@ -869,6 +869,7 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get rain_past48h => 'Dež zadnjih 48 h:';
 	@override String get detail_waiting => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.';
 	@override String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
+	@override String get detail_no_location => 'Vreme zabeležimo, ko nastaviš lokacijo.';
 	@override String get home_unavailable => 'Vreme trenutno ni na voljo.';
 	@override String get home_retry => 'Tapni za ponovni poskus';
 	@override String get no_location_title => 'Kje vrtnariš?';
@@ -1437,6 +1438,7 @@ extension on TranslationsSl {
 			'weather.rain_past48h' => 'Dež zadnjih 48 h:',
 			'weather.detail_waiting' => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.',
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
+			'weather.detail_no_location' => 'Vreme zabeležimo, ko nastaviš lokacijo.',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
 			'weather.no_location_title' => 'Kje vrtnariš?',
@@ -1455,9 +1457,9 @@ extension on TranslationsSl {
 			'recipes.empty' => 'Še ni receptov. Shrani mešanico z +.',
 			'recipes.fab_new' => 'Recept',
 			'recipes.form_new' => 'Nov recept',
-			'recipes.form_edit' => 'Uredi recept',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',

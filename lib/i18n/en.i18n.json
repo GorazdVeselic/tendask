@@ -568,6 +568,7 @@
     "rain_past48h": "Rain last 48 h:",
     "detail_waiting": "Weather will be recorded when you mark the task done.",
     "detail_none": "No weather snapshot (was offline at the time).",
+    "detail_no_location": "We'll record the weather once you set your location.",
     "home_unavailable": "Weather is currently unavailable.",
     "home_retry": "Tap to retry",
     "no_location_title": "Where do you garden?",

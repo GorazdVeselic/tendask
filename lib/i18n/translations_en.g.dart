@@ -1847,6 +1847,9 @@ class Translations$weather$en {
 	/// en: 'No weather snapshot (was offline at the time).'
 	String get detail_none => 'No weather snapshot (was offline at the time).';
 
+	/// en: 'We'll record the weather once you set your location.'
+	String get detail_no_location => 'We\'ll record the weather once you set your location.';
+
 	/// en: 'Weather is currently unavailable.'
 	String get home_unavailable => 'Weather is currently unavailable.';
 
@@ -2508,6 +2511,7 @@ extension on Translations {
 			'weather.rain_past48h' => 'Rain last 48 h:',
 			'weather.detail_waiting' => 'Weather will be recorded when you mark the task done.',
 			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
+			'weather.detail_no_location' => 'We\'ll record the weather once you set your location.',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
 			'weather.no_location_title' => 'Where do you garden?',
@@ -2526,9 +2530,9 @@ extension on Translations {
 			'recipes.empty' => 'No recipes yet. Save a mixture with +.',
 			'recipes.fab_new' => 'Recipe',
 			'recipes.form_new' => 'New recipe',
-			'recipes.form_edit' => 'Edit recipe',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',

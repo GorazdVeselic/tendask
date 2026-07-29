@@ -859,6 +859,7 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get rain_past48h => 'Regen letzte 48 h:';
 	@override String get detail_waiting => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.';
 	@override String get detail_none => 'Keine Wetteraufnahme (zum Zeitpunkt offline).';
+	@override String get detail_no_location => 'Das Wetter zeichnen wir auf, sobald du deinen Standort festlegst.';
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
 	@override String get home_retry => 'Zum Wiederholen tippen';
 	@override String get no_location_title => 'Wo gärtnerst du?';
@@ -1427,6 +1428,7 @@ extension on TranslationsDe {
 			'weather.rain_past48h' => 'Regen letzte 48 h:',
 			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
 			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
+			'weather.detail_no_location' => 'Das Wetter zeichnen wir auf, sobald du deinen Standort festlegst.',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
 			'weather.no_location_title' => 'Wo gärtnerst du?',
@@ -1445,9 +1447,9 @@ extension on TranslationsDe {
 			'recipes.empty' => 'Noch keine Rezepte. Mischung mit + speichern.',
 			'recipes.fab_new' => 'Rezept',
 			'recipes.form_new' => 'Neues Rezept',
-			'recipes.form_edit' => 'Rezept bearbeiten',
 			_ => null,
 		} ?? switch (path) {
+			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
