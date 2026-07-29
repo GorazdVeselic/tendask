@@ -4,7 +4,7 @@
 - **Datum:** 2026-06-26
 - **Avtor:** Gorazd
 - **Področja:** Android (Play), Flutter dependency, Supabase (opcijsko za gate), iOS (M10), GDPR/Data Safety (minimalno)
-- **Povezave:** [`docs/tech-stack.md`](../tech-stack.md) (§1 sklad), [`docs/roadmap.md`](../roadmap.md), [`CLAUDE.md`](../../CLAUDE.md) (»Dependencies«, »Sync, čas in shema« → additive-only)
+- **Povezave:** [`docs/tech-stack.md`](../tech-stack.md) (§1 sklad), [`docs/backlog.md`](../backlog.md), [`CLAUDE.md`](../../CLAUDE.md) (»Dependencies«, »Sync, čas in shema« → additive-only)
 
 ---
 

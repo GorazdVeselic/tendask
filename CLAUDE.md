@@ -1,6 +1,6 @@
 # Tendask — pravila za pisanje kode
 
-Vir resnice za koncept/design: `docs/koncept.md` (§7.9 entiteta opravilo, §7.14 podatkovni model), `docs/tech-stack.md` (potrjen sklad + §6 struktura + §2 sync arhitektura + §10 konvencije), `docs/brand/brand.md` (vizualna identiteta), `docs/opravila-in-rastline.md` (vir za seed kataloga). Razvojni plan + delovni dogovor: `docs/roadmap.md` (M0–M11). Ta dokument pokriva **kako** piševa, ne **kaj** gradiva.
+Vir resnice za koncept/design: `docs/koncept.md` (§7.9 entiteta opravilo, §7.14 podatkovni model), `docs/tech-stack.md` (potrjen sklad + §6 struktura + §2 sync arhitektura + §10 konvencije), `docs/brand/brand.md` (vizualna identiteta), `docs/opravila-in-rastline.md` (vir za seed kataloga). Kje smo in kaj je naslednje: `docs/stanje.md` → `docs/backlog.md` (odprto) in `docs/narejeno.md` (zgrajeno, z razlogi); karta vseh dokumentov: `docs/README.md`. Ta dokument pokriva **kako** piševa, ne **kaj** gradiva.
 
 ## Vodilna načela (po prioriteti)
 
@@ -147,7 +147,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 
 **Jezikovno pravilo (fiksno):**
 - **Pogovor agent ↔ razvijalec: slovenščina.**
-- **Vsa koda: angleščina.** To zajema: identifikatorje, route poti in imena (`/journal` ne `/dnevnik`; `name: 'journal'` ne `'dnevnik'`), i18n ključe (`nav.journal`), log/error nize, asset poti, imena datotek, komentarje, doc komentarje. Slovenščina živi samo v `docs/*`, pravilih (`CLAUDE.md`, `docs/roadmap.md`) in klepetu — **nikoli v kodi**.
+- **Vsa koda: angleščina.** To zajema: identifikatorje, route poti in imena (`/journal` ne `/dnevnik`; `name: 'journal'` ne `'dnevnik'`), i18n ključe (`nav.journal`), log/error nize, asset poti, imena datotek, komentarje, doc komentarje. Slovenščina živi samo v `docs/*`, pravilih (`CLAUDE.md`, `docs/backlog.md`) in klepetu — **nikoli v kodi**.
 
 **Komentarji:**
 - **Default: brez komentarjev.** Dobro poimenovanje pove zgodbo.
@@ -158,7 +158,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 
 ## Git / commiti
 
-- **En korak iz `docs/roadmap.md` = en commit.** Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`, `test:`. Naslov ≤72 znakov, brez pike. Slovenski opis.
+- **En korak iz `docs/backlog.md` = en commit.** Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`, `test:`. Naslov ≤72 znakov, brez pike. Slovenski opis.
 - **Pred commitom VEDNO vprašaj** (delovni dogovor): "naj ta korak označim kot zaključen in ga commitam?"
 - Body razloži *zakaj*, ne *kaj* (diff že pove kaj).
 - En commit = ena logična sprememba. Brez "wip + cleanup" mega-commitov.
@@ -171,7 +171,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - **Ne dodaj package-a za eno funkcijo, ki je 20 vrstic.**
 - Pin major version (`^1.2.3`), commit `pubspec.lock`.
 
-## Testi (pragmatično — glej `docs/roadmap.md`)
+## Testi (pragmatično)
 
 - **Pure logika** (drift poizvedbe, sync LWW/vrstni red, Open-Meteo parser, kasneje motor pravil): unit testi obvezni. Tečejo na CI brez naprave.
 - **Servisi:** mock zunanje dep-e (dio HTTP, Supabase client), testiraj svoj ovoj.

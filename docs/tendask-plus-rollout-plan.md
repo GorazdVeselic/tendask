@@ -5,8 +5,8 @@
 - **Povezave:**
   - [`feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md) — **FR-20**, avtoritativen za licence/plačila/Play skladnost
   - [`feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md) — **FR-19**, lunin koledar (prvi nosilec Plus)
-  - [`m11/11-poravnava-v-main.md`](m11/11-poravnava-v-main.md) — **M11** poravnava v main
-  - [`m11/09-koraki.md`](m11/09-koraki.md) — M11 tasklist (ostanek faze E)
+  - [`m11.md`](m11.md) — **M11** poravnava v main
+  - [`m11.md`](m11.md) — M11 tasklist (ostanek faze E)
   - [`deploy-runbook.md`](deploy-runbook.md) — deploy + migracijski ledger
 
 ---
@@ -42,8 +42,8 @@ Vsak korak je **sam po sebi deployabilen v prod** (dark). Med koraki lahko kadar
 
 | # | Korak | Stanje v main | Dokument |
 |---|---|---|---|
-| **1** | **M11 poravnava → main** | dark (`kSuggestionsEnabled=false`) | [`m11/11-poravnava-v-main.md`](m11/11-poravnava-v-main.md) |
-| **2** | **Dokončaj M11** (ostanek faze E) | dark | [`m11/09-koraki.md`](m11/09-koraki.md) |
+| **1** | **M11 poravnava → main** | dark (`kSuggestionsEnabled=false`) | [`m11.md`](m11.md) |
+| **2** | **Dokončaj M11** (ostanek faze E) | dark | [`m11.md`](m11.md) |
 | **3** | **FR-20 licenčna infra** | zid obstaja, nič ne zaklepa | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
 | **4** | **FR-19 lunin koledar** | mena Lune free; bogati del dark | [FR-19](feature-requests/biodynamic-calendar.md) |
 | **5** | **Prižig** | razkritje | §4 spodaj |

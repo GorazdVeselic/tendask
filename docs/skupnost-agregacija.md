@@ -420,5 +420,5 @@ Realna obremenitev ≈ **1 majhen pull / uporabnik / dan + 1 cron / noč skupno*
 
 ---
 
-*Ko se začne implementacija, povzamemo v `koncept.md §8` in dodamo korake v `roadmap.md`
+*Ko se začne implementacija, povzamemo v `koncept.md §8` in dodamo korake v `backlog.md`
 (zgodnji temelj + V2 pogledi).*

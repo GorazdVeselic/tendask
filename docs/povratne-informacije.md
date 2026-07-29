@@ -6,7 +6,7 @@
 > (3) ocena (vredno / hiter korak / velik zalogaj / poruši flow / že planirano), (4) priporočilo
 > in odločitev. Nove runde feedbacka se dodajajo spodaj kot nov razdelek z datumom.
 >
-> Povezano: [`roadmap.md`](roadmap.md) (mejniki + backlog FR-*), [`m11/`](m11/README.md)
+> Povezano: [`backlog.md`](backlog.md) (odprti FR-*) + [`narejeno.md`](narejeno.md), [`m11.md`](m11.md)
 > (pametni motor), [`koncept.md`](koncept.md).
 
 ---
@@ -38,7 +38,7 @@ vreme nazaj in naprej → priporočila), in naj izračuna, kdaj se pričakuje po
 da za pobiranje »potrebuješ ogromno količino podatkov o vsaki rastlini«.
 
 **Dejansko stanje:** v MVP so vsa opravila ročna (`TasksRepository.create`). Točno to opažanje je
-**jedro M11 — pametnega motorja**, ki je že polno specificiran (`docs/m11/`):
+**jedro M11 — pametnega motorja**, ki je specificiran na veji (gl. [`m11.md`](m11.md)):
 - verige opravil (setev → pikiranje → utrjevanje → presaditev), kjer se vsak naslednji korak
   računa od **dejanskega** datuma uporabnika, ne od fiksnega koledarja;
 - vremensko pogojeni namigi (zalivanje prek `weather_guard` straž — `dry24h`, `no_rain_forecast_24h`);

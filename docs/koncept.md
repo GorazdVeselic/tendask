@@ -495,7 +495,7 @@ Odprto ostaja le **in-app nabiralnik (da/ne)**.
 - **Dopolnitev (2026-06-11, M11 spec):** bralna **zgodovina predlogov** (»Pretekli predlogi« —
   kaj je bilo predlagano + uporabnikov odziv) NI center obvestil in odločitve ne krši: je
   revizijski pogled za razložljivost motorja (»zakaj sem to dobil«), brez akcij za reagiranje.
-  Glej `docs/m11/08` + korak M11.13b.
+  Glej [`docs/m11.md`](m11.md) (spec je na veji `feat/m11-smart-engine`).
 
 ---
 
@@ -599,7 +599,7 @@ Primer "jutri suho + lani 18. maja gnojil" = **dva signala združena** (vremensk
 
 ## 7.15 Prefokus na rastlino: SUBJEKT (rastlina ALI območje), M:N (2026-06-03) ⭐
 
-> 📋 **Vir resnice te revizije: [`fokus-rastlina.md`](fokus-rastlina.md)** (diagnoza + wireframe _v2).
+> 📋 **Vir resnice te revizije: [`archive/fokus-rastlina.md`](archive/fokus-rastlina.md)** (diagnoza + wireframe _v2).
 > To poglavje **popravlja** §7.7/7.8/7.9/7.14 tam, kjer je bila aplikacija območje-centrična.
 
 **Povod:** opravila so bila vezana na **območje (obvezno)**, rastlina je bila drugorazredna
@@ -644,7 +644,7 @@ območje **postransko** (na dnu, neobvezno). Subjekt = **instanca z enim `area_i
 (nullable) — »premik« je single-select prek `area_pick_sheet`; multi-area ob ustvarjanju
 opuščen. Vrt FAB→rastline (brez routerja), tih »Novo območje«; swipe Premakni/Odstrani.
 Brisanje območja **reparenta rastline v »Brez območja«** (ne osiroti). Brez spremembe
-sheme. Wireframi `docs/wireframes/*_v4.html`; plan `docs/vrt-v4-implementacijski-plan.md`.
+sheme. Wireframi `docs/wireframes/*_v4.html`; plan `docs/archive/vrt-v4-implementacijski-plan.md`.
 
 **Popravek v5 (2026-06-08, implementiran):** **obrnjena hierarhija prikaza** — območje je zdaj
 **naslov skupine** (ikona + ime + zadnje opravilo, tap → detajl), rastline pa **kartice pod njim**.
@@ -655,7 +655,7 @@ Brez spremembe sheme/logike — le presentation. Wireframe `docs/wireframes/vrt_
 
 ## 7.16 Vnos = en horizontalni stepper (2026-06-03)
 
-> Združi **02 Hiter vnos + 07 Novo opravilo** v EN flow (odpravi podvajanje iz `ia-pregled.md`).
+> Združi **02 Hiter vnos + 07 Novo opravilo** v EN flow (odpravi podvajanje iz `archive/ia-pregled.md`).
 > Wireframe: `docs/wireframes/entry-step*_v3.html`.
 
 Namesto enega gostega navpičnega obrazca (in ločenega »naprednega«) je vnos **horizontalni
@@ -861,7 +861,7 @@ eksplicitne zvezdice (manipulabilno, oslabi "opisno ne predpisno"); raje implici
   združita v en horizontalni flow s pogojnimi koraki (tip · rastlina/območje · kdaj+ura+status+
   ponavljanje · opomnik [če čaka] · sredstva [če tip] · pregled s Shrani/Popravi). Območja rastlin
   so kontekst, ne subjekt. Dodan `_v3` wireframe; sledi implementacija (refaktor v en stepper).
-- **2026-06-03 (prefokus na rastlino — glej §7.15 + [`fokus-rastlina.md`](fokus-rastlina.md)):**
+- **2026-06-03 (prefokus na rastlino — glej §7.15 + [`archive/fokus-rastlina.md`](archive/fokus-rastlina.md)):**
   Ugotovljeno, da je bila aplikacija območje-centrična na vseh plasteh (task.area_id obvezen,
   rastlina drugorazredna; ni detajla/vstopa rastline) — kar ruši bistvo. **Popravek:** opravilo
   se veže na **SUBJEKT = rastlina ALI območje**, vez **M:N** prek nove tabele `task_subject`

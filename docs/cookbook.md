@@ -76,6 +76,15 @@ Scenarij: koraki v `tmp/steps.txt` (prepiši datoteko), nato **vedno isti** ukaz
 
 Zajem zaslona: `adb exec-out screencap -p > tmp/screen.png`, nato Read.
 
+Drift baza z naprave (PowerShell redirect **pokvari binarno** → prek `cmd`):
+
+```bash
+cmd //c "adb exec-out run-as app.tendask cat app_flutter/tendask.db > tmp\\device.db"
+```
+
+**Menjava veje na telefonu = `adb uninstall app.tendask`.** Drift downgrade (novejša shema → starejša)
+sesuje app z duplicate-column. Ponovna namestitev istega brancha (`-r`) je varna.
+
 Preverba preliva na posnetkih (rumeno-črni pas): `python tool/overflow_scan.py tmp/shots/*.png` —
 izpiše `ok` ali `OVERFLOW` z vrsticami. Pas je črtast, zato šteje **število** rumenih pikslov v
 vrstici, ne zaporedja.
@@ -96,6 +105,9 @@ Staging je **on-demand** — če je stack dol, API ne dela.
 
 - **Gesla ne rabiš** — `docker exec` je superuser prek containerja. Ne išči poverilnic za `127.0.0.1:5433`.
 - Skripta bere migracije **direktno iz repa** (`/mnt/c/…`) → commit ni potreben.
+- **Testnih vrstic ne datiraj v prihodnost.** Naprava ob pull-u premakne `last_pulled_at` na najvišji
+  videni `updated_at`; žig v prihodnosti torej potisne watermark naprej in **realni zapisi za njim se
+  ne potegnejo več**. Ko ročno popravljaš vrstico, uporabi žig tik nad obstoječim, ne ur naprej.
 - **Citiranje je glavna past.** Za SQL z apostrofi (`type='garden'`) uporabi **`-tAc` in dvojne narekovaje zunaj**, ali raje zapiši SQL v `tmp/q.sql` in ga pošlji prek `cat … | docker exec -i …`. Ne gradi verig ubežnih apostrofov — tam se je zapravilo največ poskusov.
 
 ---

@@ -4,7 +4,7 @@
 - **Datum:** 2026-06-22
 - **Avtor:** Gorazd
 - **Področja:** Supabase shema, Firebase, tendask.app (web), GDPR
-- **Povezave:** [`docs/koncept.md`](../koncept.md), [`docs/tech-stack.md`](../tech-stack.md), [`docs/roadmap.md`](../roadmap.md), [`CLAUDE.md`](../../CLAUDE.md) (»Sync, čas in shema«, »Zasebnost po zasnovi«)
+- **Povezave:** [`docs/koncept.md`](../koncept.md), [`docs/tech-stack.md`](../tech-stack.md), [`docs/backlog.md`](../backlog.md), [`CLAUDE.md`](../../CLAUDE.md) (»Sync, čas in shema«, »Zasebnost po zasnovi«)
 
 ---
 

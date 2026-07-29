@@ -49,7 +49,8 @@ lib/
   data/
     seed/                 # Seed kataloga (tipi opravil + rastline)
 docs/
-  roadmap.md              # razvojni plan (M0–M11) + dnevnik napredka
+  README.md               # karta dokumentacije — začni tu
+  stanje.md               # kje smo · narejeno.md · backlog.md
   tech-stack.md           # potrjen tehnološki sklad
   koncept.md              # funkcionalna specifikacija
   brand/                  # vizualna identiteta (barve, tipografija, SVG)

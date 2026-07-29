@@ -4,7 +4,7 @@
 - **Datum:** 2026-07-22
 - **Avtor:** Gorazd (+ agent)
 - **Področja:** Google Play politika plačil, davki/s.p., Supabase (shema + Edge Function), drift, Flutter (nova dependency), Play Console (App access!), spletna stran `tendask.app`
-- **Povezave:** [`docs/feature-requests/biodynamic-calendar.md`](biodynamic-calendar.md) (**FR-19 = prvi nosilec Plus**), [`docs/roadmap.md`](../roadmap.md) (Monetizacija, FR-18), [`docs/tech-stack.md`](../tech-stack.md) (§1 sklad), [`CLAUDE.md`](../../CLAUDE.md) (offline-first, additive-only, granti), spomin `tendask-monetization-planned`
+- **Povezave:** [`docs/feature-requests/biodynamic-calendar.md`](biodynamic-calendar.md) (**FR-19 = prvi nosilec Plus**), [`docs/backlog.md`](../backlog.md) (Monetizacija, FR-18), [`docs/tech-stack.md`](../tech-stack.md) (§1 sklad), [`CLAUDE.md`](../../CLAUDE.md) (offline-first, additive-only, granti), spomin `tendask-monetization-planned`
 - **Delitev dela z FR-19:** ta dokument je **avtoritativen za licenciranje, plačila in Play skladnost**; FR-19 je avtoritativen za **UI Tendask+ zaslona, vstopne točke in free/premium mejo Luninega koledarja** (§11.2–11.4). Ne podvajaj — povezuj.
 
 ---
