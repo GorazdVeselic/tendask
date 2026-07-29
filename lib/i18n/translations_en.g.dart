@@ -596,8 +596,8 @@ class Translations$location$en {
 	/// en: 'Where do you garden?'
 	String get title => 'Where do you garden?';
 
-	/// en: 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.'
-	String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
+	/// en: 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.'
+	String get why => 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.';
 
 	/// en: 'Use my location'
 	String get use_gps => 'Use my location';
@@ -614,8 +614,8 @@ class Translations$location$en {
 	/// en: 'Village, town or address (e.g. Šentjur)'
 	String get place_hint => 'Village, town or address (e.g. Šentjur)';
 
-	/// en: 'A village or town is enough — no exact address needed.'
-	String get place_note => 'A village or town is enough — no exact address needed.';
+	/// en: 'A nearby village or town is enough — no exact address needed.'
+	String get place_note => 'A nearby village or town is enough — no exact address needed.';
 
 	/// en: 'Search'
 	String get search => 'Search';
@@ -626,11 +626,8 @@ class Translations$location$en {
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
 
-	/// en: 'Location set.'
-	String get set_gps => 'Location set.';
-
-	/// en: 'Location: $name'
-	String set_place({required Object name}) => 'Location: ${name}';
+	/// en: 'Skip'
+	String get skip => 'Skip';
 
 	/// en: 'Location access denied. Enter a place or grant permission in system settings.'
 	String get err_denied => 'Location access denied. Enter a place or grant permission in system settings.';
@@ -653,14 +650,11 @@ class Translations$location$en {
 	/// en: 'Location is set'
 	String get status_set => 'Location is set';
 
-	/// en: 'Location is set · $name'
-	String status_set_at({required Object name}) => 'Location is set · ${name}';
-
 	/// en: 'Location not set yet'
 	String get status_unset => 'Location not set yet';
 
-	/// en: 'Remove location'
-	String get clear => 'Remove location';
+	/// en: 'Remove'
+	String get clear => 'Remove';
 
 	/// en: 'Remove location?'
 	String get clear_confirm_title => 'Remove location?';
@@ -673,9 +667,6 @@ class Translations$location$en {
 
 	/// en: 'Cancel'
 	String get clear_confirm_cancel => 'Cancel';
-
-	/// en: 'Location removed'
-	String get cleared => 'Location removed';
 }
 
 // Path: journal
@@ -2136,18 +2127,17 @@ extension on Translations {
 			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
 			'email_login.skip_for_now' => 'Continue without signing in',
 			'location.title' => 'Where do you garden?',
-			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
+			'location.why' => 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.',
 			'location.use_gps' => 'Use my location',
 			'location.enter_place' => 'Enter a place',
 			'location.or' => 'or',
 			'location.gps_sub' => 'Automatically via device GPS',
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
-			'location.place_note' => 'A village or town is enough — no exact address needed.',
+			'location.place_note' => 'A nearby village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
 			'location.privacy' => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',
-			'location.set_gps' => 'Location set.',
-			'location.set_place' => ({required Object name}) => 'Location: ${name}',
+			'location.skip' => 'Skip',
 			'location.err_denied' => 'Location access denied. Enter a place or grant permission in system settings.',
 			'location.err_disabled' => 'Location services are off. Turn them on or enter a place.',
 			'location.err_unavailable' => 'Couldn\'t determine your location. Try again or enter a place.',
@@ -2155,14 +2145,12 @@ extension on Translations {
 			'location.no_results' => 'No matches for that place.',
 			'location.screen_title' => 'Garden location',
 			'location.status_set' => 'Location is set',
-			'location.status_set_at' => ({required Object name}) => 'Location is set · ${name}',
 			'location.status_unset' => 'Location not set yet',
-			'location.clear' => 'Remove location',
+			'location.clear' => 'Remove',
 			'location.clear_confirm_title' => 'Remove location?',
 			'location.clear_confirm_body' => 'Weather will use the default region until you set a new location.',
 			'location.clear_confirm_yes' => 'Remove',
 			'location.clear_confirm_cancel' => 'Cancel',
-			'location.cleared' => 'Location removed',
 			'journal.title' => 'Journal',
 			'journal.subtitle' => 'garden journal',
 			'journal.filter_all' => 'All',
@@ -2524,11 +2512,11 @@ extension on Translations {
 			'recipes.form_new' => 'New recipe',
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
 			'recipes.delete_note' => 'This recipe will be removed from your list.',

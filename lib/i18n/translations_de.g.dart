@@ -346,18 +346,17 @@ class _Translations$location$de extends Translations$location$en {
 
 	// Translations
 	@override String get title => 'Wo gärtnerst du?';
-	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
+	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun.';
 	@override String get use_gps => 'Meinen Standort verwenden';
 	@override String get enter_place => 'Ort eingeben';
 	@override String get or => 'oder';
 	@override String get gps_sub => 'Automatisch per Geräte-GPS';
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
-	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
+	@override String get place_note => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
 	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
-	@override String get set_gps => 'Standort festgelegt.';
-	@override String set_place({required Object name}) => 'Standort: ${name}';
+	@override String get skip => 'Überspringen';
 	@override String get err_denied => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.';
 	@override String get err_disabled => 'Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.';
 	@override String get err_unavailable => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.';
@@ -365,14 +364,12 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get no_results => 'Keine Treffer für diesen Ort.';
 	@override String get screen_title => 'Gartenstandort';
 	@override String get status_set => 'Standort ist festgelegt';
-	@override String status_set_at({required Object name}) => 'Standort ist festgelegt · ${name}';
 	@override String get status_unset => 'Standort noch nicht festgelegt';
-	@override String get clear => 'Standort entfernen';
+	@override String get clear => 'Entfernen';
 	@override String get clear_confirm_title => 'Standort entfernen?';
 	@override String get clear_confirm_body => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.';
 	@override String get clear_confirm_yes => 'Entfernen';
 	@override String get clear_confirm_cancel => 'Abbrechen';
-	@override String get cleared => 'Standort entfernt';
 }
 
 // Path: journal
@@ -1057,18 +1054,17 @@ extension on TranslationsDe {
 			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
 			'email_login.skip_for_now' => 'Ohne Anmeldung fortfahren',
 			'location.title' => 'Wo gärtnerst du?',
-			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
+			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
 			'location.enter_place' => 'Ort eingeben',
 			'location.or' => 'oder',
 			'location.gps_sub' => 'Automatisch per Geräte-GPS',
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
-			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
+			'location.place_note' => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
 			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
-			'location.set_gps' => 'Standort festgelegt.',
-			'location.set_place' => ({required Object name}) => 'Standort: ${name}',
+			'location.skip' => 'Überspringen',
 			'location.err_denied' => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.',
 			'location.err_disabled' => 'Standortdienste sind aus. Schalte sie ein oder gib einen Ort ein.',
 			'location.err_unavailable' => 'Standort konnte nicht ermittelt werden. Versuche es erneut oder gib einen Ort ein.',
@@ -1076,14 +1072,12 @@ extension on TranslationsDe {
 			'location.no_results' => 'Keine Treffer für diesen Ort.',
 			'location.screen_title' => 'Gartenstandort',
 			'location.status_set' => 'Standort ist festgelegt',
-			'location.status_set_at' => ({required Object name}) => 'Standort ist festgelegt · ${name}',
 			'location.status_unset' => 'Standort noch nicht festgelegt',
-			'location.clear' => 'Standort entfernen',
+			'location.clear' => 'Entfernen',
 			'location.clear_confirm_title' => 'Standort entfernen?',
 			'location.clear_confirm_body' => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.',
 			'location.clear_confirm_yes' => 'Entfernen',
 			'location.clear_confirm_cancel' => 'Abbrechen',
-			'location.cleared' => 'Standort entfernt',
 			'journal.title' => 'Tagebuch',
 			'journal.subtitle' => 'Gartentagebuch',
 			'journal.filter_all' => 'Alle',
@@ -1445,11 +1439,11 @@ extension on TranslationsDe {
 			'recipes.form_new' => 'Neues Rezept',
 			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
 			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',

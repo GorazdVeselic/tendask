@@ -11,15 +11,3 @@ String? locationErrorLabel(LocationResult result, Translations t) =>
       LocationServiceDisabled() => t.location.err_disabled,
       LocationUnavailable() => t.location.err_unavailable,
     };
-
-/// The status banner's line: not set yet, set at a resolved place, or set but
-/// with the place name still unresolved (offline).
-String locationStatusLabel(
-  Translations t, {
-  required bool isSet,
-  String? placeName,
-}) {
-  if (!isSet) return t.location.status_unset;
-  if (placeName != null) return t.location.status_set_at(name: placeName);
-  return t.location.status_set;
-}

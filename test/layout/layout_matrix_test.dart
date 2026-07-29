@@ -13,6 +13,7 @@ import 'package:tendask/core/notifications/reminder_audio.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
+import 'package:tendask/features/auth/presentation/location_screen.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
@@ -32,6 +33,7 @@ import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/features/tasks/task_specs.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
+import '../core/location/fake_location_repository.dart';
 import 'layout_harness.dart';
 
 // ─── fixtures ─────────────────────────────────────────────────────────────────
@@ -100,11 +102,11 @@ List<Override> _taskWorldOverrides() => [
     (ref) => Stream.value([_task(status: TaskStatus.done)]),
   ),
   allTasksProvider.overrideWith((ref) => Stream.value([_task()])),
-  taskIdsWithRemindersProvider.overrideWith(
-    (ref) => Stream.value({_taskId}),
-  ),
+  taskIdsWithRemindersProvider.overrideWith((ref) => Stream.value({_taskId})),
   allTaskSubjectsProvider.overrideWith((ref) => Stream.value([_subject()])),
-  taskTypesMapProvider.overrideWith((ref) => Stream.value({'water': _taskType()})),
+  taskTypesMapProvider.overrideWith(
+    (ref) => Stream.value({'water': _taskType()}),
+  ),
   taskTypeCategoriesProvider.overrideWith(
     (ref) => Stream.value({
       'water': {'water'},
@@ -115,7 +117,9 @@ List<Override> _taskWorldOverrides() => [
   latestTaskPerAreaProvider.overrideWith(
     (ref) => Stream.value({_areaId: _task()}),
   ),
-  userPlantsMapProvider.overrideWith((ref) => Stream.value(<String, UserPlant>{})),
+  userPlantsMapProvider.overrideWith(
+    (ref) => Stream.value(<String, UserPlant>{}),
+  ),
   plantsMapProvider.overrideWith((ref) => Stream.value(<String, Plant>{})),
   plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
   suppliesListProvider.overrideWith((ref) => Stream.value(<Supply>[])),
@@ -273,5 +277,30 @@ void main() {
     'note-form',
     overrides: () => [..._dbOverrides(), ..._taskWorldOverrides()],
     build: () => const NoteFormScreen(),
+  );
+
+  // ── onboarding location ────────────────────────────────────────────────────
+  //
+  // Both states, because they do not render the same thing: unset puts the
+  // emphasis on the GPS card and labels the bottom button "skip", set flips
+  // both and adds the resolved place name to the status banner.
+
+  layoutMatrix(
+    'location (unset)',
+    overrides: () => locationOverrides(FakeLocationRepository()),
+    build: () => const LocationScreen(),
+  );
+
+  layoutMatrix(
+    'location (set)',
+    overrides: () => locationOverrides(
+      FakeLocationRepository(cell: FakeLocationRepository.savedCell),
+      placeLabel: 'Šentjur',
+    ),
+    build: () => const LocationScreen(),
+    // The place name arrives a microtask after the banner first asks for it and
+    // then cross-fades in; without this frame the widest banner is never
+    // measured.
+    after: (tester) => tester.pump(const Duration(milliseconds: 400)),
   );
 }

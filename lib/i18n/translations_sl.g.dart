@@ -350,18 +350,17 @@ class _Translations$location$sl extends Translations$location$en {
 
 	// Translations
 	@override String get title => 'Kje vrtnariš?';
-	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
+	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti lahko pokažemo, kaj počnejo drugi vrtnarji v tvoji okolici.';
 	@override String get use_gps => 'Uporabi mojo lokacijo';
 	@override String get enter_place => 'Vpiši kraj';
 	@override String get or => 'ali';
 	@override String get gps_sub => 'Samodejno z GPS naprave';
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
-	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
+	@override String get place_note => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
 	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
-	@override String get set_gps => 'Lokacija je nastavljena.';
-	@override String set_place({required Object name}) => 'Lokacija: ${name}';
+	@override String get skip => 'Preskoči';
 	@override String get err_denied => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.';
 	@override String get err_disabled => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.';
 	@override String get err_unavailable => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.';
@@ -369,14 +368,12 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get no_results => 'Za ta kraj ni zadetkov.';
 	@override String get screen_title => 'Lokacija vrta';
 	@override String get status_set => 'Lokacija je nastavljena';
-	@override String status_set_at({required Object name}) => 'Lokacija je nastavljena · ${name}';
 	@override String get status_unset => 'Lokacija še ni nastavljena';
-	@override String get clear => 'Odstrani lokacijo';
+	@override String get clear => 'Odstrani';
 	@override String get clear_confirm_title => 'Odstranim lokacijo?';
 	@override String get clear_confirm_body => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.';
 	@override String get clear_confirm_yes => 'Odstrani';
 	@override String get clear_confirm_cancel => 'Prekliči';
-	@override String get cleared => 'Lokacija odstranjena';
 }
 
 // Path: journal
@@ -1067,18 +1064,17 @@ extension on TranslationsSl {
 			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
 			'email_login.skip_for_now' => 'Nadaljuj brez prijave',
 			'location.title' => 'Kje vrtnariš?',
-			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
+			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti lahko pokažemo, kaj počnejo drugi vrtnarji v tvoji okolici.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
 			'location.enter_place' => 'Vpiši kraj',
 			'location.or' => 'ali',
 			'location.gps_sub' => 'Samodejno z GPS naprave',
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
-			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
+			'location.place_note' => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
 			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
-			'location.set_gps' => 'Lokacija je nastavljena.',
-			'location.set_place' => ({required Object name}) => 'Lokacija: ${name}',
+			'location.skip' => 'Preskoči',
 			'location.err_denied' => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.',
 			'location.err_disabled' => 'Lokacijske storitve so izklopljene. Vklopi jih ali vpiši kraj.',
 			'location.err_unavailable' => 'Lokacije ni bilo mogoče določiti. Poskusi znova ali vpiši kraj.',
@@ -1086,14 +1082,12 @@ extension on TranslationsSl {
 			'location.no_results' => 'Za ta kraj ni zadetkov.',
 			'location.screen_title' => 'Lokacija vrta',
 			'location.status_set' => 'Lokacija je nastavljena',
-			'location.status_set_at' => ({required Object name}) => 'Lokacija je nastavljena · ${name}',
 			'location.status_unset' => 'Lokacija še ni nastavljena',
-			'location.clear' => 'Odstrani lokacijo',
+			'location.clear' => 'Odstrani',
 			'location.clear_confirm_title' => 'Odstranim lokacijo?',
 			'location.clear_confirm_body' => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.',
 			'location.clear_confirm_yes' => 'Odstrani',
 			'location.clear_confirm_cancel' => 'Prekliči',
-			'location.cleared' => 'Lokacija odstranjena',
 			'journal.title' => 'Dnevnik',
 			'journal.subtitle' => 'vrtni dnevnik',
 			'journal.filter_all' => 'Vse',
@@ -1455,11 +1449,11 @@ extension on TranslationsSl {
 			'recipes.form_new' => 'Nov recept',
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
 			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',

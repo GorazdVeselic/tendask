@@ -1,6 +1,6 @@
 # FR-24: Onboarding lokacija — GPS je glavni CTA, preskok je nepoudarjen
 
-- **Status:** predlog, neimplementirano
+- **Status:** implementirano 2026-07-29 (koda, i18n, testi), še neizdano
 - **Datum:** 2026-07-29
 - **Cilj:** da na zaslonu 16 v onboardingu **nič poudarjenega ne pelje mimo lokacije**
 - **Področja:** onboarding (zaslon 16), `location_screen.dart`, i18n (sl/en/de), layout matrika
@@ -103,6 +103,26 @@ sredine na dno in dobi poudarjeno varianto. Razlog ni samo videz:
   lokacijo« ne gre v noben jezik (§4).
 - Ševron napove, da sledi sistemsko dovoljenje, ne takojšnje dejanje.
 
+### 3.2 Potrditev shranjevanja: trak, ne toast
+
+Doslej je vsako shranjevanje (GPS, izbran kraj, izbris) sprožilo `showTopToast` — temno ploščico na
+**vrhu** zaslona, torej natanko čez statusni trak, ki pove isto stvar in ostane. Na zaslonu 16b
+(iz nastavitev) je to bralo kot okvara: nekaj temnega za dve sekundi prekrije vsebino.
+
+Toast na tem zaslonu odpade. Potrditev nosi statusni trak, ki je za to že tam:
+
+- **prehod se animira** (~320 ms cross-fade + rahel scale) — sprememba, ki se zgodi pred očmi, se
+  opazi; tiha zamenjava dveh sličic se ne;
+- **po shranjevanju se trak scrolla v vidno polje** (`Scrollable.ensureVisible`), sicer bi ostal nad
+  robom, če je uporabnik izbiral kraj iz zadetkov;
+- **ime kraja pokaže takoj**: izbran `place.name` se hrani lokalno, dokler ga reverzno
+  geokodiranje ne razreši. Mimogrede zapre offline vrzel — brez mreže se ime doslej sploh ni
+  pokazalo.
+
+Prednost pred toastom: potrditev je trajna (ne izgine po 2,2 s), stoji ob gumbu »Odstrani« in ničesar
+ne prekriva. `showTopToast` ostane v rabi drugod (opravila, podvojene rastline), kjer pokriva prazen
+prostor, ne lastne vsebine. Napake se še naprej izpišejo kot rdeče besedilo v vsebini, ne kot toast.
+
 ## 4. Besedila in prostor
 
 Izmerjeno na najhujši celici layout matrike — **320 dp × text-scale 1,3**, z bundlanim
@@ -153,7 +173,7 @@ je torej ta izraz na tej poti že videl in ve, kaj naredi.
 |---|---|
 | `location.skip` | **nov** — `Preskoči` · `Skip` · `Überspringen` |
 | `location.why` | novo besedilo (brez »(kasneje)«), glej spodaj |
-| `location.why_live` | **odstranjen** — zliva se v `why` |
+| `location.set_gps`, `location.set_place`, `location.cleared` | **odstranjeni** — bili so besedila toasta (§3.2) |
 | `location.use_gps` | nespremenjen (`Uporabi mojo lokacijo` · `Use my location` · `Meinen Standort verwenden`) |
 | `location.gps_sub` | nespremenjen, **ostaja v rabi** (podnaslov kartice) |
 | `location.continue` | nespremenjen, uporabljen v stanju B |
@@ -167,20 +187,24 @@ Novo besedilo `why`:
 | en | We need your location for the local weather forecast and so we can show you what other gardeners near you are doing. |
 | de | Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun. |
 
-**Zakaj združitev `why` + `why_live`.** Ključa sta se doslej razlikovala samo po »(kasneje)«, ki ga
-je `location_screen.dart:237` izbiral prek `kCommunityEnabled`. Odločitev: **en ključ brez
-»kasneje«**, ternar na tem zaslonu odpade. To pomeni, da zaslon **omenja Okolico, dokler je ta še
-temna** — sprejeto zavestno: stavek opisuje, čemu lokacija služi, ne obljublja gumba danes. Če se
-prižig Okolice zavleče čez ~2 izdaji, se stavek skrajša na vremenski del.
+**Zakaj brez »(kasneje)«.** Zaslon zdaj **omenja Okolico, dokler je ta še temna** — sprejeto
+zavestno: stavek opisuje, čemu lokacija služi, ne obljublja gumba danes. Če se prižig Okolice
+zavleče čez ~2 izdaji, se stavek skrajša na vremenski del.
+
+> **Popravek ob izvedbi:** ta razdelek je prvotno predvideval brisanje ključa `why_live` in
+> ternarja s `kCommunityEnabled` v `location_screen.dart`. Oboje je obstajalo samo na veji M11 —
+> na `main` je bil `t.location.why` že brezpogojen. Spremeni se le besedilo.
 
 ## 5. Obseg
 
 **V obsegu:** spodnji blok zaslona 16 v onboarding načinu, premik `GpsCard` na dno + poudarjena
-varianta, nov ključ `location.skip`, združitev `why`/`why_live`, vnosi v layout matriko, wireframi
-16 + 16d, `screen-map.md`.
+varianta, nov ključ `location.skip`, novo besedilo `why`, potrditev shranjevanja v traku namesto
+toasta (§3.2, velja za oba načina), vnosi v layout matriko, widget testi, wireframi 16 + 16b,
+`screen-map.md`.
 
 **Izven obsega:**
-- Način »iz nastavitev« (16b) — tam ni ne CTA-ja ne preskoka in ostane tako.
+- Hierarhija gumbov v načinu »iz nastavitev« (16b) — tam ni ne CTA-ja ne preskoka in ostane tako
+  (spremeni se le potrditev shranjevanja).
 - Pas na Domov (FR-22) in push (FR-23) — ločeni izdaji.
 - Blokiranje onboardinga brez lokacije. **Nikoli**: lokacija je prostovoljna.
 - Samodejni sistemski poziv za GPS brez tapa uporabnika.
@@ -197,6 +221,9 @@ varianta, nov ključ `location.skip`, združitev `why`/`why_live`, vnosi v layou
   uporabnik ne sme obtičati za počasnim GPS-om.
 - **Offline:** GPS deluje, geokodiranje vpisanega kraja ne. Nespremenjeno.
 - **Gost** (`kLocalUserId`): enako, celica se piše lokalno.
+- **Odprta tipkovnica:** pripeti par bi požrl seznam, v katerem so zadetki iskanja (na 360×640 mu
+  ostane manj kot 200 dp), zato se med tipkanjem umakne — GPS možnost se vrne v seznam, gumb za
+  preskok počaka. Nihče ne obtiči: tipkovnico zapre izbira zadetka ali tap mimo.
 
 ## 7. Implementacijske opombe
 
@@ -204,14 +231,18 @@ varianta, nov ključ `location.skip`, združitev `why`/`why_live`, vnosi v layou
   varianto (polna `cs.primary`, `cs.onPrimary` tekst, ikonska ploščica `white.withValues(...)`).
   **Ne** ustvarjaj druge kartice — en widget, dve varianti.
 - `OrDivider` ostane med vnosno kartico in GPS blokom; preseli se skupaj z njim na dno.
-- `location_screen.dart:237` — odstrani `kCommunityEnabled ? t.location.why_live : t.location.why`
-  in pusti `t.location.why`. Ključ `why_live` izbriši iz vseh treh JSON-ov **v istem commitu** kot
-  spremembo v Dartu, sicer `dart run slang` in koda razideta.
 - Po spremembi ključev poženi **`dart run slang`** (build_runner tega ne ujame).
-- **Layout matrika:** obstoječi vnos za `location` naj pokrije **obe** stanji (`isSet` true/false),
-  sicer se poudarjena varianta nikoli ne izriše v testu.
-- Widget test: v stanju A tap na »Preskoči« pelje na `/home`; v stanju B je poudarjen gumb
-  »Nadaljuj« in pelje na `/home`.
+- **Layout matrika:** zaslona v njej doslej ni bilo. Dodana sta **dva** vnosa (`location (unset)` /
+  `location (set)`), ker se stanji ne izrišeta enako. Vnos za stanje B rabi dodaten `pump`: ime kraja
+  pride mikrotask po prvem `watch`, potem pa se še cross-fade — brez tega se najširša varianta traku
+  nikoli ne izmeri.
+- Gumb uporablja `minimumSize`, ne `SizedBox(height: 52)` (`ui-katalog.md`): fiksna škatla bi drugo
+  vrstico tiho odrezala.
+- `EnterPlaceCard` je dobila `Material` ovoj: zadetki iskanja so `ListTile`-i, katerih ink splash se
+  izriše na najbližjem `Material` predniku — pod barvno škatlo je bil neviden (Flutter to javi kot
+  assert, ki ga je ujel prvi widget test).
+- Testni pripomoček `test/core/location/fake_location_repository.dart` (fake repo + `locationOverrides`)
+  si delita layout matrika in widget testi; prava H3 knjižnica se pod `flutter test` ne naloži (FFI).
 - Brez nove dependency, brez migracije, brez spremembe sheme, brez sprememb v routerju.
 
 ## 8. Odprta vprašanja

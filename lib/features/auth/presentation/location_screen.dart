@@ -8,7 +8,6 @@ import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
 import '../../../core/location/place_label_repository.dart';
 import '../../../core/widgets/confirm_dialog.dart';
-import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import 'location_labels.dart';
 import 'widgets/enter_place_card.dart';
@@ -28,12 +27,19 @@ class LocationScreen extends ConsumerStatefulWidget {
 
 class _LocationScreenState extends ConsumerState<LocationScreen> {
   final _searchController = TextEditingController();
-  // Lets us scroll the search card up to the top of the (keyboard-shrunk)
-  // viewport once results arrive, so the matches aren't hidden by the keyboard.
+  // Scroll anchors: the search card goes to the top of the (keyboard-shrunk)
+  // viewport once results arrive; the banner is the only save confirmation and
+  // the error sits far from the GPS card, so both must be brought into view.
   final _entryCardKey = GlobalKey();
+  final _bannerKey = GlobalKey();
+  final _errorKey = GlobalKey();
   bool _loading = false;
   bool _isSet = false;
   String? _error;
+
+  /// The place the user just picked. Shown in the banner ahead of the resolved
+  /// label, which arrives late and never at all when offline.
+  String? _pickedName;
   List<GeoPlace> _results = const [];
 
   @override
@@ -53,8 +59,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     if (!mounted) return;
     setState(() => _isSet = cell != null);
   }
-
-  void _toast(String message) => showTopToast(context, message);
 
   Future<void> _save(double latitude, double longitude) async {
     final userId = ref.read(authServiceProvider).userId;
@@ -79,10 +83,16 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     if (result case LocationCoords(:final latitude, :final longitude)) {
       await _save(latitude, longitude);
       if (!mounted) return;
-      setState(() => _isSet = true);
-      _toast(t.location.set_gps);
+      setState(() {
+        _isSet = true;
+        // A GPS fix carries no place name, and the previously typed one belongs
+        // to the cell we just replaced.
+        _pickedName = null;
+      });
+      _ensureVisible(_bannerKey);
     } else {
       setState(() => _error = locationErrorLabel(result, t));
+      _ensureVisible(_errorKey);
     }
     if (mounted) setState(() => _loading = false);
   }
@@ -105,7 +115,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
         _results = results;
         if (results.isEmpty) _error = t.location.no_results;
       });
-      if (results.isNotEmpty) _scrollEntryCardToTop();
+      if (results.isNotEmpty) _ensureVisible(_entryCardKey);
     } on Object {
       if (!mounted) return;
       setState(() => _error = t.location.err_search);
@@ -114,11 +124,11 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     }
   }
 
-  /// After matches render, align the search card to the top of the visible area
-  /// (the viewport is already shrunk above the keyboard) so the list shows.
-  void _scrollEntryCardToTop() {
+  /// Aligns [key]'s widget to the top of the visible area — which the keyboard
+  /// may have shrunk — once the frame that renders it is on screen.
+  void _ensureVisible(GlobalKey key) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      final ctx = _entryCardKey.currentContext;
+      final ctx = key.currentContext;
       if (ctx == null) return;
       Scrollable.ensureVisible(
         ctx,
@@ -130,16 +140,16 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
   }
 
   Future<void> _selectPlace(GeoPlace place) async {
-    final t = context.t;
     await _save(place.latitude, place.longitude);
     if (!mounted) return;
     setState(() {
       _isSet = true;
+      _pickedName = place.name;
       _results = const [];
       _error = null;
     });
-    _toast(t.location.set_place(name: place.name));
     FocusScope.of(context).unfocus();
+    _ensureVisible(_bannerKey);
   }
 
   Future<void> _clear() async {
@@ -157,11 +167,22 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     if (!mounted) return;
     setState(() {
       _isSet = false;
+      _pickedName = null;
       _results = const [];
       _error = null;
     });
-    _toast(t.location.cleared);
+    _ensureVisible(_bannerKey);
   }
+
+  /// The GPS option: the "or" divider and the card itself, kept together
+  /// wherever they land — pinned to the bottom in onboarding, inline in the
+  /// list from settings and while the keyboard is up.
+  List<Widget> _gpsOption({bool emphasised = false}) => [
+    const SizedBox(height: 14),
+    const OrDivider(),
+    const SizedBox(height: 14),
+    GpsCard(loading: _loading, onTap: _useGps, emphasised: emphasised),
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -172,16 +193,27 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
     // tap. From the onboarding/login flow (go): no back, a "Continue" button
     // advances to home.
     final fromSettings = context.canPop();
-    // The resolved place name for the current cell (same source as the weather
-    // card), shown in the status banner when set; null until resolved/offline.
+    // The place shown in the status banner: the freshly picked one, else the
+    // resolved label for the stored cell (same source as the weather card),
+    // which is null until it resolves and stays null offline.
     final placeName = _isSet
-        ? ref
-              .watch(
-                placeLabelProvider(LocaleSettings.currentLocale.languageCode),
-              )
-              .value
+        ? _pickedName ??
+              ref
+                  .watch(
+                    placeLabelProvider(
+                      LocaleSettings.currentLocale.languageCode,
+                    ),
+                  )
+                  .value
         : null;
     final error = _error;
+    // Onboarding pins the GPS option and the exit button to the bottom, within
+    // thumb reach; from settings the option stays inline and there is no exit
+    // button at all (a pick saves on the spot). While the keyboard is up the
+    // pinned block would squeeze the list that holds the search matches, so it
+    // steps aside until typing is done.
+    final showBottomBlock =
+        !fromSettings && MediaQuery.viewInsetsOf(context).bottom == 0;
 
     return Scaffold(
       appBar: fromSettings
@@ -204,6 +236,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                 child: ListView(
                   children: [
                     LocationStatusBanner(
+                      key: _bannerKey,
                       isSet: _isSet,
                       placeName: placeName,
                       onClear: _isSet ? _clear : null,
@@ -249,10 +282,6 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       results: _results,
                       onSelect: _selectPlace,
                     ),
-                    const SizedBox(height: 14),
-                    const OrDivider(),
-                    const SizedBox(height: 14),
-                    GpsCard(loading: _loading, onTap: _useGps),
                     if (_loading) ...[
                       const SizedBox(height: 16),
                       const Center(child: CircularProgressIndicator()),
@@ -261,31 +290,68 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       const SizedBox(height: 12),
                       Text(
                         error,
+                        key: _errorKey,
                         style: theme.textTheme.bodySmall?.copyWith(
                           color: cs.error,
                         ),
                       ),
                     ],
+                    if (!showBottomBlock) ..._gpsOption(),
                     const SizedBox(height: 20),
                     LocationPrivacyNote(text: t.location.privacy),
                   ],
                 ),
               ),
-              if (!fromSettings) ...[
-                const SizedBox(height: 12),
-                SizedBox(
-                  width: double.infinity,
-                  height: 52,
-                  child: FilledButton(
-                    onPressed: () => context.go('/home'),
-                    child: Text(t.location.kContinue),
-                  ),
+              if (showBottomBlock) ...[
+                ..._gpsOption(emphasised: !_isSet),
+                const SizedBox(height: 10),
+                _ExitButton(
+                  isSet: _isSet,
+                  onPressed: () => context.go('/home'),
                 ),
               ],
             ],
           ),
         ),
       ),
+    );
+  }
+}
+
+/// The way out of the onboarding step. It carries the emphasis only once a
+/// location is set; until then the emphasis belongs to the GPS card above it,
+/// so nothing prominent leads past the step (FR-24). Both variants are the same
+/// size, so the button does not move under the thumb when the state flips.
+class _ExitButton extends StatelessWidget {
+  const _ExitButton({required this.isSet, required this.onPressed});
+
+  final bool isSet;
+  final VoidCallback onPressed;
+
+  // A minimum, not a fixed height: a label that wraps to two lines has to grow
+  // the button instead of being silently clipped (docs/ui-katalog.md).
+  static const _size = Size(double.infinity, 52);
+
+  @override
+  Widget build(BuildContext context) {
+    final t = context.t;
+    final cs = Theme.of(context).colorScheme;
+    if (isSet) {
+      return FilledButton(
+        onPressed: onPressed,
+        style: FilledButton.styleFrom(minimumSize: _size),
+        child: Text(t.location.kContinue),
+      );
+    }
+    return OutlinedButton(
+      onPressed: onPressed,
+      style: OutlinedButton.styleFrom(
+        minimumSize: _size,
+        backgroundColor: cs.surface,
+        foregroundColor: cs.onSurface,
+        side: BorderSide(color: cs.outlineVariant, width: 1.5),
+      ),
+      child: Text(t.location.skip),
     );
   }
 }

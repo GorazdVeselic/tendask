@@ -27,47 +27,53 @@ class EnterPlaceCard extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     final cs = theme.colorScheme;
-    return Container(
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        color: cs.surface,
-        border: Border.all(color: cs.primary, width: 1.5),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          FieldLabel(t.location.enter_place),
-          TextField(
-            controller: controller,
-            textInputAction: TextInputAction.search,
-            decoration: InputDecoration(
-              hintText: t.location.place_hint,
-              suffixIcon: IconButton(
-                icon: const Icon(Icons.search),
-                onPressed: loading ? null : onSearch,
+    // The fill comes from a Material, not the box below it: the match rows are
+    // ListTiles, whose ink splash paints on the nearest Material ancestor and
+    // would be hidden under a plain coloured box.
+    return Material(
+      color: cs.surface,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          border: Border.all(color: cs.primary, width: 1.5),
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            FieldLabel(t.location.enter_place),
+            TextField(
+              controller: controller,
+              textInputAction: TextInputAction.search,
+              decoration: InputDecoration(
+                hintText: t.location.place_hint,
+                suffixIcon: IconButton(
+                  icon: const Icon(Icons.search),
+                  onPressed: loading ? null : onSearch,
+                ),
+              ),
+              onSubmitted: (_) => loading ? null : onSearch(),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              t.location.place_note,
+              style: theme.textTheme.bodySmall?.copyWith(
+                color: cs.onSurfaceVariant,
               ),
             ),
-            onSubmitted: (_) => loading ? null : onSearch(),
-          ),
-          const SizedBox(height: 6),
-          Text(
-            t.location.place_note,
-            style: theme.textTheme.bodySmall?.copyWith(
-              color: cs.onSurfaceVariant,
-            ),
-          ),
-          for (final place in results)
-            ListTile(
-              contentPadding: EdgeInsets.zero,
-              leading: const Icon(Icons.place_outlined),
-              title: Text(place.name),
-              subtitle: Text(
-                [place.admin1, place.country].whereType<String>().join(', '),
+            for (final place in results)
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: const Icon(Icons.place_outlined),
+                title: Text(place.name),
+                subtitle: Text(
+                  [place.admin1, place.country].whereType<String>().join(', '),
+                ),
+                onTap: () => onSelect(place),
               ),
-              onTap: () => onSelect(place),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }
