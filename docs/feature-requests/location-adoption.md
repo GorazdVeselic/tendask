@@ -1,10 +1,12 @@
 # FR-22: Kontekstualni poziv za lokacijo na Domov
 
 - **Status:** predlog, neimplementirano
-- **Datum:** 2026-07-28
+- **Datum:** 2026-07-28 · **rešitev spremenjena 2026-07-29** (§3: brez lokacije vremena ne kažemo)
 - **Cilj:** povečati delež uporabnikov z nastavljeno lokacijo vrta (`profile.h3_r5`)
-- **Področja:** Domov (vremenska kartica), onboarding (zaslon 16), vreme, pametni motor
-- **Povezave:** `docs/analitika-geo.md` (od kod številke), `docs/wireframes/` 16,
+- **Področja:** Domov (vremenska kartica), podrobnosti opravila, vreme, pametni motor
+- **Povezave:** `docs/analitika-geo.md` (od kod številke),
+  [`wireframes/01d-weather-states.html`](../wireframes/01d-weather-states.html) (vsa stanja + besedila),
+  `docs/wireframes/` 16,
   `lib/features/home/presentation/widgets/home_weather_section.dart`,
   `lib/features/auth/presentation/location_screen.dart`
 
@@ -75,35 +77,89 @@ tem izgubi, in da ga stanje ne zavaja.
 
 ## 3. Rešitev
 
-Vremenska kartica na Domov dobi **tretje stanje**: »vreme ni s tvoje lokacije«.
+**Brez nastavljene lokacije vremena ne prikazujemo.** Na mestu vremenske kartice
+stoji povabilo z eno potjo naprej. Privzetek Ljubljana odpade — ne le z zaslona,
+ampak iz cevovoda (§6).
 
-| Stanje | Danes | Predlog |
+| Stanje | Danes | Odločeno |
 |---|---|---|
 | lokacija nastavljena | vreme + ime kraja | nespremenjeno |
-| **ni lokacije** | **vreme za Ljubljano, brez oznake** | vreme + miren pas: to ni tvoja lokacija + CTA »Nastavi kraj« |
-| offline brez posnetka | tiha »ni na voljo« kartica | nespremenjeno |
+| **ni lokacije** | **vreme za Ljubljano, brez oznake** | **ni vremena** — povabilo + CTA »Nastavi kraj« |
+| offline brez posnetka | tiha »ni na voljo« kartica | nespremenjeno (možno le, ko je lokacija znana) |
+| **opravilo čaka, ni lokacije** | obljubi posnetek, ki bo ljubljanski | pojasnilo + CTA |
+| **opravilo opravljeno brez posnetka** | »zajet brez povezave« (tudi ko je vzrok drug) | nevtralno »ni na voljo«, brez trditve o vzroku in brez CTA |
 
-Načela:
+**Zakaj za zaključeno opravilo ni razlage:** aplikacija ne ve, zakaj posnetka ni — task tega ne shrani,
+poznamo le trenutno stanje. Kdor zaključi brez lokacije in jo pozneje nastavi, bi dobil »zajet brez
+povezave«; kdor zaključi brez povezave in pozneje lokacijo odstrani, bi dobil obratno. Trenutno stanje
+sme opisovati **prihodnost** (opravilo, ki čaka — posnetek še bo, zato tam vzrok in CTA), ne pa
+**preteklosti**.
+
+Zakaj ta varianta in ne pas pod ljubljanskim vremenom (prvotni predlog):
+
+1. **Popravek je namen FR-ja** (§1): dokler vreme ostane na zaslonu, ga uporabnik
+   bere kot svojega — opomba pod podatkom je šibkejša od podatka nad njo.
+2. **Poziv postane edina vsebina na tem mestu** in ga ni mogoče spregledati; to je
+   tudi razlog, da pričakujeva večji premik metrike kot od pasu.
+3. **Cena je znana in sprejeta:** Domov je ob prvem odprtju brez lokacije bolj
+   prazen. Kdor lokacije noče dati, ostane brez vremena — legitimna izbira, ki jo
+   povabilo pošteno pove.
+
+Načela (nespremenjena):
 - **Ne modalno, ne push, ne blokira.** Kartica je del zaslona, ne prekine poti.
 - **Miren ton, ne alarm.** Ni rdeče, ni klicaja — to ni napaka uporabnika.
 - **Ena poteza do rešitve:** CTA pelje na obstoječi `/location` (push, z back).
-- **Ne izginja in se ne vrača.** Dokler lokacije ni, je pas viden; ni odštevanja,
-  ni »ne prikaži več« (glej §5 — kdor noče, pusti pas pri miru).
+- **Ne izginja in se ne vrača.** Dokler lokacije ni, je povabilo tam; ni odštevanja,
+  ni »ne prikaži več«.
 
-### Predlog besedila
+### Besedilo in grafika
 
-| Ključ | sl | en | de |
-|---|---|---|---|
-| `home.weather.no_location.note` | Vreme za Ljubljano — tvojega kraja še ne poznamo. | Weather for Ljubljana — we don't know your place yet. | Wetter für Ljubljana — deinen Ort kennen wir noch nicht. |
-| `home.weather.no_location.cta` | Nastavi kraj | Set your place | Ort festlegen |
+Celoten predlog besedil (sl/en/de) in grafike je v
+[`wireframes/01d-weather-states.html`](../wireframes/01d-weather-states.html) — tam so
+narisana vsa stanja in vsi CTA. Povzetek ključev (vsi pod `weather.*`, kjer že živita
+`home_unavailable` in `home_retry`):
+
+| Ključ | sl |
+|---|---|
+| `no_location_title` | Kje vrtnariš? |
+| `no_location_body` | Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt. |
+| `no_location_cta` | Nastavi lokacijo |
+| `no_location_privacy` | Shranimo samo približno lokacijo. |
+| `detail_no_location` | Vreme zabeležimo, ko nastaviš lokacijo. |
 
 Nemški prevod je predlog za pregled ob implementaciji (slang, `dart run slang`).
-Besedilo namenoma imenuje **Ljubljano** — konkretno ime pove, da vreme ni od nikoder,
-ampak od nekod drugod, in to je tisto, kar sproži popravek.
+Naslov je isto vprašanje kot na zaslonu 16 — poziv in cilj se berta kot ena poteza;
+telo pove korist in namenoma **ne ponovi gumba**, ki stoji tik pod njim.
+
+**Izrazje (dosledno z obstoječim):** `lokacija / location / Standort` = nastavitev
+(»Lokacija vrta«, »Lokacija je nastavljena«, »Uporabi mojo lokacijo«);
+`kraj / place / Ort` = konkretna vas ali mesto v iskalnem polju (»Vpiši kraj«).
+Ta besedila govorijo o nastavitvi → povsod **lokacija**.
+
+**Tri obstoječa besedila gredo v isto spremembo** (celotne različice sl/en/de v wireframu):
+
+| Ključ | Danes | Po tem FR |
+|---|---|---|
+| `location.clear_confirm_body` | »Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.« | »Brez lokacije ti vremena ne bomo mogli pokazati.« — privzetega območja ni več |
+| `weather.detail_none` | »Vremenski posnetek ni na voljo **(zajet brez povezave)**.« | brez oklepaja — trdi vzrok, ki ga ne poznamo (glej §3 zgoraj) |
+| `location.privacy` | »Shranimo samo približno **okolico** (širše območje nekaj km)…« | »…približno **lokacijo** (na nekaj kilometrov natančno)…« — okolice ni mogoče shraniti; shranimo H3 celico |
+
+Zadnji dve nista posledici tega FR — napačni sta že danes; popravita se tu, ker se ju FR tako ali tako dotakne.
+
+Grafika: zeleni pin (isti motiv kot ilustracija na zaslonu 16) v zaobljenem kvadratu
+44 dp, isti zeleni preliv kot vremenska kartica, `FilledButton` polne širine,
+zasebnostna vrstica z 🔒 pod gumbom. Vse barve prek teme — brez rdeče, brez klicaja.
+Nič novega v `assets/`.
 
 ## 4. Obseg
 
-**V obsegu:** tretje stanje vremenske kartice na Domov + i18n ključi + testi.
+**V obsegu:**
+- povabilo namesto vremenske kartice na Domov (+ CTA na `/location`),
+- `gardenLocation` brez celice vrne `null` in posledice v `currentWeather` ter
+  `weatherCapture` (§6),
+- dve novi stanji v podrobnostih opravila (čaka / opravljeno brez lokacije),
+- novi i18n ključi + popravki `location.clear_confirm_body`, `weather.detail_none`, `location.privacy`,
+- unit + widget testi, vnos v `test/layout/` matriko.
 
 **Izven obsega** (ločene odločitve, ne pogoj za to):
 - Obrat hierarhije gumbov na zaslonu 16. Najmanjši poseg z največjim učinkom na *nove*
@@ -118,34 +174,61 @@ ampak od nekod drugod, in to je tisto, kar sproži popravek.
 
 - **Gost** (`kLocalUserId`): deluje enako — celica se piše lokalno, brez računa.
 - **Offline:** vnos kraja potrebuje geocoding (mreža), GPS ne. Zaslon 16 to že
-  obravnava; pas na Domov naj ob odsotnosti mreže ostane, CTA pa vodi na isti zaslon,
-  ki napako pokaže sam. Ne dupliciraj obravnave napak.
-- **Takoj po nastavitvi** pas izgine brez osvežitve — `gardenCell` je `Stream`,
-  kartica ga gleda (`ref.watch`), prehod je reaktiven.
-- **Po `clearGardenLocation`** se pas vrne. To je pravilno in ni nadlegovanje:
+  obravnava; povabilo ob odsotnosti mreže ostane, CTA pa vodi na isti zaslon, ki
+  napako pokaže sam. Ne dupliciraj obravnave napak.
+- **Takoj po nastavitvi** povabilo zamenja vreme brez osvežitve — `gardenCell` je
+  `Stream`, kartica ga gleda (`ref.watch`), prehod je reaktiven.
+- **Po `clearGardenLocation`** se povabilo vrne. To je pravilno in ni nadlegovanje:
   uporabnik je pravkar sam izbral stanje »brez lokacije«.
-- **Samo Domov.** Ne dodajaj istega pasu v Okolico, nastavitve ali seznam opravil —
-  en poziv na eno mesto.
-- **Layout:** dolga nemščina + text-scale 1.3 → pas mora ovijati, ne rezati.
+- **Stanje »offline« se brez lokacije ne more pojaviti** — brez celice ni klica, torej
+  ni česa ne dobiti. Dve tihi kartici se ne moreta prekrivati.
+- **Opravila, zaključena brez lokacije, ostanejo brez posnetka za vedno.** Vremena za nazaj
+  ne dopolnjujemo; zato tam ni CTA, ki bi obljubljal popravek.
+- **Domov + podrobnosti opravila, nič drugam.** Ne dodajaj poziva v Okolico, nastavitve
+  ali seznam opravil.
+- **Layout:** dolga nemščina + text-scale 1.3 → povabilo mora ovijati, ne rezati.
   Dodaj vnos v `test/layout/` matriko.
 
 ## 6. Implementacijske opombe
 
-- `HomeWeatherSection` naj gleda **`gardenCellProvider`** (`Stream<String?>`), ne
-  `gardenLocationProvider` — slednji privzetka in resnične lokacije ne loči.
-- Pas je del `CurrentWeatherCard` (nov opcijski `footer`/`onSetLocation`), ne nov
-  widget nad njo — sicer imamo dve kartici, kjer je bila ena.
+Odločitev seže dlje od enega widgeta — privzetek odpade tudi tam, kjer ga ni videti:
+
+| Mesto | Danes | Po tem FR |
+|---|---|---|
+| `gardenLocation` | brez celice vrne Ljubljano | vrne `null`; `kDefaultLatitude/Longitude` ostane samo kot razvojni `--dart-define` override |
+| `currentWeather` | klic na Open-Meteo za privzeto točko | brez celice ni klica |
+| `weatherCapture` (`tasks_providers.dart:22`) | zamrzne **ljubljanski** posnetek v dnevnik, za vedno in nevidno | brez celice posnetka ni; opravilo se shrani normalno |
+| podroben list (01c) | odprt tudi brez lokacije | nedosegljiv — ni kartice, ki bi jo tapnil |
+
+Vrstica `weatherCapture` je pravzaprav resnejša od kartice: napačno vreme na Domov se
+naslednjo uro osveži, napačen posnetek v dnevniku pa ostane in ga uporabnik nikoli ne
+vidi označenega kot tujega.
+
+- `HomeWeatherSection` naj gleda **`gardenLocationProvider`** (po tem FR `GardenCoords?`) in ob
+  `null` izriše povabilo, ne da bi sploh gledal `currentWeatherProvider`. **Ne `gardenCellProvider`**
+  (prvotna navodba, popravljena 29. 7.): `cellCentroid()` lahko vrne null tudi ob shranjeni celici, in
+  tak uporabnik bi videl »vreme ni na voljo« brez poti naprej — z `gardenLocation` dobi povabilo, ki ga
+  pelje na zaslon 16.
+- Povabilo je **svoj widget** (`WeatherNoLocationCard`), ne stanje `CurrentWeatherCard` —
+  ta prikazuje vreme, povabilo ni vreme. Isti preliv, ista zaobljenost.
 - CTA: `context.push('/location')`. Zaslon že zna »iz nastavitev« način
   (`fromSettings = context.canPop()`) — z `push` dobi back puščico in nima gumba
   »Nadaljuj«. **Nič novega v routerju.**
+- `TaskWeatherSection` potrebuje tretjo in četrto vejo: `waiting` + brez celice →
+  pojasnilo s CTA; `done` + brez posnetka + brez celice → pojasnilo brez CTA. Da veja ne
+  postane gnezdo `if`-ov, modeliraj z `enum`/`sealed` (CLAUDE.md: >3 pogoji → imenovan tip).
 - Brez nove dependency, brez migracije, brez spremembe sheme.
 
 ## 7. Odprta vprašanja
 
-1. **Ali Ljubljano sploh obdržati kot privzetek?** Alternativa: brez lokacije ni
-   vremenske kartice, ampak samo povabilo. Bolj pošteno, a Domov izgubi vsebino pri
-   prvem odprtju. Predlog: obdrži privzetek + pas (ta FR), ker ne odvzema ničesar.
+1. ~~**Ali Ljubljano sploh obdržati kot privzetek?**~~ **Odločeno 29. 7. 2026: ne.**
+   Brez lokacije ni vremena, ampak povabilo (§3). Cena — bolj prazen Domov ob prvem
+   odprtju — je sprejeta zavestno, ker je poziv s tem edina vsebina na tem mestu.
 2. **Ali isto povedati v Okolici**, ko se prižge? Tam brez celice ni kohorte, torej
    ni vsebine — a to je drug zaslon in druga odločitev.
-3. **Ali obstoječih 44 doseči tudi drugače** (enkraten in-app poziv ob nadgradnji)?
-   Zaenkrat ne — pas jih doseže ob prvem odprtju Domov, kar je dovolj.
+3. **Ali obstoječih 52 doseči tudi drugače** (push, razlagalni list)? Da — to je
+   [FR-23](location-nudge.md), ločena izdaja.
+4. **Ali `kDefaultLatitude/Longitude` sploh obdržati?** Predlog: obdrži kot razvojni
+   `--dart-define` override za testiranje drugih regij, a nikoli kot tiho zasilno
+   vrednost v produkciji. Alternativa je konstanti odstraniti in regije testirati z
+   dejansko nastavljeno lokacijo.

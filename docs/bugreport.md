@@ -4,6 +4,80 @@ Zbir odprtih bugov za reševanje v prihodnjih sejah. Najnovejši na vrhu.
 
 ---
 
+## BUG-005 — gostov profil ob prijavi brezpogojno prepiše oblačnega (tiha izguba novejše nastavitve)
+
+- **Status:** odprt, popravek **NE implementiran**. Izbrana smer: **zlij profil po stolpcih** (spodaj).
+- **Najden:** 2026-07-29 (pregled kode ob zasnovi FR-22, ne iz Sentryja)
+- **Resnost:** nizka–srednja — scenarij je redek (dve napravi + gost, ki se dolgo ne prijavi), a gre za
+  **tiho izgubo podatka** brez sledi; uporabnik ne izve, da mu je novejša nastavitev izginila.
+
+### Opis
+
+`profile` je edina tabela, kjer se to lahko zgodi: vse ostale imajo `id` (UUID, generiran na napravi),
+zato gostove vrstice ob prijavi postanejo **nove** vrstice v oblaku in ne trčijo z ničimer. Profil ima
+`user_id` kot primarni ključ → vedno trči z obstoječim.
+
+Potek, ki izgubi podatek:
+
+| Kdaj | Kaj |
+|---|---|
+| 1. junij | Na napravi B **gost** nastavi lokacijo (*Maribor*). Vrstica ostane lokalna, `updated_at` = 1. jun. |
+| 1. julij | Na napravi A je isti človek prijavljen in nastavi lokacijo (*Šentjur*) → v oblak, `updated_at` = 1. jul. |
+| 29. julij | Na napravi B se prijavi v ta račun. |
+
+Ob prijavi: `claimLocalRows` (`local_row_claim.dart:24`) preimenuje gostovo vrstico na pravi `user_id` in
+jo označi `pending`, **`updated_at` pa namenoma pusti pri miru** (prevzem lastništva ni vsebinska
+sprememba). Push je nato navaden `client.from(table).upsert(rows)`
+(`sync_push_service.dart:182`) — **brez primerjave `updated_at`**. Junijski Maribor tako povozi julijski
+Šentjur, pull pa nato ne prinese nič, ker je v oblaku že Maribor.
+
+Pravilo »novejši zmaga« (LWW), na katerem sync stoji, se tu torej ne uveljavi. Velja za **vse** stolpce
+profila — lokacijo, jezik, `notification_settings`, `default_garden_seeded`.
+
+### Zakaj ne trigger na strani baze
+
+Preučena in **zavrnjena** alternativa: `before update` trigger, ki zavrne zapis s starejšim `updated_at`.
+Za vsebinske tabele (`task`, `area`) bi bil pravi, za profil pa naredi novo škodo — gostova sveže
+nastavljena lokacija ima star `updated_at`, zato bi trigger zavrnil **celo vrstico**, če je oblačni profil
+novejši iz čisto drugega razloga (npr. včerajšnja menjava jezika). Profil ni atomarna vsebina, ampak več
+neodvisnih nastavitev v eni vrstici — LWW na ravni vrstice ga ne opiše.
+
+### Smer popravka (izbrana 2026-07-29)
+
+Zlij profil **po stolpcih** ob prijavi, po vzorcu, ki že obstaja za privzeti vrt
+(`reconcile_default_garden.dart`):
+
+1. `claimLocalRows` **izpusti `profiles`** (gostova vrstica ostane `local`, push je ne pošlje).
+2. Po pull-u steče zlivanje: za vsak stolpec vzemi gostovo vrednost **samo tam, kjer je oblačna prazna**,
+   sicer obdrži oblačno; nato gostovo vrstico pobriši.
+3. Idempotentno in crash-safe (isto pravilo kot reconcile: delni tek ne sme ničesar izgubiti).
+
+Ocena: ~30–40 vrstic + unit testi (`Clock` je že injektabilen).
+
+### Sorodno: zakleni invarianto »ena vrstica profila«
+
+Odkrito ob istem pregledu, **ni bug** — nezaklenjena predpostavka. `watchGardenCell()`
+(`location_repository.dart:99`) ne bere po `user_id`, ampak »najnovejšo vrstico po `updated_at`, limit 1«.
+Danes je to pravilno, ker dve vrstici hkrati ne moreta obstajati (odjava briše `profiles`
+`app_database.dart:67`, claim preimenuje, pull upserta po istem ključu) — a predpostavko vzdržujejo tri
+ločena mesta in nikjer ni preverjena. Komentar v kodi jo sam relativizira (*»even if a stray duplicate
+were ever present«*).
+
+FR-22 stoji točno na tej poizvedbi: od nje je odvisno, ali se poziv za lokacijo pokaže. Zato **test**, ki
+prehode (gost → prijava → odjava → prijava) prehodi in po vsakem preveri `count(*) from profile <= 1`.
+Branja po `user_id` **namenoma ne uvajamo**: `user_id` se ob prijavi spremeni takoj, claim pa vrstico
+preimenuje šele v naslednjem sync ciklu — vmes bi poizvedba vrnila nič in povabilo bi za trenutek
+utripnilo, čeprav je lokacija nastavljena.
+
+### Verifikacija po popravku
+
+- Unit testi zlivanja: gost ima lokacijo + oblak nima → obdrži gostovo; oba imata → obdrži oblačno;
+  gost ima lokacijo, oblak jezik → obdrži oba.
+- Test invariante (zgoraj), `flutter test` v celoti.
+- Ročno na napravi: gost nastavi lokacijo → prijava v račun z drugo lokacijo → preveri, katera ostane.
+
+---
+
 ## BUG-004 — Navigator `keyReservation` assertion (podvojen shell page key) ob tapu opravila iz zaslona nad shell-om
 
 - **Status:** ✅ razrešen na `main` 2026-06-18 — portan M11 vzorec: dodana top-level sestra `/task/:id` (`task-view`) v `app_router.dart`; `plant_detail_screen.dart` (`_HistoryRow.onTap`) zdaj potiska `task-view` namesto `task-detail`. Regresijski test `test/app/task_view_route_test.dart` (task-view se odpre nad shell-om brez podvojenega ključa); 222/222, analyze čist. Klicalci znotraj shell-a (home/journal/tasks) ostajajo na `task-detail`. (Prej: delno razrešen na `feat/m11-smart-engine` commit `b9e5b3f`.)

@@ -119,6 +119,7 @@ aplikacija je v produkciji. **M10 (iOS)** in **M11 (pametni motor)** nista → [
 | **FR-12** | Oznaka kraja pri vremenu | Nominatim reverse + cache | Po FR-8 lokacija nima imena, le celico — uporabnik ne vidi, čigavo vreme gleda. |
 | **FR-13** | Indikator okolja | Kotni `Banner` prek `MaterialApp.builder`, samo ko `kEnvLabel != 'production'` | Produkcijski build ga ne more pokazati. `Colors.orange/grey` = upravičena dev-only izjema od »barve prek teme«. |
 | **FR-17** | Haptični odziv | `AppHaptics` (light/medium/heavy); en chokepoint v `showConfirmDialog` | Sproži se, **ko se dejanje zgodi**, ne ob tapu — zato ne v skupnem `SaveBar`, ki ne ve za uspeh in bi utripnil ob neuspeli validaciji. Brez nove dependency, brez `VIBRATE` dovoljenja. |
+| **FR-24** | Onboarding lokacija: poudarek na GPS, ne na preskoku | Poudarjena GPS kartica na dnu + nepoudarjen »Preskoči«; z nastavljeno lokacijo si poudarjenost zamenjata (»Nadaljuj«). Potrditev shranjevanja nosi statusni trak, ne toast | Edina polna zelena ploskev na zaslonu je bila doslej gumb, ki lokacijo **preskoči** — 52 od 95 profilov je brez nje. **Blokade ni:** lokacija ostane prostovoljna, preskok en tap; hierarhija samo pove, kaj je pričakovano. Toast je prekrival prav trak, ki isto pove in ostane. Merilo: 25 % → **≥60 %** novih z `h3_r5` v 30 dneh. **Neizdano — ne sme v isto izdajo kot FR-22.** |
 | **T11** | Zajem pridelka ob pobiranju | `task.yield_amount` | Iz tester-feedbacka, runda 2. |
 | **T9** | Beleženje slik | ✗ **zavrnjeno** | Dokončno umaknjeno iz backloga. |
 

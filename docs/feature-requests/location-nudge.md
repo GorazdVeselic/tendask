@@ -23,6 +23,14 @@ Read-only sonda `tmp/probe_location_nudge.py` (samo agregati, nobene vrstice po 
 | med 52: ima rastlino / območje nad privzetim / ≥1 opravilo | 20 / 13 / 17 |
 | med 52: ima zapisane `notification_settings` | **1** |
 
+> ⚠️ **Najdba 29. 7. 2026: »95 profilov« ni »95 uporabnikov«.** Vrstica v `profile` ne nastane ob
+> registraciji — ni triggerja na `auth.users`, profil se ustvari **lazy**, ob prvem zapisu iz aplikacije
+> (nastavitev lokacije, sprememba jezika, zaslon 22, ali adopt privzetega vrta ob prijavi). Avtenticiran
+> uporabnik, ki ne stori nič od tega, **nima vrstice** — in je zato v vseh številkah zgoraj nevidenen.
+> Posledice za ta FR: (1) 52 je **spodnja meja**, ne število; (2) izbor prejemnikov `where h3_r5 is null`
+> teh uporabnikov ne najde (§4.1); (3) `fcm_token` živi na `profile`, torej brez vrstice ni tokena in jih
+> push ne more doseči. FR-22 to ne prizadene — klient bere lokalno in ob manjkajoči vrstici pokaže poziv.
+
 Niso mrtvi profili — onboarding so prehodili, lokacijo preskočili (FR-22 §1). In: dovoljenje
 za obvestila aplikacija zahteva **šele ob prvem opomniku na opravilo** (`entry_screen.dart:367`,
 `reminder_step.dart:85`) ali v zaslonu 22, kjer je bil eden od 52. Predpostavi torej, da
@@ -111,6 +119,12 @@ where h3_r5 is null
   and location_nudge_count < 2
   and coalesce(location_nudge_sent_at, '-infinity') < now() - interval '21 days';
 ```
+
+**Ta poizvedba ne vidi uporabnikov brez vrstice v `profile`** (§1). Ker pogoj `fcm_token is not null`
+tako ali tako zahteva obstoječo vrstico, push jih ne more doseči — vrzel torej ni v poizvedbi, ampak v
+tem, da vrstica nikoli ne nastane. Odločitev pred gradnjo (§10.6): ali profil ustvariti ob registraciji
+(trigger na `auth.users` + backfill obstoječih), ali sprejeti, da ta populacija ostane dosegljiva samo
+prek FR-22 na Domov.
 
 Pravilo lastništva: **strežnik piše, klient bere.** Če bi oba pisala, se LWW sync spopade
 sam s seboj. Ob `UNREGISTERED` odgovoru FCM velja isto kot v motorju: token ponulli, ne
@@ -215,3 +229,9 @@ prvi (samostojna izdaja), ta FR v naslednji.
    pomenljivejše, drugo se lažje testira.
 5. **Ton drugega poziva:** enak kot prvi, ali krajši? Kar koli, kar šteje čas ali očita, je
    izven pravil (FR-16 §3.8).
+6. **Ali profil ustvariti ob registraciji** (§1)? Danes nastane lazy, ob prvem zapisu. Možnosti:
+   (a) trigger `on auth.users insert → insert into profile(user_id)` + enkraten backfill — additive,
+   `default_garden_seeded` ima `not null default false`, zato reconcile deluje nespremenjeno;
+   (b) `ensureProfile()` na klientu ob prijavi — v duhu offline-first, a doseže le tiste, ki app odprejo,
+   in obstoječih ne popravi; (c) pustiti tako in sprejeti, da je ta populacija dosegljiva samo prek FR-22.
+   Vpliva tudi na analitiko: vsi odstotki v `docs/analitika-geo.md` so »od tistih, ki imajo profil«.

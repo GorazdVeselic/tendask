@@ -19,15 +19,17 @@
 🔴 **Izmerjeno na produkciji 28. 7. 2026: 55 % uporabnikov (44/80) nima lokacije vrta.** Vsi so prešli
 onboarding — preskok je preprosto najlažja poteza. Od Play izdaje 20. 7. je brez lokacije **75 %** novih
 (junijska beta: 4 %). Ni le vrzel v statistiki: brez celice `gardenLocation` tiho vrne **Ljubljano** →
-napačno vreme in motor, ki računa na tuji lokaciji.
+napačno vreme in motor, ki računa na tuji lokaciji. **Odločeno 29. 7.:** privzetka ne popravljamo z opombo —
+brez lokacije vremena sploh ne kažemo (FR-22 §3), kar velja tudi za zamrznjen posnetek ob zaključku opravila.
 
 | FR | Kaj | Stanje | Doseže | Spec |
 |---|---|:---:|---|---|
-| **FR-22** | Poziv na Domov (tretje stanje vremenske kartice) | 📝 | obstoječe, ki odprejo Domov | [`location-adoption.md`](feature-requests/location-adoption.md) |
+| **FR-22** | Brez lokacije ni vremena, ampak povabilo (Domov + opravilo) | 📝 | obstoječe, ki odprejo Domov | [`location-adoption.md`](feature-requests/location-adoption.md) · [wireframe](wireframes/01d-weather-states.html) |
 | **FR-23** | Poziv prek pusha + razlagalni list | 📝 | 52 od 95, ki Domov morda ne odprejo | [`location-nudge.md`](feature-requests/location-nudge.md) |
-| **FR-24** | Onboarding: GPS je glavni CTA, preskok nepoudarjen | 🔨 | **nove**, tam kjer problem nastane | [`onboarding-location-cta.md`](feature-requests/onboarding-location-cta.md) |
 
-⚠️ **FR-22 in FR-24 ne izdaj skupaj** — ista metrika, učinka ne bi ločila.
+**FR-24** (onboarding) je ✅ narejen, a **še neizdan** → [`narejeno.md`](narejeno.md).
+
+⚠️ **FR-22 ne sme v isto izdajo kot FR-24** — ista metrika, učinka ne bi ločila.
 Merilo: 25 % → **≥60 %** novih v 30 dneh, merljivo z `tool/geo_user_map.py`, brez nove analitike.
 
 ## Tendask+ (monetizacija)
@@ -53,8 +55,12 @@ Merilo: 25 % → **≥60 %** novih v 30 dneh, merljivo z `tool/geo_user_map.py`,
 
 ## Odprti bugi
 
-BUG-001…004 → [`bugreport.md`](bugreport.md). Manjša opažanja brez naročenega popravka so v
+BUG-001…005 → [`bugreport.md`](bugreport.md). Manjša opažanja brez naročenega popravka so v
 [`stanje.md`](stanje.md).
+
+**BUG-005** (2026-07-29, odprt): gostov profil ob prijavi brezpogojno prepiše oblačnega — možna tiha
+izguba novejše lokacije/jezika/nastavitev. Smer popravka izbrana (zlivanje po stolpcih + test invariante
+»ena vrstica profila«), ni implementirana. Odkrit ob zasnovi FR-22, ki ga ne blokira.
 
 ## Neobdelan tester-feedback
 

@@ -28,12 +28,12 @@ Kaj je bilo zgrajeno in zakaj je ustavljen → [`m11.md`](m11.md).
 layout matriki (`layoutBreaks` + `kAcceptedWordBreaks`), predelan `notification_priming_sheet`,
 strop skale nav pasu, krajši nemški nav napisi, šest M11 skript, migracije `0017`–`0022`.
 
-## V izdelavi
+## Čaka na izdajo
 
-- **FR-24 — onboarding lokacija** (`location_screen`, `gps_card`, `location_status_banner`, i18n,
-  layout matrika). Nezacommitano v delovnem drevesu; spec:
-  [`feature-requests/onboarding-location-cta.md`](feature-requests/onboarding-location-cta.md).
+- **FR-24 — onboarding lokacija** je na `main` (`699fe5b`), preverjen na napravi, **še neizdan**.
   ⚠️ **Ne izdaj skupaj s FR-22** — ista metrika, učinka ne bi ločila.
+  Zakaj tako: [`narejeno.md`](narejeno.md) · spec:
+  [`feature-requests/onboarding-location-cta.md`](feature-requests/onboarding-location-cta.md).
 
 ## Staging
 
