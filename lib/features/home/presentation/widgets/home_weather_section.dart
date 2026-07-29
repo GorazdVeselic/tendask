@@ -1,18 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/location/location_repository.dart';
 import '../../../../core/location/place_label_repository.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../weather/application/weather_service.dart';
 import '../../../weather/presentation/weather_card.dart';
 import '../../../weather/presentation/weather_detail_sheet.dart';
+import '../../../weather/presentation/weather_no_location_card.dart';
 
-/// Live weather context for the dashboard. Offline → a quiet "unavailable" card.
+/// Live weather context for the dashboard. No garden location → an invite to set
+/// one (FR-22); offline with one → a quiet "unavailable" card.
 class HomeWeatherSection extends ConsumerWidget {
   const HomeWeatherSection({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Read the location first: "no location" and "offline" both leave
+    // currentWeather null, yet they must not look the same. Watching the
+    // location — not the cell — also covers a stored cell whose centroid can't
+    // be derived, which would otherwise be a dead end with no way forward.
+    final location = ref.watch(gardenLocationProvider);
+    if (location.isLoading) return const _WeatherLoadingCard();
+    if (location.value == null) {
+      return WeatherNoLocationCard(
+        onSetLocation: () => context.push('/location'),
+      );
+    }
+
     final weather = ref.watch(currentWeatherProvider);
     // Keep the last snapshot visible while a refresh is in flight — the spinner
     // is only for the very first load, when there is nothing to show yet.

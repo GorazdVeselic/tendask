@@ -1853,6 +1853,18 @@ class Translations$weather$en {
 	/// en: 'Tap to retry'
 	String get home_retry => 'Tap to retry';
 
+	/// en: 'Where do you garden?'
+	String get no_location_title => 'Where do you garden?';
+
+	/// en: 'With your location we can show you the weather forecast for your garden.'
+	String get no_location_body => 'With your location we can show you the weather forecast for your garden.';
+
+	/// en: 'Set location'
+	String get no_location_cta => 'Set location';
+
+	/// en: 'We only store an approximate location.'
+	String get no_location_privacy => 'We only store an approximate location.';
+
 	/// en: 'Loading weather…'
 	String get loading => 'Loading weather…';
 
@@ -2498,6 +2510,10 @@ extension on Translations {
 			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
+			'weather.no_location_title' => 'Where do you garden?',
+			'weather.no_location_body' => 'With your location we can show you the weather forecast for your garden.',
+			'weather.no_location_cta' => 'Set location',
+			'weather.no_location_privacy' => 'We only store an approximate location.',
 			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			'weather.m_humidity' => 'Humidity',
@@ -2511,12 +2527,12 @@ extension on Translations {
 			'recipes.fab_new' => 'Recipe',
 			'recipes.form_new' => 'New recipe',
 			'recipes.form_edit' => 'Edit recipe',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
 			'recipes.delete_note' => 'This recipe will be removed from your list.',

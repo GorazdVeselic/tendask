@@ -861,6 +861,10 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get detail_none => 'Keine Wetteraufnahme (zum Zeitpunkt offline).';
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
 	@override String get home_retry => 'Zum Wiederholen tippen';
+	@override String get no_location_title => 'Wo gärtnerst du?';
+	@override String get no_location_body => 'Mit deinem Standort können wir dir die Wettervorhersage für deinen Garten zeigen.';
+	@override String get no_location_cta => 'Standort festlegen';
+	@override String get no_location_privacy => 'Wir speichern nur einen ungefähren Standort.';
 	@override String get loading => 'Wetter wird geladen…';
 	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
 	@override String get m_humidity => 'Luftfeuchte';
@@ -1425,6 +1429,10 @@ extension on TranslationsDe {
 			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
+			'weather.no_location_title' => 'Wo gärtnerst du?',
+			'weather.no_location_body' => 'Mit deinem Standort können wir dir die Wettervorhersage für deinen Garten zeigen.',
+			'weather.no_location_cta' => 'Standort festlegen',
+			'weather.no_location_privacy' => 'Wir speichern nur einen ungefähren Standort.',
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
 			'weather.m_humidity' => 'Luftfeuchte',
@@ -1438,12 +1446,12 @@ extension on TranslationsDe {
 			'recipes.fab_new' => 'Rezept',
 			'recipes.form_new' => 'Neues Rezept',
 			'recipes.form_edit' => 'Rezept bearbeiten',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
 			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',

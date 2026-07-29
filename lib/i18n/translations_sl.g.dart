@@ -871,6 +871,10 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
 	@override String get home_unavailable => 'Vreme trenutno ni na voljo.';
 	@override String get home_retry => 'Tapni za ponovni poskus';
+	@override String get no_location_title => 'Kje vrtnariš?';
+	@override String get no_location_body => 'Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.';
+	@override String get no_location_cta => 'Nastavi lokacijo';
+	@override String get no_location_privacy => 'Shranimo samo približno lokacijo.';
 	@override String get loading => 'Nalagam vreme…';
 	@override String updated_at({required Object time}) => 'Osveženo ${time}';
 	@override String get m_humidity => 'Vlažnost';
@@ -1435,6 +1439,10 @@ extension on TranslationsSl {
 			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
+			'weather.no_location_title' => 'Kje vrtnariš?',
+			'weather.no_location_body' => 'Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.',
+			'weather.no_location_cta' => 'Nastavi lokacijo',
+			'weather.no_location_privacy' => 'Shranimo samo približno lokacijo.',
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			'weather.m_humidity' => 'Vlažnost',
@@ -1448,12 +1456,12 @@ extension on TranslationsSl {
 			'recipes.fab_new' => 'Recept',
 			'recipes.form_new' => 'Nov recept',
 			'recipes.form_edit' => 'Uredi recept',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_name' => 'Ime',
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
 			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',

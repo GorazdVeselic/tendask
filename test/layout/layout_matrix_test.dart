@@ -31,6 +31,7 @@ import 'package:tendask/features/tasks/presentation/entry/steps/when_step.dart';
 import 'package:tendask/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/features/tasks/task_specs.dart';
+import 'package:tendask/features/weather/presentation/weather_no_location_card.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
 import '../core/location/fake_location_repository.dart';
@@ -302,5 +303,13 @@ void main() {
     // then cross-fades in; without this frame the widest banner is never
     // measured.
     after: (tester) => tester.pump(const Duration(milliseconds: 400)),
+  );
+
+  // The invite that replaces the weather card without a location (FR-22). The
+  // card, not HomeScreen: it is a pure widget precisely so the matrix can reach
+  // it without the dashboard's whole provider world.
+  layoutMatrix(
+    'weather/no-location',
+    build: () => WeatherNoLocationCard(onSetLocation: () {}),
   );
 }
