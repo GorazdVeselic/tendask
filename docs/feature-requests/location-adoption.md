@@ -106,9 +106,11 @@ ampak od nekod drugod, in to je tisto, kar sproži popravek.
 **V obsegu:** tretje stanje vremenske kartice na Domov + i18n ključi + testi.
 
 **Izven obsega** (ločene odločitve, ne pogoj za to):
-- Obrat hierarhije gumbov na zaslonu 16 (preskok → `TextButton`). Najmanjši poseg z
-  največjim učinkom na *nove* uporabnike; vreden svojega FR-ja, ker se dotakne
-  onboardinga.
+- Obrat hierarhije gumbov na zaslonu 16. Najmanjši poseg z največjim učinkom na *nove*
+  uporabnike; vreden svojega FR-ja, ker se dotakne onboardinga. → **Zdaj
+  [FR-24](onboarding-location-cta.md)** (2026-07-29). Izvedba ni `TextButton`, kot je
+  slutila ta alineja, ampak poudarjena GPS kartica + nepoudarjen gumb za preskok.
+  **Ne izdaj v isti izdaji kot ta FR** — oba premikata isto metriko.
 - Poziv ob prvi rastlini/zalivanju.
 - Sprememba privzetka iz Ljubljane v »brez vremena« (glej §7).
 

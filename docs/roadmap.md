@@ -572,6 +572,20 @@ Entiteta = `koncept.md` §7.9. Vzorec: `data/` (drift repo) → `application/` (
   stanje vremenske kartice (pove, čigavo vreme je, + CTA), brez modalnih oken in pusha. Merilo: 25 % → ≥60 %
   novih v 30 dneh, merljivo z `tool/geo_user_map.py` brez nove analitike. Polni spec:
   [`docs/feature-requests/location-adoption.md`](feature-requests/location-adoption.md).
+- **FR-23 — Poziv za lokacijo prek pusha + razlagalni list.** 📝 **Predlog (2026-07-29), neimplementirano.**
+  Doseže **obstoječih 52 od 95** profilov brez lokacije, ki Domov morda ne odprejo — torej tiste, ki jih pas
+  iz FR-22 ne ujame. Push → razlagalni list (kaj s tem izgubiš, česa ne shranjujemo) → zaslon 16, z evidenco,
+  kdaj smemo spet vprašati. Polni spec:
+  [`docs/feature-requests/location-nudge.md`](feature-requests/location-nudge.md).
+- **FR-24 — Onboarding lokacija: GPS je glavni CTA, preskok nepoudarjen.** 📝 **Predlog (2026-07-29),
+  neimplementirano.** Tretja stran istega problema — ta lovi **nove** uporabnike, tam kjer nastane
+  (onboarding, zaslon 16). Danes je edini `FilledButton` na zaslonu prav tisti, ki lokacijo **preskoči**;
+  teža postavitve torej kaže na izhod. Predlog: spodaj stalen par — poudarjena **GPS kartica** + nepoudarjen
+  »Preskoči«; ko je lokacija nastavljena, si poudarjenost samo zamenjata (»Nadaljuj«), postavitev se
+  ne premakne. **Vrstni red ostane** (vnosna kartica zgoraj, GPS pod njo) — spremeni se le, kje
+  GPS kartica stoji in da je poudarjena. Besedila izmerjena pri 320 dp × 1,3 (»trenutno«/`aktuellen` ne
+  gre v noben jezik). **Ne izdaj skupaj s FR-22** — ista metrika, učinka ne bi ločila. Polni spec:
+  [`docs/feature-requests/onboarding-location-cta.md`](feature-requests/onboarding-location-cta.md).
 - **Monetizacija — plačljive storitve (premium / naročnina).** 💡 **Namera (2026-06-30): »slej ko prej«.**
   Najverjetnejši nosilec = premium naročnina (kandidat: FR-18 več vrtov/lokacij). **Konkretna izvedba je zdaj
   specificirana v FR-20 (zunanja licenca, ne Play Billing) — spodnje velja le, če bi se kdaj vrnila na Play

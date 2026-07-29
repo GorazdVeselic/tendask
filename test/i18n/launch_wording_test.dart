@@ -38,9 +38,13 @@ void main() {
   }
 
   /// dark key → the key shown once its flag is on.
+  ///
+  /// `location.why` used to be here. FR-24 merged it with `location.why_live`
+  /// into one string that names Okolica without dating it: the sentence says
+  /// what the location is *for*, and a purpose does not expire when a flag is
+  /// off. One key, no branch on that screen.
   const pairs = {
     'onboarding.nearby_body': 'onboarding.nearby_body_live',
-    'location.why': 'location.why_live',
     'notif_settings.type_weather_sub': 'notif_settings.type_weather_sub_live',
     'notif_settings.type_community_sub':
         'notif_settings.type_community_sub_live',

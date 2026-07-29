@@ -131,7 +131,7 @@ obsega** (»v tvoji okolici« = r7/r6/r5 · »v podobni klimi« = climate) z okn
 | `/onboarding` | onboarding | prvi zagon | koraki → `/home` |
 | `/login` | login | odjava / prvi zagon | Google / e-pošta → `/login-email` |
 | `/login-email` | login-email | login »e-pošta« | OTP → home |
-| `/location` | location | onboarding / Nastavitve »Lokacija za vreme« | shrani H3 → nazaj |
+| `/location` | location | onboarding / Nastavitve »Lokacija za vreme« | shrani H3 → nazaj · **onboarding:** spodaj poudarjena GPS kartica + nepoudarjen »Preskoči«; ko je lokacija nastavljena, si poudarjenost zamenjata (»Nadaljuj«) — [FR-24](feature-requests/onboarding-location-cta.md), wireframa `16` (brez lokacije) in `16e` (nastavljena). Iz nastavitev ni ne CTA-ja ne preskoka (izbira shrani takoj, nazaj prek ‹) |
 | `/plant-picker` | plant-picker | (izbirnik rastlin) | izbere → nazaj z rezultatom |
 | `/plant-add` | plant-add | Vrt »+ Rastlina« | shrani → nazaj |
 | `/plant/:id` | **plant-detail** | Vrt → tap rastline | ✏️ → `/plant/:id/edit`; »📍 Dodeli območje«; tap opravila v zgodovini → task-view |
