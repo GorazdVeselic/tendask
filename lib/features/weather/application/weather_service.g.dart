@@ -51,15 +51,17 @@ final class WeatherServiceProvider
 String _$weatherServiceHash() => r'b5bb3beda866575759dc239d55821f9ceb7ece55';
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
-/// prior snapshot — the UI degrades to a quiet hint.
+/// garden location, cached for [kWeatherCacheTtl]. Null when there is no garden
+/// location (no call at all — FR-22) or when offline with no prior snapshot;
+/// the two read differently on screen, so Home branches on the location itself.
 
 @ProviderFor(currentWeather)
 final currentWeatherProvider = CurrentWeatherProvider._();
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
-/// prior snapshot — the UI degrades to a quiet hint.
+/// garden location, cached for [kWeatherCacheTtl]. Null when there is no garden
+/// location (no call at all — FR-22) or when offline with no prior snapshot;
+/// the two read differently on screen, so Home branches on the location itself.
 
 final class CurrentWeatherProvider
     extends
@@ -70,8 +72,9 @@ final class CurrentWeatherProvider
         >
     with $FutureModifier<WeatherSnapshot?>, $FutureProvider<WeatherSnapshot?> {
   /// Live weather for the dashboard (current conditions + short forecast) at the
-  /// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
-  /// prior snapshot — the UI degrades to a quiet hint.
+  /// garden location, cached for [kWeatherCacheTtl]. Null when there is no garden
+  /// location (no call at all — FR-22) or when offline with no prior snapshot;
+  /// the two read differently on screen, so Home branches on the location itself.
   CurrentWeatherProvider._()
     : super(
         from: null,
@@ -98,7 +101,7 @@ final class CurrentWeatherProvider
   }
 }
 
-String _$currentWeatherHash() => r'4a5e7d3d2e4a0038aa04874332d87c6b83cedbcc';
+String _$currentWeatherHash() => r'b4d06387605787fb2a69b36c6f621d84c35d8aa1';
 
 /// Full weather snapshot for the dashboard detail sheet: every band (humidity,
 /// wind, soil temperature, ET₀, the 48 h rain look-back) for the garden
@@ -157,4 +160,4 @@ final class WeatherDetailProvider
   }
 }
 
-String _$weatherDetailHash() => r'bba73c3defade7bda598108b89b0ee65ff64141e';
+String _$weatherDetailHash() => r'de30a36cd22f4cbd17bb0629bc07922c5f0242b3';

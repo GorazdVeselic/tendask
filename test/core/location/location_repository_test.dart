@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:h3_flutter/h3_flutter.dart';
 import 'package:tendask/core/clock.dart';
-import 'package:tendask/core/config.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/location/h3_cells.dart';
@@ -147,7 +146,7 @@ void main() {
   });
 
   group('gardenLocation provider', () {
-    Future<GardenCoords> firstLocation() async {
+    Future<GardenCoords?> firstLocation() async {
       final container = ProviderContainer(
         overrides: [
           databaseProvider.overrideWith((ref) => db),
@@ -155,8 +154,8 @@ void main() {
         ],
       );
       addTearDown(container.dispose);
-      final completer = Completer<GardenCoords>();
-      final sub = container.listen<AsyncValue<GardenCoords>>(
+      final completer = Completer<GardenCoords?>();
+      final sub = container.listen<AsyncValue<GardenCoords?>>(
         gardenLocationProvider,
         (_, next) {
           if (next.hasValue && !completer.isCompleted) {
@@ -176,14 +175,13 @@ void main() {
         longitude: 14.51,
       );
       final coords = await firstLocation();
-      expect(coords.latitude, closeTo(46.05, 1e-9));
+      expect(coords, isNotNull);
+      expect(coords!.latitude, closeTo(46.05, 1e-9));
       expect(coords.longitude, closeTo(14.51, 1e-9));
     });
 
-    test('emits the default region when no location is set', () async {
-      final coords = await firstLocation();
-      expect(coords.latitude, kDefaultLatitude);
-      expect(coords.longitude, kDefaultLongitude);
+    test('emits null when no location is set', () async {
+      expect(await firstLocation(), isNull);
     });
   });
 }

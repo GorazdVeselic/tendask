@@ -19,7 +19,10 @@ TasksRepository tasksRepository(Ref ref) {
     ref.watch(databaseProvider),
     ref.watch(suppliesRepositoryProvider),
     weatherCapture: () async {
+      // No garden location → nothing worth freezing into the journal (FR-22):
+      // a default-region snapshot would be wrong there forever, invisibly.
       final loc = await ref.read(gardenLocationProvider.future);
+      if (loc == null) return null;
       final snapshot = await weather.capture(
         latitude: loc.latitude,
         longitude: loc.longitude,

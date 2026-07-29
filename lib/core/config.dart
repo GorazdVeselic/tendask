@@ -1,15 +1,17 @@
 /// App-wide tunable constants (CLAUDE.md §"Konstante in konfiguracija").
 library;
 
-/// Default garden location for the weather snapshot until the user sets one;
-/// once set, weather uses the on-device H3 r7 cell centroid (FR-8). Privacy:
-/// real coordinates are never stored; this is a fixed fallback, overridable via
-/// --dart-define for testing other regions. Default = Ljubljana. (Dart has no
-/// `double.fromEnvironment`, so coordinates come in as strings.)
+/// Dev-only garden location override, for exercising other regions without
+/// setting one on the device (--dart-define=WEATHER_LAT/WEATHER_LON). Null in
+/// every shipped build: without a set location the app shows no weather at all
+/// (FR-22), rather than passing someone else's off as the user's. Weather
+/// otherwise uses the on-device H3 r7 cell centroid (FR-8) — real coordinates
+/// are never stored. (Dart has no `double.fromEnvironment`, so they come in as
+/// strings.)
 const _latEnv = String.fromEnvironment('WEATHER_LAT');
 const _lonEnv = String.fromEnvironment('WEATHER_LON');
-final kDefaultLatitude = _latEnv.isEmpty ? 46.0569 : double.parse(_latEnv);
-final kDefaultLongitude = _lonEnv.isEmpty ? 14.5058 : double.parse(_lonEnv);
+final kDevLatitude = _latEnv.isEmpty ? null : double.parse(_latEnv);
+final kDevLongitude = _lonEnv.isEmpty ? null : double.parse(_lonEnv);
 
 /// Open-Meteo is retried at most 3 times (one initial attempt + these waits),
 /// with exponential backoff, before giving up gracefully (offline = null).

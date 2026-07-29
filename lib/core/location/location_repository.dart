@@ -66,8 +66,7 @@ class LocationRepository {
   }
 
   /// Removes the garden location: clears the profile H3 cells (pending → push).
-  /// Weather falls back to the default region (gardenLocation emits the default
-  /// when the cell is null).
+  /// Weather then stops entirely — [gardenLocation] emits null without a cell.
   Future<void> clearGardenLocation(String userId) async {
     final now = _clock.now();
     await (_db.update(
@@ -117,14 +116,18 @@ Stream<String?> gardenCell(Ref ref) =>
     ref.watch(locationRepositoryProvider).watchGardenCell();
 
 /// The garden location for the weather lookup: the centroid of the stored r7
-/// cell, or [kDefaultLatitude]/[kDefaultLongitude] until one is set. Reactive —
+/// cell, or null until one is set (FR-22 — no location, no weather). Reactive —
 /// weather re-fetches when the user picks or clears a location.
 @Riverpod(keepAlive: true)
-Stream<GardenCoords> gardenLocation(Ref ref) {
+Stream<GardenCoords?> gardenLocation(Ref ref) {
   final h3 = ref.watch(h3Provider);
-  return ref.watch(locationRepositoryProvider).watchGardenCell().map(
-        (cell) =>
-            cellCentroid(h3, cell) ??
-            (latitude: kDefaultLatitude, longitude: kDefaultLongitude),
-      );
+  final devLat = kDevLatitude;
+  final devLon = kDevLongitude;
+  final dev = (devLat == null || devLon == null)
+      ? null
+      : (latitude: devLat, longitude: devLon);
+  return ref
+      .watch(locationRepositoryProvider)
+      .watchGardenCell()
+      .map((cell) => cellCentroid(h3, cell) ?? dev);
 }

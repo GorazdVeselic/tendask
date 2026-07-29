@@ -30,7 +30,7 @@ H3Cells deriveH3Cells(H3 h3, double lat, double lon) {
 /// Privacy by design: this round-trips through the stored cell, so the weather
 /// lookup uses an approximate point (≤ ~1.4 km from the garden), never a raw
 /// GPS fix. Returns null when [hexCell] is null/empty/unparseable, so callers
-/// fall back to the default region instead of crashing.
+/// treat it as "no location" instead of crashing.
 GardenCoords? cellCentroid(H3 h3, String? hexCell) {
   if (hexCell == null || hexCell.isEmpty) return null;
   final cell = BigInt.tryParse(hexCell, radix: 16);

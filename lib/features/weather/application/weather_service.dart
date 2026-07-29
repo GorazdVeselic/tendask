@@ -122,11 +122,13 @@ WeatherService weatherService(Ref ref) => WeatherService(
 );
 
 /// Live weather for the dashboard (current conditions + short forecast) at the
-/// garden location, cached for [kWeatherCacheTtl]. Null when offline with no
-/// prior snapshot — the UI degrades to a quiet hint.
+/// garden location, cached for [kWeatherCacheTtl]. Null when there is no garden
+/// location (no call at all — FR-22) or when offline with no prior snapshot;
+/// the two read differently on screen, so Home branches on the location itself.
 @riverpod
 Future<WeatherSnapshot?> currentWeather(Ref ref) async {
   final loc = await ref.watch(gardenLocationProvider.future);
+  if (loc == null) return null;
   return ref
       .watch(weatherServiceProvider)
       .captureCached(latitude: loc.latitude, longitude: loc.longitude);
@@ -141,6 +143,7 @@ Future<WeatherSnapshot?> currentWeather(Ref ref) async {
 @riverpod
 Future<WeatherSnapshot?> weatherDetail(Ref ref) async {
   final loc = await ref.watch(gardenLocationProvider.future);
+  if (loc == null) return null;
   return ref
       .watch(weatherServiceProvider)
       .captureCachedFull(latitude: loc.latitude, longitude: loc.longitude);
