@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Lokacija — onboarding</title>
+<title>Lokacija — onboarding (lokacija nastavljena)</title>
 <link rel="stylesheet" href="styles.css">
 <style>
   .loc { flex:1; display:flex; flex-direction:column; padding:10px 26px 24px; overflow:hidden; }
@@ -13,7 +13,8 @@
   .loc .helper { font-size:12px; color:var(--muted); margin-top:7px; line-height:1.5; }
 
   .locchip { display:flex; align-items:center; gap:8px; border-radius:12px; padding:10px 12px; font-size:13px; font-weight:600; }
-  .locchip.unset { background:var(--warn-soft); border:1px solid #f1e0bf; color:var(--warn); }
+  .locchip.set { background:var(--accent-soft); border:1px solid #cde6d2; color:var(--accent-900); }
+  .locchip .rm { margin-left:auto; color:#b3261e; font-weight:600; font-size:12.5px; background:none; border:none; }
 
   .fieldlabel { font-size:12.5px; font-weight:700; color:var(--muted); text-transform:uppercase; letter-spacing:.4px; }
   .search { position:relative; }
@@ -29,6 +30,8 @@
   .priv .i{ font-size:17px; } .priv .t{ font-size:12.5px; color:#1f4e79; line-height:1.5; }
   .spacer { flex:1; min-height:14px; }
 
+  /* Isti blok kot v 16, samo poudarjenost je zamenjana: kartica pobledi,
+     spodnji gumb postane zelen. Postavitev se ne premakne. */
   .btnstack { display:flex; flex-direction:column; gap:10px; }
   .gpscard { display:flex; align-items:center; gap:13px; width:100%; text-align:left;
              padding:13px 14px; border-radius:16px; background:var(--surface); border:1.5px solid var(--line-strong); }
@@ -37,12 +40,6 @@
   .gpscard .t1 { font-size:15px; font-weight:700; color:var(--text); }
   .gpscard .t2 { font-size:12px; color:var(--muted); margin-top:2px; }
   .gpscard .chev { margin-left:auto; color:var(--muted); font-size:20px; }
-  .gpscard.primary { background:var(--accent); border-color:var(--accent); }
-  .gpscard.primary .ic { background:rgba(255,255,255,.18); }
-  .gpscard.primary .t1 { color:#fff; }
-  .gpscard.primary .t2 { color:rgba(255,255,255,.82); }
-  .gpscard.primary .chev { color:rgba(255,255,255,.85); }
-  .btn.ghost { background:var(--surface); color:var(--text); border:1.5px solid var(--line-strong); font-weight:600; }
 </style>
 </head>
 <body>
@@ -51,7 +48,10 @@
   <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
 
   <div class="loc">
-    <div class="locchip unset">⚠️ Lokacija še ni nastavljena</div>
+    <div class="locchip set">
+      <span>✅</span><span>Lokacija je nastavljena · <b>Šentjur</b></span>
+      <button class="rm">Odstrani</button>
+    </div>
 
     <div class="art">
       <svg width="42" height="42" viewBox="0 0 64 64"><path d="M32 4 C20 4 11 13 11 25 C11 41 32 60 32 60 C32 60 53 41 53 25 C53 13 44 4 32 4 Z" fill="#2e7d32"/><circle cx="32" cy="25" r="8" fill="#fff"/></svg>
@@ -63,7 +63,7 @@
       <div class="optcard primary">
         <div class="fieldlabel" style="margin-bottom:9px;">Vpiši kraj</div>
         <div class="search">
-          <input class="input" placeholder="Vas, mesto ali naslov (npr. Šentjur)">
+          <input class="input" value="Šentjur">
           <button class="sicon">🔍</button>
         </div>
         <div class="helper">Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.</div>
@@ -78,7 +78,7 @@
 
     <div class="divider-or">ali</div>
     <div class="btnstack">
-      <button class="gpscard primary">
+      <button class="gpscard">
         <div class="ic">📡</div>
         <div>
           <div class="t1">Uporabi mojo lokacijo</div>
@@ -86,7 +86,7 @@
         </div>
         <div class="chev">›</div>
       </button>
-      <a href="01-home.html" style="text-decoration:none;"><button class="btn ghost">Preskoči</button></a>
+      <a href="01-home.html" style="text-decoration:none;"><button class="btn">Nadaljuj</button></a>
     </div>
   </div>
 </div>
