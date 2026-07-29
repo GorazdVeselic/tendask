@@ -16,7 +16,7 @@ Za vsak ponavljajoč se UI vzorec obstaja EN skupni widget. Lokalna `_SectionTit
 - **Izbris v edit obrazcu** → `DestructiveButton` (`core/widgets/destructive_button.dart`) — rdeč (`colorScheme.error`), inline na **dnu vsebine**, samo v edit mode. **Nikoli** delete kot ikona v AppBar s privzeto barvo (izgleda onemogočen).
 - **Izbris v `⋯` action sheetu** → zadnja `ListTile` vrstica, ločena z `Divider`, ikona+tekst v `colorScheme.error`.
 - **Potrditev izbrisa** → `showConfirmDialog(..., destructive: true)` (`core/widgets/confirm_dialog.dart`) — rdeč `FilledButton`.
-- **Shrani/potrdi gumb**: full-screen obrazec → `SaveBar`; bottom sheet → `FilledButton` (48h, full-width) — isti videz.
+- **Shrani/potrdi gumb**: full-screen obrazec → `SaveBar`; bottom sheet → `FilledButton` (48h, full-width) — isti videz. **48 je `minimumSize`, ne `SizedBox(height: 48)`**: nemški napis se prelomi v dve vrstici in fiksna škatla drugo tiho odreže (najdba N34).
 - **Bottom sheet** → vedno `SheetHandle` na vrhu.
 - **Kompakten namig na Domov** (»danes nič«) → `DashboardHint` (`features/home/presentation/widgets/dashboard_hint.dart`) — kartica z `bodySmall` v `onSurfaceVariant`. To je tista »dashboard/inline« izjema od `EmptyState` iz vrstice zgoraj; ne piši je lokalno znova.
 - **Neuspelo lokalno branje** (drift napaka = bug) → `LoadErrorHint` (`core/widgets/load_error_hint.dart`) — miren centriran napis, ne `SizedBox.shrink()`. **Mrežna napaka ni to** — offline je normalno stanje in ima svoje besedilo.

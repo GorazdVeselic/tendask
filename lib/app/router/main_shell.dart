@@ -20,7 +20,6 @@ class MainShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final t = context.t;
     // Add FAB on the Home/Tasks *tabs* themselves — not on pushed sub-pages
     // (e.g. task detail), where it would overlap their action bars. Journal is a
     // read-only history view, so it has no add button. The Garden tab owns its
@@ -37,21 +36,47 @@ class MainShell extends StatelessWidget {
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      bottomNavigationBar: NavigationBar(
+      bottomNavigationBar: MainShellNavigationBar(
         selectedIndex: shell.currentIndex,
         // Every tab tap returns to that tab's root screen (resets its stack),
         // so an open detail/entity is never shown when switching tabs.
         onDestinationSelected: (index) =>
             shell.goBranch(index, initialLocation: true),
-        destinations: mainShellDestinations(t, community: community),
+        community: community,
       ),
     );
   }
 }
 
-/// The bottom-nav destinations, in branch order. Top-level so the layout matrix
-/// can render the real labels: a NavigationBar clips its labels instead of
-/// overflowing, so five German words at 320 dp is a break no screen test sees.
+/// The bottom nav. A widget of its own so the layout matrix renders exactly what
+/// the app renders — labels *and* their text-scale ceiling: five tabs leave 64 px
+/// per label at 320 dp, and a label that does not fit breaks mid-word (R4).
+class MainShellNavigationBar extends StatelessWidget {
+  const MainShellNavigationBar({
+    required this.selectedIndex,
+    this.onDestinationSelected,
+    this.community = kCommunityEnabled,
+    super.key,
+  });
+
+  final int selectedIndex;
+  final ValueChanged<int>? onDestinationSelected;
+  final bool community;
+
+  @override
+  Widget build(BuildContext context) {
+    return MediaQuery.withClampedTextScaling(
+      maxScaleFactor: kNavLabelMaxTextScale,
+      child: NavigationBar(
+        selectedIndex: selectedIndex,
+        onDestinationSelected: onDestinationSelected,
+        destinations: mainShellDestinations(context.t, community: community),
+      ),
+    );
+  }
+}
+
+/// The bottom-nav destinations, in branch order.
 List<NavigationDestination> mainShellDestinations(
   Translations t, {
   required bool community,

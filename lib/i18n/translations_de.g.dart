@@ -95,11 +95,11 @@ class _Translations$nav$de extends Translations$nav$en {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get home => 'Startseite';
-	@override String get journal => 'Tagebuch';
+	@override String get home => 'Start';
+	@override String get journal => 'Journal';
 	@override String get areas => 'Garten';
-	@override String get tasks => 'Aufgaben';
-	@override String get community => 'Umgebung';
+	@override String get tasks => 'To-dos';
+	@override String get community => 'Umfeld';
 }
 
 // Path: home
@@ -2210,11 +2210,11 @@ extension on TranslationsDe {
 	dynamic _flatMapFunction(String path) {
 		return switch (path) {
 			'splash.tagline' => 'Dein Gartentagebuch 🌿',
-			'nav.home' => 'Startseite',
-			'nav.journal' => 'Tagebuch',
+			'nav.home' => 'Start',
+			'nav.journal' => 'Journal',
 			'nav.areas' => 'Garten',
-			'nav.tasks' => 'Aufgaben',
-			'nav.community' => 'Umgebung',
+			'nav.tasks' => 'To-dos',
+			'nav.community' => 'Umfeld',
 			'home.greeting' => 'Guten Tag 🌿',
 			'home.today' => 'Heute',
 			'home.recent' => 'Zuletzt',

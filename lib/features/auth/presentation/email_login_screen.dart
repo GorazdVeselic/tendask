@@ -249,7 +249,12 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
     return Scaffold(
       appBar: AppBar(title: Text(t.email_login.title)),
       body: SafeArea(
-        child: Padding(
+        // The keyboard is up the whole time here (both steps autofocus their
+        // field), and it takes ~260 dp off a screen that at 320 dp barely fit
+        // to begin with: the confirm button ended up half cut off and out of
+        // reach of a tap (najdba N32b). Scrolling is the whole fix — the column
+        // is top-aligned, so there is nothing to stretch.
+        child: SingleChildScrollView(
           padding: const EdgeInsets.fromLTRB(26, 16, 26, 30),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,

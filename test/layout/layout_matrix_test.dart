@@ -15,6 +15,10 @@ import 'package:tendask/core/notifications/reminder_audio.dart';
 import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
+import 'package:tendask/features/auth/presentation/email_login_screen.dart';
+import 'package:tendask/features/auth/presentation/login_screen.dart';
+import 'package:tendask/features/home/presentation/home_screen.dart';
+import 'package:tendask/features/onboarding/presentation/onboarding_screen.dart';
 import 'package:tendask/features/community/application/community_providers.dart';
 import 'package:tendask/features/community/data/community_models.dart';
 import 'package:tendask/features/suggestions/application/suggestion_providers.dart';
@@ -29,6 +33,7 @@ import 'package:tendask/features/community/presentation/widgets/community_task_l
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
+import 'package:tendask/features/notifications/presentation/notification_priming_sheet.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
 import 'package:tendask/features/settings/application/profile_providers.dart';
@@ -43,6 +48,9 @@ import 'package:tendask/features/tasks/presentation/entry/steps/when_step.dart';
 import 'package:tendask/features/tasks/presentation/task_detail_screen.dart';
 import 'package:tendask/features/tasks/presentation/tasks_screen.dart';
 import 'package:tendask/features/tasks/task_specs.dart';
+import 'package:tendask/core/location/place_label_repository.dart';
+import 'package:tendask/features/weather/application/weather_service.dart';
+import 'package:tendask/features/weather/data/weather_snapshot.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
 import 'layout_harness.dart';
@@ -278,6 +286,37 @@ List<Override> _communityTaskOverrides({required bool hasPlus}) => [
   ),
 ];
 
+/// Live weather as Home actually draws it: the longest condition label the
+/// catalog has (de "Überwiegend klar", sl "Pretežno jasno" — code 2), a stale
+/// capture so the "updated at" line is drawn too, and the three forecast days.
+///
+/// Home was outside the matrix, and a null snapshot would keep it that way: the
+/// weather card is the widest row on the screen only once it has real strings in
+/// it (najdba N23).
+WeatherSnapshot _weather() => WeatherSnapshot(
+  capturedAt: DateTime(2026, 7, 14, 8),
+  temperature: 25,
+  weatherCode: 2,
+  forecast: [
+    for (var i = 1; i <= 3; i++)
+      WeatherDay(
+        date: DateTime(2026, 7, 14 + i),
+        weatherCode: 3,
+        tempMax: 28,
+        tempMin: 14,
+      ),
+  ],
+);
+
+List<Override> _homeOverrides() => [
+  ..._taskWorldOverrides(),
+  currentWeatherProvider.overrideWith((ref) async => _weather()),
+  // The card's place header (FR-12) is drawn whenever a label is known, so the
+  // matrix draws it too — locale-independent, hence all three.
+  for (final lang in ['sl', 'en', 'de'])
+    placeLabelProvider(lang).overrideWith((ref) async => 'Ljubljana'),
+];
+
 /// Screens that persist (settings, appearance, note form) read through the
 /// database; an in-memory one keeps them off the real file.
 List<Override> _dbOverrides() {
@@ -287,6 +326,66 @@ List<Override> _dbOverrides() {
 }
 
 void main() {
+  // ── first run: intro, sign-in, code step ───────────────────────────────────
+  //
+  // Every new user sees these, and none of them was in the matrix: N32 (both
+  // sign-in steps overflow at 320 dp × 1.3) reached the device unmeasured.
+
+  layoutMatrix('onboarding', build: () => const OnboardingScreen());
+
+  layoutMatrix(
+    'login',
+    overrides: _dbOverrides,
+    build: () => const LoginScreen(),
+  );
+
+  // Both steps autofocus their field, so the keyboard is always up here.
+  layoutMatrix(
+    'login-email',
+    overrides: _dbOverrides,
+    keyboard: true,
+    build: () => const EmailLoginScreen(),
+  );
+
+  // The code step, reached the way a resumed sign-in reaches it. Its own case:
+  // it draws a different body (code field, resend, leave-as-guest) than the
+  // email step, and that is the one that overflowed on the device.
+  layoutMatrix(
+    'login-email (code step)',
+    overrides: _dbOverrides,
+    keyboard: true,
+    build: () => const EmailLoginScreen(initialEmail: 'vrtnar@example.com'),
+  );
+
+  // ── home ───────────────────────────────────────────────────────────────────
+
+  layoutMatrix(
+    'home',
+    overrides: _homeOverrides,
+    build: () => const HomeScreen(),
+  );
+
+  // ── notification priming sheet ─────────────────────────────────────────────
+  //
+  // Opened by the app itself on the first reminder, so a user on a small screen
+  // meets it whether they want to or not (najdba N33).
+
+  layoutMatrix(
+    'notif-priming',
+    overrides: () => [
+      // Audible: the silent-phone banner is an extra card on top of what
+      // already does not fit, and the sheet overflows without it.
+      reminderAudioProvider.overrideWith(
+        (ref) => Stream.value(ReminderAudio.audible),
+      ),
+    ],
+    build: () => const _SheetHost(),
+    after: (tester) async {
+      await tester.tap(find.byType(FilledButton));
+      await tester.pumpAndSettle();
+    },
+  );
+
   // ── task entry wizard ──────────────────────────────────────────────────────
 
   layoutMatrix(
@@ -527,15 +626,16 @@ void main() {
   layoutMatrix('nav (five tabs)', build: () => const _NavBarHost());
 }
 
-/// Renders the real destinations, so a relabelled tab is caught here.
+/// Renders the shell's own nav bar, so a relabelled tab — or a change to the
+/// label text-scale cap that keeps the labels fitting — is caught here.
 class _NavBarHost extends StatelessWidget {
   const _NavBarHost();
 
   @override
-  Widget build(BuildContext context) => Scaffold(
-    bottomNavigationBar: NavigationBar(
+  Widget build(BuildContext context) => const Scaffold(
+    bottomNavigationBar: MainShellNavigationBar(
       selectedIndex: 0,
-      destinations: mainShellDestinations(context.t, community: true),
+      community: true,
     ),
   );
 }
@@ -565,6 +665,25 @@ class _StandingHost extends StatelessWidget {
       catalog: {'water': _taskType()},
       plants: {'tomato': _plant()},
       hasPlus: hasPlus,
+    ),
+  );
+}
+
+/// Opens the priming sheet the way the app does — through showModalBottomSheet,
+/// so the sheet is measured inside the route that constrains it, not as a bare
+/// column that can grow as tall as it likes.
+class _SheetHost extends StatelessWidget {
+  const _SheetHost();
+
+  @override
+  Widget build(BuildContext context) => Scaffold(
+    body: Center(
+      child: Builder(
+        builder: (context) => FilledButton(
+          onPressed: () => showNotificationPriming(context),
+          child: const Text('open'),
+        ),
+      ),
     ),
   );
 }

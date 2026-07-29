@@ -31,6 +31,23 @@ const kWeatherCacheTtl = Duration(minutes: 30);
 /// the forecast strip would then be mostly past days. Survives app restarts.
 const kWeatherStaleTtl = Duration(hours: 48);
 
+/// Below this content width the dashboard weather card stacks its forecast
+/// under the conditions instead of beside them. Measured, not guessed: beside
+/// the three-day strip the conditions column keeps ~63–72 px, and the longest
+/// condition label ("Überwiegend klar") needs 82 px for its first word alone —
+/// so the side-by-side row only holds together from ~320 px of card content up
+/// (a 411 dp phone). Below that it overflowed or ellipsized the label away
+/// (najdba N23). Scaled by the text scaler: a larger font stacks earlier.
+const kWeatherCardStackWidth = 320.0;
+
+/// Ceiling for the bottom-nav label text scale. Five tabs at 320 dp leave 64 px
+/// per label, and "Opravila" needs 67 px at text×1.3 — it fits at 1.2 (najdba
+/// R4). Flutter already caps these labels at 1.3 for the same reason ("keep the
+/// visual hierarchy the same even with larger font sizes"); this is one notch
+/// further, and only on the nav labels — the rest of the UI scales as the user
+/// set it.
+const kNavLabelMaxTextScale = 1.2;
+
 /// Climate profile (M11.3, docs/m11/07): how many full past years of the
 /// Open-Meteo ERA5 archive feed the climate normals/frost medians.
 const kClimateHistoryYears = 10;

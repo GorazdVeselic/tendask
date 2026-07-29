@@ -51,18 +51,34 @@ final _inertRouter = GoRouter(
   routes: [GoRoute(path: '/', builder: (_, _) => const SizedBox.shrink())],
 );
 
+/// Height a soft keyboard takes off the viewport, in logical pixels. Android's
+/// IME is 250–300 dp on the phones we target; the exact figure does not matter,
+/// because a screen that survives one keyboard survives them all — it is the
+/// difference between "scrolls" and "does not".
+const kKeyboardInset = 260.0;
+
 /// Pumps [screen] as the app would render it: real theme, real translations, at
 /// a given viewport and system font scale.
+///
+/// [keyboard] raises the soft keyboard. A screen whose first act is to focus a
+/// text field is never seen without it, so measuring it without one measures a
+/// state the user never reaches (najdba N32b: the code step only overflows once
+/// the keyboard is up).
 Future<void> pumpScreen(
   WidgetTester tester,
   Widget screen, {
   required Size size,
   required double textScale,
   required AppLocale locale,
+  bool keyboard = false,
   List<Override> overrides = const [],
 }) async {
   tester.view.devicePixelRatio = 1.0;
   tester.view.physicalSize = size;
+  if (keyboard) {
+    tester.view.viewInsets = const FakeViewPadding(bottom: kKeyboardInset);
+    addTearDown(tester.view.resetViewInsets);
+  }
   // The system font-size slider: this is what reaches the MediaQuery that
   // MaterialApp builds from the view. An outer MediaQuery would be overwritten.
   tester.platformDispatcher.textScaleFactorTestValue = textScale;
@@ -143,15 +159,6 @@ const kAcceptedWordBreaks = <String, Set<String>>{
     'Weekly',
     'Wöchentlich',
   },
-  // Not shipped: the fifth tab is flag-dark, so this one is a precondition for
-  // turning kCommunityEnabled on, not a backlog item (docs/deploy-runbook.md).
-  'nav (five tabs)': {
-    'Aufgaben',
-    'Opravila',
-    'Startseite',
-    'Tagebuch',
-    'Umgebung',
-  },
   'note-form': {'Yesterday'},
   'notifications': {'Erinnerungen', 'dogodku'},
   'settings': {'Benachrichtigungen', 'Slovenščina'},
@@ -167,10 +174,12 @@ const kAcceptedWordBreaks = <String, Set<String>>{
 /// Two distinct failures, because the app has two distinct ways of breaking:
 ///  * an overflow error (RenderFlex and friends) — loud, throws, and is what
 ///    Sentry sees;
-///  * silently clipped text — a paragraph forced onto fewer lines than its
-///    content needs, so glyphs paint outside the box and get cut. It reports no
-///    error at all. This is what a squeezed SegmentedButton does, and it is
-///    invisible to tester.takeException().
+///  * silently clipped text — a paragraph forced into a box smaller than its
+///    content needs, horizontally (fewer lines than it needs) or vertically (a
+///    bounded height, e.g. a two-line label in a fixed-height button), so glyphs
+///    paint outside the box and get cut. It reports no error at all. This is
+///    what a squeezed SegmentedButton does, and it is invisible to
+///    tester.takeException().
 ///
 /// Crucially, text that can wrap freely (softWrap with no maxLines) NEVER
 /// clips: Flutter breaks even an over-long, unbreakable word across lines to
@@ -230,6 +239,20 @@ List<String> layoutBreaks(
       continue;
     }
 
+    // Vertical clip: the parent handed down a bounded height, so the text laid
+    // out taller than the box it paints into and the last line is cut. Nothing
+    // throws and no maxLines is involved, so none of the checks below see it —
+    // this is what a label two lines tall does inside a fixed-height button.
+    final neededHeight = paragraph.getMaxIntrinsicHeight(paragraph.size.width);
+    if (neededHeight > paragraph.size.height + 0.5) {
+      final text = paragraph.text.toPlainText().replaceAll('\n', ' ');
+      breaks.add(
+        'clipped text "$text" needs ${neededHeight.round()}px of height, box '
+        'is ${paragraph.size.height.round()}px',
+      );
+      continue;
+    }
+
     // Free-wrapping text always fits — skip it, or every long title trips a
     // false positive.
     final lineLimited = !paragraph.softWrap || paragraph.maxLines != null;
@@ -269,6 +292,7 @@ void layoutMatrix(
   required Widget Function() build,
   List<Override> Function()? overrides,
   Future<void> Function(WidgetTester tester)? after,
+  bool keyboard = false,
 }) {
   for (final viewport in kViewports.entries) {
     for (final locale in kLocales) {
@@ -283,6 +307,7 @@ void layoutMatrix(
               size: viewport.value,
               textScale: scale,
               locale: locale,
+              keyboard: keyboard,
               overrides: overrides?.call() ?? const [],
             );
             if (after != null) await after(tester);

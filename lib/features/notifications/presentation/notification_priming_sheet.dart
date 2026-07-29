@@ -82,81 +82,98 @@ class _NotificationPrimingSheet extends StatelessWidget {
           children: [
             const SheetHandle(),
             const SizedBox(height: 8),
-            Container(
-              width: 88,
-              height: 88,
-              decoration: BoxDecoration(
-                color: theme.colorScheme.primaryContainer,
-                borderRadius: BorderRadius.circular(26),
-              ),
-              child: const Center(
-                child: Text('🔔', style: TextStyle(fontSize: 42)),
-              ),
-            ),
-            const SizedBox(height: 16),
-            Text(
-              p.title,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              p.why,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyMedium?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-            const SizedBox(height: 16),
-            _Benefit(icon: '⏰', text: p.benefit_reminders),
-            _Benefit(icon: '🌤️', text: p.benefit_weather),
-            // Same flag as the settings toggle it primes for: these are engine
-            // pushes, so "(V2)" here outlives the feature too (najdba N27).
-            _Benefit(
-              icon: '🌍',
-              text: kSuggestionsEnabled
-                  ? p.benefit_nearby_live
-                  : p.benefit_nearby,
-            ),
-            const SizedBox(height: 16),
-            Container(
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                color: theme.colorScheme.surfaceContainerHighest,
-                borderRadius: BorderRadius.circular(12),
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  const Text('🔒'),
-                  const SizedBox(width: 9),
-                  Expanded(
-                    child: Text(
-                      p.privacy,
-                      style: theme.textTheme.bodySmall?.copyWith(
+            // The explanation scrolls, the two buttons stay put: at 320 dp with
+            // a large font this sheet ran 258 px past the screen and took both
+            // buttons with it — the only way out was the system back gesture,
+            // on a sheet whose whole job is to ask for permission (najdba N33).
+            Flexible(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Container(
+                      width: 88,
+                      height: 88,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.primaryContainer,
+                        borderRadius: BorderRadius.circular(26),
+                      ),
+                      child: const Center(
+                        child: Text('🔔', style: TextStyle(fontSize: 42)),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Text(
+                      p.title,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.titleLarge?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      p.why,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.bodyMedium?.copyWith(
                         color: theme.colorScheme.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                ],
+                    const SizedBox(height: 16),
+                    _Benefit(icon: '⏰', text: p.benefit_reminders),
+                    _Benefit(icon: '🌤️', text: p.benefit_weather),
+                    // Same flag as the settings toggle it primes for: these are
+                    // engine pushes, so "(V2)" here outlives the feature too
+                    // (najdba N27).
+                    _Benefit(
+                      icon: '🌍',
+                      text: kSuggestionsEnabled
+                          ? p.benefit_nearby_live
+                          : p.benefit_nearby,
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(12),
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.surfaceContainerHighest,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text('🔒'),
+                          const SizedBox(width: 9),
+                          Expanded(
+                            child: Text(
+                              p.privacy,
+                              style: theme.textTheme.bodySmall?.copyWith(
+                                color: theme.colorScheme.onSurfaceVariant,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
             const SizedBox(height: 16),
             // Shown only when reminders would be silent (volume 0 / silent mode).
             const ReminderSoundBanner(),
-            SizedBox(
-              height: 48,
-              child: FilledButton(
-                onPressed: () => Navigator.of(context).pop(true),
-                child: Text(p.enable),
+            // minimumSize, not a fixed height: German wraps "Benachrichtigungen
+            // aktivieren" onto two lines, and a 48 px box cut the second one off
+            // without a word of complaint (najdba N34).
+            FilledButton(
+              style: FilledButton.styleFrom(
+                minimumSize: const Size.fromHeight(48),
               ),
+              onPressed: () => Navigator.of(context).pop(true),
+              child: Text(p.enable, textAlign: TextAlign.center),
             ),
             const SizedBox(height: 4),
             TextButton(
               onPressed: () => Navigator.of(context).pop(false),
-              child: Text(p.later),
+              child: Text(p.later, textAlign: TextAlign.center),
             ),
           ],
         ),

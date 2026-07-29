@@ -25,8 +25,10 @@ premalo: prosto ovijajoč tekst se **lahko prelomi sredi besede**, in to je enak
 lepo prelomi na vezaju. Ta razlika je odstranila 18 od 104 prvotnih zadetkov.
 
 Vključeno pravilo je pokazalo **44 nizov na 11 zaslonih**. Da paket ne ostane rdeč, so ti zapisani
-v `kAcceptedWordBreaks`: **nov** prelom pade takoj, teh 44 pa čaka na ta paket. Seznam vsebuje
+v `kAcceptedWordBreaks`: **nov** prelom pade takoj, ti pa čakajo na ta paket. Seznam vsebuje
 samo besede, nikoli piksle — te premakne vsaka sprememba pisave ali paddinga.
+**Stanje 2026-07-29: 39 nizov na 10 zaslonih** — pet vrstic pasu (`nav (five tabs)`) je zaprtih
+(R4, §Prioriteta 4).
 
 ## 3 · Breme
 
@@ -65,11 +67,6 @@ uporabnika.
 | `entry/when (custom recurrence)` | `Täglich` | de | 320/360 | ×1.3 |
 | `entry/when (custom recurrence)` | `Weekly` | en | 320/360 | ×1.0/1.3 |
 | `entry/when (custom recurrence)` | `Wöchentlich` | de | 320/360/411 | ×1.0/1.3 |
-| `nav (five tabs)` | `Aufgaben` | de | 320/360 | ×1.3 |
-| `nav (five tabs)` | `Opravila` | sl | 320 | ×1.3 |
-| `nav (five tabs)` | `Startseite` | de | 320/360 | ×1.3 |
-| `nav (five tabs)` | `Tagebuch` | de | 320/360 | ×1.3 |
-| `nav (five tabs)` | `Umgebung` | de | 320/360/411 | ×1.0/1.3 |
 | `note-form` | `Yesterday` | en | 320/360 | ×1.3 |
 | `notifications` | `Erinnerungen` | de | 320 | ×1.3 |
 | `notifications` | `dogodku` | sl | 320 | ×1.3 |
@@ -89,8 +86,12 @@ uporabnika.
 2. **`settings`, `appearance`, `tasks`** — prav tako ×1.0; `Slovenščina` se lomi v **vseh** jezikih
    na **vseh** širinah.
 3. **`areas`, `notifications`, `note-form`, `task-detail`** — samo ×1.3.
-4. **`nav (five tabs)`** — ni v produkciji (flag-dark), zato **ni** del tega bremena, ampak
-   **pogoj za prižig** `kCommunityEnabled` (gl. `docs/deploy-runbook.md`).
+4. ~~**`nav (five tabs)`**~~ — **zaprto 2026-07-29** (R4, paket popravkov s naprave). Pas ima pet
+   zavihkov in pri 320 dp le **64 px** na napis: nemški (`Startseite` 78,6 px, `Aufgaben` 77,5,
+   `Tagebuch` 78,0, `Umgebung` 87,9) so dobili krajše besede (`Start`, `To-dos`, `Journal`,
+   `Umfeld`), slovenska `Opravila` (67,1) pa je ostala — napisi pasu se odslej nehajo večati pri
+   `kNavLabelMaxTextScale = 1,2` (Flutter jih tako ali tako že omejuje pri 1,3). Vseh pet vrstic je
+   izbrisanih iz `kAcceptedWordBreaks`, zato je odslej **vsak** prelom v pasu rdeč.
 5. **`suggestions/history`** — enako: flag-dark (`kSuggestionsEnabled`), zato pogoj za prižig, ne
    breme. Dodano 2026-07-28, ko je matrika nehala hraniti pas z **neobstoječim** `message_key`-em
    (`suggestions.season.window_open`) in je začela izrisovati resnične naslove pravil — najdba N26.

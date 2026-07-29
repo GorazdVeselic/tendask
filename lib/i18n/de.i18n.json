@@ -3,11 +3,11 @@
     "tagline": "Dein Gartentagebuch 🌿"
   },
   "nav": {
-    "home": "Startseite",
-    "journal": "Tagebuch",
+    "home": "Start",
+    "journal": "Journal",
     "areas": "Garten",
-    "tasks": "Aufgaben",
-    "community": "Umgebung"
+    "tasks": "To-dos",
+    "community": "Umfeld"
   },
   "home": {
     "greeting": "Guten Tag 🌿",
@@ -171,14 +171,14 @@
   },
   "location": {
     "title": "Wo gärtnerst du?",
-    "why": "Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.",
-    "why_live": "Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.",
+    "why": "Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun.",
     "use_gps": "Meinen Standort verwenden",
+    "skip": "Überspringen",
     "enter_place": "Ort eingeben",
     "or": "oder",
     "gps_sub": "Automatisch per Geräte-GPS",
     "place_hint": "Dorf, Stadt oder Adresse (z. B. Šentjur)",
-    "place_note": "Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.",
+    "place_note": "Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.",
     "search": "Suchen",
     "privacy": "Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.",
     "continue": "Weiter",

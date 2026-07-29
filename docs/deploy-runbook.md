@@ -266,11 +266,12 @@ pripravljenosti**. Prižgeta se lahko neodvisno; nikoli ju ne prižgi »zato ker
 > obravnavana kot upravičena in **plačljiva funkcija se podari vsem** — tease se ne pokaže nikoli.
 > Tega se ne da vzeti nazaj tiho. FR-20 to konstanto nadomesti s podpisano licenco iz drifta.
 
-> ⚠️ **Drugi pogoj prižiga Okolice: spodnja vrstica pri petih zavihkih.** Peti zavihek stisne reže
-> na 64 dp; nemške oznake (`Startseite`, `Aufgaben`, `Tagebuch`, `Umgebung`) in slovenska
-> `Opravila` se pri text×1,3 prelomijo **sredi besede** na 320 in 360 dp. Izmerjeno, ne ocenjeno —
-> gl. `docs/prelomi-besed.md` §3. Vnos `'nav (five tabs)'` v `kAcceptedWordBreaks` mora pred
-> prižigom izginiti.
+> ✅ **Drugi pogoj prižiga Okolice — spodnja vrstica pri petih zavihkih — je izpolnjen** (R4,
+> 2026-07-29). Peti zavihek stisne reže na **64 px**; nemške oznake so dobile krajše besede
+> (`Start`, `To-dos`, `Journal`, `Garten`, `Umfeld`), slovenska `Opravila` (67,1 px) pa je ostala,
+> ker se napisi pasu nehajo večati pri `kNavLabelMaxTextScale = 1,2`. Vnos `'nav (five tabs)'` je
+> iz `kAcceptedWordBreaks` **izbrisan**, matrika ga meri v vseh treh jezikih — gl.
+> `docs/prelomi-besed.md` §Prioriteta 4.
 
 ### Odprta vprašanja, ki oživijo ob prižigu
 

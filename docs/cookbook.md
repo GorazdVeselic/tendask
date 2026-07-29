@@ -76,6 +76,10 @@ Scenarij: koraki v `tmp/steps.txt` (prepiši datoteko), nato **vedno isti** ukaz
 
 Zajem zaslona: `adb exec-out screencap -p > tmp/screen.png`, nato Read.
 
+Preverba preliva na posnetkih (rumeno-črni pas): `python tool/overflow_scan.py tmp/shots/*.png` —
+izpiše `ok` ali `OVERFLOW` z vrsticami. Pas je črtast, zato šteje **število** rumenih pikslov v
+vrstici, ne zaporedja.
+
 ---
 
 ## 4. Staging DB (WSL, self-hosted)

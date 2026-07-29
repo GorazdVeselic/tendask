@@ -75,113 +75,135 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.fromLTRB(26, 8, 26, 30),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Expanded(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: 78,
-                      height: 78,
-                      decoration: BoxDecoration(
-                        color: cs.surfaceContainerHighest,
-                        borderRadius: BorderRadius.circular(22),
+        // Scrolls when it must, fills the screen when it can: at 320 dp with a
+        // large font the six buttons plus the legal text are taller than the
+        // viewport, and a bare Column put the title on top of the first button
+        // (najdba N32). IntrinsicHeight is what lets the Expanded hero keep
+        // centring inside a scroll view, which has no height of its own.
+        child: LayoutBuilder(
+          builder: (context, constraints) => SingleChildScrollView(
+            child: ConstrainedBox(
+              constraints: BoxConstraints(minHeight: constraints.maxHeight),
+              child: IntrinsicHeight(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(26, 8, 26, 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: 78,
+                              height: 78,
+                              decoration: BoxDecoration(
+                                color: cs.surfaceContainerHighest,
+                                borderRadius: BorderRadius.circular(22),
+                              ),
+                              child: Icon(
+                                Icons.eco_outlined,
+                                size: 40,
+                                color: cs.primary,
+                              ),
+                            ),
+                            const SizedBox(height: 18),
+                            Text(
+                              t.auth.title,
+                              style: theme.textTheme.headlineSmall,
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 10),
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 8,
+                              ),
+                              child: Text(
+                                t.auth.value_prop,
+                                style: theme.textTheme.bodyMedium?.copyWith(
+                                  color: cs.onSurfaceVariant,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
-                      child: Icon(
-                        Icons.eco_outlined,
-                        size: 40,
-                        color: cs.primary,
+                      if (Platform.isIOS) ...[
+                        _DarkButton(
+                          icon: Icons.apple,
+                          label: t.auth.continue_apple,
+                          onPressed: busy ? null : _comingSoon,
+                        ),
+                        const SizedBox(height: 10),
+                      ],
+                      SizedBox(
+                        height: 52,
+                        child: OutlinedButton(
+                          onPressed: busy ? null : _signInWithGoogle,
+                          child: _googleLoading
+                              ? const SizedBox(
+                                  width: 22,
+                                  height: 22,
+                                  child: CircularProgressIndicator(
+                                    strokeWidth: 2.5,
+                                  ),
+                                )
+                              : Text(t.auth.continue_google),
+                        ),
                       ),
-                    ),
-                    const SizedBox(height: 18),
-                    Text(
-                      t.auth.title,
-                      style: theme.textTheme.headlineSmall,
-                      textAlign: TextAlign.center,
-                    ),
-                    const SizedBox(height: 10),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
-                      child: Text(
-                        t.auth.value_prop,
-                        style: theme.textTheme.bodyMedium?.copyWith(
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 52,
+                        child: FilledButton.icon(
+                          onPressed: busy
+                              ? null
+                              : () => context.push('/login-email'),
+                          icon: const Icon(Icons.mail_outline, size: 20),
+                          label: Text(t.auth.continue_email),
+                        ),
+                      ),
+                      const SizedBox(height: 10),
+                      SizedBox(
+                        height: 52,
+                        child: OutlinedButton(
+                          onPressed: busy ? null : _continueAsGuest,
+                          style: OutlinedButton.styleFrom(
+                            foregroundColor: cs.onSurfaceVariant,
+                          ),
+                          child: Text(t.auth.guest),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        t.auth.guest_warning,
+                        style: theme.textTheme.bodySmall?.copyWith(
                           color: cs.onSurfaceVariant,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              if (Platform.isIOS) ...[
-                _DarkButton(
-                  icon: Icons.apple,
-                  label: t.auth.continue_apple,
-                  onPressed: busy ? null : _comingSoon,
-                ),
-                const SizedBox(height: 10),
-              ],
-              SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: busy ? null : _signInWithGoogle,
-                  child: _googleLoading
-                      ? const SizedBox(
-                          width: 22,
-                          height: 22,
-                          child: CircularProgressIndicator(strokeWidth: 2.5),
-                        )
-                      : Text(t.auth.continue_google),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 52,
-                child: FilledButton.icon(
-                  onPressed: busy ? null : () => context.push('/login-email'),
-                  icon: const Icon(Icons.mail_outline, size: 20),
-                  label: Text(t.auth.continue_email),
-                ),
-              ),
-              const SizedBox(height: 10),
-              SizedBox(
-                height: 52,
-                child: OutlinedButton(
-                  onPressed: busy ? null : _continueAsGuest,
-                  style: OutlinedButton.styleFrom(
-                    foregroundColor: cs.onSurfaceVariant,
+                      const SizedBox(height: 10),
+                      Text(
+                        t.auth.legal,
+                        style: theme.textTheme.bodySmall?.copyWith(
+                          color: cs.onSurfaceVariant,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      TextButton(
+                        onPressed: () => unawaited(openPrivacyPolicy()),
+                        child: Text(
+                          t.auth.privacy_link,
+                          style: const TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  child: Text(t.auth.guest),
                 ),
               ),
-              const SizedBox(height: 8),
-              Text(
-                t.auth.guest_warning,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(height: 10),
-              Text(
-                t.auth.legal,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              TextButton(
-                onPressed: () => unawaited(openPrivacyPolicy()),
-                child: Text(
-                  t.auth.privacy_link,
-                  style: const TextStyle(decoration: TextDecoration.underline),
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
