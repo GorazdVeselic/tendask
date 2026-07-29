@@ -242,18 +242,22 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       onClear: _isSet ? _clear : null,
                     ),
                     const SizedBox(height: 4),
+                    // Wireframe sizing (74 dp tile, 38 dp glyph). The decorative
+                    // header is what pushed the privacy note — the reassurance
+                    // the user needs *before* handing over a location — below
+                    // the fold on a normal phone.
                     Center(
                       child: Container(
-                        width: 92,
-                        height: 92,
-                        margin: const EdgeInsets.only(top: 8, bottom: 16),
+                        width: 74,
+                        height: 74,
+                        margin: const EdgeInsets.only(top: 4, bottom: 12),
                         decoration: BoxDecoration(
                           color: cs.surfaceContainerHighest,
-                          borderRadius: BorderRadius.circular(26),
+                          borderRadius: BorderRadius.circular(22),
                         ),
                         child: Icon(
                           Icons.location_on_outlined,
-                          size: 46,
+                          size: 38,
                           color: cs.primary,
                         ),
                       ),
@@ -263,7 +267,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       style: theme.textTheme.headlineSmall,
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 12),
+                    const SizedBox(height: 10),
                     Text(
                       t.location.why,
                       style: theme.textTheme.bodyMedium?.copyWith(
@@ -271,7 +275,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       ),
                       textAlign: TextAlign.center,
                     ),
-                    const SizedBox(height: 24),
+                    const SizedBox(height: 20),
                     // Manual entry on top — typing a place name is the most
                     // universally understood action; GPS is the alternative.
                     EnterPlaceCard(
@@ -297,7 +301,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                       ),
                     ],
                     if (!showBottomBlock) ..._gpsOption(),
-                    const SizedBox(height: 20),
+                    const SizedBox(height: 16),
                     LocationPrivacyNote(text: t.location.privacy),
                   ],
                 ),

@@ -238,6 +238,10 @@ toasta (§3.2, velja za oba načina), vnosi v layout matriko, widget testi, wire
   nikoli ne izmeri.
 - Gumb uporablja `minimumSize`, ne `SizedBox(height: 52)` (`ui-katalog.md`): fiksna škatla bi drugo
   vrstico tiho odrezala.
+- **Glava je pomanjšana na mere wireframa** (ploščica 92 → 74, ikona 46 → 38, ožji razmiki, tanjši
+  padding zasebnostne opombe) — ~40 dp, kolikor je manjkalo, da zasebnostna opomba pri 360×800 ne
+  visi pod robom. Preverjeno na napravi: brez scrollanja v sl in de. Pri 320 dp z veliko pisavo se
+  zaslon še vedno scrolla, kar je neizogibno.
 - `EnterPlaceCard` je dobila `Material` ovoj: zadetki iskanja so `ListTile`-i, katerih ink splash se
   izriše na najbližjem `Material` predniku — pod barvno škatlo je bil neviden (Flutter to javi kot
   assert, ki ga je ujel prvi widget test).

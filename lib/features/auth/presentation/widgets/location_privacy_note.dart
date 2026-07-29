@@ -12,7 +12,7 @@ class LocationPrivacyNote extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: const EdgeInsets.all(14),
+      padding: const EdgeInsets.fromLTRB(13, 11, 13, 11),
       decoration: BoxDecoration(
         color: AppColors.infoSoft,
         borderRadius: BorderRadius.circular(14),
