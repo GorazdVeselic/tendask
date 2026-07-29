@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../core/auth/auth_service.dart';
-import '../../../core/config.dart';
 import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
 import '../../../core/location/location_service.dart';
@@ -233,8 +232,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                     ),
                     const SizedBox(height: 12),
                     Text(
-                      // "(kasneje)" is only true while Okolica is dark (N13).
-                      kCommunityEnabled ? t.location.why_live : t.location.why,
+                      t.location.why,
                       style: theme.textTheme.bodyMedium?.copyWith(
                         color: cs.onSurfaceVariant,
                       ),

@@ -51,7 +51,7 @@ final class _ArchiveDioProvider extends $FunctionalProvider<Dio, Dio, Dio>
   }
 }
 
-String _$_archiveDioHash() => r'd35fbef42942f494726695c4dc9f9a95e4404d21';
+String _$_archiveDioHash() => r'defbe15b7812de2a3f46399be56416ff967cb9f2';
 
 @ProviderFor(climateService)
 final climateServiceProvider = ClimateServiceProvider._();

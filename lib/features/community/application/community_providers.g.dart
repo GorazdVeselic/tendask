@@ -55,7 +55,7 @@ final class CommunityRepositoryProvider
 }
 
 String _$communityRepositoryHash() =>
-    r'e350feb9bc3a3eb219c12bfcc15a6dcbedcd62eb';
+    r'37896a74f70fc8ca15131abd142a94e07b314615';
 
 /// Whether the device may see the full community content. M11 ships a stub
 /// (`kDevPlusStub`) so the tease can be built and tested; FR-20 swaps the body

@@ -372,14 +372,14 @@ class _Translations$location$sl extends Translations$location$en {
 
 	// Translations
 	@override String get title => 'Kje vrtnariš?';
-	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
-	@override String get why_live => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.';
+	@override String get why => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti lahko pokažemo, kaj počnejo drugi vrtnarji v tvoji okolici.';
 	@override String get use_gps => 'Uporabi mojo lokacijo';
+	@override String get skip => 'Preskoči';
 	@override String get enter_place => 'Vpiši kraj';
 	@override String get or => 'ali';
 	@override String get gps_sub => 'Samodejno z GPS naprave';
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
-	@override String get place_note => 'Dovolj je vas ali mesto — natančen naslov ni potreben.';
+	@override String get place_note => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
 	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
@@ -2356,14 +2356,14 @@ extension on TranslationsSl {
 			'email_login.resend_in' => ({required Object seconds}) => 'Pošlji novo kodo (${seconds} s)',
 			'email_login.skip_for_now' => 'Nadaljuj brez prijave',
 			'location.title' => 'Kje vrtnariš?',
-			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in (kasneje) da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
-			'location.why_live' => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti pokažemo, kaj počnejo vrtnarji v podobnem podnebju.',
+			'location.why' => 'Lokacijo potrebujemo za lokalno vremensko napoved in da ti lahko pokažemo, kaj počnejo drugi vrtnarji v tvoji okolici.',
 			'location.use_gps' => 'Uporabi mojo lokacijo',
+			'location.skip' => 'Preskoči',
 			'location.enter_place' => 'Vpiši kraj',
 			'location.or' => 'ali',
 			'location.gps_sub' => 'Samodejno z GPS naprave',
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
-			'location.place_note' => 'Dovolj je vas ali mesto — natančen naslov ni potreben.',
+			'location.place_note' => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
 			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',

@@ -48,4 +48,4 @@ final class FcmHandlerProvider
   }
 }
 
-String _$fcmHandlerHash() => r'c69513efb261c5ded20bd4706a696311454b4c0c';
+String _$fcmHandlerHash() => r'48974be7f3af0a3b89f55b48becb301a04b27726';

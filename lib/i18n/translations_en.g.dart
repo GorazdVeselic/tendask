@@ -636,14 +636,14 @@ class Translations$location$en {
 	/// en: 'Where do you garden?'
 	String get title => 'Where do you garden?';
 
-	/// en: 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.'
-	String get why => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.';
-
-	/// en: 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.'
-	String get why_live => 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.';
+	/// en: 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.'
+	String get why => 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.';
 
 	/// en: 'Use my location'
 	String get use_gps => 'Use my location';
+
+	/// en: 'Skip'
+	String get skip => 'Skip';
 
 	/// en: 'Enter a place'
 	String get enter_place => 'Enter a place';
@@ -657,8 +657,8 @@ class Translations$location$en {
 	/// en: 'Village, town or address (e.g. Šentjur)'
 	String get place_hint => 'Village, town or address (e.g. Šentjur)';
 
-	/// en: 'A village or town is enough — no exact address needed.'
-	String get place_note => 'A village or town is enough — no exact address needed.';
+	/// en: 'A nearby village or town is enough — no exact address needed.'
+	String get place_note => 'A nearby village or town is enough — no exact address needed.';
 
 	/// en: 'Search'
 	String get search => 'Search';
@@ -3889,14 +3889,14 @@ extension on Translations {
 			'email_login.resend_in' => ({required Object seconds}) => 'Send a new code (${seconds} s)',
 			'email_login.skip_for_now' => 'Continue without signing in',
 			'location.title' => 'Where do you garden?',
-			'location.why' => 'We need your location for the local weather forecast and (later) to show you what gardeners in a similar climate are doing.',
-			'location.why_live' => 'We need your location for the local weather forecast and to show you what gardeners in a similar climate are doing.',
+			'location.why' => 'We need your location for the local weather forecast and so we can show you what other gardeners near you are doing.',
 			'location.use_gps' => 'Use my location',
+			'location.skip' => 'Skip',
 			'location.enter_place' => 'Enter a place',
 			'location.or' => 'or',
 			'location.gps_sub' => 'Automatically via device GPS',
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
-			'location.place_note' => 'A village or town is enough — no exact address needed.',
+			'location.place_note' => 'A nearby village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
 			'location.privacy' => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',

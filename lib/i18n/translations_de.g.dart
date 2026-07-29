@@ -368,14 +368,14 @@ class _Translations$location$de extends Translations$location$en {
 
 	// Translations
 	@override String get title => 'Wo gärtnerst du?';
-	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
-	@override String get why_live => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.';
+	@override String get why => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun.';
 	@override String get use_gps => 'Meinen Standort verwenden';
+	@override String get skip => 'Überspringen';
 	@override String get enter_place => 'Ort eingeben';
 	@override String get or => 'oder';
 	@override String get gps_sub => 'Automatisch per Geräte-GPS';
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
-	@override String get place_note => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.';
+	@override String get place_note => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
 	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
@@ -2342,14 +2342,14 @@ extension on TranslationsDe {
 			'email_login.resend_in' => ({required Object seconds}) => 'Neuen Code senden (${seconds} s)',
 			'email_login.skip_for_now' => 'Ohne Anmeldung fortfahren',
 			'location.title' => 'Wo gärtnerst du?',
-			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und (später), um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
-			'location.why_live' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zu zeigen, was Gärtner in einem ähnlichen Klima tun.',
+			'location.why' => 'Wir brauchen deinen Standort für die lokale Wettervorhersage und um dir zeigen zu können, was andere Gärtner in deiner Umgebung tun.',
 			'location.use_gps' => 'Meinen Standort verwenden',
+			'location.skip' => 'Überspringen',
 			'location.enter_place' => 'Ort eingeben',
 			'location.or' => 'oder',
 			'location.gps_sub' => 'Automatisch per Geräte-GPS',
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
-			'location.place_note' => 'Ein Dorf oder eine Stadt genügt — keine genaue Adresse nötig.',
+			'location.place_note' => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
 			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
