@@ -153,63 +153,79 @@ class CurrentWeatherCard extends StatelessWidget {
     final stamp = _capturedLabel(snap.capturedAt);
     final content = Padding(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          if (placeLabel != null) ...[
-            _PlaceHeader(placeLabel!),
-            const SizedBox(height: 6),
-          ],
-          Row(
+      child: LayoutBuilder(
+        builder: (context, constraints) {
+          // Narrow (or large font): the three-day strip and a temperature +
+          // condition line do not both fit, and squeezing them cost the reader
+          // the condition itself — "Überwiegend klar" became "Ü…".
+          // Stacked, nothing is dropped; the card just grows a row.
+          final stacked =
+              constraints.maxWidth <
+              MediaQuery.textScalerOf(context).scale(kWeatherCardStackWidth);
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                weatherEmoji(condition),
-                style: const TextStyle(fontSize: 28),
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      _temp(snap.temperature),
-                      style: theme.textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
+              if (placeLabel != null) ...[
+                _PlaceHeader(placeLabel!),
+                const SizedBox(height: 6),
+              ],
+              Row(
+                children: [
+                  Text(
+                    weatherEmoji(condition),
+                    style: const TextStyle(fontSize: 28),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          _temp(snap.temperature),
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        // Wraps rather than ellipsizes: text that opts into an
+                        // ellipsis is text the layout matrix stops measuring,
+                        // which is how "Ü…" survived to a device.
+                        Text(
+                          weatherConditionLabel(condition, context.t),
+                          style: theme.textTheme.bodySmall?.copyWith(
+                            color: theme.colorScheme.onSurfaceVariant,
+                          ),
+                        ),
+                      ],
                     ),
-                    Text(
-                      weatherConditionLabel(condition, context.t),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.bodySmall?.copyWith(
-                        color: theme.colorScheme.onSurfaceVariant,
-                      ),
+                  ),
+                  if (snap.forecast.isNotEmpty && !stacked)
+                    _ForecastStrip(snap.forecast, compact: true),
+                  if (onTap != null) ...[
+                    const SizedBox(width: 8),
+                    Icon(
+                      Icons.unfold_more,
+                      size: 18,
+                      color: theme.colorScheme.onSurfaceVariant,
                     ),
                   ],
-                ),
+                ],
               ),
-              if (snap.forecast.isNotEmpty)
-                _ForecastStrip(snap.forecast, compact: true),
-              if (onTap != null) ...[
-                const SizedBox(width: 8),
-                Icon(
-                  Icons.unfold_more,
-                  size: 18,
-                  color: theme.colorScheme.onSurfaceVariant,
+              if (snap.forecast.isNotEmpty && stacked) ...[
+                const SizedBox(height: 10),
+                _ForecastStrip(snap.forecast),
+              ],
+              if (stamp != null) ...[
+                const SizedBox(height: 6),
+                Text(
+                  context.t.weather.updated_at(time: stamp),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    color: theme.colorScheme.onSurfaceVariant,
+                  ),
                 ),
               ],
             ],
-          ),
-          if (stamp != null) ...[
-            const SizedBox(height: 6),
-            Text(
-              context.t.weather.updated_at(time: stamp),
-              style: theme.textTheme.labelSmall?.copyWith(
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
-            ),
-          ],
-        ],
+          );
+        },
       ),
     );
 

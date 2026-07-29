@@ -29,6 +29,15 @@ const kWeatherCacheTtl = Duration(minutes: 30);
 /// the forecast strip would then be mostly past days. Survives app restarts.
 const kWeatherStaleTtl = Duration(hours: 48);
 
+/// Below this content width the dashboard weather card stacks its forecast
+/// under the conditions instead of beside them. Measured, not guessed: beside
+/// the three-day strip the conditions column keeps ~63–72 px, and the longest
+/// condition label ("Überwiegend klar") needs 82 px for its first word alone —
+/// so the side-by-side row only holds together from ~320 px of card content up
+/// (a 411 dp phone). Below that it overflowed or ellipsized the label away.
+/// Scaled by the text scaler: a larger font stacks earlier.
+const kWeatherCardStackWidth = 320.0;
+
 /// Task types shown before the "show all" toggle on entry step 1 (3 rows × 3).
 /// The rest stay collapsed until expanded; sorted by per-user frequency.
 const kTaskTypeGridCollapsed = 9;
