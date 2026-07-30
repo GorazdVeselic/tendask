@@ -1,5 +1,7 @@
 import 'dart:math' as math;
 
+import 'angles.dart';
+
 /// Meeus table 47.A, ~36 largest periodic terms for the Moon's longitude:
 /// (coefficient in 1e-6 deg, multipliers of D, M, M', F). Ported from the
 /// validated prototype (P0.1); terms with M != 0 are scaled by E^|M|.
@@ -74,10 +76,10 @@ double moonEclipticLongitude(double t) {
       t4 / 863310000;
   final eccentricity = 1 - 0.002516 * t - 0.0000074 * t2;
 
-  final dr = _radians(d);
-  final mr = _radians(m);
-  final mpr = _radians(mp);
-  final fr = _radians(f);
+  final dr = radians(d);
+  final mr = radians(m);
+  final mpr = radians(mp);
+  final fr = radians(f);
   var sum = 0.0;
   for (final (coef, cd, cm, cmp, cf) in _terms) {
     final arg = cd * dr + cm * mr + cmp * mpr + cf * fr;
@@ -85,5 +87,3 @@ double moonEclipticLongitude(double t) {
   }
   return (lp + sum / 1e6) % 360;
 }
-
-double _radians(double degrees) => degrees * math.pi / 180;
