@@ -60,34 +60,25 @@ gitignorirani `tmp/`**. En `git clean`/menjava stroja = kalibracije ni več mogo
 - **Vhod:** obstoječe `tmp/moon_*.py` (preverjeno 2026-07-30, so še tam).
 - **Izhod:** varna kopija; T1 iz nje vzame Meeus koeficiente in referenčne vrednosti za validacijo.
 - **Koraki:**
-  1. ⬜ **Takojšnji backup izven repa** (zip poleg keystore backupov) — brez odlašanja, neodvisno od 2.
+  1. ✅ **Backup izven repa** — `N:\development\tendask\moon-prototipi-2026-07-30.zip` (30. 7. 2026).
   2. 🅿️ **Odloči lastnik:** ali skripte (ki vsebujejo Thunove ure) smejo v repo. Opciji:
      (a) ostanejo samo zasebno (repo čist, validacija T1 teče lokalno);
      (b) v repo gre **očiščena** verzija brez `THUN2024` tabele (Meeus del je javna astronomija).
 - **Pasti:** Thunove ure so prepis iz avtorsko zaščitene knjige — **ne commitaj jih**, dokler lastnik ne
   odloči; privzeto (a).
 
-### P0.2 · Nevtralne vrednosti 3 kalibriranih mej ⬜ — edini trdi tehnični predpogoj
+### P0.2 · Meje ozvezdij ✅ ZAKLJUČENO (2026-07-30) — z drugačnim izidom od načrtovanega
 
-**Problem:** privzeti sistem je siderični-IAU s 3 kalibriranimi mejami (Tehtnica/Škorpijon/Strelec, spec
-§14.5). Empirične Thunove številke so zapisane, a jih **pravno ne smemo prepisati** — meje je treba
-izpeljati **po svetlih zvezdah**. Brez tega motor nima privzetih vrednosti.
+**Izvedeno:** zvezdna izpeljava preizkušena (`tmp/moon_star_bounds.py`, arhivirano na NAS) in **izmerjena
+kot slepa ulica** (najboljše rezultatsko-neodvisno pravilo: 1,8 h / 92 % — ne konvergira k tradiciji).
+Ob tem odkrita prava dnevna konvencija (oznaka dneva = **element ob začetku dneva**), s katero je pošteno
+ujemanje: čiste IAU 93 %, kalibrirane 97 %.
 
-- **Vhod:** javne ekliptične dolžine svetlih zvezd ob mejah teh ozvezdij (J2000 + precesija — astronomsko
-  dejstvo; npr. Zubenelgenubi/Zubeneschamali za Tehtnico, Antares za Škorpijon, zvezde zahodnega roba
-  Strelca); `tmp/` prototip za zasebno validacijo.
-- **Izhod:** 3 konstante (stopinje) + **dokumentirana izpeljava** (dopolni spec §14.5) + zasebna
-  validacija: ali z njimi napaka proti referenci ostane bistveno pod čistimi IAU (~cilj < 1 h).
-- **Koraki:**
-  1. ⬜ Izberi zvezde in izračunaj njihove ekliptične dolžine (skripta v `tmp/`).
-  2. ⬜ Definiraj pravilo meje (npr. sredina med mejno zvezdo enega in drugega ozvezdja) — pravilo mora
-     biti **utemeljeno z zvezdami**, ne z rezultatom.
-  3. ⬜ Validiraj zasebno proti `THUN2024`; zapiši dosežen MAE v spec §14.5.
-  4. ⬜ V spec zapiši končne 3 vrednosti + izpeljavo.
-- **Pasti / izhod v sili:** če zvezdna izpeljava ne pride blizu (ostane > ~1,5 h), je **vnaprej dogovorjen
-  fallback: čiste IAU meje** (~2 h, ~90 % dnevno ujemanje — spec §12.3 pravi, da je to sprejemljivo).
-  Motor (T1) je na to pripravljen: meje so **konstante v enem filu**, zamenjava ne dotakne API-ja.
-  → Ta korak torej **ne more ustaviti projekta**, lahko le zniža natančnost.
+**Odločitev (lastnik, 2026-07-30): kalibrirane meje — vseh 12** (ura vstopa MAE 0,26 h, dnevna oznaka
+97 %), z dokumentiranim izvorom in pravnim zagovorom v
+[`biodynamic-calendar-boundaries.md`](feature-requests/biodynamic-calendar-boundaries.md) (vrednosti §1,
+kronologija §2, zagovor §3). **Rezerva = čiste IAU** kot druga tabela konstant v motorju (izhod v sili,
+zamenjava brez API spremembe). Spec posodobljen: §12.6 + §14.5.
 
 ### P0.3 · Odločitve A1–A6 🅿️ (lastnik; blokirajo T1-obseg in T3–T4)
 
@@ -96,9 +87,9 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 
 | # | Odločitev | Predlog (privzet v planu) | Vpliva na |
 |---|---|---|---|
-| A1 | obseg slojev | **B**: element + mena + dvižna/padna (neugodni dnevi = kasneje) | T1.8 (da), T1.9 (ne), T3 |
+| A1 | obseg slojev | ✅ **ODLOČENO (2026-07-30): C — vse 4 plasti**; T1.9 (neugodni) je zadnji korak motorja z izrecno možnostjo zavestnega izpusta ob koncu T1 | T1.8 + T1.9, T3 |
 | A2 | en/dva koledarja | **C z odlogom**: namenski zaslon zdaj, Dnevnik-plast V2 | T3 (Dnevnik izpade iz v1) |
-| A3 | motor | **A**: lasten Meeus izračun (validiran, brez odvisnosti) | T1 |
+| A3 | motor | ✅ **ODLOČENO (2026-07-30): A — lasten Meeus izračun** (validiran, brez odvisnosti) | T1 |
 | A4 | barve | **A**: fiksne semantične, kot `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet) | T2.4 |
 | A5 | ikone | **B**: 4 lastne monokromatske vektorske (emoji 🌸🌿 trčita s katalogom); mena = CustomPainter | T3.1–T3.2 |
 | A6 | privzeto stikalo | **A**: vklopljeno (odkritje prek čipa; argument prek darila) | T2.2 |
@@ -127,17 +118,20 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
   3. ⬜ Sončeva ekliptična dolžina (Meeus 25, ~10 vrstic) + test.
   4. ⬜ Lunina ekliptična dolžina (Meeus 47, srednji elementi + ~36 členov iz prototipa) + **test proti
      Meeus primeru 47.a (0,003°)** — to je vratar taska: če ta test ne pade skozi, se ne gre naprej.
-  5. ⬜ Zodiak: tropski (`floor(λ/30)`), siderični-IAU (pragovi epoha 2000 + precesija `0.01397°/leto`
-     + 3 meje iz P0.2; Kačenosec zložen v prehod Sco/Sgr) + mapping element→del rastline (§14.4).
-     Meje = **konstante v enem filu** (zamenljive brez API spremembe).
+  5. ⬜ Zodiak: tropski (`floor(λ/30)`), siderični s **12 kalibriranimi pragovi** (boundaries doc §1,
+     epoha 2024.0 + precesija `0.013972°/leto`; Kačenosec zajet v meji Sco→Sgr) + **rezervna tabela
+     čistih IAU** (izhod v sili) + mapping element→del rastline (§14.4). Obe tabeli = konstante v enem
+     filu (zamenljive brez API spremembe). V kodi komentar »traditional biodynamic constellation
+     boundaries (calibrated)« — brez imen (boundaries §3).
   6. ⬜ Mena: elongacija, osvetljenost, mlaj/ščip z vzorčenjem+bisekcijo + **test proti javnim menam 2026**
      (1–3 min).
   7. ⬜ Prehod znotraj dneva: element ob lokalni polnoči in koncu dneva; če različna → bisekcija ure
      prehoda (§14.7). **Testi čez DST prehod** (konec marca / konec oktobra — spec §14.5 opozorilo)
      in prehod tik čez polnoč.
-  8. ⬜ (če A1 ≥ B) Deklinacija → dvigajoča/spuščajoča (validirano 96–100 % v prototipu).
-  9. ⬜ (samo če A1 = C) Neugodni dnevi: vozli/perigej/mrki — **največji dodatni izračun v celem tasku**;
-     če C, se doda kot ločen pod-korak s svojimi testi.
+  8. ⬜ Deklinacija → dvigajoča/spuščajoča (validirano 96–100 % v prototipu). (A1=C → vključeno.)
+  9. ⬜ Neugodni dnevi: vozli/perigej/mrki — **največji dodatni izračun v celem tasku**, ločen korak s
+     svojimi testi. (A1=C → vključeno, a z varovalko: ob koncu T1 se zavestno odloči, ali gre v v1 ali
+     se izpusti in doda kasneje — gl. decisions A1.)
   10. ⬜ Referenčni testni nabor: **lastno izračunani** datumi (element + ura prehoda za ~2 meseca),
       ročno preverjeni ob nastanku, commitani kot fixture (naši izračuni, pravno čisti). Zasebna
       navzkrižna preverba proti `tmp/` prototipu (ne gre v repo, gl. P0.1).
@@ -202,8 +196,10 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   2. ⬜ Element-ikone (A5): 4 vektorske (ali začasno emoji, če A5=A) — en skupen widget
      `ElementBadge` (ikona+oznaka, nikoli samo barva — dostopnost).
   3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena + oznaka), ‹ › navigacija,
-     legenda. Podatki: `List<BiodynamicDay>` iz providerja (memoizacija na (mesec, sistem), če meritev
-     T1.11 pokaže potrebo). **Pogled na napravi.**
+     legenda. **Dnevna oznaka celice = element ob začetku dneva** (konvencija tiskanih koledarjev,
+     spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi uri dneva → dan nosi novi
+     element). Podatki: `List<BiodynamicDay>` iz providerja (memoizacija na (mesec, sistem), če
+     meritev T1.11 pokaže potrebo). **Pogled na napravi.**
   4. ⬜ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
      slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.**
   5. ⬜ Dan podrobno — **sheet** (ne ruta; screen-map §5): »Kaj se dogaja« (ozvezdje/znamenje, ura
@@ -369,7 +365,7 @@ DoD sandbox matrika (nakup/unovčitev/offline/podaljšanje/vračilo/predelava/pr
 
 | Potencialna slepa ulica | Zavarovanje v planu |
 |---|---|
-| Nevtralne meje se ne dajo izpeljati dovolj natančno | P0.2 fallback = čiste IAU (~2 h), meje so konstante v enem filu (T1.5) |
+| ~~Nevtralne meje se ne dajo izpeljati dovolj natančno~~ (uresničilo se je!) | Razrešeno 2026-07-30: kalibrirane vseh 12 s pravnim zagovorom (boundaries doc); rezerva čiste IAU kot druga tabela konstant (T1.5) |
 | Motor ni dovolj natančen | Vratar T1.4 (Meeus 47.a) + T1.6 (mene) — pade takoj, ne sredi UI |
 | Izguba kalibracijskih podatkov | P0.1 backup pred vsem |
 | UI odločitve se spremenijo med gradnjo | Motor API (T1.1) brez UI predpostavk; barve/ikone izolirane v T2.4/T3.2 |

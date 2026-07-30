@@ -13,7 +13,10 @@
 
 ## A. Prave odločitve (rabijo lastnika)
 
-### A1 · Obseg slojev v prvi različici  ⬜ ODPRTO
+### A1 · Obseg slojev v prvi različici  ✅ ODLOČENO (2026-07-30): **C — vse 4 plasti**
+**Z varovalko:** plast 4 (neugodni dnevi) je v planu implementacije ločen, zadnji korak motorja
+(T1.9) — če se med potjo izkaže za predrago, se **zavestno izpusti** in doda kasneje (čista funkcija,
+brez sheme — poceni naknadno). Odločitev o izpustu se sprejme ob koncu T1, ne tiho.
 **Problem:** lunin koledar ima več neodvisnih »plasti«. Katere gremo delat najprej? Vsaka se da dodati
 kasneje poceni (ni sheme/synca).
 - **Plast 1 — element dneva** (plod/list/cvet/korenina): jedro, gotovo notri.
@@ -43,7 +46,7 @@ obarvava z lunino plastjo, ali pustiva?
 
 **Predlog:** C, a Dnevnik-plast **zadnja / za V2** (najprej namenski zaslon). · *(spec §8.9; wireframe board C)*
 
-### A3 · Motor: lastna koda ali gotov paket  ⬜ ODPRTO
+### A3 · Motor: lastna koda ali gotov paket  ✅ ODLOČENO (2026-07-30): **A — lasten izračun**
 **Problem:** za položaj Lune je treba računati. To je edino mesto z morebitno novo knjižnico — CLAUDE.md
 zahteva, da **najprej vprašam**.
 **Opcije in kaj pomenijo:**
@@ -112,11 +115,15 @@ lokacije · element se re-izpelje (ne zamrzuje) · vstopne točke (čip, Dnevnik
 board C = prekrivna plast (ne nov koledar) · vrstni red board-ov · kalibracija sideričnih mej (§12.3) ·
 **free/premium meja (2026-07-30):** mena free, element-dan + planer + akcije = Plus, debitira zaklenjen z
 lansirnim darilom (spec §11.2, FR-20 §10.4) · **zaporedje gradnje (2026-07-30):** motor → UI dark → FR-20
-minimalna rezina → prižig z darilom → trgovina (rollout plan).
+minimalna rezina → prižig z darilom → trgovina (rollout plan) · **meje ozvezdij (2026-07-30):** kalibrirane
+vseh 12 (0,26 h / 97 %), rezerva čiste IAU; izvor + pravni zagovor v `biodynamic-calendar-boundaries.md` ·
+**Kačenosec:** zajet v meji Sco→Sgr · **dnevna oznaka = element ob začetku dneva** (spec §12.6).
 
 ## D. Delo, ne odločitev (opraviti ob gradnji)
 - Napisati **lastne opise dejavnosti** (i18n sl/en/de, na element) — pravno ne prepis Luninih bukev.
-- Pridobiti **nevtralne vrednosti 3 kalibriranih mej** (po svetlih zvezdah, ne Thun številke).
+- ✅ ~~Pridobiti nevtralne vrednosti 3 kalibriranih mej (po svetlih zvezdah).~~ **Opravljeno drugače
+  (2026-07-30):** zvezdna izpeljava izmerjena kot slepa ulica; odločeno = **kalibrirane vseh 12 mej**
+  (0,26 h / 97 %) s pravnim zagovorom — [`biodynamic-calendar-boundaries.md`](biodynamic-calendar-boundaries.md).
 - Zgraditi **meno kot CustomPainter** (8 faz iz osvetljenosti).
 
 ---

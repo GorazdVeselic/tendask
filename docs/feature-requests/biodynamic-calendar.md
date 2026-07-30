@@ -307,15 +307,16 @@ Tendask+** (parameter, delovni predlog 6 mesecev — dolžina se izbere ob priž
 > odločitveni dokument ga prevaja v izbire, ki jih polirava.
 
 1. ~~**Meje ozvezdij** (znotraj sideričnega): IAU vs. enakih-30°; fino umerjanje rabi ~10 datumov.~~
-   **RAZREŠENO (2026-07-22, §12):** dobili tiskani Thun 2024 (50 vstopov z uro) → **IAU realne meje so
-   pravi model** (enakih-30° dokazano ne deluje). Čiste IAU = ~2 h; nevtralna kalibracija 3 mej
-   (Tehtnica/Škorpijon/Strelec po svetlih zvezdah, **ne** po Thunovih številkah) → ~25 min. Privzeto
-   siderični-IAU (§13).
-2. **Kačenosec (Ophiuchus):** 12 vs. 13; obravnava kot prehod.
-3. **Paket vs. lasten Meeus izračun** (odvisnost izven `tech-stack §1` → najprej vprašaj).
-4. **Obseg jedra:** samo element-dan, ali takoj tudi faza lune (T10 »poceni raven« — enostavno,
-   morda skupaj) in dvigajoča/spuščajoča?
-5. **Neugodni dnevi** (vozli/perigej/mrki): MVP ali kasneje?
+   **DOKONČNO RAZREŠENO (2026-07-22 + 2026-07-30, §12.6):** realna neenaka ozvezdja (enakih-30° dokazano
+   ne deluje); privzeto **kalibrirane vseh 12 mej** (0,26 h / 97 %), rezerva čiste IAU (2,2 h / 93 %).
+   Vrednosti + izvor + pravni zagovor: [`biodynamic-calendar-boundaries.md`](biodynamic-calendar-boundaries.md).
+   *(Vmesna ideja »kalibracija 3 mej po svetlih zvezdah« je izmerjena kot slepa ulica — §12.6.)*
+2. ~~**Kačenosec (Ophiuchus):** 12 vs. 13; obravnava kot prehod.~~ **RAZREŠENO (2026-07-30):** ni
+   samostojen — zajet v kalibrirani meji Sco→Sgr (boundaries §1).
+3. ~~**Paket vs. lasten Meeus izračun**~~ **ODLOČENO (2026-07-30): lasten izračun** (decisions A3).
+4. ~~**Obseg jedra**~~ **ODLOČENO (2026-07-30): vse 4 plasti** (decisions A1 = C).
+5. ~~**Neugodni dnevi** (vozli/perigej/mrki): MVP ali kasneje?~~ **V obsegu (A1 = C)**, z varovalko
+   zavestnega izpusta ob koncu T1 (decisions A1).
 6. **Privzeto stanje stikala** (off vs. onboarding-vprašanje) in ali vprašati o sistemu.
 7. **Izbira med koledarji** (T10 lastnikova ideja): če kdaj več sistemov, vsak ima svoje meje —
    ločen podspec; za zdaj **en** (izračunan siderični).
@@ -471,6 +472,27 @@ je **časovno stabilen** (precesija ~1,5 min/leto, že vključena).
   označi »do 14:20 …, nato …«) + enkratna nevtralna kalibracija 3 mej. **Dodatnih virov ne rabimo** —
   4 meseci × obe smeri × 2026 = dovolj.
 
+### 12.6 Ponovna meritev in KONČNA odločitev mej (2026-07-30) — nadomešča §12.3-sklep o »3 mejah«
+
+Pred implementacijo sva ponovila meritev (skripta `tmp/moon_star_bounds.py`, arhivirana na NAS) in
+prišla do treh ugotovitev, ki spreminjajo julijski sklep:
+
+1. **Thunova dnevna oznaka = element OB ZAČETKU dneva** (»plod do 3h, nato koren« → dan piše plod),
+   ne dominanten del dneva. S to konvencijo je pošteno merjeno ujemanje dnevnih oznak:
+   **čiste IAU 93 % · kalibrirane vseh 12 mej 97 %** (ostanek = polnočni drobci — prehod v prvi uri
+   dneva; rešljivo s prikazno konvencijo, ne z mejami). **Posledica za UI:** celica dneva nosi element
+   začetka dneva + uro prehoda (enako kot tiskani koledarji).
+2. **Izpeljava mej iz svetlih zvezd je slepa ulica** (preizkušena z vnaprej določenimi pravili nad
+   HIP koordinatami): najboljše pravilo doseže 1,8 h / 92 % — ne konvergira; pravilo, ki bi zadelo
+   tradicijo, bi bilo izbrano zaradi rezultata (= kalibracija po referenci z ovinkom). Zavrnjeno.
+3. **Kalibracija pomaga predvsem pri URI prehoda:** čiste IAU ~2,2 h; kalibrirane vseh 12 → **0,26 h
+   (16 min)** čez vseh 50 referenčnih vstopov.
+
+**Odločitev (lastnik, 2026-07-30): kalibrirane meje — vseh 12, ne le 3.** Vrednosti, natančen izvor
+(ponovljiva kronologija) in **pravni zagovor** so v ločenem dokumentu:
+[`biodynamic-calendar-boundaries.md`](biodynamic-calendar-boundaries.md). Izhod v sili = preklop na
+čiste IAU (ena tabela konstant, 93 %/2,2 h).
+
 ## 13. Toggle sistema: tropski / siderični (odločeno 2026-07-22)
 
 Ker je trg razdeljen (splet ≈ tropski, tiskana biodinamika = siderični), ponudimo **preklop sistema**.
@@ -537,14 +559,15 @@ voda → list    (Rak, Škorpijon, Ribi)
 Zaporedje znamenj od 0°: [plod, korenina, cvet, list] × 3.
 
 ### 14.5 Razmejitev (izbira = `system`; kalibrirano §12.3)
-- **Siderični-IAU (PRIVZETO):** `λ` primerjaj s pragovi realnih **neenakih** ozvezdij. Baza = pragovi iz
-  datumov vstopa Sonca (epoha 2000 + precesija `0.01397°/leto`). **Nevtralno kalibrirane 3 meje** (območje
-  Kačenosca). **Empirični pragovi (°), izpeljani iz tiskanega Thun 2024** (Lunina λ ob dokumentiranih
-  urah vstopa — referenca, ne za dobesedni prepis):
-  `Ari 29.6 · Tau 54.0 · Gem 90.2 · Cnc 118.1 · Leo 139.1 · Vir 174.0 · Lib 219.9 · Sco 238.2 · Sgr 269.2 ·
-  Cap 299.4 · Aqr 327.1 · Psc 352.3`. **8/12 mej je znotraj ±0,7° od surovih IAU**; odstopajo le Tehtnica
-  (+2,2°), Škorpijon (−3,7°), Strelec (+3,0°) → te tri **kalibriraj po svetlih zvezdah** (ne po zgornjih
-  Thunovih številkah — pravni §3), ostale pusti IAU.
+- **Siderični — kalibrirane meje (PRIVZETO; odločeno 2026-07-30, §12.6):** `λ` primerjaj z **12
+  kalibriranimi pragovi** realnih neenakih ozvezdij — vrednosti (epoha 2024.0, tropska λ), izvor in
+  pravni zagovor: [`biodynamic-calendar-boundaries.md`](biodynamic-calendar-boundaries.md) §1:
+  `Ari 29.8 · Tau 54.1 · Gem 90.1 · Cnc 118.1 · Leo 139.1 · Vir 174.0 · Lib 220.0 · Sco 238.1 ·
+  Sgr 269.1 · Cap 299.2 · Aqr 327.1 · Psc 352.1`. Za druga leta prištej precesijo
+  `0.013972°/leto × (leto − 2024)`. Verificirano: ura vstopa MAE 0,26 h, dnevna oznaka 97 %.
+  **Rezervni model = čiste IAU meje** (pragovi iz datumov vstopa Sonca, epoha 2000 + precesija) —
+  93 %/2,2 h; motor ju drži kot dve tabeli konstant (zamenjava brez API spremembe). *(Prejšnje navodilo
+  »kalibriraj 3 meje po svetlih zvezdah« je preseženo — izmerjeno kot slepa ulica, §12.6.)*
 - **Tropski (preklop):** `sign = floor(λ / 30) mod 12`. Za primerjavo s spletom.
 - **Siderični enakih-30° — ZAVRNJEN** (§12.3): `floor((λ−ayanamsa)/30)`; dokazano se s tiskanim Thunom NE
   ujame (napaka do 18–23 h, ker Thun uporablja neenaka ozvezdja). Ne uporabljamo.
@@ -576,8 +599,11 @@ BiodynamicDay dayFor(DateTime date, CalendarSystem system)
 znanim datumom (Meeus primer + mene 2026). **`system`** je edini vzvod med tropskim in sideričnim.
 
 ### 14.9 Kaj je še odprto ob implementaciji
-Paket vs lasten Meeus · Kačenosec 12/13 · ~~kalibracija sideričnih mej~~ (**razrešeno §12.3**) · nevtralni
-vir za 3 kalibrirane meje (svetle zvezde) · dvigajoča/spuščajoča in neugodni dnevi (MVP ali kasneje).
+~~Paket vs lasten Meeus~~ (**odločeno 2026-07-30: lasten, decisions A3**) · ~~Kačenosec 12/13~~
+(**razrešen 2026-07-30:** ni samostojen — njegov pas je zajet v kalibrirani meji Sco→Sgr, gl.
+boundaries §1) · ~~kalibracija sideričnih mej~~ (**dokončno 2026-07-30: kalibrirane vseh 12, §12.6 +
+boundaries doc**) · ~~obseg slojev~~ (**odločeno: vse 4 plasti, decisions A1**; neugodni dnevi z
+varovalko izpusta ob koncu T1).
 
 ## 15. Konkurenca — posadi.si (benchmark, 2026-07-22)
 
