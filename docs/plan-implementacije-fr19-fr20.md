@@ -118,11 +118,11 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
   3. ✅ Sončeva ekliptična dolžina (2026-07-30): Meeus 25, ~10 vrstic + test.
   4. ✅ Lunina ekliptična dolžina (2026-07-30): Meeus 47, srednji elementi + 36 členov iz prototipa; **test proti
      Meeus primeru 47.a** ✅ (0,0033°; Dart = Python prototip na 13 decimalk) — vratar prestal.
-  5. ⬜ Zodiak: tropski (`floor(λ/30)`), siderični s **12 kalibriranimi pragovi** (boundaries doc §1,
+  5. ✅ Zodiak (2026-07-30): tropski (`floor(λ/30)`), siderični s **12 kalibriranimi pragovi** (boundaries doc §1,
      epoha 2024.0 + precesija `0.013972°/leto`; Kačenosec zajet v meji Sco→Sgr) + **rezervna tabela
-     čistih IAU** (izhod v sili) + mapping element→del rastline (§14.4). Obe tabeli = konstante v enem
-     filu (zamenljive brez API spremembe). V kodi komentar »traditional biodynamic constellation
-     boundaries (calibrated)« — brez imen (boundaries §3).
+     čistih IAU** (izhod v sili; epoha 2000, iz prototipa) + mapping element→del rastline (§14.4). Obe
+     tabeli = konstante v `zodiac.dart` (zamenjava = preusmeritev `_activeStarts`, brez API spremembe).
+     Komentar brez imen (boundaries §3) ✅.
   6. ⬜ Mena: elongacija, osvetljenost, mlaj/ščip z vzorčenjem+bisekcijo + **test proti javnim menam 2026**
      (1–3 min).
   7. ⬜ Prehod znotraj dneva: element ob lokalni polnoči in koncu dneva; če različna → bisekcija ure
