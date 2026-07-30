@@ -213,8 +213,8 @@ unit testi (izbor prejemnikov, kapica, sprožilec prek `Clock`) · layout matrik
 
 Merjenje: ista sonda, pognana pred izdajo in 30 dni po njej. FR-14 (analitika) ni pogoj.
 
-**Ločevanje od FR-22:** če gresta v isti izdaji, učinka ne bo mogoče ločiti. Predlog: FR-22
-prvi (samostojna izdaja), ta FR v naslednji.
+**Ločevanje od FR-22 ni pogoj** (odločeno 30. 7.): šteje rast deleža uporabnikov z lokacijo, ne
+pripis učinka posameznemu popravku. Vrstni red izdaje je torej prost.
 
 ## 10. Odprta vprašanja (odločiti pred gradnjo)
 

@@ -62,8 +62,8 @@ ponavljanja.
 | **Varovalo:** delež, ki lokacijo pozneje počisti | ~0 | ostane ~0 |
 
 Merjenje je isto kot pri FR-22 (`tool/geo_user_map.py`, `docs/analitika-geo.md`) — nova analitika
-ni pogoj. Ker FR-22 in FR-24 vplivata na isto metriko, ju **ne izdaj v isti izdaji**, sicer učinka
-ni mogoče pripisati.
+ni pogoj. FR-22 in FR-24 vplivata na isto metriko, a **smeta v isto izdajo** (odločeno 30. 7.):
+šteje, da delež zraste, ne kateri popravek ga je dvignil.
 
 ## 3. Rešitev
 

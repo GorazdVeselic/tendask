@@ -33,8 +33,9 @@ strop skale nav pasu, krajši nemški nav napisi, šest M11 skript, migracije `0
 
 ## Čaka na izdajo
 
-⚠️ **FR-22 in FR-24 ne smeta v isto izdajo** — ista metrika (delež novih profilov z `h3_r5`), učinka
-ne bi ločila. Zakaj tako pri obeh: [`narejeno.md`](narejeno.md).
+Oba gresta lahko **v isto izdajo** (odločeno 30. 7.): merilo je delež uporabnikov z lokacijo, in če
+zraste, je cilj dosežen — kateri od popravkov je prispeval, ni pomembno. Prejšnja zahteva po ločenih
+izdajah zaradi atribucije je umaknjena.
 
 - **FR-24 — onboarding lokacija** (`699fe5b`), preverjen na napravi. Spec:
   [`onboarding-location-cta.md`](feature-requests/onboarding-location-cta.md).
@@ -42,8 +43,6 @@ ne bi ločila. Zakaj tako pri obeh: [`narejeno.md`](narejeno.md).
   [planu §6](feature-requests/location-adoption-plan.md) + GPS brez omrežja. Spec:
   [`location-adoption.md`](feature-requests/location-adoption.md) ·
   [wireframe](wireframes/01d-weather-states.html).
-  **Pred izdajo znižaj cilj ≥60 %** — postavljen je bil za celozaslonsko povabilo, izdaja pa nosi
-  ~72 dp kartico.
 
 ## Staging
 

@@ -28,10 +28,9 @@ onboarding — preskok je preprosto najlažja poteza. Od Play izdaje 20. 7. je b
 **FR-22** (brez lokacije ni vremena) in **FR-24** (onboarding) sta ✅ narejena in preverjena na napravi,
 oba **še neizdana** → [`narejeno.md`](narejeno.md).
 
-⚠️ **FR-22 in FR-24 ne smeta v isto izdajo** — ista metrika, učinka ne bi ločila.
 Merilo: 25 % → **≥60 %** novih v 30 dneh, merljivo z `tool/geo_user_map.py`, brez nove analitike.
-**Cilj je treba pred izdajo znižati:** postavljen je bil za celozaslonsko povabilo, FR-22 pa je izdan
-kot ~72 dp kartica.
+FR-22 in FR-24 gresta lahko v isto izdajo (odločeno 30. 7.) — če delež zraste, je cilj dosežen;
+kateri popravek je prispeval, ni pomembno.
 
 ## Tendask+ (monetizacija)
 

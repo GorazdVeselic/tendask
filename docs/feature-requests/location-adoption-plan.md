@@ -4,7 +4,7 @@
 - **Datum:** 2026-07-29 · **Stanje:** ✅ izveden 30. 7. 2026 (zgodovinski dokument — kartica je bila
   po izvedbi prenovljena, glej [`location-adoption.md`](location-adoption.md) in
   [`../narejeno.md`](../narejeno.md))
-- **Predpogoj izdaje:** FR-24 je narejen, a neizdan — FR-22 **ne sme v isto izdajo** (ista metrika).
+- **Predpogoj izdaje:** odpadel 30. 7. — FR-22 in FR-24 gresta lahko v isto izdajo.
 
 Plan je napisan tako, da ga je mogoče izvesti od zgoraj navzdol. §2 so trki, ki so se pokazali med
 načrtovanjem in **spremenijo spec** — preberi jih pred §3.

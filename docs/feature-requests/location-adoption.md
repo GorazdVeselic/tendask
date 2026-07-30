@@ -3,7 +3,6 @@
 - **Status:** ✅ **implementirano in preverjeno na napravi 30. 7. 2026, še neizdano.** Izvedba odstopa
   od §3 v enem: povabilo je **kompaktna kartica ~72 dp** (vremenska ikona, naslov o vremenu, ena poved
   s povezano besedo), ne celozaslonsko povabilo z gumbom — prva izvedba je izgubila vez z vremenom.
-  Posledica: **cilj ≥60 % iz §2 je treba znižati**, ker je bil postavljen za večji poziv.
   Kaj je zgrajeno in zakaj → [`../narejeno.md`](../narejeno.md).
 - **Datum:** 2026-07-28 · **rešitev spremenjena 2026-07-29** (§3: brez lokacije vremena ne kažemo)
 - **Cilj:** povečati delež uporabnikov z nastavljeno lokacijo vrta (`profile.h3_r5`)
@@ -170,7 +169,8 @@ Nič novega v `assets/`.
   uporabnike; vreden svojega FR-ja, ker se dotakne onboardinga. → **Zdaj
   [FR-24](onboarding-location-cta.md)** (2026-07-29). Izvedba ni `TextButton`, kot je
   slutila ta alineja, ampak poudarjena GPS kartica + nepoudarjen gumb za preskok.
-  **Ne izdaj v isti izdaji kot ta FR** — oba premikata isto metriko.
+  ~~Ne izdaj v isti izdaji kot ta FR~~ — **umaknjeno 30. 7.:** oba smeta v isto izdajo, ker šteje
+  rast deleža, ne pripis učinka posameznemu popravku.
 - Poziv ob prvi rastlini/zalivanju.
 - Sprememba privzetka iz Ljubljane v »brez vremena« (glej §7).
 
