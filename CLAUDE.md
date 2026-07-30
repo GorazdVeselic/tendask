@@ -162,6 +162,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 ## Git / commiti
 
 - **En korak iz `docs/backlog.md` = en commit.** Conventional Commits: `feat:`, `fix:`, `refactor:`, `chore:`, `docs:`, `test:`. Naslov ≤72 znakov, brez pike. Slovenski opis.
+- **Kompaktno sporočilo: samo naslov; telo (1–2 vrstici) le, ko je *zakaj* neočiten. Brez Co-Authored-By ali drugih podpisov/trailerjev.**
 - **Pred commitom VEDNO vprašaj** (delovni dogovor): "naj ta korak označim kot zaključen in ga commitam?"
 - Body razloži *zakaj*, ne *kaj* (diff že pove kaj).
 - En commit = ena logična sprememba. Brez "wip + cleanup" mega-commitov.
