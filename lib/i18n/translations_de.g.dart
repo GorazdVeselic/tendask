@@ -354,7 +354,7 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
 	@override String get place_note => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.';
 	@override String get search => 'Suchen';
-	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.';
+	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur einen ungefähren Standort (auf wenige Kilometer genau), den wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
 	@override String get skip => 'Überspringen';
 	@override String get err_denied => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.';
@@ -367,7 +367,7 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get status_unset => 'Standort noch nicht festgelegt';
 	@override String get clear => 'Entfernen';
 	@override String get clear_confirm_title => 'Standort entfernen?';
-	@override String get clear_confirm_body => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.';
+	@override String get clear_confirm_body => 'Ohne Standort können wir dir kein Wetter zeigen.';
 	@override String get clear_confirm_yes => 'Entfernen';
 	@override String get clear_confirm_cancel => 'Abbrechen';
 }
@@ -858,14 +858,20 @@ class _Translations$weather$de extends Translations$weather$en {
 	@override String get band_forecast => 'Vorhersage';
 	@override String get rain_past48h => 'Regen letzte 48 h:';
 	@override String get detail_waiting => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.';
-	@override String get detail_none => 'Keine Wetteraufnahme (zum Zeitpunkt offline).';
-	@override String get detail_no_location => 'Das Wetter zeichnen wir auf, sobald du deinen Standort festlegst.';
+	@override String get detail_none => 'Keine Wetteraufnahme.';
+	@override TextSpan detail_no_location({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'Das Wetter zeichnen wir auf, sobald du deinen '),
+		link('Standort'),
+		const TextSpan(text: ' festlegst.'),
+	]);
 	@override String get home_unavailable => 'Wetter derzeit nicht verfügbar.';
 	@override String get home_retry => 'Zum Wiederholen tippen';
-	@override String get no_location_title => 'Wo gärtnerst du?';
-	@override String get no_location_body => 'Mit deinem Standort können wir dir die Wettervorhersage für deinen Garten zeigen.';
-	@override String get no_location_cta => 'Standort festlegen';
-	@override String get no_location_privacy => 'Wir speichern nur einen ungefähren Standort.';
+	@override String get no_location_title => 'Wetter für deinen Garten';
+	@override TextSpan no_location_body({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'Für die Vorhersage brauchen wir den '),
+		link('Standort'),
+		const TextSpan(text: ' deines Gartens.'),
+	]);
 	@override String get loading => 'Wetter wird geladen…';
 	@override String updated_at({required Object time}) => 'Aktualisiert ${time}';
 	@override String get m_humidity => 'Luftfeuchte';
@@ -1067,7 +1073,7 @@ extension on TranslationsDe {
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
 			'location.place_note' => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.',
 			'location.search' => 'Suchen',
-			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur eine ungefähre Umgebung (ein größeres Gebiet von wenigen Kilometern), die wir niemals an andere weitergeben.',
+			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur einen ungefähren Standort (auf wenige Kilometer genau), den wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
 			'location.skip' => 'Überspringen',
 			'location.err_denied' => 'Standortzugriff verweigert. Gib einen Ort ein oder erlaube den Zugriff in den Systemeinstellungen.',
@@ -1080,7 +1086,7 @@ extension on TranslationsDe {
 			'location.status_unset' => 'Standort noch nicht festgelegt',
 			'location.clear' => 'Entfernen',
 			'location.clear_confirm_title' => 'Standort entfernen?',
-			'location.clear_confirm_body' => 'Das Wetter verwendet die Standardregion, bis du einen neuen Standort festlegst.',
+			'location.clear_confirm_body' => 'Ohne Standort können wir dir kein Wetter zeigen.',
 			'location.clear_confirm_yes' => 'Entfernen',
 			'location.clear_confirm_cancel' => 'Abbrechen',
 			'journal.title' => 'Tagebuch',
@@ -1427,14 +1433,12 @@ extension on TranslationsDe {
 			'weather.band_forecast' => 'Vorhersage',
 			'weather.rain_past48h' => 'Regen letzte 48 h:',
 			'weather.detail_waiting' => 'Das Wetter wird erfasst, sobald du die Aufgabe als erledigt markierst.',
-			'weather.detail_none' => 'Keine Wetteraufnahme (zum Zeitpunkt offline).',
-			'weather.detail_no_location' => 'Das Wetter zeichnen wir auf, sobald du deinen Standort festlegst.',
+			'weather.detail_none' => 'Keine Wetteraufnahme.',
+			'weather.detail_no_location' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'Das Wetter zeichnen wir auf, sobald du deinen '), link('Standort'), const TextSpan(text: ' festlegst.'), ]), 
 			'weather.home_unavailable' => 'Wetter derzeit nicht verfügbar.',
 			'weather.home_retry' => 'Zum Wiederholen tippen',
-			'weather.no_location_title' => 'Wo gärtnerst du?',
-			'weather.no_location_body' => 'Mit deinem Standort können wir dir die Wettervorhersage für deinen Garten zeigen.',
-			'weather.no_location_cta' => 'Standort festlegen',
-			'weather.no_location_privacy' => 'Wir speichern nur einen ungefähren Standort.',
+			'weather.no_location_title' => 'Wetter für deinen Garten',
+			'weather.no_location_body' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'Für die Vorhersage brauchen wir den '), link('Standort'), const TextSpan(text: ' deines Gartens.'), ]), 
 			'weather.loading' => 'Wetter wird geladen…',
 			'weather.updated_at' => ({required Object time}) => 'Aktualisiert ${time}',
 			'weather.m_humidity' => 'Luftfeuchte',
@@ -1447,10 +1451,10 @@ extension on TranslationsDe {
 			'recipes.empty' => 'Noch keine Rezepte. Mischung mit + speichern.',
 			'recipes.fab_new' => 'Rezept',
 			'recipes.form_new' => 'Neues Rezept',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',

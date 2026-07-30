@@ -28,6 +28,11 @@ WeatherCondition weatherConditionFromCode(int? code) => switch (code) {
   _ => WeatherCondition.unknown,
 };
 
+/// Glyph for every "no weather to show" surface — no garden location, no frozen
+/// snapshot. One constant, not a literal per widget, so those slots can never
+/// drift apart; same family as [weatherEmoji], so they still read as weather.
+const kNoWeatherEmoji = '🌦️';
+
 String weatherEmoji(WeatherCondition condition) => switch (condition) {
   WeatherCondition.clear => '☀️',
   WeatherCondition.mainlyClear => '🌤️',

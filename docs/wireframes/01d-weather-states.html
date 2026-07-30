@@ -23,24 +23,19 @@
   .wchev { color: var(--muted); font-size: 14px; margin-left: 6px; }
   .wstamp { font-size: 11px; color: var(--muted); padding: 0 16px 12px; }
 
-  /* ---- Povabilo namesto vremena (ni lokacije) ---- */
+  /* ---- Namesto vremena, ko lokacije ni ----
+     text-align eksplicitno: .frame-wrap v styles.css centrira vse v okvirju. */
   .winvite {
     background: linear-gradient(135deg, #eaf4ec, #f4faf5);
     border: 1px solid #dcebe0; border-radius: var(--radius);
-    padding: 16px; margin-bottom: 12px;
+    margin-bottom: 12px; text-align: left;
   }
-  .winvite .wi-head { display: flex; align-items: center; gap: 12px; }
-  .winvite .wi-art {
-    width: 44px; height: 44px; flex: 0 0 44px; border-radius: 14px;
-    background: var(--accent-soft); display: grid; place-items: center;
-  }
+  .winvite .row { display: flex; align-items: flex-start; gap: 12px; padding: 14px 16px; }
+  .winvite .ico { font-size: 28px; line-height: 1.1; flex: 0 0 auto; }
+  .winvite .txt { flex: 1 1 auto; min-width: 0; }
   .winvite .wi-title { font-size: 15px; font-weight: 700; }
-  .winvite .wi-body { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 10px 0 14px; }
-  .winvite .btn { padding: 13px; font-size: 15px; border-radius: 13px; }
-  .winvite .wi-priv {
-    display: flex; align-items: center; justify-content: center; gap: 6px;
-    font-size: 11.5px; color: var(--muted); margin-top: 10px;
-  }
+  .winvite .wi-body { font-size: 12.5px; color: var(--muted); line-height: 1.45; margin-top: 2px; }
+  .lnk { color: var(--accent); font-weight: 700; text-decoration: underline; text-underline-offset: 2px; }
 
   /* ---- Tiha kartica (offline / nalaganje / posnetek opravila) ---- */
   .wquiet {
@@ -110,6 +105,12 @@
     Namesto njega stoji povabilo z eno potjo naprej — na zaslon 16. Dosedanje vedenje (tiho vreme za
     Ljubljano prek <code>kDefaultLatitude/Longitude</code>, brez oznake kraja) odpade: aplikacija ni več
     v položaju, da bi tuje vreme predstavljala kot uporabnikovo.</p>
+    <p><b>Prenova kartice (30. 7. 2026):</b> prva izvedba povabila je govorila o lokaciji (»Kje
+    vrtnariš?«, pin, gumb, zasebnostna vrstica) in je z ~168 dp izpodrinila vse ostalo — mesto se ni
+    več bralo kot vremensko. Zdaj je to <b>vremenska kartica brez podatka</b>: vremenska ikona, naslov
+    »Vreme za tvoj vrt«, ena poved, v kateri je beseda <b>lokacija</b> povezava na zaslon 16.
+    Brez gumba, brez zasebnostne vrstice (to pove zaslon 16), brez chevrona — <b>~72 dp</b>.
+    Isto potezo dobi tudi opravilo, ki čaka (telefon 3), da aplikacija za lokacijo prosi na en način.</p>
     <p>Kartice so narisane po dejanski <code>CurrentWeatherCard</code> — glava s krajem, emoji +
     temperatura + pogoj, 3-dnevni strip, ikona za razširitev — ne po starem wireframu 01-home.</p>
   </div>
@@ -129,17 +130,13 @@
         </div>
         <div class="content">
           <div class="winvite">
-            <div class="wi-head">
-              <div class="wi-art">
-                <svg width="26" height="26" viewBox="0 0 64 64"><path d="M32 4 C20 4 11 13 11 25 C11 41 32 60 32 60 C32 60 53 41 53 25 C53 13 44 4 32 4 Z" fill="#2e7d32"/><circle cx="32" cy="25" r="8" fill="#fff"/></svg>
+            <div class="row">
+              <span class="ico">🌦️</span>
+              <div class="txt">
+                <div class="wi-title">Vreme za tvoj vrt</div>
+                <div class="wi-body">Za napoved potrebujemo <span class="lnk">lokacijo</span> vrta.</div>
               </div>
-              <div class="wi-title">Kje vrtnariš?</div>
             </div>
-            <div class="wi-body">
-              Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.
-            </div>
-            <div class="btn">Nastavi lokacijo</div>
-            <div class="wi-priv"><span>🔒</span><span>Shranimo samo približno lokacijo.</span></div>
           </div>
 
           <div class="section-title">Danes</div>
@@ -171,7 +168,7 @@
         </nav>
       </div>
       <div class="cap">1 · Domov — brez lokacije
-        <small>povabilo stoji točno tam, kjer sicer stoji vreme · CTA in cela kartica vodita na 16</small>
+        <small>~72 dp na mestu vremena · vremenska ikona in naslov o vremenu · cela kartica vodi na 16</small>
       </div>
     </div>
 
@@ -201,7 +198,7 @@
             </div>
           </div>
           <div class="priv"><span class="i">🔒</span>
-            <div class="t"><b>Natančne lokacije nikoli ne shranjujemo.</b> Shranimo samo <b>približno okolico</b>.</div>
+            <div class="t"><b>Natančne lokacije nikoli ne shranjujemo.</b> Shranimo samo <b>približno lokacijo</b>.</div>
           </div>
           <div class="spacer"></div>
           <div class="divider-or">ali</div>
@@ -242,11 +239,12 @@
           </div>
 
           <div class="section-title">Vremenski posnetek</div>
-          <div class="wquiet">
-            <span class="qi">📍</span>
-            <div>
-              <div>Vreme zabeležimo, ko nastaviš lokacijo.</div>
-              <div class="qcta">Nastavi lokacijo</div>
+          <div class="winvite">
+            <div class="row">
+              <span class="ico">🌦️</span>
+              <div class="txt">
+                <div class="wi-body" style="margin-top:0;">Vreme zabeležimo, ko nastaviš <span class="lnk">lokacijo</span>.</div>
+              </div>
             </div>
           </div>
 
@@ -261,7 +259,7 @@
         </nav>
       </div>
       <div class="cap">3 · Opravilo čaka — brez lokacije <span class="badge new">novo</span>
-        <small>posledica odločitve: brez lokacije ob zaključku ni kaj zamrzniti · CTA še pomaga</small>
+        <small>ista kartica kot na Domov, brez naslova · posledica odločitve: brez lokacije ob zaključku ni kaj zamrzniti</small>
       </div>
     </div>
 
@@ -284,9 +282,13 @@
           </div>
 
           <div class="section-title">Vremenski posnetek</div>
-          <div class="wquiet">
-            <span class="qi">☁️</span>
-            <div>Vremenski posnetek ni na voljo.</div>
+          <div class="winvite">
+            <div class="row">
+              <span class="ico">🌦️</span>
+              <div class="txt">
+                <div class="wi-body" style="margin-top:0;">Vremenski posnetek ni na voljo.</div>
+              </div>
+            </div>
           </div>
 
           <div class="section-title">Opombe</div>
@@ -300,7 +302,7 @@
         </nav>
       </div>
       <div class="cap">4 · Opravilo opravljeno — brez posnetka <span class="badge new">besedilo</span>
-        <small>vzroka za nazaj ne poznamo → brez trditve in brez gumba</small>
+        <small>ista kartica in ista ikona, le brez povezave · vzroka za nazaj ne poznamo → brez trditve in brez izhoda</small>
       </div>
     </div>
 
@@ -379,13 +381,15 @@
           <div class="icon-btn">⚙️</div>
         </div>
         <div class="content">
-          <div class="wquiet">
-            <span class="qi">☁️</span>
-            <div>
-              <div>Vreme trenutno ni na voljo.</div>
-              <div class="qcta">Tapni za ponovni poskus</div>
+          <div class="winvite">
+            <div class="row" style="align-items:center;">
+              <span class="ico">🌦️</span>
+              <div class="txt">
+                <div class="wi-body" style="margin-top:0;">Vreme trenutno ni na voljo.</div>
+                <div style="color:var(--accent);font-weight:700;font-size:11.5px;">Tapni za ponovni poskus</div>
+              </div>
+              <span style="color:var(--muted);font-size:17px;">↻</span>
             </div>
-            <span class="qtrail">↻</span>
           </div>
 
           <div class="section-title">Danes</div>
@@ -416,8 +420,8 @@
           <div class="nav-item"><span class="ico">🪴</span>Vrt</div>
         </nav>
       </div>
-      <div class="cap">6 · Z lokacijo, brez povezave <span class="badge same">nespremenjeno</span>
-        <small>lokacija je znana, podatka ni · to ni poziv za lokacijo</small>
+      <div class="cap">6 · Z lokacijo, brez povezave <span class="badge new">ikona</span>
+        <small>lokacija je znana, podatka ni · to ni poziv za lokacijo — razliko nosita besedilo in ↻</small>
       </div>
     </div>
 
@@ -474,16 +478,16 @@
   <table class="cmp">
     <tr><th style="width:22%;">Mesto</th><th style="width:20%;">CTA</th><th style="width:24%;">Cilj</th><th style="width:34%;">Opomba</th></tr>
     <tr>
-      <td>Domov — povabilo <span class="badge new">novo</span></td>
-      <td><b>Nastavi lokacijo</b> (poln gumb) + tap na celo kartico</td>
+      <td>Domov — brez lokacije <span class="badge new">novo</span></td>
+      <td>tap na celo kartico; podčrtana beseda <b>lokacijo</b> je znak</td>
       <td><code>push('/location')</code> → zaslon 16</td>
-      <td>Gumb je vizualni znak, cela kartica je tarča — en <code>onTap</code>, dve poti do njega. Zaslon 16 s <code>push</code> dobi puščico nazaj in nima »Nadaljuj«.</td>
+      <td>Beseda je vizualni znak, tarča je cela kartica — zato tudi nima svojega <code>TapGestureRecognizer</code> in widget ostane <code>StatelessWidget</code>. Zaslon 16 s <code>push</code> dobi puščico nazaj in nima »Nadaljuj«.</td>
     </tr>
     <tr>
       <td>Opravilo čaka — brez lokacije <span class="badge new">novo</span></td>
-      <td><b>Nastavi lokacijo</b> (besedilni)</td>
+      <td>tap na celo kartico namiga; ista podčrtana beseda</td>
       <td><code>push('/location')</code> → zaslon 16</td>
-      <td>Edini poziv zunaj Domov, in ne po lastni volji: uporabnik ravno gleda mesto, kjer bi vreme bilo.</td>
+      <td>Edini poziv zunaj Domov, in ne po lastni volji: uporabnik ravno gleda mesto, kjer bi vreme bilo. Ista poteza kot na Domov — aplikacija za lokacijo prosi na en način.</td>
     </tr>
     <tr>
       <td>Opravilo opravljeno — brez lokacije <span class="badge new">novo</span></td>
@@ -525,49 +529,46 @@
     <tr><th style="width:19%;">Ključ</th><th style="width:27%;">sl</th><th style="width:27%;">en</th><th style="width:27%;">de</th></tr>
     <tr>
       <td class="k">no_location_title</td>
-      <td>Kje vrtnariš?</td>
-      <td>Where do you garden?</td>
-      <td>Wo gärtnerst du?</td>
+      <td>Vreme za tvoj vrt</td>
+      <td>Weather for your garden</td>
+      <td>Wetter für deinen Garten</td>
     </tr>
     <tr>
-      <td class="k">no_location_body</td>
-      <td>Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.</td>
-      <td>With your location we can show you the weather forecast for your garden.</td>
-      <td>Mit deinem Standort können wir dir die Wettervorhersage für deinen Garten zeigen.</td>
+      <td class="k">no_location_body<br>(rich)</td>
+      <td>Za napoved potrebujemo ${link(lokacijo)} vrta.</td>
+      <td>We need your garden's ${link(location)} for the forecast.</td>
+      <td>Für die Vorhersage brauchen wir den ${link(Standort)} deines Gartens.</td>
     </tr>
     <tr>
-      <td class="k">no_location_cta</td>
-      <td>Nastavi lokacijo</td>
-      <td>Set location</td>
-      <td>Standort festlegen</td>
-    </tr>
-    <tr>
-      <td class="k">no_location_privacy</td>
-      <td>Shranimo samo približno lokacijo.</td>
-      <td>We only store an approximate location.</td>
-      <td>Wir speichern nur einen ungefähren Standort.</td>
-    </tr>
-    <tr>
-      <td class="k">detail_no_location</td>
-      <td>Vreme zabeležimo, ko nastaviš lokacijo.</td>
-      <td>We'll record the weather once you set your location.</td>
-      <td>Das Wetter zeichnen wir auf, sobald du deinen Standort festlegst.</td>
+      <td class="k">detail_no_location<br>(rich)</td>
+      <td>Vreme zabeležimo, ko nastaviš ${link(lokacijo)}.</td>
+      <td>We'll record the weather once you set your ${link(location)}.</td>
+      <td>Das Wetter zeichnen wir auf, sobald du deinen ${link(Standort)} festlegst.</td>
     </tr>
   </table>
+
+  <div class="sect">
+    <p><b>Zakaj <code>(rich)</code>:</b> povezana beseda živi <b>sredi</b> stavka, prevod pa mora
+    ostati ena sama vrednost — sicer bi prevajalec sestavljal poved iz koščkov in nemški besedni red
+    bi razpadel. Slang to pozna kot rich text: v ključu <code>(rich)</code>, v vrednosti
+    <code>${link(…)}</code>, v kodi <code>Text.rich(t.….no_location_body(link: …))</code>.
+    Ključa <code>no_location_cta</code> in <code>no_location_privacy</code> s prenovo
+    <b>odpadeta</b> — gumba ni več, zasebnost pove zaslon 16.</p>
+  </div>
 
   <div class="sect">
     <p><b>Zakaj za zaključeno opravilo ni razlage:</b> aplikacija ne ve, <i>zakaj</i> posnetka ni —
     task tega ne shrani, poznamo le trenutno stanje. Kdor opravilo zaključi brez lokacije in jo pozneje
     nastavi, bi dobil »zajet brez povezave«; kdor zaključi brez povezave in pozneje lokacijo odstrani,
     bi dobil obratno. Trenutno stanje sme opisovati <b>prihodnost</b> (opravilo, ki še čaka — posnetek
-    še bo, zato tam vzrok in CTA), ne pa <b>preteklosti</b>.</p>
+    še bo, zato tam vzrok in pot naprej), ne pa <b>preteklosti</b>.</p>
   </div>
 
   <div class="sect">
-    <p><b>Zakaj tako:</b> naslov je isto vprašanje kot na zaslonu 16 (<code>location.title</code>) — poziv
-    in cilj se berta kot ena poteza. Telo pove korist, ne pogoja, in <b>ne ponovi gumba</b>: če bi telo
-    reklo »nastavi lokacijo«, bi isto pisalo dvakrat, 8 px narazen. Nikjer ni očitka in nikjer se ne šteje,
-    kolikokrat je uporabnik že preskočil.</p>
+    <p><b>Zakaj tako:</b> naslov imenuje <b>vsebino, ki manjka</b> (vreme), ne dejanja, ki ga hočemo od
+    uporabnika — mesto na zaslonu ostane vremensko, tudi ko podatka ni. Poved pod njim pove pogoj v enem
+    stavku in ga ne ponovi v gumbu: povezana beseda <i>je</i> poteza. Nikjer ni očitka in nikjer se ne
+    šteje, kolikokrat je uporabnik že preskočil.</p>
   </div>
 
   <div class="sect">
@@ -628,29 +629,29 @@
   <table class="cmp">
     <tr><th style="width:24%;">Element</th><th style="width:38%;">Kaj</th><th style="width:38%;">Zakaj</th></tr>
     <tr>
-      <td>Ikona povabila</td>
-      <td>Zeleni pin (isti motiv kot ilustracija na zaslonu 16), 26 dp, v zaobljenem kvadratu 44 dp z <code>accent-soft</code> ozadjem.</td>
-      <td>Isti znak na pozivu in na cilju — uporabnik vidi, da je prispel tja, kamor je tapnil. Nič novega v <code>assets/</code>: Material <code>Icons.place</code> zadošča.</td>
+      <td>Ikona</td>
+      <td>Vremenski emoji 🌦️, 28 dp, brez podlage.</td>
+      <td>Isti način zapisa kot pogoji na pravi vremenski kartici (<code>weatherEmoji</code>), zato se mesto še naprej bere kot vremensko. Pin bi govoril o lokaciji — to je pogoj, ne vsebina. Nič novega v <code>assets/</code>.</td>
+    </tr>
+    <tr>
+      <td>Velikost</td>
+      <td>~72 dp; brez fiksne višine in brez <code>maxLines</code>.</td>
+      <td>Med vremensko kartico (~86 dp) in tiho »ni na voljo« (~62 dp) — kot manjkajoč podatek, ne kot poziv. Dolga nemščina ovije in kartica zraste za vrstico, namesto da bi rezala.</td>
     </tr>
     <tr>
       <td>Ozadje kartice</td>
-      <td>Isti zeleni preliv kot vremenska kartica.</td>
-      <td>Povabilo zaseda mesto vremena — če bi bilo drugačne barve, bi bralo kot opozorilo, ne kot vsebina, ki manjka.</td>
+      <td>Isti zeleni preliv kot vremenska kartica (v kodi: navaden <code>Card</code>, tako kot <code>CurrentWeatherCard</code>).</td>
+      <td>Kartica zaseda mesto vremena — če bi bila drugačne barve, bi brala kot opozorilo, ne kot vsebina, ki manjka.</td>
     </tr>
     <tr>
-      <td>Gumb</td>
-      <td><code>FilledButton</code>, polna širina, 48 dp.</td>
-      <td>Enak videz kot <code>SaveBar</code> in listi drugod — ista poteza, isti gumb.</td>
+      <td>Povezana beseda</td>
+      <td><code>primary</code>, krepko, podčrtano — sredi stavka, prek slang <code>(rich)</code>.</td>
+      <td>Znak, da kartica nekam pelje; tarča je cela kartica, ne beseda, zato span nima recognizerja (ki bi ga bilo treba <code>dispose</code>-ati). Chevrona ni — podčrtaj zadošča.</td>
     </tr>
     <tr>
       <td>Barve</td>
-      <td>Vse prek teme: <code>primary</code>, <code>primaryContainer</code>, <code>onSurfaceVariant</code>.</td>
+      <td>Vse prek teme: <code>primary</code>, <code>onSurfaceVariant</code>.</td>
       <td>Brez rdeče in brez klicaja — manjkajoča lokacija ni napaka uporabnika. Paleta sledi <code>theme/</code>, tudi v temnem načinu in ostalih paletah.</td>
-    </tr>
-    <tr>
-      <td>Zasebnostna vrstica</td>
-      <td>🔒 + <code>labelSmall</code> v <code>onSurfaceVariant</code>, sredinsko pod gumbom.</td>
-      <td>Vidna brez tapa, a tiha — pomirja, ne pridiga.</td>
     </tr>
   </table>
 
@@ -663,7 +664,7 @@
     <tr>
       <td><code>gardenLocation</code></td>
       <td>brez celice vrne Ljubljano</td>
-      <td>brez celice vrne <code>null</code> (<code>kDefaultLatitude/Longitude</code> ostane samo kot razvojni <code>--dart-define</code>)</td>
+      <td>brez celice vrne <code>null</code> (ostane samo razvojni <code>--dart-define</code> override <code>kDevLatitude/kDevLongitude</code>)</td>
     </tr>
     <tr>
       <td><code>currentWeather</code></td>

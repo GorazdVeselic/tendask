@@ -5,7 +5,9 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/location/location_repository.dart';
 import '../../../../core/task_status.dart';
+import '../../../../core/widgets/link_span.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../weather/data/weather_code.dart';
 import '../../../weather/data/weather_snapshot.dart';
 import '../../../weather/presentation/weather_card.dart';
 
@@ -25,61 +27,45 @@ class TaskWeatherSection extends ConsumerWidget {
     // A waiting task's snapshot is still ahead of it, so the current location
     // decides whether there will be one — that may be said, and offered. A done
     // task's is not: the task does not record *why* it has none, and the current
-    // location says nothing about the past, so it gets no claim and no CTA.
+    // location says nothing about the past, so it gets no claim and no way out.
     final hasLocation = ref.watch(gardenLocationProvider).value != null;
-    final (:hint, :icon, :showCta) = switch ((task.status, hasLocation)) {
+    final hintStyle = theme.textTheme.bodySmall?.copyWith(
+      color: theme.colorScheme.onSurfaceVariant,
+    );
+    final (:hint, :onTap) = switch ((task.status, hasLocation)) {
       (TaskStatus.waiting, true) => (
-        hint: t.weather.detail_waiting,
-        icon: Icons.cloud_outlined,
-        showCta: false,
+        hint: TextSpan(text: t.weather.detail_waiting),
+        onTap: null,
       ),
       (TaskStatus.waiting, false) => (
-        hint: t.weather.detail_no_location,
-        icon: Icons.place_outlined,
-        showCta: true,
+        // Deliberately the dashboard invite, word for word in shape: same card,
+        // same glyph, a sentence with the same linked word. The app asks for a
+        // location in one voice, wherever it asks.
+        hint: t.weather.detail_no_location(
+          link: (text) => linkSpan(context, text),
+        ),
+        onTap: () => context.push('/location'),
       ),
-      _ => (
-        hint: t.weather.detail_none,
-        icon: Icons.cloud_outlined,
-        showCta: false,
-      ),
+      _ => (hint: TextSpan(text: t.weather.detail_none), onTap: null),
     };
 
-    return Card(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Icon(icon, color: theme.colorScheme.onSurfaceVariant),
-            const SizedBox(width: 12),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    hint,
-                    style: theme.textTheme.bodySmall?.copyWith(
-                      color: theme.colorScheme.onSurfaceVariant,
-                    ),
-                  ),
-                  if (showCta)
-                    TextButton(
-                      // Flush with the hint above it, but still a 40 dp target.
-                      style: TextButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        minimumSize: const Size(0, 40),
-                        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                      ),
-                      onPressed: () => context.push('/location'),
-                      child: Text(t.weather.no_location_cta),
-                    ),
-                ],
-              ),
-            ),
-          ],
-        ),
+    final content = Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Text(kNoWeatherEmoji, style: TextStyle(fontSize: 28)),
+          const SizedBox(width: 12),
+          Expanded(child: Text.rich(hint, style: hintStyle)),
+        ],
       ),
+    );
+
+    return Card(
+      clipBehavior: Clip.antiAlias,
+      child: onTap == null
+          ? content
+          : InkWell(onTap: onTap, child: content),
     );
   }
 }

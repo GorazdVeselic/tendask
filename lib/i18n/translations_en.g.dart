@@ -620,8 +620,8 @@ class Translations$location$en {
 	/// en: 'Search'
 	String get search => 'Search';
 
-	/// en: 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.'
-	String get privacy => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.';
+	/// en: 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.'
+	String get privacy => 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.';
 
 	/// en: 'Continue'
 	String get kContinue => 'Continue';
@@ -659,8 +659,8 @@ class Translations$location$en {
 	/// en: 'Remove location?'
 	String get clear_confirm_title => 'Remove location?';
 
-	/// en: 'Weather will use the default region until you set a new location.'
-	String get clear_confirm_body => 'Weather will use the default region until you set a new location.';
+	/// en: 'Without a location we can't show you the weather.'
+	String get clear_confirm_body => 'Without a location we can\'t show you the weather.';
 
 	/// en: 'Remove'
 	String get clear_confirm_yes => 'Remove';
@@ -1844,11 +1844,15 @@ class Translations$weather$en {
 	/// en: 'Weather will be recorded when you mark the task done.'
 	String get detail_waiting => 'Weather will be recorded when you mark the task done.';
 
-	/// en: 'No weather snapshot (was offline at the time).'
-	String get detail_none => 'No weather snapshot (was offline at the time).';
+	/// en: 'No weather snapshot.'
+	String get detail_none => 'No weather snapshot.';
 
-	/// en: 'We'll record the weather once you set your location.'
-	String get detail_no_location => 'We\'ll record the weather once you set your location.';
+	/// en: 'We'll record the weather once you set your ${link(location)}.'
+	TextSpan detail_no_location({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'We\'ll record the weather once you set your '),
+		link('location'),
+		const TextSpan(text: '.'),
+	]);
 
 	/// en: 'Weather is currently unavailable.'
 	String get home_unavailable => 'Weather is currently unavailable.';
@@ -1856,17 +1860,15 @@ class Translations$weather$en {
 	/// en: 'Tap to retry'
 	String get home_retry => 'Tap to retry';
 
-	/// en: 'Where do you garden?'
-	String get no_location_title => 'Where do you garden?';
+	/// en: 'Weather for your garden'
+	String get no_location_title => 'Weather for your garden';
 
-	/// en: 'With your location we can show you the weather forecast for your garden.'
-	String get no_location_body => 'With your location we can show you the weather forecast for your garden.';
-
-	/// en: 'Set location'
-	String get no_location_cta => 'Set location';
-
-	/// en: 'We only store an approximate location.'
-	String get no_location_privacy => 'We only store an approximate location.';
+	/// en: 'We need your garden's ${link(location)} for the forecast.'
+	TextSpan no_location_body({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'We need your garden\'s '),
+		link('location'),
+		const TextSpan(text: ' for the forecast.'),
+	]);
 
 	/// en: 'Loading weather…'
 	String get loading => 'Loading weather…';
@@ -2150,7 +2152,7 @@ extension on Translations {
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
 			'location.place_note' => 'A nearby village or town is enough — no exact address needed.',
 			'location.search' => 'Search',
-			'location.privacy' => 'We never store your exact location. We only keep an approximate area (a wider region of a few km), which we never reveal to others.',
+			'location.privacy' => 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',
 			'location.skip' => 'Skip',
 			'location.err_denied' => 'Location access denied. Enter a place or grant permission in system settings.',
@@ -2163,7 +2165,7 @@ extension on Translations {
 			'location.status_unset' => 'Location not set yet',
 			'location.clear' => 'Remove',
 			'location.clear_confirm_title' => 'Remove location?',
-			'location.clear_confirm_body' => 'Weather will use the default region until you set a new location.',
+			'location.clear_confirm_body' => 'Without a location we can\'t show you the weather.',
 			'location.clear_confirm_yes' => 'Remove',
 			'location.clear_confirm_cancel' => 'Cancel',
 			'journal.title' => 'Journal',
@@ -2510,14 +2512,12 @@ extension on Translations {
 			'weather.band_forecast' => 'Forecast',
 			'weather.rain_past48h' => 'Rain last 48 h:',
 			'weather.detail_waiting' => 'Weather will be recorded when you mark the task done.',
-			'weather.detail_none' => 'No weather snapshot (was offline at the time).',
-			'weather.detail_no_location' => 'We\'ll record the weather once you set your location.',
+			'weather.detail_none' => 'No weather snapshot.',
+			'weather.detail_no_location' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'We\'ll record the weather once you set your '), link('location'), const TextSpan(text: '.'), ]), 
 			'weather.home_unavailable' => 'Weather is currently unavailable.',
 			'weather.home_retry' => 'Tap to retry',
-			'weather.no_location_title' => 'Where do you garden?',
-			'weather.no_location_body' => 'With your location we can show you the weather forecast for your garden.',
-			'weather.no_location_cta' => 'Set location',
-			'weather.no_location_privacy' => 'We only store an approximate location.',
+			'weather.no_location_title' => 'Weather for your garden',
+			'weather.no_location_body' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'We need your garden\'s '), link('location'), const TextSpan(text: ' for the forecast.'), ]), 
 			'weather.loading' => 'Loading weather…',
 			'weather.updated_at' => ({required Object time}) => 'Updated ${time}',
 			'weather.m_humidity' => 'Humidity',
@@ -2530,10 +2530,10 @@ extension on Translations {
 			'recipes.empty' => 'No recipes yet. Save a mixture with +.',
 			'recipes.fab_new' => 'Recipe',
 			'recipes.form_new' => 'New recipe',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',

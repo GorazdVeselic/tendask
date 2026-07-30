@@ -358,7 +358,7 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
 	@override String get place_note => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.';
 	@override String get search => 'Poišči';
-	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.';
+	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno lokacijo (na nekaj kilometrov natančno), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
 	@override String get skip => 'Preskoči';
 	@override String get err_denied => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.';
@@ -371,7 +371,7 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get status_unset => 'Lokacija še ni nastavljena';
 	@override String get clear => 'Odstrani';
 	@override String get clear_confirm_title => 'Odstranim lokacijo?';
-	@override String get clear_confirm_body => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.';
+	@override String get clear_confirm_body => 'Brez lokacije ti vremena ne bomo mogli pokazati.';
 	@override String get clear_confirm_yes => 'Odstrani';
 	@override String get clear_confirm_cancel => 'Prekliči';
 }
@@ -868,14 +868,20 @@ class _Translations$weather$sl extends Translations$weather$en {
 	@override String get band_forecast => 'Napoved';
 	@override String get rain_past48h => 'Dež zadnjih 48 h:';
 	@override String get detail_waiting => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.';
-	@override String get detail_none => 'Vremenski posnetek ni na voljo (zajet brez povezave).';
-	@override String get detail_no_location => 'Vreme zabeležimo, ko nastaviš lokacijo.';
+	@override String get detail_none => 'Vremenski posnetek ni na voljo.';
+	@override TextSpan detail_no_location({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'Vreme zabeležimo, ko nastaviš '),
+		link('lokacijo'),
+		const TextSpan(text: '.'),
+	]);
 	@override String get home_unavailable => 'Vreme trenutno ni na voljo.';
 	@override String get home_retry => 'Tapni za ponovni poskus';
-	@override String get no_location_title => 'Kje vrtnariš?';
-	@override String get no_location_body => 'Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.';
-	@override String get no_location_cta => 'Nastavi lokacijo';
-	@override String get no_location_privacy => 'Shranimo samo približno lokacijo.';
+	@override String get no_location_title => 'Vreme za tvoj vrt';
+	@override TextSpan no_location_body({required InlineSpanBuilder link}) => TextSpan(children: [
+		const TextSpan(text: 'Za napoved potrebujemo '),
+		link('lokacijo'),
+		const TextSpan(text: ' vrta.'),
+	]);
 	@override String get loading => 'Nalagam vreme…';
 	@override String updated_at({required Object time}) => 'Osveženo ${time}';
 	@override String get m_humidity => 'Vlažnost';
@@ -1077,7 +1083,7 @@ extension on TranslationsSl {
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
 			'location.place_note' => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.',
 			'location.search' => 'Poišči',
-			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno okolico (širše območje nekaj km), ki je nikoli ne razkrijemo drugim.',
+			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno lokacijo (na nekaj kilometrov natančno), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
 			'location.skip' => 'Preskoči',
 			'location.err_denied' => 'Dostop do lokacije je zavrnjen. Vpiši kraj ali omogoči dovoljenje v sistemskih nastavitvah.',
@@ -1090,7 +1096,7 @@ extension on TranslationsSl {
 			'location.status_unset' => 'Lokacija še ni nastavljena',
 			'location.clear' => 'Odstrani',
 			'location.clear_confirm_title' => 'Odstranim lokacijo?',
-			'location.clear_confirm_body' => 'Vreme bo prikazano za privzeto območje, dokler ne nastaviš nove lokacije.',
+			'location.clear_confirm_body' => 'Brez lokacije ti vremena ne bomo mogli pokazati.',
 			'location.clear_confirm_yes' => 'Odstrani',
 			'location.clear_confirm_cancel' => 'Prekliči',
 			'journal.title' => 'Dnevnik',
@@ -1437,14 +1443,12 @@ extension on TranslationsSl {
 			'weather.band_forecast' => 'Napoved',
 			'weather.rain_past48h' => 'Dež zadnjih 48 h:',
 			'weather.detail_waiting' => 'Vreme bo zabeleženo, ko označiš opravilo kot opravljeno.',
-			'weather.detail_none' => 'Vremenski posnetek ni na voljo (zajet brez povezave).',
-			'weather.detail_no_location' => 'Vreme zabeležimo, ko nastaviš lokacijo.',
+			'weather.detail_none' => 'Vremenski posnetek ni na voljo.',
+			'weather.detail_no_location' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'Vreme zabeležimo, ko nastaviš '), link('lokacijo'), const TextSpan(text: '.'), ]), 
 			'weather.home_unavailable' => 'Vreme trenutno ni na voljo.',
 			'weather.home_retry' => 'Tapni za ponovni poskus',
-			'weather.no_location_title' => 'Kje vrtnariš?',
-			'weather.no_location_body' => 'Z lokacijo ti lahko pokažemo vremensko napoved za tvoj vrt.',
-			'weather.no_location_cta' => 'Nastavi lokacijo',
-			'weather.no_location_privacy' => 'Shranimo samo približno lokacijo.',
+			'weather.no_location_title' => 'Vreme za tvoj vrt',
+			'weather.no_location_body' => ({required InlineSpanBuilder link}) => TextSpan(children: [ const TextSpan(text: 'Za napoved potrebujemo '), link('lokacijo'), const TextSpan(text: ' vrta.'), ]), 
 			'weather.loading' => 'Nalagam vreme…',
 			'weather.updated_at' => ({required Object time}) => 'Osveženo ${time}',
 			'weather.m_humidity' => 'Vlažnost',
@@ -1457,10 +1461,10 @@ extension on TranslationsSl {
 			'recipes.empty' => 'Še ni receptov. Shrani mešanico z +.',
 			'recipes.fab_new' => 'Recept',
 			'recipes.form_new' => 'Nov recept',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',

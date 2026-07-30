@@ -66,6 +66,13 @@ Future<void> _pump(
   await tester.pump(const Duration(milliseconds: 100));
 }
 
+/// The no-location hint is rich text (a linked word inside the sentence), so
+/// `find.text` — which only reads `Text.data` — never matches it. Compare the
+/// plain text of the same translation instead.
+String get _noLocationHint =>
+    t.weather.detail_no_location(link: (text) => TextSpan(text: text))
+        .toPlainText();
+
 void main() {
   setUpAll(() => LocaleSettings.setLocale(AppLocale.sl));
 
@@ -78,8 +85,8 @@ void main() {
       location: _gardenPoint,
     );
 
-    expect(find.text(t.weather.detail_waiting), findsOne);
-    expect(find.text(t.weather.no_location_cta), findsNothing);
+    expect(find.textContaining(t.weather.detail_waiting), findsOne);
+    expect(find.textContaining(_noLocationHint), findsNothing);
   });
 
   testWidgets('a waiting task without a location explains and offers the fix', (
@@ -87,14 +94,15 @@ void main() {
   ) async {
     await _pump(tester, task: _task(status: TaskStatus.waiting), location: null);
 
-    expect(find.text(t.weather.detail_no_location), findsOne);
+    expect(find.textContaining(_noLocationHint), findsOne);
 
-    await tester.tap(find.text(t.weather.no_location_cta));
+    // No button: the card itself is the way out.
+    await tester.tap(find.textContaining(_noLocationHint));
     await tester.pumpAndSettle();
     expect(find.text('location screen'), findsOne);
   });
 
-  testWidgets('a done task without a snapshot claims no cause and offers no CTA', (
+  testWidgets('a done task without a snapshot claims no cause and leads nowhere', (
     tester,
   ) async {
     // Same wording either way: the task does not record why the snapshot is
@@ -106,9 +114,10 @@ void main() {
         location: location,
       );
 
-      expect(find.text(t.weather.detail_none), findsOne);
-      expect(find.text(t.weather.detail_no_location), findsNothing);
-      expect(find.text(t.weather.no_location_cta), findsNothing);
+      expect(find.textContaining(t.weather.detail_none), findsOne);
+      expect(find.textContaining(_noLocationHint), findsNothing);
+      // Nothing to tap: a snapshot cannot be recovered after the fact.
+      expect(find.byType(InkWell), findsNothing);
     }
   });
 

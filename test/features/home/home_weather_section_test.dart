@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_riverpod/misc.dart' show Override;
@@ -100,23 +102,50 @@ void main() {
     expect(find.text(t.weather.home_retry), findsOne);
   });
 
-  testWidgets('the CTA pushes the location screen', (tester) async {
-    await _pump(tester, location: null);
-
-    await tester.tap(find.text(t.weather.no_location_cta));
-    await tester.pumpAndSettle();
-
-    expect(find.text('location screen'), findsOne);
-  });
-
-  testWidgets('tapping the card body also pushes the location screen', (
-    tester,
-  ) async {
+  testWidgets('tapping the card pushes the location screen', (tester) async {
+    // The whole card is the target — the underlined word in the sentence is a
+    // cue, not the only 60 px worth of tappable surface.
     await _pump(tester, location: null);
 
     await tester.tap(find.text(t.weather.no_location_title));
     await tester.pumpAndSettle();
 
     expect(find.text('location screen'), findsOne);
+  });
+
+  testWidgets('setting a location swaps the invite for weather, unprompted', (
+    tester,
+  ) async {
+    // The promise the section makes: the cell is a stream and the card watches
+    // it, so returning from the location screen needs no manual refresh.
+    final location = StreamController<GardenCoords?>();
+    addTearDown(location.close);
+
+    await tester.pumpWidget(
+      TranslationProvider(
+        child: ProviderScope(
+          overrides: [
+            gardenLocationProvider.overrideWith((ref) => location.stream),
+            currentWeatherProvider.overrideWith((ref) async => _snapshot()),
+            for (final locale in AppLocale.values)
+              placeLabelProvider(
+                locale.languageCode,
+              ).overrideWith((ref) async => null),
+          ],
+          child: const MaterialApp(home: Scaffold(body: HomeWeatherSection())),
+        ),
+      ),
+    );
+
+    location.add(null);
+    await tester.pump();
+    expect(find.byType(WeatherNoLocationCard), findsOne);
+
+    location.add(_gardenPoint);
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 100));
+
+    expect(find.byType(CurrentWeatherCard), findsOne);
+    expect(find.byType(WeatherNoLocationCard), findsNothing);
   });
 }

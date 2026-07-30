@@ -114,10 +114,7 @@ class CurrentWeatherCard extends StatelessWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              Icon(
-                Icons.cloud_off_outlined,
-                color: theme.colorScheme.onSurfaceVariant,
-              ),
+              const Text(kNoWeatherEmoji, style: TextStyle(fontSize: 28)),
               const SizedBox(width: 12),
               Expanded(
                 child: Column(

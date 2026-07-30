@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/widgets/link_span.dart';
 import '../../../i18n/translations.g.dart';
+import '../data/weather_code.dart';
 
 /// Stands in for the weather card when no garden location is set (FR-22): the
-/// app has no honest weather to show, so it offers the one way forward instead.
-/// Not a state of CurrentWeatherCard — that card shows weather, and an invite
-/// is not weather.
+/// app has no honest weather to show, so it says whose weather is missing and
+/// why, in the slot where the forecast would be. Deliberately the size of the
+/// quiet "unavailable" card, not a full-screen prompt — Home is not a supplicant.
 ///
 /// Takes no `ref`: the navigation arrives as [onSetLocation], so the layout
 /// matrix can render it without a world of providers behind it.
 class WeatherNoLocationCard extends StatelessWidget {
   const WeatherNoLocationCard({super.key, required this.onSetLocation});
 
-  /// Opens the location screen. Both the button and the whole card call it —
-  /// the button is the visual cue, the card is the target.
+  /// Opens the location screen. The whole card is the target; the underlined
+  /// word is only the cue.
   final VoidCallback onSetLocation;
 
   @override
@@ -26,64 +28,33 @@ class WeatherNoLocationCard extends StatelessWidget {
       child: InkWell(
         onTap: onSetLocation,
         child: Padding(
-          padding: const EdgeInsets.all(16),
-          child: Column(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Row(
-                children: [
-                  Container(
-                    width: 44,
-                    height: 44,
-                    decoration: BoxDecoration(
-                      color: cs.primaryContainer,
-                      borderRadius: BorderRadius.circular(14),
-                    ),
-                    child: Icon(Icons.place, size: 26, color: cs.primary),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
+              const Text(kNoWeatherEmoji, style: TextStyle(fontSize: 28)),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
                       t.weather.no_location_title,
                       style: theme.textTheme.titleSmall,
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 10),
-              Text(
-                t.weather.no_location_body,
-                style: theme.textTheme.bodySmall?.copyWith(
-                  color: cs.onSurfaceVariant,
-                ),
-              ),
-              const SizedBox(height: 14),
-              SizedBox(
-                width: double.infinity,
-                height: 48,
-                child: FilledButton(
-                  onPressed: onSetLocation,
-                  child: Text(t.weather.no_location_cta),
-                ),
-              ),
-              const SizedBox(height: 10),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.lock_outline, size: 12, color: cs.onSurfaceVariant),
-                  const SizedBox(width: 6),
-                  // Flexible, not fixed: the German line wraps at 320 dp with a
-                  // large system font.
-                  Flexible(
-                    child: Text(
-                      t.weather.no_location_privacy,
-                      textAlign: TextAlign.center,
-                      style: theme.textTheme.labelSmall?.copyWith(
+                    const SizedBox(height: 2),
+                    Text.rich(
+                      // One translated sentence with the linked word inside it;
+                      // splitting it into pieces would break German word order.
+                      t.weather.no_location_body(
+                        link: (text) => linkSpan(context, text),
+                      ),
+                      style: theme.textTheme.bodySmall?.copyWith(
                         color: cs.onSurfaceVariant,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ],
           ),

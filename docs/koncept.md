@@ -352,7 +352,8 @@ SUBJEKT  = rastlina ALI območje   (M:N — POPRAVEK 2026-06-03, glej §7.15)
   (back gumb, izbira se **samodejno shrani** + toast, brez spodnjega gumba) in iz onboarding/prijave
   (brez back, gumb »Nadaljuj« → Domov). Zgoraj **statusni pas** pokaže, ali je lokacija že nastavljena.
   Gumb **»Odstrani lokacijo«** (le ko je nastavljena) s potrditvijo počisti H3 celice v profilu →
-  vreme pade na privzeto območje (`clearGardenLocation`). **FR-8:** surovih koordinat ni več (ne
+  vremena ni več (`clearGardenLocation`; **FR-22:** brez lokacije se namesto vremena na Domov
+  pokaže povabilo — privzetega območja ni). **FR-8:** surovih koordinat ni več (ne
   device-local); »nastavljena« = `profile.h3_r7` ni null, vreme bere centroid te celice.
 
 ### Onboarding
