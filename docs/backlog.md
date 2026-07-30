@@ -18,19 +18,20 @@
 
 🔴 **Izmerjeno na produkciji 28. 7. 2026: 55 % uporabnikov (44/80) nima lokacije vrta.** Vsi so prešli
 onboarding — preskok je preprosto najlažja poteza. Od Play izdaje 20. 7. je brez lokacije **75 %** novih
-(junijska beta: 4 %). Ni le vrzel v statistiki: brez celice `gardenLocation` tiho vrne **Ljubljano** →
-napačno vreme in motor, ki računa na tuji lokaciji. **Odločeno 29. 7.:** privzetka ne popravljamo z opombo —
-brez lokacije vremena sploh ne kažemo (FR-22 §3), kar velja tudi za zamrznjen posnetek ob zaključku opravila.
+(junijska beta: 4 %). Ni bila le vrzel v statistiki: brez celice je `gardenLocation` tiho vrnil **Ljubljano**
+→ napačno vreme in motor, ki računa na tuji lokaciji.
 
 | FR | Kaj | Stanje | Doseže | Spec |
 |---|---|:---:|---|---|
-| **FR-22** | Brez lokacije ni vremena, ampak povabilo (Domov + opravilo) | 📝 | obstoječe, ki odprejo Domov | [`location-adoption.md`](feature-requests/location-adoption.md) · [wireframe](wireframes/01d-weather-states.html) |
 | **FR-23** | Poziv prek pusha + razlagalni list | 📝 | 52 od 95, ki Domov morda ne odprejo | [`location-nudge.md`](feature-requests/location-nudge.md) |
 
-**FR-24** (onboarding) je ✅ narejen, a **še neizdan** → [`narejeno.md`](narejeno.md).
+**FR-22** (brez lokacije ni vremena) in **FR-24** (onboarding) sta ✅ narejena in preverjena na napravi,
+oba **še neizdana** → [`narejeno.md`](narejeno.md).
 
-⚠️ **FR-22 ne sme v isto izdajo kot FR-24** — ista metrika, učinka ne bi ločila.
+⚠️ **FR-22 in FR-24 ne smeta v isto izdajo** — ista metrika, učinka ne bi ločila.
 Merilo: 25 % → **≥60 %** novih v 30 dneh, merljivo z `tool/geo_user_map.py`, brez nove analitike.
+**Cilj je treba pred izdajo znižati:** postavljen je bil za celozaslonsko povabilo, FR-22 pa je izdan
+kot ~72 dp kartica.
 
 ## Tendask+ (monetizacija)
 

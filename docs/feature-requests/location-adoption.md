@@ -1,6 +1,10 @@
 # FR-22: Kontekstualni poziv za lokacijo na Domov
 
-- **Status:** predlog, neimplementirano
+- **Status:** ✅ **implementirano in preverjeno na napravi 30. 7. 2026, še neizdano.** Izvedba odstopa
+  od §3 v enem: povabilo je **kompaktna kartica ~72 dp** (vremenska ikona, naslov o vremenu, ena poved
+  s povezano besedo), ne celozaslonsko povabilo z gumbom — prva izvedba je izgubila vez z vremenom.
+  Posledica: **cilj ≥60 % iz §2 je treba znižati**, ker je bil postavljen za večji poziv.
+  Kaj je zgrajeno in zakaj → [`../narejeno.md`](../narejeno.md).
 - **Datum:** 2026-07-28 · **rešitev spremenjena 2026-07-29** (§3: brez lokacije vremena ne kažemo)
 - **Cilj:** povečati delež uporabnikov z nastavljeno lokacijo vrta (`profile.h3_r5`)
 - **Področja:** Domov (vremenska kartica), podrobnosti opravila, vreme, pametni motor

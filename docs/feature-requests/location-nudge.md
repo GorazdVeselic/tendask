@@ -5,7 +5,8 @@
 - **Cilj:** doseči 52 uporabnikov brez lokacije s push obvestilom, jim pokazati, kaj
   s tem izgubijo in česa ne shranjujemo — z evidenco, kdaj smemo spet
 - **Področja:** lokacija (zaslon 16), FCM (M11), obvestila (M8), Domov, zasebnost
-- **Povezave:** [FR-22](location-adoption.md) (pasivni pas na Domov), [FR-16](re-engagement-nudge.md)
+- **Povezave:** [FR-22](location-adoption.md) (✅ narejen: brez lokacije na Domov ni vremena, ampak
+  kartica s povezavo), [FR-16](re-engagement-nudge.md)
   (lokalni nudge — deli isti prostor), `docs/m11/06-fcm.md`, `docs/koncept.md`
   §"Vodenje proti motečnosti"
 

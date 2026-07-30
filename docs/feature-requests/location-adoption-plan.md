@@ -1,7 +1,9 @@
 # FR-22 — implementacijski plan
 
 - **Spec:** [`location-adoption.md`](location-adoption.md) · **Wireframe:** [`01d-weather-states.html`](../wireframes/01d-weather-states.html)
-- **Datum:** 2026-07-29 · **Stanje:** plan, koda ni pisana
+- **Datum:** 2026-07-29 · **Stanje:** ✅ izveden 30. 7. 2026 (zgodovinski dokument — kartica je bila
+  po izvedbi prenovljena, glej [`location-adoption.md`](location-adoption.md) in
+  [`../narejeno.md`](../narejeno.md))
 - **Predpogoj izdaje:** FR-24 je narejen, a neizdan — FR-22 **ne sme v isto izdajo** (ista metrika).
 
 Plan je napisan tako, da ga je mogoče izvesti od zgoraj navzdol. §2 so trki, ki so se pokazali med
