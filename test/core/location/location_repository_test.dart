@@ -183,5 +183,22 @@ void main() {
     test('emits null when no location is set', () async {
       expect(await firstLocation(), isNull);
     });
+
+    test('emits null for a stored cell whose centroid cannot be derived', () async {
+      // A cell that survived storage but is unparseable: the UI must read this
+      // as "no location" (invite → screen 16), not as "weather unavailable",
+      // which would be a dead end with nothing to tap.
+      await db
+          .into(db.profiles)
+          .insert(
+            ProfilesCompanion.insert(
+              userId: userId,
+              h3R7: const Value('not-a-cell'),
+              updatedAt: t0,
+            ),
+          );
+
+      expect(await firstLocation(), isNull);
+    });
   });
 }
