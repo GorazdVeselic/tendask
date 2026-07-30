@@ -24,8 +24,9 @@ Kaj je bilo zgrajeno in zakaj je ustavljen → [`m11.md`](m11.md).
 320 dp z veliko pisavo (prijava, e-pošta, vremenska kartica), `ui-katalog.md`, `cookbook.md`,
 `prelomi-besed.md`, `tool/overflow_scan.py`.
 
-**Na `main` je prišlo 30. 7.:** FR-22 (implementacija, 7 commitov) in FR-25 v backlog. Brez migracije,
-brez nove dependency, brez spremembe sheme.
+**Na `main` je prišlo 30. 7.:** FR-22 (implementacija, 7 commitov), FR-25 (odprt in **zaprt** isti dan —
+obljuba o vremenu pri opombah umaknjena, zajema ni bilo nikoli) in počiščeni štirje mrtvi i18n ključi.
+Brez migracije, brez nove dependency, brez spremembe sheme.
 
 **Ostalo samo na M11 veji** (če bo kdaj potrebno, pobrati posamično): pravilo za prelome besed v
 layout matriki (`layoutBreaks` + `kAcceptedWordBreaks`), predelan `notification_priming_sheet`,
@@ -62,5 +63,5 @@ Backup pred posegom: `~/tendask-supabase/backups/staging_20260729_141730.sql.gz`
 | »Dvojni tap« pri dodajanju opomnika | opaženo |
 | Sentry TENDASK-6: RenderFlex overflow 9 px | brez widget verige |
 | Insert-if-missing race v `setLang` / `setNotificationSettings` / `saveGardenLocation` | ni sprožilo napake v produkciji |
-| Odprti bugi BUG-001…004 | [`bugreport.md`](bugreport.md) |
+| Odprti bugi BUG-001…005 | [`bugreport.md`](bugreport.md) |
 | Načrtovano, negrajeno | [`backlog.md`](backlog.md) |
