@@ -353,7 +353,6 @@ class _Translations$location$de extends Translations$location$en {
 	@override String get gps_sub => 'Automatisch per Geräte-GPS';
 	@override String get place_hint => 'Dorf, Stadt oder Adresse (z. B. Šentjur)';
 	@override String get place_note => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.';
-	@override String get search => 'Suchen';
 	@override String get privacy => 'Wir speichern deinen genauen Standort nie. Wir behalten nur einen ungefähren Standort (auf wenige Kilometer genau), den wir niemals an andere weitergeben.';
 	@override String get kContinue => 'Weiter';
 	@override String get skip => 'Überspringen';
@@ -719,7 +718,6 @@ class _Translations$plants$de extends Translations$plants$en {
 	@override String get add_title => 'Pflanzen hinzufügen';
 	@override String get frequent => 'Häufig';
 	@override String get less_likely => 'Weniger wahrscheinlich für diesen Bereich';
-	@override String get undo => 'Rückgängig';
 	@override String get done => 'Fertig';
 	@override String get add_to_label => 'Hinzufügen zu';
 	@override String get choose_area => 'wählen';
@@ -734,8 +732,6 @@ class _Translations$supplies$de extends Translations$supplies$en {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Mittel';
-	@override String get subtitle => 'was ich zu Hause habe';
 	@override String get empty => 'Noch keine Mittel. Füge welche mit + hinzu.';
 	@override String get low => 'wenig';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
@@ -1071,7 +1067,6 @@ extension on TranslationsDe {
 			'location.gps_sub' => 'Automatisch per Geräte-GPS',
 			'location.place_hint' => 'Dorf, Stadt oder Adresse (z. B. Šentjur)',
 			'location.place_note' => 'Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.',
-			'location.search' => 'Suchen',
 			'location.privacy' => 'Wir speichern deinen genauen Standort nie. Wir behalten nur einen ungefähren Standort (auf wenige Kilometer genau), den wir niemals an andere weitergeben.',
 			'location.kContinue' => 'Weiter',
 			'location.skip' => 'Überspringen',
@@ -1329,14 +1324,11 @@ extension on TranslationsDe {
 			'plants.add_title' => 'Pflanzen hinzufügen',
 			'plants.frequent' => 'Häufig',
 			'plants.less_likely' => 'Weniger wahrscheinlich für diesen Bereich',
-			'plants.undo' => 'Rückgängig',
 			'plants.done' => 'Fertig',
 			'plants.add_to_label' => 'Hinzufügen zu',
 			'plants.choose_area' => 'wählen',
 			'plants.field_add' => 'Pflanze auswählen',
 			'plants.field_empty' => 'Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu.',
-			'supplies.title' => 'Mittel',
-			'supplies.subtitle' => 'was ich zu Hause habe',
 			'supplies.empty' => 'Noch keine Mittel. Füge welche mit + hinzu.',
 			'supplies.low' => 'wenig',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
@@ -1452,12 +1444,12 @@ extension on TranslationsDe {
 			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Geräte',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			'recipes.items' => 'Mittel',
 			'recipes.add_item' => 'Mittel hinzufügen',

@@ -171,7 +171,6 @@
     "gps_sub": "Samodejno z GPS naprave",
     "place_hint": "Vas, mesto ali naslov (npr. Šentjur)",
     "place_note": "Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.",
-    "search": "Poišči",
     "privacy": "Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno lokacijo (na nekaj kilometrov natančno), ki je nikoli ne razkrijemo drugim.",
     "continue": "Nadaljuj",
     "skip": "Preskoči",
@@ -466,7 +465,6 @@
     "add_title": "Dodaj rastline",
     "frequent": "Pogosto",
     "less_likely": "Manj verjetno za to območje",
-    "undo": "Razveljavi",
     "done": "Končano",
     "add_to_label": "Kam dodajam",
     "choose_area": "izberi",
@@ -474,8 +472,6 @@
     "field_empty": "To območje še nima rastlin. Dodaj jo z gumbom spodaj."
   },
   "supplies": {
-    "title": "Sredstva",
-    "subtitle": "kaj imam doma",
     "empty": "Ni sredstev. Dodaj jih z +.",
     "low": "malo",
     "qty(q, unit)": "~$q$unit",

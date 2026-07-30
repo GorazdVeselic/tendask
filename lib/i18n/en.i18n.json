@@ -167,7 +167,6 @@
     "gps_sub": "Automatically via device GPS",
     "place_hint": "Village, town or address (e.g. Šentjur)",
     "place_note": "A nearby village or town is enough — no exact address needed.",
-    "search": "Search",
     "privacy": "We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.",
     "continue": "Continue",
     "skip": "Skip",
@@ -456,7 +455,6 @@
     "add_title": "Add plants",
     "frequent": "Frequent",
     "less_likely": "Less likely for this area",
-    "undo": "Undo",
     "done": "Done",
     "add_to_label": "Add to",
     "choose_area": "choose",
@@ -464,8 +462,6 @@
     "field_empty": "This area has no plants yet. Add one with the button below."
   },
   "supplies": {
-    "title": "Supplies",
-    "subtitle": "what I have at home",
     "empty": "No supplies yet. Add some with +.",
     "low": "low",
     "qty(q, unit)": "~$q$unit",

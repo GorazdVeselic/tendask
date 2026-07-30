@@ -617,9 +617,6 @@ class Translations$location$en {
 	/// en: 'A nearby village or town is enough — no exact address needed.'
 	String get place_note => 'A nearby village or town is enough — no exact address needed.';
 
-	/// en: 'Search'
-	String get search => 'Search';
-
 	/// en: 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.'
 	String get privacy => 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.';
 
@@ -1499,9 +1496,6 @@ class Translations$plants$en {
 	/// en: 'Less likely for this area'
 	String get less_likely => 'Less likely for this area';
 
-	/// en: 'Undo'
-	String get undo => 'Undo';
-
 	/// en: 'Done'
 	String get done => 'Done';
 
@@ -1525,12 +1519,6 @@ class Translations$supplies$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
-
-	/// en: 'Supplies'
-	String get title => 'Supplies';
-
-	/// en: 'what I have at home'
-	String get subtitle => 'what I have at home';
 
 	/// en: 'No supplies yet. Add some with +.'
 	String get empty => 'No supplies yet. Add some with +.';
@@ -2148,7 +2136,6 @@ extension on Translations {
 			'location.gps_sub' => 'Automatically via device GPS',
 			'location.place_hint' => 'Village, town or address (e.g. Šentjur)',
 			'location.place_note' => 'A nearby village or town is enough — no exact address needed.',
-			'location.search' => 'Search',
 			'location.privacy' => 'We never store your exact location. We only keep an approximate location (accurate to a few km), which we never reveal to others.',
 			'location.kContinue' => 'Continue',
 			'location.skip' => 'Skip',
@@ -2406,14 +2393,11 @@ extension on Translations {
 			'plants.add_title' => 'Add plants',
 			'plants.frequent' => 'Frequent',
 			'plants.less_likely' => 'Less likely for this area',
-			'plants.undo' => 'Undo',
 			'plants.done' => 'Done',
 			'plants.add_to_label' => 'Add to',
 			'plants.choose_area' => 'choose',
 			'plants.field_add' => 'Select plant',
 			'plants.field_empty' => 'This area has no plants yet. Add one with the button below.',
-			'supplies.title' => 'Supplies',
-			'supplies.subtitle' => 'what I have at home',
 			'supplies.empty' => 'No supplies yet. Add some with +.',
 			'supplies.low' => 'low',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
@@ -2529,12 +2513,12 @@ extension on Translations {
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
 			'recipes.form_equipment' => 'Equipment',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.delete_note' => 'This recipe will be removed from your list.',
 			'recipes.items' => 'Supplies',
 			'recipes.add_item' => 'Add supply',

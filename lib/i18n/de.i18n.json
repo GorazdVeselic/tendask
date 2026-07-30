@@ -167,7 +167,6 @@
     "gps_sub": "Automatisch per Geräte-GPS",
     "place_hint": "Dorf, Stadt oder Adresse (z. B. Šentjur)",
     "place_note": "Ein Dorf oder eine Stadt in der Nähe genügt — keine genaue Adresse nötig.",
-    "search": "Suchen",
     "privacy": "Wir speichern deinen genauen Standort nie. Wir behalten nur einen ungefähren Standort (auf wenige Kilometer genau), den wir niemals an andere weitergeben.",
     "continue": "Weiter",
     "skip": "Überspringen",
@@ -456,7 +455,6 @@
     "add_title": "Pflanzen hinzufügen",
     "frequent": "Häufig",
     "less_likely": "Weniger wahrscheinlich für diesen Bereich",
-    "undo": "Rückgängig",
     "done": "Fertig",
     "add_to_label": "Hinzufügen zu",
     "choose_area": "wählen",
@@ -464,8 +462,6 @@
     "field_empty": "Dieser Bereich hat noch keine Pflanzen. Füge unten eine hinzu."
   },
   "supplies": {
-    "title": "Mittel",
-    "subtitle": "was ich zu Hause habe",
     "empty": "Noch keine Mittel. Füge welche mit + hinzu.",
     "low": "wenig",
     "qty(q, unit)": "~$q$unit",

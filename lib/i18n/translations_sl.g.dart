@@ -357,7 +357,6 @@ class _Translations$location$sl extends Translations$location$en {
 	@override String get gps_sub => 'Samodejno z GPS naprave';
 	@override String get place_hint => 'Vas, mesto ali naslov (npr. Šentjur)';
 	@override String get place_note => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.';
-	@override String get search => 'Poišči';
 	@override String get privacy => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno lokacijo (na nekaj kilometrov natančno), ki je nikoli ne razkrijemo drugim.';
 	@override String get kContinue => 'Nadaljuj';
 	@override String get skip => 'Preskoči';
@@ -729,7 +728,6 @@ class _Translations$plants$sl extends Translations$plants$en {
 	@override String get add_title => 'Dodaj rastline';
 	@override String get frequent => 'Pogosto';
 	@override String get less_likely => 'Manj verjetno za to območje';
-	@override String get undo => 'Razveljavi';
 	@override String get done => 'Končano';
 	@override String get add_to_label => 'Kam dodajam';
 	@override String get choose_area => 'izberi';
@@ -744,8 +742,6 @@ class _Translations$supplies$sl extends Translations$supplies$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get title => 'Sredstva';
-	@override String get subtitle => 'kaj imam doma';
 	@override String get empty => 'Ni sredstev. Dodaj jih z +.';
 	@override String get low => 'malo';
 	@override String qty({required Object q, required Object unit}) => '~${q}${unit}';
@@ -1081,7 +1077,6 @@ extension on TranslationsSl {
 			'location.gps_sub' => 'Samodejno z GPS naprave',
 			'location.place_hint' => 'Vas, mesto ali naslov (npr. Šentjur)',
 			'location.place_note' => 'Dovolj je bližnja vas ali mesto — natančen naslov ni potreben.',
-			'location.search' => 'Poišči',
 			'location.privacy' => 'Natančne lokacije nikoli ne shranjujemo. Shranimo samo približno lokacijo (na nekaj kilometrov natančno), ki je nikoli ne razkrijemo drugim.',
 			'location.kContinue' => 'Nadaljuj',
 			'location.skip' => 'Preskoči',
@@ -1339,14 +1334,11 @@ extension on TranslationsSl {
 			'plants.add_title' => 'Dodaj rastline',
 			'plants.frequent' => 'Pogosto',
 			'plants.less_likely' => 'Manj verjetno za to območje',
-			'plants.undo' => 'Razveljavi',
 			'plants.done' => 'Končano',
 			'plants.add_to_label' => 'Kam dodajam',
 			'plants.choose_area' => 'izberi',
 			'plants.field_add' => 'Izberi rastlino',
 			'plants.field_empty' => 'To območje še nima rastlin. Dodaj jo z gumbom spodaj.',
-			'supplies.title' => 'Sredstva',
-			'supplies.subtitle' => 'kaj imam doma',
 			'supplies.empty' => 'Ni sredstev. Dodaj jih z +.',
 			'supplies.low' => 'malo',
 			'supplies.qty' => ({required Object q, required Object unit}) => '~${q}${unit}',
@@ -1462,12 +1454,12 @@ extension on TranslationsSl {
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
 			'recipes.form_equipment' => 'Oprema',
-			_ => null,
-		} ?? switch (path) {
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
+			_ => null,
+		} ?? switch (path) {
 			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			'recipes.items' => 'Sredstva',
 			'recipes.add_item' => 'Dodaj sredstvo',
