@@ -775,9 +775,6 @@ class Translations$notes$en {
 
 	/// en: 'This action cannot be undone.'
 	String get delete_confirm => 'This action cannot be undone.';
-
-	/// en: '🌧️ Weather is saved automatically.'
-	String get info => '🌧️ Weather is saved automatically.';
 }
 
 // Path: task_detail
@@ -2197,7 +2194,6 @@ extension on Translations {
 			'notes.err_content' => 'Enter the note text.',
 			'notes.delete' => 'Delete note',
 			'notes.delete_confirm' => 'This action cannot be undone.',
-			'notes.info' => '🌧️ Weather is saved automatically.',
 			'task_detail.section_weather' => 'Weather snapshot',
 			'task_detail.section_details' => 'Details',
 			'task_detail.label_supplies' => 'Supplies',
@@ -2532,9 +2528,9 @@ extension on Translations {
 			'recipes.form_new' => 'New recipe',
 			'recipes.form_edit' => 'Edit recipe',
 			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Equipment',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.form_equipment' => 'Equipment',
 			'recipes.form_equipment_hint' => 'e.g. 16 L sprayer',
 			'recipes.form_save' => 'Save',
 			'recipes.err_name' => 'Enter a recipe name.',

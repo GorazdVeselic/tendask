@@ -420,7 +420,6 @@ class _Translations$notes$de extends Translations$notes$en {
 	@override String get err_content => 'Notiztext eingeben.';
 	@override String get delete => 'Notiz löschen';
 	@override String get delete_confirm => 'Diese Aktion kann nicht rückgängig gemacht werden.';
-	@override String get info => '🌧️ Das Wetter wird automatisch gespeichert.';
 }
 
 // Path: task_detail
@@ -1118,7 +1117,6 @@ extension on TranslationsDe {
 			'notes.err_content' => 'Notiztext eingeben.',
 			'notes.delete' => 'Notiz löschen',
 			'notes.delete_confirm' => 'Diese Aktion kann nicht rückgängig gemacht werden.',
-			'notes.info' => '🌧️ Das Wetter wird automatisch gespeichert.',
 			'task_detail.section_weather' => 'Wetteraufnahme',
 			'task_detail.section_details' => 'Details',
 			'task_detail.label_supplies' => 'Mittel',
@@ -1453,9 +1451,9 @@ extension on TranslationsDe {
 			'recipes.form_new' => 'Neues Rezept',
 			'recipes.form_edit' => 'Rezept bearbeiten',
 			'recipes.form_name' => 'Name',
+			'recipes.form_equipment' => 'Geräte',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.form_equipment' => 'Geräte',
 			'recipes.form_equipment_hint' => 'z. B. 16-L-Sprühgerät',
 			'recipes.form_save' => 'Speichern',
 			'recipes.err_name' => 'Rezeptnamen eingeben.',

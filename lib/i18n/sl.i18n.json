@@ -225,8 +225,7 @@
     "save": "Shrani opombo",
     "err_content": "Vpiši besedilo opombe.",
     "delete": "Izbriši opombo",
-    "delete_confirm": "To dejanje je nepopravljivo.",
-    "info": "🌧️ Vreme se shrani samodejno."
+    "delete_confirm": "To dejanje je nepopravljivo."
   },
   "task_detail": {
     "section_weather": "Vremenski posnetek",

@@ -426,7 +426,6 @@ class _Translations$notes$sl extends Translations$notes$en {
 	@override String get err_content => 'Vpiši besedilo opombe.';
 	@override String get delete => 'Izbriši opombo';
 	@override String get delete_confirm => 'To dejanje je nepopravljivo.';
-	@override String get info => '🌧️ Vreme se shrani samodejno.';
 }
 
 // Path: task_detail
@@ -1128,7 +1127,6 @@ extension on TranslationsSl {
 			'notes.err_content' => 'Vpiši besedilo opombe.',
 			'notes.delete' => 'Izbriši opombo',
 			'notes.delete_confirm' => 'To dejanje je nepopravljivo.',
-			'notes.info' => '🌧️ Vreme se shrani samodejno.',
 			'task_detail.section_weather' => 'Vremenski posnetek',
 			'task_detail.section_details' => 'Podrobnosti',
 			'task_detail.label_supplies' => 'Sredstva',
@@ -1463,9 +1461,9 @@ extension on TranslationsSl {
 			'recipes.form_new' => 'Nov recept',
 			'recipes.form_edit' => 'Uredi recept',
 			'recipes.form_name' => 'Ime',
+			'recipes.form_equipment' => 'Oprema',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.form_equipment' => 'Oprema',
 			'recipes.form_equipment_hint' => 'npr. 16 l škropilnica',
 			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',

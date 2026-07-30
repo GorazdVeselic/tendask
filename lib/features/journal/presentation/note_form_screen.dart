@@ -216,8 +216,6 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
                           onAdd: _addPlant,
                         ),
                       ],
-                      const SizedBox(height: 16),
-                      _InfoHint(text: t.notes.info),
                       if (_isEdit) ...[
                         const SizedBox(height: 24),
                         DestructiveButton(
@@ -324,24 +322,6 @@ class _AreaField extends ConsumerWidget {
             onSelected: (sel) => onChanged(sel ? area.id : null),
           ),
       ],
-    );
-  }
-}
-
-class _InfoHint extends StatelessWidget {
-  const _InfoHint({required this.text});
-
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return Text(
-      text,
-      textAlign: TextAlign.center,
-      style: theme.textTheme.bodySmall?.copyWith(
-        color: theme.colorScheme.onSurfaceVariant,
-      ),
     );
   }
 }

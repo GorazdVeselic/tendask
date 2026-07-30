@@ -219,8 +219,7 @@
     "save": "Save note",
     "err_content": "Enter the note text.",
     "delete": "Delete note",
-    "delete_confirm": "This action cannot be undone.",
-    "info": "🌧️ Weather is saved automatically."
+    "delete_confirm": "This action cannot be undone."
   },
   "task_detail": {
     "section_weather": "Weather snapshot",
