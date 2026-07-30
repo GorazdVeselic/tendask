@@ -22,7 +22,7 @@
 
 Če se pokaže, da brez gumba v aplikaciji ni konverzije → **pot B** (Googlov external payments program, ~10 % service fee, geo-pogojeno). Arhitektura licenc je v obeh primerih **enaka**, zato ni izgubljenega dela.
 
-**Prvi nosilec = FR-19 (Lunin koledar).** Odločeno 2026-07-22 v FR-19 v2: mena Lune ostane **free** (kavelj, gradi navado), **element-dan + koledar/planer + akcije = Plus**. Zdaj je vse še free; premium meja se prižge šele s tem FR-jem.
+**Prvi nosilec = FR-19 (Lunin koledar).** Odločeno 2026-07-22, **dokončno potrjeno 2026-07-30**: mena Lune ostane **free** (kavelj, gradi navado), **element-dan + koledar/planer + akcije = Plus**. Plus del FR-19 **debitira zaklenjen** (gradi se za flagom), ob prižigu pa vsi obstoječi profili dobijo **časovno omejeno darilo Tendask+** (darilni model, §10.4).
 
 ---
 
@@ -526,8 +526,8 @@ Monetizirati se sme le **nov sloj nad njimi** (glej 10.2), nikoli sam mehanizem 
 
 | Kandidat | Stanje | Strošek na uporabnika | Opomba |
 |---|---|---|---|
-| **M11 pametni motor / predlogi** | **zgrajen (faze A–D) na `feat/m11-smart-engine`, NIKOLI izdan** — v `main` ni `lib/features/suggestions/` | **realen** (edge funkcije, cron, FCM, vreme) | Najboljši kandidat: nihče ničesar ne izgubi, najvišja zaznana vrednost, razvoj večinoma plačan |
-| **FR-19 lunin koledar** (element-dan, planer, akcije) | spec, gradi se **najprej free** | **nič** (čista funkcija datuma) | Prvi nosilec; mena Lune ostane free |
+| **M11 pametni motor / predlogi** | **ustavljen 2026-07-29 kot preobsežen**; zgrajen (faze A–D) in arhiviran na `feat/m11-smart-engine` (pushano), NIKOLI izdan — v `main` ni `lib/features/suggestions/` | **realen** (edge funkcije, cron, FCM, vreme) | Kandidat za širitev paketa **kasneje** (zagon znova, v majhnih korakih); nihče ničesar ne izgubi, razvoj večinoma plačan |
+| **FR-19 lunin koledar** (element-dan, planer, akcije) | spec; gradi se **za flagom (dark)**, debitira **zaklenjen** (§10.4) | **nič** (čista funkcija datuma) | Prvi nosilec; mena Lune ostane free |
 | **FR-18 več vrtov/lokacij** | ideja | nizek | Razširitev zmogljivosti — danes ima vsak 1 vrt in ga obdrži |
 | **Vremensko pogojeni opomniki** | ne obstaja | nizek (vreme že imava) | »Ne opominjaj na zalivanje, če bo dež« — pošten način monetizacije opomnikov |
 | **Opomnik po fazi Lune** | ne obstaja | nič | Naravna vez s FR-19 |
@@ -543,26 +543,32 @@ Monetizirati se sme le **nov sloj nad njimi** (glej 10.2), nikoli sam mehanizem 
 - **Izvoz podatkov in izbris računa** — zakonska obveznost (GDPR)
 - **Mena Lune** — free sloj FR-19 (kavelj, gradi navado)
 
-### 10.4 Lansirno darilo namesto trajnega grandfatheringa (odločeno 2026-07-23)
+### 10.4 Lansirno darilo namesto trajnega grandfatheringa (odločeno 2026-07-23, dopolnjeno 2026-07-30)
 
-**Nadomešča prvotni model »free-first + trajni grandfathering«.** Da spoštujeva pravilo §10 do konca (»nič, kar bo Plus, ne izide free«), **noben bodoči-Plus del ne gre v produkcijo brezplačno.** FR-19 bogati del (element-dan + planer + akcije) in M11 **debitirata že zaklenjena** (gradita se za flagom — glej rollout plan), tako kot M11. Free ostane le **mena Lune** (kavelj, §10.2/§10.3).
+**Nadomešča prvotni model »free-first + trajni grandfathering«.** Da spoštujeva pravilo §10 do konca (»nič, kar bo Plus, ne izide free«), **noben bodoči-Plus del ne gre v produkcijo brezplačno.** FR-19 bogati del (element-dan + planer + akcije) **debitira že zaklenjen** (gradi se za flagom — glej rollout plan). Free ostane le **mena Lune** (kavelj, §10.2/§10.3). *(M11 je bil 2026-07-29 ustavljen — iz tega odstavka izpade; ko se vrne, velja zanj isto pravilo.)*
 
-Namesto trajne obveznosti daš **omejeno lansirno darilo**: ob prižigu zidu **masovno dodeliš vsem obstoječim profilom 1-letno `granted` licenco** (mehanizem §6.6). Strežniška enkratna operacija (additive migracija; server je lastnik `plus_until`/`plus_token`).
+Namesto trajne obveznosti daš **omejeno lansirno darilo**: ob prižigu zidu **masovno dodeliš vsem obstoječim profilom časovno omejeno `granted` licenco** (mehanizem §6.6). Strežniška enkratna operacija (additive migracija; server je lastnik `plus_until`/`plus_token`).
 
-| | Trajni grandfathering (zavrnjeno) | **1-letno lansirno darilo (izbrano)** |
+**Dolžina darila (2026-07-30):** prvotni »1 leto« ni več fiksen — je **parameter, ki se izbere ob prižigu**. Lastnikov delovni predlog je **6 mesecev**. Sezonski razmislek: vrtnarjenje je sezonsko — darilo, ki poteče **spomladi** (ko uporabnik koledar najbolj rabi), je za konverzijo idealno; dolžino izberi glede na datum prižiga, ne pavšalno.
+
+| | Trajni grandfathering (zavrnjeno) | **Časovno omejeno lansirno darilo (izbrano)** |
 |---|---|---|
-| Obljuba | ta funkcija **za vedno** free za zgodnji val | **cel paket** free **1 leto** za obstoječe |
+| Obljuba | ta funkcija **za vedno** free za zgodnji val | **cel paket** free za omejen čas (predlog 6 mesecev) za obstoječe |
 | Obveznost | neomejena, večna (`plus_grandfathered` flag za vedno) | **zamejena** — poteče |
 | Kdaj feature debitira | free → kasneje odvzet delu ljudi | **že zaklenjen od 1. dne** (nič ni nikoli odvzeto) |
 | Tveganje 1★ | obvladano z zgodbo | **še manjše** — nihče nič ne izgubi, vsi **dobijo** darilo |
 
-Po letu dni zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**1 leto v zahvalo**« (ne »za vedno«), čez leto ni drugega vala presenečenja. Iz tega naredi objavljeno zgodbo, ne tihega popravka.
+Po poteku zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**X mesecev v zahvalo**« (ne »za vedno«), ob poteku ni drugega vala presenečenja. Iz tega naredi objavljeno zgodbo, ne tihega popravka.
+
+**Potek darila je hkrati ROK za trgovino:** ko prva darila potečejo, mora nakupna pot obstajati (Polar, kode, spletna stran) — uporabnik, ki hoče plačati in ne more, je najslabši izid. Komercialni del FR-20 se torej dokonča **v teku darilne dobe**, ne nujno pred prižigom (§12).
+
+**⚠️ Odprto (pred prižigom odločiti): gost brez računa.** Darilo se dodeli **profilom v oblaku** — gost (lokalni `kLocalUserId`, brez Supabase seje) profila nima. Opciji: (a) lokalno darilo v drift (luknja: reinstall = novo darilo), (b) darilo vezano na prijavo (»prijavi se in dobiš X mesecev« — hkrati vzvod za prijave). Glej §11.9.
 
 ---
 
 ## 11. Odprta vprašanja / odločitve
 
-1. ~~**Katere funkcije so Plus?**~~ **Odločeno (2026-07-22): prvi nosilec je FR-19** — element-dan + koledar/planer + akcije; mena Lune ostane free. **Opomniki so izrecno izključeni** (§10.1). Seznam kandidatov za širitev = §10.2, pri čemer je **M11 (zgrajen, a nikoli izdan) najmočnejši**. *Odprto ostaja, ali Plus starta z eno funkcijo ali počaka na dve — enofunkcijski paket je težje prodati; par »FR-19 kavelj + M11 vsebina« je najbolj obetaven.*
+1. ~~**Katere funkcije so Plus?**~~ **Odločeno (2026-07-22, potrjeno 2026-07-30): prvi nosilec je FR-19** — element-dan + koledar/planer + akcije; mena Lune ostane free. **Opomniki so izrecno izključeni** (§10.1). Seznam kandidatov za širitev = §10.2. ~~Par »FR-19 kavelj + M11 vsebina«~~ — **M11 je bil 2026-07-29 ustavljen**, zato Plus **starta enofunkcijski** (samo lunin paket). Posledica: lunin paket mora ob poteku darila delovati kot zaokrožen izdelek, vreden ~10 €/leto (sidro §11.2) → argument za **srednji/polni obseg FR-19** (element + mena + dvižna/padna, po možnosti neugodni dnevi + iskalnik — FR-19 decisions A1), ne minimalni MVP.
 2. **Cena in model.** **Mesečna naročnina zavrnjena (2026-07-22)** — v igri ostaneta **letna + doživljenjska**; **konkretne številke namenoma še niso zapečene.** Podlaga za odločitev:
    - Fiksni del provizije MoR (~0,50 $) požre mesečno: pri 1,99 € ti ostane **1,05 €** (47 % izgube), pri letni 9,90 € pa **7,20 €**, pri doživljenjski 29,90 € **22,80 €** (računano z 22 % DDV in 5 % + 0,50 $ MoR).
    - **Prelomna točka: 7 mesecev.** Mesečna prehiti letno šele, če povprečen naročnik vztraja ≥7 mesecev (7,20 ÷ 1,05 = 6,9). Pri sezonski dejavnosti in slovenski zimi je to malo verjetno, a **ni izmerjeno** — je ocena, ne podatek. *(Po Startup tarifi 3,40 % + 0,30 $ bi bila prelomna točka ~6 mesecev; odločitve ne spremeni, ker glavni argument ni ta številka, ampak spodnji strukturni.)*
@@ -578,6 +584,8 @@ Po letu dni zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**1 leto
 6. **Število sedežev** — 3 ali več?
 7. **Trial?** (npr. 14 dni Plus ob prvi prijavi) — poveča konverzijo, a doda stanje.
 8. **Kdaj?** Ni launch-gating; aplikacija je v produkciji in free.
+9. **Gost brez računa in darilo** (§10.4): lokalno darilo vs. vezava na prijavo — odločiti **pred prižigom**.
+10. **Dolžina lansirnega darila** (§10.4): parameter ob prižigu; lastnikov delovni predlog 6 mesecev, izbira glede na sezono.
 
 ---
 
@@ -599,9 +607,14 @@ Po letu dni zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**1 leto
    - predelana drift vrstica → Plus ugasne
    - `review` koda: druga unovčitev uspe, po preklicu ne
 
-**Vrstni red glede na FR-19 in M11 (posodobljeno 2026-07-23):** avtoritativno zaporedje je v **[`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md)**. Načelo: **deployaj sproti (flag-dark), razkrij enkrat.** FR-19 bogati del in M11 se gradita **za flagom, temna**; oba **debitirata zaklenjena** ob enem samem prižigu (§10.4), ne izideta free. Free ostane le mena Lune.
+**Vrstni red glede na FR-19 (posodobljeno 2026-07-30, M11 izpadel — ustavljen 2026-07-29):** avtoritativno zaporedje je v **[`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md)**. Načelo: **deployaj sproti (flag-dark), razkrij enkrat** — dopolnjeno z razrezom FR-20 na dva dela:
 
-⚠️ **Neusklajenost za popraviti:** FR-19 §11.2 še piše »etapno — najprej vse free«. To je **preseženo** — bogati del FR-19 ne izide free (§10.4). FR-19 spec je treba uskladiti.
+- **Minimalna rezina upravičenosti** (potrebna ŽE ob prižigu FR-19): migracija `plus_until`/`plus_token`/`plus_kind` (§7; `license*` tabele še NE — masovni grant je pot §6.6-C) + granti + `plusProvider` + osnovni Tendask+ zaslon (stanje darila; vnos kode lahko pride kasneje). Brez Polarja, webhookov, spletne strani. Razrez na korake: [`../plan-implementacije-fr19-fr20.md`](../plan-implementacije-fr19-fr20.md) T6.
+- **Komercialni del** (Polar, kode, unovčitev, splet, Play App access — točke 1–8 zgoraj): dokonča se **v teku darilne dobe**, rok = pred potekom prvih daril (§10.4).
+
+FR-19 bogati del se gradi **za flagom, temen**, in **debitira zaklenjen** ob prižigu (§10.4) — z masovnim darilom, zato uporabniško deluje kot »podarjen Plus«, ne kot zid. Free ostane le mena Lune.
+
+*(Prejšnja opomba o neusklajenosti FR-19 §11.2 »najprej vse free« je razrešena — FR-19 spec usklajen 2026-07-24 in 2026-07-30.)*
 
 ---
 

@@ -1,13 +1,13 @@
-# Tendask + — rollout plan (FR-19 + FR-20 + M11)
+# Tendask + — rollout plan (FR-19 + FR-20)
 
-- **Status:** delovni plan (dogovorjena smer 2026-07-23)
+- **Status:** delovni plan (dogovorjena smer 2026-07-23; **prenovljen 2026-07-30** — M11 izpadel iz zaporedja, ker je bil 2026-07-29 ustavljen kot preobsežen; dodan darilni model in razrez FR-20)
 - **Namen:** eno vozlišče, ki poveže tri velike povezane naloge in določi **vrstni red**, **način dostave** in **disciplino branchev**. Podrobnosti so v pripadajočih dokumentih — ta plan jih ne podvaja, ampak sekvencira.
 - **Povezave:**
   - [`feature-requests/tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md) — **FR-20**, avtoritativen za licence/plačila/Play skladnost
   - [`feature-requests/biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md) — **FR-19**, lunin koledar (prvi nosilec Plus)
-  - [`m11.md`](m11.md) — **M11** poravnava v main
-  - [`m11.md`](m11.md) — M11 tasklist (ostanek faze E)
+  - [`m11.md`](m11.md) — **M11** (ustavljen 2026-07-29; iz zaporedja izpadel, vrne se kasneje v majhnih korakih)
   - [`deploy-runbook.md`](deploy-runbook.md) — deploy + migracijski ledger
+  - [`plan-implementacije-fr19-fr20.md`](plan-implementacije-fr19-fr20.md) — **razrez na taske/korake z branchi** (izvedbeni nivo tega plana)
 
 ---
 
@@ -30,56 +30,66 @@ Namesto tega:
 
 Ni treba biti dosleden pri *vseh* branchih — le pri tistih, ki premikajo **shemo/sync**:
 
-- **Shemo-dotikajoče delo v `main` po enem naenkrat.** M11 in FR-20 oba premikata `profile` shemo + drift `schemaVersion` + sync push. Dva hkratna dviga `schemaVersion` = kolizija.
+- **Shemo-dotikajoče delo v `main` po enem naenkrat.** FR-20 premika `profile` shemo + drift `schemaVersion` + sync push (M11 je to prav tako počel — ob ponovnem zagonu se serializira mimo FR-20). Dva hkratna dviga `schemaVersion` = kolizija.
 - **Vse ostalo (ne-shemsko) sme teči vzporedno** — kratkoživi branchi z `main`, hitro nazaj.
 - Migracije **additive-only** (stari APK-ji ob pull-u ne crashajo); vsaka klient-dostopna tabela **eksplicitni grant v isti migraciji**.
 
 ---
 
-## 3. Vrstni red (avtoritativen)
+## 3. Vrstni red (avtoritativen, prenovljen 2026-07-30)
 
 Vsak korak je **sam po sebi deployabilen v prod** (dark). Med koraki lahko kadarkoli izdaš bugfix ali drug dodatek.
 
 | # | Korak | Stanje v main | Dokument |
 |---|---|---|---|
-| **1** | **M11 poravnava → main** | dark (`kSuggestionsEnabled=false`) | [`m11.md`](m11.md) |
-| **2** | **Dokončaj M11** (ostanek faze E) | dark | [`m11.md`](m11.md) |
-| **3** | **FR-20 licenčna infra** | zid obstaja, nič ne zaklepa | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
-| **4** | **FR-19 lunin koledar** | mena Lune free; bogati del dark | [FR-19](feature-requests/biodynamic-calendar.md) |
-| **5** | **Prižig** | razkritje | §4 spodaj |
+| **1** | **FR-19 motor** (čista funkcija v `core/` + unit testi + nevtralne 3 meje po svetlih zvezdah) | dark (nič ga še ne kliče) | [FR-19 §14](feature-requests/biodynamic-calendar.md) |
+| **2** | **FR-19 UI v celoti** (koledar, čip, oznake, iskalnik — po odločitvah A1–A6) | dark (za flagom) | [FR-19](feature-requests/biodynamic-calendar.md) · [odločitve](feature-requests/biodynamic-calendar-decisions.md) |
+| **3** | **FR-20 minimalna rezina upravičenosti** (migracija `plus_until`/`plus_token`/`plus_kind` + granti + `plusProvider` + osnovni Tendask+ zaslon; brez `license*` tabel) | zid obstaja, nič ne zaklepa | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
+| **4** | **Prižig z darilom** | razkritje | §4 spodaj |
+| **5** | **FR-20 komercialni del** (Polar, kode, unovčitev, spletna stran, Play App access) | živo; **rok = pred potekom prvih daril** | [FR-20 §12](feature-requests/tendask-plus-licensing.md) |
 
 **Zakaj ta red:**
-- **M11 prvi** — je staralna bomba (125/46 in raste); defuziraj takoj. (FR-19 ne front-loadava, ker po novem modelu ne izide free — glej FR-20 §10.4.)
-- **Dokončaj M11 tik za poravnavo** (koraka 1→2 skupaj), ker je kontekst M11 takrat v glavi; FR-20 vmes bi ga naložil dvakrat.
-- **FR-20 pred FR-19**, ker FR-19 bogati del debitira zaklenjen → zid mora obstajati.
-- Koraka 1–3 se dotikata sheme → gredo **serijsko** (§2).
+- **Odvisnost FR-19 ↔ FR-20 je samo v točki prižiga, ne med gradnjo.** FR-19 je čisto klientski (nič sheme, nič synca) in se v celoti zgradi ter deploya temen brez FR-20; gate je do koraka 3 navaden `const` flag.
+- **Motor prvi (korak 1)**, ker je edini kos z odprtim tehničnim vprašanjem (nevtralne meje) — tveganje se pobere na začetku.
+- **Minimalna rezina FR-20 šele pred prižigom**, ker prižig z masovnim darilom rabi le upravičenost, ne trgovine.
+- **Komercialni del po prižigu, a z rokom:** potek prvih daril je deadline — uporabnik, ki hoče plačati in ne more, je najslabši izid (FR-20 §10.4).
+- Če se komercialni del zavleče, je izhod vedno odprt: **darilo se podaljša** — nobena pot se ne zapre.
+- Shemo premika samo korak 3 → pravilo §2 je trivialno izpolnjeno. (M11, ki je premikal shemo vzporedno, je ustavljen; ob ponovnem zagonu se serializira mimo teh korakov.)
 
 ---
 
-## 4. Prižig (korak 5 — edini »big bang«, in je majhen)
+## 4. Prižig z darilom (korak 4 — edini »big bang«, in je majhen)
 
 Vse hkrati, en dogodek:
 
-1. `kSuggestionsEnabled = true` + gate M11 kot Plus.
-2. FR-19 bogati del: flag on + gate kot Plus.
-3. **Deploy `smart-engine` edge funkcije + omogoči cron** (server dark → live).
-4. **Masovna 1-letna `granted` licenca vsem obstoječim profilom** (lansirno darilo, FR-20 §10.4).
-5. Play Console: `App access` → »Da« + `review` koda (FR-20 §8); listing/posnetki po potrebi (SL/EN/DE).
-6. Objavljena zgodba: »Tendask+ je tu, zgodnji uporabniki dobijo **1 leto v zahvalo**.«
+1. FR-19 bogati del: flag on + gate kot Plus (prek `plusProvider`).
+2. **Masovna časovno omejena `granted` licenca vsem obstoječim profilom** (lansirno darilo, FR-20 §10.4; dolžina = parameter, delovni predlog 6 mesecev, izbran glede na sezono).
+3. Objavljena zgodba: »Tendask+ je tu, zgodnji uporabniki dobijo **X mesecev v zahvalo**.«
+4. Play Console `App access` + `review` koda (FR-20 §8) — šele ko obstaja vnos kode, tj. lahko tudi s korakom 5; listing/posnetki po potrebi (SL/EN/DE).
 
-M11 in FR-19 bogati del tako **debitirata zaklenjena** → nič grandfatheringa (FR-20 §10.2, §10.4).
+FR-19 bogati del tako **debitira zaklenjen** → nič grandfatheringa (FR-20 §10.4); z darilom pa uporabniško deluje kot »podarjen Plus«, ne kot zid.
 
----
+**Pred prižigom odločiti (FR-20 §11.9–11.10):** gost brez računa (lokalno darilo vs. vezava na prijavo) in dokončna dolžina darila.
 
-## 5. Odprto (blokira gradnjo, ne poravnave)
-
-- **FR-20 §11.2** — konkretne cene (letna + doživljenjska).
-- **FR-20 §11.3** — Polar ali Paddle.
-- **FR-20 §11.4** — dependency za podpis tokena (`tech-stack.md §1`).
-- **FR-19 §11.2** — uskladi z novim modelom (»najprej vse free« je preseženo; bogati del ne izide free).
-
-Koraka 1–2 (M11) se **lahko začneta takoj** — nista odvisna od zgornjih odločitev.
+*(M11 točki — `kSuggestionsEnabled` in deploy `smart-engine` + cron — sta izpadli z ustavitvijo M11; ob ponovnem zagonu M11 dobi svoj prižig.)*
 
 ---
 
-*Zapisano 2026-07-23. Vrstni red in »deployaj-sproti-razkrij-enkrat« dogovorjena v pogovoru.*
+## 5. Odprto
+
+**Blokira šele korak 3 oz. 5 (ne korakov 1–2):**
+- **FR-20 §11.2** — konkretne cene (letna + doživljenjska) — blokira komercialni del (korak 5).
+- **FR-20 §11.3** — Polar ali Paddle — korak 5.
+- **FR-20 §11.4** — dependency za podpis tokena (`tech-stack.md §1`) — korak 3.
+- **FR-20 §11.9** — gost brez računa in darilo — pred prižigom (korak 4).
+- **FR-20 §11.10** — dolžina darila — pred prižigom (korak 4).
+
+**Blokira korak 1–2 (FR-19 gradnjo):**
+- **FR-19 decisions A1–A6** (obseg slojev, en/dva koledarja, motor, barve, ikone, stikalo) — dorekniti pred UI.
+- **Nevtralne vrednosti 3 kalibriranih mej** (svetle zvezde, FR-19 §14.5) — pred motorjem.
+
+Korak 1 (motor) se **lahko začne takoj po** doreku mej — ni odvisen od ničesar drugega.
+
+---
+
+*Zapisano 2026-07-23, prenovljeno 2026-07-30 (M11 ustavljen; darilni model; razrez FR-20; vrstni red FR-19 → minimalna rezina → prižig → trgovina). »Deployaj-sproti-razkrij-enkrat« ostaja vodilo.*

@@ -6,7 +6,8 @@
 > **Wireframe:** `docs/wireframes/lunar-calendar_overview.html` (v2 — stanja z/brez Tendask+, mena free,
 > agenda z opisi, semantika »dan za X«). Zaženi prek localhost (glej memory reference-wireframe-localhost).
 > **Ime izdelka (in-app):** »**Lunin koledar**«; polna oblika »**Tendask biodinamični lunin koledar**«
-> (lastna kompilacija, nevtralno poimenovanje). **Premium (Tendask+)** kasneje; zdaj vse free.
+> (lastna kompilacija, nevtralno poimenovanje). **Premium (Tendask+):** mena free, ves preostali lunin del
+> = Plus, debitira zaklenjen z lansirnim darilom (odločeno 2026-07-30, §6.5).
 > **Obseg (potrjeno z lastnikom):** pristop **A = izračunan približek** z **najboljšim možnim
 > približkom originalnega koledarja**, a brez kopiranja Thuninega izdelka. Ta dokument je spec, ne koda.
 > **Faznost:** aplikacija je **že v produkciji** (Play, od 2026-07-20) — to NI launch-gating; »kasneje«
@@ -28,8 +29,8 @@
   obratni iskalnik »naslednji dober dan za X«, personalizacija po vrtu, opt-in obvestila, kratka
   razlaga, kasneje retrospektivni vpogled (§6.3).
 - **Nič sheme / synca / mreže / lokacije** — element je čista funkcija datuma (§2, §5).
-- **Zdaj VSE FREE** (nabiranje uporabnikov; billing še ne obstaja). Premium meja = **zapis namere za
-  takrat, ko pride plačilna infrastruktura**; plačljive postanejo »dobre/želene akcije« (§6.5).
+- ~~**Zdaj VSE FREE**~~ — preseženo (2026-07-23/30): bodoči-Plus del **ne izide free**, debitira zaklenjen
+  z darilom. Glej blok »Dogovorjeno 2026-07-30« spodaj + §6.5.
 - **Ni launch-gating** — aplikacija je v produkciji; »kasneje« = prioritizacija (stabilizacija + drugi
   FR-ji prej).
 
@@ -51,6 +52,22 @@
 - **Toggle tropski/siderični** (§13): poimenovanje po mehanizmu (»Po ozvezdjih (biodinamični)« /
   »Po znamenjih«), **brez »Thun«** (znamka); **privzeto = siderični-IAU** (obrat po kalibraciji —
   ujame tiskani SI trg Thun/Ajda/Miler), tropski ostane za tiste, ki primerjajo splet.
+
+### Dogovorjeno 2026-07-30 — darilni model in zaporedje (zapre §6.5/§11.2)
+
+- **Free/premium meja ZAPRTA:** mena Lune trajno free; **element-dan + koledar/planer + akcije = Tendask+**.
+  Posadi.si protiargument (»koledar zastonj«) ne prevlada, ker je po ustavitvi M11 (2026-07-29) lunin paket
+  **edina vsebina Plusa** — če izide free, Plus nima ničesar za prodati in pravilo »nič, kar bo Plus, ne
+  izide free« (FR-20 §10) prepove kasnejši zaklep. Darilo omili kavelj-argument: vsi izkusijo polno vrednost.
+- **Darilni model:** Plus del debitira **zaklenjen**, ob prižigu vsi obstoječi profili dobijo **časovno
+  omejeno darilo Tendask+** (parameter; delovni predlog 6 mesecev, dokončno ob prižigu — FR-20 §10.4).
+  Funkcija od 1. dne nosi okvir »premium, ki ga imaš začasno zastonj« → ob poteku nič ni »odvzeto«.
+- **Zaporedje (rollout plan, prenovljen):** 1) motor v `core/` + testi + nevtralne meje → 2) celoten UI za
+  flagom (dark) → 3) FR-20 **minimalna rezina** upravičenosti (`plus_until` + granti + `plusProvider` +
+  osnovni Tendask+ zaslon) → 4) prižig z darilom → 5) komercialni del FR-20 v darilni dobi (rok = potek
+  prvih daril). Odvisnost FR-19 ↔ FR-20 je **samo v točki prižiga**, ne med gradnjo.
+- **Posledica za obseg (decisions A1):** enofunkcijski Plus mora ob poteku darila delovati kot zaokrožen
+  izdelek, vreden ~10 €/leto → argument za srednji/polni obseg, ne minimalni MVP.
 
 ---
 
@@ -249,12 +266,11 @@ Ker je element dneva poceni re-izpeljljiv, ga pokažemo na več mestih brez stro
 
 ## 6.5 Faznost in monetizacija
 
-**Zdaj (nabiranje uporabnikov) = VSE FREE.** Billing/IAP še ne obstaja (`tendask-monetization-planned`,
-»slej ko prej«), zato je vse brezplačno tako ali tako. Spodnja meja je **zapis namere za takrat, ko
-pride plačilna infrastruktura**, ne stikalo, ki bi ga vklopili zdaj. To NI vezano na launch (aplikacija
-je že v produkciji) — je stvar prioritizacije in kasnejše monetizacije.
+~~**Zdaj (nabiranje uporabnikov) = VSE FREE.**~~ **Preseženo 2026-07-23/30** — bodoči-Plus del ne izide
+free (FR-20 §10.4); glej »Dogovorjeno 2026-07-30« v §0 in razkritje spodaj.
 
-**Meja (odločeno v2, 2026-07-22): mena free, element-dan premium.**
+**Meja (odločeno v2 2026-07-22, po vmesnem premisleku §15 dokončno potrjena 2026-07-30):
+mena free, element-dan + koledar/planer + akcije = Plus.**
 
 | **Free** (za vse — kavelj, navada) | **Premium »Tendask+«** (dobre/želene akcije) |
 |---|---|
@@ -269,11 +285,13 @@ je že v produkciji) — je stvar prioritizacije in kasnejše monetizacije.
 Načelo: izračun je poceni → **adut ni algoritem, ampak UX + integracija + planiranje**. Premium
 entitlement se cachea v drift (offline-first, plačnik dela brez signala — `tendask-monetization-planned`).
 
-**Razkritje (posodobljeno 2026-07-24, nadomešča prvotni »najprej vse free«):** prvotna ideja je bila
-etapno vse free in kasnejši vklop zidu — a to na koncu **povzroči slabe ocene** (odvzem izdane funkcije).
-Zato: **bogati del (element-dan + planer + akcije) se gradi za flagom, temen — ne izide free.** Free ostane
-le **mena Lune**. Ob prižigu vsi obstoječi profili dobijo **1 leto Tendask+ zastonj** (lansirno darilo).
-Avtoritativno: **FR-20 §10.4** + [`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md).
+**Razkritje (posodobljeno 2026-07-24 in 2026-07-30, nadomešča prvotni »najprej vse free«):** prvotna
+ideja je bila etapno vse free in kasnejši vklop zidu — a to na koncu **povzroči slabe ocene** (odvzem
+izdane funkcije). Zato: **bogati del (element-dan + planer + akcije) se gradi za flagom, temen — ne izide
+free.** Free ostane le **mena Lune**. Ob prižigu vsi obstoječi profili dobijo **časovno omejeno darilo
+Tendask+** (parameter, delovni predlog 6 mesecev — dolžina se izbere ob prižigu glede na sezono; prvotni
+»1 leto« ni več fiksen). Avtoritativno: **FR-20 §10.4** +
+[`../tendask-plus-rollout-plan.md`](../tendask-plus-rollout-plan.md).
 
 ## 7. i18n / brand
 
@@ -333,15 +351,17 @@ narobe). Singular »dan za plod«, plural/splošno »dnevi za plod«. Kratka ozn
 (`plod` / `list` / `cvet` / `korenina`). Vir potrjuje raba na slov. setvenih koledarjih (Delo in dom,
 vsezamojdan.si). i18n ključi naj sledijo tej frazi (`moon.day_for_fruit/leaf/flower/root`).
 
-### 11.2 Free vs premium meja (v ponovnem premisleku — glej §15)
-> **Ločiti dve vprašanji:**
+### 11.2 Free vs premium meja (ZAPRTO 2026-07-30)
+> **Obe vprašanji rešeni:**
 > - **Način razkritja = REŠENO (2026-07-24).** Karkoli pristane v premium, se gradi **za flagom (dark) in
 >   debitira zaklenjeno** — NE izide free in se kasneje zaklene (to povzroči slabe ocene). Ob prižigu
->   vsi obstoječi dobijo **1 leto Tendask+ zastonj**. Avtoritativno: FR-20 §10.4 + rollout plan.
-> - **Kje je meja = ŠE ODPRTO.** Opomba (2026-07-22): konkurent posadi.si daje setveni koledar **zastonj**
->   (§15) → »element-dan = premium« je šibka prodajna točka. Verjetno **element-dan tudi free** (kavelj),
->   premium = **napredni sloji** (planer, obratni iskalnik, dvižna/padna, neugodni, obvestila). Odločitev
->   pending; spodnje je prvotni v2 predlog. **Karkoli konča kot premium, sledi zgornjemu načinu razkritja.**
+>   vsi obstoječi dobijo **časovno omejeno darilo Tendask+** (parameter, predlog 6 mesecev — 2026-07-30).
+>   Avtoritativno: FR-20 §10.4 + rollout plan.
+> - **Kje je meja = REŠENO (2026-07-30).** Ostane v2 razdelitev spodaj: mena free, **element-dan + koledar/
+>   planer + akcije = Plus**. Vmesni premislek (posadi.si daje koledar zastonj → element-dan free kot
+>   kavelj, §15) je **zavrnjen**: po ustavitvi M11 je lunin paket edina vsebina Plusa — free izid bi Plus
+>   izpraznil, pravilo FR-20 §10 pa prepove kasnejši zaklep. Kavelj-funkcijo prevzame **darilo** (vsi
+>   izkusijo polno vrednost), ne free element-dan.
 - **Mena Lune (faza) = FREE za vse** — ikona (dinamični SVG) + faza na čipu Domov. Nedvoumna, poceni,
   gradi navado.
 - **Element-dan (dan za plod/list/…) + koledar/planer + akcije = premium (Tendask+).**
@@ -585,4 +605,6 @@ Google AdMob, direktni deali) + **PRO ~24 €/leto** + **promo kode** + skupinsk
 
 **Free/premium posledica (vhod v FR-19 §6.5 in FR-20):** konkurent daje **koledar zastonj** (z oglasi) →
 element-dan kot čisti premium je šibka prodajna točka; premium naj bo **napredno** (planer, obratni iskalnik,
-dvižna/padna, neugodni, obvestila, personalizacija), ne osnovni kavelj. *(Meja ostaja odprta — glej §6.5.)*
+dvižna/padna, neugodni, obvestila, personalizacija), ne osnovni kavelj. *(Ta premislek je bil 2026-07-30
+**zavrnjen** — glej §11.2: po ustavitvi M11 je lunin paket edina vsebina Plusa; kavelj-funkcijo prevzame
+lansirno darilo, meja ostane v2: element-dan = Plus.)*

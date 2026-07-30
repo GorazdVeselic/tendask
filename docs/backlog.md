@@ -37,12 +37,13 @@ kateri popravek je prispeval, ni pomembno.
 | FR | Kaj | Stanje | Ključna odločitev | Spec |
 |---|---|:---:|---|---|
 | **FR-20** | Licenciranje, plačila, skladnost s Play | 📝 | **»Consumption-only«**: nakup na spletni strani, v aplikaciji samo odkupna koda → **0 % provizije Play**. Rdeča črta: v aplikaciji **ne sme biti** poziva k nakupu, cene ali URL-ja (velja tudi za pushe in i18n). Plačila prek **merchant of record** (Polar), ne Stripe — normirani s.p. je obdavčen po prihodkih. Offline: podpisan token, javni ključ bundlan, pride z obstoječim pull syncom. **Opomniki ostajajo trajno free** (obljuba iz listinga). | [`tendask-plus-licensing.md`](feature-requests/tendask-plus-licensing.md) |
-| **FR-19** | Lunin koledar (koren/list/cvet/plod) | 📝 | Iz feedbacka T10. **Lasten izračun** (siderični položaj Lune), **brez kopiranja Thuninega koledarja** — dejstva in tradicija so prosta, njen izdelek in znamka ne. Nič sheme, synca, mreže ali lokacije: element je čista funkcija datuma. Zgradi se **v celoti free**, gating je zadnji korak. | [`biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md) · [odločitve](feature-requests/biodynamic-calendar-decisions.md) |
+| **FR-19** | Lunin koledar (koren/list/cvet/plod) | 📝 | Iz feedbacka T10. **Lasten izračun** (siderični položaj Lune), **brez kopiranja Thuninega koledarja** — dejstva in tradicija so prosta, njen izdelek in znamka ne. Nič sheme, synca, mreže ali lokacije: element je čista funkcija datuma. **Mena free; ves preostali del = Tendask+** — gradi se **za flagom (dark)** in **debitira zaklenjen**; ob prižigu vsi obstoječi profili dobijo časovno omejeno **darilo Tendask+** (odločeno 2026-07-30, FR-20 §10.4 + rollout plan). | [`biodynamic-calendar.md`](feature-requests/biodynamic-calendar.md) · [odločitve](feature-requests/biodynamic-calendar-decisions.md) |
 | **FR-18** | Več vrtov / lokacij | 💡 | Arhitektura je danes »1 uporabnik = 1 lokacija« (lastnost profila). Vzvod: `area` je že N-na-uporabnika → verjetno dovolj nova `garden` tabela + `area.garden_id`. Groba ocena 2–3 tedne. | [`multi-location.md`](feature-requests/multi-location.md) |
 | **FR-21** | Rastlinsko znanje / »Vodič« | 💡 | Iz konkurenčne analize posadi.si + T5. LLM naredi obseg izvedljiv, a je **le pospešek za osnutek** — agronomska halucinacija uniči pridelek in zaupanje → osnutek → navzkrižna preverba → seed, **enkratno v katalog, ne runtime**. Osnovni opis free, poglobljeni = Plus. | [`plant-knowledge-catalog.md`](feature-requests/plant-knowledge-catalog.md) |
 
-**Vrstni red dostave** (dogovorjen 2026-07-23, ob ustavitvi M11 delno zastarel):
-[`tendask-plus-rollout-plan.md`](tendask-plus-rollout-plan.md).
+**Vrstni red dostave** (prenovljen 2026-07-30, brez M11): FR-19 motor → FR-19 UI dark → FR-20 minimalna
+rezina → prižig z darilom → FR-20 trgovina — [`tendask-plus-rollout-plan.md`](tendask-plus-rollout-plan.md);
+razrez na korake z branchi: [`plan-implementacije-fr19-fr20.md`](plan-implementacije-fr19-fr20.md).
 
 ## Ostalo
 

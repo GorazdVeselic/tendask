@@ -27,6 +27,9 @@ kasneje poceni (ni sheme/synca).
 - **B) Srednje** = +plast 3 → bližje pravemu biodinamičnemu koledarju (Thun/posadi.si).
 - **C) Polno** = +plast 4 → najbolj verodostojno, a največ izračuna, UI in testov.
 
+**Nov argument (2026-07-30):** po ustavitvi M11 Plus **starta enofunkcijski** — lunin paket mora ob
+poteku darila sam upravičiti ~10 €/leto (FR-20 §11.1) → govori za B ali C, proti A.
+
 **Predlog:** B. · *(spec §8.4, §8.5)*
 
 ### A2 · En koledar ali dva (kje »živi« koledar)  ⬜ ODPRTO
@@ -77,20 +80,27 @@ wireframa v temni temi ne delujejo dobro.
 uporabnik funkcije ne odkrije.
 **Opcije in kaj pomenijo:**
 - **A) Privzeto VKLOPLJEN** → čip na Domov je viden, funkcija se odkrije sama; kdor ne dela po luni, jo
-  izklopi. (Smiselno, ker je zdaj vse brezplačno.)
+  izklopi. (Ob darilnem modelu — B2 — čip kaže free meno + podarjen Plus del; odkritje je hkrati
+  predstavitev Plusa, kar govori ZA vklopljeno.)
 - **B) Privzeto IZKLOPLJEN** → app čist za tiste brez zanimanja; a nihče je ne odkrije brez brskanja.
 - **C) Vprašaj ob onboardingu** → eksplicitno, a doda korak.
 
-**Predlog:** A. · *(spec §8.6)*
+**Predlog:** A. · *(spec §8.6; prvotna utemeljitev »ker je zdaj vse brezplačno« je presežena z B2 —
+argument zdaj teče prek darila.)*
 
 ---
 
 ## B. Nagib — potrdi ali spremeni (niso prave dileme)
 
 - **B1 · Nastavitve koledarja lokalno** (device-local, ne sync) — koledar je globalen, ni uporabniški
-  podatek. Skladno z »nič synca« (§2). 🅿️
-- **B2 · ✦ Tendask+ zaklep se NE gradi zdaj** — roadmap »najprej vse free, gating zadnji«. Koledar v prvi
-  različici dostopen vsem; board 2 / zaklenjeni čip / vnos kode šele s FR-20. 🅿️
+  podatek. Skladno z »nič synca« (§2). 🅿️ **Pozor (odpreti ob §6.3.9):** lunina opt-in obvestila bi po
+  obstoječem vzorcu sodila v `NotificationSettings`, ki je **sinhroniziran** (profile JSON) — meja
+  device-local ↔ synced za lunine nastavitve še ni dorečena.
+- **B2 · Tendask+ zaklep** ✅ ODLOČENO (2026-07-30, nadomešča prvotni nagib »najprej vse free«): lunin
+  Plus del **debitira zaklenjen** (gradi se za flagom, dark) — NE izide free. Ob prižigu vsi obstoječi
+  profili dobijo **časovno omejeno darilo Tendask+** (predlog 6 mesecev; FR-20 §10.4). Med gradnjo (koraka
+  1–2 rollout plana) je gate navaden `const` flag; `plusProvider` + board 2 / zaklenjeni čip / vnos kode
+  pridejo z minimalno rezino FR-20 (korak 3) oz. komercialnim delom (korak 5).
 
 ---
 
@@ -99,7 +109,10 @@ Ime »Lunin koledar« · semantika »dan za plod/list/cvet/korenino« · pristop
 **privzeto siderični** + toggle po mehanizmu (»Po ozvezdjih« / »Po znamenjih«) · brez sheme/synca/mreže/
 lokacije · element se re-izpelje (ne zamrzuje) · vstopne točke (čip, Dnevnik, ⚙️→✦ Tendask+, 🔎) · aktivacija
 = licenčna koda ([[tendask-lunar-calendar-fr19]], FR-20) · »✦ Tendask+« (ikona spredaj) + prihodnje = »Kmalu« ·
-board C = prekrivna plast (ne nov koledar) · vrstni red board-ov · kalibracija sideričnih mej (§12.3).
+board C = prekrivna plast (ne nov koledar) · vrstni red board-ov · kalibracija sideričnih mej (§12.3) ·
+**free/premium meja (2026-07-30):** mena free, element-dan + planer + akcije = Plus, debitira zaklenjen z
+lansirnim darilom (spec §11.2, FR-20 §10.4) · **zaporedje gradnje (2026-07-30):** motor → UI dark → FR-20
+minimalna rezina → prižig z darilom → trgovina (rollout plan).
 
 ## D. Delo, ne odločitev (opraviti ob gradnji)
 - Napisati **lastne opise dejavnosti** (i18n sl/en/de, na element) — pravno ne prepis Luninih bukev.
