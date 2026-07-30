@@ -62,6 +62,5 @@ Backup pred posegom: `~/tendask-supabase/backups/staging_20260729_141730.sql.gz`
 | »Dvojni tap« pri dodajanju opomnika | opaženo |
 | Sentry TENDASK-6: RenderFlex overflow 9 px | brez widget verige |
 | Insert-if-missing race v `setLang` / `setNotificationSettings` / `saveGardenLocation` | ni sprožilo napake v produkciji |
-| Vremenski posnetek z žigom iz časa **po** izbrisu podatkov (30. 7., enkrat opaženo) | **Ni ponovljivo** — namenska reprodukcija (lokacija + svež posnetek → Nastavitve »Izbriši vse podatke« → brez povezave → nova GPS lokacija) je dala »Vreme trenutno ni na voljo«, torej `clearUserData` `local_flag` res pobriše. Če se ponovi, prvi sum je pretvorba UTC → lokalni čas v žigu (`_capturedLabel`), ne izbris |
 | Odprti bugi BUG-001…004 | [`bugreport.md`](bugreport.md) |
 | Načrtovano, negrajeno | [`backlog.md`](backlog.md) |
