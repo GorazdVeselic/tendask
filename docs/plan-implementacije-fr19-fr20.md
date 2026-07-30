@@ -114,7 +114,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      ali freezed) in podpis `dayFor` + prazno implementacijo. *Zakaj prvi: T2/T3 lahko od tu dalje
      razvijata proti stabilni pogodbi.* Pogodba časa: klicalec poda **lokalni koledarski dan**
      (`DateTime(y,m,d)` v lokalni coni); interno vse v UTC; meji dneva = lokalna polnoč→polnoč.
-  2. ⬜ Časovna osnova: JD/T iz UTC (Fliegel/Meeus) + testi (znani JD datumi).
+  2. ✅ Časovna osnova (2026-07-30): JD/T iz UTC (Fliegel/Meeus) + testi (znani JD datumi).
   3. ⬜ Sončeva ekliptična dolžina (Meeus 25, ~10 vrstic) + test.
   4. ⬜ Lunina ekliptična dolžina (Meeus 47, srednji elementi + ~36 členov iz prototipa) + **test proti
      Meeus primeru 47.a (0,003°)** — to je vratar taska: če ta test ne pade skozi, se ne gre naprej.
