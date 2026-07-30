@@ -20,8 +20,12 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
 - **Brez Riverpoda, brez Clocka, brez I/O** — čista logika; nič v aplikaciji tega še ne kliče.
   Gradniki so vsi na mestu: `time_base.dart`, `sun_longitude.dart`, `moon_longitude.dart`,
   `zodiac.dart`, `moon_phase.dart` — ne spreminjaj jih.
-- ⚠️ Past iz T1.6: prototipov IZPIS datuma (JD→datum) ima 13-dnevni zamik (brez gregorijanske
-  korekcije) — prototipovim izpisanim datumom ne verjemi, JD-jem in uram ja.
+- **JD→lokalni `DateTime` NE piši kot ročno koledarsko inverzijo** (razred hroščev iz najdbe T1.6) —
+  uporabi epoch aritmetiko: `DateTime.fromMillisecondsSinceEpoch(((jd − 2440587.5) · 86400000)
+  .round(), isUtc: true)` + round-trip test (`DateTime → julianDay → nazaj` = identiteta na ms).
+- ⚠️ Past iz T1.6: prototipov IZPIS datuma (JD→datum) je imel 13-dnevni zamik (brez gregorijanske
+  korekcije; v NAS arhivu popravljeno, original `…-original.zip`). Port motorja je sweep-verificiran
+  Dart ↔ Python za 2024–2027 (max 3·10⁻¹¹°) — astronomije ni treba znova preverjati.
 
 **Pred delom preberi:** plan T1 (`docs/plan-implementacije-fr19-fr20.md`) · spec §14.7–14.8 + §12.6
 (`docs/feature-requests/biodynamic-calendar.md`) · obstoječe (`lib/core/biodynamic/`).

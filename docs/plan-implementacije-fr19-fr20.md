@@ -129,7 +129,9 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      in ure so bili pravilni, motor v Dartu ni prizadet. **Revizija kontaminacije (2026-07-30):**
      `moon_calibrate.py` — vir kalibriranih mej — ima obe inverzni pretvorbi pravilni → kalibracija
      in verifikacija 0,26 h/97 % NISTA prizadeti; hrošč samo v `moon_thun_test.py::jd_to_hhmm`,
-     popravljen v arhivu na NAS, original ohranjen kot `…-original.zip`.)*
+     popravljen v arhivu na NAS, original ohranjen kot `…-original.zip`. **Sweep verifikacija porta
+     (2026-07-30):** dnevna λ Lune/Sonca Dart ↔ Python za 2024–2027 (1461 točk) — max razlika
+     3·10⁻¹¹°/2·10⁻¹²° → vseh 36 koeficientov potrjenih čez celotno domeno, ne le v točki 47.a.)*
   7. ⬜ Prehod znotraj dneva: element ob lokalni polnoči in koncu dneva; če različna → bisekcija ure
      prehoda (§14.7). **Testi čez DST prehod** (konec marca / konec oktobra — spec §14.5 opozorilo)
      in prehod tik čez polnoč.
