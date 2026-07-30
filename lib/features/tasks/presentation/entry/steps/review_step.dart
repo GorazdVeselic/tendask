@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/database/catalog_provider.dart';
 import '../../../../../core/date_format.dart';
+import '../../../../../core/location/location_repository.dart';
 import '../../../../../core/task_status.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
@@ -180,8 +181,17 @@ class ReviewStepBody extends ConsumerWidget {
           textCapitalization: TextCapitalization.sentences,
         ),
         const SizedBox(height: 12),
-        Text(
-          t.entry.weather_note,
+        // Only promise a snapshot when there is a location to take one for
+        // (FR-22) — otherwise say what will actually happen. Same sentence as
+        // the task detail, but the word is not a link: tapping away from a
+        // half-finished wizard would cost the draft, and the user can set the
+        // location from Home once this is saved.
+        Text.rich(
+          ref.watch(gardenLocationProvider).value == null
+              ? t.weather.detail_no_location(
+                  link: (text) => TextSpan(text: text),
+                )
+              : TextSpan(text: t.entry.weather_note),
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,

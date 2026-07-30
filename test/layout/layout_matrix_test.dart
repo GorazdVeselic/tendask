@@ -126,6 +126,11 @@ List<Override> _taskWorldOverrides() => [
   plantsListProvider.overrideWith((ref) => Stream.value(<Plant>[])),
   suppliesListProvider.overrideWith((ref) => Stream.value(<Supply>[])),
   notesProvider.overrideWith((ref) => Stream.value(<Note>[])),
+  // Unset, which is the wordiest state for every task-shaped screen that reads
+  // it (the detail's weather hint, the review step's note). Overridden rather
+  // than faked at the repository, because the real provider derives the centroid
+  // through the native H3 library, whose FFI cannot load here.
+  gardenLocationProvider.overrideWith((ref) => Stream.value(null)),
 ];
 
 /// Screens that persist (settings, appearance, note form) read through the
@@ -218,11 +223,6 @@ void main() {
       taskSuppliesProvider(
         _taskId,
       ).overrideWith((ref) => Stream.value(<TaskSupply>[])),
-      // Unset, which is both the new branch and the wordiest: the weather
-      // section then carries the explanation plus its CTA. Overridden rather
-      // than faked at the repository, because the real provider derives the
-      // centroid through the native H3 library, whose FFI cannot load here.
-      gardenLocationProvider.overrideWith((ref) => Stream.value(null)),
     ],
     build: () => const TaskDetailScreen(id: _taskId),
   );
