@@ -25,6 +25,9 @@ Za vsak ponavljajoč se UI vzorec obstaja EN skupni widget. Lokalna `_SectionTit
 - **Kvalitativna oznaka na koncu vrstice** (intenzivnost Okolice, pas zgodaj/običajno/pozno, status predloga) → `StatusPill` (`core/widgets/status_pill.dart`) — zaobljena značka; `background: null` = obrobljena različica za mirni konec lestvice. Klicalec izbere le trojico (napis, ozadje, ospredje); oblika, radij in `labelSmall`/w700 živijo na enem mestu, da se tri liste berejo kot en besednjak.
 - **Seznam vrstic z brezplačnim odsekom** (Okolica: »Ta teden«, »Kje si ti«) → `TeasedRowCards<T>` (`features/community/presentation/widgets/teased_row_cards.dart`) — prva vrstica v svoji kartici, ostale zamegljene pod `TeaseOverlay`; s Plusom ena navadna kartica. Vsebuje tudi `Divider` med vrsticami, zato **ne** gradi svoje `Column` + `Card` kombinacije.
 
+- **Vremenski slot brez podatka** (ni lokacije · offline brez posnetka · opravilo brez zamrznjenega posnetka) → ista kartica, isti glif `kNoWeatherEmoji` (`features/weather/data/weather_code.dart`), razliko nosi **samo besedilo** (+ ↻ pri offline). Trije klicalci: `WeatherNoLocationCard`, `CurrentWeatherCard(snapshot: null)`, `TaskWeatherSection`. Glif je konstanta in ne literal na površino — tri kopije emojija so se razšle že v prvem popravku (FR-22).
+- **Povezana beseda sredi stavka** (»potrebujemo *lokacijo* vrta«) → `linkSpan(context, text)` (`core/widgets/link_span.dart`) v slang `(rich)` ključu. Span **nima** `TapGestureRecognizer`: tarča je cela kartica, zato widget ostane `StatelessWidget` in ni česa `dispose`-ati, tarča pa je večja od ene besede. Če mora biti tapljiva samo beseda, rabiš `StatefulWidget` z recognizerjem — najprej premisli, ali res mora.
+
 ## Barve in stil samo prek teme
 
 - **Destruktivno/napaka = `colorScheme.error`**, nikoli hardcode rdeča; brand barve so v `theme/` (`AppColors.danger` ipd.).

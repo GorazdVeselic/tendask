@@ -66,6 +66,7 @@ Pravila:
 - **Brand barve in tipografija živijo v `theme/`**, nikoli hardcode hex (`#2e7d32`, `#E0A82E`) v widgetih.
 - **Uporabniške vrednosti = typed model (freezed), nikoli `Map<String, dynamic>` po kodi.** Eno mesto za branje/pisanje (repozitorij), nikoli direkten dostop iz widgeta.
 - **i18n: slang (en/sl/de) od M0.** Vsi uporabniško vidni nizi prek `t.*` (npr. `t.tasks.title`), **nikoli hardcoded niz v widgetu**. **`base_locale: en`** (`slang.yaml`) = tehnični privzeti + fallback za nepodprte jezike (in default jezik Play listinga); app sicer sledi jeziku telefona prek `useDeviceLocale()`. **sl ostaja jezik ciljnega trga + vir wireframov** (vsebinsko izhodišče, ne tehnični base). Prevodi v `i18n/*.i18n.json`; po spremembi ključev poženi **`dart run slang`** (slang je ločen CLI, build_runner ga NE ujame).
+- **Poudarjen ali povezan del stavka = slang `(rich)`**, nikoli deljenje na `_pred`/`_povezava`/`_za`: poved mora ostati ena vrednost, sicer nemški besedni red razpade. Ključ `"key(rich)"`, v vrednosti `${link(beseda)}`, v kodi `Text.rich(t.….key(link: (s) => linkSpan(context, s)))`. **Rich text ne pade pod `find.text`** (ta bere le `Text.data`) — v testih primerjaj prek `toPlainText()` ali `find.textContaining`.
 
 ## Dart/Flutter specifika
 
@@ -89,6 +90,8 @@ Pravila:
 - **Datumi za prikaz prek `core/date_format.dart`** (`startOfDay`/`formatDmy`/`formatHm`), ne podvojeni inline izračuni `DateTime(now.year, now.month, now.day)` po zaslonih.
 - **Napake niso `SizedBox.shrink()`.** Tiho požiranje (`error: (_, _) => SizedBox.shrink()`) skrije bug — pokaži vsaj miren indikator (kasneje Sentry). Mreža = pričakovano stanje (graceful degrade); lokalni DB error = ne, to je bug.
 - **Velika presentation datoteka (>~300 vrstic) je signal za ekstrakcijo widgetov**, ne za scroll.
+- **Nov viden gradnik: najprej videz, šele nato investicija.** Widget + en vnos v matriko → **poglej ga** (naprava ali wireframe) → potem testi, prevodi, dokumentacija. Obrnjen vrstni red je v FR-22 pomenil, da so bili testi, trije prevodi in wireframi napisani dvakrat: zasnova se presoja, ko jo prvič vidiš, ne ko je potrjena na papirju.
+- **Sprememba vzorca gre kot en sveženj.** Preden popraviš imenovano pojavitev (ikona, besedilo, oblika kartice), **popiši vse** pojavitve vzorca in predlagaj celoto. Skupni glif/besedilo živi kot **ena konstanta ali en i18n ključ**, ne kot kopija na površino.
 
 ### Komponentni katalog (en widget na vzorec — nikoli lokalna kopija)
 
@@ -178,6 +181,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - **UI:** widget testi za ključne/netrivialne zaslone (Hiter vnos shrani, akcija ✓ premakne opravilo). Brez golden testov, dokler dizajn ni stabilen. Brez e2e zaenkrat.
 - **Layout regresije: `test/layout/` matrika** (`layout_harness.dart` + `layout_matrix_test.dart`). Vsak zaslon se izriše čez viewport × locale × text-scale (320/360/411 × sl/en/de × 1.0/1.3) in lovi overflow + odrezan tekst — ujame prelome pri dolgi nemščini in veliki pisavi, ki jih navadni widget test ne. **Pomni:** prosto-ovijajoč tekst (`softWrap && maxLines==null`) se nikoli ne odreže (Flutter razlomi tudi predolgo besedo), zato `getMinIntrinsicWidth` NI signal za odrez — flag samo vrstično omejen tekst. Nov zaslon dodaš z enim `layoutMatrix(...)` klicem.
 - **Brez testov za scaffolding/setter-je** — ne plačajo vzdrževanja.
+- **Dve pasti, ki ju je vsak nov test providerjev že plačal** (prej glej tudi `docs/bugreport.md`, kjer živijo pasti okolja): `container.read(streamProvider.future)` **brez poslušalca nikoli ne dokonča** — stream se naroči šele ob `listen`, zato prej `addTearDown(container.listen(p, (_, _) {}).close)`. In: **nativne knjižnice se pod `flutter test` ne naložijo** (H3 prek FFI), zato providerja, ki jih uporablja, **override-aj neposredno** (`gardenLocationProvider.overrideWith(...)`) — fake repozitorija ni dovolj, ker `gardenLocation` sam gleda `h3Provider`. Podvojen override istega providerja v enem seznamu Riverpod zavrne.
 - Ob mejniku: **ročna preverba na napravi** (Android, USB).
 
 ## Stvari, ki jih NE delam brez vprašanja
@@ -189,6 +193,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - Spreminjati Android `applicationId` (`app.tendask`), package name, signing config.
 - Uvajati nov state-management lib, novo arhitekturno plast, nov build sistem.
 - Spreminjati potrjene odločitve iz `tech-stack.md` ali `koncept.md` — najprej predlagaj in vprašaj.
+- **Zapisovati svoja priporočila v `docs/*` kot odločitve.** Predlog gre v klepet; v dokument šele, ko je odločen. Dokumenti so vir resnice o tem, kaj je *dogovorjeno* — moje mnenje jih razvodeni.
 
 ## Stvari, ki jih VEDNO delam
 
@@ -197,6 +202,7 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - Pred spremembo sheme: preverim §7.14 koncepta in poskrbim, da drift + Supabase ostaneta zrcalna.
 - Pred dodajanjem zaslona: preverim ustrezni `docs/wireframes/*`; če odstopam, najprej posodobim wireframe + koncept.
 - **Nikoli ne ugibam dejstev** (email, imena, ID-ji, ključi) — če ne vem, vprašam.
+- **Kar se da izmeriti, izmerim; hipotez ne prodajam kot ugotovitve.** Ko je naprava priklopljena ali baza dosegljiva, je reprodukcija ceneje od sklepanja — in edino, kar loči najdbo od domneve. Če ostane domneva, jo označim kot domnevo.
 - Po končani podnalogi: kratek "to je narejeno, naslednje je X" + vprašam za commit — brez epskih povzetkov.
 
 ---
