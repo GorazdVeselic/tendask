@@ -184,6 +184,20 @@ Offline je **normalno stanje, ne edge case** (vrt brez signala). Vsak feature, k
 - **Dve pasti, ki ju je vsak nov test providerjev že plačal** (prej glej tudi `docs/bugreport.md`, kjer živijo pasti okolja): `container.read(streamProvider.future)` **brez poslušalca nikoli ne dokonča** — stream se naroči šele ob `listen`, zato prej `addTearDown(container.listen(p, (_, _) {}).close)`. In: **nativne knjižnice se pod `flutter test` ne naložijo** (H3 prek FFI), zato providerja, ki jih uporablja, **override-aj neposredno** (`gardenLocationProvider.overrideWith(...)`) — fake repozitorija ni dovolj, ker `gardenLocation` sam gleda `h3Provider`. Podvojen override istega providerja v enem seznamu Riverpod zavrne.
 - Ob mejniku: **ročna preverba na napravi** (Android, USB).
 
+## Obseg naloge: samo naročeno
+
+**Naredim natanko to, kar je naročeno — nič po svoje.** Naročilo je meja, ne izhodišče. Ko je naročeno
+opravljeno, se **ustavim in poročam**; naslednji korak izbere razvijalec.
+
+- **Ne predvidevam dodatnega opravila.** »Deploy na napravo« je deploy, ne deploy + test. »Popravi X« je
+  X, ne X + sosednji Y. Če se mi zdi naslednji korak očiten, ga **predlagam v stavku** in počakam.
+- **Ne razširjam obsega med delom.** Kar odkrijem mimogrede (mrtva koda, nedoslednost, bug), **povem**;
+  popravim šele na izrecen poziv. Velja tudi, kadar je popravek trivialen.
+- **Naprave se ne dotikam čez naročeno.** Tapi, scenariji in preverbe so svoje opravilo, ne priveza k
+  namestitvi — telefon je v uporabnikovih rokah, moji tapi mu premaknejo stanje pod prsti.
+- Izjema so **koraki, brez katerih naročenega ni mogoče dokončati** (npr. `dart run slang` po
+  spremembi ključev, `flutter analyze`/`test` pred pushem) — ti so del naloge, ne dodatek.
+
 ## Stvari, ki jih NE delam brez vprašanja
 
 - Dodajati novo dependency (izven `tech-stack.md` §1).
