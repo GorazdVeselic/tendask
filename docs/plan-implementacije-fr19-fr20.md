@@ -110,7 +110,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
   Porabniki: T3 (zasloni), T4 (oznake), T5 (iskalnik). **Brez Riverpoda, brez Clocka** — Clock rabi šele
   UI za »danes«.
 - **Koraki:**
-  1. ⬜ **API najprej:** definiraj `CalendarSystem` enum, `BiodynamicDay` model (navaden immutable razred
+  1. ✅ **API najprej** (2026-07-30): definiraj `CalendarSystem` enum, `BiodynamicDay` model (navaden immutable razred
      ali freezed) in podpis `dayFor` + prazno implementacijo. *Zakaj prvi: T2/T3 lahko od tu dalje
      razvijata proti stabilni pogodbi.* Pogodba časa: klicalec poda **lokalni koledarski dan**
      (`DateTime(y,m,d)` v lokalni coni); interno vse v UTC; meji dneva = lokalna polnoč→polnoč.
