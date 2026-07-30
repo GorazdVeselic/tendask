@@ -28,6 +28,11 @@ void main() {
       expect(julianDay(DateTime.utc(1600, 1, 1)), 2305447.5);
     });
 
+    test('1900 is not a leap year (century rule)', () {
+      expect(julianDay(DateTime.utc(1900, 2, 28)), 2415078.5);
+      expect(julianDay(DateTime.utc(1900, 3, 1)), 2415079.5);
+    });
+
     test('non-UTC input is normalized to UTC', () {
       final local = DateTime.utc(2000, 1, 1, 12).toLocal();
       expect(julianDay(local), 2451545.0);

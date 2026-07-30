@@ -45,7 +45,11 @@ class BiodynamicDay {
     required this.illumFraction,
     this.ascending,
     this.unfavorable,
-  });
+  })  : assert(
+          (transitionAt == null) == (secondaryElement == null),
+          'transitionAt and secondaryElement must be set together',
+        ),
+        assert(illumFraction >= 0 && illumFraction <= 1);
 
   /// Zodiac division at the start of the day (day label convention, spec §12.6).
   final ZodiacSign sign;

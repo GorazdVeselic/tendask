@@ -21,4 +21,4 @@ double julianDay(DateTime dateTime) {
 }
 
 /// Julian centuries since J2000.0: `T = (JD − 2451545) / 36525` (Meeus).
-double julianCenturies(double julianDay) => (julianDay - 2451545.0) / 36525.0;
+double julianCenturies(double jd) => (jd - 2451545.0) / 36525.0;
