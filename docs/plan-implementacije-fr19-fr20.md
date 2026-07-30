@@ -123,8 +123,13 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      čistih IAU** (izhod v sili; epoha 2000, iz prototipa) + mapping element→del rastline (§14.4). Obe
      tabeli = konstante v `zodiac.dart` (zamenjava = preusmeritev `_activeStarts`, brez API spremembe).
      Komentar brez imen (boundaries §3) ✅.
-  6. ⬜ Mena: elongacija, osvetljenost, mlaj/ščip z vzorčenjem+bisekcijo + **test proti javnim menam 2026**
-     (1–3 min).
+  6. ✅ Mena (2026-07-30): elongacija, osvetljenost, 8-stopenjska mena, mlaj/ščip z vzorčenjem+bisekcijo;
+     **testi proti javnim menam 2026** (14. 7. mlaj, 29. 7. ščip, 12. 8. mlaj — ±5 min) ✅. *(Odkrit
+     hrošč v prototipovem IZPISU datuma — JD→datum brez gregorijanske korekcije, 13 dni zamika; JD-ji
+     in ure so bili pravilni, motor v Dartu ni prizadet. **Revizija kontaminacije (2026-07-30):**
+     `moon_calibrate.py` — vir kalibriranih mej — ima obe inverzni pretvorbi pravilni → kalibracija
+     in verifikacija 0,26 h/97 % NISTA prizadeti; hrošč samo v `moon_thun_test.py::jd_to_hhmm`,
+     popravljen v arhivu na NAS, original ohranjen kot `…-original.zip`.)*
   7. ⬜ Prehod znotraj dneva: element ob lokalni polnoči in koncu dneva; če različna → bisekcija ure
      prehoda (§14.7). **Testi čez DST prehod** (konec marca / konec oktobra — spec §14.5 opozorilo)
      in prehod tik čez polnoč.
