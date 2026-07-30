@@ -116,8 +116,8 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      (`DateTime(y,m,d)` v lokalni coni); interno vse v UTC; meji dneva = lokalna polnoč→polnoč.
   2. ✅ Časovna osnova (2026-07-30): JD/T iz UTC (Fliegel/Meeus) + testi (znani JD datumi).
   3. ✅ Sončeva ekliptična dolžina (2026-07-30): Meeus 25, ~10 vrstic + test.
-  4. ⬜ Lunina ekliptična dolžina (Meeus 47, srednji elementi + ~36 členov iz prototipa) + **test proti
-     Meeus primeru 47.a (0,003°)** — to je vratar taska: če ta test ne pade skozi, se ne gre naprej.
+  4. ✅ Lunina ekliptična dolžina (2026-07-30): Meeus 47, srednji elementi + 36 členov iz prototipa; **test proti
+     Meeus primeru 47.a** ✅ (0,0033°; Dart = Python prototip na 13 decimalk) — vratar prestal.
   5. ⬜ Zodiak: tropski (`floor(λ/30)`), siderični s **12 kalibriranimi pragovi** (boundaries doc §1,
      epoha 2024.0 + precesija `0.013972°/leto`; Kačenosec zajet v meji Sco→Sgr) + **rezervna tabela
      čistih IAU** (izhod v sili) + mapping element→del rastline (§14.4). Obe tabeli = konstante v enem
