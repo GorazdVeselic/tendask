@@ -39,6 +39,18 @@ void main() {
     expect(await prefs.moonCalendarEnabled(), isTrue);
   });
 
+  test('a corrupted moon flag reads as switched off, never as default-on',
+      () async {
+    // Only the app writes this key ('true'/'false'); anything else must not
+    // read as null (null means never-set and defaults to ON per A6).
+    await db
+        .into(db.localFlags)
+        .insertOnConflictUpdate(
+          LocalFlagsCompanion.insert(key: 'moon_calendar_enabled', value: 'yes'),
+        );
+    expect(await prefs.moonCalendarEnabled(), isFalse);
+  });
+
   test('moonSystem round-trips and overwrites', () async {
     expect(await prefs.moonSystem(), isNull);
 

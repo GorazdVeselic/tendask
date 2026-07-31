@@ -58,6 +58,19 @@ void main() {
     expect(await container.read(localPrefsProvider).moonSystem(), 'tropical');
   });
 
+  test('setEnabled(false) survives a rebuild (persisted, not just state)',
+      () async {
+    await container
+        .read(moonSettingsControllerProvider.notifier)
+        .setEnabled(false);
+    container.invalidate(moonSettingsControllerProvider);
+
+    final settings = await container.read(
+      moonSettingsControllerProvider.future,
+    );
+    expect(settings.enabled, isFalse);
+  });
+
   test('an unknown stored system falls back to sidereal', () async {
     await container.read(localPrefsProvider).setMoonSystem('draconic');
     container.invalidate(moonSettingsControllerProvider);
@@ -66,5 +79,20 @@ void main() {
       moonSettingsControllerProvider.future,
     );
     expect(settings.system, CalendarSystem.sidereal);
+  });
+
+  test('keepAlive: the bootstrap warm-up survives without listeners', () async {
+    // The provider is read once in bootstrap and then has NO listener until
+    // the first moon UI subscribes — with autoDispose it would be dropped
+    // right after the read and the warm-up would be pointless (the Home chip
+    // would flash through AsyncLoading again).
+    expect(moonSettingsControllerProvider.isAutoDispose, isFalse);
+
+    await container.read(moonSettingsControllerProvider.future);
+    await container.pump();
+    expect(
+      container.read(moonSettingsControllerProvider).hasValue,
+      isTrue,
+    );
   });
 }

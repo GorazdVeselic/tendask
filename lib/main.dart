@@ -192,8 +192,17 @@ Future<void> _bootstrap() async {
   await container.read(themePaletteControllerProvider.future);
 
   // Same for the moon calendar settings (FR-19): resolved before first paint so
-  // the Home chip never flashes in or out on launch.
-  await container.read(moonSettingsControllerProvider.future);
+  // the Home chip never flashes in or out on launch. Unlike the theme, this is
+  // NOT essential to booting (dark feature) — a failed load must never block
+  // runApp; the chip then resolves after start.
+  try {
+    await container.read(moonSettingsControllerProvider.future);
+  } catch (error, stack) {
+    debugPrint('Moon settings warm-up failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
 
   // Start on the branded splash (M9.2), which routes to [target] after a brief
   // readable delay.
