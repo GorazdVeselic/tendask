@@ -176,6 +176,12 @@ const kVersionChannel = '';
 /// to re-enable. See entry_screen (step list) and settings_screen.
 const kSuppliesEnabled = true;
 
+/// Moon calendar feature gate (FR-19, dark until T7 ignition): keeps every moon
+/// calendar entry point and route hidden while the feature is built behind it.
+/// Sole switch until T6, when entry points additionally gate on the Tendask+
+/// plusProvider.
+const kMoonCalendarEnabled = false;
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

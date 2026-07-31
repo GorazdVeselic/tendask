@@ -193,7 +193,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   `theme_palette_controller`, `SwipeColors` ThemeExtension, `app_router`.
 - **Izhod:** infra, ki jo T3/T4 samo porabljata. Nič vidnega.
 - **Koraki:**
-  1. ⬜ `kMoonCalendarEnabled = false` v `core/config.dart` (compile-time dark flag; vzorec
+  1. ✅ (2026-07-31) `kMoonCalendarEnabled = false` v `core/config.dart` (compile-time dark flag; vzorec
      `kSuppliesEnabled`). To je **edino stikalo do T6** — ob T6 ga na vstopnih točkah dopolni
      `plusProvider` gate, zraven pa pride še `kTendaskPlusEnabled` za Tendask+ kartico/zaslon
      (ime že rezervirano v `screen-map.md` §2.1).

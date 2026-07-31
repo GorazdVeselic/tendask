@@ -20,20 +20,25 @@ provider**, motor ostane brez nje. Motor: 121 testov, cel suite 1021, CI zelen.
 **⚠️ Časovna cona:** referenčni in fixture testi so CET/CEST — CI korak `Test` ima pripeto
 `TZ: Europe/Ljubljana` (`ci.yml`), ne odstranjuj pripetja.
 
-**Naloga TE seje: korak T2.1 — compile-time dark flag** (branch `feat/fr19-t2-1-flag`):
+**T2.1 ✅ (31. 7.):** `kMoonCalendarEnabled = false` v `core/config.dart` (compile-time dark flag,
+vzorec `kSuppliesEnabled`) — edino stikalo do T6, ko ga na vstopnih točkah dopolni `plusProvider`
+gate + `kTendaskPlusEnabled`.
 
-- `kMoonCalendarEnabled = false` v `core/config.dart` (vzorec `kSuppliesEnabled`). To je **edino
-  stikalo do T6** — ob T6 ga na vstopnih točkah dopolni `plusProvider` gate, zraven pa pride še
-  `kTendaskPlusEnabled` za Tendask+ kartico/zaslon (ime rezervirano v `screen-map.md` §2.1).
-- Nič vidnega, nič sheme, nič odvisnosti — samo konstanta po obstoječem vzorcu.
+**Naloga TE seje: korak T2.2 — `local_prefs` ključa** (branch `feat/fr19-t2-2-prefs`):
+
+- Ključa `moonCalendarEnabled` (privzeto po odločitvi A6) in `moonSystem` (privzeto siderični)
+  + metode po obstoječem vzorcu v `local_prefs` (eksplicitne, ne generične).
+- **Device-local** (odločitev B1) — nič synca, nič sheme. Ključa še brez bralca → nič vidnega.
+- ⚠️ **A6 blokira ta korak** (privzeta vrednost `moonCalendarEnabled`) — če še ni odločena,
+  najprej vprašaj lastnika.
 
 **Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječi vzorec
-(`core/config.dart`, `kSuppliesEnabled`).
+(`local_prefs`).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.2). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.1, posodobi ta
-dokument na naslednji korak (T2.2 local_prefs, `feat/fr19-t2-2-prefs`) in predlagaj commit.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.3). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.2, posodobi ta
+dokument na naslednji korak (T2.3 `MoonSettingsController`, `feat/fr19-t2-3-settings-controller`)
+in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4/A5/A6 (barve, ikone, privzeto stikalo) še odprte —
-A6 blokira T2.2 (privzeta vrednost `moonCalendarEnabled`), A4 blokira T2.4 (barve elementov);
-T2.1 ne blokira nobena.
+A6 blokira T2.2 (privzeta vrednost `moonCalendarEnabled`), A4 blokira T2.4 (barve elementov).
