@@ -103,10 +103,47 @@ void main() {
       expect(fullMoonDay.illumFraction, greaterThan(0.97));
     });
 
-    test('ascending and unfavorable stay null until T1.8/T1.9', () {
+    test('ascending is filled since T1.8; unfavorable stays null until T1.9',
+        () {
       final day = dayFor(DateTime(2026, 7, 14), CalendarSystem.sidereal);
-      expect(day.ascending, isNull);
+      expect(day.ascending, isNotNull);
       expect(day.unfavorable, isNull);
+    });
+
+    test('descending days match the Thun 2024 transplanting reference', () {
+      // Printed reference (spec §12.4): transplanting = descending Moon,
+      // Jan 1-10 & 23-31, Feb 1-6 & 19-29 2024. The prototype with CET
+      // midnights scores 30/31 and 29/29; the machine zone shifts the day
+      // boundaries, so allow a small slack around the direction extrema.
+      final months = [
+        (1, 31, {for (var d = 1; d <= 10; d++) d, for (var d = 23; d <= 31; d++) d}),
+        (2, 29, {for (var d = 1; d <= 6; d++) d, for (var d = 19; d <= 29; d++) d}),
+      ];
+      for (final (month, daysInMonth, transplantingRef) in months) {
+        var matches = 0;
+        for (var d = 1; d <= daysInMonth; d++) {
+          final day = dayFor(DateTime(2024, month, d), CalendarSystem.sidereal);
+          final descending = day.ascending == false;
+          if (descending == transplantingRef.contains(d)) matches++;
+        }
+        expect(
+          matches,
+          greaterThanOrEqualTo(daysInMonth - 3),
+          reason: '2024-$month: $matches/$daysInMonth',
+        );
+      }
+    });
+
+    test('ascending direction flips about twice per tropical month', () {
+      var flips = 0;
+      bool? previous;
+      for (var d = DateTime(2026); d.year == 2026; d = _nextDay(d)) {
+        final ascending = dayFor(d, CalendarSystem.sidereal).ascending;
+        if (previous != null && ascending != previous) flips++;
+        previous = ascending;
+      }
+      // Two direction changes per ~27.32-day cycle: 365 / 27.32 * 2 = ~27.
+      expect(flips, inInclusiveRange(24, 30));
     });
 
     test('wiring and continuity across the DST months, both systems', () {

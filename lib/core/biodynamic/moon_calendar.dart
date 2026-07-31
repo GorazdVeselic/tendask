@@ -1,5 +1,6 @@
 import 'biodynamic_day.dart';
 import 'calendar_system.dart';
+import 'declination.dart';
 import 'moon_longitude.dart';
 import 'moon_phase.dart';
 import 'time_base.dart';
@@ -18,8 +19,9 @@ DateTime dateTimeFromJulianDay(double jd) => DateTime.fromMillisecondsSinceEpoch
 /// the caller's zone); the day spans local midnight to midnight. All astronomy
 /// runs internally in UTC; [BiodynamicDay.transitionAt] is local wall-clock.
 /// The day label is the element at the start of the day (spec §12.6); phase
-/// and illumination are sampled at the middle of the local day. Pure function:
-/// no I/O, no clock, no state.
+/// and illumination are sampled at the middle of the local day; ascending
+/// compares the Moon's declination at the end of the day against the start
+/// (prototype method, spec §4.5). Pure function: no I/O, no clock, no state.
 BiodynamicDay dayFor(DateTime localDate, CalendarSystem system) {
   final dayStart = DateTime(localDate.year, localDate.month, localDate.day);
   final dayEnd = DateTime(localDate.year, localDate.month, localDate.day + 1);
@@ -58,7 +60,9 @@ BiodynamicDay dayFor(DateTime localDate, CalendarSystem system) {
   }
 
   final tMid = julianCenturies((jdStart + jdEnd) / 2);
-  // TODO(gorazd, 2026-08-15): ascending (T1.8) and unfavorable (T1.9).
+  final descending = moonDeclination(julianCenturies(jdEnd)) <
+      moonDeclination(julianCenturies(jdStart));
+  // TODO(gorazd, 2026-08-15): unfavorable (T1.9).
   return BiodynamicDay(
     sign: startSign,
     isConstellation: system == CalendarSystem.sidereal,
@@ -67,5 +71,6 @@ BiodynamicDay dayFor(DateTime localDate, CalendarSystem system) {
     secondaryElement: secondaryElement,
     phase: phaseFor(tMid),
     illumFraction: illuminatedFraction(tMid),
+    ascending: !descending,
   );
 }

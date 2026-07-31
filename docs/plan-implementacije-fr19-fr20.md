@@ -138,7 +138,14 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      dneva. Testi: DST dneva (23/25 h), polnočni drobec (§12.6 — oznaka = element začetka dneva),
      kontinuiteta elementov med sosednjimi dnevi, ~44 % dni s prehodom. `ascending`/`unfavorable`
      ostajata null do T1.8/T1.9.
-  8. ⬜ Deklinacija → dvigajoča/spuščajoča (validirano 96–100 % v prototipu). (A1=C → vključeno.)
+  8. ✅ Deklinacija → dvigajoča/spuščajoča (2026-07-31): β (Meeus 47.B, 13 členov iz prototipa,
+     vratar 47.a −3.229126° na 0,002°), ε linearno, δ = f(λ, β, ε); `ascending` = δ(konec dneva) ≥
+     δ(začetek), metoda iz prototipa (`tmp/moon_descending.py`, 96/100 % proti Thun presajanju
+     jan/feb 2024 — test tega tudi replicira). Testi: fizikalni pas β/δ, ~27,3-dnevni ciklus
+     maksimumov, ~27 obratov smeri v letu. **Review-verifikacija (2026-07-31, `tmp/engine_check.py`
+     + `tmp/thun_vs_dart.py`):** Dart ↔ Python sweep 2024–2027 vseh plasti = 0 neujemanj (prehodi
+     ≤ 0,5 ms, β ≤ 7·10⁻¹⁰°); Dart direktno proti tiskanim 50 vstopom Thun 2024 = MAE 0,26 h,
+     oznake 58/60 (oba zgrešena = dokumentirani polnočni drobec §12.6).
   9. ⬜ Neugodni dnevi: vozli/perigej/mrki — **največji dodatni izračun v celem tasku**, ločen korak s
      svojimi testi. (A1=C → vključeno, a z varovalko: ob koncu T1 se zavestno odloči, ali gre v v1 ali
      se izpusti in doda kasneje — gl. decisions A1.)
