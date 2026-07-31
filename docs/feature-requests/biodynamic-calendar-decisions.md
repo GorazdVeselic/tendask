@@ -35,7 +35,10 @@ poteku darila sam upravičiti ~10 €/leto (FR-20 §11.1) → govori za B ali C,
 
 **Predlog:** B. · *(spec §8.4, §8.5)*
 
-### A2 · En koledar ali dva (kje »živi« koledar)  ⬜ ODPRTO
+### A2 · En koledar ali dva (kje »živi« koledar)  ✅ ODLOČENO (2026-07-31): **C — oboje, Dnevnik-plast že v v1**
+**Izvedba:** namenski `/moon-calendar` = dom (planiranje); Dnevnik dobi **🌙 gumb v AppBar** (vstop v
+koledar) in **barvno plast** v svoji mesečni mreži (orientacija — tap na dan ostane dnevniški dan, ne
+lunin), za stikalom »Prikaži v Dnevniku«. Koledarja se ne kanibalizirata: plast je samo barva+mena.
 **Problem:** naredila bova **namenski lunin zaslon**; v **Dnevniku** pa že obstaja mesečni koledar. Ga tudi
 obarvava z lunino plastjo, ali pustiva?
 **Opcije in kaj pomenijo:**
@@ -44,7 +47,7 @@ obarvava z lunino plastjo, ali pustiva?
 - **C) Oboje** → namenski = »dom« za planiranje, Dnevnik dobi medel indikator (orientacija ob opravilih);
   največ vrednosti, a dve mesti za vzdrževati.
 
-**Predlog:** C, a Dnevnik-plast **zadnja / za V2** (najprej namenski zaslon). · *(spec §8.9; wireframe board C)*
+**Predlog je bil:** C z odlogom plasti na V2 — lastnik odločil **C brez odloga** (plast v v1). · *(spec §8.9; wireframe board C)*
 
 ### A3 · Motor: lastna koda ali gotov paket  ✅ ODLOČENO (2026-07-30): **A — lasten izračun**
 **Problem:** za položaj Lune je treba računati. To je edino mesto z morebitno novo knjižnico — CLAUDE.md
@@ -79,7 +82,9 @@ wireframa v temni temi ne delujejo dobro.
 
 **Predlog:** A. · *(ni v §8; iz wireframe pregleda + [[tendask-theme-palettes]])*
 
-### A5 · Ikone elementov: emoji ali lasten vektor  ⬜ ODPRTO
+### A5 · Ikone elementov: emoji ali lasten vektor  ✅ ODLOČENO (2026-07-31): **B — lastne vektorske, pogojno na vizualno potrditev**
+**Pogoj:** T3.2 začne z **osnutki 4 monokromatskih vektorskih ikon** (pravilo »poglej, preden vlagaš«);
+če osnutki lastnika ne prepričajo, fallback = A (emoji) brez spremembe API-ja (`ElementBadge` skrije vir).
 **Problem:** za 4 elemente rabiva ikone.
 **Opcije in kaj pomenijo:**
 - **A) Emoji** 🍅🥕🌸🌿 → zastonj, a **🌸 in 🌿 že označujeta rastline** v katalogu → možna zmeda (element
@@ -127,7 +132,14 @@ board C = prekrivna plast (ne nov koledar) · vrstni red board-ov · kalibracija
 lansirnim darilom (spec §11.2, FR-20 §10.4) · **zaporedje gradnje (2026-07-30):** motor → UI dark → FR-20
 minimalna rezina → prižig z darilom → trgovina (rollout plan) · **meje ozvezdij (2026-07-30):** kalibrirane
 vseh 12 (0,26 h / 97 %), rezerva čiste IAU; izvor + pravni zagovor v `biodynamic-calendar-boundaries.md` ·
-**Kačenosec:** zajet v meji Sco→Sgr · **dnevna oznaka = element ob začetku dneva** (spec §12.6).
+**Kačenosec:** zajet v meji Sco→Sgr · **dnevna oznaka = element ob začetku dneva** (spec §12.6) ·
+**uskladitev z wireframom (2026-07-31, lastnik):** personalizacija »poudari po mojem vrtu« + ★ v mreži
+**v v1** (mapping kategorija→element = T5.1, izvede se pred mrežo T3.3) · dan podrobno = **sheet z
+drsenjem** (revizija sheet↔zaslon ob prvem pogledu na napravi) · sheet vsebuje seznam »Priporočeno
+za …« s »＋ opravilo« vrsticami · lunino obvestilo »jutri dober dan« **v v1 kot lasten task** (tihe ure +
+frekvenčna kapica morata z njim zaživeti; B1 meja device-local/sync se odloči tam; do takrat vrstice v
+nastavitvah NI — brez mrtvih stikal) · navigacija: `/moon-calendar` = dom; ⚙️ v njegovem AppBar →
+`/moon-settings`; Dnevnik = 🌙 AppBar gumb + plast (A2); when-step/task-detail oznaki info-only v v1.
 
 ## D. Delo, ne odločitev (opraviti ob gradnji)
 - Napisati **lastne opise dejavnosti** (i18n sl/en/de, na element) — pravno ne prepis Luninih bukev.

@@ -43,8 +43,9 @@ Naslov »Dnevnik · vrtni dnevnik«. Segmented **[Časovnica | Mesec]**.
   izbran dan: naslov datuma + seznam opravil + **»+ Dodaj opravilo na ta dan«**.
 - **Akcije:** tap dan → izbere (pokaže opravila spodaj); tap opravila → task-detail; »+ Dodaj opravilo na ta
   dan« → `/task-new?date=…`.
-- **[FR-19] doda (board C):** toggle »Lunin koledar« v tem koledarju → celice dobijo element-barvo + meno
-  (kot namenski koledar), opravila ostanejo. Gl. §4.
+- **[FR-19] doda (board C, v1 — A2=C 2026-07-31):** 🌙 gumb v AppBar → `/moon-calendar` · barvna plast
+  v mesečni mreži (element-barva + mena; **tap dan ostane dnevniški dan**, ne lunin), za stikalom
+  »Prikaži v Dnevniku« v `/moon-settings`. Opravila ostanejo. Gl. §4.
 - **NI »Teden« pogleda** (samo Časovnica + Mesec). Namenski lunin »Teden« živi v `/moon-calendar`.
 
 ### 1.4 Vrt — `/areas` (`areas`) [shell]
@@ -144,8 +145,8 @@ Predlagane rute (top-level [full], brez kolizij):
 | Route | name | Kako se pride (VSI vstopi) | Vsebuje / vodi |
 |---|---|---|---|
 | `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA | brez licence: vnos kode + »Aktiviraj« + seznam ugodnosti (»Kmalu« za prihodnje) · z licenco: veljavnost + funkcije; **»Lunin koledar« → `/moon-settings`** |
-| `/moon-settings` | moon-settings | `/tendask-plus` → »Lunin koledar« | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala · »Kaj je to« |
-| `/moon-calendar` | moon-calendar | (1) Domov moon chip (odklenjen) · (2) *opc.* Dnevnik vstop | segmented [Mesec | Teden] · 🔎 → `/moon-finder` · **tap dan → dan-podrobno (sheet)** |
+| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (s T6) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena (🔔 namig pride s T4b) · »Kaj je to« |
+| `/moon-calendar` | moon-calendar | (1) Domov moon chip (odklenjen) · (2) Dnevnik **🌙** AppBar | segmented [Mesec | Teden] · **⚙️ → `/moon-settings`** · 🔎 → `/moon-finder` · ★ po vrtu · **tap dan → dan-podrobno (sheet)** |
 | `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Kdaj za …« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
 | (sheet) | moon-day | `/moon-calendar` → tap dan | »Kaj se dogaja« + priporočila → »＋ opravilo« = `/task-new?date=…` |
 
@@ -170,7 +171,8 @@ znamenjih (astrološki)«.
 ---
 
 ## 5. Odprto (vpliva na karto)
-- §8.9: en koledar (`/moon-calendar`) vs. tudi indikator v Dnevniku (§1.3 / board C). **Predlog:** primaren
-  `/moon-calendar`; dnevniški toggle-overlay kasneje.
-- `moon-day`: sheet znotraj `/moon-calendar` vs. lastna ruta. **Predlog:** sheet.
+- ~~§8.9 en/dva koledarja~~ → **ODLOČENO (2026-07-31, A2=C):** oboje v v1 — `/moon-calendar` je dom,
+  Dnevnik dobi 🌙 vstop + barvno plast (§1.3).
+- ~~`moon-day` sheet vs. lastna ruta~~ → **ODLOČENO (2026-07-31):** sheet z drsenjem; revizija ob
+  prvem pogledu na napravi.
 - pre-fill »＋ opravilo«: zaenkrat le `?date=` (obstaja). Tip/subjekt predizpolniti = odprto.

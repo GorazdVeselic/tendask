@@ -88,10 +88,10 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 | # | Odločitev | Predlog (privzet v planu) | Vpliva na |
 |---|---|---|---|
 | A1 | obseg slojev | ✅ **ODLOČENO (2026-07-30): C — vse 4 plasti**; T1.9 (neugodni) je zadnji korak motorja z izrecno možnostjo zavestnega izpusta ob koncu T1 | T1.8 + T1.9, T3 |
-| A2 | en/dva koledarja | **C z odlogom**: namenski zaslon zdaj, Dnevnik-plast V2 | T3 (Dnevnik izpade iz v1) |
+| A2 | en/dva koledarja | ✅ **ODLOČENO (2026-07-31): C — oboje v v1** (Dnevnik: 🌙 AppBar vstop + barvna plast, T4.4) | T4 |
 | A3 | motor | ✅ **ODLOČENO (2026-07-30): A — lasten Meeus izračun** (validiran, brez odvisnosti) | T1 |
 | A4 | barve | ✅ **ODLOČENO (2026-07-31): A — fiksne semantične**, `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet; vrednosti v `moon_colors.dart`) | T2.4 |
-| A5 | ikone | **B**: 4 lastne monokromatske vektorske (emoji 🌸🌿 trčita s katalogom); mena = CustomPainter | T3.1–T3.2 |
+| A5 | ikone | ✅ **ODLOČENO (2026-07-31): B — lastne vektorske, pogojno na vizualno potrditev osnutkov** (fallback A emoji); mena = CustomPainter (✅ T3.1) | T3.2 |
 | A6 | privzeto stikalo | ✅ **ODLOČENO (2026-07-31): A — vklopljeno** (odkritje prek čipa; argument prek darila) | T2.2 |
 
 ### P0.4 · Odločitve darila 🅿️ (lastnik; blokirata šele T7)
@@ -223,8 +223,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 
 ## T3 · Zasloni Luninega koledarja (jedro UI)
 
-- **Vhod:** T1 (podatki), T2 (flag/barve/ruta/prefs), A5 (ikone), wireframe
-  `lunar-calendar_overview.html`, screen-map §4.
+- **Vhod:** T1 (podatki), T2 (flag/barve/ruta/prefs), A5 (ikone), **T5.1 (mapping kategorija→element —
+  izvede se pred korakom 3, vhod za ★)**, wireframe `lunar-calendar_overview.html`, screen-map §4.
 - **Izhod:** delujoč `/moon-calendar` (+ `/moon-settings`), dosegljiv samo z ročno vklopljenim flagom;
   potrošnik za T6 gate.
 - **Koraki (vsak vidni gradnik: najprej videz → pogled na napravi/wireframe → šele nato testi/prevodi):**
@@ -233,20 +233,26 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      `MoonPhaseIcon`, videz potrjen prek harnessa `tmp/moon_phase_preview_test.dart` → PNG.)
   2. ⬜ Element-ikone (A5): 4 vektorske (ali začasno emoji, če A5=A) — en skupen widget
      `ElementBadge` (ikona+oznaka, nikoli samo barva — dostopnost).
-  3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena + oznaka), ‹ › navigacija,
-     legenda. **Dnevna oznaka celice = element ob začetku dneva** (konvencija tiskanih koledarjev,
-     spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi uri dneva → dan nosi novi
-     element). Podatki: `List<BiodynamicDay>` iz providerja (memoizacija na (mesec, sistem) — meritev
-     T1.11 je pokazala ~16 ms/mrežo → potrebna). **Pogled na napravi.**
+  3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena-marker na dneve mlaja/krajcev/
+     ščipa + oznaka), ‹ › navigacija, legenda. **Dnevna oznaka celice = element ob začetku dneva**
+     (konvencija tiskanih koledarjev, spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi
+     uri dneva → dan nosi novi element). **★ »priporočen« na dnevih, katerih element ustreza rastlinam
+     vrta** (T5.1 mapping + kategorije `user_plant`; prazen vrt → brez ★; pogojeno s stikalom »Poudari
+     po mojem vrtu«, privzeto vklopljeno — odločitev 2026-07-31). Podatki: `List<BiodynamicDay>` iz
+     providerja (memoizacija na (mesec, sistem) — meritev T1.11 je pokazala ~16 ms/mrežo → potrebna).
+     **Pogled na napravi.**
   4. ⬜ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
      slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.**
-  5. ⬜ Dan podrobno — **sheet** (ne ruta; screen-map §5): »Kaj se dogaja« (ozvezdje/znamenje, ura
-     prehoda, mena, dvigajoča/spuščajoča), CTA »＋ opravilo« → `/task-new?date=…` (obstoječi param).
-     **Pogled.**
+  5. ⬜ Dan podrobno — **sheet z drsenjem** (odločeno 2026-07-31; revizija sheet↔zaslon ob prvem
+     pogledu na napravi): »Kaj se dogaja« (ozvezdje/znamenje, ura prehoda, mena, dvigajoča/spuščajoča,
+     ugodnost) + **seznam »Priporočeno za <dan>«** (vrstici na element iz i18n T3.4, vsaka s CTA
+     »＋ opravilo«) → `/task-new?date=…` (obstoječi param). **Pogled.**
   6. ⬜ `/moon-settings`: stikalo (opt-in), sistem toggle (»Po ozvezdjih (biodinamični)« / »Po znamenjih
-     (astrološki)«, ena vrstica razlage, §13), »Kaj je to« mini razlaga. Do T6 dosegljiv **samo prek
-     rute z varovalom** (nobene povezave iz vidnih zaslonov); **končna umestitev pod Tendask+ zaslon
-     pride s T6** (screen-map).
+     (astrološki)«, ena vrstica razlage, §13), **podstikala (2026-07-31):** »Poudari po mojem vrtu«
+     (★, T3.3) · »Prikaži v Dnevniku« (plast, T4.4) · »Prikaži ozvezdja in meno« (podrobnosti v
+     dan-sheetu); vrstica »Namig 'jutri dober dan'« pride šele s **T4b** (brez mrtvih stikal). »Kaj je
+     to« mini razlaga. Dosegljiv prek **⚙️ v AppBar `/moon-calendar`** (ta korak jo ožiči; koledar je
+     sam za flagom) in prek rute z varovalom; **umestitev tudi pod Tendask+ zaslon pride s T6** (screen-map).
   7. ⬜ Po vizualni potrditvi vseh zaslonov: **de prevodi** + `dart run slang` + pregled dolgih nemških
      besed (Blütentag …).
   8. ⬜ Testi: widget testi ključnih interakcij (preklop sistema posodobi vse; tap dan odpre sheet) +
@@ -277,15 +283,36 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      »🌱 dan za list · do 14:20« iz izbranega datuma. **Pogled.**
   3. ⬜ **Task-detail sekcija**: element-dan iz `task.date` — **re-izpeljan, ne zamrznjen** (če uporabnik
      datum spremeni, se posodobi; kontrast z vremenom, ki JE zamrznjeno — spec §6.1.2). Info, brez tapa (MVP).
-  4. ⬜ Widget/layout testi za vse tri + de prevodi po pogledu.
+  4. ⬜ **Dnevnik (A2=C, 2026-07-31):** 🌙 gumb v AppBar `/journal` → `/moon-calendar` + **barvna plast**
+     v mesečni mreži Dnevnika (element-barva + mena celic; tap dan ostane dnevniški dan), za stikalom
+     »Prikaži v Dnevniku« (T3.6). ⚠️ `DayCell` je layout-kritičen (320 px × 1.3) — layout matrika
+     Dnevnika mora ostati zelena. **Pogled.**
+  5. ⬜ Widget/layout testi za vse štiri + de prevodi po pogledu.
 - **Branchi:** `feat/fr19-t4-1-home-chip` · `feat/fr19-t4-2-when-step` · `feat/fr19-t4-3-task-detail` ·
-  `feat/fr19-t4-4-tests`.
+  `feat/fr19-t4-4-journal-layer` · `feat/fr19-t4-5-tests`.
 - **Varnost na `main`:** vsak od treh widgetov ob izklopljenem flagu (ali izklopljenem opt-in stikalu)
   vrne prazno (`SizedBox.shrink` na nivoju vstopnega widgeta je tu legitimen — ni požiranje napake,
   ampak izklopljena funkcija) → obstoječi zasloni vizualno nespremenjeni; layout matrika obstoječih
   zaslonov mora ostati zelena brez sprememb.
-- **Pasti:** vse tri oznake spoštujejo **opt-in stikalo** (off → nič nikjer) IN flag · čip bere ogrete
-  prefs (T2.3), sicer utripanje · Dnevnik-plast (board C) **namerno ni v v1** (A2).
+- **Pasti:** vse oznake spoštujejo **opt-in stikalo** (off → nič nikjer) IN flag · čip bere ogrete
+  prefs (T2.3), sicer utripanje · Dnevnik-plast dodatno spoštuje svoje podstikalo »Prikaži v Dnevniku«.
+
+## T4b · Lunino obvestilo — namig »jutri dober dan« (v v1 po odločitvi 2026-07-31)
+
+- **Vhod:** T1 (motor), T2.3 (prefs), T3.6 (zaslon nastavitev — vrstica 🔔 pride šele s tem taskom);
+  **odločitev B1** (device-local vs sync za lunina obvestila) se sprejme na začetku tega taska.
+- **Izhod:** opt-in lokalno obvestilo »jutri je dan za X« (privzeto izklopljeno, wireframe board 2b),
+  ki spoštuje tihe ure in frekvenčno kapico — **ti dve morata s tem taskom zaživeti** (danes
+  »persisted but inert«; obvestilo brez njiju bi kršilo obljubo speca §6.3.9).
+- **Koraki:** 1. ⬜ B1 + oživitev tihih ur/frekvenčne kapice v obvestilnem sloju · 2. ⬜ izračun +
+  razpored (lokalno, prek `Clock`) · 3. ⬜ 🔔 vrstica v `/moon-settings` · 4. ⬜ testi (FakeClock:
+  tihe ure, kapica, preklop sistema, rob polnoči).
+- **Branchi:** `feat/fr19-t4b-1-quiet-hours` · `feat/fr19-t4b-2-scheduler` · `feat/fr19-t4b-3-toggle` ·
+  `feat/fr19-t4b-4-tests`.
+- **Varnost na `main`:** privzeto izklopljeno + za flagom; dokler stikala ni (korak 3 zadnji pred testi),
+  se nič ne razporeja.
+- **Pasti:** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) · spoštuje preklop
+  sistema (en `system` vodi vse) · UI brez besede »motor«.
 
 ## T5 · Iskalnik »Kdaj za X« (`/moon-finder`) ⬜ — priporočen za v1, sme v v1.1
 
@@ -293,8 +320,9 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   (nova majhna tabela v motorju ali ob njem), plant-picker (obstaja).
 - **Izhod:** obratni iskalnik + chip »🌙 Kdaj za …« na plant-detail (`?plant=:id` predizpolnjen) →
   seznam prihajajočih primernih dni → »＋« → `/task-new?date=…`.
-- **Koraki:** 1. ⬜ mapping kategorija→element (konstanta + test) · 2. ⬜ zaslon (izbor rastline →
-  dnevi) · 3. ⬜ plant-detail chip · 4. ⬜ pogled → testi/prevodi.
+- **Koraki:** 1. ⬜ mapping kategorija→element (konstanta + test) — **izvede se PRED T3.3** (vhod za ★
+  v mreži, odločitev 2026-07-31) · 2. ⬜ zaslon (izbor rastline → dnevi) · 3. ⬜ plant-detail chip ·
+  4. ⬜ pogled → testi/prevodi.
 - **Branchi:** `feat/fr19-t5-1-category-map` · `feat/fr19-t5-2-finder-screen` ·
   `feat/fr19-t5-3-plant-chip` · `feat/fr19-t5-4-tests`.
 - **Varnost na `main`:** kot T3/T4 — ruta z varovalom, chip za flagom.
@@ -379,11 +407,10 @@ DoD sandbox matrika (nakup/unovčitev/offline/podaljšanje/vračilo/predelava/pr
 
 ## Namerno zunaj v1 (da se obseg med delom ne razleze)
 
-- **Lunina obvestila (spec §6.3.9)** — tihe ure in frekvenčna kapica sta v kodi danes »persisted but
-  inert« (samo stikali); obvestilo brez njiju bi kršilo obljubo speca. Pride kot ločen task po prižigu
-  (kandidat za širitev Plus paketa), skupaj z dejansko implementacijo tihih ur/kapice.
-- **Personalizacija po vrtu (§6.3.8)** — poceni, a smiselna šele nad iskalnikom (T5); po prižigu.
-- **Dnevnik-plast (board C, §8.9)** — A2 predlog: V2; `DayCell` je layout-kritičen pri 320 px × 1.3.
+> Uskladitev z wireframom (2026-07-31, lastnik) je v v1 prenesla: lunino obvestilo (→ **T4b**),
+> personalizacijo po vrtu §6.3.8 (→ **T3.3 ★ + T3.6 stikalo**, mapping T5.1 prej) in Dnevnik-plast
+> board C (→ **T4.4**, A2=C). Zunaj v1 ostaja:
+
 - **Retrospektivni vpogled (§6.3.11)** — dolgoročno.
 - **Vnos licenčne kode, `license*` tabele, Play `App access`** — T8, ne prej.
 
