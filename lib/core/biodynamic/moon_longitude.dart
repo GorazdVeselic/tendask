@@ -5,6 +5,8 @@ import 'angles.dart';
 /// Meeus table 47.A, ~36 largest periodic terms for the Moon's longitude:
 /// (coefficient in 1e-6 deg, multipliers of D, M, M', F). Ported from the
 /// validated prototype (P0.1); terms with M != 0 are scaled by E^|M|.
+/// The (0,1,-2,0)/(0,1,2,0) M' signs are book-corrected (T1.9): the prototype
+/// carries them swapped, so a sweep against it differs by ~0.001 deg there.
 const List<(int, int, int, int, int)> _terms = [
   (6288774, 0, 0, 1, 0),
   (1274027, 2, 0, -1, 0),
@@ -33,12 +35,12 @@ const List<(int, int, int, int, int)> _terms = [
   (3994, 2, 0, 2, 0),
   (3861, 4, 0, 0, 0),
   (3665, 2, 0, -3, 0),
-  (-2689, 0, 1, 2, 0),
+  (-2689, 0, 1, -2, 0),
   (-2602, 2, 0, -1, 2),
   (2390, 2, -1, -2, 0),
   (-2348, 1, 0, 1, 0),
   (2236, 2, -2, 0, 0),
-  (-2120, 0, 1, -2, 0),
+  (-2120, 0, 1, 2, 0),
   (-2069, 0, 2, 0, 0),
   (2048, 2, -2, -1, 0),
   (-1773, 2, 0, 1, -2),
