@@ -19,6 +19,7 @@ import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/areas/application/areas_providers.dart';
 import 'features/areas/data/garden_seed_service.dart';
+import 'features/moon/application/moon_settings_controller.dart';
 import 'features/notifications/application/journal_nudge_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
 import 'features/settings/application/profile_providers.dart';
@@ -189,6 +190,10 @@ Future<void> _bootstrap() async {
   // opens in the chosen theme without a flash (same container backs runApp).
   await container.read(themeModeControllerProvider.future);
   await container.read(themePaletteControllerProvider.future);
+
+  // Same for the moon calendar settings (FR-19): resolved before first paint so
+  // the Home chip never flashes in or out on launch.
+  await container.read(moonSettingsControllerProvider.future);
 
   // Start on the branded splash (M9.2), which routes to [target] after a brief
   // readable delay.

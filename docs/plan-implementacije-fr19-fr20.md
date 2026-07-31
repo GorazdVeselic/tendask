@@ -200,7 +200,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   2. ✅ (2026-07-31) `local_prefs`: ključa `moonCalendarEnabled` (privzeto po A6) in `moonSystem`
      (privzeto siderični) + metode po obstoječem vzorcu (eksplicitne, ne generične). **Device-local**
      (odločitev B1) — nič synca, nič sheme.
-  3. ⬜ `MoonSettingsController` (`@riverpod`, vzorec `theme_palette_controller.dart`) + **ogretje v
+  3. ✅ (2026-07-31) `MoonSettingsController` (`@riverpod`, vzorec `theme_palette_controller.dart`) + **ogretje v
      `main.dart` bootstrapu** (kot paleta) — da čip na Domov ob zagonu ne utripne.
      **Invarianta iz §11.6:** en `system` iz tega controllerja vodi VSE zaslone hkrati.
   4. ⬜ `MoonColors` ThemeExtension (vzorec `SwipeColors`): 4 element-barve × light/dark, **ena globalna
