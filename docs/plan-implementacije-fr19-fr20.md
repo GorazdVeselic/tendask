@@ -91,7 +91,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 | A2 | en/dva koledarja | ✅ **ODLOČENO (2026-07-31): C — oboje v v1** (Dnevnik: 🌙 AppBar vstop + barvna plast, T4.4) | T4 |
 | A3 | motor | ✅ **ODLOČENO (2026-07-30): A — lasten Meeus izračun** (validiran, brez odvisnosti) | T1 |
 | A4 | barve | ✅ **ODLOČENO (2026-07-31): A — fiksne semantične**, `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet; vrednosti v `moon_colors.dart`) | T2.4 |
-| A5 | ikone | ✅ **ODLOČENO (2026-07-31): B — lastne vektorske, pogojno na vizualno potrditev osnutkov** (fallback A emoji); mena = CustomPainter (✅ T3.1) | T3.2 |
+| A5 | ikone | ✅ **RAZREŠENO (2026-07-31): A — emoji** (vektorski osnutki ob pogledu T3.2 zavrnjeni → dogovorjeni fallback; glif = `elementEmoji()`); mena = CustomPainter (✅ T3.1) | T3.2 |
 | A6 | privzeto stikalo | ✅ **ODLOČENO (2026-07-31): A — vklopljeno** (odkritje prek čipa; argument prek darila) | T2.2 |
 
 ### P0.4 · Odločitve darila 🅿️ (lastnik; blokirata šele T7)
@@ -231,8 +231,10 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   1. ✅ Mena kot `CustomPainter` (krivulja terminatorja iz osvetljenosti, §11.7) — samostojen widget,
      rabijo ga koledar, čip in dan-sheet. **Pogled na napravi** (8 faz). (2026-07-31:
      `MoonPhaseIcon`, videz potrjen prek harnessa `tmp/moon_phase_preview_test.dart` → PNG.)
-  2. ⬜ Element-ikone (A5): 4 vektorske (ali začasno emoji, če A5=A) — en skupen widget
-     `ElementBadge` (ikona+oznaka, nikoli samo barva — dostopnost).
+  2. ✅ Element-ikone (A5): vektorski osnutki ob pogledu zavrnjeni (2026-07-31) → dogovorjeni
+     fallback **emoji** (🍅🥕🌸🌿, isti kot wireframe) — en skupen widget `ElementBadge`
+     (emoji+oznaka, nikoli samo barva — dostopnost); glif živi samo v `elementEmoji()`
+     (`element_badge.dart`). Predogled: `tmp/element_badge_preview.png`.
   3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena-marker na dneve mlaja/krajcev/
      ščipa + oznaka), ‹ › navigacija, legenda. **Dnevna oznaka celice = element ob začetku dneva**
      (konvencija tiskanih koledarjev, spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi

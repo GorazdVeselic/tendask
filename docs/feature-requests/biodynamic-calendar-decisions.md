@@ -82,9 +82,12 @@ wireframa v temni temi ne delujejo dobro.
 
 **Predlog:** A. · *(ni v §8; iz wireframe pregleda + [[tendask-theme-palettes]])*
 
-### A5 · Ikone elementov: emoji ali lasten vektor  ✅ ODLOČENO (2026-07-31): **B — lastne vektorske, pogojno na vizualno potrditev**
-**Pogoj:** T3.2 začne z **osnutki 4 monokromatskih vektorskih ikon** (pravilo »poglej, preden vlagaš«);
-če osnutki lastnika ne prepričajo, fallback = A (emoji) brez spremembe API-ja (`ElementBadge` skrije vir).
+### A5 · Ikone elementov: emoji ali lasten vektor  ✅ RAZREŠENO (2026-07-31): **A — emoji** (fallback po pogoju)
+**Izid pogoja (2026-07-31, pogled predogleda T3.2):** vektorski osnutki (jabolko/korenček/rozeta/list
+kot `CustomPainter`) lastnika niso prepričali (»niti malo razumljive«) → velja dogovorjeni fallback A
+(emoji 🍅🥕🌸🌿, isti kot wireframe). API `ElementBadge` vir skriva; glif živi samo v `elementEmoji()`
+(`element_badge.dart`). Prvotni pogoj: T3.2 začne z **osnutki 4 monokromatskih vektorskih ikon**
+(pravilo »poglej, preden vlagaš«); če osnutki ne prepričajo, fallback = A brez spremembe API-ja.
 **Problem:** za 4 elemente rabiva ikone.
 **Opcije in kaj pomenijo:**
 - **A) Emoji** 🍅🥕🌸🌿 → zastonj, a **🌸 in 🌿 že označujeta rastline** v katalogu → možna zmeda (element
