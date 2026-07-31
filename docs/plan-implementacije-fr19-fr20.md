@@ -132,9 +132,12 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      popravljen v arhivu na NAS, original ohranjen kot `…-original.zip`. **Sweep verifikacija porta
      (2026-07-30):** dnevna λ Lune/Sonca Dart ↔ Python za 2024–2027 (1461 točk) — max razlika
      3·10⁻¹¹°/2·10⁻¹²° → vseh 36 koeficientov potrjenih čez celotno domeno, ne le v točki 47.a.)*
-  7. ⬜ Prehod znotraj dneva: element ob lokalni polnoči in koncu dneva; če različna → bisekcija ure
-     prehoda (§14.7). **Testi čez DST prehod** (konec marca / konec oktobra — spec §14.5 opozorilo)
-     in prehod tik čez polnoč.
+  7. ✅ Prehod znotraj dneva (2026-07-31): `dayFor` napolnjen za sloje T1.5/T1.6 — element ob lokalni
+     polnoči in koncu dneva, bisekcija ure prehoda (§14.7); JD→DateTime prek epoch aritmetike z
+     round-trip testom na ms (past iz T1.6 pokrita); mena/osvetljenost vzorčeni na sredini lokalnega
+     dneva. Testi: DST dneva (23/25 h), polnočni drobec (§12.6 — oznaka = element začetka dneva),
+     kontinuiteta elementov med sosednjimi dnevi, ~44 % dni s prehodom. `ascending`/`unfavorable`
+     ostajata null do T1.8/T1.9.
   8. ⬜ Deklinacija → dvigajoča/spuščajoča (validirano 96–100 % v prototipu). (A1=C → vključeno.)
   9. ⬜ Neugodni dnevi: vozli/perigej/mrki — **največji dodatni izračun v celem tasku**, ločen korak s
      svojimi testi. (A1=C → vključeno, a z varovalko: ob koncu T1 se zavestno odloči, ali gre v v1 ali
