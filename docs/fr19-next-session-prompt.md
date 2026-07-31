@@ -17,7 +17,10 @@ Thun 2024** (jan/feb/dec fotografije, rešene iz transkriptov sej v `tmp/thun_ph
 [−5 h, +4 h], perigej ±13 h, mrk = sizigija z |β| < 1,6°; apogej namenoma ni modeliran. Verifikacija
 motorja: sweep Dart ↔ Python 2024–2027 = 0 neujemanj; proti tisku MAE 0,26 h, oznake 58/60;
 day-level neugodni jan+feb+dec = vseh 14 modelabilnih tiskanih dni (planetarne oznake izven obsega,
-spec §4.5). `BiodynamicDay` je s tem poln. Motor: 60 testov, cel suite 957.
+spec §4.5). `BiodynamicDay` je s tem poln. Motor: 57 testov, cel suite 957, CI zelen.
+**⚠️ Časovna cona:** referenčni testi proti tisku so CET/CEST — CI korak `Test` ima pripeto
+`TZ: Europe/Ljubljana` (`ci.yml`); tudi novi fixture testi z urami prehodov bodo CET-vezani,
+ne odstranjuj pripetja.
 
 **Naloga TE seje: korak T1.10 — referenčni fixture + mikro-meritev** (plan koraka 10+11 skupaj,
 branch `feat/fr19-t1-10-fixtures`):
