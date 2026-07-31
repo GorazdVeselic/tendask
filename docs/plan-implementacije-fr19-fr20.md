@@ -146,9 +146,22 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      + `tmp/thun_vs_dart.py`):** Dart ↔ Python sweep 2024–2027 vseh plasti = 0 neujemanj (prehodi
      ≤ 0,5 ms, β ≤ 7·10⁻¹⁰°); Dart direktno proti tiskanim 50 vstopom Thun 2024 = MAE 0,26 h,
      oznake 58/60 (oba zgrešena = dokumentirani polnočni drobec §12.6).
-  9. ⬜ Neugodni dnevi: vozli/perigej/mrki — **največji dodatni izračun v celem tasku**, ločen korak s
-     svojimi testi. (A1=C → vključeno, a z varovalko: ob koncu T1 se zavestno odloči, ali gre v v1 ali
-     se izpusti in doda kasneje — gl. decisions A1.)
+  9. ✅ Neugodni dnevi (2026-07-31; varovalka A1: lastnik potrdil vključitev): `moon_distance.dart`
+     (Meeus 47.A cos stolpec, vseh 46 neničelnih členov iz knjige — prototip razdalje ne pokriva;
+     vratar 47.a: 368409,7 km na 0,1 km) + v `moon_calendar.dart` vozel (β skozi 0, bisekcija),
+     perigej (minimum razdalje prek predznaka naklona) in mrk (sizigija z |β| < 1,6°; vsi 4 mrki
+     2024 ujeti). **Kalibracija proti tiskanemu Thun 2024** (fotografije jan/feb/dec strani, rešene
+     iz transkriptov prejšnjih sej): vozel **[−5 h, +4 h]**, perigej **±13 h**, apogej v tisku NI
+     neugoden → namenoma ni modeliran. Ure motorja ↔ tisk na minute (vozel 15:03 ↔ tisk 10–19;
+     perigej 19:54 ↔ tisk 7–9). Day-level test jan+feb+dec: vseh 14 modelabilnih tiskanih dni
+     zadetih; 4 dodatni = polnočni repki oken (tisk jih enkrat izpiše, drugič ne — konservativno
+     obdržani); tiskane planetarne oznake (☿/♀ vozli, konjunkcije ♄/♆) namenoma izven obsega
+     (spec §4.5). *(Stranska najdba + POPRAVLJENO isti dan: `moon_longitude.dart` je imel iz
+     prototipa podedovana **zamenjana člena (0,1,∓2,0)** — potrjeno z dvema neodvisnima viroma
+     (astropy, frink), popravljeno po knjigi; vpliv ~0,001° ≈ 7 s. Ponovna verifikacija direktno
+     proti tiskanemu Thun 2024: 50/50 vstopov, MAE 0,26 h, oznake 58/60 — nespremenjeno. Sweep
+     proti Python prototipu za ta člena ni več referenca (prototip nosi isto napako; opomba v
+     glavi datoteke).)*
   10. ⬜ Referenčni testni nabor: **lastno izračunani** datumi (element + ura prehoda za ~2 meseca),
       ročno preverjeni ob nastanku, commitani kot fixture (naši izračuni, pravno čisti). Zasebna
       navzkrižna preverba proti `tmp/` prototipu (ne gre v repo, gl. P0.1).

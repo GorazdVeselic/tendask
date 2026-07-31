@@ -103,11 +103,10 @@ void main() {
       expect(fullMoonDay.illumFraction, greaterThan(0.97));
     });
 
-    test('ascending is filled since T1.8; unfavorable stays null until T1.9',
-        () {
+    test('ascending and unfavorable are filled since T1.8/T1.9', () {
       final day = dayFor(DateTime(2026, 7, 14), CalendarSystem.sidereal);
       expect(day.ascending, isNotNull);
-      expect(day.unfavorable, isNull);
+      expect(day.unfavorable, isNotNull);
     });
 
     test('descending days match the Thun 2024 transplanting reference', () {

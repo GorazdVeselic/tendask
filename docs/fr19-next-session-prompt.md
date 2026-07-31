@@ -8,43 +8,38 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (motor `lib/core/biodynamic/`, vse v main):** T1.1–T1.8 ✅ — API + časovna osnova
+**Kaj je narejeno (motor `lib/core/biodynamic/`, vse v main):** T1.1–T1.9 ✅ — API + časovna osnova
 (JD/T), λ Sonca in Lune (Meeus 25/47), zodiak (kalibrirane meje + IAU rezerva), mena (elongacija,
-osvetljenost, mlaj/ščip z bisekcijo), **T1.7** `dayFor` (element ob začetku dneva §12.6, bisekcija
-ure prehoda, JD→DateTime epoch aritmetika, mena na sredini dneva) in **T1.8** deklinacija (β Meeus
-47.B, ε, δ; `ascending` = δ(konec) ≥ δ(začetek) — prototipova metoda). **Verifikacija (2026-07-31):**
-Dart ↔ Python sweep 2024–2027 vseh plasti = 0 neujemanj; Dart **direktno proti tiskanemu Thun 2024**
-(50 fotografiranih vstopov): MAE 0,26 h, oznake 58/60 — oba zgrešena = polnočni drobec §12.6;
-presajanje jan/feb = 30/31, 29/29. Skripte: `tmp/engine_dump.dart`, `tmp/engine_check.py`,
-`tmp/thun_vs_dart.py`. V `BiodynamicDay` je nezapolnjen samo še `unfavorable`.
+osvetljenost, mlaj/ščip z bisekcijo), T1.7 `dayFor` (element ob začetku dneva §12.6, bisekcija ure
+prehoda), T1.8 deklinacija (`ascending`), **T1.9 neugodni dnevi**: `moon_distance.dart` (Meeus 47.A
+cos stolpec, vratar 47.a) + vozel/perigej/mrk v `moon_calendar.dart`, **kalibrirano proti tiskanemu
+Thun 2024** (jan/feb/dec fotografije, rešene iz transkriptov sej v `tmp/thun_photos/`): vozel
+[−5 h, +4 h], perigej ±13 h, mrk = sizigija z |β| < 1,6°; apogej namenoma ni modeliran. Verifikacija
+motorja: sweep Dart ↔ Python 2024–2027 = 0 neujemanj; proti tisku MAE 0,26 h, oznake 58/60;
+day-level neugodni jan+feb+dec = vseh 14 modelabilnih tiskanih dni (planetarne oznake izven obsega,
+spec §4.5). `BiodynamicDay` je s tem poln. Motor: 60 testov, cel suite 957.
 
-**Naloga TE seje: samo korak T1.9 — neugodni dnevi** (branch `feat/fr19-t1-9-unfavorable`):
+**Naloga TE seje: korak T1.10 — referenčni fixture + mikro-meritev** (plan koraka 10+11 skupaj,
+branch `feat/fr19-t1-10-fixtures`):
 
-- **NAJPREJ varovalka iz decisions A1:** to je zadnji vsebinski korak motorja z izrecno možnostjo
-  zavestnega izpusta — **vprašaj lastnika**, ali T1.9 gre v v1 ali se izpusti (potem preskoči na
-  T1.10 fixtures). Plan ga označuje kot **največji dodatni izračun v celem tasku**.
-- Če DA: neugodno = bližina **vozlov** (prehod Lune skozi ekliptiko — β skozi 0, že izračunljivo iz
-  `moon_latitude.dart` z bisekcijo kot pri menah), **perigej** (minimum razdalje — ⚠️ razdaljni
-  členi Meeus 47.A (cos stolpec) ŠE NISO portirani; nov file po vzorcu `moon_longitude.dart`,
-  koeficienti iz prototipa/knjige, vratar 47.a za razdaljo; ob tretjem uporabniku srednjih
-  elementov razmisli o ekstrakciji skupnega helperja — review opažanje T1.8) in **mrki** (sizigija
-  blizu vozla). Napolni `BiodynamicDay.unfavorable` v `dayFor`.
-- ⚠️ **Za ta sloj NI validiranega prototipa** (prototip pokriva λ, β, mene) — pragove (koliko ur
-  okoli vozla/perigeja je »neugodno«) in referenco za validacijo (npr. fotografije tiskanega Thun
-  2024 s temi oznakami, NAS) **določi z lastnikom, ne ugibaj**.
-- Od obstoječih datotek smeš spremeniti samo `moon_calendar.dart`; `time_base.dart`,
-  `sun_longitude.dart`, `moon_longitude.dart`, `moon_latitude.dart`, `declination.dart`,
-  `zodiac.dart`, `moon_phase.dart`, `biodynamic_day.dart` ostanejo (`unfavorable` polje že
-  obstaja).
+- **Fixture:** lastno izračunani datumi (element + ura prehoda, mena, ascending, unfavorable za
+  ~2 meseca), ročno preverjeni ob nastanku, commitani kot testni fixture — naši izračuni, pravno
+  čisti. Zasebna navzkrižna preverba proti `tmp/` prototipu (ne gre v repo, gl. P0.1).
+- **Mikro-meritev:** `dayFor` za cel mesec (42 celic × 2 sistema) — potrdi < nekaj ms (»optimizacije
+  morajo biti merljive«); če ne, memoizacija pride v T3 provider, ne v motor.
 - **Brez Riverpoda, brez Clocka, brez I/O** — čista logika; nič v aplikaciji tega še ne kliče.
 
-**Pred delom preberi:** plan T1 + decisions A1 (`docs/plan-implementacije-fr19-fr20.md`) · spec
-§4.5 (`docs/feature-requests/biodynamic-calendar.md`) · obstoječe (`lib/core/biodynamic/`).
+**Stranska najdba iz T1.9 — RAZREŠENA:** zamenjana člena (0,1,∓2,0) v `moon_longitude.dart`
+(podedovano iz prototipa) popravljena po knjigi in re-verificirana proti tiskanemu Thun 2024
+(50/50, MAE 0,26 h, 58/60 — nespremenjeno). Python prototip napako še nosi → Dart↔Python sweep za
+ta dva člena ni več referenca (opomba v glavi datoteke); merodajna je primerjava s tiskom.
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T1.10). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T1.9 (✅ ali
-zavestni izpust), posodobi ta dokument na korak T1.10 (`feat/fr19-t1-10-fixtures`, koraka 10+11
-skupaj) in predlagaj commit.
+**Pred delom preberi:** plan T1 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječe
+(`lib/core/biodynamic/`, `test/core/biodynamic/`).
 
-**Stanje odločitev:** A1=C, A3=A ✅ · A4/A5/A6 (barve, ikone, privzeto stikalo) še odprte — blokirajo
-šele T3, ne motorja.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T1.10+11,
+posodobi ta dokument na naslednji korak (T2.1 flag, `feat/fr19-t2-1-flag`) in predlagaj commit.
+
+**Stanje odločitev:** A1=C (T1.9 vključen, potrjeno 2026-07-31), A3=A ✅ · A4/A5/A6 (barve, ikone,
+privzeto stikalo) še odprte — blokirajo šele T3, ne motorja.
