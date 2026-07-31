@@ -63,6 +63,12 @@ zahteva, da **najprej vprašam**.
 Svetle vrednosti iz wireframa v2, temne po vzorcu terakote (svetlejši poudarek + zamolkel temen
 container); konkretne vrednosti = `lib/app/theme/moon_colors.dart` (vir resnice). Fino nastavljanje
 temnih ob prvem vizualnem pogledu v T3.
+
+**Izmerjeni WCAG kontrasti (2026-07-31, poudarek kot BESEDILO na svojem soft ozadju):** svetla
+tema — korenina 4,4:1 (meja), plod 3,0:1, list 3,1:1, **cvet 1,8:1 (pade)**; temna tema OK (cvet
+6,2:1). Podedovano iz wireframa. **Omejitev za T3:** poudarek na soft ozadju samo za ikono/glif;
+tekstovni napisi na soft ozadju v `onSurface` (skladno z `ElementBadge` pravilom »nikoli samo
+barva«) ali pa se ob vizualnem pregledu uvedejo `onXxxSoft` toni po vzorcu `onTerracottaSoft`.
 **Problem:** 4 elementi so barvno kodirani. App ima svetlo+temno temo in **6 palet**. Fiksni pasteli iz
 wireframa v temni temi ne delujejo dobro.
 **Opcije in kaj pomenijo:**
