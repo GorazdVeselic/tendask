@@ -37,21 +37,30 @@ light/dark, eni globalni instanci `moonColorsLight`/`moonColorsDark` za vseh 6 p
 registrirani v `app_theme.dart` `extensions:`; svetle iz wireframa v2, temne po vzorcu terakote
 (fino nastavljanje ob prvem pogledu v T3). Test: vsaka paleta izpostavi MoonColors.
 
-**Naloga TE seje: korak T2.5 — ruta `/moon-calendar` z varovalom** (branch `feat/fr19-t2-5-route`):
+**T2.5 ✅ (31. 7.):** ruta `/moon-calendar` (top-level [full], `moon-calendar`) s placeholder
+zaslonom (`lib/features/moon/presentation/moon_calendar_screen.dart`, T3 ga zamenja) in
+**varovalom na ruti sami**: `moonCalendarRedirect` (`app_router.dart`) ob `!kMoonCalendarEnabled`
+preusmeri na `/home`. `route_collision_test` ima guard test (uporablja pravi redirect + flag, zato
+ob prižigu T7 ostane zelen); `screen-map.md` §4 ima stanje rut.
 
-- Ruta `/moon-calendar` v `app_router.dart` — top-level [full], **mimo shell `:id` kolizij**,
-  z **varovalom na ruti sami**: ob `!kMoonCalendarEnabled` `redirect` na `/home` (deep-link
-  jo doseže mimo CTA-jev — flag samo na gumbih ne zadošča). Placeholder zaslon (T3 ga zamenja).
-- Posodobi `route_collision_test` in `screen-map.md` **v istem commitu** (pravilo).
-- (`/moon-settings`, `/moon-finder` prideta kasneje ob svojih taskih.)
+**Naloga TE seje: korak T2.6 — i18n skelet `moon`** (branch `feat/fr19-t2-6-i18n-skeleton`):
 
-**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · `app_router.dart`
-(top-level rute, redirect vzorec) · `test/app/route_collision_test.dart` · `screen-map.md` §4.
+- Namespace `moon` v `en` + `sl` (`i18n/*.i18n.json`): 4 elementi kot »dan za …«, 12
+  ozvezdij/znamenj, beseda ozvezdje/znamenje kot varianti (siderično/tropsko), mena.
+- **de ŠELE po vizualni potrditvi zaslonov** (pravilo »poglej, preden vlagaš«) — ne dodajaj je.
+- `dart run slang` (ločen CLI, build_runner ga NE ujame) + **commit generiranega** (CI gotcha:
+  CI regenerira pred analyze, lokalni pre-push hook ne).
+- Ključi še brez porabnika → nič vidnega.
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.6). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.5, posodobi ta
-dokument na naslednji korak (T2.6 i18n skelet `moon`, `feat/fr19-t2-6-i18n-skeleton`) in
+**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · spec §11
+(poimenovanja, »dan za plod/list/cvet/korenino«, ozvezdje vs znamenje) · obstoječa
+`i18n/en.i18n.json`/`sl.i18n.json` struktura.
+
+**Pravila:** naredi natanko ta korak in nič več (T2 je s tem zaključen — ne začenjaj T3). Pred
+merge: `flutter analyze` čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu
+označi T2.6, posodobi ta dokument na naslednji korak (T3.1 mena CustomPainter,
+`feat/fr19-t3-1-phase-painter` — ⚠️ najprej pogled na napravi, A5 ikone blokira T3.2) in
 predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4=A ✅ (fiksne semantične barve) · A6=A ✅ (privzeto
-vklopljeno) · A5 (ikone) še odprta — blokira T3.1–T3.2; T2.5 in T2.6 ne blokira nobena.
+vklopljeno) · A5 (ikone) še odprta — blokira T3.1–T3.2; T2.6 ne blokira nobena.

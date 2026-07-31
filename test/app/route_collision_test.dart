@@ -3,6 +3,8 @@ import 'dart:async' show unawaited;
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tendask/app/router/app_router.dart';
+import 'package:tendask/core/config.dart';
 
 /// Regression guard: a full-screen "create" route must NOT live under the same
 /// single-segment prefix as a shell detail route (`/areas/:id`), or go_router
@@ -63,4 +65,38 @@ void main() {
       expect(find.text('DETAIL new'), findsOneWidget);
     },
   );
+
+  // The moon calendar (FR-19) must be guarded on the route itself, not only on
+  // its CTAs: a deep link reaches the route past any flag-gated buttons. Uses
+  // the real [moonCalendarRedirect], so this stays green when the flag flips
+  // on at ignition (T7) — it then asserts the route opens instead.
+  testWidgets('dark /moon-calendar deep link is guarded on the route', (
+    tester,
+  ) async {
+    final router = GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(path: '/home', builder: (_, _) => const Text('HOME')),
+        GoRoute(
+          path: '/moon-calendar',
+          redirect: moonCalendarRedirect,
+          builder: (_, _) => const Text('MOON'),
+        ),
+      ],
+    );
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    unawaited(router.push('/moon-calendar'));
+    await tester.pumpAndSettle();
+
+    expect(
+      find.text(kMoonCalendarEnabled ? 'MOON' : 'HOME'),
+      findsOneWidget,
+    );
+    expect(
+      find.text(kMoonCalendarEnabled ? 'HOME' : 'MOON'),
+      findsNothing,
+    );
+  });
 }

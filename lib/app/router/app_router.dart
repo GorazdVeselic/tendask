@@ -1,5 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/config.dart';
 import '../../features/areas/presentation/area_detail_screen.dart';
 import '../../features/areas/presentation/area_form_screen.dart';
 import '../../features/areas/presentation/areas_screen.dart';
@@ -9,6 +11,7 @@ import '../../features/auth/presentation/login_screen.dart';
 import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
+import '../../features/moon/presentation/moon_calendar_screen.dart';
 import '../../features/notifications/presentation/notification_preview_screen.dart';
 import '../../features/notifications/presentation/notification_settings_screen.dart';
 import '../../features/onboarding/presentation/onboarding_screen.dart';
@@ -23,6 +26,12 @@ import '../../features/tasks/presentation/entry/entry_screen.dart';
 import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
+
+/// Guard on the moon calendar routes themselves (FR-19, dark until T7): a deep
+/// link reaches a route past the flag-gated CTAs, so gating buttons alone is
+/// not enough.
+String? moonCalendarRedirect(BuildContext context, GoRouterState state) =>
+    kMoonCalendarEnabled ? null : '/home';
 
 /// Builds the app router. [initialLocation] depends on first-run state (M7.2):
 /// '/onboarding' until the intro is seen, '/home' afterwards (resolved in main).
@@ -212,6 +221,12 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       name: 'task-view',
       builder: (context, state) =>
           TaskDetailScreen(id: state.pathParameters['id']!),
+    ),
+    GoRoute(
+      path: '/moon-calendar',
+      name: 'moon-calendar',
+      redirect: moonCalendarRedirect,
+      builder: (context, state) => const MoonCalendarScreen(),
     ),
   ],
 );

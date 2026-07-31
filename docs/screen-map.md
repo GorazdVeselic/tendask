@@ -149,6 +149,10 @@ Predlagane rute (top-level [full], brez kolizij):
 | `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Kdaj za …« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
 | (sheet) | moon-day | `/moon-calendar` → tap dan | »Kaj se dogaja« + priporočila → »＋ opravilo« = `/task-new?date=…` |
 
+**Stanje rut:** `/moon-calendar` obstaja od T2.5 (placeholder zaslon; **redirect varovalo na ruti
+sami**: ob `!kMoonCalendarEnabled` → `/home`, ker deep-link doseže ruto mimo CTA-jev). Ostale rute
+(`/tendask-plus`, `/moon-settings`, `/moon-finder`) pridejo s svojimi taski, vsaka z istim varovalom.
+
 **Polni navigacijski poti do iskalnika (za »vse vmesne korake«):**
 - **A · iz koledarja:** Domov → *moon chip* → `/moon-calendar` → tap **🔎** → `/moon-finder` (prazen) → tap
   polje → **plant-picker** → izbereš rastlino → seznam dni → »＋« → `/task-new?date=…`.

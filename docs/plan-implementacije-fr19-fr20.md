@@ -206,7 +206,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   4. ✅ (2026-07-31) `MoonColors` ThemeExtension (vzorec `SwipeColors`): 4 element-barve × light/dark, **ena globalna
      instanca za vseh 6 palet** (A4-A brez 12 kombinacij); registracija v `app_theme.dart`
      `extensions:`. Nikoli hardcode hex v widgetih.
-  5. ⬜ Ruta `/moon-calendar` (+ kasneje `/moon-settings`, `/moon-finder` ob svojih taskih) v
+  5. ✅ (2026-07-31) Ruta `/moon-calendar` (+ kasneje `/moon-settings`, `/moon-finder` ob svojih taskih) v
      `app_router.dart` — top-level [full], **mimo shell `:id` kolizij**, in z **varovalom na ruti
      sami**: ob `!kMoonCalendarEnabled` `redirect` na `/home`. Ruta je namreč dosegljiva tudi prek
      deep-linka, ne le prek CTA-jev — flag samo na gumbih ne zadošča. Posodobi `route_collision_test`
