@@ -228,8 +228,9 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Izhod:** delujoč `/moon-calendar` (+ `/moon-settings`), dosegljiv samo z ročno vklopljenim flagom;
   potrošnik za T6 gate.
 - **Koraki (vsak vidni gradnik: najprej videz → pogled na napravi/wireframe → šele nato testi/prevodi):**
-  1. ⬜ Mena kot `CustomPainter` (krivulja terminatorja iz osvetljenosti, §11.7) — samostojen widget,
-     rabijo ga koledar, čip in dan-sheet. **Pogled na napravi** (8 faz).
+  1. ✅ Mena kot `CustomPainter` (krivulja terminatorja iz osvetljenosti, §11.7) — samostojen widget,
+     rabijo ga koledar, čip in dan-sheet. **Pogled na napravi** (8 faz). (2026-07-31:
+     `MoonPhaseIcon`, videz potrjen prek harnessa `tmp/moon_phase_preview_test.dart` → PNG.)
   2. ⬜ Element-ikone (A5): 4 vektorske (ali začasno emoji, če A5=A) — en skupen widget
      `ElementBadge` (ikona+oznaka, nikoli samo barva — dostopnost).
   3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena + oznaka), ‹ › navigacija,

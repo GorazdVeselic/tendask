@@ -28,24 +28,34 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **A4 omejitev (izmerjeni kontrasti, decisions doc):** tekst na soft ozadju = `onSurface`
   (svetli cvet 1,8:1 pade!), poudarek samo za ikono/glif; temne odtenke fino nastavi ob prvem
   pogledu. Predogled barv: `tmp/moon_colors_preview.html`.
+- **T3.1 mena kot `CustomPainter` ✅ (31. 7.):** `MoonPhaseIcon(phase, illumFraction, size, color?)`
+  (`lib/features/moon/presentation/widgets/moon_phase_icon.dart`) — obris diska + osvetljeni del
+  z elipso terminatorja (polos `r·|2f−1|`), rastoča osvetljena desno, pojemajoča zrcalna; barva
+  privzeto `onSurfaceVariant` (v svetli temi »ink« konvencija: osvetljeno = polnilo). Videz
+  potrjen prek harnessa `tmp/moon_phase_preview_test.dart` (`flutter test --update-goldens` →
+  `tmp/moon_phase_preview.png`); testi s pixel-samplingom v
+  `test/features/moon/moon_phase_icon_test.dart`. Widget še nima klicalca (temno).
 
-**Naloga TE seje: korak T3.1 — mena kot `CustomPainter`** (branch `feat/fr19-t3-1-phase-painter`):
+**Naloga TE seje: korak T3.2 — `ElementBadge`** (branch `feat/fr19-t3-2-element-icons`):
 
-- Samostojen widget (krivulja terminatorja iz `illumFraction`, spec §11.7) — rabijo ga koledar,
-  čip na Domov in dan-sheet. `lib/features/moon/presentation/widgets/`.
-- **Najprej videz:** widget + pogled vseh 8 men (naprava ali harness) — šele po potrditvi videza
-  testi/dokumentacija (pravilo »poglej, preden vlagaš«).
+- ⚠️ **Blokira jo A5 (ikone)** — če še ni odločena, jo mora lastnik odločiti pred/na začetku seje
+  (predlog v planu: A5=B, 4 lastne monokromatske vektorske; emoji 🌸🌿 trčita s katalogom).
+- En skupen widget `ElementBadge` (ikona + oznaka, **nikoli samo barva** — dostopnost),
+  `lib/features/moon/presentation/widgets/`. Barve prek `MoonColors` teme (A4 omejitev: tekst na
+  soft ozadju = `onSurface`, poudarek samo ikona/glif).
+- **Najprej videz:** widget + pogled vseh 4 elementov (naprava ali harness kot pri T3.1) — šele po
+  potrditvi videza testi/dokumentacija (pravilo »poglej, preden vlagaš«).
 - Nič vidnega v aplikaciji brez flaga; barve prek teme, ne hardcode.
 
-**Pred delom preberi:** plan T3 (`docs/plan-implementacije-fr19-fr20.md`) · spec §11.7 ·
-wireframe `lunar-calendar_overview.html` (krajci) · `MoonPhase`/`illumFraction`
-(`core/biodynamic/biodynamic_day.dart`).
+**Pred delom preberi:** plan T3 (`docs/plan-implementacije-fr19-fr20.md`) · A4/A5 v decisions doc ·
+wireframe `lunar-calendar_overview.html` (legenda elementov) · `MoonColors`
+(`lib/app/theme/moon_colors.dart`) · `BiodynamicElement` (`core/biodynamic/biodynamic_day.dart`).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.2). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.1, posodobi ta
-dokument na naslednji korak (T3.2 `ElementBadge` — ⚠️ **blokira A5**,
-`feat/fr19-t3-2-element-icons`) in predlagaj commit.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.3). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.2, posodobi ta
+dokument na naslednji korak (T3.3 `/moon-calendar` Mesec, `feat/fr19-t3-3-month-view`) in
+predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4=A ✅ (fiksne semantične barve + kontrastna omejitev) ·
-A6=A ✅ (privzeto vklopljeno) · **A5 (ikone) še ODPRTA — blokira T3.2 in emoji v mreži T3.3**;
-T3.1 ne blokira nobena. Če lastnik med sejo odloči A5, jo zabeleži v decisions doc + plan tabelo.
+A6=A ✅ (privzeto vklopljeno) · **A5 (ikone) še ODPRTA — blokira T3.2 in emoji v mreži T3.3**.
+Ko je odločena, jo zabeleži v decisions doc + plan tabelo.
