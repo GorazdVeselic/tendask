@@ -73,6 +73,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$weather$en weather = Translations$weather$en.internal(_root);
 	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
 	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
+	late final Translations$moon$en moon = Translations$moon$en.internal(_root);
 }
 
 // Path: splash
@@ -1997,6 +1998,61 @@ class Translations$harvest$en {
 	String get unit_bunch => 'bunch';
 }
 
+// Path: moon
+class Translations$moon$en {
+	Translations$moon$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+	Map<String, String> get day_for => {
+		'fruit': 'fruit day',
+		'root': 'root day',
+		'flower': 'flower day',
+		'leaf': 'leaf day',
+	};
+	late final Translations$moon$division$en division = Translations$moon$division$en.internal(_root);
+	Map<String, String> get sign => {
+		'aries': 'Aries',
+		'taurus': 'Taurus',
+		'gemini': 'Gemini',
+		'cancer': 'Cancer',
+		'leo': 'Leo',
+		'virgo': 'Virgo',
+		'libra': 'Libra',
+		'scorpio': 'Scorpio',
+		'sagittarius': 'Sagittarius',
+		'capricorn': 'Capricorn',
+		'aquarius': 'Aquarius',
+		'pisces': 'Pisces',
+	};
+	Map<String, String> get phase => {
+		'newMoon': 'new moon',
+		'waxingCrescent': 'waxing crescent',
+		'firstQuarter': 'first quarter',
+		'waxingGibbous': 'waxing gibbous',
+		'fullMoon': 'full moon',
+		'waningGibbous': 'waning gibbous',
+		'lastQuarter': 'last quarter',
+		'waningCrescent': 'waning crescent',
+	};
+}
+
+// Path: moon.division
+class Translations$moon$division$en {
+	Translations$moon$division$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'constellation'
+	String get constellation => 'constellation';
+
+	/// en: 'sign'
+	String get sign => 'sign';
+}
+
 /// The flat map containing all translations for locale <en>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -2541,6 +2597,32 @@ extension on Translations {
 			'harvest.unit_pieces' => 'pcs',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'bunch',
+			'moon.day_for.fruit' => 'fruit day',
+			'moon.day_for.root' => 'root day',
+			'moon.day_for.flower' => 'flower day',
+			'moon.day_for.leaf' => 'leaf day',
+			'moon.division.constellation' => 'constellation',
+			'moon.division.sign' => 'sign',
+			'moon.sign.aries' => 'Aries',
+			'moon.sign.taurus' => 'Taurus',
+			'moon.sign.gemini' => 'Gemini',
+			'moon.sign.cancer' => 'Cancer',
+			'moon.sign.leo' => 'Leo',
+			'moon.sign.virgo' => 'Virgo',
+			'moon.sign.libra' => 'Libra',
+			'moon.sign.scorpio' => 'Scorpio',
+			'moon.sign.sagittarius' => 'Sagittarius',
+			'moon.sign.capricorn' => 'Capricorn',
+			'moon.sign.aquarius' => 'Aquarius',
+			'moon.sign.pisces' => 'Pisces',
+			'moon.phase.newMoon' => 'new moon',
+			'moon.phase.waxingCrescent' => 'waxing crescent',
+			'moon.phase.firstQuarter' => 'first quarter',
+			'moon.phase.waxingGibbous' => 'waxing gibbous',
+			'moon.phase.fullMoon' => 'full moon',
+			'moon.phase.waningGibbous' => 'waning gibbous',
+			'moon.phase.lastQuarter' => 'last quarter',
+			'moon.phase.waningCrescent' => 'waning crescent',
 			_ => null,
 		};
 	}

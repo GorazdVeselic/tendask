@@ -211,7 +211,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      sami**: ob `!kMoonCalendarEnabled` `redirect` na `/home`. Ruta je namreč dosegljiva tudi prek
      deep-linka, ne le prek CTA-jev — flag samo na gumbih ne zadošča. Posodobi `route_collision_test`
      in `screen-map.md` (pravilo: v istem commitu).
-  6. ⬜ i18n skelet: namespace `moon` v `en` + `sl` (4 elementi kot »dan za …«, 12 ozvezdij/znamenj,
+  6. ✅ (2026-07-31) i18n skelet: namespace `moon` v `en` + `sl` (4 elementi kot »dan za …«, 12 ozvezdij/znamenj,
      beseda ozvezdje/znamenje kot varianti, mena) — **de šele po vizualni potrditvi zaslonov**
      (pravilo »poglej, preden vlagaš«); `dart run slang` + commit generiranega (CI gotcha).
 - **Branchi:** `feat/fr19-t2-1-flag` · `feat/fr19-t2-2-prefs` · `feat/fr19-t2-3-settings-controller` ·

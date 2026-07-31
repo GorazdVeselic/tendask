@@ -72,6 +72,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$weather$sl weather = _Translations$weather$sl._(_root);
 	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
 	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
+	@override late final _Translations$moon$sl moon = _Translations$moon$sl._(_root);
 }
 
 // Path: splash
@@ -938,6 +939,57 @@ class _Translations$harvest$sl extends Translations$harvest$en {
 	@override String get unit_bunch => 'šop';
 }
 
+// Path: moon
+class _Translations$moon$sl extends Translations$moon$en {
+	_Translations$moon$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override Map<String, String> get day_for => {
+		'fruit': 'dan za plod',
+		'root': 'dan za korenino',
+		'flower': 'dan za cvet',
+		'leaf': 'dan za list',
+	};
+	@override late final _Translations$moon$division$sl division = _Translations$moon$division$sl._(_root);
+	@override Map<String, String> get sign => {
+		'aries': 'Oven',
+		'taurus': 'Bik',
+		'gemini': 'Dvojčka',
+		'cancer': 'Rak',
+		'leo': 'Lev',
+		'virgo': 'Devica',
+		'libra': 'Tehtnica',
+		'scorpio': 'Škorpijon',
+		'sagittarius': 'Strelec',
+		'capricorn': 'Kozorog',
+		'aquarius': 'Vodnar',
+		'pisces': 'Ribi',
+	};
+	@override Map<String, String> get phase => {
+		'newMoon': 'mlaj',
+		'waxingCrescent': 'rastoči srp',
+		'firstQuarter': 'prvi krajec',
+		'waxingGibbous': 'izbočena rastoča luna',
+		'fullMoon': 'ščip',
+		'waningGibbous': 'izbočena upadajoča luna',
+		'lastQuarter': 'zadnji krajec',
+		'waningCrescent': 'upadajoči srp',
+	};
+}
+
+// Path: moon.division
+class _Translations$moon$division$sl extends Translations$moon$division$en {
+	_Translations$moon$division$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get constellation => 'ozvezdje';
+	@override String get sign => 'znamenje';
+}
+
 /// The flat map containing all translations for locale <sl>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1482,6 +1534,32 @@ extension on TranslationsSl {
 			'harvest.unit_pieces' => 'kom',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'šop',
+			'moon.day_for.fruit' => 'dan za plod',
+			'moon.day_for.root' => 'dan za korenino',
+			'moon.day_for.flower' => 'dan za cvet',
+			'moon.day_for.leaf' => 'dan za list',
+			'moon.division.constellation' => 'ozvezdje',
+			'moon.division.sign' => 'znamenje',
+			'moon.sign.aries' => 'Oven',
+			'moon.sign.taurus' => 'Bik',
+			'moon.sign.gemini' => 'Dvojčka',
+			'moon.sign.cancer' => 'Rak',
+			'moon.sign.leo' => 'Lev',
+			'moon.sign.virgo' => 'Devica',
+			'moon.sign.libra' => 'Tehtnica',
+			'moon.sign.scorpio' => 'Škorpijon',
+			'moon.sign.sagittarius' => 'Strelec',
+			'moon.sign.capricorn' => 'Kozorog',
+			'moon.sign.aquarius' => 'Vodnar',
+			'moon.sign.pisces' => 'Ribi',
+			'moon.phase.newMoon' => 'mlaj',
+			'moon.phase.waxingCrescent' => 'rastoči srp',
+			'moon.phase.firstQuarter' => 'prvi krajec',
+			'moon.phase.waxingGibbous' => 'izbočena rastoča luna',
+			'moon.phase.fullMoon' => 'ščip',
+			'moon.phase.waningGibbous' => 'izbočena upadajoča luna',
+			'moon.phase.lastQuarter' => 'zadnji krajec',
+			'moon.phase.waningCrescent' => 'upadajoči srp',
 			_ => null,
 		};
 	}

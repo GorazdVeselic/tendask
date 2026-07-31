@@ -613,5 +613,41 @@
     "unit_pieces": "pcs",
     "unit_l": "l",
     "unit_bunch": "bunch"
+  },
+  "moon": {
+    "day_for(map)": {
+      "fruit": "fruit day",
+      "root": "root day",
+      "flower": "flower day",
+      "leaf": "leaf day"
+    },
+    "division": {
+      "constellation": "constellation",
+      "sign": "sign"
+    },
+    "sign(map)": {
+      "aries": "Aries",
+      "taurus": "Taurus",
+      "gemini": "Gemini",
+      "cancer": "Cancer",
+      "leo": "Leo",
+      "virgo": "Virgo",
+      "libra": "Libra",
+      "scorpio": "Scorpio",
+      "sagittarius": "Sagittarius",
+      "capricorn": "Capricorn",
+      "aquarius": "Aquarius",
+      "pisces": "Pisces"
+    },
+    "phase(map)": {
+      "newMoon": "new moon",
+      "waxingCrescent": "waxing crescent",
+      "firstQuarter": "first quarter",
+      "waxingGibbous": "waxing gibbous",
+      "fullMoon": "full moon",
+      "waningGibbous": "waning gibbous",
+      "lastQuarter": "last quarter",
+      "waningCrescent": "waning crescent"
+    }
   }
 }

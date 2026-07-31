@@ -43,24 +43,28 @@ zaslonom (`lib/features/moon/presentation/moon_calendar_screen.dart`, T3 ga zame
 preusmeri na `/home`. `route_collision_test` ima guard test (uporablja pravi redirect + flag, zato
 ob prižigu T7 ostane zelen); `screen-map.md` §4 ima stanje rut.
 
-**Naloga TE seje: korak T2.6 — i18n skelet `moon`** (branch `feat/fr19-t2-6-i18n-skeleton`):
+**T2.6 ✅ (31. 7.) — T2 je s tem ZAKLJUČEN:** namespace `moon` v `en` + `sl`
+(`lib/i18n/*.i18n.json`): `day_for` (4 elementi, »dan za …«), `division`
+(ozvezdje/znamenje — besedna varianta §11.6), `sign` (12), `phase` (8 men). `de` namenoma NI
+dodana (pade na `en` prek `fallback_strategy: base_locale`) — pride kot T3.7 po vizualni
+potrditvi zaslonov. Generirano commitano. Ključi še brez porabnika.
 
-- Namespace `moon` v `en` + `sl` (`i18n/*.i18n.json`): 4 elementi kot »dan za …«, 12
-  ozvezdij/znamenj, beseda ozvezdje/znamenje kot varianti (siderično/tropsko), mena.
-- **de ŠELE po vizualni potrditvi zaslonov** (pravilo »poglej, preden vlagaš«) — ne dodajaj je.
-- `dart run slang` (ločen CLI, build_runner ga NE ujame) + **commit generiranega** (CI gotcha:
-  CI regenerira pred analyze, lokalni pre-push hook ne).
-- Ključi še brez porabnika → nič vidnega.
+**Naloga TE seje: korak T3.1 — mena kot `CustomPainter`** (branch `feat/fr19-t3-1-phase-painter`):
 
-**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · spec §11
-(poimenovanja, »dan za plod/list/cvet/korenino«, ozvezdje vs znamenje) · obstoječa
-`i18n/en.i18n.json`/`sl.i18n.json` struktura.
+- Samostojen widget (krivulja terminatorja iz `illumFraction`, spec §11.7) — rabijo ga koledar,
+  čip na Domov in dan-sheet. `lib/features/moon/presentation/widgets/`.
+- **Najprej videz:** widget + pogled (naprava ali test harness) čez vseh 8 men — šele po
+  potrditvi videza testi/dokumentacija (pravilo »poglej, preden vlagaš«).
+- Nič vidnega v aplikaciji brez flaga; barve prek teme, ne hardcode.
 
-**Pravila:** naredi natanko ta korak in nič več (T2 je s tem zaključen — ne začenjaj T3). Pred
-merge: `flutter analyze` čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu
-označi T2.6, posodobi ta dokument na naslednji korak (T3.1 mena CustomPainter,
-`feat/fr19-t3-1-phase-painter` — ⚠️ najprej pogled na napravi, A5 ikone blokira T3.2) in
-predlagaj commit.
+**Pred delom preberi:** plan T3 (`docs/plan-implementacije-fr19-fr20.md`) · spec §11.7 ·
+wireframe `lunar-calendar_overview.html` (krajci) · `MoonPhase`/`illumFraction`
+(`core/biodynamic/biodynamic_day.dart`).
+
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.2). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.1, posodobi ta
+dokument na naslednji korak (T3.2 element-ikone — ⚠️ **blokira A5**, `feat/fr19-t3-2-element-icons`)
+in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4=A ✅ (fiksne semantične barve) · A6=A ✅ (privzeto
-vklopljeno) · A5 (ikone) še odprta — blokira T3.1–T3.2; T2.6 ne blokira nobena.
+vklopljeno) · A5 (ikone) še odprta — blokira T3.2 (in emoji v T3.3 mreži); T3.1 ne blokira nobena.

@@ -623,5 +623,41 @@
     "unit_pieces": "kom",
     "unit_l": "l",
     "unit_bunch": "šop"
+  },
+  "moon": {
+    "day_for(map)": {
+      "fruit": "dan za plod",
+      "root": "dan za korenino",
+      "flower": "dan za cvet",
+      "leaf": "dan za list"
+    },
+    "division": {
+      "constellation": "ozvezdje",
+      "sign": "znamenje"
+    },
+    "sign(map)": {
+      "aries": "Oven",
+      "taurus": "Bik",
+      "gemini": "Dvojčka",
+      "cancer": "Rak",
+      "leo": "Lev",
+      "virgo": "Devica",
+      "libra": "Tehtnica",
+      "scorpio": "Škorpijon",
+      "sagittarius": "Strelec",
+      "capricorn": "Kozorog",
+      "aquarius": "Vodnar",
+      "pisces": "Ribi"
+    },
+    "phase(map)": {
+      "newMoon": "mlaj",
+      "waxingCrescent": "rastoči srp",
+      "firstQuarter": "prvi krajec",
+      "waxingGibbous": "izbočena rastoča luna",
+      "fullMoon": "ščip",
+      "waningGibbous": "izbočena upadajoča luna",
+      "lastQuarter": "zadnji krajec",
+      "waningCrescent": "upadajoči srp"
+    }
   }
 }
