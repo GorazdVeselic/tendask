@@ -5,7 +5,9 @@ import 'moon_latitude.dart';
 import 'moon_longitude.dart';
 
 /// Mean obliquity of the ecliptic in degrees for julian centuries [t]
-/// (linear approximation from the validated prototype).
+/// (linear fit from the validated prototype; its slope differs from Meeus
+/// 22.2 by ~0.0016 deg/century — ~0.0004 deg around 2026, far below what the
+/// declination-trend layer needs).
 double meanObliquity(double t) => 23.439 - 0.014610 * t;
 
 /// Moon's declination in degrees for julian centuries [t]: ecliptic

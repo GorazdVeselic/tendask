@@ -23,8 +23,11 @@ MoonPhase phaseFor(double t) =>
 /// Julian day in `[jdStart, jdEnd)` where elongation crosses [targetDegrees]
 /// upward (0 = new moon, 180 = full moon), or null if the window has none.
 ///
-/// Sampling every 0.02 days catches the ~29.5-day synodic cycle safely;
-/// 40 bisection steps refine far below the validated 1-3 min accuracy.
+/// Sampling every 0.02 days catches the ~29.5-day synodic cycle safely; the
+/// final sample is clamped to [jdEnd] so a crossing in the last partial step
+/// is not missed (an eclipse-grade syzygy minutes before local midnight would
+/// otherwise be flagged on neither day). 40 bisection steps refine far below
+/// the validated 1-3 min accuracy.
 double? findPhaseTime(double targetDegrees, double jdStart, double jdEnd) {
   double offset(double jd) {
     final e = (elongation(julianCenturies(jd)) - targetDegrees) % 360;
@@ -34,7 +37,8 @@ double? findPhaseTime(double targetDegrees, double jdStart, double jdEnd) {
   const step = 0.02;
   var prevJd = jdStart;
   var prevOffset = offset(jdStart);
-  for (var jd = jdStart + step; jd < jdEnd; jd += step) {
+  while (prevJd < jdEnd) {
+    final jd = prevJd + step < jdEnd ? prevJd + step : jdEnd;
     final current = offset(jd);
     if (prevOffset <= 0 && current > 0 && (current - prevOffset) < 180) {
       var lo = prevJd;

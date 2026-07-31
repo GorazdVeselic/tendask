@@ -51,6 +51,23 @@ void main() {
       );
       expect(jd, isNull);
     });
+
+    test('crossing in the last partial sampling step is not missed', () {
+      // Regression: the pre-fix loop never sampled the (last step, jdEnd)
+      // tail, so a syzygy in the final <0.02 day of a window returned null —
+      // and the next window starts past it, so an eclipse-grade syzygy just
+      // before local midnight was flagged on neither day.
+      final wide = findPhaseTime(
+        0,
+        julianDay(DateTime.utc(2026, 7, 8)),
+        julianDay(DateTime.utc(2026, 7, 20)),
+      );
+      expect(wide, isNotNull);
+      // wide is non-null: the 12-day window brackets the July new moon.
+      final tail = findPhaseTime(0, wide! - 0.505, wide + 0.005);
+      expect(tail, isNotNull);
+      expect(tail, closeTo(wide, _fiveMinutesInDays));
+    });
   });
 
   group('illuminatedFraction', () {

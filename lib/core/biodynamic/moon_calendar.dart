@@ -58,9 +58,9 @@ BiodynamicDay dayFor(DateTime localDate, CalendarSystem system) {
   DateTime? transitionAt;
   BiodynamicElement? secondaryElement;
   if (endSign != startSign) {
-    // At most one boundary per day: the narrowest band (21 degrees) exceeds
-    // the Moon's motion even on a 25-hour DST day (~16 degrees), so a single
-    // bisection over the day finds the only crossing.
+    // At most one boundary per day: the narrowest calibrated band (Libra,
+    // 18.1 degrees) exceeds the Moon's motion even on a 25-hour DST day at
+    // perigee (~16 degrees), so a single bisection finds the only crossing.
     final jd = _bisect(jdStart, jdEnd, (jd) => signAt(jd) == startSign);
     transitionAt = dateTimeFromJulianDay(jd).toLocal();
     secondaryElement = elementOf(endSign);

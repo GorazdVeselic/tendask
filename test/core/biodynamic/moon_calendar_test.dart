@@ -161,6 +161,24 @@ void main() {
       }
     });
 
+    test('wiring and continuity across year boundaries (precession step)', () {
+      // The sidereal boundary shift is quantized per calendar year, so the
+      // Dec 31 -> Jan 1 seam is where a day's end sign (computed with the old
+      // year) meets the next day's start sign (new year). The 0.014-degree
+      // step could in principle break continuity when the Moon sits exactly
+      // on a boundary at New Year midnight; these sweeps document that the
+      // seam holds for the years in range.
+      for (final year in [2024, 2025, 2026, 2027]) {
+        final to = DateTime(year + 1, 1, 4);
+        for (var d = DateTime(year, 12, 28); d.isBefore(to); d = _nextDay(d)) {
+          for (final system in CalendarSystem.values) {
+            _expectDayWiring(d, system);
+            _expectContinuity(d, system);
+          }
+        }
+      }
+    });
+
     test('DST changeover days themselves (23 h / 25 h in EU zones)', () {
       final changeovers = [
         DateTime(2026, 3, 29),
