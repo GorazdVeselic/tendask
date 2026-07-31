@@ -66,6 +66,17 @@ void main() {
     },
   );
 
+  // The real router's /moon-calendar route must carry the guard — the widget
+  // test below exercises the guard's behavior, but only this check fails if
+  // someone detaches `redirect:` from the route in app_router.dart.
+  test('the real /moon-calendar route carries the redirect guard', () {
+    final router = createAppRouter();
+    final route = router.configuration.routes
+        .whereType<GoRoute>()
+        .singleWhere((r) => r.path == '/moon-calendar');
+    expect(route.redirect, same(moonCalendarRedirect));
+  });
+
   // The moon calendar (FR-19) must be guarded on the route itself, not only on
   // its CTAs: a deep link reaches the route past any flag-gated buttons. Uses
   // the real [moonCalendarRedirect], so this stays green when the flag flips
