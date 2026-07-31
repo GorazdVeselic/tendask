@@ -31,4 +31,8 @@ jobs:
         run: flutter analyze
 
       - name: Test
+        # Biodynamic engine reference tests compare against the printed Thun
+        # 2024 calendar, whose hours are CET/CEST — run in that zone.
+        env:
+          TZ: Europe/Ljubljana
         run: flutter test

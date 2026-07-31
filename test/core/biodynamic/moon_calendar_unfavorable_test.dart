@@ -29,6 +29,9 @@ void main() {
     });
 
     test('matches the printed Thun 2024 node/perigee marks (jan/feb/dec)', () {
+      // The printed hours are CET/CEST, so the expected day sets assume a
+      // Europe/Ljubljana local zone (dev machines; pinned via TZ in CI) —
+      // under UTC the midnight tails land on different days.
       // Printed reference (photographed jan/feb/dec pages): every day whose
       // node/perigee window overlaps it. Days 1.2., 10.12., 13.12. and 23.12.
       // are sub-5-hour midnight tails of a real event; the print shows the
