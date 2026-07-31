@@ -92,7 +92,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 | A3 | motor | ✅ **ODLOČENO (2026-07-30): A — lasten Meeus izračun** (validiran, brez odvisnosti) | T1 |
 | A4 | barve | **A**: fiksne semantične, kot `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet) | T2.4 |
 | A5 | ikone | **B**: 4 lastne monokromatske vektorske (emoji 🌸🌿 trčita s katalogom); mena = CustomPainter | T3.1–T3.2 |
-| A6 | privzeto stikalo | **A**: vklopljeno (odkritje prek čipa; argument prek darila) | T2.2 |
+| A6 | privzeto stikalo | ✅ **ODLOČENO (2026-07-31): A — vklopljeno** (odkritje prek čipa; argument prek darila) | T2.2 |
 
 ### P0.4 · Odločitve darila 🅿️ (lastnik; blokirata šele T7)
 
@@ -197,7 +197,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      `kSuppliesEnabled`). To je **edino stikalo do T6** — ob T6 ga na vstopnih točkah dopolni
      `plusProvider` gate, zraven pa pride še `kTendaskPlusEnabled` za Tendask+ kartico/zaslon
      (ime že rezervirano v `screen-map.md` §2.1).
-  2. ⬜ `local_prefs`: ključa `moonCalendarEnabled` (privzeto po A6) in `moonSystem`
+  2. ✅ (2026-07-31) `local_prefs`: ključa `moonCalendarEnabled` (privzeto po A6) in `moonSystem`
      (privzeto siderični) + metode po obstoječem vzorcu (eksplicitne, ne generične). **Device-local**
      (odločitev B1) — nič synca, nič sheme.
   3. ⬜ `MoonSettingsController` (`@riverpod`, vzorec `theme_palette_controller.dart`) + **ogretje v

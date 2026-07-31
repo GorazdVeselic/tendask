@@ -23,22 +23,27 @@ provider**, motor ostane brez nje. Motor: 121 testov, cel suite 1021, CI zelen.
 **T2.1 ✅ (31. 7.):** `kMoonCalendarEnabled = false` v `core/config.dart` (compile-time dark flag,
 vzorec `kSuppliesEnabled`) — edino stikalo do T6, ko ga na vstopnih točkah dopolni `plusProvider`
 gate + `kTendaskPlusEnabled`.
+**T2.2 ✅ (31. 7.):** `local_prefs` ključa `moon_calendar_enabled` (`Future<bool?>`, null =
+nikoli spremenjeno → privzeto VKLOPLJENO po A6=A) in `moon_system` (`String?`, privzeto
+`'sidereal'`) + eksplicitne metode in round-trip testi. Device-local (B1), nič synca, nič sheme,
+ključa še brez bralca.
 
-**Naloga TE seje: korak T2.2 — `local_prefs` ključa** (branch `feat/fr19-t2-2-prefs`):
+**Naloga TE seje: korak T2.3 — `MoonSettingsController`** (branch `feat/fr19-t2-3-settings-controller`):
 
-- Ključa `moonCalendarEnabled` (privzeto po odločitvi A6) in `moonSystem` (privzeto siderični)
-  + metode po obstoječem vzorcu v `local_prefs` (eksplicitne, ne generične).
-- **Device-local** (odločitev B1) — nič synca, nič sheme. Ključa še brez bralca → nič vidnega.
-- ⚠️ **A6 blokira ta korak** (privzeta vrednost `moonCalendarEnabled`) — če še ni odločena,
-  najprej vprašaj lastnika.
+- `@riverpod` controller po vzorcu `theme_palette_controller.dart`: bere/piše oba `local_prefs`
+  ključa, privzeti vrednosti razreši on (enabled=true po A6, `CalendarSystem.sidereal`).
+- **Ogretje v `main.dart` bootstrapu** (kot paleta) — da čip na Domov ob zagonu ne utripne.
+- **Invarianta iz §11.6:** en `system` iz tega controllerja vodi VSE zaslone hkrati.
+- Riverpod code-gen → `dart run build_runner build --delete-conflicting-outputs` + commit
+  generiranega.
 
-**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječi vzorec
-(`local_prefs`).
+**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · vzorec
+(`theme_palette_controller.dart` + njegovi testi) · `local_prefs` (nova ključa).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.3). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.2, posodobi ta
-dokument na naslednji korak (T2.3 `MoonSettingsController`, `feat/fr19-t2-3-settings-controller`)
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.4). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.3, posodobi ta
+dokument na naslednji korak (T2.4 `MoonColors` ThemeExtension, `feat/fr19-t2-4-moon-colors`)
 in predlagaj commit.
 
-**Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4/A5/A6 (barve, ikone, privzeto stikalo) še odprte —
-A6 blokira T2.2 (privzeta vrednost `moonCalendarEnabled`), A4 blokira T2.4 (barve elementov).
+**Stanje odločitev:** A1=C ✅ · A3=A ✅ · A6=A ✅ (privzeto vklopljeno) · A4/A5 (barve, ikone) še
+odprti — A4 blokira T2.4 (barve elementov), A5 blokira T3.1–T3.2 (ikone); T2.3 ne blokira nobena.

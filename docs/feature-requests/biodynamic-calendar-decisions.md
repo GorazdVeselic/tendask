@@ -78,7 +78,7 @@ wireframa v temni temi ne delujejo dobro.
 
 **Predlog:** nagib k B (če je trk moteč); A hitrejši za MVP. · *(spec §7 omenja obe možnosti)*
 
-### A6 · Privzeto stanje stikala + odkritje  ⬜ ODPRTO (manjše)
+### A6 · Privzeto stanje stikala + odkritje  ✅ ODLOČENO (2026-07-31): A — privzeto vklopljeno
 **Problem:** koledar je opt-in. Privzeto vklopljen ali izklopljen? Če izklopljen, čipa na Domov ni →
 uporabnik funkcije ne odkrije.
 **Opcije in kaj pomenijo:**

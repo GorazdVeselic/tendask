@@ -28,4 +28,24 @@ void main() {
     await prefs.setPendingSignInEmail('b@y.si');
     expect(await prefs.pendingSignInEmail(), 'b@y.si');
   });
+
+  test('moonCalendarEnabled distinguishes never-set from switched off', () async {
+    expect(await prefs.moonCalendarEnabled(), isNull);
+
+    await prefs.setMoonCalendarEnabled(false);
+    expect(await prefs.moonCalendarEnabled(), isFalse);
+
+    await prefs.setMoonCalendarEnabled(true);
+    expect(await prefs.moonCalendarEnabled(), isTrue);
+  });
+
+  test('moonSystem round-trips and overwrites', () async {
+    expect(await prefs.moonSystem(), isNull);
+
+    await prefs.setMoonSystem('tropical');
+    expect(await prefs.moonSystem(), 'tropical');
+
+    await prefs.setMoonSystem('sidereal');
+    expect(await prefs.moonSystem(), 'sidereal');
+  });
 }
