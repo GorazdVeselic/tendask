@@ -8,41 +8,32 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (motor `lib/core/biodynamic/`, vse v main):** T1.1–T1.9 ✅ — API + časovna osnova
-(JD/T), λ Sonca in Lune (Meeus 25/47), zodiak (kalibrirane meje + IAU rezerva), mena (elongacija,
-osvetljenost, mlaj/ščip z bisekcijo), T1.7 `dayFor` (element ob začetku dneva §12.6, bisekcija ure
-prehoda), T1.8 deklinacija (`ascending`), **T1.9 neugodni dnevi**: `moon_distance.dart` (Meeus 47.A
-cos stolpec, vratar 47.a) + vozel/perigej/mrk v `moon_calendar.dart`, **kalibrirano proti tiskanemu
-Thun 2024** (jan/feb/dec fotografije, rešene iz transkriptov sej v `tmp/thun_photos/`): vozel
-[−5 h, +4 h], perigej ±13 h, mrk = sizigija z |β| < 1,6°; apogej namenoma ni modeliran. Verifikacija
-motorja: sweep Dart ↔ Python 2024–2027 = 0 neujemanj; proti tisku MAE 0,26 h, oznake 58/60;
-day-level neugodni jan+feb+dec = vseh 14 modelabilnih tiskanih dni (planetarne oznake izven obsega,
-spec §4.5). `BiodynamicDay` je s tem poln. Motor: 57 testov, cel suite 957, CI zelen.
-**⚠️ Časovna cona:** referenčni testi proti tisku so CET/CEST — CI korak `Test` ima pripeto
-`TZ: Europe/Ljubljana` (`ci.yml`); tudi novi fixture testi z urami prehodov bodo CET-vezani,
-ne odstranjuj pripetja.
+**Kaj je narejeno (motor `lib/core/biodynamic/`, vse v main):** T1.1–T1.11 ✅ — **T1 je zaključen.**
+Motor: API + časovna osnova (JD/T), λ Sonca in Lune (Meeus 25/47), zodiak (kalibrirane meje + IAU
+rezerva), mena (elongacija, osvetljenost, mlaj/ščip z bisekcijo), `dayFor` (element ob začetku dneva
+§12.6, bisekcija ure prehoda), deklinacija (`ascending`), neugodni dnevi (vozel [−5 h, +4 h],
+perigej ±13 h, mrk |β| < 1,6°; kalibrirano proti tiskanemu Thun 2024). T1.10 fixture: julij+avgust
+2026 (62 dni × 2 sistema, vse plasti) v `biodynamic_fixture_test.dart`, sidran na javne sizigije in
+mrka 12. 8./28. 8. 2026, zasebno navzkrižno preverjen (sweep 0 neujemanj, vozli 7/7). T1.11
+meritev: mreža meseca (84 klicev `dayFor`) ~16 ms → **memoizacija na (mesec, sistem) gre v T3
+provider**, motor ostane brez nje. Motor: 121 testov, cel suite 1021, CI zelen.
+**⚠️ Časovna cona:** referenčni in fixture testi so CET/CEST — CI korak `Test` ima pripeto
+`TZ: Europe/Ljubljana` (`ci.yml`), ne odstranjuj pripetja.
 
-**Naloga TE seje: korak T1.10 — referenčni fixture + mikro-meritev** (plan koraka 10+11 skupaj,
-branch `feat/fr19-t1-10-fixtures`):
+**Naloga TE seje: korak T2.1 — compile-time dark flag** (branch `feat/fr19-t2-1-flag`):
 
-- **Fixture:** lastno izračunani datumi (element + ura prehoda, mena, ascending, unfavorable za
-  ~2 meseca), ročno preverjeni ob nastanku, commitani kot testni fixture — naši izračuni, pravno
-  čisti. Zasebna navzkrižna preverba proti `tmp/` prototipu (ne gre v repo, gl. P0.1).
-- **Mikro-meritev:** `dayFor` za cel mesec (42 celic × 2 sistema) — potrdi < nekaj ms (»optimizacije
-  morajo biti merljive«); če ne, memoizacija pride v T3 provider, ne v motor.
-- **Brez Riverpoda, brez Clocka, brez I/O** — čista logika; nič v aplikaciji tega še ne kliče.
+- `kMoonCalendarEnabled = false` v `core/config.dart` (vzorec `kSuppliesEnabled`). To je **edino
+  stikalo do T6** — ob T6 ga na vstopnih točkah dopolni `plusProvider` gate, zraven pa pride še
+  `kTendaskPlusEnabled` za Tendask+ kartico/zaslon (ime rezervirano v `screen-map.md` §2.1).
+- Nič vidnega, nič sheme, nič odvisnosti — samo konstanta po obstoječem vzorcu.
 
-**Stranska najdba iz T1.9 — RAZREŠENA:** zamenjana člena (0,1,∓2,0) v `moon_longitude.dart`
-(podedovano iz prototipa) popravljena po knjigi in re-verificirana proti tiskanemu Thun 2024
-(50/50, MAE 0,26 h, 58/60 — nespremenjeno). Python prototip napako še nosi → Dart↔Python sweep za
-ta dva člena ni več referenca (opomba v glavi datoteke); merodajna je primerjava s tiskom.
+**Pred delom preberi:** plan T2 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječi vzorec
+(`core/config.dart`, `kSuppliesEnabled`).
 
-**Pred delom preberi:** plan T1 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječe
-(`lib/core/biodynamic/`, `test/core/biodynamic/`).
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2.2). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T2.1, posodobi ta
+dokument na naslednji korak (T2.2 local_prefs, `feat/fr19-t2-2-prefs`) in predlagaj commit.
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T2). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T1.10+11,
-posodobi ta dokument na naslednji korak (T2.1 flag, `feat/fr19-t2-1-flag`) in predlagaj commit.
-
-**Stanje odločitev:** A1=C (T1.9 vključen, potrjeno 2026-07-31), A3=A ✅ · A4/A5/A6 (barve, ikone,
-privzeto stikalo) še odprte — blokirajo šele T3, ne motorja.
+**Stanje odločitev:** A1=C ✅ · A3=A ✅ · A4/A5/A6 (barve, ikone, privzeto stikalo) še odprte —
+A6 blokira T2.2 (privzeta vrednost `moonCalendarEnabled`), A4 blokira T2.4 (barve elementov);
+T2.1 ne blokira nobena.

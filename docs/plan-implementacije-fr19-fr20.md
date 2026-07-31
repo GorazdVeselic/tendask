@@ -162,12 +162,19 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
      proti tiskanemu Thun 2024: 50/50 vstopov, MAE 0,26 h, oznake 58/60 — nespremenjeno. Sweep
      proti Python prototipu za ta člena ni več referenca (prototip nosi isto napako; opomba v
      glavi datoteke).)*
-  10. ⬜ Referenčni testni nabor: **lastno izračunani** datumi (element + ura prehoda za ~2 meseca),
-      ročno preverjeni ob nastanku, commitani kot fixture (naši izračuni, pravno čisti). Zasebna
-      navzkrižna preverba proti `tmp/` prototipu (ne gre v repo, gl. P0.1).
-  11. ⬜ Mikro-meritev: `dayFor` za cel mesec (42 celic × 2 sistema) — potrdi, da je < nekaj ms
-      (bisekcije so poceni, a »optimizacije morajo biti merljive«); če ne, memoizacija pride v T3
-      provider, ne v motor. (Skupaj s korakom 10 na istem branchu.)
+  10. ✅ Referenčni testni nabor (2026-07-31): **lastno izračunani** datumi julij+avgust 2026 (62 dni ×
+      2 sistema: znamenje, ura prehoda, mena, osvetljenost, ascending, unfavorable), commitani kot
+      fixture (`test/core/biodynamic/biodynamic_fixture_test.dart` — naši izračuni, pravno čisti).
+      Ročna sidra ob nastanku: mlaj 14. 7. (0,000) / ščip 29. 7. (1,000) / mlaj 12. 8. = popolni
+      sončev mrk / ščip 28. 8. = delni lunin mrk (oba `unfavorable`). Zasebna navzkrižna preverba
+      (`tmp/`, ni v repu): sweep vseh plasti Dart ↔ Python 2024–2027 = 0 neujemanj (max razlika
+      prehodov 8,1 s = dokumentirana napaka členov v prototipu); vozli iz neodvisne β serije = 7/7
+      dni; perigejska dneva v razmiku ~28,6 d (anomalistični cikel). Ure prehodov v fixture so
+      CET/CEST → CI `TZ: Europe/Ljubljana` ostaja obvezen.
+  11. ✅ Mikro-meritev (2026-07-31): `dayFor` mreža meseca (42 celic × 2 sistema = 84 klicev) =
+      **~16 ms** (~0,19 ms/klic, JIT test VM; `moon_calendar_benchmark_test.dart`, ohlapna meja
+      < 100 ms proti CI flake). Ni »< nekaj ms« → **memoizacija na (mesec, sistem) gre v T3
+      provider** (T3.3 jo že predvideva), motor ostane brez nje.
 - **Branchi:** `feat/fr19-t1-1-api` · `feat/fr19-t1-2-timebase` · `feat/fr19-t1-3-sun` ·
   `feat/fr19-t1-4-moon-longitude` · `feat/fr19-t1-5-zodiac` · `feat/fr19-t1-6-phase` ·
   `feat/fr19-t1-7-transitions` · `feat/fr19-t1-8-declination` · (`feat/fr19-t1-9-unfavorable`) ·
@@ -228,8 +235,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena + oznaka), ‹ › navigacija,
      legenda. **Dnevna oznaka celice = element ob začetku dneva** (konvencija tiskanih koledarjev,
      spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi uri dneva → dan nosi novi
-     element). Podatki: `List<BiodynamicDay>` iz providerja (memoizacija na (mesec, sistem), če
-     meritev T1.11 pokaže potrebo). **Pogled na napravi.**
+     element). Podatki: `List<BiodynamicDay>` iz providerja (memoizacija na (mesec, sistem) — meritev
+     T1.11 je pokazala ~16 ms/mrežo → potrebna). **Pogled na napravi.**
   4. ⬜ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
      slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.**
   5. ⬜ Dan podrobno — **sheet** (ne ruta; screen-map §5): »Kaj se dogaja« (ozvezdje/znamenje, ura
