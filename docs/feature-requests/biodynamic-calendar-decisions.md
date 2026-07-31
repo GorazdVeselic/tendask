@@ -58,7 +58,11 @@ zahteva, da **najprej vprašam**.
 **Pod-točka (tehnična):** Kačenosec (Ophiuchus) — 12 ali 13 ozvezdij; predlog: obravnavaj kot prehod. *(§8.2)*
 **Predlog:** A. · *(spec §8.3, §4.6, §14.9)*
 
-### A4 · Barve elementov v temi (dark + 6 palet)  ⬜ ODPRTO
+### A4 · Barve elementov v temi (dark + 6 palet)  ✅ ODLOČENO (2026-07-31): A — fiksne semantične
+
+Svetle vrednosti iz wireframa v2, temne po vzorcu terakote (svetlejši poudarek + zamolkel temen
+container); konkretne vrednosti = `lib/app/theme/moon_colors.dart` (vir resnice). Fino nastavljanje
+temnih ob prvem vizualnem pogledu v T3.
 **Problem:** 4 elementi so barvno kodirani. App ima svetlo+temno temo in **6 palet**. Fiksni pasteli iz
 wireframa v temni temi ne delujejo dobro.
 **Opcije in kaj pomenijo:**

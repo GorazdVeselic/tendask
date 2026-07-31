@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'moon_colors.dart';
 import 'theme_palette.dart';
 
 abstract final class AppTheme {
@@ -14,7 +15,7 @@ abstract final class AppTheme {
       colorScheme: _scheme(r, Brightness.light),
       inputDecorationTheme: _inputTheme(r.hint),
       chipTheme: _chipTheme(r.primaryContainer, r.onPrimaryContainer),
-      extensions: [r.swipe],
+      extensions: [r.swipe, moonColorsLight],
     );
   }
 
@@ -29,7 +30,7 @@ abstract final class AppTheme {
       colorScheme: _scheme(r, Brightness.dark),
       inputDecorationTheme: _inputTheme(r.hint),
       chipTheme: _chipTheme(r.primaryContainer, r.onPrimaryContainer),
-      extensions: [r.swipe],
+      extensions: [r.swipe, moonColorsDark],
     );
   }
 

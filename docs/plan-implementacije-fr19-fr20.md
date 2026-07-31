@@ -90,7 +90,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 | A1 | obseg slojev | ✅ **ODLOČENO (2026-07-30): C — vse 4 plasti**; T1.9 (neugodni) je zadnji korak motorja z izrecno možnostjo zavestnega izpusta ob koncu T1 | T1.8 + T1.9, T3 |
 | A2 | en/dva koledarja | **C z odlogom**: namenski zaslon zdaj, Dnevnik-plast V2 | T3 (Dnevnik izpade iz v1) |
 | A3 | motor | ✅ **ODLOČENO (2026-07-30): A — lasten Meeus izračun** (validiran, brez odvisnosti) | T1 |
-| A4 | barve | **A**: fiksne semantične, kot `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet) | T2.4 |
+| A4 | barve | ✅ **ODLOČENO (2026-07-31): A — fiksne semantične**, `MoonColors` ThemeExtension (ena light/dark instanca za vseh 6 palet; vrednosti v `moon_colors.dart`) | T2.4 |
 | A5 | ikone | **B**: 4 lastne monokromatske vektorske (emoji 🌸🌿 trčita s katalogom); mena = CustomPainter | T3.1–T3.2 |
 | A6 | privzeto stikalo | ✅ **ODLOČENO (2026-07-31): A — vklopljeno** (odkritje prek čipa; argument prek darila) | T2.2 |
 
@@ -203,7 +203,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   3. ✅ (2026-07-31) `MoonSettingsController` (`@riverpod`, vzorec `theme_palette_controller.dart`) + **ogretje v
      `main.dart` bootstrapu** (kot paleta) — da čip na Domov ob zagonu ne utripne.
      **Invarianta iz §11.6:** en `system` iz tega controllerja vodi VSE zaslone hkrati.
-  4. ⬜ `MoonColors` ThemeExtension (vzorec `SwipeColors`): 4 element-barve × light/dark, **ena globalna
+  4. ✅ (2026-07-31) `MoonColors` ThemeExtension (vzorec `SwipeColors`): 4 element-barve × light/dark, **ena globalna
      instanca za vseh 6 palet** (A4-A brez 12 kombinacij); registracija v `app_theme.dart`
      `extensions:`. Nikoli hardcode hex v widgetih.
   5. ⬜ Ruta `/moon-calendar` (+ kasneje `/moon-settings`, `/moon-finder` ob svojih taskih) v
