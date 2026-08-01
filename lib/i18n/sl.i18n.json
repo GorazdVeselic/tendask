@@ -667,6 +667,9 @@
     "task_section": {
       "footnote": "Tradicija, ne nasvet. Preračunano iz datuma opravila."
     },
+    "hint": {
+      "title": "Jutri je ${day}"
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",

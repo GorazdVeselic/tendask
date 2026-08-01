@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../core/config.dart';
 import '../core/notifications/notification_service.dart';
+import '../features/moon/application/moon_hint_coordinator.dart';
 import '../features/notifications/application/journal_nudge_coordinator.dart';
 import '../i18n/translations.g.dart';
 import 'router/app_router.dart';
@@ -45,10 +46,13 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
         );
 
     // A foreground return counts as activity: push the journal nudge forward
-    // (FR-16). Cold start is covered by the coordinator's start() in main().
+    // (FR-16) and re-arm the moon hints, whose horizon moved on while the app
+    // was away (FR-19). Cold start is covered by start() in main().
     _lifecycle = AppLifecycleListener(
-      onResume: () =>
-          ref.read(journalNudgeCoordinatorProvider.notifier).onResume(),
+      onResume: () {
+        ref.read(journalNudgeCoordinatorProvider.notifier).onResume();
+        ref.read(moonHintCoordinatorProvider.notifier).onResume();
+      },
     );
   }
 

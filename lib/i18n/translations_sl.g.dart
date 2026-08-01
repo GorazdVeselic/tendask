@@ -950,6 +950,7 @@ class _Translations$moon$sl extends Translations$moon$en {
 	@override late final _Translations$moon$settings$sl settings = _Translations$moon$settings$sl._(_root);
 	@override late final _Translations$moon$badge$sl badge = _Translations$moon$badge$sl._(_root);
 	@override late final _Translations$moon$task_section$sl task_section = _Translations$moon$task_section$sl._(_root);
+	@override late final _Translations$moon$hint$sl hint = _Translations$moon$hint$sl._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'dan za plod',
 		'root': 'dan za korenino',
@@ -1077,6 +1078,16 @@ class _Translations$moon$task_section$sl extends Translations$moon$task_section$
 
 	// Translations
 	@override String get footnote => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.';
+}
+
+// Path: moon.hint
+class _Translations$moon$hint$sl extends Translations$moon$hint$en {
+	_Translations$moon$hint$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String title({required Object day}) => 'Jutri je ${day}';
 }
 
 // Path: moon.division
@@ -1728,6 +1739,7 @@ extension on TranslationsSl {
 			'moon.settings.load_error' => 'Nastavitev ni bilo mogoče naložiti.',
 			'moon.badge.until' => ({required Object time}) => 'do ${time}',
 			'moon.task_section.footnote' => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.',
+			'moon.hint.title' => ({required Object day}) => 'Jutri je ${day}',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',

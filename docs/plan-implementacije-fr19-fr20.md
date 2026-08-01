@@ -393,8 +393,23 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   presoja pa se na **prestavljenem** dnevu. Priklopljen dnevniški nudge (dokazano brez spremembe
   vedenja — 17:00 ni v oknu, kapica brez sotekmecev; moon namig se bo umikal njemu, ne obratno).
   Posodobljena zastarela komentarja v `notification_settings.dart` in `config.dart`. 11 novih testov,
-  suite **1244**.) · 2. ⬜ izračun +
-  razpored (lokalno, prek `Clock`) · 3. ⬜ 🔔 vrstica v `/moon-settings` · 4. ⬜ testi (FakeClock:
+  suite **1244**.) · 2. ✅ izračun +
+  razpored (lokalno, prek `Clock`) (2026-08-01: **odločitev lastnika o ritmu** — namig pride **samo za
+  dneve, ki jih vrt lahko uporabi** (element dneva ∈ `gardenElements`, isto pravilo kot ★; prazen vrt =
+  brez namigov) in **ob 18:00 dan prej**. Čisti izračun `moonHintCandidates()`
+  (`moon/application/moon_hint_schedule.dart`) → `MoonHintCoordinator` (`moon_hint_coordinator.dart`,
+  keepAlive, vzorec `JournalNudgeCoordinator`): re-arm ob zagonu/resume/spremembi luninih nastavitev,
+  vrta ali profila (debounce), `Clock` namesto `DateTime.now()`, `scheduleNudge` = inexact kanal,
+  horizont **7 dni** = 7 rezerviranih id-jev `kMoonHintNotificationIds` (−211…−217). Vsak kandidat gre
+  skozi `hintFireTime` z `otherHintDays` = dnevi dnevniškega nudgea (`journalNudgeDays()`, nov skupni
+  helper) — lunin namig se umakne njemu; opomnik opravila dneva ne zasede (B1), vpliva le na to, kam
+  nudge pade (`futureTaskReminderDays()` ekstrahiran iz nudge koordinatorja, da oba računata enako).
+  **Opt-in `moonHintEnabled`** v `NotificationSettings` (JSON `moon_hint`, privzeto **false**, tolerantni
+  parser → brez migracije). Vsebina se **re-izpelje ob vsakem arm-u** (ne zamrzne): naslov
+  `moon.hint.title` en+sl+de nad `day_for`, telo = obstoječi `activity` (mlaj → `activity_new_moon`, isto
+  kot agenda). `kHintNotificationIds` = nudge + moon; **orphan sweep opomnikov jih zdaj oba preskoči**
+  (prej bi pobrisal lunine). Dokler stikala ni (korak 3), flag + privzeti `false` ne razporedita nič.) ·
+  3. ⬜ 🔔 vrstica v `/moon-settings` · 4. ⬜ testi (FakeClock:
   tihe ure, kapica, preklop sistema, rob polnoči).
 - **Branchi:** `feat/fr19-t4b-1-quiet-hours` · `feat/fr19-t4b-2-scheduler` · `feat/fr19-t4b-3-toggle` ·
   `feat/fr19-t4b-4-tests`.

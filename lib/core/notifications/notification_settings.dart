@@ -11,6 +11,7 @@ class NotificationSettings {
   const NotificationSettings({
     this.taskRemindersEnabled = true,
     this.journalNudgeEnabled = true,
+    this.moonHintEnabled = false,
     this.weatherHintsEnabled = false,
     this.communityHintsEnabled = false,
     this.defaultReminderOffset = kDefaultReminderOffset,
@@ -24,6 +25,11 @@ class NotificationSettings {
   /// Opt-in for the local re-engagement journal nudge (FR-16). On by default; a
   /// separate switch from task reminders (FR-16 §3.6). Local, works offline.
   final bool journalNudgeEnabled;
+
+  /// Opt-in for the moon "tomorrow is a X day" hint (FR-19 T4b). Off by
+  /// default; local delivery, but synced with the profile so it follows the
+  /// user across devices (decision B1). The switch lands on /moon-settings.
+  final bool moonHintEnabled;
 
   /// Opt-in for weather hints (FCM, deferred — stored, not yet wired).
   final bool weatherHintsEnabled;
@@ -43,6 +49,7 @@ class NotificationSettings {
   NotificationSettings copyWith({
     bool? taskRemindersEnabled,
     bool? journalNudgeEnabled,
+    bool? moonHintEnabled,
     bool? weatherHintsEnabled,
     bool? communityHintsEnabled,
     int? defaultReminderOffset,
@@ -51,6 +58,7 @@ class NotificationSettings {
   }) => NotificationSettings(
     taskRemindersEnabled: taskRemindersEnabled ?? this.taskRemindersEnabled,
     journalNudgeEnabled: journalNudgeEnabled ?? this.journalNudgeEnabled,
+    moonHintEnabled: moonHintEnabled ?? this.moonHintEnabled,
     weatherHintsEnabled: weatherHintsEnabled ?? this.weatherHintsEnabled,
     communityHintsEnabled: communityHintsEnabled ?? this.communityHintsEnabled,
     defaultReminderOffset: defaultReminderOffset ?? this.defaultReminderOffset,
@@ -61,6 +69,7 @@ class NotificationSettings {
   Map<String, dynamic> toJson() => {
     'task_reminders': taskRemindersEnabled,
     'journal_nudge': journalNudgeEnabled,
+    'moon_hint': moonHintEnabled,
     'weather_hints': weatherHintsEnabled,
     'community_hints': communityHintsEnabled,
     'default_offset': defaultReminderOffset,
@@ -73,6 +82,7 @@ class NotificationSettings {
       NotificationSettings(
         taskRemindersEnabled: j['task_reminders'] as bool? ?? true,
         journalNudgeEnabled: j['journal_nudge'] as bool? ?? true,
+        moonHintEnabled: j['moon_hint'] as bool? ?? false,
         weatherHintsEnabled: j['weather_hints'] as bool? ?? false,
         communityHintsEnabled: j['community_hints'] as bool? ?? false,
         defaultReminderOffset:

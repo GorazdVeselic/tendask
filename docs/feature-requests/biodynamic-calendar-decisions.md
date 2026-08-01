@@ -121,6 +121,12 @@ argument zdaj teče prek darila.)*
   ker je stolpec JSON in je parser tolerantno pisan, nova vrednost **ne rabi migracije**. **Frekvenčna
   kapica velja samo za namige** (lunin namig + dnevniški nudge si ne delita dneva); eksplicitni
   opomnik opravila dneva ne zasede, ker ga je uporabnik nastavil sam (koncept: »max 1 ne-opomnik/dan«).
+  ✅ **Ritem namiga razrešen (2026-08-01, lastnik, ob T4b koraku 2):** namig pride **samo za dneve, ki
+  jih vrt lahko uporabi** — element dneva mora biti med `gardenElements` (isto pravilo kot ★ v mreži),
+  prazen vrt = brez namigov; ura je **18:00 dan prej** (zunaj tihih ur, isto območje kot dnevniški
+  nudge ob 17:00). Zavrnjeni varianti: »vsak večer za jutri« (365 obvestil/leto) in »samo ob menjavi
+  elementa« (neodvisno od vrta). Posledica izbire: pri nizu 2–3 dni istega elementa pride namig vsak
+  večer tega niza.
 - **B1a · Mena je free za vedno** ✅ ODLOČENO (2026-08-01, lastnik): ob prižigu Plusa (T6) se čip na
   Domov **ne** zaklene v celoti — mena (ikona + ime faze) ostane vidna vsem, za zid gre samo
   element-dan (CTA »dan za X ›« → »✦ Tendask+ ›«) in vse površine, ki element kažejo (koledar, sheet,

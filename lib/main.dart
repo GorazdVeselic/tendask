@@ -19,6 +19,7 @@ import 'core/notifications/notification_service.dart';
 import 'core/sync/sync_coordinator.dart';
 import 'features/areas/application/areas_providers.dart';
 import 'features/areas/data/garden_seed_service.dart';
+import 'features/moon/application/moon_hint_coordinator.dart';
 import 'features/moon/application/moon_settings_controller.dart';
 import 'features/notifications/application/journal_nudge_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
@@ -155,6 +156,10 @@ Future<void> _bootstrap() async {
     // Arm the re-engagement journal nudge (FR-16): a local dead-man's-switch that
     // app opens / writes push forward and only fires after the user goes quiet.
     container.read(journalNudgeCoordinatorProvider.notifier).start();
+
+    // Arm the moon "tomorrow is a X day" hints (FR-19 T4b). Dark behind the
+    // feature flag and off by default, so this schedules nothing until T7.
+    container.read(moonHintCoordinatorProvider.notifier).start();
   } catch (error, stack) {
     debugPrint('Notification bootstrap failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {

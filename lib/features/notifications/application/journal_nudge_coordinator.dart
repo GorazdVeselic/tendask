@@ -9,13 +9,11 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
-import '../../../core/date_format.dart';
 import '../../../core/notifications/hint_rules.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
-import '../../tasks/data/tasks_repository.dart';
 import 'journal_nudge_schedule.dart';
 import 'reminder_schedule.dart';
 
@@ -90,7 +88,7 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
         // Only avoid reminder days when reminders are actually scheduled; with
         // the master switch off there are none to clash with.
         taskReminderDays: settings.taskRemindersEnabled
-            ? await _taskReminderDays(repo, nowLocal)
+            ? await futureTaskReminderDays(repo, nowLocal)
             : const {},
       );
 
@@ -135,24 +133,5 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
         unawaited(_reschedule());
       }
     }
-  }
-
-  /// Local days that already carry a future task reminder, so the nudge can skip
-  /// them (FR-16 §3.5). One join query (no N+1), then [reminderFireTime] — the
-  /// same fire-time logic the reminder coordinator schedules with.
-  Future<Set<DateTime>> _taskReminderDays(
-    TasksRepository repo,
-    DateTime nowLocal,
-  ) async {
-    final days = <DateTime>{};
-    for (final input in await repo.reminderScheduleInputs()) {
-      final fire = reminderFireTime(
-        taskDateLocal: input.taskDate.toLocal(),
-        offsetMinutes: input.offsetMinutes,
-        reminderTime: input.reminderTime,
-      );
-      if (fire.isAfter(nowLocal)) days.add(startOfDay(fire));
-    }
-    return days;
   }
 }
