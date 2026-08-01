@@ -27,6 +27,7 @@ import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_week_view.dart';
 import 'package:tendask/features/moon/presentation/widgets/moon_day_badge.dart';
+import 'package:tendask/features/moon/presentation/widgets/moon_task_section.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
@@ -394,6 +395,12 @@ void main() {
     'entry/when-badge',
     overrides: _dbOverrides,
     build: () => MoonDayBadgeRow(date: _moonTransitionDate()),
+  );
+
+  layoutMatrix(
+    'task/moon-section',
+    overrides: _dbOverrides,
+    build: () => MoonTaskSectionCard(date: _moonTransitionDate()),
   );
 }
 

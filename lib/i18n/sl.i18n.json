@@ -664,6 +664,9 @@
     "badge": {
       "until": "do ${time}"
     },
+    "task_section": {
+      "footnote": "Tradicija, ne nasvet. Preračunano iz datuma opravila."
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",

@@ -654,6 +654,9 @@
     "badge": {
       "until": "until ${time}"
     },
+    "task_section": {
+      "footnote": "Tradition, not advice. Derived from the task's date."
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",

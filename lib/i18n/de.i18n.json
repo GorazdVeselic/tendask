@@ -654,6 +654,9 @@
     "badge": {
       "until": "bis ${time}"
     },
+    "task_section": {
+      "footnote": "Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet."
+    },
     "day_for(map)": {
       "fruit": "Fruchttag",
       "root": "Wurzeltag",

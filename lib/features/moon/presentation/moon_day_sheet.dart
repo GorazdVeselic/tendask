@@ -12,6 +12,7 @@ import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/moon_month_provider.dart';
 import '../application/moon_settings_controller.dart';
+import 'moon_text.dart';
 import 'widgets/element_badge.dart';
 import 'widgets/moon_phase_icon.dart';
 
@@ -33,9 +34,6 @@ Future<void> showMoonDaySheet(BuildContext context, DateTime date) {
     ),
   );
 }
-
-String _sentenceCase(String s) =>
-    s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
 class _MoonDaySheet extends ConsumerWidget {
   const _MoonDaySheet({required this.date, required this.scrollController});
@@ -66,7 +64,7 @@ class _MoonDaySheet extends ConsumerWidget {
       children: [
         const SheetHandle(),
         Text(
-          _sentenceCase(ml.formatFullDate(date)),
+          sentenceCase(ml.formatFullDate(date)),
           style: theme.textTheme.titleMedium?.copyWith(
             fontWeight: FontWeight.w700,
           ),
@@ -144,7 +142,7 @@ class _DayHero extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  _sentenceCase(t.moon.day_for[cell.element.name]!),
+                  sentenceCase(t.moon.day_for[cell.element.name]!),
                   // Text on a soft element background stays onSurface (A4).
                   style: theme.textTheme.titleMedium?.copyWith(
                     fontWeight: FontWeight.w700,

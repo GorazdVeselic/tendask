@@ -2008,6 +2008,7 @@ class Translations$moon$en {
 	late final Translations$moon$calendar$en calendar = Translations$moon$calendar$en.internal(_root);
 	late final Translations$moon$settings$en settings = Translations$moon$settings$en.internal(_root);
 	late final Translations$moon$badge$en badge = Translations$moon$badge$en.internal(_root);
+	late final Translations$moon$task_section$en task_section = Translations$moon$task_section$en.internal(_root);
 	Map<String, String> get day_for => {
 		'fruit': 'fruit day',
 		'root': 'root day',
@@ -2177,6 +2178,18 @@ class Translations$moon$badge$en {
 
 	/// en: 'until ${time}'
 	String until({required Object time}) => 'until ${time}';
+}
+
+// Path: moon.task_section
+class Translations$moon$task_section$en {
+	Translations$moon$task_section$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Tradition, not advice. Derived from the task's date.'
+	String get footnote => 'Tradition, not advice. Derived from the task\'s date.';
 }
 
 // Path: moon.division
@@ -2857,6 +2870,7 @@ extension on Translations {
 			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
 			'moon.settings.load_error' => 'Couldn\'t load the settings.',
 			'moon.badge.until' => ({required Object time}) => 'until ${time}',
+			'moon.task_section.footnote' => 'Tradition, not advice. Derived from the task\'s date.',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',
