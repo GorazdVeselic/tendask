@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1233 testov):**
+**Kaj je narejeno (vse v main, 1285 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -273,25 +273,34 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `moon_settings_screen_test.dart`. Za predoglede v `tmp/` je dovolj
   `notificationSettingsProvider.overrideWith((ref) => Stream.value(const NotificationSettings()))`.
 
-**Naloga TE seje: T4b korak 4 — testi** (branch `feat/fr19-t4b-4-tests`; s tem je T4b zaključen):
+- **T4b korak 4 ✅ (1. 8.) — T4b s tem ZAKLJUČEN:** korak se je začel z ugotovitvijo, da **odločitve ni
+  bilo mogoče izvesti v testu**: `_reschedule()` je v eni metodi držal vrata (flag), odločitev (kateri
+  dnevi, tihe ure, kapica, rob polnoči, sloti) in izvedbo (branje profila, klic Androida), zato je
+  najbolj zunanja plast zaklenila najbolj notranjo. Popravek zasnove (odobril lastnik): odločitev je
+  zdaj **čista funkcija `planMoonHints()`** v `moon_hint_schedule.dart`, ki »zdaj« dobi kot argument
+  (**`Clock` tam ni potreben — čas je podatek**), koordinator pa je dobil
+  **`armHints(nowLocal)`** (`@visibleForTesting`, brez flaga in brez ambientne ure).
+  `kMoonCalendarEnabled` živi **samo na vhodu** `_reschedule()`; netestirana ostane natanko ta vrstica,
+  ki jo T7 obrne. **+20 testov (suite 1285):** `moon_hint_schedule_test.dart` (12) ·
+  `moon_hint_coordinator_test.dart` (7: temen flag ne doseže OS vrste, opt-in počisti rezervirane
+  id-je in oboroži po vrsti, opt-out/izklopljen koledar/prazen vrt utihnejo, novoluna zamenja telo,
+  besedilo se re-izpelje po preklopu sistema) · 🔔 vrstica v `moon_settings_screen_test.dart`.
+  Fake obvestilne službe izločen v `test/support/fake_notification_service.dart` (2 klicalca).
+  **Najdba:** pravilo »lunin namig se umakne dnevniškemu nudgeu« je s trenutnimi konstantami
+  **nedosegljivo** (predvečer dneva +7 je +6, nudge pride na +7/+28 → trka ni); testirano je na ravni
+  `planMoonHints(takenDays:)` in oživi šele, če horizont zraste čez 7 dni.
 
-- **Kaj:** testi za T4b kot celoto — `moonHintCandidates()` + `MoonHintCoordinator` s `FakeClock`
-  (tihe ure prestavijo namig, frekvenčna kapica ga na zasedenem dnevu spusti, preklop sistema
-  spremeni element/besedilo, rob polnoči = namig, ki bi zdrsnil čez polnoč, odpade) in widget test
-  🔔 vrstice (privzeto izklopljena in **aktivna**, vklop zapiše `moon_hint: true` v profil).
-- **Pasti:** teardown vzorec zgoraj (drift stream) · `Clock` injektiraj, nikoli `DateTime.now()` ·
-  koordinator je za flagom (`kMoonCalendarEnabled = false`), zato testiraj **čisti izračun** in
-  javne dele, ne prižiganja flaga · layout matrika `moon-settings` že obstaja — preveri, da nova
-  vrstica ne podre 320 px × 1.3.
+**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 2** (`/moon-finder` zaslon,
+branch `feat/fr19-t5-2-finder-screen`), a T5 sme tudi v v1.1 — zato je pred njim mogoč **T6**
+(FR-20 rezina upravičenosti, edini task s shemo; rabi odločitev §11.4 o dependency za podpis tokena)
+ali **T7** (prižig). Vrstni red je odprt.
 
-**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) ·
-`moon_hint_schedule.dart` + `moon_hint_coordinator.dart` · `hint_rules.dart` ·
-`test/features/notifications/nudge_coordinators_test.dart` (vzorec fake notification service) ·
-`test/features/moon/moon_settings_screen_test.dart` (vzorec containerja).
+**Pred delom preberi:** ustrezni task v `docs/plan-implementacije-fr19-fr20.md` · wireframe zaslona ·
+`docs/screen-map.md`.
 
 **Pravila:** naredi natanko ta korak in nič več. Pred merge: `flutter analyze` čist + cel
-`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 4 (in T4b kot
-zaključen), posodobi ta dokument na naslednji task in predlagaj commit.
+`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi korak, posodobi ta dokument na
+naslednji task in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

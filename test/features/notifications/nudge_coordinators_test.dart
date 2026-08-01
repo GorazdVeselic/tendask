@@ -23,54 +23,7 @@ import 'package:tendask/features/tasks/application/tasks_providers.dart';
 import 'package:tendask/features/tasks/data/tasks_repository.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
-/// Records the OS-notification calls so we can assert what each coordinator
-/// scheduled/cancelled. Overrides every method that would touch the real plugin,
-/// so the inherited FlutterLocalNotificationsPlugin is never actually used.
-class _FakeNotificationService extends NotificationService {
-  _FakeNotificationService([Iterable<int> seed = const []])
-    : pending = {...seed};
-
-  final Set<int> pending;
-  final scheduledReminders = <int>[];
-  final scheduledNudges = <int>[];
-  final nudgeTitles = <String>[];
-  final nudgeTimes = <DateTime>[];
-  final cancelled = <int>[];
-
-  @override
-  Future<void> scheduleAt({
-    required int id,
-    required DateTime when,
-    required String title,
-    required String body,
-    String? payload,
-  }) async {
-    pending.add(id);
-    scheduledReminders.add(id);
-  }
-
-  @override
-  Future<void> scheduleNudge({
-    required int id,
-    required DateTime when,
-    required String title,
-    required String body,
-  }) async {
-    pending.add(id);
-    scheduledNudges.add(id);
-    nudgeTitles.add(title);
-    nudgeTimes.add(when);
-  }
-
-  @override
-  Future<void> cancel(int id) async {
-    pending.remove(id);
-    cancelled.add(id);
-  }
-
-  @override
-  Future<Set<int>> pendingIds() async => {...pending};
-}
+import '../../support/fake_notification_service.dart';
 
 /// A stream that emits [value] immediately and stays open (closed on dispose),
 /// mimicking a drift watch — so an autoDispose StreamProvider override doesn't
@@ -87,7 +40,7 @@ typedef _Env = ({
   AppDatabase db,
   TasksRepository repo,
   ProfileRepository profileRepo,
-  _FakeNotificationService notif,
+  FakeNotificationService notif,
 });
 
 Future<_Env> _setup({
@@ -99,7 +52,7 @@ Future<_Env> _setup({
   final profileRepo = ProfileRepository(db);
   await profileRepo.setNotificationSettings(kLocalUserId, settings);
   final repo = TasksRepository(db, SuppliesRepository(db));
-  final notif = _FakeNotificationService(pendingSeed);
+  final notif = FakeNotificationService(pendingSeed);
 
   final container = ProviderContainer(
     overrides: [

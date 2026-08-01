@@ -9,8 +9,6 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
-import '../../../core/date_format.dart';
-import '../../../core/notifications/hint_rules.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../i18n/translations.g.dart';
 import '../../notifications/application/journal_nudge_schedule.dart';
@@ -68,8 +66,7 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     _debounce = Timer(kReminderDebounce, () => unawaited(_reschedule()));
   }
 
-  /// Cancels the reserved ids and schedules the upcoming hints again, unless
-  /// the feature is dark or the user opted out. Idempotent: fixed ids.
+  /// Arms the hints again, unless the feature is dark. Idempotent: fixed ids.
   Future<void> _reschedule() async {
     // Dark until T7: nothing was ever scheduled, so there is nothing to clean
     // up either — leave the OS queue untouched.
@@ -80,67 +77,7 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     }
     _running = true;
     try {
-      final notif = ref.read(notificationServiceProvider);
-      final userId = ref.read(authServiceProvider).userId;
-      final settings = await ref
-          .read(profileRepositoryProvider)
-          .notificationSettings(userId);
-      final moon = await ref.read(moonSettingsControllerProvider.future);
-
-      // Clear first so an opt-out (or a system switch) never leaves a stale
-      // hint behind.
-      for (final id in kMoonHintNotificationIds) {
-        await notif.cancel(id);
-      }
-      if (!moon.enabled || !settings.moonHintEnabled) return;
-
-      final nowLocal = _clock.now().toLocal();
-      final candidates = moonHintCandidates(
-        fromLocal: nowLocal,
-        horizonDays: kMoonHintHorizonDays,
-        hour: kMoonHintHour,
-        // The one system that drives every moon surface (spec §11.6).
-        system: moon.system,
-        gardenElements: ref.read(gardenElementsProvider),
-      );
-
-      // The journal nudge is the senior hint: the moon hint yields to its days
-      // (one gentle hint per day) and then to its own already-taken days. An
-      // explicit task reminder does not take a day (decision B1) — it only
-      // moves the nudge, hence the reminder days here.
-      final repo = ref.read(tasksRepositoryProvider);
-      final taken = journalNudgeDays(
-        fromLocal: nowLocal,
-        settings: settings,
-        taskReminderDays: settings.taskRemindersEnabled
-            ? await futureTaskReminderDays(repo, nowLocal)
-            : const {},
-      ).toSet();
-
-      var slot = 0;
-      for (final hint in candidates) {
-        if (slot == kMoonHintNotificationIds.length) break;
-        final when = hintFireTime(
-          desiredLocal: hint.fireTime,
-          settings: settings,
-          otherHintDays: taken,
-        );
-        if (when == null || !when.isAfter(nowLocal)) continue;
-        // A hint that says "tomorrow" has to arrive the day before: if quiet
-        // hours ever pushed it past midnight it would be wrong, so drop it.
-        // With kMoonHintHour outside the window this cannot happen today.
-        if (startOfDay(when) != startOfDay(hint.fireTime)) continue;
-
-        taken.add(startOfDay(when));
-        await notif.scheduleNudge(
-          id: kMoonHintNotificationIds[slot++],
-          when: when,
-          title: t.moon.hint.title(day: t.moon.day_for[hint.element.name]!),
-          body: hint.isNewMoon
-              ? t.moon.activity_new_moon
-              : t.moon.activity[hint.element.name]!,
-        );
-      }
+      await armHints(_clock.now().toLocal());
     } catch (error, stack) {
       debugPrint('moon hint reschedule failed: $error');
       if (kSentryDsn.isNotEmpty) {
@@ -152,6 +89,64 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
         _dirty = false;
         unawaited(_reschedule());
       }
+    }
+  }
+
+  /// Clears the reserved ids and posts the hints due after [nowLocal], unless
+  /// the user opted out. Free of both the feature gate and the ambient clock on
+  /// purpose — the gate belongs to the entry points above and the time comes
+  /// from the caller — so the real arming path stays reachable while the
+  /// calendar is dark.
+  @visibleForTesting
+  Future<void> armHints(DateTime nowLocal) async {
+    final notif = ref.read(notificationServiceProvider);
+    final userId = ref.read(authServiceProvider).userId;
+    final settings = await ref
+        .read(profileRepositoryProvider)
+        .notificationSettings(userId);
+    final moon = await ref.read(moonSettingsControllerProvider.future);
+
+    // Clear first so an opt-out (or a system switch) never leaves a stale hint
+    // behind.
+    for (final id in kMoonHintNotificationIds) {
+      await notif.cancel(id);
+    }
+    if (!moon.enabled || !settings.moonHintEnabled) return;
+
+    // The journal nudge is the senior hint: the moon hint yields to its days
+    // (one gentle hint per day). An explicit task reminder does not take a day
+    // (decision B1) — it only moves the nudge, hence the reminder days here.
+    final repo = ref.read(tasksRepositoryProvider);
+    final nudgeDays = journalNudgeDays(
+      fromLocal: nowLocal,
+      settings: settings,
+      taskReminderDays: settings.taskRemindersEnabled
+          ? await futureTaskReminderDays(repo, nowLocal)
+          : const {},
+    );
+
+    final hints = planMoonHints(
+      nowLocal: nowLocal,
+      settings: settings,
+      // The one system that drives every moon surface (spec §11.6).
+      system: moon.system,
+      gardenElements: ref.read(gardenElementsProvider),
+      takenDays: nudgeDays,
+      maxHints: kMoonHintNotificationIds.length,
+      horizonDays: kMoonHintHorizonDays,
+      hour: kMoonHintHour,
+    );
+
+    for (var slot = 0; slot < hints.length; slot++) {
+      final hint = hints[slot];
+      await notif.scheduleNudge(
+        id: kMoonHintNotificationIds[slot],
+        when: hint.fireTime,
+        title: t.moon.hint.title(day: t.moon.day_for[hint.element.name]!),
+        body: hint.isNewMoon
+            ? t.moon.activity_new_moon
+            : t.moon.activity[hint.element.name]!,
+      );
     }
   }
 }
