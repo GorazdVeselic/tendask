@@ -10,6 +10,7 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/notifications/hint_rules.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
@@ -103,13 +104,21 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
           ? fireTimes.length
           : kJournalNudgeNotificationIds.length;
       for (var i = 0; i < steps; i++) {
+        // The nudge is a gentle hint, so quiet hours apply (a no-op at
+        // [kJournalNudgeHour] by design, live if that hour ever moves). No
+        // frequency-cap peers: this is the senior hint — the moon hint yields
+        // to it, not the other way round.
+        final when = hintFireTime(
+          desiredLocal: fireTimes[i],
+          settings: settings,
+        );
         // Defensive: never schedule a past time (e.g. a debug-shortened offset
         // or a DST edge) — it would fire immediately. Production offsets are
         // always days out, so this is a no-op there.
-        if (!fireTimes[i].isAfter(nowLocal)) continue;
+        if (when == null || !when.isAfter(nowLocal)) continue;
         await notif.scheduleNudge(
           id: kJournalNudgeNotificationIds[i],
-          when: fireTimes[i],
+          when: when,
           title: title,
           body: body,
         );

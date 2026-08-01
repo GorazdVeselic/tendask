@@ -133,10 +133,10 @@ const kJournalNudgeDayOffsets = [7, 28];
 /// [kJournalNudgeDayOffsets].
 const kJournalNudgeNotificationIds = [-201, -202];
 
-/// Quiet-hours window shown in notification settings (display only in MVP). It
-/// is stored as a device-local preference and governs the future weather/
-/// community hints (FCM, deferred), NOT explicit task reminders — see
-/// koncept.md §"Vodenje proti motečnosti".
+/// Quiet-hours window: gentle hints wanted inside it wait until its end
+/// (`hint_rules.dart`). It governs hints only — NOT explicit task reminders,
+/// see koncept.md §"Vodenje proti motečnosti". The window wraps past midnight,
+/// which `inQuietHours` relies on.
 const kQuietHoursStartHour = 22;
 const kQuietHoursEndHour = 7;
 

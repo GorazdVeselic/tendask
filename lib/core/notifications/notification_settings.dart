@@ -3,9 +3,10 @@ import '../config.dart';
 /// User notification preferences (screen 22), stored in `profile` and synced
 /// (LWW) so they follow the user across devices. Task reminders are local and
 /// the only live type today; weather/community hints are server-side (FCM) and
-/// deferred, so their opt-ins and the anti-spam controls (quiet hours, frequency
-/// cap) are persisted but inert until FCM lands. Quiet hours never silence the
-/// explicit task reminders (koncept §"Vodenje proti motečnosti").
+/// deferred, so their opt-ins stay persisted but inert until FCM lands. The
+/// anti-spam controls (quiet hours, frequency cap) govern gentle hints through
+/// `hint_rules.dart` and never silence the explicit task reminders
+/// (koncept §"Vodenje proti motečnosti").
 class NotificationSettings {
   const NotificationSettings({
     this.taskRemindersEnabled = true,
