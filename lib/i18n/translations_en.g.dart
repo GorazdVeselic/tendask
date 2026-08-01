@@ -2005,11 +2005,24 @@ class Translations$moon$en {
 	final Translations _root; // ignore: unused_field
 
 	// Translations
+	late final Translations$moon$calendar$en calendar = Translations$moon$calendar$en.internal(_root);
 	Map<String, String> get day_for => {
 		'fruit': 'fruit day',
 		'root': 'root day',
 		'flower': 'flower day',
 		'leaf': 'leaf day',
+	};
+	Map<String, String> get element => {
+		'fruit': 'fruit',
+		'root': 'root',
+		'flower': 'flower',
+		'leaf': 'leaf',
+	};
+	Map<String, String> get element_short => {
+		'fruit': 'fruit',
+		'root': 'root',
+		'flower': 'flower',
+		'leaf': 'leaf',
 	};
 	late final Translations$moon$division$en division = Translations$moon$division$en.internal(_root);
 	Map<String, String> get sign => {
@@ -2036,6 +2049,21 @@ class Translations$moon$en {
 		'lastQuarter': 'last quarter',
 		'waningCrescent': 'waning crescent',
 	};
+}
+
+// Path: moon.calendar
+class Translations$moon$calendar$en {
+	Translations$moon$calendar$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Moon calendar'
+	String get title => 'Moon calendar';
+
+	/// en: 'recommended for your garden'
+	String get legend_star => 'recommended for your garden';
 }
 
 // Path: moon.division
@@ -2597,10 +2625,20 @@ extension on Translations {
 			'harvest.unit_pieces' => 'pcs',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'bunch',
+			'moon.calendar.title' => 'Moon calendar',
+			'moon.calendar.legend_star' => 'recommended for your garden',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',
 			'moon.day_for.leaf' => 'leaf day',
+			'moon.element.fruit' => 'fruit',
+			'moon.element.root' => 'root',
+			'moon.element.flower' => 'flower',
+			'moon.element.leaf' => 'leaf',
+			'moon.element_short.fruit' => 'fruit',
+			'moon.element_short.root' => 'root',
+			'moon.element_short.flower' => 'flower',
+			'moon.element_short.leaf' => 'leaf',
 			'moon.division.constellation' => 'constellation',
 			'moon.division.sign' => 'sign',
 			'moon.sign.aries' => 'Aries',

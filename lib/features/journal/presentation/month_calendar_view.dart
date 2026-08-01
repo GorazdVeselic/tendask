@@ -5,6 +5,8 @@ import 'package:go_router/go_router.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
+import '../../../core/month_cells.dart';
+import '../../../core/widgets/month_chrome.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
@@ -13,7 +15,6 @@ import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
 import 'month_grid.dart';
 import 'widgets/day_cell.dart';
-import 'widgets/month_chrome.dart';
 import 'widgets/task_entry_tile.dart';
 
 class MonthCalendarView extends ConsumerStatefulWidget {

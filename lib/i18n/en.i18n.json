@@ -615,11 +615,27 @@
     "unit_bunch": "bunch"
   },
   "moon": {
+    "calendar": {
+      "title": "Moon calendar",
+      "legend_star": "recommended for your garden"
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",
       "flower": "flower day",
       "leaf": "leaf day"
+    },
+    "element(map)": {
+      "fruit": "fruit",
+      "root": "root",
+      "flower": "flower",
+      "leaf": "leaf"
+    },
+    "element_short(map)": {
+      "fruit": "fruit",
+      "root": "root",
+      "flower": "flower",
+      "leaf": "leaf"
     },
     "division": {
       "constellation": "constellation",

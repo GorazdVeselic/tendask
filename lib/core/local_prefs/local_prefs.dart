@@ -13,6 +13,7 @@ const _kThemePalette = 'theme_palette';
 const _kPendingSignInEmail = 'pending_sign_in_email';
 const _kMoonCalendarEnabled = 'moon_calendar_enabled';
 const _kMoonSystem = 'moon_system';
+const _kMoonHighlightGarden = 'moon_highlight_garden';
 
 /// Device-local "seen once" flags backed by the local_flag table. Never synced —
 /// these are per-device UI state (which intro/priming screens the user passed).
@@ -114,6 +115,16 @@ class LocalPrefsRepository {
   Future<String?> moonSystem() => _getString(_kMoonSystem);
 
   Future<void> setMoonSystem(String system) => _setString(_kMoonSystem, system);
+
+  /// Whether calendar days matching the user's garden get a ★ highlight, or
+  /// null if the user never changed it (defaults to on — decision 2026-07-31).
+  Future<bool?> moonHighlightGarden() async {
+    final value = await _getString(_kMoonHighlightGarden);
+    return value == null ? null : value == 'true';
+  }
+
+  Future<void> setMoonHighlightGarden(bool enabled) =>
+      _setFlag(_kMoonHighlightGarden, enabled);
 }
 
 @riverpod

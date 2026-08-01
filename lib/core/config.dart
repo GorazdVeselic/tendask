@@ -182,6 +182,11 @@ const kSuppliesEnabled = true;
 /// plusProvider.
 const kMoonCalendarEnabled = false;
 
+/// Midnight-sliver display rule of the moon month grid (FR-19 T3.3): an
+/// element transition within this window after local midnight hands the whole
+/// day to the new element instead of splitting the cell for a sliver.
+const kMoonMidnightSliverWindow = Duration(hours: 1);
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

@@ -625,11 +625,27 @@
     "unit_bunch": "šop"
   },
   "moon": {
+    "calendar": {
+      "title": "Lunin koledar",
+      "legend_star": "priporočeno za tvoj vrt"
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",
       "flower": "dan za cvet",
       "leaf": "dan za list"
+    },
+    "element(map)": {
+      "fruit": "plod",
+      "root": "korenina",
+      "flower": "cvet",
+      "leaf": "list"
+    },
+    "element_short(map)": {
+      "fruit": "plod",
+      "root": "koren.",
+      "flower": "cvet",
+      "leaf": "list"
     },
     "division": {
       "constellation": "ozvezdje",

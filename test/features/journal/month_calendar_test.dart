@@ -1,6 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/task_status.dart';
+import 'package:tendask/core/month_cells.dart';
 import 'package:tendask/features/journal/presentation/month_grid.dart';
 
 Task _task(String id, DateTime date) => Task(
