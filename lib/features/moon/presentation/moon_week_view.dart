@@ -7,14 +7,12 @@ import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/moon_month_provider.dart';
 import 'moon_day_sheet.dart';
+import 'moon_text.dart';
 import 'widgets/element_badge.dart';
 import 'widgets/moon_phase_icon.dart';
 
 /// i18n weekday_short key for a date (DateTime.weekday is Mon=1..Sun=7).
 const _weekdayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
-String _sentenceCase(String s) =>
-    s.isEmpty ? s : s[0].toUpperCase() + s.substring(1);
 
 /// Week tab of the moon calendar (FR-19 T3.4): one agenda row per day with
 /// the element day title and an activity description, ‹ › week navigation.
@@ -96,7 +94,7 @@ class _WeekRow extends StatelessWidget {
 
     // Map completeness against BiodynamicElement / MoonPhase / weekday keys is
     // enforced by i18n tests.
-    final title = _sentenceCase(t.moon.day_for[day.element.name]!);
+    final title = sentenceCase(t.moon.day_for[day.element.name]!);
     final description = phase == MoonPhase.newMoon
         ? t.moon.activity_new_moon
         : t.moon.activity[day.element.name]!;

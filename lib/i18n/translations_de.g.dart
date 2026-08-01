@@ -939,6 +939,7 @@ class _Translations$moon$de extends Translations$moon$en {
 	@override late final _Translations$moon$calendar$de calendar = _Translations$moon$calendar$de._(_root);
 	@override late final _Translations$moon$settings$de settings = _Translations$moon$settings$de._(_root);
 	@override late final _Translations$moon$badge$de badge = _Translations$moon$badge$de._(_root);
+	@override late final _Translations$moon$task_section$de task_section = _Translations$moon$task_section$de._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'Fruchttag',
 		'root': 'Wurzeltag',
@@ -1056,6 +1057,16 @@ class _Translations$moon$badge$de extends Translations$moon$badge$en {
 
 	// Translations
 	@override String until({required Object time}) => 'bis ${time}';
+}
+
+// Path: moon.task_section
+class _Translations$moon$task_section$de extends Translations$moon$task_section$en {
+	_Translations$moon$task_section$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get footnote => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.';
 }
 
 // Path: moon.division
@@ -1706,6 +1717,7 @@ extension on TranslationsDe {
 			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
 			'moon.settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
 			'moon.badge.until' => ({required Object time}) => 'bis ${time}',
+			'moon.task_section.footnote' => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.',
 			'moon.day_for.fruit' => 'Fruchttag',
 			'moon.day_for.root' => 'Wurzeltag',
 			'moon.day_for.flower' => 'Blütentag',

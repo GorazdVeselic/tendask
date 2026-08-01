@@ -328,8 +328,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      kaže varianto z »— ugodno za …« repom, plan jo je nadomestil. Nov ključ `moon.badge.until`
      en+sl+de. Matrika `entry/when-badge` + testa gate/vsebina že tu. Pogled prek
      `tmp/moon_day_badge_preview_test.dart` → PNG. Suite 1184.)
-  3. ⬜ **Task-detail sekcija**: element-dan iz `task.date` — **re-izpeljan, ne zamrznjen** (če uporabnik
+  3. ✅ **Task-detail sekcija**: element-dan iz `task.date` — **re-izpeljan, ne zamrznjen** (če uporabnik
      datum spremeni, se posodobi; kontrast z vremenom, ki JE zamrznjeno — spec §6.1.2). Info, brez tapa (MVP).
+     (2026-08-01: `MoonTaskSection` (`moon/presentation/widgets/moon_task_section.dart`) v
+     task-detail za vremenskim posnetkom, `task.date.toLocal()`; trislojni vzorec T4.2 (gate
+     skrije tudi `SectionLabel`); kartica board A: emoji + »Dan za X« + `until_then` rep +
+     pripis »Tradicija, ne nasvet …« (`moon.task_section.footnote` en+sl+de; brez trigona —
+     MVP po planu). `sentenceCase` ekstrahiran v `moon_text.dart` (3. pojavitev). Matrika
+     `task/moon-section` + testa. Pogled prek `tmp/moon_task_section_preview_test.dart` → PNG.
+     Suite 1204.)
   4. ⬜ **Dnevnik (A2=C, 2026-07-31):** 🌙 gumb v AppBar `/journal` → `/moon-calendar` + **barvna plast**
      v mesečni mreži Dnevnika (element-barva + mena celic; tap dan ostane dnevniški dan), za stikalom
      »Prikaži v Dnevniku« (T3.6). ⚠️ `DayCell` je layout-kritičen (320 px × 1.3) — layout matrika

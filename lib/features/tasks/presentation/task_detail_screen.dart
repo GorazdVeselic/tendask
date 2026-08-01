@@ -10,6 +10,7 @@ import '../../../core/task_status.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../moon/presentation/widgets/moon_task_section.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../supplies/application/supplies_providers.dart';
 import '../application/tasks_providers.dart';
@@ -135,6 +136,10 @@ class TaskDetailScreen extends ConsumerWidget {
                       ),
                       SectionLabel(t.task_detail.section_weather),
                       TaskWeatherSection(task: task),
+                      // Re-derived from the task date, never frozen like the
+                      // weather snapshot (spec §6.1.2); dark while the moon
+                      // flag or opt-in switch is off.
+                      MoonTaskSection(date: task.date.toLocal()),
                       if (isHarvest && task.status == TaskStatus.done) ...[
                         SectionLabel(t.harvest.yield_section),
                         TaskYieldSection(task: task),
