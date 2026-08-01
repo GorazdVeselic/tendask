@@ -613,5 +613,110 @@
     "unit_pieces": "Stk.",
     "unit_l": "l",
     "unit_bunch": "Bund"
+  },
+  "moon": {
+    "calendar": {
+      "title": "Mondkalender",
+      "legend_star": "empfohlen für deinen Garten",
+      "month_view": "Monat",
+      "week_view": "Woche",
+      "today_marker": "heute",
+      "weekday_short(map)": {
+        "mon": "Mo",
+        "tue": "Di",
+        "wed": "Mi",
+        "thu": "Do",
+        "fri": "Fr",
+        "sat": "Sa",
+        "sun": "So"
+      }
+    },
+    "settings": {
+      "enable": "Mondkalender anzeigen",
+      "enable_sub": "Chip auf der Startseite, Hinweise im Garten",
+      "system_label": "Kalendersystem",
+      "system_sidereal": "Nach Sternbildern",
+      "system_sidereal_sub": "biodynamisch",
+      "system_tropical": "Nach Zeichen",
+      "system_tropical_sub": "astrologisch",
+      "system_help": "Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.",
+      "highlight_garden": "Für meinen Garten hervorheben",
+      "highlight_garden_sub": "hebt Tage für das hervor, was ich anbaue",
+      "show_in_journal": "Im Tagebuch anzeigen",
+      "show_in_journal_sub": "färbt den Monatskalender im Tagebuch",
+      "show_astro": "Sternbilder und Mondphase anzeigen",
+      "show_astro_sub": "mehr Astro-Details in der Tagesansicht",
+      "about_title": "🌙 Was ist das?",
+      "about_body(rich)": "Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit ${b(Wurzeln, Blättern, Blüten und Früchten)} verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der ${b(Planung)}, nicht als Regel.",
+      "about_footnote": "Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet."
+    },
+    "day_for(map)": {
+      "fruit": "Fruchttag",
+      "root": "Wurzeltag",
+      "flower": "Blütentag",
+      "leaf": "Blatttag"
+    },
+    "activity(map)": {
+      "fruit": "Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.",
+      "root": "Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).",
+      "flower": "Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.",
+      "leaf": "Blattgemüse säen und pflegen (Salat, Spinat, Kohl)."
+    },
+    "activity_new_moon": "Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.",
+    "element(map)": {
+      "fruit": "Frucht",
+      "root": "Wurzel",
+      "flower": "Blüte",
+      "leaf": "Blatt"
+    },
+    "element_short(map)": {
+      "fruit": "Fru.",
+      "root": "Wur.",
+      "flower": "Blüte",
+      "leaf": "Blatt"
+    },
+    "division": {
+      "constellation": "Sternbild",
+      "sign": "Zeichen"
+    },
+    "sign(map)": {
+      "aries": "Widder",
+      "taurus": "Stier",
+      "gemini": "Zwillinge",
+      "cancer": "Krebs",
+      "leo": "Löwe",
+      "virgo": "Jungfrau",
+      "libra": "Waage",
+      "scorpio": "Skorpion",
+      "sagittarius": "Schütze",
+      "capricorn": "Steinbock",
+      "aquarius": "Wassermann",
+      "pisces": "Fische"
+    },
+    "phase(map)": {
+      "newMoon": "Neumond",
+      "waxingCrescent": "zunehmende Sichel",
+      "firstQuarter": "erstes Viertel",
+      "waxingGibbous": "zunehmender Mond",
+      "fullMoon": "Vollmond",
+      "waningGibbous": "abnehmender Mond",
+      "lastQuarter": "letztes Viertel",
+      "waningCrescent": "abnehmende Sichel"
+    },
+    "sheet": {
+      "whats_happening": "Was passiert",
+      "in_constellation(rich)": "Der Mond steht im Sternbild ${sign} → ${day}.",
+      "in_sign(rich)": "Der Mond steht im Zeichen ${sign} → ${day}.",
+      "transition(rich)": "Um ${time} folgt ${sign} → ${day}.",
+      "until_then": "bis ${time}, dann ${emoji} ${day}",
+      "phase_waxing(rich)": "${b(Zunehmender Mond)} — begünstigt traditionell Aussaat und oberirdische Kulturen.",
+      "phase_waning(rich)": "${b(Abnehmender Mond)} — begünstigt Ernte, Schnitt und Wurzelgemüse.",
+      "ascending(rich)": "${b(Aufsteigender Mond)} — steigende Säfte: säen und ernten, weniger umpflanzen.",
+      "descending(rich)": "${b(Absteigender Mond)} — sinkende Säfte: umpflanzen, Stecklinge, Wurzelernte.",
+      "favorable(rich)": "Kein Mondknoten und keine Finsternis in der Nähe — ${b(ein günstiger Tag)}.",
+      "unfavorable(rich)": "Ein Mondknoten oder eine Finsternis ist nah — ${b(ein ungünstiger Tag)}; gönn dem Garten lieber Ruhe.",
+      "recommended_for": "Empfohlen für den ${day}",
+      "add_task": "+ Aufgabe"
+    }
   }
 }
