@@ -5,32 +5,53 @@ import '../../../core/local_prefs/local_prefs.dart';
 
 part 'moon_settings_controller.g.dart';
 
-/// Moon calendar settings (FR-19): the on/off switch and the zodiac system.
+/// Moon calendar settings (FR-19): the on/off switch, the zodiac system and
+/// the garden-based ★ highlight.
 class MoonSettings {
-  const MoonSettings({required this.enabled, required this.system});
+  const MoonSettings({
+    required this.enabled,
+    required this.system,
+    required this.highlightGarden,
+  });
 
   final bool enabled;
   final CalendarSystem system;
+  final bool highlightGarden;
+
+  MoonSettings copyWith({
+    bool? enabled,
+    CalendarSystem? system,
+    bool? highlightGarden,
+  }) =>
+      MoonSettings(
+        enabled: enabled ?? this.enabled,
+        system: system ?? this.system,
+        highlightGarden: highlightGarden ?? this.highlightGarden,
+      );
 
   @override
   bool operator ==(Object other) =>
       other is MoonSettings &&
       other.enabled == enabled &&
-      other.system == system;
+      other.system == system &&
+      other.highlightGarden == highlightGarden;
 
   @override
-  int get hashCode => Object.hash(enabled, system);
+  int get hashCode => Object.hash(enabled, system, highlightGarden);
 
   @override
   String toString() =>
-      'MoonSettings(enabled: $enabled, system: ${system.name})';
+      'MoonSettings(enabled: $enabled, system: ${system.name}, '
+      'highlightGarden: $highlightGarden)';
 }
 
 /// Defaults when nothing is stored yet or the load failed: enabled (decision
-/// A6), sidereal (matches the printed calendars the target market uses).
+/// A6), sidereal (matches the printed calendars the target market uses),
+/// garden highlight on (decision 2026-07-31).
 const _defaults = MoonSettings(
   enabled: true,
   system: CalendarSystem.sidereal,
+  highlightGarden: true,
 );
 
 /// The user's moon calendar settings, persisted device-locally (never synced —
@@ -49,19 +70,30 @@ class MoonSettingsController extends _$MoonSettingsController {
       'tropical' => CalendarSystem.tropical,
       _ => _defaults.system,
     };
-    return MoonSettings(enabled: enabled, system: system);
+    final highlightGarden =
+        await prefs.moonHighlightGarden() ?? _defaults.highlightGarden;
+    return MoonSettings(
+      enabled: enabled,
+      system: system,
+      highlightGarden: highlightGarden,
+    );
   }
 
   Future<void> setEnabled(bool enabled) async {
-    final current = await _current();
-    state = AsyncData(MoonSettings(enabled: enabled, system: current.system));
+    state = AsyncData((await _current()).copyWith(enabled: enabled));
     await ref.read(localPrefsProvider).setMoonCalendarEnabled(enabled);
   }
 
   Future<void> setSystem(CalendarSystem system) async {
-    final current = await _current();
-    state = AsyncData(MoonSettings(enabled: current.enabled, system: system));
+    state = AsyncData((await _current()).copyWith(system: system));
     await ref.read(localPrefsProvider).setMoonSystem(system.name);
+  }
+
+  Future<void> setHighlightGarden(bool highlightGarden) async {
+    state = AsyncData(
+      (await _current()).copyWith(highlightGarden: highlightGarden),
+    );
+    await ref.read(localPrefsProvider).setMoonHighlightGarden(highlightGarden);
   }
 
   /// Current settings, falling back to [_defaults] when the initial load

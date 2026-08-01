@@ -82,6 +82,26 @@ BiodynamicDay dayFor(DateTime localDate, CalendarSystem system) {
   );
 }
 
+/// The principal phase (new moon, first quarter, full moon, last quarter)
+/// whose exact instant falls within the local calendar day [localDate], or
+/// null — the calendar grid marks only these four event days (spec §12).
+MoonPhase? principalPhaseOn(DateTime localDate) {
+  final jdStart =
+      julianDay(DateTime(localDate.year, localDate.month, localDate.day));
+  final jdEnd =
+      julianDay(DateTime(localDate.year, localDate.month, localDate.day + 1));
+  const targets = [
+    (0.0, MoonPhase.newMoon),
+    (90.0, MoonPhase.firstQuarter),
+    (180.0, MoonPhase.fullMoon),
+    (270.0, MoonPhase.lastQuarter),
+  ];
+  for (final (degrees, phase) in targets) {
+    if (findPhaseTime(degrees, jdStart, jdEnd) != null) return phase;
+  }
+  return null;
+}
+
 /// Bisects `[lo, hi]` to the point where [isBefore] flips to false; 40 steps
 /// refine far below a millisecond.
 double _bisect(double lo, double hi, bool Function(double jd) isBefore) {

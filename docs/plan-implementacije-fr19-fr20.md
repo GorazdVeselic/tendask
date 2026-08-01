@@ -235,14 +235,17 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      fallback **emoji** (🍅🥕🌸🌿, isti kot wireframe) — en skupen widget `ElementBadge`
      (emoji+oznaka, nikoli samo barva — dostopnost); glif živi samo v `elementEmoji()`
      (`element_badge.dart`). Predogled: `tmp/element_badge_preview.png`.
-  3. ⬜ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena-marker na dneve mlaja/krajcev/
+  3. ✅ `/moon-calendar` — **Mesec**: mreža (element-barva ozadja + mena-marker na dneve mlaja/krajcev/
      ščipa + oznaka), ‹ › navigacija, legenda. **Dnevna oznaka celice = element ob začetku dneva**
      (konvencija tiskanih koledarjev, spec §12.6) + prikazno pravilo za polnočni drobec (prehod v prvi
      uri dneva → dan nosi novi element). **★ »priporočen« na dnevih, katerih element ustreza rastlinam
      vrta** (T5.1 mapping + kategorije `user_plant`; prazen vrt → brez ★; pogojeno s stikalom »Poudari
      po mojem vrtu«, privzeto vklopljeno — odločitev 2026-07-31). Podatki: `List<BiodynamicDay>` iz
      providerja (memoizacija na (mesec, sistem) — meritev T1.11 je pokazala ~16 ms/mrežo → potrebna).
-     **Pogled na napravi.**
+     **Pogled na napravi.** (2026-08-01: `MoonCalendarScreen` + `moonMonthProvider` +
+     `gardenElementsProvider`; prehodni dan = deljeno ozadje zgoraj/spodaj; drobec <
+     `kMoonMidnightSliverWindow` (1 h) → nov element; `principalPhaseOn()` v motorju; naprave ni
+     bilo → pogled prek `tmp/moon_month_preview_test.dart` → PNG.)
   4. ⬜ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
      slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.**
   5. ⬜ Dan podrobno — **sheet z drsenjem** (odločeno 2026-07-31; revizija sheet↔zaslon ob prvem

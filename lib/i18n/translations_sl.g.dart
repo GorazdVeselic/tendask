@@ -946,11 +946,24 @@ class _Translations$moon$sl extends Translations$moon$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
+	@override late final _Translations$moon$calendar$sl calendar = _Translations$moon$calendar$sl._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'dan za plod',
 		'root': 'dan za korenino',
 		'flower': 'dan za cvet',
 		'leaf': 'dan za list',
+	};
+	@override Map<String, String> get element => {
+		'fruit': 'plod',
+		'root': 'korenina',
+		'flower': 'cvet',
+		'leaf': 'list',
+	};
+	@override Map<String, String> get element_short => {
+		'fruit': 'plod',
+		'root': 'koren.',
+		'flower': 'cvet',
+		'leaf': 'list',
 	};
 	@override late final _Translations$moon$division$sl division = _Translations$moon$division$sl._(_root);
 	@override Map<String, String> get sign => {
@@ -977,6 +990,17 @@ class _Translations$moon$sl extends Translations$moon$en {
 		'lastQuarter': 'zadnji krajec',
 		'waningCrescent': 'upadajoči srp',
 	};
+}
+
+// Path: moon.calendar
+class _Translations$moon$calendar$sl extends Translations$moon$calendar$en {
+	_Translations$moon$calendar$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Lunin koledar';
+	@override String get legend_star => 'priporočeno za tvoj vrt';
 }
 
 // Path: moon.division
@@ -1534,10 +1558,20 @@ extension on TranslationsSl {
 			'harvest.unit_pieces' => 'kom',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'šop',
+			'moon.calendar.title' => 'Lunin koledar',
+			'moon.calendar.legend_star' => 'priporočeno za tvoj vrt',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',
 			'moon.day_for.leaf' => 'dan za list',
+			'moon.element.fruit' => 'plod',
+			'moon.element.root' => 'korenina',
+			'moon.element.flower' => 'cvet',
+			'moon.element.leaf' => 'list',
+			'moon.element_short.fruit' => 'plod',
+			'moon.element_short.root' => 'koren.',
+			'moon.element_short.flower' => 'cvet',
+			'moon.element_short.leaf' => 'list',
 			'moon.division.constellation' => 'ozvezdje',
 			'moon.division.sign' => 'znamenje',
 			'moon.sign.aries' => 'Oven',
