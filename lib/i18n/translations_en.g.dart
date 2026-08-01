@@ -2132,6 +2132,12 @@ class Translations$moon$settings$en {
 	/// en: 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.'
 	String get system_help => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.';
 
+	/// en: '“Tomorrow is a good day” hint'
+	String get hint => '“Tomorrow is a good day” hint';
+
+	/// en: 'gentle, respects quiet hours'
+	String get hint_sub => 'gentle, respects quiet hours';
+
 	/// en: 'Highlight for my garden'
 	String get highlight_garden => 'Highlight for my garden';
 
@@ -2872,6 +2878,8 @@ extension on Translations {
 			'moon.settings.system_tropical' => 'By signs',
 			'moon.settings.system_tropical_sub' => 'astrological',
 			'moon.settings.system_help' => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.',
+			'moon.settings.hint' => '“Tomorrow is a good day” hint',
+			'moon.settings.hint_sub' => 'gentle, respects quiet hours',
 			'moon.settings.highlight_garden' => 'Highlight for my garden',
 			'moon.settings.highlight_garden_sub' => 'lift the days for what I grow',
 			'moon.settings.show_in_journal' => 'Show in Journal',

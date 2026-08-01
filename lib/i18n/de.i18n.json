@@ -640,6 +640,8 @@
       "system_tropical": "Nach Zeichen",
       "system_tropical_sub": "astrologisch",
       "system_help": "Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.",
+      "hint": "Hinweis „morgen ist ein guter Tag“",
+      "hint_sub": "sanft, beachtet die Ruhezeiten",
       "highlight_garden": "Für meinen Garten hervorheben",
       "highlight_garden_sub": "hebt Tage für das hervor, was ich anbaue",
       "show_in_journal": "Im Tagebuch anzeigen",

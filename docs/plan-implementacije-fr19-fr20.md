@@ -409,7 +409,17 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   `moon.hint.title` en+sl+de nad `day_for`, telo = obstoječi `activity` (mlaj → `activity_new_moon`, isto
   kot agenda). `kHintNotificationIds` = nudge + moon; **orphan sweep opomnikov jih zdaj oba preskoči**
   (prej bi pobrisal lunine). Dokler stikala ni (korak 3), flag + privzeti `false` ne razporedita nič.) ·
-  3. ⬜ 🔔 vrstica v `/moon-settings` · 4. ⬜ testi (FakeClock:
+  3. ✅ 🔔 vrstica v `/moon-settings` (2026-08-01: `_HintTile` kot **prva vrstica kartice podstikal**
+  (wireframe board 2b) — edino stikalo zaslona, ki NE živi v `MoonSettingsController`: bere
+  `notificationSettingsProvider`, piše prek `profileRepository.setNotificationSettings` (profile JSON,
+  sinhronizirano). Ob vklopu `_ensurePermission`: priming (zaslon 21) + `requestPermission`, **brez
+  exact-alarm vrat** — namig vozi po inexact nudge kanalu; zavrnitev pusti stikalo izklopljeno.
+  Re-arm ni ročen: `MoonHintCoordinator` že posluša `tableUpdates(profiles)`. Med nalaganjem in ob
+  napaki je vrstica onemogočena (podnaslov = `load_error`). Ključa `moon.settings.hint`/`hint_sub`
+  en+sl+de. Pogled: `tmp/moon_settings_{light,dark}.png` + `tmp/moon_de_settings.png` — de pri 320 px
+  ovije naslov na 3 vrstice, brez odreza. **Past za korak 4:** zaslon zdaj drži drift *stream*, zato
+  test, ki sam lastuje `ProviderScope` in v teardownu zapre bazo, obvisi — uporabi obstoječi vzorec
+  `UncontrolledProviderScope` + `container.dispose()` PRED `db.close()`.) · 4. ⬜ testi (FakeClock:
   tihe ure, kapica, preklop sistema, rob polnoči).
 - **Branchi:** `feat/fr19-t4b-1-quiet-hours` · `feat/fr19-t4b-2-scheduler` · `feat/fr19-t4b-3-toggle` ·
   `feat/fr19-t4b-4-tests`.

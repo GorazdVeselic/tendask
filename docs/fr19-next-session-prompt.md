@@ -254,27 +254,44 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   varna. Preverba izračuna prek `tmp/moon_hint_scratch_test.dart` (avg 2026, vrt list+koren). Testov ta
   korak namenoma ne dodaja — so korak 4. Suite ostaja **1265**.
 
-**Naloga TE seje: T4b korak 3 — 🔔 vrstica v `/moon-settings`** (branch
-`feat/fr19-t4b-3-toggle`; korak 4 = testi je svoja seja):
+- **T4b korak 3 ✅ (1. 8.) — 🔔 stikalo v `/moon-settings`:** `_HintTile` je **prva vrstica kartice
+  podstikal** (wireframe board 2b: 🔔 »Namig »jutri dober dan«« + »nežno, spoštuje tihe ure«). Edino
+  stikalo tega zaslona, ki **ne** živi v `MoonSettingsController`: bere `notificationSettingsProvider`,
+  piše prek `profileRepository.setNotificationSettings` → profile JSON, **sinhronizirano** (B1). Ob
+  vklopu `_ensurePermission` (top-level v istem filu): `areNotificationsEnabled` → priming sheet
+  (zaslon 21) → `requestPermission`; **brez exact-alarm vrat**, ker namig vozi po **inexact** nudge
+  kanalu (`scheduleNudge`) — zavrnitev pusti stikalo izklopljeno, ker vrednost zrcali shranjeno stanje.
+  **Re-arma ni bilo treba dodajati:** `MoonHintCoordinator.build()` že posluša
+  `tableUpdates(profiles)` → zapis ga sproži prek debouncea. Med nalaganjem in ob napaki je vrstica
+  onemogočena (`onChanged: null`), ob napaki podnaslov = `moon.settings.load_error`. Nova ključa
+  `moon.settings.hint`/`hint_sub` en+sl+de. Pogled: `tmp/moon_settings_{light,dark}.png` +
+  `tmp/moon_de_settings.png` (de pri 320 px ovije naslov na 3 vrstice, brez odreza).
+  **⚠️ Najdba za korak 4:** zaslon zdaj drži drift **stream**, zato test, ki sam lastuje
+  `ProviderScope` in v teardownu zapre bazo, **obvisi** (`db.close()` čaka na naročnino, nato timeout;
+  ob odjavi drift zaplanira še cleanup timer) — uporabi obstoječi vzorec
+  `UncontrolledProviderScope` + `container.dispose()` **pred** `db.close()`, kot ga ima
+  `moon_settings_screen_test.dart`. Za predoglede v `tmp/` je dovolj
+  `notificationSettingsProvider.overrideWith((ref) => Stream.value(const NotificationSettings()))`.
 
-- **Kaj:** vrstica »Namig ‚jutri dober dan'« (wireframe board 2b: 🔔 + podnaslov »nežno, spoštuje tihe
-  ure«) v `MoonSettingsScreen`, med podstikala — prižge/ugasne `moonHintEnabled` v
-  `NotificationSettings` (profile JSON, **sinhronizirano**, ne v `local_prefs`!).
-- **Pasti:** to je edino stikalo, ki NI v `MoonSettingsController` (živi v profilu) — beri/piši prek
-  `profileRepository`/`notificationSettingsProvider`, ne prek luninih prefs · ob vklopu je treba
-  **zaprositi za dovoljenje za obvestila** (obstoječi vzorec zaslon 21 / priming) in po zapisu
-  **re-armati** `moonHintCoordinatorProvider` (profil sproži re-arm sam prek `tableUpdates`, preveri) ·
-  privzeto ostane izklopljeno · besedilo brez besede »motor«.
-- **Videz najprej:** widget → pogled (`tmp/…preview_test.dart` → PNG) → šele nato prevodi/testi.
+**Naloga TE seje: T4b korak 4 — testi** (branch `feat/fr19-t4b-4-tests`; s tem je T4b zaključen):
+
+- **Kaj:** testi za T4b kot celoto — `moonHintCandidates()` + `MoonHintCoordinator` s `FakeClock`
+  (tihe ure prestavijo namig, frekvenčna kapica ga na zasedenem dnevu spusti, preklop sistema
+  spremeni element/besedilo, rob polnoči = namig, ki bi zdrsnil čez polnoč, odpade) in widget test
+  🔔 vrstice (privzeto izklopljena in **aktivna**, vklop zapiše `moon_hint: true` v profil).
+- **Pasti:** teardown vzorec zgoraj (drift stream) · `Clock` injektiraj, nikoli `DateTime.now()` ·
+  koordinator je za flagom (`kMoonCalendarEnabled = false`), zato testiraj **čisti izračun** in
+  javne dele, ne prižiganja flaga · layout matrika `moon-settings` že obstaja — preveri, da nova
+  vrstica ne podre 320 px × 1.3.
 
 **Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) ·
-`moon_settings_screen.dart` (kam gre vrstica) · `moon_hint_coordinator.dart` (kaj bere) ·
-`notification_settings.dart` + zaslon 22 (kako se piše profilna nastavitev) · wireframe
-`docs/wireframes/lunar-calendar_overview.html` (board 2b).
+`moon_hint_schedule.dart` + `moon_hint_coordinator.dart` · `hint_rules.dart` ·
+`test/features/notifications/nudge_coordinators_test.dart` (vzorec fake notification service) ·
+`test/features/moon/moon_settings_screen_test.dart` (vzorec containerja).
 
 **Pravila:** naredi natanko ta korak in nič več. Pred merge: `flutter analyze` čist + cel
-`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 3, posodobi ta
-dokument na korak 4 in predlagaj commit.
+`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 4 (in T4b kot
+zaključen), posodobi ta dokument na naslednji task in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

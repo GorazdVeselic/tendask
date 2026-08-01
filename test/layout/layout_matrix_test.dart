@@ -379,9 +379,18 @@ void main() {
     },
   );
 
+  // The 🔔 row watches the profile through a drift stream. Cancelling that
+  // stream when the harness-owned ProviderScope unmounts leaves drift's cleanup
+  // timer pending (and then blocks db.close()), so feed the row a plain value —
+  // layout only needs the switch's text, same reasoning as gardenLocation above.
   layoutMatrix(
     'moon-settings',
-    overrides: _dbOverrides,
+    overrides: () => [
+      ..._dbOverrides(),
+      notificationSettingsProvider.overrideWith(
+        (ref) => Stream.value(const NotificationSettings()),
+      ),
+    ],
     build: () => const MoonSettingsScreen(),
   );
 
