@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/date_format.dart';
@@ -75,7 +76,15 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen> {
         : const <BiodynamicElement>{};
 
     return Scaffold(
-      appBar: AppBar(title: Text(t.moon.calendar.title)),
+      appBar: AppBar(
+        title: Text(t.moon.calendar.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings_outlined),
+            onPressed: () => context.pushNamed('moon-settings'),
+          ),
+        ],
+      ),
       body: Column(
         children: [
           Padding(

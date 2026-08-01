@@ -53,9 +53,8 @@ class _MoonDaySheet extends ConsumerWidget {
 
     // One system drives all moon screens (spec §11.6); sidereal while the
     // settings are still loading — same fallback as the month provider.
-    final system =
-        ref.watch(moonSettingsControllerProvider).asData?.value.system ??
-        CalendarSystem.sidereal;
+    final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
+    final system = settings?.system ?? CalendarSystem.sidereal;
     // Raw layers for the facts; the grid-cell reduction for the day label
     // (midnight-sliver display rule) so the sheet agrees with the calendar.
     final day = dayFor(date, system);
@@ -74,8 +73,11 @@ class _MoonDaySheet extends ConsumerWidget {
         ),
         const SizedBox(height: 12),
         _DayHero(day: day, cell: cell),
-        const SizedBox(height: 14),
-        _WhatsHappening(day: day),
+        // The astro details block is behind its own sub-toggle (T3.6).
+        if (settings?.showAstroDetails ?? true) ...[
+          const SizedBox(height: 14),
+          _WhatsHappening(day: day),
+        ],
         SectionLabel(
           // Map completeness against BiodynamicElement is enforced by i18n
           // tests.

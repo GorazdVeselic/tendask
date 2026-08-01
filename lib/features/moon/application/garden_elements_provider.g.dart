@@ -67,4 +67,4 @@ final class GardenElementsProvider
   }
 }
 
-String _$gardenElementsHash() => r'15d789661060e9297d93928ec26859b9469c1085';
+String _$gardenElementsHash() => r'c777c1cf8ed73ba3ea1cdfc935b388971742bc5b';

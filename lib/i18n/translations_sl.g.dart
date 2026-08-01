@@ -947,6 +947,7 @@ class _Translations$moon$sl extends Translations$moon$en {
 
 	// Translations
 	@override late final _Translations$moon$calendar$sl calendar = _Translations$moon$calendar$sl._(_root);
+	@override late final _Translations$moon$settings$sl settings = _Translations$moon$settings$sl._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'dan za plod',
 		'root': 'dan za korenino',
@@ -1021,6 +1022,38 @@ class _Translations$moon$calendar$sl extends Translations$moon$calendar$en {
 		'sat': 'sob',
 		'sun': 'ned',
 	};
+}
+
+// Path: moon.settings
+class _Translations$moon$settings$sl extends Translations$moon$settings$en {
+	_Translations$moon$settings$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get enable => 'Prikaži Lunin koledar';
+	@override String get enable_sub => 'čip na Domov, oznake po vrtu';
+	@override String get system_label => 'Sistem koledarja';
+	@override String get system_sidereal => 'Po ozvezdjih';
+	@override String get system_sidereal_sub => 'biodinamični';
+	@override String get system_tropical => 'Po znamenjih';
+	@override String get system_tropical_sub => 'astrološki';
+	@override String get system_help => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.';
+	@override String get highlight_garden => 'Poudari po mojem vrtu';
+	@override String get highlight_garden_sub => 'dvigni dneve za to, kar gojim';
+	@override String get show_in_journal => 'Prikaži v Dnevniku';
+	@override String get show_in_journal_sub => 'obarva mesečni koledar Dnevnika';
+	@override String get show_astro => 'Prikaži ozvezdja in meno';
+	@override String get show_astro_sub => 'več astro podrobnosti v dnevu';
+	@override String get about_title => '🌙 Kaj je to?';
+	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '),
+		b('koreninami, listi, cvetovi in plodovi'),
+		const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '),
+		b('načrtovanju'),
+		const TextSpan(text: ', ne kot pravilo.'),
+	]);
+	@override String get about_footnote => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.';
 }
 
 // Path: moon.division
@@ -1652,6 +1685,23 @@ extension on TranslationsSl {
 			'moon.calendar.weekday_short.fri' => 'pet',
 			'moon.calendar.weekday_short.sat' => 'sob',
 			'moon.calendar.weekday_short.sun' => 'ned',
+			'moon.settings.enable' => 'Prikaži Lunin koledar',
+			'moon.settings.enable_sub' => 'čip na Domov, oznake po vrtu',
+			'moon.settings.system_label' => 'Sistem koledarja',
+			'moon.settings.system_sidereal' => 'Po ozvezdjih',
+			'moon.settings.system_sidereal_sub' => 'biodinamični',
+			'moon.settings.system_tropical' => 'Po znamenjih',
+			'moon.settings.system_tropical_sub' => 'astrološki',
+			'moon.settings.system_help' => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.',
+			'moon.settings.highlight_garden' => 'Poudari po mojem vrtu',
+			'moon.settings.highlight_garden_sub' => 'dvigni dneve za to, kar gojim',
+			'moon.settings.show_in_journal' => 'Prikaži v Dnevniku',
+			'moon.settings.show_in_journal_sub' => 'obarva mesečni koledar Dnevnika',
+			'moon.settings.show_astro' => 'Prikaži ozvezdja in meno',
+			'moon.settings.show_astro_sub' => 'več astro podrobnosti v dnevu',
+			'moon.settings.about_title' => '🌙 Kaj je to?',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '), b('koreninami, listi, cvetovi in plodovi'), const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '), b('načrtovanju'), const TextSpan(text: ', ne kot pravilo.'), ]), 
+			'moon.settings.about_footnote' => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',

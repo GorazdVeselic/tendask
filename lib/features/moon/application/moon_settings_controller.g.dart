@@ -52,7 +52,7 @@ final class MoonSettingsControllerProvider
 }
 
 String _$moonSettingsControllerHash() =>
-    r'344f190b74b3fc58300a3295d1a0b7f46baa2bbc';
+    r'0faeb7bf3b54dfef7e6e50b2a770999280cf3c17';
 
 /// The user's moon calendar settings, persisted device-locally (never synced —
 /// the calendar is global, not user data). Warmed in bootstrap before the

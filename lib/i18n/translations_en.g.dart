@@ -2006,6 +2006,7 @@ class Translations$moon$en {
 
 	// Translations
 	late final Translations$moon$calendar$en calendar = Translations$moon$calendar$en.internal(_root);
+	late final Translations$moon$settings$en settings = Translations$moon$settings$en.internal(_root);
 	Map<String, String> get day_for => {
 		'fruit': 'fruit day',
 		'root': 'root day',
@@ -2094,6 +2095,72 @@ class Translations$moon$calendar$en {
 		'sat': 'Sat',
 		'sun': 'Sun',
 	};
+}
+
+// Path: moon.settings
+class Translations$moon$settings$en {
+	Translations$moon$settings$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Show moon calendar'
+	String get enable => 'Show moon calendar';
+
+	/// en: 'chip on Home, labels across the garden'
+	String get enable_sub => 'chip on Home, labels across the garden';
+
+	/// en: 'Calendar system'
+	String get system_label => 'Calendar system';
+
+	/// en: 'By constellations'
+	String get system_sidereal => 'By constellations';
+
+	/// en: 'biodynamic'
+	String get system_sidereal_sub => 'biodynamic';
+
+	/// en: 'By signs'
+	String get system_tropical => 'By signs';
+
+	/// en: 'astrological'
+	String get system_tropical_sub => 'astrological';
+
+	/// en: 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.'
+	String get system_help => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.';
+
+	/// en: 'Highlight for my garden'
+	String get highlight_garden => 'Highlight for my garden';
+
+	/// en: 'lift the days for what I grow'
+	String get highlight_garden_sub => 'lift the days for what I grow';
+
+	/// en: 'Show in Journal'
+	String get show_in_journal => 'Show in Journal';
+
+	/// en: 'colours the Journal month calendar'
+	String get show_in_journal_sub => 'colours the Journal month calendar';
+
+	/// en: 'Show constellations and phase'
+	String get show_astro => 'Show constellations and phase';
+
+	/// en: 'more astro detail in the day view'
+	String get show_astro_sub => 'more astro detail in the day view';
+
+	/// en: '🌙 What is this?'
+	String get about_title => '🌙 What is this?';
+
+	/// en: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with ${b(roots, leaves, flowers and fruits)}. The calendar shows each day's element — as an aid for ${b(planning)}, not a rule.'
+	TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '),
+		b('roots, leaves, flowers and fruits'),
+		const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '),
+		b('planning'),
+		const TextSpan(text: ', not a rule.'),
+	]);
+
+	/// en: 'Tradition and preference, not agronomic advice. Computed on your device.'
+	String get about_footnote => 'Tradition and preference, not agronomic advice. Computed on your device.';
 }
 
 // Path: moon.division
@@ -2755,6 +2822,23 @@ extension on Translations {
 			'moon.calendar.weekday_short.fri' => 'Fri',
 			'moon.calendar.weekday_short.sat' => 'Sat',
 			'moon.calendar.weekday_short.sun' => 'Sun',
+			'moon.settings.enable' => 'Show moon calendar',
+			'moon.settings.enable_sub' => 'chip on Home, labels across the garden',
+			'moon.settings.system_label' => 'Calendar system',
+			'moon.settings.system_sidereal' => 'By constellations',
+			'moon.settings.system_sidereal_sub' => 'biodynamic',
+			'moon.settings.system_tropical' => 'By signs',
+			'moon.settings.system_tropical_sub' => 'astrological',
+			'moon.settings.system_help' => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.',
+			'moon.settings.highlight_garden' => 'Highlight for my garden',
+			'moon.settings.highlight_garden_sub' => 'lift the days for what I grow',
+			'moon.settings.show_in_journal' => 'Show in Journal',
+			'moon.settings.show_in_journal_sub' => 'colours the Journal month calendar',
+			'moon.settings.show_astro' => 'Show constellations and phase',
+			'moon.settings.show_astro_sub' => 'more astro detail in the day view',
+			'moon.settings.about_title' => '🌙 What is this?',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '), b('roots, leaves, flowers and fruits'), const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '), b('planning'), const TextSpan(text: ', not a rule.'), ]), 
+			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',

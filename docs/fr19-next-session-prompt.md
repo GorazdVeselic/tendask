@@ -98,38 +98,47 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   narobe). Naprave ni bilo → videz potrjen prek `tmp/moon_day_sheet_preview_test.dart` →
   `tmp/moon_day_sheet_{light,dark,unfavorable}.png`; ob prvem zagonu na napravi preveri sheet
   (revizija sheet↔zaslon po odločitvi 31. 7.).
+- **T3.6 `/moon-settings` ✅ (1. 8.):** `MoonSettingsScreen`
+  (`lib/features/moon/presentation/moon_settings_screen.dart`, wireframe board 2b) — glavno
+  stikalo 🌙 · **sistem segmented** (dvovrstična segmenta »Po ozvezdjih/biodinamični« ·
+  »Po znamenjih/astrološki« + vrstica razlage §13) · podstikala 🪴 poudari po vrtu / 📅 prikaži v
+  Dnevniku / 🌌 ozvezdja in meno · tinted kartica »Kaj je to?« (rich bold + pripis
+  tradicija-ne-nasvet); 🔔 vrstice NI (pride s T4b). Nova prefs ključa `moon_show_in_journal` +
+  `moon_show_astro_details` (null = vklopljeno) + setterja; `MoonSettings` razširjen
+  (`showInJournal`, `showAstroDetails`). **Potrošnik »ozvezdja in meno« ožičen:** dan-sheet ob
+  izklopu skrije blok »Kaj se dogaja« (Dnevnik-potrošnik pride s T4.4). Vstop: **⚙️ v AppBar
+  koledarja** → `pushNamed('moon-settings')`; ruta z `moonCalendarRedirect`;
+  `route_collision_test` zdaj preverja varovalo na OBEH moon rutah; screen-map §4 »Stanje rut«
+  posodobljen. i18n `moon.settings.*` en+sl. Naprave ni bilo → videz potrjen prek
+  `tmp/moon_settings_preview_test.dart` → `tmp/moon_settings_{light,dark}.png`; ob prvem zagonu
+  na napravi preveri zaslon (tudi segmenta pri širokem de tekstu, ko pride T3.7).
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T3.6 — `/moon-settings`** (branch `feat/fr19-t3-6-moon-settings`):
+**Naloga TE seje: korak T3.7 — de prevodi** (branch `feat/fr19-t3-7-i18n-de`):
 
-- Zaslon nastavitev Luninega koledarja (wireframe board 2b): **glavno stikalo** (opt-in po A6) ·
-  **sistem toggle** »Po ozvezdjih (biodinamični)« / »Po znamenjih (astrološki)« z eno vrstico
-  razlage (spec §13) · **podstikala (31. 7.):** »Poudari po mojem vrtu« (★ — ključ
-  `moon_highlight_garden` + setter že obstajata iz T3.3) · »Prikaži v Dnevniku« (plast, potrošnik
-  pride s T4.4) · »Prikaži ozvezdja in meno« (podrobnosti v dan-sheetu — potrošnika ožiči po
-  planu/wireframu). Vrstica »Namig 'jutri dober dan'« pride šele s **T4b** — brez mrtvih stikal.
-  »Kaj je to« mini razlaga.
-- Nova prefs ključa za podstikali Dnevnik/ozvezdja po vzorcu `moon_highlight_garden` (null =
-  privzeto vklopljeno) + setterja v `MoonSettingsController`.
-- Vstop: **⚙️ v AppBar `/moon-calendar`** (ožiči ta korak; koledar je sam za flagom) + ruta
-  `/moon-settings` z `moonCalendarRedirect` varovalom; posodobi `route_collision_test` in
-  `screen-map.md` (pravilo: isti commit). Umestitev pod Tendask+ zaslon pride s T6.
-- **Najprej videz → pogled na napravi → šele nato testi/prevodi**; de pride s T3.7, testi s T3.8.
+- Celoten `moon` namespace prevedi v `lib/i18n/de.i18n.json` (danes de pade na en): `calendar` ·
+  `settings` · `day_for` · `activity` + `activity_new_moon` · `element`/`element_short` ·
+  `division` · `sign` · `phase` · `sheet` (rich predloge — poved ostane ENA vrednost, nemški
+  besedni red!). Terminologija po mehanizmu, ne znamki (spec §13): NIKJER »Thun«/»Aussaattage«.
+- Po spremembi ključev poženi **`dart run slang`** (ločen CLI, build_runner ga ne ujame).
+- **Pregled dolgih nemških besed** (Blütentag, Wurzeltag, Sternbild …) na ozkih površinah:
+  mesečna celica (`element_short`), agenda vrstica, segmenta na `/moon-settings`, sheet — videz
+  prek obstoječih `tmp/moon_*_preview_test.dart` harnessov z de locale (ali na napravi, če je
+  priklopljena). Layout matrika pride s T3.8 — tu samo vizualna preverba.
+- `moon_i18n_test.dart` popolnost map mora ostati zelena tudi za de (če teste locale-širi, sicer
+  jih razširi šele T3.8 — ne širi obsega).
 
-**Pred delom preberi:** plan T3 korak 6 (`docs/plan-implementacije-fr19-fr20.md`) · wireframe
-`docs/wireframes/lunar-calendar_overview.html` board 2b · spec §13
-(`docs/feature-requests/biodynamic-calendar.md`) · `MoonSettingsController` + `local_prefs`
-(`lib/features/moon/application/`, `lib/core/`) · ruta + varovalo (`app/router/app_router.dart`) ·
-`moon_day_sheet.dart` (kandidat potrošnik »Prikaži ozvezdja in meno«).
+**Pred delom preberi:** plan T3 korak 7 (`docs/plan-implementacije-fr19-fr20.md`) · obstoječa
+en+sl `moon` namespace-a (`lib/i18n/{en,sl}.i18n.json`) · CLAUDE.md pravilo o rich nizih ·
+`tmp/moon_month_preview_test.dart` (vzorec harnessa za de poglede).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.7). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.6, posodobi ta
-dokument na naslednji korak (T3.7 de prevodi; branch `feat/fr19-t3-7-i18n-de`) in predlagaj
-commit.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.8). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.7, posodobi ta
+dokument na naslednji korak (T3.8 testi; branch `feat/fr19-t3-8-tests`) in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

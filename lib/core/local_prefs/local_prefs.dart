@@ -14,6 +14,8 @@ const _kPendingSignInEmail = 'pending_sign_in_email';
 const _kMoonCalendarEnabled = 'moon_calendar_enabled';
 const _kMoonSystem = 'moon_system';
 const _kMoonHighlightGarden = 'moon_highlight_garden';
+const _kMoonShowInJournal = 'moon_show_in_journal';
+const _kMoonShowAstroDetails = 'moon_show_astro_details';
 
 /// Device-local "seen once" flags backed by the local_flag table. Never synced —
 /// these are per-device UI state (which intro/priming screens the user passed).
@@ -125,6 +127,26 @@ class LocalPrefsRepository {
 
   Future<void> setMoonHighlightGarden(bool enabled) =>
       _setFlag(_kMoonHighlightGarden, enabled);
+
+  /// Whether the Journal month grid gets the moon colour layer (T4.4), or null
+  /// if the user never changed it (defaults to on).
+  Future<bool?> moonShowInJournal() async {
+    final value = await _getString(_kMoonShowInJournal);
+    return value == null ? null : value == 'true';
+  }
+
+  Future<void> setMoonShowInJournal(bool enabled) =>
+      _setFlag(_kMoonShowInJournal, enabled);
+
+  /// Whether the day sheet shows the astro details block (constellation/sign,
+  /// phase, …), or null if the user never changed it (defaults to on).
+  Future<bool?> moonShowAstroDetails() async {
+    final value = await _getString(_kMoonShowAstroDetails);
+    return value == null ? null : value == 'true';
+  }
+
+  Future<void> setMoonShowAstroDetails(bool enabled) =>
+      _setFlag(_kMoonShowAstroDetails, enabled);
 }
 
 @riverpod
