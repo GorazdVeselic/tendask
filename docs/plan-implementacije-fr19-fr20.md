@@ -271,8 +271,12 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (null = vklopljeno) + setterja v `MoonSettingsController`; potrošnik »ozvezdja in meno« ožičen —
      dan-sheet skrije blok »Kaj se dogaja«; ruta z `moonCalendarRedirect` + route_collision_test +
      screen-map; naprave ni bilo → pogled prek `tmp/moon_settings_preview_test.dart` → PNG.)
-  7. ⬜ Po vizualni potrditvi vseh zaslonov: **de prevodi** + `dart run slang` + pregled dolgih nemških
-     besed (Blütentag …).
+  7. ✅ Po vizualni potrditvi vseh zaslonov: **de prevodi** + `dart run slang` + pregled dolgih nemških
+     besed (Blütentag …). (2026-08-01: cel `moon` namespace v de (Sternbild/Zeichen po §13, brez
+     znamk); `element_short` de = `Fru.`/`Wur.` (polni `Frucht`/`Wurzel` se v mesečni celici
+     odrežeta); pogledi prek `tmp/moon_de_preview_test.dart` → PNG (mesec, teden, nastavitve,
+     sheet). ⚠️ Najdba za T3.8: zgornja vrstica mesečne celice (številka + ★ + mena-ikona)
+     prekipi ~4 px pri 320 px viewportu — ne glede na jezik.)
   8. ⬜ Testi: widget testi ključnih interakcij (preklop sistema posodobi vse; tap dan odpre sheet) +
      `layoutMatrix('moon-calendar', …)` (+ teden, + sheet če izvedljivo) — 18 kombinacij/zaslon.
      Lunin zaslon ne rabi provider overridov (čista funkcija datuma) razen `MoonSettings`.

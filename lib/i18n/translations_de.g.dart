@@ -72,6 +72,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$weather$de weather = _Translations$weather$de._(_root);
 	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
 	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
+	@override late final _Translations$moon$de moon = _Translations$moon$de._(_root);
 }
 
 // Path: splash
@@ -928,6 +929,196 @@ class _Translations$harvest$de extends Translations$harvest$en {
 	@override String get unit_bunch => 'Bund';
 }
 
+// Path: moon
+class _Translations$moon$de extends Translations$moon$en {
+	_Translations$moon$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override late final _Translations$moon$calendar$de calendar = _Translations$moon$calendar$de._(_root);
+	@override late final _Translations$moon$settings$de settings = _Translations$moon$settings$de._(_root);
+	@override Map<String, String> get day_for => {
+		'fruit': 'Fruchttag',
+		'root': 'Wurzeltag',
+		'flower': 'Blütentag',
+		'leaf': 'Blatttag',
+	};
+	@override Map<String, String> get activity => {
+		'fruit': 'Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.',
+		'root': 'Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).',
+		'flower': 'Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.',
+		'leaf': 'Blattgemüse säen und pflegen (Salat, Spinat, Kohl).',
+	};
+	@override String get activity_new_moon => 'Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.';
+	@override Map<String, String> get element => {
+		'fruit': 'Frucht',
+		'root': 'Wurzel',
+		'flower': 'Blüte',
+		'leaf': 'Blatt',
+	};
+	@override Map<String, String> get element_short => {
+		'fruit': 'Fru.',
+		'root': 'Wur.',
+		'flower': 'Blüte',
+		'leaf': 'Blatt',
+	};
+	@override late final _Translations$moon$division$de division = _Translations$moon$division$de._(_root);
+	@override Map<String, String> get sign => {
+		'aries': 'Widder',
+		'taurus': 'Stier',
+		'gemini': 'Zwillinge',
+		'cancer': 'Krebs',
+		'leo': 'Löwe',
+		'virgo': 'Jungfrau',
+		'libra': 'Waage',
+		'scorpio': 'Skorpion',
+		'sagittarius': 'Schütze',
+		'capricorn': 'Steinbock',
+		'aquarius': 'Wassermann',
+		'pisces': 'Fische',
+	};
+	@override Map<String, String> get phase => {
+		'newMoon': 'Neumond',
+		'waxingCrescent': 'zunehmende Sichel',
+		'firstQuarter': 'erstes Viertel',
+		'waxingGibbous': 'zunehmender Mond',
+		'fullMoon': 'Vollmond',
+		'waningGibbous': 'abnehmender Mond',
+		'lastQuarter': 'letztes Viertel',
+		'waningCrescent': 'abnehmende Sichel',
+	};
+	@override late final _Translations$moon$sheet$de sheet = _Translations$moon$sheet$de._(_root);
+}
+
+// Path: moon.calendar
+class _Translations$moon$calendar$de extends Translations$moon$calendar$en {
+	_Translations$moon$calendar$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Mondkalender';
+	@override String get legend_star => 'empfohlen für deinen Garten';
+	@override String get month_view => 'Monat';
+	@override String get week_view => 'Woche';
+	@override String get today_marker => 'heute';
+	@override Map<String, String> get weekday_short => {
+		'mon': 'Mo',
+		'tue': 'Di',
+		'wed': 'Mi',
+		'thu': 'Do',
+		'fri': 'Fr',
+		'sat': 'Sa',
+		'sun': 'So',
+	};
+}
+
+// Path: moon.settings
+class _Translations$moon$settings$de extends Translations$moon$settings$en {
+	_Translations$moon$settings$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get enable => 'Mondkalender anzeigen';
+	@override String get enable_sub => 'Chip auf der Startseite, Hinweise im Garten';
+	@override String get system_label => 'Kalendersystem';
+	@override String get system_sidereal => 'Nach Sternbildern';
+	@override String get system_sidereal_sub => 'biodynamisch';
+	@override String get system_tropical => 'Nach Zeichen';
+	@override String get system_tropical_sub => 'astrologisch';
+	@override String get system_help => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.';
+	@override String get highlight_garden => 'Für meinen Garten hervorheben';
+	@override String get highlight_garden_sub => 'hebt Tage für das hervor, was ich anbaue';
+	@override String get show_in_journal => 'Im Tagebuch anzeigen';
+	@override String get show_in_journal_sub => 'färbt den Monatskalender im Tagebuch';
+	@override String get show_astro => 'Sternbilder und Mondphase anzeigen';
+	@override String get show_astro_sub => 'mehr Astro-Details in der Tagesansicht';
+	@override String get about_title => '🌙 Was ist das?';
+	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '),
+		b('Wurzeln, Blättern, Blüten und Früchten'),
+		const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '),
+		b('Planung'),
+		const TextSpan(text: ', nicht als Regel.'),
+	]);
+	@override String get about_footnote => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.';
+}
+
+// Path: moon.division
+class _Translations$moon$division$de extends Translations$moon$division$en {
+	_Translations$moon$division$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get constellation => 'Sternbild';
+	@override String get sign => 'Zeichen';
+}
+
+// Path: moon.sheet
+class _Translations$moon$sheet$de extends Translations$moon$sheet$en {
+	_Translations$moon$sheet$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get whats_happening => 'Was passiert';
+	@override TextSpan in_constellation({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Der Mond steht im Sternbild '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan in_sign({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Der Mond steht im Zeichen '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Um '),
+		time,
+		const TextSpan(text: ' folgt '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override String until_then({required Object time, required Object emoji, required Object day}) => 'bis ${time}, dann ${emoji} ${day}';
+	@override TextSpan phase_waxing({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Zunehmender Mond'),
+		const TextSpan(text: ' — begünstigt traditionell Aussaat und oberirdische Kulturen.'),
+	]);
+	@override TextSpan phase_waning({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Abnehmender Mond'),
+		const TextSpan(text: ' — begünstigt Ernte, Schnitt und Wurzelgemüse.'),
+	]);
+	@override TextSpan ascending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Aufsteigender Mond'),
+		const TextSpan(text: ' — steigende Säfte: säen und ernten, weniger umpflanzen.'),
+	]);
+	@override TextSpan descending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Absteigender Mond'),
+		const TextSpan(text: ' — sinkende Säfte: umpflanzen, Stecklinge, Wurzelernte.'),
+	]);
+	@override TextSpan favorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Kein Mondknoten und keine Finsternis in der Nähe — '),
+		b('ein günstiger Tag'),
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan unfavorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Ein Mondknoten oder eine Finsternis ist nah — '),
+		b('ein ungünstiger Tag'),
+		const TextSpan(text: '; gönn dem Garten lieber Ruhe.'),
+	]);
+	@override String recommended_for({required Object day}) => 'Empfohlen für den ${day}';
+	@override String get add_task => '+ Aufgabe';
+}
+
 /// The flat map containing all translations for locale <de>.
 /// Only for edge cases! For simple maps, use the map function of this library.
 ///
@@ -1472,6 +1663,87 @@ extension on TranslationsDe {
 			'harvest.unit_pieces' => 'Stk.',
 			'harvest.unit_l' => 'l',
 			'harvest.unit_bunch' => 'Bund',
+			'moon.calendar.title' => 'Mondkalender',
+			'moon.calendar.legend_star' => 'empfohlen für deinen Garten',
+			'moon.calendar.month_view' => 'Monat',
+			'moon.calendar.week_view' => 'Woche',
+			'moon.calendar.today_marker' => 'heute',
+			'moon.calendar.weekday_short.mon' => 'Mo',
+			'moon.calendar.weekday_short.tue' => 'Di',
+			'moon.calendar.weekday_short.wed' => 'Mi',
+			'moon.calendar.weekday_short.thu' => 'Do',
+			'moon.calendar.weekday_short.fri' => 'Fr',
+			'moon.calendar.weekday_short.sat' => 'Sa',
+			'moon.calendar.weekday_short.sun' => 'So',
+			'moon.settings.enable' => 'Mondkalender anzeigen',
+			'moon.settings.enable_sub' => 'Chip auf der Startseite, Hinweise im Garten',
+			'moon.settings.system_label' => 'Kalendersystem',
+			'moon.settings.system_sidereal' => 'Nach Sternbildern',
+			'moon.settings.system_sidereal_sub' => 'biodynamisch',
+			'moon.settings.system_tropical' => 'Nach Zeichen',
+			'moon.settings.system_tropical_sub' => 'astrologisch',
+			'moon.settings.system_help' => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.',
+			'moon.settings.highlight_garden' => 'Für meinen Garten hervorheben',
+			'moon.settings.highlight_garden_sub' => 'hebt Tage für das hervor, was ich anbaue',
+			'moon.settings.show_in_journal' => 'Im Tagebuch anzeigen',
+			'moon.settings.show_in_journal_sub' => 'färbt den Monatskalender im Tagebuch',
+			'moon.settings.show_astro' => 'Sternbilder und Mondphase anzeigen',
+			'moon.settings.show_astro_sub' => 'mehr Astro-Details in der Tagesansicht',
+			'moon.settings.about_title' => '🌙 Was ist das?',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '), b('Wurzeln, Blättern, Blüten und Früchten'), const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '), b('Planung'), const TextSpan(text: ', nicht als Regel.'), ]), 
+			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
+			'moon.day_for.fruit' => 'Fruchttag',
+			'moon.day_for.root' => 'Wurzeltag',
+			'moon.day_for.flower' => 'Blütentag',
+			'moon.day_for.leaf' => 'Blatttag',
+			'moon.activity.fruit' => 'Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.',
+			'moon.activity.root' => 'Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).',
+			'moon.activity.flower' => 'Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.',
+			'moon.activity.leaf' => 'Blattgemüse säen und pflegen (Salat, Spinat, Kohl).',
+			'moon.activity_new_moon' => 'Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.',
+			'moon.element.fruit' => 'Frucht',
+			'moon.element.root' => 'Wurzel',
+			'moon.element.flower' => 'Blüte',
+			'moon.element.leaf' => 'Blatt',
+			'moon.element_short.fruit' => 'Fru.',
+			'moon.element_short.root' => 'Wur.',
+			'moon.element_short.flower' => 'Blüte',
+			'moon.element_short.leaf' => 'Blatt',
+			'moon.division.constellation' => 'Sternbild',
+			'moon.division.sign' => 'Zeichen',
+			'moon.sign.aries' => 'Widder',
+			'moon.sign.taurus' => 'Stier',
+			'moon.sign.gemini' => 'Zwillinge',
+			'moon.sign.cancer' => 'Krebs',
+			'moon.sign.leo' => 'Löwe',
+			'moon.sign.virgo' => 'Jungfrau',
+			'moon.sign.libra' => 'Waage',
+			'moon.sign.scorpio' => 'Skorpion',
+			'moon.sign.sagittarius' => 'Schütze',
+			'moon.sign.capricorn' => 'Steinbock',
+			'moon.sign.aquarius' => 'Wassermann',
+			'moon.sign.pisces' => 'Fische',
+			'moon.phase.newMoon' => 'Neumond',
+			'moon.phase.waxingCrescent' => 'zunehmende Sichel',
+			'moon.phase.firstQuarter' => 'erstes Viertel',
+			'moon.phase.waxingGibbous' => 'zunehmender Mond',
+			'moon.phase.fullMoon' => 'Vollmond',
+			'moon.phase.waningGibbous' => 'abnehmender Mond',
+			'moon.phase.lastQuarter' => 'letztes Viertel',
+			'moon.phase.waningCrescent' => 'abnehmende Sichel',
+			'moon.sheet.whats_happening' => 'Was passiert',
+			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Der Mond steht im Sternbild '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Der Mond steht im Zeichen '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Um '), time, const TextSpan(text: ' folgt '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'bis ${time}, dann ${emoji} ${day}',
+			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Zunehmender Mond'), const TextSpan(text: ' — begünstigt traditionell Aussaat und oberirdische Kulturen.'), ]), 
+			'moon.sheet.phase_waning' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Abnehmender Mond'), const TextSpan(text: ' — begünstigt Ernte, Schnitt und Wurzelgemüse.'), ]), 
+			'moon.sheet.ascending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Aufsteigender Mond'), const TextSpan(text: ' — steigende Säfte: säen und ernten, weniger umpflanzen.'), ]), 
+			'moon.sheet.descending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Absteigender Mond'), const TextSpan(text: ' — sinkende Säfte: umpflanzen, Stecklinge, Wurzelernte.'), ]), 
+			'moon.sheet.favorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Kein Mondknoten und keine Finsternis in der Nähe — '), b('ein günstiger Tag'), const TextSpan(text: '.'), ]), 
+			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Ein Mondknoten oder eine Finsternis ist nah — '), b('ein ungünstiger Tag'), const TextSpan(text: '; gönn dem Garten lieber Ruhe.'), ]), 
+			'moon.sheet.recommended_for' => ({required Object day}) => 'Empfohlen für den ${day}',
+			'moon.sheet.add_task' => '+ Aufgabe',
 			_ => null,
 		};
 	}
