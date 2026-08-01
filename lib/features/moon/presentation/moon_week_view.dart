@@ -6,6 +6,7 @@ import '../../../core/date_format.dart';
 import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/moon_month_provider.dart';
+import 'moon_day_sheet.dart';
 import 'widgets/element_badge.dart';
 import 'widgets/moon_phase_icon.dart';
 
@@ -37,12 +38,16 @@ class MoonWeekView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weekEnd =
-        DateTime(weekStart.year, weekStart.month, weekStart.day + 6);
+    final weekEnd = DateTime(
+      weekStart.year,
+      weekStart.month,
+      weekStart.day + 6,
+    );
     // The month grid of the week's last day covers the whole week (it carries
     // six leading days) — reuses the memoized month instead of a new provider.
-    final days =
-        ref.watch(moonMonthProvider(DateTime(weekEnd.year, weekEnd.month)));
+    final days = ref.watch(
+      moonMonthProvider(DateTime(weekEnd.year, weekEnd.month)),
+    );
     final now = DateTime.now();
 
     return ListView(
@@ -96,115 +101,124 @@ class _WeekRow extends StatelessWidget {
         ? t.moon.activity_new_moon
         : t.moon.activity[day.element.name]!;
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
-      decoration: isToday
-          ? BoxDecoration(
-              color: theme.colorScheme.primaryContainer.withValues(alpha: 0.35),
-              borderRadius: BorderRadius.circular(10),
-            )
-          : isLast
-              ? null
-              : BoxDecoration(
-                  border: Border(
-                    bottom: BorderSide(
-                      color: theme.colorScheme.outlineVariant,
-                      width: 0.5,
+    return InkWell(
+      borderRadius: BorderRadius.circular(10),
+      onTap: () => showMoonDaySheet(context, day.date),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 12),
+        decoration: isToday
+            ? BoxDecoration(
+                color: theme.colorScheme.primaryContainer.withValues(
+                  alpha: 0.35,
+                ),
+                borderRadius: BorderRadius.circular(10),
+              )
+            : isLast
+            ? null
+            : BoxDecoration(
+                border: Border(
+                  bottom: BorderSide(
+                    color: theme.colorScheme.outlineVariant,
+                    width: 0.5,
+                  ),
+                ),
+              ),
+        child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              width: 40,
+              child: Column(
+                children: [
+                  Text(
+                    '${day.date.day}',
+                    style: theme.textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
                     ),
                   ),
-                ),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            width: 40,
-            child: Column(
-              children: [
-                Text(
-                  '${day.date.day}',
-                  style: theme.textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                  Text(
+                    t
+                        .moon
+                        .calendar
+                        .weekday_short[_weekdayKeys[day.date.weekday - 1]]!,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
                   ),
-                ),
-                Text(
-                  t.moon.calendar
-                      .weekday_short[_weekdayKeys[day.date.weekday - 1]]!,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            width: 44,
-            child: Column(
-              children: [
-                Text(
-                  elementEmoji(day.element),
-                  style: const TextStyle(fontSize: 20, height: 1.2),
-                ),
-                Text(
-                  t.moon.element_short[day.element.name]!.toUpperCase(),
-                  maxLines: 1,
-                  overflow: TextOverflow.clip,
-                  style: theme.textTheme.labelSmall?.copyWith(
-                    fontSize: 9,
-                    fontWeight: FontWeight.w700,
-                    color: theme.colorScheme.onSurfaceVariant,
+            SizedBox(
+              width: 44,
+              child: Column(
+                children: [
+                  Text(
+                    elementEmoji(day.element),
+                    style: const TextStyle(fontSize: 20, height: 1.2),
                   ),
-                ),
-              ],
+                  Text(
+                    t.moon.element_short[day.element.name]!.toUpperCase(),
+                    maxLines: 1,
+                    overflow: TextOverflow.clip,
+                    style: theme.textTheme.labelSmall?.copyWith(
+                      fontSize: 9,
+                      fontWeight: FontWeight.w700,
+                      color: theme.colorScheme.onSurfaceVariant,
+                    ),
+                  ),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(width: 10),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text.rich(
-                  TextSpan(
-                    children: [
-                      TextSpan(text: title),
-                      if (phase != null) ...[
-                        const TextSpan(text: ' · '),
-                        WidgetSpan(
-                          alignment: PlaceholderAlignment.middle,
-                          child: MoonPhaseIcon(
-                            phase: phase,
-                            illumFraction: principalIllumFraction(phase),
-                            size: 12,
-                            color: theme.colorScheme.onSurface,
+            const SizedBox(width: 10),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(text: title),
+                        if (phase != null) ...[
+                          const TextSpan(text: ' · '),
+                          WidgetSpan(
+                            alignment: PlaceholderAlignment.middle,
+                            child: MoonPhaseIcon(
+                              phase: phase,
+                              illumFraction: principalIllumFraction(phase),
+                              size: 12,
+                              color: theme.colorScheme.onSurface,
+                            ),
                           ),
-                        ),
-                        TextSpan(text: ' ${t.moon.phase[phase.name]!}'),
+                          TextSpan(text: ' ${t.moon.phase[phase.name]!}'),
+                        ],
+                        if (isToday)
+                          TextSpan(text: ' · ${t.moon.calendar.today_marker}'),
+                        if (starred)
+                          TextSpan(
+                            text: ' ★',
+                            style: TextStyle(
+                              color: theme.colorScheme.secondary,
+                            ),
+                          ),
                       ],
-                      if (isToday)
-                        TextSpan(text: ' · ${t.moon.calendar.today_marker}'),
-                      if (starred)
-                        TextSpan(
-                          text: ' ★',
-                          style:
-                              TextStyle(color: theme.colorScheme.secondary),
-                        ),
-                    ],
+                    ),
+                    style: theme.textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
-                  style: theme.textTheme.bodyMedium?.copyWith(
-                    fontWeight: FontWeight.w700,
+                  const SizedBox(height: 2),
+                  Text(
+                    description,
+                    style: theme.textTheme.bodySmall?.copyWith(
+                      color: theme.colorScheme.onSurfaceVariant,
+                      height: 1.4,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  description,
-                  style: theme.textTheme.bodySmall?.copyWith(
-                    color: theme.colorScheme.onSurfaceVariant,
-                    height: 1.4,
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

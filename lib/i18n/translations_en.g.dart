@@ -2059,6 +2059,7 @@ class Translations$moon$en {
 		'lastQuarter': 'last quarter',
 		'waningCrescent': 'waning crescent',
 	};
+	late final Translations$moon$sheet$en sheet = Translations$moon$sheet$en.internal(_root);
 }
 
 // Path: moon.calendar
@@ -2108,6 +2109,94 @@ class Translations$moon$division$en {
 
 	/// en: 'sign'
 	String get sign => 'sign';
+}
+
+// Path: moon.sheet
+class Translations$moon$sheet$en {
+	Translations$moon$sheet$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'What's happening'
+	String get whats_happening => 'What\'s happening';
+
+	/// en: 'The Moon is in the constellation ${sign} → ${day}.'
+	TextSpan in_constellation({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'The Moon is in the constellation '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+
+	/// en: 'The Moon is in the sign ${sign} → ${day}.'
+	TextSpan in_sign({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'The Moon is in the sign '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+
+	/// en: 'At ${time} ${sign} follows → ${day}.'
+	TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'At '),
+		time,
+		const TextSpan(text: ' '),
+		sign,
+		const TextSpan(text: ' follows → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+
+	/// en: 'until ${time}, then ${emoji} ${day}'
+	String until_then({required Object time, required Object emoji, required Object day}) => 'until ${time}, then ${emoji} ${day}';
+
+	/// en: '${b(Waxing moon)} — traditionally favours sowing and above-ground crops.'
+	TextSpan phase_waxing({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Waxing moon'),
+		const TextSpan(text: ' — traditionally favours sowing and above-ground crops.'),
+	]);
+
+	/// en: '${b(Waning moon)} — favours harvesting, pruning and root crops.'
+	TextSpan phase_waning({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Waning moon'),
+		const TextSpan(text: ' — favours harvesting, pruning and root crops.'),
+	]);
+
+	/// en: '${b(Ascending moon)} — rising sap: sowing and gathering, less transplanting.'
+	TextSpan ascending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Ascending moon'),
+		const TextSpan(text: ' — rising sap: sowing and gathering, less transplanting.'),
+	]);
+
+	/// en: '${b(Descending moon)} — sinking sap: transplanting, cuttings, root harvest.'
+	TextSpan descending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Descending moon'),
+		const TextSpan(text: ' — sinking sap: transplanting, cuttings, root harvest.'),
+	]);
+
+	/// en: 'No lunar node or eclipse nearby — ${b(a favorable day)}.'
+	TextSpan favorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'No lunar node or eclipse nearby — '),
+		b('a favorable day'),
+		const TextSpan(text: '.'),
+	]);
+
+	/// en: 'A lunar node or eclipse is near — ${b(an unfavorable day)}; better let the garden rest.'
+	TextSpan unfavorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'A lunar node or eclipse is near — '),
+		b('an unfavorable day'),
+		const TextSpan(text: '; better let the garden rest.'),
+	]);
+
+	/// en: 'Recommended for ${day}'
+	String recommended_for({required Object day}) => 'Recommended for ${day}';
+
+	/// en: '+ task'
+	String get add_task => '+ task';
 }
 
 /// The flat map containing all translations for locale <en>.
@@ -2705,6 +2794,19 @@ extension on Translations {
 			'moon.phase.waningGibbous' => 'waning gibbous',
 			'moon.phase.lastQuarter' => 'last quarter',
 			'moon.phase.waningCrescent' => 'waning crescent',
+			'moon.sheet.whats_happening' => 'What\'s happening',
+			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'The Moon is in the constellation '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'The Moon is in the sign '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'At '), time, const TextSpan(text: ' '), sign, const TextSpan(text: ' follows → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'until ${time}, then ${emoji} ${day}',
+			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Waxing moon'), const TextSpan(text: ' — traditionally favours sowing and above-ground crops.'), ]), 
+			'moon.sheet.phase_waning' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Waning moon'), const TextSpan(text: ' — favours harvesting, pruning and root crops.'), ]), 
+			'moon.sheet.ascending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Ascending moon'), const TextSpan(text: ' — rising sap: sowing and gathering, less transplanting.'), ]), 
+			'moon.sheet.descending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Descending moon'), const TextSpan(text: ' — sinking sap: transplanting, cuttings, root harvest.'), ]), 
+			'moon.sheet.favorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'No lunar node or eclipse nearby — '), b('a favorable day'), const TextSpan(text: '.'), ]), 
+			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'A lunar node or eclipse is near — '), b('an unfavorable day'), const TextSpan(text: '; better let the garden rest.'), ]), 
+			'moon.sheet.recommended_for' => ({required Object day}) => 'Recommended for ${day}',
+			'moon.sheet.add_task' => '+ task',
 			_ => null,
 		};
 	}
