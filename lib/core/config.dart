@@ -133,6 +133,22 @@ const kJournalNudgeDayOffsets = [7, 28];
 /// [kJournalNudgeDayOffsets].
 const kJournalNudgeNotificationIds = [-201, -202];
 
+/// Moon "tomorrow is a X day" hint (FR-19 T4b) — a device-local notification
+/// posted the evening before a day whose element the garden actually grows
+/// (decision 2026-08-01). 18:00 sits outside quiet hours by design; the horizon
+/// is what one arming covers, so the hints keep coming while the app stays
+/// closed. One reserved id per horizon day.
+const kMoonHintHour = 18;
+const kMoonHintHorizonDays = 7;
+const kMoonHintNotificationIds = [-211, -212, -213, -214, -215, -216, -217];
+
+/// Every id owned by a gentle-hint coordinator. The reminder coordinator shares
+/// the OS queue but owns none of these — its orphan sweep must skip them.
+const kHintNotificationIds = [
+  ...kJournalNudgeNotificationIds,
+  ...kMoonHintNotificationIds,
+];
+
 /// Quiet-hours window: gentle hints wanted inside it wait until its end
 /// (`hint_rules.dart`). It governs hints only — NOT explicit task reminders,
 /// see koncept.md §"Vodenje proti motečnosti". The window wraps past midnight,

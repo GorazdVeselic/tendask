@@ -1,4 +1,6 @@
+import '../../../core/config.dart';
 import '../../../core/date_format.dart';
+import '../../../core/notifications/notification_settings.dart';
 
 /// Local wall-clock fire times for the re-engagement journal nudge (FR-16).
 ///
@@ -34,4 +36,23 @@ List<DateTime> journalNudgeFireTimes({
     minDay = day;
   }
   return times;
+}
+
+/// Local days the currently armed nudge chain occupies, empty when the user
+/// opted out. The junior moon hint (FR-19 T4b) yields to these days — one
+/// gentle hint per day, and the nudge is the senior of the two.
+Set<DateTime> journalNudgeDays({
+  required DateTime fromLocal,
+  required NotificationSettings settings,
+  Set<DateTime> taskReminderDays = const {},
+}) {
+  if (!settings.journalNudgeEnabled) return const {};
+  // kJournalNudgeHour is outside quiet hours, so the scheduled day is the
+  // computed day (no hint_rules shift to mirror here).
+  return journalNudgeFireTimes(
+    fromLocal: fromLocal,
+    dayOffsets: kJournalNudgeDayOffsets,
+    hour: kJournalNudgeHour,
+    taskReminderDays: taskReminderDays,
+  ).map(startOfDay).toSet();
 }

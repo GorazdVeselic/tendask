@@ -233,27 +233,48 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   mejo meseca in leta, `gardenElements` nad pravim katalogom (lastna rastlina/soba/izbris), sistem
   odloča besedilo sheeta (ozvezdje ↔ znamenje).
 
-**Naloga TE seje: T4b korak 2 — izračun + razpored luninega namiga** (branch
-`feat/fr19-t4b-2-scheduler`; koraka 3 in 4 sta svoji seji):
+- **T4b korak 2 ✅ (1. 8.) — razporejevalnik luninega namiga:** **odločitev lastnika o ritmu:** namig
+  pride **samo za dneve, ki jih vrt lahko uporabi** (element dneva ∈ `gardenElements`, isto pravilo kot
+  ★; prazen vrt = tišina) in **ob 18:00 dan prej**; zavrnjeni »vsak večer« in »samo ob menjavi
+  elementa« (zapisano v decisions B1). Čisti izračun `moonHintCandidates()`
+  (`moon/application/moon_hint_schedule.dart`, vrne `MoonHint` = fireTime + date + element + isNewMoon;
+  eve prek `startOfDay` zaradi DST; pretekli časi odpadejo) → `MoonHintCoordinator`
+  (`moon_hint_coordinator.dart`, keepAlive, vzorec `JournalNudgeCoordinator`): re-arm ob
+  zagonu (`main.dart`), resume (`app.dart`, poleg nudgea) in spremembi luninih nastavitev / vrta /
+  profila (debounce `kReminderDebounce`); `Clock` namesto `DateTime.now()`; horizont **7 dni** =
+  `kMoonHintNotificationIds` (−211…−217), `kMoonHintHour = 18`. Vsak kandidat gre skozi `hintFireTime`
+  z `otherHintDays` = dnevi dnevniškega nudgea (nov `journalNudgeDays()`; `futureTaskReminderDays()`
+  ekstrahiran iz nudge koordinatorja v `reminder_schedule.dart`, da oba računata isto) + že zasedeni
+  lunini dnevi; obramba: če bi tihe ure namig prestavile čez polnoč, ga raje spusti (»jutri« mora priti
+  dan prej — pri 18:00 nemogoče). **Opt-in `moonHintEnabled`** v `NotificationSettings` (JSON
+  `moon_hint`, privzeto **false**, tolerantni parser → brez migracije). Vsebina se **re-izpelje ob
+  vsakem arm-u**: naslov nov ključ `moon.hint.title` (en+sl+de) nad `day_for`, telo = obstoječi
+  `activity` (mlaj → `activity_new_moon`, isto kot agenda). ⚠️ **Najdba:** orphan sweep opomnikov je
+  brisal vse tuje id-je razen nudge — dodan skupni `kHintNotificationIds` (nudge + moon), zdaj sta oba
+  varna. Preverba izračuna prek `tmp/moon_hint_scratch_test.dart` (avg 2026, vrt list+koren). Testov ta
+  korak namenoma ne dodaja — so korak 4. Suite ostaja **1265**.
 
-- **Kaj:** device-local razporejevalnik namiga »jutri je dan za X« — po vzorcu
-  `JournalNudgeCoordinator` (re-arm ob zagonu/resume/spremembi nastavitev, rezervirani negativni
-  id-ji v `config.dart`, `scheduleNudge` = inexact kanal, brez exact-alarm dovoljenja).
-- **Skozi `hintFireTime`** (korak 1): želeni čas → tihe ure/kapica; `otherHintDays` = dnevi, ki jih
-  že zaseda dnevniški nudge (lunin namig se umakne njemu). Ura namiga = nova konstanta v `config.dart`.
-- **Vhod za vsebino:** `dayFor(jutri, system)` prek `MoonSettingsController` (en `system` vodi vse).
-- **Pasti (plan T4b):** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) ·
-  spoštuje preklop sistema · UI nikjer ne reče »motor« · `Clock` namesto `DateTime.now()` (testi
-  rabijo FakeClock) · dokler stikala ni (korak 3), se **nič ne razporeja** — flag + privzeto off.
-- **Vrstica 🔔 v `/moon-settings` pride šele s korakom 3** — brez mrtvih stikal.
+**Naloga TE seje: T4b korak 3 — 🔔 vrstica v `/moon-settings`** (branch
+`feat/fr19-t4b-3-toggle`; korak 4 = testi je svoja seja):
 
-**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) · spec §6.3.9 ·
-`core/notifications/hint_rules.dart` (korak 1) · `journal_nudge_coordinator.dart` (vzorec) ·
-`notification_settings.dart` (kam gre nova opt-in vrednost).
+- **Kaj:** vrstica »Namig ‚jutri dober dan'« (wireframe board 2b: 🔔 + podnaslov »nežno, spoštuje tihe
+  ure«) v `MoonSettingsScreen`, med podstikala — prižge/ugasne `moonHintEnabled` v
+  `NotificationSettings` (profile JSON, **sinhronizirano**, ne v `local_prefs`!).
+- **Pasti:** to je edino stikalo, ki NI v `MoonSettingsController` (živi v profilu) — beri/piši prek
+  `profileRepository`/`notificationSettingsProvider`, ne prek luninih prefs · ob vklopu je treba
+  **zaprositi za dovoljenje za obvestila** (obstoječi vzorec zaslon 21 / priming) in po zapisu
+  **re-armati** `moonHintCoordinatorProvider` (profil sproži re-arm sam prek `tableUpdates`, preveri) ·
+  privzeto ostane izklopljeno · besedilo brez besede »motor«.
+- **Videz najprej:** widget → pogled (`tmp/…preview_test.dart` → PNG) → šele nato prevodi/testi.
+
+**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) ·
+`moon_settings_screen.dart` (kam gre vrstica) · `moon_hint_coordinator.dart` (kaj bere) ·
+`notification_settings.dart` + zaslon 22 (kako se piše profilna nastavitev) · wireframe
+`docs/wireframes/lunar-calendar_overview.html` (board 2b).
 
 **Pravila:** naredi natanko ta korak in nič več. Pred merge: `flutter analyze` čist + cel
-`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 1, posodobi ta
-dokument na naslednji korak in predlagaj commit.
+`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 3, posodobi ta
+dokument na korak 4 in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

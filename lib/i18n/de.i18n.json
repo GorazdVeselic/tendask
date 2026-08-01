@@ -657,6 +657,9 @@
     "task_section": {
       "footnote": "Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet."
     },
+    "hint": {
+      "title": "Morgen ist ${day}"
+    },
     "day_for(map)": {
       "fruit": "Fruchttag",
       "root": "Wurzeltag",

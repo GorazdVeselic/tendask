@@ -54,7 +54,7 @@ final class JournalNudgeCoordinatorProvider
 }
 
 String _$journalNudgeCoordinatorHash() =>
-    r'9f58d0d2cb65e8d594f4085be62089d57fe4d983';
+    r'484edf934ffb7fff75078fa93591929a351b0b65';
 
 /// Keeps the local re-engagement journal nudge (FR-16) armed. Reschedules the
 /// decaying chain once at startup, on every (debounced) task/note/profile write,

@@ -657,6 +657,9 @@
     "task_section": {
       "footnote": "Tradition, not advice. Derived from the task's date."
     },
+    "hint": {
+      "title": "Tomorrow is a ${day}"
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",

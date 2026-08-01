@@ -82,14 +82,15 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       final repo = ref.read(tasksRepositoryProvider);
 
       // Master switch off: cancel everything we scheduled, schedule nothing —
-      // but never the journal nudge (FR-16), which has its own switch and owner.
+      // but never a gentle hint (FR-16 nudge, FR-19 moon hint): each has its
+      // own switch and owner.
       final userId = ref.read(authServiceProvider).userId;
       final settings = await ref
           .read(profileRepositoryProvider)
           .notificationSettings(userId);
       if (!settings.taskRemindersEnabled) {
         final ours = (await notif.pendingIds()).difference(
-          kJournalNudgeNotificationIds.toSet(),
+          kHintNotificationIds.toSet(),
         );
         for (final id in ours) {
           await notif.cancel(id);
@@ -137,12 +138,12 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       }
 
       // Drop reminders that no longer exist / moved to the past (only pending,
-      // never already-delivered notifications). The journal nudge (FR-16) lives
-      // in the same OS queue but is owned by its own coordinator — never cancel
-      // its reserved ids here.
+      // never already-delivered notifications). The gentle hints live in the
+      // same OS queue but are owned by their own coordinators — never cancel
+      // their reserved ids here.
       final orphans = (await notif.pendingIds())
           .difference(desired)
-          .difference(kJournalNudgeNotificationIds.toSet());
+          .difference(kHintNotificationIds.toSet());
       for (final id in orphans) {
         await notif.cancel(id);
       }
