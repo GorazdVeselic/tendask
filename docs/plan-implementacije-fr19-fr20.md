@@ -337,10 +337,22 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      MVP po planu). `sentenceCase` ekstrahiran v `moon_text.dart` (3. pojavitev). Matrika
      `task/moon-section` + testa. Pogled prek `tmp/moon_task_section_preview_test.dart` → PNG.
      Suite 1204.)
-  4. ⬜ **Dnevnik (A2=C, 2026-07-31):** 🌙 gumb v AppBar `/journal` → `/moon-calendar` + **barvna plast**
+  4. ✅ **Dnevnik (A2=C, 2026-07-31):** 🌙 gumb v AppBar `/journal` → `/moon-calendar` + **barvna plast**
      v mesečni mreži Dnevnika (element-barva + mena celic; tap dan ostane dnevniški dan), za stikalom
      »Prikaži v Dnevniku« (T3.6). ⚠️ `DayCell` je layout-kritičen (320 px × 1.3) — layout matrika
      Dnevnika mora ostati zelena. **Pogled.**
+     (2026-08-01: `journal_moon.dart` (`moon/presentation/widgets/`) — trislojni gumb
+     `JournalMoonButton` (flag gate brez ref → opt-in gate → javna `JournalMoonIconButton`;
+     podstikalo velja za PLAST, ne za gumb — screen-map §1.3) + `journalMoonDays()` (null,
+     dokler flag/opt-in/`showInJournal` niso vsi vklopljeni → mreža piksel-identična). `DayCell`
+     dobi opcijski `moonDay`: soft element ozadje (izbran/danes ostaneta na obrobi, board C) +
+     mena-marker ob številki v `FittedBox.scaleDown`. Brez novih i18n ključev (tooltip =
+     `moon.calendar.title`). Mimogrede popravljena latentna tesnoba: številka + pike pri
+     320 px × 1.3 prekipita za 1,3 px (obstoječa matrika je ne ujame, ker tekoči mesec nima pik)
+     → vrstica pik v `Flexible` + `FittedBox.scaleDown`. Matrika `journal/moon-layer` (javno
+     jedro, avg 2026) + testi (dark gumb brez scope-a · tap → ruta · `journalMoonDays` dark →
+     null brez providerja · celica z/brez plasti). Pogled prek
+     `tmp/journal_moon_preview_test.dart` → PNG (svetla/temna/320×1.3). Suite 1227.)
   5. ⬜ Widget/layout testi za vse štiri + de prevodi po pogledu.
 - **Branchi:** `feat/fr19-t4-1-home-chip` · `feat/fr19-t4-2-when-step` · `feat/fr19-t4-3-task-detail` ·
   `feat/fr19-t4-4-journal-layer` · `feat/fr19-t4-5-tests`.

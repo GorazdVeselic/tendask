@@ -2,11 +2,17 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/moon_colors.dart';
+import '../../../moon/application/moon_month_provider.dart';
+import '../../../moon/presentation/widgets/moon_phase_icon.dart';
+
 /// How many task dots a day cell shows at most.
 const _kMaxDots = 3;
 
 /// One day of the month grid: its number, up to three task dots, and the
-/// today/selected accents.
+/// today/selected accents. With [moonDay] set the moon layer paints the
+/// element soft tone as background and a principal-phase marker next to the
+/// number (FR-19 T4.4, board C) — dots and accents stay unchanged.
 class DayCell extends StatelessWidget {
   const DayCell({
     super.key,
@@ -15,6 +21,7 @@ class DayCell extends StatelessWidget {
     required this.isToday,
     required this.selected,
     required this.onTap,
+    this.moonDay,
   });
 
   final DateTime day;
@@ -22,18 +29,35 @@ class DayCell extends StatelessWidget {
   final bool isToday;
   final bool selected;
   final VoidCallback onTap;
+  final MoonMonthDay? moonDay;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final moonDay = this.moonDay;
+    // Fallback covers bare ThemeData in tests; app themes always register it.
+    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
+
+    final number = Text(
+      '${day.day}',
+      style: theme.textTheme.bodySmall?.copyWith(
+        fontWeight: (isToday || selected) ? FontWeight.w700 : FontWeight.w500,
+        // Today's number stays green even when the day is selected.
+        color: isToday ? theme.colorScheme.primary : null,
+      ),
+    );
+
     return InkWell(
       borderRadius: BorderRadius.circular(10),
       onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
-          // Selected = honey fill (distinct from today's green); today keeps a
-          // light fill so the task dots stay visible.
-          color: selected
+          // Moon layer wins the fill (board C: selection stays on the border);
+          // otherwise selected = honey fill (distinct from today's green) and
+          // today keeps a light fill so the task dots stay visible.
+          color: moonDay != null
+              ? moon.softOf(moonDay.element)
+              : selected
               ? theme.colorScheme.secondary.withValues(alpha: 0.18)
               : theme.colorScheme.surfaceContainerHighest,
           borderRadius: BorderRadius.circular(10),
@@ -46,34 +70,52 @@ class DayCell extends StatelessWidget {
         padding: const EdgeInsets.only(top: 5),
         child: Column(
           children: [
-            Text(
-              '${day.day}',
-              style: theme.textTheme.bodySmall?.copyWith(
-                fontWeight: (isToday || selected)
-                    ? FontWeight.w700
-                    : FontWeight.w500,
-                // Today's number stays green even when the day is selected.
-                color: isToday ? theme.colorScheme.primary : null,
-              ),
-            ),
+            if (moonDay?.principalPhase case final phase?)
+              // Scale down rather than overflow: at the 320 px viewport a
+              // two-digit number + phase icon exceed the cell width.
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    number,
+                    const SizedBox(width: 2),
+                    MoonPhaseIcon(
+                      phase: phase,
+                      illumFraction: principalIllumFraction(phase),
+                      size: 10,
+                      color: theme.colorScheme.onSurface,
+                    ),
+                  ],
+                ),
+              )
+            else
+              number,
             const SizedBox(height: 3),
             if (count > 0)
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var i = 0; i < math.min(count, _kMaxDots); i++)
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 1),
-                      child: Container(
-                        width: 5,
-                        height: 5,
-                        decoration: BoxDecoration(
-                          color: theme.colorScheme.primary,
-                          shape: BoxShape.circle,
+              // Scale down rather than overflow: at the 320 px viewport with
+              // large font scale the number plus dots exceed the cell height.
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (var i = 0; i < math.min(count, _kMaxDots); i++)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 1),
+                          child: Container(
+                            width: 5,
+                            height: 5,
+                            decoration: BoxDecoration(
+                              color: theme.colorScheme.primary,
+                              shape: BoxShape.circle,
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                ],
+                    ],
+                  ),
+                ),
               ),
           ],
         ),

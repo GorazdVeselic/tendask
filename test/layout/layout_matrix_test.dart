@@ -18,11 +18,14 @@ import 'package:tendask/features/auth/presentation/location_screen.dart';
 import 'package:tendask/core/biodynamic/biodynamic_day.dart';
 import 'package:tendask/core/biodynamic/calendar_system.dart';
 import 'package:tendask/core/biodynamic/moon_calendar.dart';
+import 'package:tendask/core/month_cells.dart';
 import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/home/presentation/widgets/home_moon_chip.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
+import 'package:tendask/features/journal/presentation/widgets/day_cell.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
+import 'package:tendask/features/moon/application/moon_month_provider.dart';
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_week_view.dart';
@@ -402,6 +405,56 @@ void main() {
     overrides: _dbOverrides,
     build: () => MoonTaskSectionCard(date: _moonTransitionDate()),
   );
+
+  // The journal grid with the moon layer on (T4.4). Through the public core
+  // (DayCell + moonDay), not JournalScreen: the flag gate is const-false until
+  // T7. August 2026 carries phase markers on two-digit days — the row's worst
+  // case at 320 px.
+  layoutMatrix(
+    'journal/moon-layer',
+    overrides: _taskWorldOverrides,
+    build: () => const _JournalMoonGrid(),
+  );
+}
+
+/// The journal month grid of August 2026 with the moon layer applied.
+class _JournalMoonGrid extends StatelessWidget {
+  const _JournalMoonGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    final ml = MaterialLocalizations.of(context);
+    final month = DateTime(2026, 8);
+    final cells = monthCells(month, ml.firstDayOfWeekIndex);
+
+    return ListView(
+      padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
+      children: [
+        GridView.builder(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: 7,
+            mainAxisSpacing: 4,
+            crossAxisSpacing: 4,
+          ),
+          itemCount: cells.length,
+          itemBuilder: (context, i) {
+            final day = cells[i];
+            if (day == null) return const SizedBox.shrink();
+            return DayCell(
+              day: day,
+              count: day.day % 3,
+              isToday: day.day == 12,
+              selected: day.day == 28,
+              onTap: () {},
+              moonDay: moonMonthDayFor(day, CalendarSystem.sidereal),
+            );
+          },
+        ),
+      ],
+    );
+  }
 }
 
 /// First August 2026 day with an element transition (sidereal).

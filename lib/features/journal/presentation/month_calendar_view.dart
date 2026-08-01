@@ -10,6 +10,7 @@ import '../../../core/widgets/month_chrome.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../moon/presentation/widgets/journal_moon.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
@@ -77,6 +78,8 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
     final counts = taskCountsInMonth(tasks, _visibleMonth);
     final cells = monthCells(_visibleMonth, ml.firstDayOfWeekIndex);
     final now = DateTime.now();
+    // Null while the moon layer is off — the grid stays exactly as before.
+    final moonDays = journalMoonDays(ref, _visibleMonth);
 
     return ListView(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 100),
@@ -122,6 +125,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
               isToday: isSameDay(day, now),
               selected: selected != null && isSameDay(day, selected),
               onTap: () => setState(() => _selectedDay = day),
+              moonDay: moonDays?[day],
             );
           },
         ),
