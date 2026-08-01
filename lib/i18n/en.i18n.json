@@ -640,6 +640,8 @@
       "system_tropical": "By signs",
       "system_tropical_sub": "astrological",
       "system_help": "Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.",
+      "hint": "“Tomorrow is a good day” hint",
+      "hint_sub": "gentle, respects quiet hours",
       "highlight_garden": "Highlight for my garden",
       "highlight_garden_sub": "lift the days for what I grow",
       "show_in_journal": "Show in Journal",

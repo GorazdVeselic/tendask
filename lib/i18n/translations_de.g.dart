@@ -1032,6 +1032,8 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	@override String get system_tropical => 'Nach Zeichen';
 	@override String get system_tropical_sub => 'astrologisch';
 	@override String get system_help => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.';
+	@override String get hint => 'Hinweis „morgen ist ein guter Tag“';
+	@override String get hint_sub => 'sanft, beachtet die Ruhezeiten';
 	@override String get highlight_garden => 'Für meinen Garten hervorheben';
 	@override String get highlight_garden_sub => 'hebt Tage für das hervor, was ich anbaue';
 	@override String get show_in_journal => 'Im Tagebuch anzeigen';
@@ -1717,6 +1719,8 @@ extension on TranslationsDe {
 			'moon.settings.system_tropical' => 'Nach Zeichen',
 			'moon.settings.system_tropical_sub' => 'astrologisch',
 			'moon.settings.system_help' => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.',
+			'moon.settings.hint' => 'Hinweis „morgen ist ein guter Tag“',
+			'moon.settings.hint_sub' => 'sanft, beachtet die Ruhezeiten',
 			'moon.settings.highlight_garden' => 'Für meinen Garten hervorheben',
 			'moon.settings.highlight_garden_sub' => 'hebt Tage für das hervor, was ich anbaue',
 			'moon.settings.show_in_journal' => 'Im Tagebuch anzeigen',

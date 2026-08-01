@@ -4,9 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/auth/auth_service.dart';
 import '../../../core/biodynamic/calendar_system.dart';
+import '../../../core/notifications/notification_service.dart';
+import '../../../core/notifications/notification_settings.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../notifications/presentation/notification_priming_sheet.dart';
+import '../../settings/application/profile_providers.dart';
 import '../application/moon_settings_controller.dart';
 
 /// Moon calendar settings (FR-19 T3.6, wireframe board 2b): the opt-in switch,
@@ -86,6 +91,7 @@ class MoonSettingsScreen extends ConsumerWidget {
             Card(
               child: Column(
                 children: [
+                  const _HintTile(),
                   SwitchListTile(
                     secondary: const Text('🪴', style: TextStyle(fontSize: 22)),
                     title: Text(t.moon.settings.highlight_garden),
@@ -120,6 +126,69 @@ class MoonSettingsScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+/// The 🔔 opt-in for the "tomorrow is a X day" hint (FR-19 T4b). The only row
+/// here that is NOT device-local: it lives in the profile and syncs with the
+/// account (decision B1), so it reads and writes the notification settings
+/// instead of [MoonSettingsController].
+class _HintTile extends ConsumerWidget {
+  const _HintTile();
+
+  Future<void> _set(
+    BuildContext context,
+    WidgetRef ref,
+    NotificationSettings settings,
+    bool on,
+  ) async {
+    if (on) {
+      final notif = ref.read(notificationServiceProvider);
+      // Denied → leave it off; the switch mirrors what is stored.
+      if (!await _ensurePermission(context, notif)) return;
+    }
+    final userId = ref.read(authServiceProvider).userId;
+    // The hint coordinator re-arms itself off the profile table update.
+    await ref
+        .read(profileRepositoryProvider)
+        .setNotificationSettings(
+          userId,
+          settings.copyWith(moonHintEnabled: on),
+        );
+  }
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final t = context.t;
+    final settingsAsync = ref.watch(notificationSettingsProvider);
+    final settings = settingsAsync.asData?.value;
+
+    return SwitchListTile(
+      secondary: const Text('🔔', style: TextStyle(fontSize: 22)),
+      title: Text(t.moon.settings.hint),
+      subtitle: Text(
+        settingsAsync.hasError
+            ? t.moon.settings.load_error
+            : t.moon.settings.hint_sub,
+      ),
+      value: settings?.moonHintEnabled ?? false,
+      onChanged: settings == null
+          ? null
+          : (v) => unawaited(_set(context, ref, settings, v)),
+    );
+  }
+}
+
+/// Notification permission for the hint. It rides the inexact nudge channel, so
+/// unlike a task reminder it needs no exact-alarm grant — priming (screen 21)
+/// plus POST_NOTIFICATIONS is the whole flow.
+Future<bool> _ensurePermission(
+  BuildContext context,
+  NotificationService notif,
+) async {
+  if (await notif.areNotificationsEnabled()) return true;
+  if (!context.mounted) return false;
+  if (await showNotificationPriming(context) != true) return false;
+  return notif.requestPermission();
 }
 
 /// Two-line segment label (mechanism name over its small qualifier), matching

@@ -1042,6 +1042,8 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	@override String get system_tropical => 'Po znamenjih';
 	@override String get system_tropical_sub => 'astrološki';
 	@override String get system_help => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.';
+	@override String get hint => 'Namig »jutri dober dan«';
+	@override String get hint_sub => 'nežno, spoštuje tihe ure';
 	@override String get highlight_garden => 'Poudari po mojem vrtu';
 	@override String get highlight_garden_sub => 'dvigni dneve za to, kar gojim';
 	@override String get show_in_journal => 'Prikaži v Dnevniku';
@@ -1727,6 +1729,8 @@ extension on TranslationsSl {
 			'moon.settings.system_tropical' => 'Po znamenjih',
 			'moon.settings.system_tropical_sub' => 'astrološki',
 			'moon.settings.system_help' => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.',
+			'moon.settings.hint' => 'Namig »jutri dober dan«',
+			'moon.settings.hint_sub' => 'nežno, spoštuje tihe ure',
 			'moon.settings.highlight_garden' => 'Poudari po mojem vrtu',
 			'moon.settings.highlight_garden_sub' => 'dvigni dneve za to, kar gojim',
 			'moon.settings.show_in_journal' => 'Prikaži v Dnevniku',
