@@ -9,6 +9,7 @@ import '../../../../core/widgets/section_label.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
+import '../moon_gate.dart';
 import '../moon_text.dart';
 import 'element_badge.dart';
 
@@ -40,7 +41,7 @@ class _MoonTaskSectionGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!(settings?.enabled ?? false)) return const SizedBox.shrink();
+    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

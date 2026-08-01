@@ -8,6 +8,7 @@ import '../../../../core/config.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../moon/application/moon_month_provider.dart';
 import '../../../moon/application/moon_settings_controller.dart';
+import '../../../moon/presentation/moon_gate.dart';
 import '../../../moon/presentation/widgets/moon_phase_icon.dart';
 
 /// Moon calendar entry gate on the dashboard (FR-19 T4.1, wireframe board 1).
@@ -23,8 +24,9 @@ class HomeMoonChip extends ConsumerWidget {
     // Warmed in bootstrap (keepAlive), so no flash: the value is present from
     // the first frame and the null branch only covers a failed load.
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    final visible = (settings?.enabled ?? false) && kMoonCalendarEnabled;
-    if (!visible) return const SizedBox.shrink();
+    if (!kMoonCalendarEnabled || !moonSurfaceOn(settings)) {
+      return const SizedBox.shrink();
+    }
     return const Padding(
       padding: EdgeInsets.only(bottom: 16),
       child: HomeMoonChipCard(),
@@ -94,13 +96,25 @@ class _HomeMoonChipCardState extends ConsumerState<HomeMoonChipCard>
               ),
               const SizedBox(width: 12),
               Expanded(
+                flex: 3,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      t.moon.calendar.title,
-                      style: theme.textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.w600,
+                    // One word in German ("Mondkalender"), so wrapping would
+                    // break it mid-word at 320 px with large text — scale it
+                    // down instead. Untouched at ordinary sizes (scaleDown
+                    // never enlarges).
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          t.moon.calendar.title,
+                          maxLines: 1,
+                          style: theme.textTheme.titleSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
                       ),
                     ),
                     Text(
@@ -115,17 +129,33 @@ class _HomeMoonChipCardState extends ConsumerState<HomeMoonChipCard>
                 ),
               ),
               const SizedBox(width: 8),
-              Text(
-                t.moon.day_for[cell.element.name]!,
-                style: theme.textTheme.bodyMedium?.copyWith(
-                  color: theme.colorScheme.primary,
-                  fontWeight: FontWeight.w600,
+              // The CTA yields width instead of taking its natural size: laid
+              // out rigidly it starves the title column, and German
+              // ("Mondkalender" · "Blütentag") then breaks mid-word at 320 px
+              // with large text. It scales down rather than wrap.
+              Flexible(
+                flex: 2,
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerRight,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        t.moon.day_for[cell.element.name]!,
+                        style: theme.textTheme.bodyMedium?.copyWith(
+                          color: theme.colorScheme.primary,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      Icon(
+                        Icons.chevron_right,
+                        size: 20,
+                        color: theme.colorScheme.primary,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-              Icon(
-                Icons.chevron_right,
-                size: 20,
-                color: theme.colorScheme.primary,
               ),
             ],
           ),

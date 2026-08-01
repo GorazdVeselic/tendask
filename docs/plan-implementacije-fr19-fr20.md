@@ -353,7 +353,21 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      jedro, avg 2026) + testi (dark gumb brez scope-a · tap → ruta · `journalMoonDays` dark →
      null brez providerja · celica z/brez plasti). Pogled prek
      `tmp/journal_moon_preview_test.dart` → PNG (svetla/temna/320×1.3). Suite 1227.)
-  5. ⬜ Widget/layout testi za vse štiri + de prevodi po pogledu.
+  5. ✅ Widget/layout testi za vse štiri + de prevodi po pogledu.
+     (2026-08-01: testi in matrike so prišli že z vsakim korakom, zato je bil ta korak **pregled +
+     zapolnitev vrzeli**. Najdbe: **(1) de prelom v čipu na Domov** — pri 320 px × 1.3 je CTA vzel
+     naravno širino in izstradal naslovni stolpec, zato sta se »Mondkalender« in »abnehmender Mond«
+     lomila **sredi besede** (matrika tega ne ujame: prosto-ovijajoč tekst se nikoli ne odreže) →
+     CTA zdaj `Flexible(flex: 2)` + `FittedBox.scaleDown`, naslovni stolpec `Expanded(flex: 3)`,
+     naslov `FittedBox.scaleDown` + `maxLines: 1`; pri 360 × 1.0 videz nespremenjen (PNG).
+     sl/en brez sprememb. **(2) srednja plast vrat (opt-in stikalo) ni bila testirana pri NOBENI
+     od štirih točk** — temni flag jo prekrije → pravili ekstrahirani v imenovana predikata
+     `moonSurfaceOn()` / `journalMoonLayerOn()` (`moon/presentation/moon_gate.dart`, 4 klicalci)
+     + `moon_gate_test.dart`: pokvarjene nastavitve = izklopljeno, 🌙 gumb ne gleda podstikala,
+     plast rabi oboje. **(3) priklop na gostitelja** (mount) lovi test le pri when-koraku
+     (`WhenStepBody` je brez Riverpoda, zato poceni) — ostali trije rabijo cel svet providerjev,
+     zato gre preverba v T7 korak 3. de pogled: `tmp/moon_t4_de_preview_test.dart` →
+     `tmp/moon_t4_{de,sl,en}_320x1.3.png` + `moon_t4_de_360x1.0.png`. Suite **1233**.)
 - **Branchi:** `feat/fr19-t4-1-home-chip` · `feat/fr19-t4-2-when-step` · `feat/fr19-t4-3-task-detail` ·
   `feat/fr19-t4-4-journal-layer` · `feat/fr19-t4-5-tests`.
 - **Varnost na `main`:** vsak od treh widgetov ob izklopljenem flagu (ali izklopljenem opt-in stikalu)
@@ -455,7 +469,9 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   2. ⬜ Oba flaga on (`kMoonCalendarEnabled`, `kTendaskPlusEnabled`) — branch `feat/fr20-t7-ignite`,
      en drobcen commit — + release build (versionCode disciplina — nalaganje porabi kodo) + `db push` check.
   3. ⬜ Preverba na napravi (SM A536B): odklenjen tok, potek/zaklenjen tok (ročno skrajšan `plus_until`
-     na stagingu), offline.
+     na stagingu), offline. **Vključi vse štiri T4 vstopne točke** (čip · when-step · task-detail ·
+     Dnevnik gumb+plast): dokler je flag temen, priklop na gostitelja lovi test le pri when-koraku
+     (ostali gostitelji rabijo cel svet providerjev) — najdba T4.5.
   4. ⬜ Objavljena zgodba (»X mesecev v zahvalo«) + Play listing/posnetki po potrebi (SL/EN/DE).
   5. ⬜ Zabeleži datum poteka prvih daril = **trdi rok za T8**.
 - **Varnost:** to je edini korak, ki **namerno** spremeni vedenje v produkciji — zato je zadnji in

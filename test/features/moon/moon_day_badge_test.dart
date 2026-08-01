@@ -8,8 +8,10 @@ import 'package:tendask/core/biodynamic/moon_calendar.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/date_format.dart';
+import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/moon/application/moon_month_provider.dart';
 import 'package:tendask/features/moon/presentation/widgets/moon_day_badge.dart';
+import 'package:tendask/features/tasks/presentation/entry/steps/when_step.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
 /// First August 2026 day with an element transition (sidereal).
@@ -40,6 +42,36 @@ void main() {
 
     expect(tester.takeException(), isNull);
     expect(find.byType(Text), findsNothing);
+  });
+
+  testWidgets('the when-step mounts the badge and stays ProviderScope-free', (
+    tester,
+  ) async {
+    // Pins both halves of the wiring: the badge really is in its host (a dark
+    // feature is invisible, so nothing else would notice it being dropped),
+    // and the host tree still pumps without a scope.
+    await tester.pumpWidget(
+      TranslationProvider(
+        child: MaterialApp(
+          home: Scaffold(
+            body: WhenStepBody(
+              date: DateTime(2026, 8, 2, 9),
+              status: TaskStatus.waiting,
+              recurrence: null,
+              onSetDate: (_) {},
+              onSetStatus: (_) {},
+              onSetRecurrence: (_, _) {},
+            ),
+          ),
+          localizationsDelegates: GlobalMaterialLocalizations.delegates,
+        ),
+      ),
+    );
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.byType(MoonDayBadge), findsOneWidget);
+    expect(find.byType(MoonDayBadgeRow), findsNothing);
   });
 
   testWidgets('the row shows the day label with the transition hour', (
