@@ -2012,6 +2012,16 @@ class Translations$moon$en {
 		'flower': 'flower day',
 		'leaf': 'leaf day',
 	};
+	Map<String, String> get activity => {
+		'fruit': 'Sow and tend fruiting crops (tomatoes, beans); gather seeds.',
+		'root': 'Sow and tend root crops (carrots, radishes, beets).',
+		'flower': 'Sow and tend flowering plants; cut flowers for the vase.',
+		'leaf': 'Sow and tend leafy vegetables (lettuce, spinach, cabbage).',
+	};
+
+	/// en: 'Around the new moon, let the garden rest; light chores only.'
+	String get activity_new_moon => 'Around the new moon, let the garden rest; light chores only.';
+
 	Map<String, String> get element => {
 		'fruit': 'fruit',
 		'root': 'root',
@@ -2064,6 +2074,25 @@ class Translations$moon$calendar$en {
 
 	/// en: 'recommended for your garden'
 	String get legend_star => 'recommended for your garden';
+
+	/// en: 'Month'
+	String get month_view => 'Month';
+
+	/// en: 'Week'
+	String get week_view => 'Week';
+
+	/// en: 'today'
+	String get today_marker => 'today';
+
+	Map<String, String> get weekday_short => {
+		'mon': 'Mon',
+		'tue': 'Tue',
+		'wed': 'Wed',
+		'thu': 'Thu',
+		'fri': 'Fri',
+		'sat': 'Sat',
+		'sun': 'Sun',
+	};
 }
 
 // Path: moon.division
@@ -2627,10 +2656,25 @@ extension on Translations {
 			'harvest.unit_bunch' => 'bunch',
 			'moon.calendar.title' => 'Moon calendar',
 			'moon.calendar.legend_star' => 'recommended for your garden',
+			'moon.calendar.month_view' => 'Month',
+			'moon.calendar.week_view' => 'Week',
+			'moon.calendar.today_marker' => 'today',
+			'moon.calendar.weekday_short.mon' => 'Mon',
+			'moon.calendar.weekday_short.tue' => 'Tue',
+			'moon.calendar.weekday_short.wed' => 'Wed',
+			'moon.calendar.weekday_short.thu' => 'Thu',
+			'moon.calendar.weekday_short.fri' => 'Fri',
+			'moon.calendar.weekday_short.sat' => 'Sat',
+			'moon.calendar.weekday_short.sun' => 'Sun',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',
 			'moon.day_for.leaf' => 'leaf day',
+			'moon.activity.fruit' => 'Sow and tend fruiting crops (tomatoes, beans); gather seeds.',
+			'moon.activity.root' => 'Sow and tend root crops (carrots, radishes, beets).',
+			'moon.activity.flower' => 'Sow and tend flowering plants; cut flowers for the vase.',
+			'moon.activity.leaf' => 'Sow and tend leafy vegetables (lettuce, spinach, cabbage).',
+			'moon.activity_new_moon' => 'Around the new moon, let the garden rest; light chores only.',
 			'moon.element.fruit' => 'fruit',
 			'moon.element.root' => 'root',
 			'moon.element.flower' => 'flower',

@@ -617,7 +617,19 @@
   "moon": {
     "calendar": {
       "title": "Moon calendar",
-      "legend_star": "recommended for your garden"
+      "legend_star": "recommended for your garden",
+      "month_view": "Month",
+      "week_view": "Week",
+      "today_marker": "today",
+      "weekday_short(map)": {
+        "mon": "Mon",
+        "tue": "Tue",
+        "wed": "Wed",
+        "thu": "Thu",
+        "fri": "Fri",
+        "sat": "Sat",
+        "sun": "Sun"
+      }
     },
     "day_for(map)": {
       "fruit": "fruit day",
@@ -625,6 +637,13 @@
       "flower": "flower day",
       "leaf": "leaf day"
     },
+    "activity(map)": {
+      "fruit": "Sow and tend fruiting crops (tomatoes, beans); gather seeds.",
+      "root": "Sow and tend root crops (carrots, radishes, beets).",
+      "flower": "Sow and tend flowering plants; cut flowers for the vase.",
+      "leaf": "Sow and tend leafy vegetables (lettuce, spinach, cabbage)."
+    },
+    "activity_new_moon": "Around the new moon, let the garden rest; light chores only.",
     "element(map)": {
       "fruit": "fruit",
       "root": "root",

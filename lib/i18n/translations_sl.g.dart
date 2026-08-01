@@ -953,6 +953,13 @@ class _Translations$moon$sl extends Translations$moon$en {
 		'flower': 'dan za cvet',
 		'leaf': 'dan za list',
 	};
+	@override Map<String, String> get activity => {
+		'fruit': 'Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.',
+		'root': 'Setev in oskrba korenovk (korenje, redkev, pesa).',
+		'flower': 'Setev in oskrba cvetnic; rez cvetja za šopke.',
+		'leaf': 'Setev in oskrba listnate zelenjave (solata, špinača, zelje).',
+	};
+	@override String get activity_new_moon => 'Ob mlaju raje počitek; le lažja opravila.';
 	@override Map<String, String> get element => {
 		'fruit': 'plod',
 		'root': 'korenina',
@@ -1001,6 +1008,18 @@ class _Translations$moon$calendar$sl extends Translations$moon$calendar$en {
 	// Translations
 	@override String get title => 'Lunin koledar';
 	@override String get legend_star => 'priporočeno za tvoj vrt';
+	@override String get month_view => 'Mesec';
+	@override String get week_view => 'Teden';
+	@override String get today_marker => 'danes';
+	@override Map<String, String> get weekday_short => {
+		'mon': 'pon',
+		'tue': 'tor',
+		'wed': 'sre',
+		'thu': 'čet',
+		'fri': 'pet',
+		'sat': 'sob',
+		'sun': 'ned',
+	};
 }
 
 // Path: moon.division
@@ -1560,10 +1579,25 @@ extension on TranslationsSl {
 			'harvest.unit_bunch' => 'šop',
 			'moon.calendar.title' => 'Lunin koledar',
 			'moon.calendar.legend_star' => 'priporočeno za tvoj vrt',
+			'moon.calendar.month_view' => 'Mesec',
+			'moon.calendar.week_view' => 'Teden',
+			'moon.calendar.today_marker' => 'danes',
+			'moon.calendar.weekday_short.mon' => 'pon',
+			'moon.calendar.weekday_short.tue' => 'tor',
+			'moon.calendar.weekday_short.wed' => 'sre',
+			'moon.calendar.weekday_short.thu' => 'čet',
+			'moon.calendar.weekday_short.fri' => 'pet',
+			'moon.calendar.weekday_short.sat' => 'sob',
+			'moon.calendar.weekday_short.sun' => 'ned',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',
 			'moon.day_for.leaf' => 'dan za list',
+			'moon.activity.fruit' => 'Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.',
+			'moon.activity.root' => 'Setev in oskrba korenovk (korenje, redkev, pesa).',
+			'moon.activity.flower' => 'Setev in oskrba cvetnic; rez cvetja za šopke.',
+			'moon.activity.leaf' => 'Setev in oskrba listnate zelenjave (solata, špinača, zelje).',
+			'moon.activity_new_moon' => 'Ob mlaju raje počitek; le lažja opravila.',
 			'moon.element.fruit' => 'plod',
 			'moon.element.root' => 'korenina',
 			'moon.element.flower' => 'cvet',

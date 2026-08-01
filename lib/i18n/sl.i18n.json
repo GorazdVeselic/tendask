@@ -627,7 +627,19 @@
   "moon": {
     "calendar": {
       "title": "Lunin koledar",
-      "legend_star": "priporočeno za tvoj vrt"
+      "legend_star": "priporočeno za tvoj vrt",
+      "month_view": "Mesec",
+      "week_view": "Teden",
+      "today_marker": "danes",
+      "weekday_short(map)": {
+        "mon": "pon",
+        "tue": "tor",
+        "wed": "sre",
+        "thu": "čet",
+        "fri": "pet",
+        "sat": "sob",
+        "sun": "ned"
+      }
     },
     "day_for(map)": {
       "fruit": "dan za plod",
@@ -635,6 +647,13 @@
       "flower": "dan za cvet",
       "leaf": "dan za list"
     },
+    "activity(map)": {
+      "fruit": "Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.",
+      "root": "Setev in oskrba korenovk (korenje, redkev, pesa).",
+      "flower": "Setev in oskrba cvetnic; rez cvetja za šopke.",
+      "leaf": "Setev in oskrba listnate zelenjave (solata, špinača, zelje)."
+    },
+    "activity_new_moon": "Ob mlaju raje počitek; le lažja opravila.",
     "element(map)": {
       "fruit": "plod",
       "root": "korenina",
