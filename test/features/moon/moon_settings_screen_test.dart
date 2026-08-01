@@ -3,13 +3,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:tendask/core/auth/auth_service.dart';
 import 'package:tendask/core/biodynamic/calendar_system.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/local_prefs/local_prefs.dart';
+import 'package:tendask/core/notifications/notification_service.dart';
 import 'package:tendask/features/moon/application/moon_settings_controller.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
+import 'package:tendask/features/settings/data/profile_repository.dart';
 import 'package:tendask/i18n/translations.g.dart';
+
+import '../../support/fake_notification_service.dart';
 
 /// Simulates a failed prefs load so the screen's error branch is reachable.
 class _FailingController extends MoonSettingsController {
@@ -20,11 +25,17 @@ class _FailingController extends MoonSettingsController {
 void main() {
   late AppDatabase db;
   late ProviderContainer container;
+  late FakeNotificationService notif;
 
   setUp(() {
     db = AppDatabase.forTesting(NativeDatabase.memory());
+    notif = FakeNotificationService();
     container = ProviderContainer(
-      overrides: [databaseProvider.overrideWithValue(db)],
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        // The 🔔 row asks the OS for the notification grant before it opts in.
+        notificationServiceProvider.overrideWithValue(notif),
+      ],
     );
   });
 
@@ -95,6 +106,32 @@ void main() {
     await tester.tap(find.text(t.moon.settings.show_astro));
     await tester.pumpAndSettle();
     expect(await prefs.moonShowAstroDetails(), isFalse);
+  });
+
+  testWidgets('the hint opt-in starts off and writes to the synced profile', (
+    tester,
+  ) async {
+    await pumpSettings(tester);
+    final hintRow = find.ancestor(
+      of: find.text(t.moon.settings.hint),
+      matching: find.byType(SwitchListTile),
+    );
+
+    // Off by default (decision B1) but reachable — a disabled row would mean
+    // the settings never resolved.
+    expect(tester.widget<SwitchListTile>(hintRow).value, isFalse);
+    expect(tester.widget<SwitchListTile>(hintRow).onChanged, isNotNull);
+
+    await tester.tap(find.text(t.moon.settings.hint));
+    await tester.pumpAndSettle();
+
+    // Unlike every other row here, this one lives in the profile, so it syncs
+    // with the account instead of staying on the device.
+    final settings = await ProfileRepository(
+      db,
+    ).notificationSettings(kLocalUserId);
+    expect(settings.moonHintEnabled, isTrue);
+    expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
   });
 
   testWidgets('a failed load shows the error message, not a stuck spinner', (

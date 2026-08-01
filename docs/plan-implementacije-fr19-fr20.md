@@ -378,7 +378,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Pasti:** vse oznake spoštujejo **opt-in stikalo** (off → nič nikjer) IN flag · čip bere ogrete
   prefs (T2.3), sicer utripanje · Dnevnik-plast dodatno spoštuje svoje podstikalo »Prikaži v Dnevniku«.
 
-## T4b · Lunino obvestilo — namig »jutri dober dan« (v v1 po odločitvi 2026-07-31)
+## T4b · Lunino obvestilo — namig »jutri dober dan« ✅ ZAKLJUČEN (2026-08-01)
 
 - **Vhod:** T1 (motor), T2.3 (prefs), T3.6 (zaslon nastavitev — vrstica 🔔 pride šele s tem taskom);
   **odločitev B1** ✅ (2026-08-01): dostava device-local, opt-in 🔔 sinhroniziran v profile JSON.
@@ -419,8 +419,26 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   en+sl+de. Pogled: `tmp/moon_settings_{light,dark}.png` + `tmp/moon_de_settings.png` — de pri 320 px
   ovije naslov na 3 vrstice, brez odreza. **Past za korak 4:** zaslon zdaj drži drift *stream*, zato
   test, ki sam lastuje `ProviderScope` in v teardownu zapre bazo, obvisi — uporabi obstoječi vzorec
-  `UncontrolledProviderScope` + `container.dispose()` PRED `db.close()`.) · 4. ⬜ testi (FakeClock:
-  tihe ure, kapica, preklop sistema, rob polnoči).
+  `UncontrolledProviderScope` + `container.dispose()` PRED `db.close()`.) · 4. ✅ testi (2026-08-01:
+  **najprej popravek zasnove, ker se odločitve ni dalo izvesti v testu** — v `_reschedule()` so bila
+  zlepljena vrata (flag), odločitev (kateri dnevi, tihe ure, kapica, polnoč, sloti) in izvedba (branje
+  profila, klic Androida), zato je najbolj zunanja plast zaklenila najbolj notranjo. Odločitev je zdaj
+  čista funkcija `planMoonHints()` (`moon_hint_schedule.dart`), ki »zdaj« dobi kot **argument** —
+  `Clock` tam ni potreben, ker je čas podatek; koordinator je dobil `armHints(nowLocal)`
+  (`@visibleForTesting`, brez flaga in brez ambientne ure), `kMoonCalendarEnabled` pa je ostal **samo
+  na vhodu** `_reschedule()`. Netestirana ostane natanko ta ena vrstica, ki jo T7 obrne.
+  **20 novih testov, suite 1285:** `moon_hint_schedule_test.dart` (12 — vrt filtrira dneve, 18:00 na
+  predvečer, novoluna zastavljena, horizont, arm po 18:00 spusti nocojšnji termin, sistem odloča dneve;
+  plan = kandidati brez pravil, `maxHints`, kapica spusti zaseden dan, tihe ure prestavijo 03:00 na
+  07:00, namig čez polnoč **odpade** namesto pozne dostave) · `moon_hint_coordinator_test.dart` (7 —
+  temen flag ne doseže OS vrste, opt-in počisti rezervirane id-je in oboroži po vrsti, opt-out in
+  izklopljen koledar utihneta, prazen vrt utihne, novoluna zamenja telo, **besedilo se re-izpelje po
+  preklopu sistema**) · 🔔 vrstica v `moon_settings_screen_test.dart` (privzeto izklopljena in
+  aktivna; vklop zapiše `moon_hint: true` v profil). Fake obvestilne službe izločen v
+  `test/support/fake_notification_service.dart` (2 klicalca). **Najdba:** pravilo »lunin namig se
+  umakne dnevniškemu nudgeu« je s trenutnimi konstantami **nedosegljivo** — predvečer dneva +7 je +6,
+  nudge pa pride šele na +7/+28, zato trka ne more biti; pravilo je testirano na ravni `planMoonHints`
+  (`takenDays`) in postane živo, če horizont zraste čez 7 dni.)
 - **Branchi:** `feat/fr19-t4b-1-quiet-hours` · `feat/fr19-t4b-2-scheduler` · `feat/fr19-t4b-3-toggle` ·
   `feat/fr19-t4b-4-tests`.
 - **Varnost na `main`:** privzeto izklopljeno + za flagom; dokler stikala ni (korak 3 zadnji pred testi),
