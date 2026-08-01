@@ -997,6 +997,7 @@ class _Translations$moon$sl extends Translations$moon$en {
 		'lastQuarter': 'zadnji krajec',
 		'waningCrescent': 'upadajoči srp',
 	};
+	@override late final _Translations$moon$sheet$sl sheet = _Translations$moon$sheet$sl._(_root);
 }
 
 // Path: moon.calendar
@@ -1031,6 +1032,68 @@ class _Translations$moon$division$sl extends Translations$moon$division$en {
 	// Translations
 	@override String get constellation => 'ozvezdje';
 	@override String get sign => 'znamenje';
+}
+
+// Path: moon.sheet
+class _Translations$moon$sheet$sl extends Translations$moon$sheet$en {
+	_Translations$moon$sheet$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get whats_happening => 'Kaj se dogaja';
+	@override TextSpan in_constellation({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Luna je v ozvezdju '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan in_sign({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Luna je v znamenju '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Ob '),
+		time,
+		const TextSpan(text: ' sledi '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override String until_then({required Object time, required Object emoji, required Object day}) => 'do ${time}, nato ${emoji} ${day}';
+	@override TextSpan phase_waxing({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Rastoča luna'),
+		const TextSpan(text: ' — tradicionalno ugodno za setev in nadzemne pridelke.'),
+	]);
+	@override TextSpan phase_waning({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Upadajoča luna'),
+		const TextSpan(text: ' — ugodno za spravilo, obrezovanje in korenovke.'),
+	]);
+	@override TextSpan ascending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Dvigajoča luna'),
+		const TextSpan(text: ' — čas vzpona sokov: setev in nabiranje, manj presajanja.'),
+	]);
+	@override TextSpan descending({required InlineSpanBuilder b}) => TextSpan(children: [
+		b('Spuščajoča luna'),
+		const TextSpan(text: ' — sokovi se spuščajo: presajanje, potaknjenci, spravilo korenin.'),
+	]);
+	@override TextSpan favorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Brez bližine vozla ali mrka — '),
+		b('ugoden dan'),
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan unfavorable({required InlineSpanBuilder b}) => TextSpan(children: [
+		const TextSpan(text: 'Bližina vozla ali mrka — '),
+		b('neugoden dan'),
+		const TextSpan(text: '; vrt raje počiva.'),
+	]);
+	@override String recommended_for({required Object day}) => 'Priporočeno za ${day}';
+	@override String get add_task => '+ opravilo';
 }
 
 /// The flat map containing all translations for locale <sl>.
@@ -1628,6 +1691,19 @@ extension on TranslationsSl {
 			'moon.phase.waningGibbous' => 'izbočena upadajoča luna',
 			'moon.phase.lastQuarter' => 'zadnji krajec',
 			'moon.phase.waningCrescent' => 'upadajoči srp',
+			'moon.sheet.whats_happening' => 'Kaj se dogaja',
+			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Luna je v ozvezdju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Luna je v znamenju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Ob '), time, const TextSpan(text: ' sledi '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'do ${time}, nato ${emoji} ${day}',
+			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Rastoča luna'), const TextSpan(text: ' — tradicionalno ugodno za setev in nadzemne pridelke.'), ]), 
+			'moon.sheet.phase_waning' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Upadajoča luna'), const TextSpan(text: ' — ugodno za spravilo, obrezovanje in korenovke.'), ]), 
+			'moon.sheet.ascending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Dvigajoča luna'), const TextSpan(text: ' — čas vzpona sokov: setev in nabiranje, manj presajanja.'), ]), 
+			'moon.sheet.descending' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Spuščajoča luna'), const TextSpan(text: ' — sokovi se spuščajo: presajanje, potaknjenci, spravilo korenin.'), ]), 
+			'moon.sheet.favorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Brez bližine vozla ali mrka — '), b('ugoden dan'), const TextSpan(text: '.'), ]), 
+			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Bližina vozla ali mrka — '), b('neugoden dan'), const TextSpan(text: '; vrt raje počiva.'), ]), 
+			'moon.sheet.recommended_for' => ({required Object day}) => 'Priporočeno za ${day}',
+			'moon.sheet.add_task' => '+ opravilo',
 			_ => null,
 		};
 	}

@@ -252,10 +252,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      `moon_week_view.dart`; podatki iz `moonMonthProvider` meseca zadnjega dne tedna (vodilni
      dnevi pokrijejo teden čez mejo meseca); `moon.activity(map)` + `activity_new_moon` en+sl;
      naprave ni bilo → pogled prek `tmp/moon_week_preview_test.dart` → PNG.)
-  5. ⬜ Dan podrobno — **sheet z drsenjem** (odločeno 2026-07-31; revizija sheet↔zaslon ob prvem
+  5. ✅ Dan podrobno — **sheet z drsenjem** (odločeno 2026-07-31; revizija sheet↔zaslon ob prvem
      pogledu na napravi): »Kaj se dogaja« (ozvezdje/znamenje, ura prehoda, mena, dvigajoča/spuščajoča,
      ugodnost) + **seznam »Priporočeno za <dan>«** (vrstici na element iz i18n T3.4, vsaka s CTA
-     »＋ opravilo«) → `/task-new?date=…` (obstoječi param). **Pogled.**
+     »＋ opravilo«) → `/task-new?date=…` (obstoječi param). **Pogled.** (2026-08-01:
+     `showMoonDaySheet` v `moon_day_sheet.dart` — `DraggableScrollableSheet` + `SheetHandle`; tap v
+     mesečni celici in agenda vrstici; hero z oznako dneva (ista polnočna redukcija kot celica) +
+     prehodni rep; slot-filled `moon.sheet.*` predloge (rich poudarki, ozvezdje/znamenje = dve
+     predlogi ene povedi); `MoonColors.softOf()` skupna metoda; naprave ni bilo → pogled prek
+     `tmp/moon_day_sheet_preview_test.dart` → PNG.)
   6. ⬜ `/moon-settings`: stikalo (opt-in), sistem toggle (»Po ozvezdjih (biodinamični)« / »Po znamenjih
      (astrološki)«, ena vrstica razlage, §13), **podstikala (2026-07-31):** »Poudari po mojem vrtu«
      (★, T3.3) · »Prikaži v Dnevniku« (plast, T4.4) · »Prikaži ozvezdja in meno« (podrobnosti v

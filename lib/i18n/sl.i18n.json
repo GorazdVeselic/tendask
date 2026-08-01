@@ -693,6 +693,21 @@
       "waningGibbous": "izbočena upadajoča luna",
       "lastQuarter": "zadnji krajec",
       "waningCrescent": "upadajoči srp"
+    },
+    "sheet": {
+      "whats_happening": "Kaj se dogaja",
+      "in_constellation(rich)": "Luna je v ozvezdju ${sign} → ${day}.",
+      "in_sign(rich)": "Luna je v znamenju ${sign} → ${day}.",
+      "transition(rich)": "Ob ${time} sledi ${sign} → ${day}.",
+      "until_then": "do ${time}, nato ${emoji} ${day}",
+      "phase_waxing(rich)": "${b(Rastoča luna)} — tradicionalno ugodno za setev in nadzemne pridelke.",
+      "phase_waning(rich)": "${b(Upadajoča luna)} — ugodno za spravilo, obrezovanje in korenovke.",
+      "ascending(rich)": "${b(Dvigajoča luna)} — čas vzpona sokov: setev in nabiranje, manj presajanja.",
+      "descending(rich)": "${b(Spuščajoča luna)} — sokovi se spuščajo: presajanje, potaknjenci, spravilo korenin.",
+      "favorable(rich)": "Brez bližine vozla ali mrka — ${b(ugoden dan)}.",
+      "unfavorable(rich)": "Bližina vozla ali mrka — ${b(neugoden dan)}; vrt raje počiva.",
+      "recommended_for": "Priporočeno za ${day}",
+      "add_task": "+ opravilo"
     }
   }
 }

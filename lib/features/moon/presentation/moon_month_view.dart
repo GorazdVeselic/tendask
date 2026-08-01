@@ -8,6 +8,7 @@ import '../../../core/month_cells.dart';
 import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/moon_month_provider.dart';
+import 'moon_day_sheet.dart';
 import 'widgets/element_badge.dart';
 import 'widgets/moon_phase_icon.dart';
 
@@ -63,15 +64,18 @@ class MoonMonthView extends ConsumerWidget {
           itemCount: cells.length,
           itemBuilder: (context, i) {
             final inMonth = cells[i] != null;
-            final date = cells[i] ??
-                DateTime(month.year, month.month, i - leading + 1);
+            final date =
+                cells[i] ?? DateTime(month.year, month.month, i - leading + 1);
             final day = days[date];
             if (day == null) return const SizedBox.shrink();
-            return _MoonDayCell(
-              day: day,
-              inMonth: inMonth,
-              isToday: isSameDay(date, now),
-              starred: inMonth && starred.contains(day.element),
+            return GestureDetector(
+              onTap: () => showMoonDaySheet(context, date),
+              child: _MoonDayCell(
+                day: day,
+                inMonth: inMonth,
+                isToday: isSameDay(date, now),
+                starred: inMonth && starred.contains(day.element),
+              ),
             );
           },
         ),
@@ -105,7 +109,7 @@ class _MoonDayCell extends StatelessWidget {
     // Fallback covers bare ThemeData in tests; app themes always register it.
     final moon = theme.extension<MoonColors>() ?? moonColorsLight;
 
-    final soft = _softOf(moon, day.element);
+    final soft = moon.softOf(day.element);
     final secondary = day.secondaryElement;
     final phase = day.principalPhase;
 
@@ -120,8 +124,12 @@ class _MoonDayCell extends StatelessWidget {
             : LinearGradient(
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
-                colors: [soft, soft, _softOf(moon, secondary),
-                    _softOf(moon, secondary)],
+                colors: [
+                  soft,
+                  soft,
+                  moon.softOf(secondary),
+                  moon.softOf(secondary),
+                ],
                 stops: const [0, 0.5, 0.5, 1],
               ),
         borderRadius: BorderRadius.circular(9),
@@ -198,14 +206,6 @@ class _MoonDayCell extends StatelessWidget {
   }
 }
 
-Color _softOf(MoonColors moon, BiodynamicElement element) =>
-    switch (element) {
-      BiodynamicElement.fruit => moon.fruitSoft,
-      BiodynamicElement.root => moon.rootSoft,
-      BiodynamicElement.flower => moon.flowerSoft,
-      BiodynamicElement.leaf => moon.leafSoft,
-    };
-
 Color _strongOf(MoonColors moon, BiodynamicElement element) =>
     switch (element) {
       BiodynamicElement.fruit => moon.fruit,
@@ -231,13 +231,13 @@ class _MoonLegend extends StatelessWidget {
     );
 
     Widget item(Widget glyph, String label) => Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            glyph,
-            const SizedBox(width: 5),
-            Text(label, style: labelStyle),
-          ],
-        );
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        glyph,
+        const SizedBox(width: 5),
+        Text(label, style: labelStyle),
+      ],
+    );
 
     return Wrap(
       alignment: WrapAlignment.center,
@@ -277,10 +277,7 @@ class _MoonLegend extends StatelessWidget {
         item(
           Text(
             '★',
-            style: TextStyle(
-              fontSize: 11,
-              color: theme.colorScheme.secondary,
-            ),
+            style: TextStyle(fontSize: 11, color: theme.colorScheme.secondary),
           ),
           t.moon.calendar.legend_star,
         ),

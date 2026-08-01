@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/biodynamic/biodynamic_day.dart';
 import 'app_colors.dart';
 
 /// Fixed semantic colours of the four moon calendar elements (FR-19, decision
@@ -28,6 +29,14 @@ class MoonColors extends ThemeExtension<MoonColors> {
   final Color flowerSoft;
   final Color leaf; // water — leaf day
   final Color leafSoft;
+
+  /// Soft (background) tone of [element] — one resolution for every surface.
+  Color softOf(BiodynamicElement element) => switch (element) {
+    BiodynamicElement.fruit => fruitSoft,
+    BiodynamicElement.root => rootSoft,
+    BiodynamicElement.flower => flowerSoft,
+    BiodynamicElement.leaf => leafSoft,
+  };
 
   @override
   MoonColors copyWith({

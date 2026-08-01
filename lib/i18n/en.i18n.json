@@ -683,6 +683,21 @@
       "waningGibbous": "waning gibbous",
       "lastQuarter": "last quarter",
       "waningCrescent": "waning crescent"
+    },
+    "sheet": {
+      "whats_happening": "What's happening",
+      "in_constellation(rich)": "The Moon is in the constellation ${sign} → ${day}.",
+      "in_sign(rich)": "The Moon is in the sign ${sign} → ${day}.",
+      "transition(rich)": "At ${time} ${sign} follows → ${day}.",
+      "until_then": "until ${time}, then ${emoji} ${day}",
+      "phase_waxing(rich)": "${b(Waxing moon)} — traditionally favours sowing and above-ground crops.",
+      "phase_waning(rich)": "${b(Waning moon)} — favours harvesting, pruning and root crops.",
+      "ascending(rich)": "${b(Ascending moon)} — rising sap: sowing and gathering, less transplanting.",
+      "descending(rich)": "${b(Descending moon)} — sinking sap: transplanting, cuttings, root harvest.",
+      "favorable(rich)": "No lunar node or eclipse nearby — ${b(a favorable day)}.",
+      "unfavorable(rich)": "A lunar node or eclipse is near — ${b(an unfavorable day)}; better let the garden rest.",
+      "recommended_for": "Recommended for ${day}",
+      "add_task": "+ task"
     }
   }
 }
