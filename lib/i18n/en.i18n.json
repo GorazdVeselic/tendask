@@ -651,6 +651,9 @@
       "about_footnote": "Tradition and preference, not agronomic advice. Computed on your device.",
       "load_error": "Couldn't load the settings."
     },
+    "badge": {
+      "until": "until ${time}"
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",

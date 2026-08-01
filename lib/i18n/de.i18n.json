@@ -651,6 +651,9 @@
       "about_footnote": "Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.",
       "load_error": "Einstellungen konnten nicht geladen werden."
     },
+    "badge": {
+      "until": "bis ${time}"
+    },
     "day_for(map)": {
       "fruit": "Fruchttag",
       "root": "Wurzeltag",

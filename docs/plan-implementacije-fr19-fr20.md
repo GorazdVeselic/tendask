@@ -317,9 +317,17 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (ne šele T4.5). Dodatno iz reviewa: error veja `/moon-settings` (`load_error` en+sl+de) +
      test, `kMoonWhatsHappeningKey` namesto emoji finderja, test ‹ › navigacije in test CTA
      »+ opravilo« → `/task-new?date=…`. Suite 1164 testov.)
-  2. ⬜ **When-step oznaka**: **ločen ConsumerWidget otrok** (ne parameter `WhenStepBody` — ta je
+  2. ✅ **When-step oznaka**: **ločen ConsumerWidget otrok** (ne parameter `WhenStepBody` — ta je
      namenoma brez Riverpoda in ima 36 layout testov, ki jih ne podirava): medla vrstica
      »🌱 dan za list · do 14:20« iz izbranega datuma. **Pogled.**
+     (2026-08-01: `MoonDayBadge` (`moon/presentation/widgets/moon_day_badge.dart`) pod
+     Datum/Ura + privzeto opombo; gate je **StatelessWidget s flag preverbo PRED ref** (testi
+     when-koraka pumpajo brez ProviderScope — dark ne sme zahtevati scope-a; test to zaklene) +
+     `_MoonDayBadgeGate` (opt-in) + javna `MoonDayBadgeRow`. Besedilo po planu (»dan za X · do
+     HH:MM«, `moonMonthDayFor` redukcija; rep samo, ko celica ohrani prehod) — wireframe board B
+     kaže varianto z »— ugodno za …« repom, plan jo je nadomestil. Nov ključ `moon.badge.until`
+     en+sl+de. Matrika `entry/when-badge` + testa gate/vsebina že tu. Pogled prek
+     `tmp/moon_day_badge_preview_test.dart` → PNG. Suite 1184.)
   3. ⬜ **Task-detail sekcija**: element-dan iz `task.date` — **re-izpeljan, ne zamrznjen** (če uporabnik
      datum spremeni, se posodobi; kontrast z vremenom, ki JE zamrznjeno — spec §6.1.2). Info, brez tapa (MVP).
   4. ⬜ **Dnevnik (A2=C, 2026-07-31):** 🌙 gumb v AppBar `/journal` → `/moon-calendar` + **barvna plast**

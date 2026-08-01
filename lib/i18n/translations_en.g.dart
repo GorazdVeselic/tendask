@@ -2007,6 +2007,7 @@ class Translations$moon$en {
 	// Translations
 	late final Translations$moon$calendar$en calendar = Translations$moon$calendar$en.internal(_root);
 	late final Translations$moon$settings$en settings = Translations$moon$settings$en.internal(_root);
+	late final Translations$moon$badge$en badge = Translations$moon$badge$en.internal(_root);
 	Map<String, String> get day_for => {
 		'fruit': 'fruit day',
 		'root': 'root day',
@@ -2164,6 +2165,18 @@ class Translations$moon$settings$en {
 
 	/// en: 'Couldn't load the settings.'
 	String get load_error => 'Couldn\'t load the settings.';
+}
+
+// Path: moon.badge
+class Translations$moon$badge$en {
+	Translations$moon$badge$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'until ${time}'
+	String until({required Object time}) => 'until ${time}';
 }
 
 // Path: moon.division
@@ -2843,6 +2856,7 @@ extension on Translations {
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '), b('roots, leaves, flowers and fruits'), const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '), b('planning'), const TextSpan(text: ', not a rule.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
 			'moon.settings.load_error' => 'Couldn\'t load the settings.',
+			'moon.badge.until' => ({required Object time}) => 'until ${time}',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',

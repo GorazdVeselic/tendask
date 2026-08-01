@@ -4,6 +4,7 @@ import '../../../../../core/date_format.dart';
 import '../../../../../core/task_status.dart';
 import '../../../../../core/widgets/section_label.dart';
 import '../../../../../i18n/translations.g.dart';
+import '../../../../moon/presentation/widgets/moon_day_badge.dart';
 import '../../../data/recurrence.dart';
 import '../widgets/recurrence_picker.dart';
 import 'when_rules.dart';
@@ -123,6 +124,9 @@ class WhenStepBody extends StatelessWidget {
             color: theme.colorScheme.onSurfaceVariant,
           ),
         ),
+        // Renders nothing while the moon flag or opt-in switch is off (the
+        // step itself stays Riverpod-free — the badge is its own consumer).
+        MoonDayBadge(date: date),
         const SizedBox(height: 20),
         _Field(
           label: t.entry.when_status,

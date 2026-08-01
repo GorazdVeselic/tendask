@@ -948,6 +948,7 @@ class _Translations$moon$sl extends Translations$moon$en {
 	// Translations
 	@override late final _Translations$moon$calendar$sl calendar = _Translations$moon$calendar$sl._(_root);
 	@override late final _Translations$moon$settings$sl settings = _Translations$moon$settings$sl._(_root);
+	@override late final _Translations$moon$badge$sl badge = _Translations$moon$badge$sl._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'dan za plod',
 		'root': 'dan za korenino',
@@ -1055,6 +1056,16 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	]);
 	@override String get about_footnote => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.';
 	@override String get load_error => 'Nastavitev ni bilo mogoče naložiti.';
+}
+
+// Path: moon.badge
+class _Translations$moon$badge$sl extends Translations$moon$badge$en {
+	_Translations$moon$badge$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String until({required Object time}) => 'do ${time}';
 }
 
 // Path: moon.division
@@ -1704,6 +1715,7 @@ extension on TranslationsSl {
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '), b('koreninami, listi, cvetovi in plodovi'), const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '), b('načrtovanju'), const TextSpan(text: ', ne kot pravilo.'), ]), 
 			'moon.settings.about_footnote' => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.',
 			'moon.settings.load_error' => 'Nastavitev ni bilo mogoče naložiti.',
+			'moon.badge.until' => ({required Object time}) => 'do ${time}',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',

@@ -938,6 +938,7 @@ class _Translations$moon$de extends Translations$moon$en {
 	// Translations
 	@override late final _Translations$moon$calendar$de calendar = _Translations$moon$calendar$de._(_root);
 	@override late final _Translations$moon$settings$de settings = _Translations$moon$settings$de._(_root);
+	@override late final _Translations$moon$badge$de badge = _Translations$moon$badge$de._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'Fruchttag',
 		'root': 'Wurzeltag',
@@ -1045,6 +1046,16 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	]);
 	@override String get about_footnote => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.';
 	@override String get load_error => 'Einstellungen konnten nicht geladen werden.';
+}
+
+// Path: moon.badge
+class _Translations$moon$badge$de extends Translations$moon$badge$en {
+	_Translations$moon$badge$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String until({required Object time}) => 'bis ${time}';
 }
 
 // Path: moon.division
@@ -1694,6 +1705,7 @@ extension on TranslationsDe {
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '), b('Wurzeln, Blättern, Blüten und Früchten'), const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '), b('Planung'), const TextSpan(text: ', nicht als Regel.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
 			'moon.settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
+			'moon.badge.until' => ({required Object time}) => 'bis ${time}',
 			'moon.day_for.fruit' => 'Fruchttag',
 			'moon.day_for.root' => 'Wurzeltag',
 			'moon.day_for.flower' => 'Blütentag',

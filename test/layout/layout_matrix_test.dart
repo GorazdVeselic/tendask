@@ -16,6 +16,8 @@ import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
 import 'package:tendask/features/auth/presentation/location_screen.dart';
 import 'package:tendask/core/biodynamic/biodynamic_day.dart';
+import 'package:tendask/core/biodynamic/calendar_system.dart';
+import 'package:tendask/core/biodynamic/moon_calendar.dart';
 import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/home/presentation/widgets/home_moon_chip.dart';
@@ -24,6 +26,7 @@ import 'package:tendask/features/moon/application/garden_elements_provider.dart'
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_week_view.dart';
+import 'package:tendask/features/moon/presentation/widgets/moon_day_badge.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
@@ -385,4 +388,20 @@ void main() {
     overrides: _dbOverrides,
     build: () => const HomeMoonChipCard(),
   );
+
+  // A transition day is the row's longest text ("… day · until 14:20").
+  layoutMatrix(
+    'entry/when-badge',
+    overrides: _dbOverrides,
+    build: () => MoonDayBadgeRow(date: _moonTransitionDate()),
+  );
+}
+
+/// First August 2026 day with an element transition (sidereal).
+DateTime _moonTransitionDate() {
+  for (var d = 2; d < 26; d++) {
+    final date = DateTime(2026, 8, d);
+    if (dayFor(date, CalendarSystem.sidereal).transitionAt != null) return date;
+  }
+  throw StateError('no transition day in Aug 2026');
 }
