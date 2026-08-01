@@ -648,7 +648,8 @@
       "show_astro_sub": "more astro detail in the day view",
       "about_title": "🌙 What is this?",
       "about_body(rich)": "Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with ${b(roots, leaves, flowers and fruits)}. The calendar shows each day's element — as an aid for ${b(planning)}, not a rule.",
-      "about_footnote": "Tradition and preference, not agronomic advice. Computed on your device."
+      "about_footnote": "Tradition and preference, not agronomic advice. Computed on your device.",
+      "load_error": "Couldn't load the settings."
     },
     "day_for(map)": {
       "fruit": "fruit day",

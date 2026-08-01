@@ -21,7 +21,7 @@ class MoonSettingsScreen extends ConsumerWidget {
     final theme = Theme.of(context);
     // Warmed in bootstrap and keepAlive, so data is present in practice; the
     // spinner only covers the theoretical first-frame gap.
-    final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
+    final settingsAsync = ref.watch(moonSettingsControllerProvider);
     final controller = ref.read(moonSettingsControllerProvider.notifier);
     final hint = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -37,94 +37,87 @@ class MoonSettingsScreen extends ConsumerWidget {
         title: Text(t.moon.calendar.title),
         centerTitle: true,
       ),
-      body: settings == null
-          ? const Center(child: CircularProgressIndicator.adaptive())
-          : ListView(
-              padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-              children: [
-                Card(
-                  child: SwitchListTile(
-                    secondary: const Text('🌙', style: TextStyle(fontSize: 22)),
-                    title: Text(t.moon.settings.enable),
-                    subtitle: Text(t.moon.settings.enable_sub),
-                    value: settings.enabled,
-                    onChanged: (v) => unawaited(controller.setEnabled(v)),
-                  ),
-                ),
-
-                SectionLabel(t.moon.settings.system_label),
-                SegmentedButton<CalendarSystem>(
-                  segments: [
-                    ButtonSegment(
-                      value: CalendarSystem.sidereal,
-                      label: _SystemSegment(
-                        title: t.moon.settings.system_sidereal,
-                        subtitle: t.moon.settings.system_sidereal_sub,
-                      ),
-                    ),
-                    ButtonSegment(
-                      value: CalendarSystem.tropical,
-                      label: _SystemSegment(
-                        title: t.moon.settings.system_tropical,
-                        subtitle: t.moon.settings.system_tropical_sub,
-                      ),
-                    ),
-                  ],
-                  selected: {settings.system},
-                  showSelectedIcon: false,
-                  onSelectionChanged: (s) =>
-                      unawaited(controller.setSystem(s.first)),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
-                  child: Text(t.moon.settings.system_help, style: hint),
-                ),
-
-                const SizedBox(height: 16),
-                Card(
-                  child: Column(
-                    children: [
-                      SwitchListTile(
-                        secondary: const Text(
-                          '🪴',
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        title: Text(t.moon.settings.highlight_garden),
-                        subtitle: Text(t.moon.settings.highlight_garden_sub),
-                        value: settings.highlightGarden,
-                        onChanged: (v) =>
-                            unawaited(controller.setHighlightGarden(v)),
-                      ),
-                      SwitchListTile(
-                        secondary: const Text(
-                          '📅',
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        title: Text(t.moon.settings.show_in_journal),
-                        subtitle: Text(t.moon.settings.show_in_journal_sub),
-                        value: settings.showInJournal,
-                        onChanged: (v) =>
-                            unawaited(controller.setShowInJournal(v)),
-                      ),
-                      SwitchListTile(
-                        secondary: const Text(
-                          '🌌',
-                          style: TextStyle(fontSize: 22),
-                        ),
-                        title: Text(t.moon.settings.show_astro),
-                        subtitle: Text(t.moon.settings.show_astro_sub),
-                        value: settings.showAstroDetails,
-                        onChanged: (v) =>
-                            unawaited(controller.setShowAstroDetails(v)),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(height: 18),
-                const _AboutCard(),
-              ],
+      body: settingsAsync.when(
+        loading: () =>
+            const Center(child: CircularProgressIndicator.adaptive()),
+        error: (_, _) => Center(child: Text(t.moon.settings.load_error)),
+        data: (settings) => ListView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          children: [
+            Card(
+              child: SwitchListTile(
+                secondary: const Text('🌙', style: TextStyle(fontSize: 22)),
+                title: Text(t.moon.settings.enable),
+                subtitle: Text(t.moon.settings.enable_sub),
+                value: settings.enabled,
+                onChanged: (v) => unawaited(controller.setEnabled(v)),
+              ),
             ),
+
+            SectionLabel(t.moon.settings.system_label),
+            SegmentedButton<CalendarSystem>(
+              segments: [
+                ButtonSegment(
+                  value: CalendarSystem.sidereal,
+                  label: _SystemSegment(
+                    title: t.moon.settings.system_sidereal,
+                    subtitle: t.moon.settings.system_sidereal_sub,
+                  ),
+                ),
+                ButtonSegment(
+                  value: CalendarSystem.tropical,
+                  label: _SystemSegment(
+                    title: t.moon.settings.system_tropical,
+                    subtitle: t.moon.settings.system_tropical_sub,
+                  ),
+                ),
+              ],
+              selected: {settings.system},
+              showSelectedIcon: false,
+              onSelectionChanged: (s) =>
+                  unawaited(controller.setSystem(s.first)),
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
+              child: Text(t.moon.settings.system_help, style: hint),
+            ),
+
+            const SizedBox(height: 16),
+            Card(
+              child: Column(
+                children: [
+                  SwitchListTile(
+                    secondary: const Text('🪴', style: TextStyle(fontSize: 22)),
+                    title: Text(t.moon.settings.highlight_garden),
+                    subtitle: Text(t.moon.settings.highlight_garden_sub),
+                    value: settings.highlightGarden,
+                    onChanged: (v) =>
+                        unawaited(controller.setHighlightGarden(v)),
+                  ),
+                  SwitchListTile(
+                    secondary: const Text('📅', style: TextStyle(fontSize: 22)),
+                    title: Text(t.moon.settings.show_in_journal),
+                    subtitle: Text(t.moon.settings.show_in_journal_sub),
+                    value: settings.showInJournal,
+                    onChanged: (v) => unawaited(controller.setShowInJournal(v)),
+                  ),
+                  SwitchListTile(
+                    secondary: const Text('🌌', style: TextStyle(fontSize: 22)),
+                    title: Text(t.moon.settings.show_astro),
+                    subtitle: Text(t.moon.settings.show_astro_sub),
+                    value: settings.showAstroDetails,
+                    onChanged: (v) =>
+                        unawaited(controller.setShowAstroDetails(v)),
+                  ),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 18),
+            const _AboutCard(),
+          ],
+        ),
+      ),
     );
   }
 }

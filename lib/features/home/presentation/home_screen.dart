@@ -16,6 +16,7 @@ import '../../../features/weather/application/weather_service.dart';
 import '../../../i18n/translations.g.dart';
 import 'home_buckets.dart';
 import 'widgets/dashboard_hint.dart';
+import 'widgets/home_moon_chip.dart';
 import 'widgets/home_task_list.dart';
 import 'widgets/home_weather_section.dart';
 import 'widgets/task_banner.dart';
@@ -121,6 +122,8 @@ class _HomeBody extends ConsumerWidget {
           children: [
             const HomeWeatherSection(),
             const SizedBox(height: 16),
+            // Renders nothing while the moon flag or opt-in switch is off.
+            const HomeMoonChip(),
             if (buckets.overdue.isNotEmpty) ...[
               TaskBanner(
                 label: t.home.overdue_banner(n: buckets.overdue.length),

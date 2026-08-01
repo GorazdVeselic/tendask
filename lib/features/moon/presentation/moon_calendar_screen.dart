@@ -23,7 +23,8 @@ class MoonCalendarScreen extends ConsumerStatefulWidget {
       _MoonCalendarScreenState();
 }
 
-class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen> {
+class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
+    with WidgetsBindingObserver {
   _MoonView _view = _MoonView.month;
 
   /// Any day inside the visible period (month or week).
@@ -32,7 +33,21 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen> {
   @override
   void initState() {
     super.initState();
+    WidgetsBinding.instance.addObserver(this);
     _anchor = startOfDay(DateTime.now());
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    // The today highlight is derived from DateTime.now() in build; a screen
+    // resumed the next morning must not keep marking yesterday.
+    if (state == AppLifecycleState.resumed) setState(() {});
   }
 
   DateTime _weekStartOf(DateTime d) {
