@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1050 testov):**
+**Kaj je narejeno (vse v main, 1058 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -38,31 +38,48 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   artefakt Segoe fonta v golden okolju, na napravi ga ni). Testi
   `test/features/moon/element_badge_test.dart`; popolnost `day_for` mape že krije
   `test/i18n/moon_i18n_test.dart`. Brez klicalca (temno).
+- **T5.1 mapping kategorija→element ✅ (31. 7. + revizija 1. 8.):**
+  `core/biodynamic/category_element.dart` — `plantElement({category, plantId})` vrne
+  `BiodynamicElement?`; vedra fruit_tree/berries→plod, herbs/lawn→list, ornamental→cvet;
+  houseplant + conifer + hedge **brez priporočila** (`kCategoryNoElement`, preverba na FINI
+  kategoriji pred foldingom). `kPlantElementOverride` po `plant.id` (34 vnosov: 32 vrtnin +
+  kamilica/sivka→cvet) po Thun: kapusnice→list z **brokolijem kot edino cvetno izjemo,
+  cvetača→LIST** (revizija 1. 8. po navzkrižni preverbi prc-lu.si + nemški viri),
+  čebula/česen/zelena→koren (zelena = gomoljna, komentar v kodi), por/kolerabica→list,
+  stročnice/koruza→plod. **Katalog NEDOTAKNJEN** (odločitev lastnika 31. 7.: sprememba
+  `category` vrednosti v oblaku bi starim APK-jem izpraznila čip Vrtnine) — delitev živi samo
+  v kodi; testi popolnosti proti seedu (katalog ima **141 vrst**, ne 128) prisilijo vnos za
+  vsako novo vrtnino. Custom rastline → null (brez ★). Brez klicalca (temno).
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T5.1 — mapping kategorija→element** (branch `feat/fr19-t5-1-category-map`),
-po odločitvi 31. 7. IZVEDEN PRED T3.3 (vhod za ★ v mreži):
+**Naloga TE seje: korak T3.3 — `/moon-calendar` Mesec (mreža)** (branch `feat/fr19-t3-3-month-view`):
 
-- Konstanta mapping **`coarsePlantCategory` (7 veder — obstaja) → `BiodynamicElement`** + test.
-  Plan T5 pravi: »nova majhna tabela v motorju ali ob njem« — umestitev ob motor
-  (`core/biodynamic/`), brez UI predpostavk (porabniki: T3.3 ★, T5.2 iskalnik, T4 oznake).
-- Preveri obstoječih 7 veder (`coarsePlantCategory`) in za vsako določi element po agronomski
-  logiki setvenih koledarjev (plodovke→plod, korenovke→korenina, cvetnice→cvet, listnata→list …);
-  robna vedra (npr. začimbnice, okrasne, »drugo«) predlagaj lastniku v potrditev, ne ugibaj tiho.
-- Čista logika brez Riverpoda; unit test popolnosti (vsako vedro ima element ali eksplicitno
-  nima priporočila).
+- Mreža meseca: **element-barva ozadja** (MoonColors soft, tekst `onSurface` — A4) + **mena-marker
+  na dneve mlaja/krajcev/ščipa** (`MoonPhaseIcon`) + oznaka · ‹ › navigacija · legenda.
+  **Dnevna oznaka celice = element ob začetku dneva** (konvencija tiskanih koledarjev, spec §12.6)
+  + prikazno pravilo za polnočni drobec (prehod v prvi uri dneva → dan nosi novi element).
+- **★ »priporočen«** na dnevih, katerih element ustreza rastlinam vrta: `plantElement()`
+  (`core/biodynamic/category_element.dart`, T5.1 ✅) + kategorije/`plant_id` iz `user_plant`;
+  prazen vrt → brez ★; pogojeno s stikalom »Poudari po mojem vrtu« (privzeto vklopljeno,
+  odločitev 31. 7.; stikalo v `/moon-settings` pride s T3.6 — do takrat samo prefs ključ).
+- Podatki: `List<BiodynamicDay>` iz providerja z **memoizacijo na (mesec, sistem)** — meritev
+  T1.11: ~16 ms/mrežo → potrebna. En `system` iz `MoonSettingsController` vodi vse (§11.6).
+- **Najprej videz → pogled na napravi → šele nato testi/prevodi** (naučeno FR-22); de pride s T3.7.
 
-**Pred delom preberi:** plan T5 + T3.3 (`docs/plan-implementacije-fr19-fr20.md`) ·
-`coarsePlantCategory` v kodi (poišči po repu) · `BiodynamicElement`
-(`core/biodynamic/biodynamic_day.dart`) · spec §6.3.8 (personalizacija po vrtu), če obstaja.
+**Pred delom preberi:** plan T3 korak 3 (`docs/plan-implementacije-fr19-fr20.md`) · wireframe
+`docs/wireframes/lunar-calendar_overview.html` + screen-map §4 · `MoonColors`
+(`moon_colors.dart`, A4 kontrastna omejitev) · `MoonPhaseIcon`, `ElementBadge`/`elementEmoji()`
+(`lib/features/moon/presentation/widgets/`) · `plantElement()`
+(`core/biodynamic/category_element.dart`) · `MoonSettingsController`
+(`lib/features/moon/application/`).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.3). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T5.1, posodobi ta
-dokument na naslednji korak (T3.3 mreža meseca; branch `feat/fr19-t3-3-month-view`) in predlagaj
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.4). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.3, posodobi ta
+dokument na naslednji korak (T3.4 teden-agenda; branch `feat/fr19-t3-4-week-agenda`) in predlagaj
 commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna

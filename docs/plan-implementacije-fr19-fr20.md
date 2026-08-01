@@ -322,9 +322,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   (nova majhna tabela v motorju ali ob njem), plant-picker (obstaja).
 - **Izhod:** obratni iskalnik + chip »🌙 Kdaj za …« na plant-detail (`?plant=:id` predizpolnjen) →
   seznam prihajajočih primernih dni → »＋« → `/task-new?date=…`.
-- **Koraki:** 1. ⬜ mapping kategorija→element (konstanta + test) — **izvede se PRED T3.3** (vhod za ★
-  v mreži, odločitev 2026-07-31) · 2. ⬜ zaslon (izbor rastline → dnevi) · 3. ⬜ plant-detail chip ·
-  4. ⬜ pogled → testi/prevodi.
+- **Koraki:** 1. ✅ mapping kategorija→element (konstanta + test) — **izvede se PRED T3.3** (vhod za ★
+  v mreži, odločitev 2026-07-31). (2026-08-01: `core/biodynamic/category_element.dart` —
+  `plantElement()`; vedra: fruit_tree/berries→plod, herbs/lawn→list, ornamental→cvet;
+  houseplant + conifer + hedge **brez priporočila**; `kPlantElementOverride` po `plant.id`
+  (34 vnosov: 32 vrtnin + kamilica/sivka→cvet) po Thun klasifikaciji, navzkrižno preverjeno
+  proti prc-lu.si/nemškim virom — **cvetača→list, brokoli edina cvetna kapusnica**;
+  **katalog nedotaknjen** (sprememba `category` vrednosti bi starim APK-jem izpraznila čip
+  Vrtnine); testi popolnosti proti seedu.) · 2. ⬜ zaslon (izbor rastline → dnevi) ·
+  3. ⬜ plant-detail chip · 4. ⬜ pogled → testi/prevodi.
 - **Branchi:** `feat/fr19-t5-1-category-map` · `feat/fr19-t5-2-finder-screen` ·
   `feat/fr19-t5-3-plant-chip` · `feat/fr19-t5-4-tests`.
 - **Varnost na `main`:** kot T3/T4 — ruta z varovalom, chip za flagom.
