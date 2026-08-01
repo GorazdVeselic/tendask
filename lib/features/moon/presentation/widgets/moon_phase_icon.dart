@@ -4,6 +4,14 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/biodynamic/biodynamic_day.dart';
 
+/// Canonical illuminated fraction for a principal-phase marker — the event
+/// glyph should be a crisp new/quarter/full disc, not the midday sample.
+double principalIllumFraction(MoonPhase phase) => switch (phase) {
+      MoonPhase.newMoon => 0.0,
+      MoonPhase.firstQuarter || MoonPhase.lastQuarter => 0.5,
+      _ => 1.0,
+    };
+
 /// Monochrome moon-phase glyph drawn from the illuminated fraction (spec
 /// §11.7): a faint limb outline plus the lit region bounded by the terminator
 /// ellipse. Shared by the calendar grid, the home chip and the day sheet.

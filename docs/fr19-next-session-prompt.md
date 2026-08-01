@@ -66,34 +66,50 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `tmp/moon_month_preview_test.dart` → `tmp/moon_month_{light,dark}.png` (⚠️ zelena kvadrata
   namesto ‹ › = manjkajoč MaterialIcons font v golden okolju, na napravi OK). Testi/layout
   matrika pride s T3.8; ob prvem zagonu na napravi preveri temne odtenke (A4 opomba).
+- **T3.4 Teden (agenda) ✅ (1. 8.):** `/moon-calendar` = **Segmented [Mesec | Teden]** nad enim
+  skupnim sidrom (`_anchor` v `MoonCalendarScreen`) — preklop pogledov ostane na istem obdobju;
+  če je danes v vidnem obdobju, preklop pristane na tekočem tednu/mesecu. Zaslon razdeljen:
+  `moon_month_view.dart` (mreža+legenda, izločeno iz screen) + `moon_week_view.dart` (agenda) +
+  `moon_calendar_screen.dart` (scaffold+segment+sidro). **Agenda vrstica** = datum (dan +
+  `weekday_short` mapa) · emoji + `element_short` · naslov »Dan za X« (+ `MoonPhaseIcon` in ime
+  mene na dan dogodka, + »· danes«, + ★ po vrtu) · **opis dejavnosti na element** (LASTNA
+  besedila, `moon.activity(map)`; mlaj → `activity_new_moon` override po wireframu). Današnja
+  vrstica = `primaryContainer` α0,35 ozadje; kratka element-oznaka `onSurfaceVariant` (A4 —
+  brez element-barve na tekstu). Podatki: **brez novega providerja** — mreža meseca zadnjega dne
+  tedna nosi 6 vodilnih dni, torej pokrije vsak teden (`moonMonthProvider(mesec konca tedna)`).
+  `principalIllumFraction()` premaknjen v `moon_phase_icon.dart` (skupno obema pogledoma). i18n:
+  `moon.calendar.{month_view,week_view,today_marker,weekday_short(map)}`, `activity(map)`,
+  `activity_new_moon` en+sl; `moon_i18n_test.dart` razširjen na popolnost VSEH map (tudi
+  element/element_short iz T3.3, ki nista bili pokriti). Naprave ni bilo → videz potrjen prek
+  `tmp/moon_week_preview_test.dart` → `tmp/moon_week_{light,dark}.png`; ob prvem zagonu na
+  napravi preveri teden + preklop segmentov.
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T3.4 — `/moon-calendar` Teden (agenda)** (branch `feat/fr19-t3-4-week-agenda`):
+**Naloga TE seje: korak T3.5 — dan podrobno (sheet z drsenjem)** (branch `feat/fr19-t3-5-day-sheet`):
 
-- **Segmented [Mesec | Teden]** na `/moon-calendar` (wireframe board 3; do zdaj je zaslon samo
-  mesec — segment pride šele zdaj, ko druga možnost obstaja) · ‹ › navigacija po tednih.
-- **Agenda vrstica na dan** (wireframe board 3 desno): datum (dan + kratek dan v tednu) · element
-  (emoji iz `elementEmoji()` + kratka oznaka, `element_short`) · naslov (»Dan za X« +
-  »· mlaj/ščip/krajec« na dan dogodka + ★ po vrtu — ista logika kot mesec) · **opis dejavnosti na
-  element — LASTNA besedila** (slot-filled predloge §11.6, i18n na element, NE per-dan proza;
-  tujih dnevnih tekstov ne prepisujemo). Današnja vrstica poudarjena (accent-soft ozadje).
-- Podatki: `moonMonthProvider` (teden = izsek meseca; teden čez mejo meseca bere dva providerja
-  ali dobi lasten tedenski provider — presodi ob implementaciji).
+- **Tap na dan** (mesečna celica IN agenda vrstica) odpre **bottom sheet z drsenjem** (odločeno
+  31. 7.; revizija sheet↔zaslon ob prvem pogledu na napravi). Vedno s `SheetHandle`.
+- Blok **»Kaj se dogaja«** (wireframe board 4, spec §11.6): ozvezdje/znamenje (besedna varianta
+  `division` po sistemu) · ura prehoda v naslednji element · mena · dvigajoča/spuščajoča ·
+  ugodnost (vozel/mrk = neugoden dan). **Slot-filled predloga**, ne ločena proza po sistemih.
+- **Seznam »Priporočeno za <dan>«**: vrstice na element (i18n `activity` iz T3.4), vsaka s CTA
+  **»＋ opravilo«** → `/task-new?date=…` (obstoječi query param).
 - **Najprej videz → pogled na napravi → šele nato testi/prevodi**; de pride s T3.7, testi s T3.8.
 
-**Pred delom preberi:** plan T3 korak 4 (`docs/plan-implementacije-fr19-fr20.md`) · wireframe
-`docs/wireframes/lunar-calendar_overview.html` board 3 (desno) · spec §11.6 (slot-filled predloge,
-`docs/feature-requests/biodynamic-calendar.md`) · `MoonCalendarScreen` + `moonMonthProvider` +
-`gardenElementsProvider` (`lib/features/moon/`) · `elementEmoji()` (`element_badge.dart`).
+**Pred delom preberi:** plan T3 korak 5 (`docs/plan-implementacije-fr19-fr20.md`) · wireframe
+`docs/wireframes/lunar-calendar_overview.html` board 4 · spec §11.6
+(`docs/feature-requests/biodynamic-calendar.md`) · `dayFor()` (`core/biodynamic/moon_calendar.dart` —
+kaj vse `BiodynamicDay` že nosi) · `MoonCalendarScreen`/`MoonMonthView`/`MoonWeekView`
+(`lib/features/moon/presentation/`) · `ElementBadge` (T3.2, še brez klicalca — kandidat za sheet).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.5). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.4, posodobi ta
-dokument na naslednji korak (T3.5 dan-sheet; branch `feat/fr19-t3-5-day-sheet`) in predlagaj
-commit.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T3.6). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T3.5, posodobi ta
+dokument na naslednji korak (T3.6 `/moon-settings`; branch `feat/fr19-t3-6-moon-settings`) in
+predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

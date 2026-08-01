@@ -246,8 +246,12 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      `gardenElementsProvider`; prehodni dan = deljeno ozadje zgoraj/spodaj; drobec <
      `kMoonMidnightSliverWindow` (1 h) → nov element; `principalPhaseOn()` v motorju; naprave ni
      bilo → pogled prek `tmp/moon_month_preview_test.dart` → PNG.)
-  4. ⬜ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
-     slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.**
+  4. ✅ `/moon-calendar` — **Teden**: agenda z opisi dejavnosti na element (lastna besedila —
+     slot-filled predloge §11.6, i18n na element, ne per-dan proza). **Pogled.** (2026-08-01:
+     segmented Mesec/Teden nad skupnim sidrom; zaslon razdeljen na `moon_month_view.dart` +
+     `moon_week_view.dart`; podatki iz `moonMonthProvider` meseca zadnjega dne tedna (vodilni
+     dnevi pokrijejo teden čez mejo meseca); `moon.activity(map)` + `activity_new_moon` en+sl;
+     naprave ni bilo → pogled prek `tmp/moon_week_preview_test.dart` → PNG.)
   5. ⬜ Dan podrobno — **sheet z drsenjem** (odločeno 2026-07-31; revizija sheet↔zaslon ob prvem
      pogledu na napravi): »Kaj se dogaja« (ozvezdje/znamenje, ura prehoda, mena, dvigajoča/spuščajoča,
      ugodnost) + **seznam »Priporočeno za <dan>«** (vrstici na element iz i18n T3.4, vsaka s CTA
