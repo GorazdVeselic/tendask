@@ -6,6 +6,7 @@ import '../../../../core/config.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
+import '../moon_gate.dart';
 
 /// Moon calendar entry in the journal AppBar (FR-19 T4.4, wireframe board C):
 /// pushes /moon-calendar. Decides its own visibility — while the feature flag
@@ -29,7 +30,7 @@ class _JournalMoonButtonGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!(settings?.enabled ?? false)) return const SizedBox.shrink();
+    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
     return const JournalMoonIconButton();
   }
 }
@@ -57,8 +58,6 @@ Map<DateTime, MoonMonthDay>? journalMoonDays(WidgetRef ref, DateTime month) {
   // Flag check before any ref — journal tests may pump without moon prefs.
   if (!kMoonCalendarEnabled) return null;
   final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-  if (settings == null || !settings.enabled || !settings.showInJournal) {
-    return null;
-  }
+  if (!journalMoonLayerOn(settings)) return null;
   return ref.watch(moonMonthProvider(month));
 }

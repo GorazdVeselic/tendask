@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1227 testov):**
+**Kaj je narejeno (vse v main, 1233 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -191,26 +191,41 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `tmp/journal_moon_preview_test.dart` → `tmp/journal_moon_{light,dark,320}.png`; ob prvem
   zagonu na napravi preveri plast + 🌙 gumb. Suite **1227 testov**.
 
-**Naloga TE seje: korak T4.5 — pregled testov + de za T4 sklop** (branch `feat/fr19-t4-5-tests`):
+- **T4.5 pregled testov + de ✅ (1. 8.) — T4 s tem ZAKLJUČEN:** testi in matrike so prišli že z
+  vsakim korakom, zato je bil ta korak pregled + zapolnitev vrzeli. Tri najdbe: **(1) de prelom v
+  čipu na Domov** — pri 320 px × 1.3 je CTA vzel naravno širino in izstradal naslovni stolpec, zato
+  sta se »Mondkalender« in »abnehmender Mond« lomila SREDI BESEDE (layout matrika tega ne ujame:
+  prosto-ovijajoč tekst se nikoli ne odreže, gl. pravilo v CLAUDE.md) → CTA `Flexible(flex: 2)` +
+  `FittedBox.scaleDown`, stolpec `Expanded(flex: 3)`, naslov `FittedBox.scaleDown` + `maxLines: 1`;
+  360 × 1.0 nespremenjen, sl/en brez sprememb. **(2) srednja plast vrat (opt-in stikalo) ni bila
+  testirana pri NOBENI od štirih točk** (temni flag jo prekrije) → pravili ekstrahirani v
+  `moonSurfaceOn()` / `journalMoonLayerOn()` (`moon/presentation/moon_gate.dart`, 4 klicalci) +
+  `moon_gate_test.dart`. **(3) priklop na gostitelja** lovi test le pri when-koraku (`WhenStepBody`
+  je brez Riverpoda → poceni); ostali trije rabijo cel svet providerjev, zato je preverba dodana v
+  **T7 korak 3**. Pogled: `tmp/moon_t4_de_preview_test.dart` → `tmp/moon_t4_*.png`. Suite **1233**.
 
-- Plan T4 korak 5: »Widget/layout testi za vse štiri + de prevodi po pogledu.« Ker so T4.1–T4.4
-  teste in matrike prinesli že vsak s svojim korakom, je ta korak **pregled in zapolnitev vrzeli**,
-  ne pisanje od začetka: preveri, da imajo vse štiri vstopne točke (Domov čip · when-step oznaka ·
-  task-detail sekcija · Dnevnik gumb+plast) teste dark-poti, teste vsebine in vnos v matriki —
-  kar manjka, dodaj.
-- **de pregled T4 nizov po pogledu:** novi T4 ključi so `moon.badge.until` + `moon.task_section.footnote`
-  (+ `moon.settings.load_error` iz reviewa) — en+sl+de že obstajajo; preveri de besedni red na
-  dejanskem pogledu (viewport 320, ×1.3), kot pri T3.7. Za Dnevnik-plast ključev ni.
-- Če pregled ne najde vrzeli, je korak lahko zelo kratek — ne izmišljuj si testov za scaffolding
-  (pravilo: brez testov, ki ne plačajo vzdrževanja).
+**Naloga TE seje: korak T4b — lunino obvestilo »jutri dober dan«** (branchi
+`feat/fr19-t4b-1-quiet-hours` → `-2-scheduler` → `-3-toggle` → `-4-tests`; **korak po koraku,
+vsak svoja seja** — ta seja je T4b korak 1):
 
-**Pred delom preberi:** plan T4 korak 5 (`docs/plan-implementacije-fr19-fr20.md`) — opombe pri
-korakih 1–4 naštejejo, kateri testi/matrike so že narejeni.
+- **NAJPREJ ODLOČITEV B1** (edina odprta odločitev FR-19): so lunina obvestila **device-local**
+  (razporejena na napravi, nič v oblaku) ali gredo prek **sync/strežnika**? Predlagaj in **vprašaj
+  lastnika** — brez odgovora ne začni kodirati. Vpliva na shemo in na to, ali sploh rabiš migracijo.
+- **Korak 1 = tihe ure + frekvenčna kapica oživijo.** Danes sta »persisted but inert« (vrednosti se
+  shranjujejo, a nič jih ne upošteva); obvestilo brez njiju bi kršilo obljubo speca §6.3.9. Zato je
+  to prvi korak, pred razporejanjem.
+- **Pasti (plan T4b):** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) ·
+  spoštuje preklop sistema (en `system` vodi vse) · UI nikjer ne reče »motor« · `Clock` namesto
+  `DateTime.now()` v razporejevalniku (testi rabijo FakeClock).
+- **Vrstica 🔔 v `/moon-settings` pride šele s korakom 3** — brez mrtvih stikal.
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4b/T5.2/T6). Pred merge:
-`flutter analyze` čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi
-T4.5, posodobi ta dokument na naslednji korak (po planu: **T4b lunino obvestilo** — na začetku
-odloči **B1**, ali so lunina obvestila device-local ali sync) in predlagaj commit.
+**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) · spec §6.3.9 (tihe
+ure/kapica) · obstoječi obvestilni sloj (`core/notifications/`) · `moon_settings_controller.dart`
+(kam gre nova prefs vrednost).
+
+**Pravila:** naredi natanko ta korak in nič več. Pred merge: `flutter analyze` čist + cel
+`flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 1, posodobi ta
+dokument na naslednji korak in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

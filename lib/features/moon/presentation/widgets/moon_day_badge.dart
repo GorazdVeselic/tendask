@@ -8,6 +8,7 @@ import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
+import '../moon_gate.dart';
 import 'element_badge.dart';
 
 /// Element-day gate for a date row (FR-19 T4.2, wireframe board B): a muted
@@ -40,7 +41,7 @@ class _MoonDayBadgeGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!(settings?.enabled ?? false)) return const SizedBox.shrink();
+    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
     return Padding(
       padding: const EdgeInsets.only(top: 8),
       child: MoonDayBadgeRow(date: date),
