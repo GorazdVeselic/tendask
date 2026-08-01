@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/moon_colors.dart';
 import '../../../core/biodynamic/biodynamic_day.dart';
-import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/biodynamic/moon_calendar.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/section_label.dart';
@@ -49,10 +48,8 @@ class _MoonDaySheet extends ConsumerWidget {
     final theme = Theme.of(context);
     final ml = MaterialLocalizations.of(context);
 
-    // One system drives all moon screens (spec §11.6); sidereal while the
-    // settings are still loading — same fallback as the month provider.
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    final system = settings?.system ?? CalendarSystem.sidereal;
+    final system = ref.watch(moonSystemProvider);
     // Raw layers for the facts; the grid-cell reduction for the day label
     // (midnight-sliver display rule) so the sheet agrees with the calendar.
     final day = dayFor(date, system);
@@ -70,7 +67,7 @@ class _MoonDaySheet extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 12),
-        _DayHero(day: day, cell: cell),
+        _DayHero(cell: cell),
         // The astro details block is behind its own sub-toggle (T3.6).
         if (settings?.showAstroDetails ?? true) ...[
           const SizedBox(height: 14),
@@ -99,8 +96,7 @@ class _MoonDaySheet extends ConsumerWidget {
                 elementEmoji(element),
                 style: const TextStyle(fontSize: 18),
               ),
-              avatarColor: (theme.extension<MoonColors>() ?? moonColorsLight)
-                  .softOf(element),
+              avatarColor: MoonColors.of(context).softOf(element),
               text: t.moon.activity[element.name]!,
               date: date,
             ),
@@ -113,16 +109,15 @@ class _MoonDaySheet extends ConsumerWidget {
 /// Banner naming the day ("Fruit day"), with the transition tail
 /// ("until 14:20, then …") on element-change days.
 class _DayHero extends StatelessWidget {
-  const _DayHero({required this.day, required this.cell});
+  const _DayHero({required this.cell});
 
-  final BiodynamicDay day;
   final MoonMonthDay cell;
 
   @override
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
+    final moon = MoonColors.of(context);
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
@@ -149,7 +144,7 @@ class _DayHero extends StatelessWidget {
                     color: theme.colorScheme.onSurface,
                   ),
                 ),
-                if ((day.transitionAt, cell.secondaryElement) case (
+                if ((cell.transitionAt, cell.secondaryElement) case (
                   final transitionAt?,
                   final secondary?,
                 ))

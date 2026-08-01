@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/biodynamic/calendar_system.dart';
 import '../../../../core/biodynamic/moon_calendar.dart';
 import '../../../../core/config.dart';
 import '../../../../i18n/translations.g.dart';
@@ -69,11 +68,7 @@ class _HomeMoonChipCardState extends ConsumerState<HomeMoonChipCard>
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    // Sidereal while the settings are still loading — same fallback as the
-    // other moon screens (one system drives them all, spec §11.6).
-    final system =
-        ref.watch(moonSettingsControllerProvider).asData?.value.system ??
-        CalendarSystem.sidereal;
+    final system = ref.watch(moonSystemProvider);
     final today = DateTime.now();
     final day = dayFor(today, system);
     // The element of the day LABEL (midnight-sliver display rule), so the chip

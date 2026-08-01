@@ -25,9 +25,7 @@ class ElementBadge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    // Fallback covers bare ThemeData in tests; app themes always register it.
-    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
-    final soft = moon.softOf(element);
+    final soft = MoonColors.of(context).softOf(element);
     // Map completeness against BiodynamicElement is enforced by i18n tests.
     final label = context.t.moon.day_for[element.name]!;
 

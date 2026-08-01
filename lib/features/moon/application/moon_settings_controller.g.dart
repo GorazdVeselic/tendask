@@ -78,3 +78,55 @@ abstract class _$MoonSettingsController extends $AsyncNotifier<MoonSettings> {
     element.handleCreate(ref, build);
   }
 }
+
+/// The zodiac system every moon surface reads (one system drives them all,
+/// spec §11.6). Sidereal while the settings are still loading or if they
+/// failed — the same fallback everywhere, so no two surfaces can disagree.
+
+@ProviderFor(moonSystem)
+final moonSystemProvider = MoonSystemProvider._();
+
+/// The zodiac system every moon surface reads (one system drives them all,
+/// spec §11.6). Sidereal while the settings are still loading or if they
+/// failed — the same fallback everywhere, so no two surfaces can disagree.
+
+final class MoonSystemProvider
+    extends $FunctionalProvider<CalendarSystem, CalendarSystem, CalendarSystem>
+    with $Provider<CalendarSystem> {
+  /// The zodiac system every moon surface reads (one system drives them all,
+  /// spec §11.6). Sidereal while the settings are still loading or if they
+  /// failed — the same fallback everywhere, so no two surfaces can disagree.
+  MoonSystemProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'moonSystemProvider',
+        isAutoDispose: true,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$moonSystemHash();
+
+  @$internal
+  @override
+  $ProviderElement<CalendarSystem> $createElement($ProviderPointer pointer) =>
+      $ProviderElement(pointer);
+
+  @override
+  CalendarSystem create(Ref ref) {
+    return moonSystem(ref);
+  }
+
+  /// {@macro riverpod.override_with_value}
+  Override overrideWithValue(CalendarSystem value) {
+    return $ProviderOverride(
+      origin: this,
+      providerOverride: $SyncValueProvider<CalendarSystem>(value),
+    );
+  }
+}
+
+String _$moonSystemHash() => r'c66e77bde3d381f70448a7540d20313e75c52b4f';

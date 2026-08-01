@@ -450,8 +450,14 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.
      Kartica »✦ Tendask+« v Nastavitvah pod profilom, za flagom **`kTendaskPlusEnabled`** (ime iz
      screen-map §2.1); ruta `/tendask-plus` z istim varovalom. **Pogled → prevodi → layout matrika.**
-  6. ⬜ **Gate swap:** na vseh vstopnih točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za
+  6. ⬜ **Gate swap:** na vstopnih točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za
      prižig); čip dobi zaklenjeno stanje (rdeči »✦ Tendask+ ›« → `/tendask-plus`).
+     **⚠️ Čip NI eno stikalo (odločitev lastnika 2026-08-01):** mena ostane **free za vedno**
+     (spec §6.5 — edini kavelj), zato `HomeMoonChipCard` rabi **deljena vrata**: ikona mene + naslov
+     + ime mene se izrišejo vedno (ko je master flag on), **element-dan CTA »dan za X ›«** pa se ob
+     ne-Plusu zamenja z »✦ Tendask+ ›«. Enako velja za vse ostale površine, ki kažejo element-dan
+     (when-step oznaka, task-detail sekcija, Dnevnik-plast, koledar, sheet): te gredo **cele** za zid.
+     Test naj zaklene oboje: brez Plusa čip **še vedno** kaže meno in **ne** kaže elementa.
   7. ⬜ **Anti-steering i18n pregled** vseh novih nizov (FR-20 §3.1): brez cene, brez URL-ja, brez
      »kje dobiti kodo« — rdeča črta, ki lahko stane odstranitev aplikacije.
   8. ⬜ Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene

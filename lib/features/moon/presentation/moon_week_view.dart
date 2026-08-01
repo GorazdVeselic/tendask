@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/biodynamic/biodynamic_day.dart';
+import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/moon_month_provider.dart';
+import '../application/moon_settings_controller.dart';
 import 'moon_day_sheet.dart';
 import 'moon_text.dart';
 import 'widgets/element_badge.dart';
@@ -13,6 +15,20 @@ import 'widgets/moon_phase_icon.dart';
 
 /// i18n weekday_short key for a date (DateTime.weekday is Mon=1..Sun=7).
 const _weekdayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+
+/// The week's [i]-th day out of the memoized month grid, computed directly
+/// when the map does not reach it (it carries six leading days, which covers
+/// every week today — the fallback keeps a future off-by-one visible as a
+/// slower row, not as a missing one).
+MoonMonthDay _dayOfWeek(
+  Map<DateTime, MoonMonthDay> month,
+  DateTime weekStart,
+  int i,
+  CalendarSystem system,
+) {
+  final date = DateTime(weekStart.year, weekStart.month, weekStart.day + i);
+  return month[date] ?? moonMonthDayFor(date, system);
+}
 
 /// Week tab of the moon calendar (FR-19 T3.4): one agenda row per day with
 /// the element day title and an activity description, ‹ › week navigation.
@@ -46,6 +62,13 @@ class MoonWeekView extends ConsumerWidget {
     final days = ref.watch(
       moonMonthProvider(DateTime(weekEnd.year, weekEnd.month)),
     );
+    final system = ref.watch(moonSystemProvider);
+    // Never let a day the month map does not reach drop a row silently: the
+    // agenda always shows seven days, computing the odd one out on the spot.
+    final weekDays = [
+      for (var i = 0; i < 7; i++)
+        _dayOfWeek(days, weekStart, i, system),
+    ];
     final now = DateTime.now();
 
     return ListView(
@@ -57,15 +80,13 @@ class MoonWeekView extends ConsumerWidget {
           onNext: onNext,
         ),
         const SizedBox(height: 8),
-        for (var i = 0; i < 7; i++)
-          if (days[DateTime(weekStart.year, weekStart.month, weekStart.day + i)]
-              case final day?)
-            _WeekRow(
-              day: day,
-              isToday: isSameDay(day.date, now),
-              starred: starred.contains(day.element),
-              isLast: i == 6,
-            ),
+        for (final (i, day) in weekDays.indexed)
+          _WeekRow(
+            day: day,
+            isToday: isSameDay(day.date, now),
+            starred: starred.contains(day.element),
+            isLast: i == 6,
+          ),
       ],
     );
   }

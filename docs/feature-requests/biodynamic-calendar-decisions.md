@@ -121,6 +121,11 @@ argument zdaj teče prek darila.)*
   ker je stolpec JSON in je parser tolerantno pisan, nova vrednost **ne rabi migracije**. **Frekvenčna
   kapica velja samo za namige** (lunin namig + dnevniški nudge si ne delita dneva); eksplicitni
   opomnik opravila dneva ne zasede, ker ga je uporabnik nastavil sam (koncept: »max 1 ne-opomnik/dan«).
+- **B1a · Mena je free za vedno** ✅ ODLOČENO (2026-08-01, lastnik): ob prižigu Plusa (T6) se čip na
+  Domov **ne** zaklene v celoti — mena (ikona + ime faze) ostane vidna vsem, za zid gre samo
+  element-dan (CTA »dan za X ›« → »✦ Tendask+ ›«) in vse površine, ki element kažejo (koledar, sheet,
+  when-step, task-detail, Dnevnik-plast). Razlog: mena je edini free kavelj (§6.5); dobesedni
+  »gate swap« bi jo pobrisal. Zapisano kot izrecno opozorilo v planu T6 korak 6.
 - **B2 · Tendask+ zaklep** ✅ ODLOČENO (2026-07-30, nadomešča prvotni nagib »najprej vse free«): lunin
   Plus del **debitira zaklenjen** (gradi se za flagom, dark) — NE izide free. Ob prižigu vsi obstoječi
   profili dobijo **časovno omejeno darilo Tendask+** (predlog 6 mesecev; FR-20 §10.4). Med gradnjo (koraka

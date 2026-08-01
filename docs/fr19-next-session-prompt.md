@@ -218,6 +218,21 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   »inert«, `config.dart` »display only« + napačna trditev, da so tihe ure device-local).
   Suite **1244**.
 
+- **Pregled kode FR-19 (1. 8.) ✅ — po njem popravljeno vse najdeno:** **(1)** `MoonColors.of(context)`
+  (6 kopij `extension<MoonColors>() ?? moonColorsLight`) + `strongOf()` k `softOf()` (prej privatna
+  funkcija v mesečnem pogledu) · **(2)** nov `moonSystemProvider` (5 kopij »sistem s sidereal
+  fallbackom«; en sam vir za §11.6) · **(3)** `MoonMonthDay` dobil **`transitionAt`** → trije zasloni
+  ne sestavljajo več para `(day.transitionAt, cell.secondaryElement)` in **ne kličejo motorja dvakrat**
+  (badge in task-sekcija zdaj sploh ne kličeta `dayFor`) · **(4)** tedenska agenda ne more več tiho
+  izgubiti vrstice (`_dayOfWeek` izračuna dan, ki ga mesečna mapa ne doseže — prej `if case` preskok) ·
+  **(5) B1a odločitev lastnika: mena ostane free za vedno** → plan T6 korak 6 ima zdaj izrecno
+  opozorilo, da čip rabi **deljena vrata** (mena vidna vsem, element-dan za zid) · **(6)** wireframe
+  board B usklajen z dejansko oznako (»· do 14:20«, medla vrstica brez pike). **21 novih testov**
+  (suite **1265**): polnočni drobec v `moonMonthDayFor` (vseh 7 dni 2026), `principalPhaseOn` (avg 2026
+  = 4 markerji), pokritost ključev `moonMonth` (−6 … konec meseca, 37) + sledenje sistemu, teden čez
+  mejo meseca in leta, `gardenElements` nad pravim katalogom (lastna rastlina/soba/izbris), sistem
+  odloča besedilo sheeta (ozvezdje ↔ znamenje).
+
 **Naloga TE seje: T4b korak 2 — izračun + razpored luninega namiga** (branch
 `feat/fr19-t4b-2-scheduler`; koraka 3 in 4 sta svoji seji):
 

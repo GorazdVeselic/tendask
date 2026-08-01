@@ -35,8 +35,7 @@ class DayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final moonDay = this.moonDay;
-    // Fallback covers bare ThemeData in tests; app themes always register it.
-    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
+    final moon = MoonColors.of(context);
 
     final number = Text(
       '${day.day}',

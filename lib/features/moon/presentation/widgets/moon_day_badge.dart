@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/biodynamic/calendar_system.dart';
-import '../../../../core/biodynamic/moon_calendar.dart';
 import '../../../../core/config.dart';
 import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
@@ -60,23 +58,14 @@ class MoonDayBadgeRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final theme = Theme.of(context);
-    // Sidereal while the settings are still loading — same fallback as the
-    // other moon screens (one system drives them all, spec §11.6).
-    final system =
-        ref.watch(moonSettingsControllerProvider).asData?.value.system ??
-        CalendarSystem.sidereal;
-    final day = dayFor(date, system);
-    // The element of the day LABEL (midnight-sliver display rule), so the
-    // badge agrees with the calendar cell for the same date.
-    final cell = moonMonthDayFor(date, system);
+    // The grid cell of the date: same day label (midnight-sliver display rule)
+    // and same transition hour the calendar shows for it.
+    final cell = moonMonthDayFor(date, ref.watch(moonSystemProvider));
 
     // Map completeness against BiodynamicElement is enforced by i18n tests.
     var text =
         '${elementEmoji(cell.element)} ${t.moon.day_for[cell.element.name]!}';
-    if ((day.transitionAt, cell.secondaryElement) case (
-      final transitionAt?,
-      _?,
-    )) {
+    if (cell.transitionAt case final transitionAt?) {
       text = '$text · ${t.moon.badge.until(time: formatHm(transitionAt))}';
     }
 
