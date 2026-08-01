@@ -145,38 +145,50 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `kMoonWhatsHappeningKey` (astro blok, namesto emoji finderja) · testa ‹ › navigacije meseca in
   sheet CTA »+ opravilo« → `/task-new?date=…` · matrika week z `expect(MoonWeekView)` · plan T6
   dobil pogoj »T4.4 pred prižigom« (sicer mrtvo stikalo Dnevnika). Suite **1164 testov**.
+- **T4.2 when-step oznaka ✅ (1. 8.):** `MoonDayBadge`
+  (`lib/features/moon/presentation/widgets/moon_day_badge.dart`) v `when_step.dart` pod
+  Datum/Ura + privzeto opombo; `WhenStepBody` podpis NEDOTAKNJEN. Trislojno: **StatelessWidget
+  gate s flag preverbo PRED vsakim ref** (⚠️ testi when-koraka pumpajo BREZ ProviderScope —
+  dark badge ne sme zahtevati scope-a; test to zaklene; ob T7 prižigu bodo ti testi rabili
+  scope!) → `_MoonDayBadgeGate` (opt-in stikalo) → javna `MoonDayBadgeRow` (za teste/matriko/
+  predoglede brez flaga). Besedilo: »{emoji} dan za X · do HH:MM« (element oznake dneva prek
+  `moonMonthDayFor`; rep samo, ko celica ohrani prehod — polnočna redukcija ga požre). Nov ključ
+  `moon.badge.until` en+sl+de. Wireframe board B kaže starejšo varianto z »— ugodno za …« repom;
+  plan (2026-07-30) jo je nadomestil s prehodno uro — ob priložnosti uskladi wireframe. Matrika
+  `entry/when-badge` (18 komb., prehodni dan = najdaljši tekst) + testa (dark gate brez scope-a ·
+  vsebina vrstice). Pogled: `tmp/moon_day_badge_preview_test.dart` → `tmp/moon_day_badge.png`.
+  Suite **1184 testov**.
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T4.2 — when-step oznaka** (branch `feat/fr19-t4-2-when-step`):
+**Naloga TE seje: korak T4.3 — task-detail sekcija** (branch `feat/fr19-t4-3-task-detail`):
 
-- **Ločen ConsumerWidget otrok** pod Datum/Ura vrstico v when-koraku čarovnika — **NE parameter
-  `WhenStepBody`** (ta je namenoma brez Riverpoda in ima 36 layout testov, ki jih ne podirava):
-  poglej, kje `entry_screen.dart` sestavi when-korak, in vstavi widget tam (ali kot sibling v
-  telo koraka, če je to čisteje — a brez spreminjanja podpisa `WhenStepBody`).
-- **Vsebina:** medla vrstica »🌱 dan za list · do 14:20« iz **izbranega datuma** (ne danes!) —
-  element oznake dneva (`moonMonthDayFor(izbrani datum, system)`, polnočna redukcija) + ura
-  prehoda, če obstaja (`dayFor(...).transitionAt` → `formatHm`). Stil: bodySmall
-  `onSurfaceVariant` (medlo, ne kričeče). Emoji prek `elementEmoji()`.
-- **Vidnost:** flag + opt-in stikalo (isti vzorec kot `HomeMoonChip` — off → `SizedBox.shrink`,
-  obstoječi wizard vizualno nespremenjen, njegovih 36 layout testov ostane zelenih).
-- **i18n:** za »· do HH:MM« obstaja `moon.sheet.until_then`? Ta vsebuje »nato …« rep — preveri in
-  po potrebi dodaj NOV ključ (en+sl+de, de takoj — vzorec obstaja) namesto zlorabe sheet ključa.
-- **Najprej videz → pogled → šele nato prevodi**; testi (vključno z layout matriko when-koraka z
-  oznako) pridejo s **T4.5**. Za render bo spet treba flag začasno prižgati (vzorec
-  `tmp/home_moon_chip_preview_test.dart` — v commitu flag OSTANE false!).
+- **Sekcija »Lunin koledar« v task-detail** (screen-map §2.2, wireframe
+  `lunar-calendar_contexts.html` board A): za sekcijo vremenskega posnetka — element-dan iz
+  `task.date`, **re-izpeljan, ne zamrznjen** (uporabnik spremeni datum → oznaka se posodobi;
+  kontrast z vremenom, ki JE zamrznjeno — spec §6.1.2). Info, **brez tapa** (MVP).
+- **Uporabi obstoječi `MoonDayBadge`** (T4.2, `moon/presentation/widgets/moon_day_badge.dart`) —
+  gate + vrstica že obstajata in `date` je edini vhod. Če board A zahteva bogatejšo obliko
+  (naslov sekcije?), preveri wireframe in po potrebi ovij v sekcijo po vzorcu obstoječih
+  task-detail sekcij — a NE podvajaj vrstice; skupna stvar živi enkrat.
+- **Vidnost:** gate že rešuje flag + opt-in (dark → `shrink`, task-detail nespremenjen; njegovi
+  obstoječi testi/matrika ostanejo zeleni brez sprememb).
+- **Pozor:** `task.date` je v drift UTC → za prikaz/izračun uporabi lokalni čas (`.toLocal()`)
+  kot ostale task-detail vrstice — element dneva se veže na LOKALNI dan.
+- **Najprej videz → pogled → nato morebitne dopolnitve**; matrika/testi po vzorcu T4.1/T4.2
+  (task-detail že ima matriko — z dark gate ostane ista; za vidno stanje pokrij
+  `MoonDayBadgeRow` postavitev v sekciji, če dodaš novo ovojno obliko).
 
-**Pred delom preberi:** plan T4 korak 2 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
-screen-map §2 · `when_step.dart` (`WhenStepBody` — česa NE dotikati) + `entry_screen.dart`
-(sestava koraka) · `home_moon_chip.dart` (vzorec vidnosti/flag) · wireframe
-`lunar-calendar_contexts.html` (when-step board).
+**Pred delom preberi:** plan T4 korak 3 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
+screen-map §2.2 · wireframe `lunar-calendar_contexts.html` board A · `task_detail_screen.dart`
+(mesto za vremenskim posnetkom, kako sekcije izgledajo) · `moon_day_badge.dart` (T4.2 vzorec).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.3). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.2, posodobi ta
-dokument na naslednji korak (T4.3 task-detail sekcija; branch `feat/fr19-t4-3-task-detail`) in
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.4). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.3, posodobi ta
+dokument na naslednji korak (T4.4 Dnevnik-plast; branch `feat/fr19-t4-4-journal-layer`) in
 predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna

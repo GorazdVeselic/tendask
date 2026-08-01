@@ -661,6 +661,9 @@
       "about_footnote": "Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.",
       "load_error": "Nastavitev ni bilo mogoče naložiti."
     },
+    "badge": {
+      "until": "do ${time}"
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",
