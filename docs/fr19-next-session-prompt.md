@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1058 testov):**
+**Kaj je narejeno (vse v main, 1059 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
