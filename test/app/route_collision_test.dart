@@ -66,15 +66,17 @@ void main() {
     },
   );
 
-  // The real router's /moon-calendar route must carry the guard — the widget
-  // test below exercises the guard's behavior, but only this check fails if
-  // someone detaches `redirect:` from the route in app_router.dart.
-  test('the real /moon-calendar route carries the redirect guard', () {
+  // The real router's moon routes must carry the guard — the widget test
+  // below exercises the guard's behavior, but only this check fails if
+  // someone detaches `redirect:` from a route in app_router.dart.
+  test('the real moon routes carry the redirect guard', () {
     final router = createAppRouter();
-    final route = router.configuration.routes
-        .whereType<GoRoute>()
-        .singleWhere((r) => r.path == '/moon-calendar');
-    expect(route.redirect, same(moonCalendarRedirect));
+    for (final path in ['/moon-calendar', '/moon-settings']) {
+      final route = router.configuration.routes
+          .whereType<GoRoute>()
+          .singleWhere((r) => r.path == path);
+      expect(route.redirect, same(moonCalendarRedirect), reason: path);
+    }
   });
 
   // The moon calendar (FR-19) must be guarded on the route itself, not only on

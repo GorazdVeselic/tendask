@@ -261,12 +261,16 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      prehodni rep; slot-filled `moon.sheet.*` predloge (rich poudarki, ozvezdje/znamenje = dve
      predlogi ene povedi); `MoonColors.softOf()` skupna metoda; naprave ni bilo → pogled prek
      `tmp/moon_day_sheet_preview_test.dart` → PNG.)
-  6. ⬜ `/moon-settings`: stikalo (opt-in), sistem toggle (»Po ozvezdjih (biodinamični)« / »Po znamenjih
+  6. ✅ `/moon-settings`: stikalo (opt-in), sistem toggle (»Po ozvezdjih (biodinamični)« / »Po znamenjih
      (astrološki)«, ena vrstica razlage, §13), **podstikala (2026-07-31):** »Poudari po mojem vrtu«
      (★, T3.3) · »Prikaži v Dnevniku« (plast, T4.4) · »Prikaži ozvezdja in meno« (podrobnosti v
      dan-sheetu); vrstica »Namig 'jutri dober dan'« pride šele s **T4b** (brez mrtvih stikal). »Kaj je
      to« mini razlaga. Dosegljiv prek **⚙️ v AppBar `/moon-calendar`** (ta korak jo ožiči; koledar je
      sam za flagom) in prek rute z varovalom; **umestitev tudi pod Tendask+ zaslon pride s T6** (screen-map).
+     (2026-08-01: `MoonSettingsScreen` + prefs ključa `moon_show_in_journal`/`moon_show_astro_details`
+     (null = vklopljeno) + setterja v `MoonSettingsController`; potrošnik »ozvezdja in meno« ožičen —
+     dan-sheet skrije blok »Kaj se dogaja«; ruta z `moonCalendarRedirect` + route_collision_test +
+     screen-map; naprave ni bilo → pogled prek `tmp/moon_settings_preview_test.dart` → PNG.)
   7. ⬜ Po vizualni potrditvi vseh zaslonov: **de prevodi** + `dart run slang` + pregled dolgih nemških
      besed (Blütentag …).
   8. ⬜ Testi: widget testi ključnih interakcij (preklop sistema posodobi vse; tap dan odpre sheet) +

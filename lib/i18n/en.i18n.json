@@ -631,6 +631,25 @@
         "sun": "Sun"
       }
     },
+    "settings": {
+      "enable": "Show moon calendar",
+      "enable_sub": "chip on Home, labels across the garden",
+      "system_label": "Calendar system",
+      "system_sidereal": "By constellations",
+      "system_sidereal_sub": "biodynamic",
+      "system_tropical": "By signs",
+      "system_tropical_sub": "astrological",
+      "system_help": "Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.",
+      "highlight_garden": "Highlight for my garden",
+      "highlight_garden_sub": "lift the days for what I grow",
+      "show_in_journal": "Show in Journal",
+      "show_in_journal_sub": "colours the Journal month calendar",
+      "show_astro": "Show constellations and phase",
+      "show_astro_sub": "more astro detail in the day view",
+      "about_title": "🌙 What is this?",
+      "about_body(rich)": "Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with ${b(roots, leaves, flowers and fruits)}. The calendar shows each day's element — as an aid for ${b(planning)}, not a rule.",
+      "about_footnote": "Tradition and preference, not agronomic advice. Computed on your device."
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",

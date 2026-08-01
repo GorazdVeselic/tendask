@@ -641,6 +641,25 @@
         "sun": "ned"
       }
     },
+    "settings": {
+      "enable": "Prikaži Lunin koledar",
+      "enable_sub": "čip na Domov, oznake po vrtu",
+      "system_label": "Sistem koledarja",
+      "system_sidereal": "Po ozvezdjih",
+      "system_sidereal_sub": "biodinamični",
+      "system_tropical": "Po znamenjih",
+      "system_tropical_sub": "astrološki",
+      "system_help": "Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.",
+      "highlight_garden": "Poudari po mojem vrtu",
+      "highlight_garden_sub": "dvigni dneve za to, kar gojim",
+      "show_in_journal": "Prikaži v Dnevniku",
+      "show_in_journal_sub": "obarva mesečni koledar Dnevnika",
+      "show_astro": "Prikaži ozvezdja in meno",
+      "show_astro_sub": "več astro podrobnosti v dnevu",
+      "about_title": "🌙 Kaj je to?",
+      "about_body(rich)": "Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s ${b(koreninami, listi, cvetovi in plodovi)}. Koledar pokaže element vsakega dne — kot pomoč pri ${b(načrtovanju)}, ne kot pravilo.",
+      "about_footnote": "Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi."
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",

@@ -91,7 +91,7 @@ final class MoonMonthProvider
   }
 }
 
-String _$moonMonthHash() => r'31adbf30026e9e5b73d5bae27806e6ceb314a62e';
+String _$moonMonthHash() => r'b6aca73c0be12fc7042f1e31754f15d99398a2d3';
 
 /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
 /// day of the month plus six leading days of the previous month for the grid

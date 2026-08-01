@@ -6,27 +6,35 @@ import '../../../core/local_prefs/local_prefs.dart';
 part 'moon_settings_controller.g.dart';
 
 /// Moon calendar settings (FR-19): the on/off switch, the zodiac system and
-/// the garden-based ★ highlight.
+/// the display sub-toggles (garden ★, Journal layer, astro details).
 class MoonSettings {
   const MoonSettings({
     required this.enabled,
     required this.system,
     required this.highlightGarden,
+    required this.showInJournal,
+    required this.showAstroDetails,
   });
 
   final bool enabled;
   final CalendarSystem system;
   final bool highlightGarden;
+  final bool showInJournal;
+  final bool showAstroDetails;
 
   MoonSettings copyWith({
     bool? enabled,
     CalendarSystem? system,
     bool? highlightGarden,
+    bool? showInJournal,
+    bool? showAstroDetails,
   }) =>
       MoonSettings(
         enabled: enabled ?? this.enabled,
         system: system ?? this.system,
         highlightGarden: highlightGarden ?? this.highlightGarden,
+        showInJournal: showInJournal ?? this.showInJournal,
+        showAstroDetails: showAstroDetails ?? this.showAstroDetails,
       );
 
   @override
@@ -34,24 +42,35 @@ class MoonSettings {
       other is MoonSettings &&
       other.enabled == enabled &&
       other.system == system &&
-      other.highlightGarden == highlightGarden;
+      other.highlightGarden == highlightGarden &&
+      other.showInJournal == showInJournal &&
+      other.showAstroDetails == showAstroDetails;
 
   @override
-  int get hashCode => Object.hash(enabled, system, highlightGarden);
+  int get hashCode => Object.hash(
+        enabled,
+        system,
+        highlightGarden,
+        showInJournal,
+        showAstroDetails,
+      );
 
   @override
   String toString() =>
       'MoonSettings(enabled: $enabled, system: ${system.name}, '
-      'highlightGarden: $highlightGarden)';
+      'highlightGarden: $highlightGarden, showInJournal: $showInJournal, '
+      'showAstroDetails: $showAstroDetails)';
 }
 
 /// Defaults when nothing is stored yet or the load failed: enabled (decision
 /// A6), sidereal (matches the printed calendars the target market uses),
-/// garden highlight on (decision 2026-07-31).
+/// display sub-toggles on (decision 2026-07-31).
 const _defaults = MoonSettings(
   enabled: true,
   system: CalendarSystem.sidereal,
   highlightGarden: true,
+  showInJournal: true,
+  showAstroDetails: true,
 );
 
 /// The user's moon calendar settings, persisted device-locally (never synced —
@@ -72,10 +91,16 @@ class MoonSettingsController extends _$MoonSettingsController {
     };
     final highlightGarden =
         await prefs.moonHighlightGarden() ?? _defaults.highlightGarden;
+    final showInJournal =
+        await prefs.moonShowInJournal() ?? _defaults.showInJournal;
+    final showAstroDetails =
+        await prefs.moonShowAstroDetails() ?? _defaults.showAstroDetails;
     return MoonSettings(
       enabled: enabled,
       system: system,
       highlightGarden: highlightGarden,
+      showInJournal: showInJournal,
+      showAstroDetails: showAstroDetails,
     );
   }
 
@@ -94,6 +119,20 @@ class MoonSettingsController extends _$MoonSettingsController {
       (await _current()).copyWith(highlightGarden: highlightGarden),
     );
     await ref.read(localPrefsProvider).setMoonHighlightGarden(highlightGarden);
+  }
+
+  Future<void> setShowInJournal(bool showInJournal) async {
+    state = AsyncData((await _current()).copyWith(showInJournal: showInJournal));
+    await ref.read(localPrefsProvider).setMoonShowInJournal(showInJournal);
+  }
+
+  Future<void> setShowAstroDetails(bool showAstroDetails) async {
+    state = AsyncData(
+      (await _current()).copyWith(showAstroDetails: showAstroDetails),
+    );
+    await ref
+        .read(localPrefsProvider)
+        .setMoonShowAstroDetails(showAstroDetails);
   }
 
   /// Current settings, falling back to [_defaults] when the initial load
