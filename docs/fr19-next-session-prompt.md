@@ -204,24 +204,52 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   je brez Riverpoda → poceni); ostali trije rabijo cel svet providerjev, zato je preverba dodana v
   **T7 korak 3**. Pogled: `tmp/moon_t4_de_preview_test.dart` → `tmp/moon_t4_*.png`. Suite **1233**.
 
-**Naloga TE seje: korak T4b — lunino obvestilo »jutri dober dan«** (branchi
-`feat/fr19-t4b-1-quiet-hours` → `-2-scheduler` → `-3-toggle` → `-4-tests`; **korak po koraku,
-vsak svoja seja** — ta seja je T4b korak 1):
+- **T4b korak 1 ✅ (1. 8.) — B1 ODLOČEN, tihe ure + kapica oživele:** **B1 (lastnik, 1. 8.):**
+  dostava **device-local** (razporeja naprava, nič FCM/crona/oblačne sheme — motor je čista funkcija
+  datuma) · **opt-in 🔔 gre v `NotificationSettings`** (profile JSON, **sinhroniziran**, sledi
+  uporabniku med napravami; tolerantni parser → **brez migracije**) · **kapica velja samo za namige**
+  (lunin namig + dnevniški nudge si ne delita dneva; eksplicitni opomnik opravila dneva ne zasede).
+  Pravili živita v `core/notifications/hint_rules.dart`: `inQuietHours(local)` (okno 22–07 čez
+  polnoč) in `hintFireTime({desiredLocal, settings, otherHintDays})` → tihe ure namig **prestavijo**
+  na 07:00 (nikoli ne izbrišejo), kapica vrne `null`, če je dan že zaseden, **presoja pa teče na
+  prestavljenem dnevu** (test to zaklene). Priklopljen `JournalNudgeCoordinator` — dokazano brez
+  spremembe vedenja (17:00 ni v oknu; nudge nima sotekmecev, ker se bo **lunin namig umikal njemu**,
+  ne obratno) + regresijski test. Posodobljena zastarela komentarja (`notification_settings.dart`
+  »inert«, `config.dart` »display only« + napačna trditev, da so tihe ure device-local).
+  Suite **1244**.
 
-- **NAJPREJ ODLOČITEV B1** (edina odprta odločitev FR-19): so lunina obvestila **device-local**
-  (razporejena na napravi, nič v oblaku) ali gredo prek **sync/strežnika**? Predlagaj in **vprašaj
-  lastnika** — brez odgovora ne začni kodirati. Vpliva na shemo in na to, ali sploh rabiš migracijo.
-- **Korak 1 = tihe ure + frekvenčna kapica oživijo.** Danes sta »persisted but inert« (vrednosti se
-  shranjujejo, a nič jih ne upošteva); obvestilo brez njiju bi kršilo obljubo speca §6.3.9. Zato je
-  to prvi korak, pred razporejanjem.
+- **Pregled kode FR-19 (1. 8.) ✅ — po njem popravljeno vse najdeno:** **(1)** `MoonColors.of(context)`
+  (6 kopij `extension<MoonColors>() ?? moonColorsLight`) + `strongOf()` k `softOf()` (prej privatna
+  funkcija v mesečnem pogledu) · **(2)** nov `moonSystemProvider` (5 kopij »sistem s sidereal
+  fallbackom«; en sam vir za §11.6) · **(3)** `MoonMonthDay` dobil **`transitionAt`** → trije zasloni
+  ne sestavljajo več para `(day.transitionAt, cell.secondaryElement)` in **ne kličejo motorja dvakrat**
+  (badge in task-sekcija zdaj sploh ne kličeta `dayFor`) · **(4)** tedenska agenda ne more več tiho
+  izgubiti vrstice (`_dayOfWeek` izračuna dan, ki ga mesečna mapa ne doseže — prej `if case` preskok) ·
+  **(5) B1a odločitev lastnika: mena ostane free za vedno** → plan T6 korak 6 ima zdaj izrecno
+  opozorilo, da čip rabi **deljena vrata** (mena vidna vsem, element-dan za zid) · **(6)** wireframe
+  board B usklajen z dejansko oznako (»· do 14:20«, medla vrstica brez pike). **21 novih testov**
+  (suite **1265**): polnočni drobec v `moonMonthDayFor` (vseh 7 dni 2026), `principalPhaseOn` (avg 2026
+  = 4 markerji), pokritost ključev `moonMonth` (−6 … konec meseca, 37) + sledenje sistemu, teden čez
+  mejo meseca in leta, `gardenElements` nad pravim katalogom (lastna rastlina/soba/izbris), sistem
+  odloča besedilo sheeta (ozvezdje ↔ znamenje).
+
+**Naloga TE seje: T4b korak 2 — izračun + razpored luninega namiga** (branch
+`feat/fr19-t4b-2-scheduler`; koraka 3 in 4 sta svoji seji):
+
+- **Kaj:** device-local razporejevalnik namiga »jutri je dan za X« — po vzorcu
+  `JournalNudgeCoordinator` (re-arm ob zagonu/resume/spremembi nastavitev, rezervirani negativni
+  id-ji v `config.dart`, `scheduleNudge` = inexact kanal, brez exact-alarm dovoljenja).
+- **Skozi `hintFireTime`** (korak 1): želeni čas → tihe ure/kapica; `otherHintDays` = dnevi, ki jih
+  že zaseda dnevniški nudge (lunin namig se umakne njemu). Ura namiga = nova konstanta v `config.dart`.
+- **Vhod za vsebino:** `dayFor(jutri, system)` prek `MoonSettingsController` (en `system` vodi vse).
 - **Pasti (plan T4b):** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) ·
-  spoštuje preklop sistema (en `system` vodi vse) · UI nikjer ne reče »motor« · `Clock` namesto
-  `DateTime.now()` v razporejevalniku (testi rabijo FakeClock).
+  spoštuje preklop sistema · UI nikjer ne reče »motor« · `Clock` namesto `DateTime.now()` (testi
+  rabijo FakeClock) · dokler stikala ni (korak 3), se **nič ne razporeja** — flag + privzeto off.
 - **Vrstica 🔔 v `/moon-settings` pride šele s korakom 3** — brez mrtvih stikal.
 
-**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) · spec §6.3.9 (tihe
-ure/kapica) · obstoječi obvestilni sloj (`core/notifications/`) · `moon_settings_controller.dart`
-(kam gre nova prefs vrednost).
+**Pred delom preberi:** plan **T4b** (`docs/plan-implementacije-fr19-fr20.md`) · spec §6.3.9 ·
+`core/notifications/hint_rules.dart` (korak 1) · `journal_nudge_coordinator.dart` (vzorec) ·
+`notification_settings.dart` (kam gre nova opt-in vrednost).
 
 **Pravila:** naredi natanko ta korak in nič več. Pred merge: `flutter analyze` čist + cel
 `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4b korak 1, posodobi ta
@@ -229,4 +257,5 @@ dokument na naslednji korak in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·
-**B1 (device-local vs sync za lunina obvestila) še ODPRTA — odloči se na začetku T4b.**
+**B1 ✅ ODLOČEN (1. 8.): dostava device-local, opt-in 🔔 sinhroniziran (profile JSON), kapica samo za
+namige.** Odprtih odločitev FR-19 ni več.

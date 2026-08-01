@@ -9,21 +9,21 @@ part of 'moon_month_provider.dart';
 // GENERATED CODE - DO NOT MODIFY BY HAND
 // ignore_for_file: type=lint, type=warning
 /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
-/// day of the month plus six leading days of the previous month for the grid
-/// fill, keyed by local midnight. Memoized per (month, system) — one grid
-/// costs ~16 ms (measurement T1.11), too much to recompute on every rebuild.
-/// The system comes from [MoonSettingsController] (one system drives all moon
-/// screens, spec §11.6); sidereal while settings are still loading.
+/// day of the month plus six leading days of the previous month, keyed by
+/// local midnight. Six covers both consumers exactly — the grid's leading fill
+/// and the week agenda of a week ending on the 1st. Memoized per (month,
+/// system): one grid costs ~16 ms (measurement T1.11), too much to recompute
+/// on every rebuild.
 
 @ProviderFor(moonMonth)
 final moonMonthProvider = MoonMonthFamily._();
 
 /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
-/// day of the month plus six leading days of the previous month for the grid
-/// fill, keyed by local midnight. Memoized per (month, system) — one grid
-/// costs ~16 ms (measurement T1.11), too much to recompute on every rebuild.
-/// The system comes from [MoonSettingsController] (one system drives all moon
-/// screens, spec §11.6); sidereal while settings are still loading.
+/// day of the month plus six leading days of the previous month, keyed by
+/// local midnight. Six covers both consumers exactly — the grid's leading fill
+/// and the week agenda of a week ending on the 1st. Memoized per (month,
+/// system): one grid costs ~16 ms (measurement T1.11), too much to recompute
+/// on every rebuild.
 
 final class MoonMonthProvider
     extends
@@ -34,11 +34,11 @@ final class MoonMonthProvider
         >
     with $Provider<Map<DateTime, MoonMonthDay>> {
   /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
-  /// day of the month plus six leading days of the previous month for the grid
-  /// fill, keyed by local midnight. Memoized per (month, system) — one grid
-  /// costs ~16 ms (measurement T1.11), too much to recompute on every rebuild.
-  /// The system comes from [MoonSettingsController] (one system drives all moon
-  /// screens, spec §11.6); sidereal while settings are still loading.
+  /// day of the month plus six leading days of the previous month, keyed by
+  /// local midnight. Six covers both consumers exactly — the grid's leading fill
+  /// and the week agenda of a week ending on the 1st. Memoized per (month,
+  /// system): one grid costs ~16 ms (measurement T1.11), too much to recompute
+  /// on every rebuild.
   MoonMonthProvider._({
     required MoonMonthFamily super.from,
     required DateTime super.argument,
@@ -91,14 +91,14 @@ final class MoonMonthProvider
   }
 }
 
-String _$moonMonthHash() => r'b6aca73c0be12fc7042f1e31754f15d99398a2d3';
+String _$moonMonthHash() => r'c20805d547c92a17c789ac885167f304864867f6';
 
 /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
-/// day of the month plus six leading days of the previous month for the grid
-/// fill, keyed by local midnight. Memoized per (month, system) — one grid
-/// costs ~16 ms (measurement T1.11), too much to recompute on every rebuild.
-/// The system comes from [MoonSettingsController] (one system drives all moon
-/// screens, spec §11.6); sidereal while settings are still loading.
+/// day of the month plus six leading days of the previous month, keyed by
+/// local midnight. Six covers both consumers exactly — the grid's leading fill
+/// and the week agenda of a week ending on the 1st. Memoized per (month,
+/// system): one grid costs ~16 ms (measurement T1.11), too much to recompute
+/// on every rebuild.
 
 final class MoonMonthFamily extends $Family
     with $FunctionalFamilyOverride<Map<DateTime, MoonMonthDay>, DateTime> {
@@ -112,11 +112,11 @@ final class MoonMonthFamily extends $Family
       );
 
   /// Cells of the month grid for [month] (a `DateTime(year, month)` key): every
-  /// day of the month plus six leading days of the previous month for the grid
-  /// fill, keyed by local midnight. Memoized per (month, system) — one grid
-  /// costs ~16 ms (measurement T1.11), too much to recompute on every rebuild.
-  /// The system comes from [MoonSettingsController] (one system drives all moon
-  /// screens, spec §11.6); sidereal while settings are still loading.
+  /// day of the month plus six leading days of the previous month, keyed by
+  /// local midnight. Six covers both consumers exactly — the grid's leading fill
+  /// and the week agenda of a week ending on the 1st. Memoized per (month,
+  /// system): one grid costs ~16 ms (measurement T1.11), too much to recompute
+  /// on every rebuild.
 
   MoonMonthProvider call(DateTime month) =>
       MoonMonthProvider._(argument: month, from: this);

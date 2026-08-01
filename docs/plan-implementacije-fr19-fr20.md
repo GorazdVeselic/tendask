@@ -51,7 +51,7 @@ P0.4 darilo (dolžina, gost) ─────────────► T6 FR-20
 
 ## P0 · Predpriprava (pred prvim commitom kode)
 
-### P0.1 · Zavarovanje prototipov in referenčnih podatkov ⬜
+### P0.1 · Zavarovanje prototipov in referenčnih podatkov ✅ ZAKLJUČENO (2026-07-30)
 
 **Problem:** validirani prototipi (`tmp/moon_thun_test.py` 233 vrstic, `tmp/moon_calibrate.py` 389 vrstic
 z vgrajeno tabelo `THUN2024` — 50 referenčnih vstopov, `tmp/moon_descending.py`) živijo **samo v
@@ -61,9 +61,10 @@ gitignorirani `tmp/`**. En `git clean`/menjava stroja = kalibracije ni več mogo
 - **Izhod:** varna kopija; T1 iz nje vzame Meeus koeficiente in referenčne vrednosti za validacijo.
 - **Koraki:**
   1. ✅ **Backup izven repa** — `N:\development\tendask\moon-prototipi-2026-07-30.zip` (30. 7. 2026).
-  2. 🅿️ **Odloči lastnik:** ali skripte (ki vsebujejo Thunove ure) smejo v repo. Opciji:
-     (a) ostanejo samo zasebno (repo čist, validacija T1 teče lokalno);
-     (b) v repo gre **očiščena** verzija brez `THUN2024` tabele (Meeus del je javna astronomija).
+  2. ✅ **Obveljal privzetek (a)** — skripte s Thunovimi urami ostajajo **zasebne** (v `tmp/` + backup);
+     v repo ni šlo nič. Motor je bil validiran lokalno, referenčne vrednosti živijo v fixture testih
+     (lastni izračuni, ne prepis). Če bi kdaj hotel (b) — očiščeno verzijo brez `THUN2024` — je to nova
+     odločitev, ne odprta točka tega plana.
 - **Pasti:** Thunove ure so prepis iz avtorsko zaščitene knjige — **ne commitaj jih**, dokler lastnik ne
   odloči; privzeto (a).
 
@@ -80,7 +81,7 @@ ujemanje: čiste IAU 93 %, kalibrirane 97 %.
 kronologija §2, zagovor §3). **Rezerva = čiste IAU** kot druga tabela konstant v motorju (izhod v sili,
 zamenjava brez API spremembe). Spec posodobljen: §12.6 + §14.5.
 
-### P0.3 · Odločitve A1–A6 🅿️ (lastnik; blokirajo T1-obseg in T3–T4)
+### P0.3 · Odločitve A1–A6 ✅ ZAKLJUČENO (vseh šest odločenih do 2026-07-31)
 
 Po vrsti iz [`biodynamic-calendar-decisions.md`](feature-requests/biodynamic-calendar-decisions.md);
 plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, je to zapisano pri tasku:
@@ -101,7 +102,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
 
 ---
 
-## T1 · Motor (`lib/core/biodynamic/`) — čista logika, brez UI
+## T1 · Motor (`lib/core/biodynamic/`) — čista logika, brez UI ✅ ZAKLJUČEN (2026-07-31)
 
 - **Vhod:** P0.1 (koeficienti iz prototipa), P0.2 (3 meje ali IAU fallback), A1 (ali gre deklinacija zraven), A3=A.
 - **Izhod:** čisti Dart modul brez odvisnosti in brez I/O:
@@ -185,7 +186,7 @@ plan spodaj privzame **predloge** (označeno), kjer odločitev spremeni obseg, j
   DST pokrit s testi (7) · natančnost zavarovana z vratarjem (4) · API brez drift/Riverpod tipov —
   motor je uporaben tudi, če se UI odločitve spremenijo.
 
-## T2 · Ogrodje (flag, nastavitve, barve, ruta, i18n skelet)
+## T2 · Ogrodje (flag, nastavitve, barve, ruta, i18n skelet) ✅ ZAKLJUČEN (2026-07-31)
 
 Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flaga.
 
@@ -221,7 +222,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Pasti:** slang regeneracija (CI rdeč brez commitanih `*.g.dart`) · flag mora biti preverjen na
   **vseh** vstopnih točkah, ne le na ruti (čip, oznake) — sicer temna izdaja pokaže drobec.
 
-## T3 · Zasloni Luninega koledarja (jedro UI)
+## T3 · Zasloni Luninega koledarja (jedro UI) ✅ ZAKLJUČEN (2026-08-01)
 
 - **Vhod:** T1 (podatki), T2 (flag/barve/ruta/prefs), A5 (ikone), **T5.1 (mapping kategorija→element —
   izvede se pred korakom 3, vhod za ★)**, wireframe `lunar-calendar_overview.html`, screen-map §4.
@@ -296,7 +297,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   prehodni dnevi (~44 %) morajo biti vizualno rešeni že v koraku 3 (dvobarvna celica ali oznaka), ne
   naknadno.
 
-## T4 · Kontekstne oznake (vstopne točke)
+## T4 · Kontekstne oznake (vstopne točke) ✅ ZAKLJUČEN (2026-08-01)
 
 - **Vhod:** T1 + T2; T3 za cilje navigacije. Mesta potrjena v kodi (pregled 2026-07-30):
   čip → `home_screen.dart` takoj za `HomeWeatherSection` · when-step → pod Datum/Ura vrstico ·
@@ -380,11 +381,19 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 ## T4b · Lunino obvestilo — namig »jutri dober dan« (v v1 po odločitvi 2026-07-31)
 
 - **Vhod:** T1 (motor), T2.3 (prefs), T3.6 (zaslon nastavitev — vrstica 🔔 pride šele s tem taskom);
-  **odločitev B1** (device-local vs sync za lunina obvestila) se sprejme na začetku tega taska.
+  **odločitev B1** ✅ (2026-08-01): dostava device-local, opt-in 🔔 sinhroniziran v profile JSON.
 - **Izhod:** opt-in lokalno obvestilo »jutri je dan za X« (privzeto izklopljeno, wireframe board 2b),
   ki spoštuje tihe ure in frekvenčno kapico — **ti dve morata s tem taskom zaživeti** (danes
   »persisted but inert«; obvestilo brez njiju bi kršilo obljubo speca §6.3.9).
-- **Koraki:** 1. ⬜ B1 + oživitev tihih ur/frekvenčne kapice v obvestilnem sloju · 2. ⬜ izračun +
+- **Koraki:** 1. ✅ B1 + oživitev tihih ur/frekvenčne kapice v obvestilnem sloju (2026-08-01:
+  **B1 odločen** — dostava **device-local** (nič FCM/crona/sheme), opt-in 🔔 v `NotificationSettings`
+  (profile JSON, sinhroniziran, brez migracije), **kapica velja samo za namige**; pravili živita v
+  `core/notifications/hint_rules.dart` — `inQuietHours()` + `hintFireTime()`: tihe ure namig
+  **prestavijo** na konec okna (nikoli ne izbrišejo), kapica ga na že zasedenem dnevu vrne kot `null`,
+  presoja pa se na **prestavljenem** dnevu. Priklopljen dnevniški nudge (dokazano brez spremembe
+  vedenja — 17:00 ni v oknu, kapica brez sotekmecev; moon namig se bo umikal njemu, ne obratno).
+  Posodobljena zastarela komentarja v `notification_settings.dart` in `config.dart`. 11 novih testov,
+  suite **1244**.) · 2. ⬜ izračun +
   razpored (lokalno, prek `Clock`) · 3. ⬜ 🔔 vrstica v `/moon-settings` · 4. ⬜ testi (FakeClock:
   tihe ure, kapica, preklop sistema, rob polnoči).
 - **Branchi:** `feat/fr19-t4b-1-quiet-hours` · `feat/fr19-t4b-2-scheduler` · `feat/fr19-t4b-3-toggle` ·
@@ -394,7 +403,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Pasti:** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) · spoštuje preklop
   sistema (en `system` vodi vse) · UI brez besede »motor«.
 
-## T5 · Iskalnik »Kdaj za X« (`/moon-finder`) ⬜ — priporočen za v1, sme v v1.1
+## T5 · Iskalnik »Kdaj za X« (`/moon-finder`) 🔨 delno (T5.1 ✅) — priporočen za v1, sme v v1.1
 
 - **Vhod:** T3 (koledar, sheet), `coarsePlantCategory` (7 veder — obstaja), mapping element→kategorija
   (nova majhna tabela v motorju ali ob njem), plant-picker (obstaja).
@@ -441,8 +450,14 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.
      Kartica »✦ Tendask+« v Nastavitvah pod profilom, za flagom **`kTendaskPlusEnabled`** (ime iz
      screen-map §2.1); ruta `/tendask-plus` z istim varovalom. **Pogled → prevodi → layout matrika.**
-  6. ⬜ **Gate swap:** na vseh vstopnih točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za
+  6. ⬜ **Gate swap:** na vstopnih točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za
      prižig); čip dobi zaklenjeno stanje (rdeči »✦ Tendask+ ›« → `/tendask-plus`).
+     **⚠️ Čip NI eno stikalo (odločitev lastnika 2026-08-01):** mena ostane **free za vedno**
+     (spec §6.5 — edini kavelj), zato `HomeMoonChipCard` rabi **deljena vrata**: ikona mene + naslov
+     + ime mene se izrišejo vedno (ko je master flag on), **element-dan CTA »dan za X ›«** pa se ob
+     ne-Plusu zamenja z »✦ Tendask+ ›«. Enako velja za vse ostale površine, ki kažejo element-dan
+     (when-step oznaka, task-detail sekcija, Dnevnik-plast, koledar, sheet): te gredo **cele** za zid.
+     Test naj zaklene oboje: brez Plusa čip **še vedno** kaže meno in **ne** kaže elementa.
   7. ⬜ **Anti-steering i18n pregled** vseh novih nizov (FR-20 §3.1): brez cene, brez URL-ja, brez
      »kje dobiti kodo« — rdeča črta, ki lahko stane odstranitev aplikacije.
   8. ⬜ Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene

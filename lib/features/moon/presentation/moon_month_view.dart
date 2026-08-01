@@ -106,8 +106,7 @@ class _MoonDayCell extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    // Fallback covers bare ThemeData in tests; app themes always register it.
-    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
+    final moon = MoonColors.of(context);
 
     final soft = moon.softOf(day.element);
     final secondary = day.secondaryElement;
@@ -223,14 +222,6 @@ class _MoonDayCell extends StatelessWidget {
   }
 }
 
-Color _strongOf(MoonColors moon, BiodynamicElement element) =>
-    switch (element) {
-      BiodynamicElement.fruit => moon.fruit,
-      BiodynamicElement.root => moon.root,
-      BiodynamicElement.flower => moon.flower,
-      BiodynamicElement.leaf => moon.leaf,
-    };
-
 /// Legend under the grid: element tones, principal-phase markers and the ★
 /// garden highlight.
 class _MoonLegend extends StatelessWidget {
@@ -240,8 +231,7 @@ class _MoonLegend extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    // Fallback covers bare ThemeData in tests; app themes always register it.
-    final moon = theme.extension<MoonColors>() ?? moonColorsLight;
+    final moon = MoonColors.of(context);
 
     final labelStyle = theme.textTheme.labelSmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -267,7 +257,7 @@ class _MoonLegend extends StatelessWidget {
               width: 10,
               height: 10,
               decoration: BoxDecoration(
-                color: _strongOf(moon, element),
+                color: moon.strongOf(element),
                 borderRadius: BorderRadius.circular(3),
               ),
             ),

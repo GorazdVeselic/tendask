@@ -30,12 +30,25 @@ class MoonColors extends ThemeExtension<MoonColors> {
   final Color leaf; // water — leaf day
   final Color leafSoft;
 
+  /// Moon colours of the ambient theme. Falls back to the light instance for a
+  /// bare [ThemeData] (widget tests); the app themes always register them.
+  static MoonColors of(BuildContext context) =>
+      Theme.of(context).extension<MoonColors>() ?? moonColorsLight;
+
   /// Soft (background) tone of [element] — one resolution for every surface.
   Color softOf(BiodynamicElement element) => switch (element) {
     BiodynamicElement.fruit => fruitSoft,
     BiodynamicElement.root => rootSoft,
     BiodynamicElement.flower => flowerSoft,
     BiodynamicElement.leaf => leafSoft,
+  };
+
+  /// Strong (accent) tone of [element] — legend swatches, icons.
+  Color strongOf(BiodynamicElement element) => switch (element) {
+    BiodynamicElement.fruit => fruit,
+    BiodynamicElement.root => root,
+    BiodynamicElement.flower => flower,
+    BiodynamicElement.leaf => leaf,
   };
 
   @override

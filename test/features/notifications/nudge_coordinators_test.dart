@@ -34,6 +34,7 @@ class _FakeNotificationService extends NotificationService {
   final scheduledReminders = <int>[];
   final scheduledNudges = <int>[];
   final nudgeTitles = <String>[];
+  final nudgeTimes = <DateTime>[];
   final cancelled = <int>[];
 
   @override
@@ -58,6 +59,7 @@ class _FakeNotificationService extends NotificationService {
     pending.add(id);
     scheduledNudges.add(id);
     nudgeTitles.add(title);
+    nudgeTimes.add(when);
   }
 
   @override
@@ -185,6 +187,25 @@ void main() {
       expect(env.notif.scheduledNudges, kJournalNudgeNotificationIds);
       expect(
         env.notif.nudgeTitles.every((t0) => t0 == t.journal_nudge.title_b),
+        isTrue,
+      );
+    });
+
+    test('quiet hours leave the 17:00 chain where it is', () async {
+      final env = await _setup(
+        settings: const NotificationSettings(
+          quietHoursEnabled: true,
+          frequencyCapEnabled: true,
+        ),
+      );
+      _registerTearDown(env);
+
+      env.container.read(journalNudgeCoordinatorProvider.notifier).start();
+      await pumpEventQueue(times: 30);
+
+      expect(env.notif.scheduledNudges, kJournalNudgeNotificationIds);
+      expect(
+        env.notif.nudgeTimes.every((n) => n.hour == kJournalNudgeHour),
         isTrue,
       );
     });

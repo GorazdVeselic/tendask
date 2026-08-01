@@ -145,3 +145,11 @@ class MoonSettingsController extends _$MoonSettingsController {
     }
   }
 }
+
+/// The zodiac system every moon surface reads (one system drives them all,
+/// spec §11.6). Sidereal while the settings are still loading or if they
+/// failed — the same fallback everywhere, so no two surfaces can disagree.
+@riverpod
+CalendarSystem moonSystem(Ref ref) =>
+    ref.watch(moonSettingsControllerProvider).asData?.value.system ??
+    CalendarSystem.sidereal;

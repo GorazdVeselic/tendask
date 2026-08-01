@@ -5,6 +5,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tendask/core/biodynamic/biodynamic_day.dart';
+import 'package:tendask/core/biodynamic/calendar_system.dart';
+import 'package:tendask/core/biodynamic/moon_calendar.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/core/local_prefs/local_prefs.dart';
@@ -90,6 +92,32 @@ void main() {
 
     expect(find.byType(SheetHandle), findsOneWidget);
     expect(find.byKey(kMoonWhatsHappeningKey), findsNothing);
+  });
+
+  testWidgets('the stored system decides the sheet wording and the day', (
+    tester,
+  ) async {
+    // §11.6: one system drives every surface. Sidereal names a constellation,
+    // tropical a sign — and the same date can be a different element day.
+    await LocalPrefsRepository(db).setMoonSystem('tropical');
+
+    await pumpCalendar(tester);
+    await tester.tap(find.text('15'));
+    await tester.pumpAndSettle();
+
+    final now = DateTime.now();
+    final date = DateTime(now.year, now.month, 15);
+    final day = dayFor(date, CalendarSystem.tropical);
+    expect(day.isConstellation, isFalse);
+
+    final expected = t.moon.sheet
+        .in_sign(
+          sign: TextSpan(text: t.moon.sign[day.sign.name]!),
+          day: TextSpan(text: t.moon.day_for[day.element.name]!),
+        )
+        .toPlainText();
+    // Rich text never matches find.text — compare the flattened span.
+    expect(find.textContaining(expected), findsOneWidget);
   });
 
   testWidgets('the month arrows navigate to the adjacent month', (
