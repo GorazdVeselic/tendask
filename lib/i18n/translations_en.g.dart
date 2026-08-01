@@ -2161,6 +2161,9 @@ class Translations$moon$settings$en {
 
 	/// en: 'Tradition and preference, not agronomic advice. Computed on your device.'
 	String get about_footnote => 'Tradition and preference, not agronomic advice. Computed on your device.';
+
+	/// en: 'Couldn't load the settings.'
+	String get load_error => 'Couldn\'t load the settings.';
 }
 
 // Path: moon.division
@@ -2839,6 +2842,7 @@ extension on Translations {
 			'moon.settings.about_title' => '🌙 What is this?',
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '), b('roots, leaves, flowers and fruits'), const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '), b('planning'), const TextSpan(text: ', not a rule.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
+			'moon.settings.load_error' => 'Couldn\'t load the settings.',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',

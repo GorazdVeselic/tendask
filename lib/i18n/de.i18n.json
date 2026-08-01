@@ -648,7 +648,8 @@
       "show_astro_sub": "mehr Astro-Details in der Tagesansicht",
       "about_title": "🌙 Was ist das?",
       "about_body(rich)": "Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit ${b(Wurzeln, Blättern, Blüten und Früchten)} verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der ${b(Planung)}, nicht als Regel.",
-      "about_footnote": "Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet."
+      "about_footnote": "Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.",
+      "load_error": "Einstellungen konnten nicht geladen werden."
     },
     "day_for(map)": {
       "fruit": "Fruchttag",

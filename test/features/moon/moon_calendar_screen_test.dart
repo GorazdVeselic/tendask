@@ -11,6 +11,7 @@ import 'package:tendask/core/local_prefs/local_prefs.dart';
 import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
+import 'package:tendask/features/moon/presentation/moon_day_sheet.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -64,7 +65,7 @@ void main() {
 
     expect(find.byType(SheetHandle), findsOneWidget);
     // The astro details block is on by default.
-    expect(find.text('🌌'), findsOneWidget);
+    expect(find.byKey(kMoonWhatsHappeningKey), findsOneWidget);
   });
 
   testWidgets('tapping a week agenda row opens the day sheet', (tester) async {
@@ -88,7 +89,62 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(SheetHandle), findsOneWidget);
-    expect(find.text('🌌'), findsNothing);
+    expect(find.byKey(kMoonWhatsHappeningKey), findsNothing);
+  });
+
+  testWidgets('the month arrows navigate to the adjacent month', (
+    tester,
+  ) async {
+    await pumpCalendar(tester);
+    final ml = MaterialLocalizations.of(
+      tester.element(find.byType(MoonCalendarScreen)),
+    );
+    final now = DateTime.now();
+    final thisMonth = ml.formatMonthYear(DateTime(now.year, now.month));
+    final nextMonth = ml.formatMonthYear(DateTime(now.year, now.month + 1));
+    expect(find.text(thisMonth), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+
+    expect(find.text(nextMonth), findsOneWidget);
+    expect(find.text(thisMonth), findsNothing);
+  });
+
+  testWidgets('the sheet "+ task" CTA opens the prefilled task form', (
+    tester,
+  ) async {
+    String? receivedDate;
+    final router = GoRouter(
+      initialLocation: '/moon-calendar',
+      routes: [
+        GoRoute(
+          path: '/moon-calendar',
+          builder: (_, _) => const MoonCalendarScreen(),
+        ),
+        GoRoute(
+          path: '/task-new',
+          name: 'task-new',
+          builder: (_, state) {
+            receivedDate = state.uri.queryParameters['date'];
+            return const Scaffold(body: Text('TASK-NEW'));
+          },
+        ),
+      ],
+    );
+    await pumpCalendar(tester, router: router);
+    await tester.tap(find.text('15'));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.text(t.moon.sheet.add_task).first);
+    await tester.pumpAndSettle();
+
+    expect(find.text('TASK-NEW'), findsOneWidget);
+    final now = DateTime.now();
+    expect(
+      DateTime.tryParse(receivedDate ?? ''),
+      DateTime(now.year, now.month, 15),
+    );
   });
 
   testWidgets('the AppBar gear opens /moon-settings', (tester) async {

@@ -303,9 +303,20 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   task-detail → za sekcijo vremenskega posnetka.
 - **Izhod:** vse vstopne točke iz screen-map §1–§3, za flagom.
 - **Koraki:**
-  1. ⬜ **Čip na Domov** (vzorec `HomeWeatherSection`: samostojen ConsumerWidget, ki sam bere providerje
+  1. ✅ **Čip na Domov** (vzorec `HomeWeatherSection`: samostojen ConsumerWidget, ki sam bere providerje
      in sam odloči, ali se izriše): mena (free del) + desni CTA → `/moon-calendar`. Stanje
      »zaklenjeno → ✦ Tendask+« pride s T6 (do takrat samo odklenjeno stanje za flagom). **Pogled.**
+     (2026-08-01: `HomeMoonChip` (`home/presentation/widgets/`), na Domov takoj za vremensko
+     sekcijo; flag ali izklopljen opt-in → `SizedBox.shrink`. Vsebina: `MoonPhaseIcon` + naslov +
+     ime mene (free) · CTA »dan za X ›« (element oznake dneva prek `moonMonthDayFor`) → push
+     `/moon-calendar`. Brez novih i18n ključev. Naprave ni bilo → pogled prek
+     `tmp/home_moon_chip_preview_test.dart` → PNG. Po code-review istega dne: razdeljen na
+     **gate (`HomeMoonChip`) + javno kartico (`HomeMoonChipCard`)**, da so testi/matrika/predogledi
+     možni brez prižiganja flaga; kartica in koledar ob resume osvežita »danes«
+     (`WidgetsBindingObserver`); testi gate-off + tap→ruta + matrika `home/moon-chip` že tu
+     (ne šele T4.5). Dodatno iz reviewa: error veja `/moon-settings` (`load_error` en+sl+de) +
+     test, `kMoonWhatsHappeningKey` namesto emoji finderja, test ‹ › navigacije in test CTA
+     »+ opravilo« → `/task-new?date=…`. Suite 1164 testov.)
   2. ⬜ **When-step oznaka**: **ločen ConsumerWidget otrok** (ne parameter `WhenStepBody` — ta je
      namenoma brez Riverpoda in ima 36 layout testov, ki jih ne podirava): medla vrstica
      »🌱 dan za list · do 14:20« iz izbranega datuma. **Pogled.**
@@ -367,7 +378,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 
 - **Vhod:** T3+T4 obstajata (potrošnik gate-a) · **odločitev §11.4** (dependency za preverjanje podpisa
   tokena — izven `tech-stack §1` → **najprej vprašaj**) · FR-20 §6 (token model) · deploy runbook
-  (staging → prod, migracija + granti v istem koraku).
+  (staging → prod, migracija + granti v istem koraku). ⚠️ **Pogoj:** T4.4 (Dnevnik-plast) mora biti
+  narejen pred prižigom — stikalo »Prikaži v Dnevniku« (T3.6) je sicer brez potrošnika (mrtvo stikalo).
 - **Izhod:** zid obstaja, nič ne zaklepa (flag še off): shema `plus_until`/`plus_token`, `plusProvider`,
   osnovni `/tendask-plus` zaslon, gate ožičen na vstopne točke. Porabnik: T7.
 - **Koraki:**

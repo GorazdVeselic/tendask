@@ -658,7 +658,8 @@
       "show_astro_sub": "več astro podrobnosti v dnevu",
       "about_title": "🌙 Kaj je to?",
       "about_body(rich)": "Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s ${b(koreninami, listi, cvetovi in plodovi)}. Koledar pokaže element vsakega dne — kot pomoč pri ${b(načrtovanju)}, ne kot pravilo.",
-      "about_footnote": "Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi."
+      "about_footnote": "Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.",
+      "load_error": "Nastavitev ni bilo mogoče naložiti."
     },
     "day_for(map)": {
       "fruit": "dan za plod",

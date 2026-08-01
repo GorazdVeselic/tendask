@@ -1044,6 +1044,7 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 		const TextSpan(text: ', nicht als Regel.'),
 	]);
 	@override String get about_footnote => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.';
+	@override String get load_error => 'Einstellungen konnten nicht geladen werden.';
 }
 
 // Path: moon.division
@@ -1692,6 +1693,7 @@ extension on TranslationsDe {
 			'moon.settings.about_title' => '🌙 Was ist das?',
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '), b('Wurzeln, Blättern, Blüten und Früchten'), const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '), b('Planung'), const TextSpan(text: ', nicht als Regel.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
+			'moon.settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
 			'moon.day_for.fruit' => 'Fruchttag',
 			'moon.day_for.root' => 'Wurzeltag',
 			'moon.day_for.flower' => 'Blütentag',

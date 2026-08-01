@@ -174,6 +174,9 @@ class _DayHero extends StatelessWidget {
   }
 }
 
+/// Test handle for the astro-details block (behind the 🌌 sub-toggle).
+const kMoonWhatsHappeningKey = Key('moon-whats-happening');
+
 /// The "what's happening" box (spec §11.6): position + transition hour, phase
 /// meaning, ascending/descending, favorability — slot-filled templates.
 class _WhatsHappening extends StatelessWidget {
@@ -232,6 +235,7 @@ class _WhatsHappening extends StatelessWidget {
     };
 
     return Container(
+      key: kMoonWhatsHappeningKey,
       padding: const EdgeInsets.fromLTRB(12, 4, 12, 12),
       decoration: BoxDecoration(
         border: Border.all(color: theme.colorScheme.outlineVariant),

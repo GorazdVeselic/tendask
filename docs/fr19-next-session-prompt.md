@@ -130,39 +130,53 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   preloma** iz najdbe T3.7: vrstica mesečne celice (številka+★+mena) in `element_short` (celica +
   agenda stolpec) → `FittedBox.scaleDown` namesto odreza; vizualno preverjeno pri 320 px (PNG).
   Suite **1141 testov**.
+- **T4.1 čip na Domov ✅ (1. 8., + code-review popravki isti dan):**
+  `lib/features/home/presentation/widgets/home_moon_chip.dart` (board 1) — **gate
+  `HomeMoonChip`** (flag ali izklopljeno opt-in stikalo → `SizedBox.shrink`; Domov nespremenjen)
+  **+ javna kartica `HomeMoonChipCard`** (testabilna/izrisljiva brez prižiganja flaga — ta vzorec
+  uporabi tudi za T4.2–T4.4 widgete!). Vsebina: `MoonPhaseIcon` + »Lunin koledar« + ime mene
+  (free del) · desni CTA »dan za X ›« (element OZNAKE dneva — `moonMonthDayFor`, polnočna
+  redukcija; `dayFor`/`moonMonthDayFor` sama normalizirata na polnoč, `DateTime.now()` je varen) →
+  `context.push('/moon-calendar')`. Kartica in `MoonCalendarScreen` ob **resume** osvežita
+  »danes« (`WidgetsBindingObserver` — aplikacija čez noč v ozadju ne sme kazati včerajšnjega
+  dne). Zaklenjeno stanje (✦ Tendask+) pride s T6. Brez novih i18n ključev. Testi in matrika
+  `home/moon-chip` so narejeni ŽE TU (gate-off → nič; tap → `/moon-calendar`). Iz reviewa še:
+  error veja `/moon-settings` (`moon.settings.load_error` en+sl+de) + test ·
+  `kMoonWhatsHappeningKey` (astro blok, namesto emoji finderja) · testa ‹ › navigacije meseca in
+  sheet CTA »+ opravilo« → `/task-new?date=…` · matrika week z `expect(MoonWeekView)` · plan T6
+  dobil pogoj »T4.4 pred prižigom« (sicer mrtvo stikalo Dnevnika). Suite **1164 testov**.
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T4.1 — čip na Domov** (branch `feat/fr19-t4-1-home-chip`):
+**Naloga TE seje: korak T4.2 — when-step oznaka** (branch `feat/fr19-t4-2-when-step`):
 
-- **Vzorec `HomeWeatherSection`** (potrjeno mesto, pregled 2026-07-30): samostojen ConsumerWidget
-  v `features/moon/presentation/` (ali `home/`? poglej, kje živi `HomeWeatherSection`, in sledi
-  vzorcu), vstavljen v `home_screen.dart` **takoj za `HomeWeatherSection`**; sam bere providerje
-  in **sam odloči, ali se izriše**: ob izklopljenem flagu ALI izklopljenem opt-in stikalu
-  (`MoonSettings.enabled`) vrne prazno (`SizedBox.shrink` je tu legitimen — izklopljena funkcija,
-  ne požrta napaka) → obstoječi Domov vizualno nespremenjen, layout matrika Domov ostane zelena.
-- **Vsebina čipa (free del):** mena danes (`MoonPhaseIcon` + ime mene) + element dneva (emoji +
-  »dan za X«, ista polnočna redukcija kot celica — `moonMonthDayFor`) + desni CTA →
-  `/moon-calendar` (push). Stanje »zaklenjeno → ✦ Tendask+« pride s **T6** — do takrat samo
-  odklenjeno stanje za flagom. Wireframe: `lunar-calendar_contexts.html` (board 1) + screen-map §1.
-- **Čip bere ogrete prefs** (controller je keepAlive, ogret v bootstrapu) — brez utripanja ob
-  zagonu; brez novih providerjev, `moonMonthDayFor`/`dayFor` je čista funkcija.
-- **Najprej videz → pogled (naprava ali `tmp/` harness) → šele nato testi/prevodi** (de takoj, ker
-  T3.7 vzorec že obstaja — a šele po potrjenem videzu). Layout matrika Domov s čipom + widget test
-  (flag/stikalo off → čipa ni) sodita v **T4.5**, ne sem — tu samo pogled.
+- **Ločen ConsumerWidget otrok** pod Datum/Ura vrstico v when-koraku čarovnika — **NE parameter
+  `WhenStepBody`** (ta je namenoma brez Riverpoda in ima 36 layout testov, ki jih ne podirava):
+  poglej, kje `entry_screen.dart` sestavi when-korak, in vstavi widget tam (ali kot sibling v
+  telo koraka, če je to čisteje — a brez spreminjanja podpisa `WhenStepBody`).
+- **Vsebina:** medla vrstica »🌱 dan za list · do 14:20« iz **izbranega datuma** (ne danes!) —
+  element oznake dneva (`moonMonthDayFor(izbrani datum, system)`, polnočna redukcija) + ura
+  prehoda, če obstaja (`dayFor(...).transitionAt` → `formatHm`). Stil: bodySmall
+  `onSurfaceVariant` (medlo, ne kričeče). Emoji prek `elementEmoji()`.
+- **Vidnost:** flag + opt-in stikalo (isti vzorec kot `HomeMoonChip` — off → `SizedBox.shrink`,
+  obstoječi wizard vizualno nespremenjen, njegovih 36 layout testov ostane zelenih).
+- **i18n:** za »· do HH:MM« obstaja `moon.sheet.until_then`? Ta vsebuje »nato …« rep — preveri in
+  po potrebi dodaj NOV ključ (en+sl+de, de takoj — vzorec obstaja) namesto zlorabe sheet ključa.
+- **Najprej videz → pogled → šele nato prevodi**; testi (vključno z layout matriko when-koraka z
+  oznako) pridejo s **T4.5**. Za render bo spet treba flag začasno prižgati (vzorec
+  `tmp/home_moon_chip_preview_test.dart` — v commitu flag OSTANE false!).
 
-**Pred delom preberi:** plan T4 korak 1 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
-wireframe `docs/wireframes/lunar-calendar_contexts.html` board 1 · screen-map §1 ·
-`home_screen.dart` + `HomeWeatherSection` (vzorec samoodločanja) · `MoonSettingsController`
-(`enabled`) · `moon_phase_icon.dart` + `moon_calendar.dart` (`moonMonthDayFor`,
-`principalIllumFraction`).
+**Pred delom preberi:** plan T4 korak 2 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
+screen-map §2 · `when_step.dart` (`WhenStepBody` — česa NE dotikati) + `entry_screen.dart`
+(sestava koraka) · `home_moon_chip.dart` (vzorec vidnosti/flag) · wireframe
+`lunar-calendar_contexts.html` (when-step board).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.2). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.1, posodobi ta
-dokument na naslednji korak (T4.2 when-step oznaka; branch `feat/fr19-t4-2-when-step`) in
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.3). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.2, posodobi ta
+dokument na naslednji korak (T4.3 task-detail sekcija; branch `feat/fr19-t4-3-task-detail`) in
 predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna

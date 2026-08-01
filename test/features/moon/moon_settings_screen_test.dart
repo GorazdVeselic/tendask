@@ -11,6 +11,12 @@ import 'package:tendask/features/moon/application/moon_settings_controller.dart'
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
+/// Simulates a failed prefs load so the screen's error branch is reachable.
+class _FailingController extends MoonSettingsController {
+  @override
+  Future<MoonSettings> build() async => throw StateError('boom');
+}
+
 void main() {
   late AppDatabase db;
   late ProviderContainer container;
@@ -89,5 +95,21 @@ void main() {
     await tester.tap(find.text(t.moon.settings.show_astro));
     await tester.pumpAndSettle();
     expect(await prefs.moonShowAstroDetails(), isFalse);
+  });
+
+  testWidgets('a failed load shows the error message, not a stuck spinner', (
+    tester,
+  ) async {
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        moonSettingsControllerProvider.overrideWith(_FailingController.new),
+      ],
+    );
+    await pumpSettings(tester);
+
+    expect(find.text(t.moon.settings.load_error), findsOneWidget);
+    expect(find.byType(CircularProgressIndicator), findsNothing);
   });
 }

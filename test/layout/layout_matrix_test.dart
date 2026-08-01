@@ -18,10 +18,12 @@ import 'package:tendask/features/auth/presentation/location_screen.dart';
 import 'package:tendask/core/biodynamic/biodynamic_day.dart';
 import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
+import 'package:tendask/features/home/presentation/widgets/home_moon_chip.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
+import 'package:tendask/features/moon/presentation/moon_week_view.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
@@ -350,6 +352,8 @@ void main() {
       await tester.tap(find.text(t.moon.calendar.week_view));
       await tester.pump();
       await tester.pump(const Duration(milliseconds: 400));
+      // Guard against silently measuring the month again when the tap missed.
+      expect(find.byType(MoonWeekView), findsOneWidget);
     },
   );
 
@@ -372,5 +376,13 @@ void main() {
     'moon-settings',
     overrides: _dbOverrides,
     build: () => const MoonSettingsScreen(),
+  );
+
+  // The card, not the HomeMoonChip gate: the gate is const-false until T7, so
+  // only the card can be measured (same pattern as weather/no-location).
+  layoutMatrix(
+    'home/moon-chip',
+    overrides: _dbOverrides,
+    build: () => const HomeMoonChipCard(),
   );
 }
