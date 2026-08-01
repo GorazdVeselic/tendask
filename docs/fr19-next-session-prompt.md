@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1141 testov):**
+**Kaj je narejeno (vse v main, 1227 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -175,34 +175,42 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T4.4 — Dnevnik-plast** (branch `feat/fr19-t4-4-journal-layer`):
+- **T4.4 Dnevnik-plast ✅ (1. 8.):** `journal_moon.dart` (`moon/presentation/widgets/`) —
+  trislojni **🌙 gumb** `JournalMoonButton` v AppBar `/journal` (flag gate brez ref → opt-in gate
+  → javna `JournalMoonIconButton` → push `/moon-calendar`; podstikalo velja za PLAST, ne za
+  gumb) + **`journalMoonDays(ref, mesec)`** (null, dokler flag + opt-in + `showInJournal` niso
+  vsi vklopljeni → mreža piksel-identična današnji). `DayCell` dobi opcijski `moonDay`
+  (`MoonMonthDay`): soft element ozadje (izbran/danes ostaneta na obrobi, board C) + mena-marker
+  ob številki (`FittedBox.scaleDown`); pike/tap nespremenjeni (tap dan OSTANE dnevniški).
+  Brez novih i18n ključev (tooltip = `moon.calendar.title`). **Mimogrede popravljena latentna
+  tesnoba `DayCell`:** številka + pike pri 320 px × 1.3 prekipita za 1,3 px (matrika Dnevnika
+  je ne ujame, ker tekoči mesec v fixture nima pik) → vrstica pik v `Flexible` +
+  `FittedBox.scaleDown`. Matrika `journal/moon-layer` (javno jedro `DayCell`+`moonDay`,
+  avg 2026 = markerji na dvomestnih dnevih) + testi (dark gumb brez scope-a · tap → ruta ·
+  `journalMoonDays` dark → null brez dotika providerja · celica z/brez plasti). Pogled prek
+  `tmp/journal_moon_preview_test.dart` → `tmp/journal_moon_{light,dark,320}.png`; ob prvem
+  zagonu na napravi preveri plast + 🌙 gumb. Suite **1227 testov**.
 
-- **A2=C (2026-07-31), board C (`lunar-calendar_contexts.html`) + screen-map §1.3:** dvoje —
-  (1) **🌙 gumb v AppBar `/journal`** → push `/moon-calendar`; (2) **barvna plast v mesečni
-  mreži Dnevnika**: element-barva ozadja celice (`MoonColors.softOf`) + mena-marker na dneve
-  mlaja/krajcev/ščipa; **tap dan OSTANE dnevniški dan** (odpre opravila dneva, ne lunin sheet).
-  Opravila/pike v celicah ostanejo.
-- **Vidnost — TROJNA:** flag + opt-in stikalo + podstikalo `showInJournal` (T3.6; potrošnik
-  je TA korak). Vse tri off-poti → Dnevnik vizualno IDENTIČEN današnjemu (njegova matrika in
-  testi morajo ostati zeleni brez sprememb). 🌙 AppBar gumb za flagom + opt-in (podstikalo
-  velja za PLAST, ne za gumb — preveri board C, če ni jasno, vprašaj).
-- ⚠️ **`DayCell` Dnevnika je layout-kritičen** (320 px × 1.3) — plast dodaj kot ozadje/dekoracijo
-  brez spreminjanja layouta celice; matrika Dnevnika (`journal/month`) mora ostati zelena.
-  Podatki: `moonMonthProvider(mesec)` že obstaja (memoiziran); element celice = `MoonMonthDay`.
-- **Trislojni vzorec T4.2/T4.3** za vse nove widgete (flag gate brez ref → opt-in gate → javno
-  jedro za teste). Pozor: če testi Dnevnika pumpajo brez ProviderScope, flag preverba PRED ref.
-- **Najprej videz → pogled → nato testi** (matrika `journal/month` s plastjo prek javnega jedra
-  ali override — razmisli; teste dark-poti dodaj kot pri T4.2/T4.3).
+**Naloga TE seje: korak T4.5 — pregled testov + de za T4 sklop** (branch `feat/fr19-t4-5-tests`):
 
-**Pred delom preberi:** plan T4 korak 4 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
-wireframe board C (`lunar-calendar_contexts.html`, ~vrstica 204 dalje) · screen-map §1.3 ·
-`journal_screen.dart` + `DayCell` (mesečna mreža Dnevnika) · `moon_month_provider.dart` +
-`MoonColors.softOf` · `moon_task_section.dart` (trislojni vzorec).
+- Plan T4 korak 5: »Widget/layout testi za vse štiri + de prevodi po pogledu.« Ker so T4.1–T4.4
+  teste in matrike prinesli že vsak s svojim korakom, je ta korak **pregled in zapolnitev vrzeli**,
+  ne pisanje od začetka: preveri, da imajo vse štiri vstopne točke (Domov čip · when-step oznaka ·
+  task-detail sekcija · Dnevnik gumb+plast) teste dark-poti, teste vsebine in vnos v matriki —
+  kar manjka, dodaj.
+- **de pregled T4 nizov po pogledu:** novi T4 ključi so `moon.badge.until` + `moon.task_section.footnote`
+  (+ `moon.settings.load_error` iz reviewa) — en+sl+de že obstajajo; preveri de besedni red na
+  dejanskem pogledu (viewport 320, ×1.3), kot pri T3.7. Za Dnevnik-plast ključev ni.
+- Če pregled ne najde vrzeli, je korak lahko zelo kratek — ne izmišljuj si testov za scaffolding
+  (pravilo: brez testov, ki ne plačajo vzdrževanja).
 
-**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.5). Pred merge: `flutter analyze`
-čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.4, posodobi ta
-dokument na naslednji korak (T4.5 testi + de pregled; branch `feat/fr19-t4-5-tests`) in predlagaj
-commit.
+**Pred delom preberi:** plan T4 korak 5 (`docs/plan-implementacije-fr19-fr20.md`) — opombe pri
+korakih 1–4 naštejejo, kateri testi/matrike so že narejeni.
+
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4b/T5.2/T6). Pred merge:
+`flutter analyze` čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi
+T4.5, posodobi ta dokument na naslednji korak (po planu: **T4b lunino obvestilo** — na začetku
+odloči **B1**, ali so lunina obvestila device-local ali sync) in predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·

@@ -7,6 +7,7 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/widgets/empty_state.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../moon/presentation/widgets/journal_moon.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
@@ -67,6 +68,7 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
             ),
           ],
         ),
+        actions: const [JournalMoonButton()],
       ),
       body: Column(
         children: [
