@@ -156,14 +156,17 @@ class _WeekRow extends StatelessWidget {
                     elementEmoji(day.element),
                     style: const TextStyle(fontSize: 20, height: 1.2),
                   ),
-                  Text(
-                    t.moon.element_short[day.element.name]!.toUpperCase(),
-                    maxLines: 1,
-                    overflow: TextOverflow.clip,
-                    style: theme.textTheme.labelSmall?.copyWith(
-                      fontSize: 9,
-                      fontWeight: FontWeight.w700,
-                      color: theme.colorScheme.onSurfaceVariant,
+                  // Scale down instead of clipping: large font scale pushes
+                  // the longer labels past the fixed glyph column.
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      t.moon.element_short[day.element.name]!.toUpperCase(),
+                      style: theme.textTheme.labelSmall?.copyWith(
+                        fontSize: 9,
+                        fontWeight: FontWeight.w700,
+                        color: theme.colorScheme.onSurfaceVariant,
+                      ),
                     ),
                   ),
                 ],

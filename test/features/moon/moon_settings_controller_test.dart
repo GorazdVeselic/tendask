@@ -31,6 +31,46 @@ void main() {
     expect(settings.system, CalendarSystem.sidereal);
   });
 
+  test('display sub-toggles default to on when unset', () async {
+    final settings = await container.read(
+      moonSettingsControllerProvider.future,
+    );
+    expect(settings.highlightGarden, isTrue);
+    expect(settings.showInJournal, isTrue);
+    expect(settings.showAstroDetails, isTrue);
+  });
+
+  test('setShowInJournal updates state and persists device-locally', () async {
+    await container
+        .read(moonSettingsControllerProvider.notifier)
+        .setShowInJournal(false);
+
+    expect(
+      container.read(moonSettingsControllerProvider).value?.showInJournal,
+      isFalse,
+    );
+    expect(
+      await container.read(localPrefsProvider).moonShowInJournal(),
+      isFalse,
+    );
+  });
+
+  test('setShowAstroDetails updates state and persists device-locally',
+      () async {
+    await container
+        .read(moonSettingsControllerProvider.notifier)
+        .setShowAstroDetails(false);
+
+    expect(
+      container.read(moonSettingsControllerProvider).value?.showAstroDetails,
+      isFalse,
+    );
+    expect(
+      await container.read(localPrefsProvider).moonShowAstroDetails(),
+      isFalse,
+    );
+  });
+
   test('setEnabled updates state and persists device-locally', () async {
     await container
         .read(moonSettingsControllerProvider.notifier)

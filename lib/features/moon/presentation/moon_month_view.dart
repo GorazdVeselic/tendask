@@ -143,22 +143,36 @@ class _MoonDayCell extends StatelessWidget {
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                '${day.date.day}',
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontWeight: FontWeight.w600,
-                  color: theme.colorScheme.onSurface,
-                ),
-              ),
-              if (starred)
-                Text(
-                  ' ★',
-                  style: TextStyle(
-                    fontSize: 9,
-                    color: theme.colorScheme.secondary,
+              // Scale down rather than overflow: at the 320 px viewport a
+              // two-digit number + ★ + phase icon exceed the ~29 px cell.
+              Expanded(
+                child: Align(
+                  alignment: Alignment.topLeft,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          '${day.date.day}',
+                          style: theme.textTheme.labelSmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: theme.colorScheme.onSurface,
+                          ),
+                        ),
+                        if (starred)
+                          Text(
+                            ' ★',
+                            style: TextStyle(
+                              fontSize: 9,
+                              color: theme.colorScheme.secondary,
+                            ),
+                          ),
+                      ],
+                    ),
                   ),
                 ),
-              const Spacer(),
+              ),
               if (phase != null)
                 Padding(
                   padding: const EdgeInsets.only(top: 1),
@@ -184,17 +198,20 @@ class _MoonDayCell extends StatelessWidget {
           ),
           if (inMonth)
             Center(
-              child: Text(
-                // Map completeness against BiodynamicElement is enforced by
-                // i18n tests.
-                t.moon.element_short[day.element.name]!.toUpperCase(),
-                maxLines: 1,
-                overflow: TextOverflow.clip,
-                style: theme.textTheme.labelSmall?.copyWith(
-                  fontSize: 8,
-                  height: 1.1,
-                  fontWeight: FontWeight.w700,
-                  color: theme.colorScheme.onSurface,
+              // Scale down instead of clipping: large font scale pushes even
+              // the abbreviated labels past the cell width.
+              child: FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  // Map completeness against BiodynamicElement is enforced by
+                  // i18n tests.
+                  t.moon.element_short[day.element.name]!.toUpperCase(),
+                  style: theme.textTheme.labelSmall?.copyWith(
+                    fontSize: 8,
+                    height: 1.1,
+                    fontWeight: FontWeight.w700,
+                    color: theme.colorScheme.onSurface,
+                  ),
                 ),
               ),
             ),

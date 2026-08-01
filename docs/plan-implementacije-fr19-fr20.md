@@ -277,9 +277,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      odrežeta); pogledi prek `tmp/moon_de_preview_test.dart` → PNG (mesec, teden, nastavitve,
      sheet). ⚠️ Najdba za T3.8: zgornja vrstica mesečne celice (številka + ★ + mena-ikona)
      prekipi ~4 px pri 320 px viewportu — ne glede na jezik.)
-  8. ⬜ Testi: widget testi ključnih interakcij (preklop sistema posodobi vse; tap dan odpre sheet) +
+  8. ✅ Testi: widget testi ključnih interakcij (preklop sistema posodobi vse; tap dan odpre sheet) +
      `layoutMatrix('moon-calendar', …)` (+ teden, + sheet če izvedljivo) — 18 kombinacij/zaslon.
      Lunin zaslon ne rabi provider overridov (čista funkcija datuma) razen `MoonSettings`.
+     (2026-08-01: widget testi — tap celica/agenda vrstica odpre sheet, 🌌 podstikalo skrije »Kaj
+     se dogaja«, ⚙️ odpre `/moon-settings`, preklop sistema + vsa stikala persistirajo; kontroler
+     testi za nova setterja. Matrika: moon/month · moon/week · moon/day-sheet · moon-settings =
+     72 kombinacij. Popravljena oba 320 px/×1.3 preloma: vrstica celice (številka+★+mena) in
+     `element_short` v celici ter agenda stolpcu → `FittedBox.scaleDown` namesto odreza. Suite
+     1141 testov.)
 - **Branchi:** `feat/fr19-t3-1-phase-painter` · `feat/fr19-t3-2-element-icons` ·
   `feat/fr19-t3-3-month-view` · `feat/fr19-t3-4-week-agenda` · `feat/fr19-t3-5-day-sheet` ·
   `feat/fr19-t3-6-moon-settings` · `feat/fr19-t3-7-i18n-de` · `feat/fr19-t3-8-tests`.

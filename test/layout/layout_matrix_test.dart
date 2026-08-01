@@ -15,8 +15,13 @@ import 'package:tendask/core/task_status.dart';
 import 'package:tendask/features/areas/application/areas_providers.dart';
 import 'package:tendask/features/areas/presentation/areas_screen.dart';
 import 'package:tendask/features/auth/presentation/location_screen.dart';
+import 'package:tendask/core/biodynamic/biodynamic_day.dart';
+import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/journal/application/notes_providers.dart';
 import 'package:tendask/features/journal/presentation/journal_screen.dart';
+import 'package:tendask/features/moon/application/garden_elements_provider.dart';
+import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
+import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
@@ -317,5 +322,55 @@ void main() {
   layoutMatrix(
     'weather/no-location',
     build: () => WeatherNoLocationCard(onSetLocation: () {}),
+  );
+
+  // ── moon calendar (FR-19) ──────────────────────────────────────────────────
+  //
+  // Pure functions of the date, so no task-world providers — just the database
+  // (settings) and a non-empty garden so the ★ markers render too.
+
+  List<Override> moonOverrides() => [
+    ..._dbOverrides(),
+    gardenElementsProvider.overrideWithValue(
+      const {BiodynamicElement.fruit, BiodynamicElement.leaf},
+    ),
+  ];
+
+  layoutMatrix(
+    'moon/month',
+    overrides: moonOverrides,
+    build: () => const MoonCalendarScreen(),
+  );
+
+  layoutMatrix(
+    'moon/week',
+    overrides: moonOverrides,
+    build: () => const MoonCalendarScreen(),
+    after: (tester) async {
+      await tester.tap(find.text(t.moon.calendar.week_view));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+    },
+  );
+
+  layoutMatrix(
+    'moon/day-sheet',
+    overrides: moonOverrides,
+    build: () => const MoonCalendarScreen(),
+    after: (tester) async {
+      // Mid-month day: always in the current month and unique in the grid.
+      await tester.ensureVisible(find.text('15'));
+      await tester.tap(find.text('15'));
+      await tester.pump();
+      await tester.pump(const Duration(milliseconds: 400));
+      // Guard against silently measuring the calendar when the tap missed.
+      expect(find.byType(SheetHandle), findsOneWidget);
+    },
+  );
+
+  layoutMatrix(
+    'moon-settings',
+    overrides: _dbOverrides,
+    build: () => const MoonSettingsScreen(),
   );
 }

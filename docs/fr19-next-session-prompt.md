@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1059 testov):**
+**Kaj je narejeno (vse v main, 1141 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -120,37 +120,50 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `tmp/moon_de_preview_test.dart` → `tmp/moon_de_{month,week,settings,sheet}.png`.
   **⚠️ Najdba za T3.8:** zgornja vrstica mesečne celice (številka + ★ + mena-ikona) prekipi
   ~4 px pri **320 px** viewportu, ne glede na jezik — layout matrika jo MORA pokriti (fix v T3.8).
+- **T3.8 testi ✅ (1. 8.) — T3 s tem ZAKLJUČEN:** widget testi
+  (`test/features/moon/moon_calendar_screen_test.dart`, `moon_settings_screen_test.dart`): tap
+  celica IN agenda vrstica odpre sheet · 🌌 podstikalo skrije »Kaj se dogaja« · ⚙️ odpre
+  `/moon-settings` (mini-router, ker je flag temen) · preklop sistema + vsa stikala persistirajo
+  (en controller vodi vse); + kontroler testi novih setterjev. **Layout matrika:** moon/month ·
+  moon/week · moon/day-sheet (tap '15' v `after`) · moon-settings = 72 kombinacij; moon rabi samo
+  `_dbOverrides` + `gardenElementsProvider.overrideWithValue` (★). **Popravljena oba 320 px/×1.3
+  preloma** iz najdbe T3.7: vrstica mesečne celice (številka+★+mena) in `element_short` (celica +
+  agenda stolpec) → `FittedBox.scaleDown` namesto odreza; vizualno preverjeno pri 320 px (PNG).
+  Suite **1141 testov**.
 - **Uskladitev wireframe ↔ plan (31. 7., lastnik) ✅:** A2=C **v v1** (Dnevnik: 🌙 AppBar vstop +
   barvna plast → T4.4) · ★ + »poudari po mojem vrtu« v v1 (**T5.1 mapping se izvede PRED T3.3**) ·
   dan podrobno = sheet z drsenjem (+ »Priporočeno za …« s »＋ opravilo«) · lunino obvestilo
   »jutri dober dan« v v1 kot **T4b** (tihe ure + kapica tam; 🔔 vrstica v nastavitvah šele takrat) ·
   T3.6 podstikala (poudari/Dnevnik/ozvezdja) + ⚙️ vstop iz koledarja · `/moon-calendar` = dom.
 
-**Naloga TE seje: korak T3.8 — testi** (branch `feat/fr19-t3-8-tests`):
+**Naloga TE seje: korak T4.1 — čip na Domov** (branch `feat/fr19-t4-1-home-chip`):
 
-- **Widget testi ključnih interakcij:** preklop sistema posodobi vse (nastavitve → koledar/sheet
-  berejo isti `MoonSettings.system`) · tap na dan (celica IN agenda vrstica) odpre sheet ·
-  podstikalo 🌌 skrije »Kaj se dogaja« v sheetu · ⚙️ odpre `/moon-settings`. Rich nizi: `find.text`
-  jih NE najde — `toPlainText()`/`find.textContaining`.
-- **Layout matrika:** `layoutMatrix('moon-calendar', …)` (+ teden, + `/moon-settings`, + sheet če
-  izvedljivo) — 18 kombinacij/zaslon (320/360/411 × sl/en/de × 1.0/1.3). Moon zasloni ne rabijo
-  provider overridov (čista funkcija datuma) razen `MoonSettings`; DB override po vzorcu
-  `tmp/moon_*_preview_test.dart`.
-- **⚠️ Znana najdba (iz T3.7):** zgornja vrstica mesečne celice (številka + ★ + mena-ikona)
-  prekipi ~4 px pri **320 px** — matrika jo bo ujela; popravi (npr. manjši razmik/ikona ali
-  `FittedBox`) v tem koraku.
-- Past iz CLAUDE.md: `container.read(streamProvider.future)` brez poslušalca ne dokonča;
-  H3/FFI se pod `flutter test` ne naloži (tu ni relevanten, moon je čista funkcija).
+- **Vzorec `HomeWeatherSection`** (potrjeno mesto, pregled 2026-07-30): samostojen ConsumerWidget
+  v `features/moon/presentation/` (ali `home/`? poglej, kje živi `HomeWeatherSection`, in sledi
+  vzorcu), vstavljen v `home_screen.dart` **takoj za `HomeWeatherSection`**; sam bere providerje
+  in **sam odloči, ali se izriše**: ob izklopljenem flagu ALI izklopljenem opt-in stikalu
+  (`MoonSettings.enabled`) vrne prazno (`SizedBox.shrink` je tu legitimen — izklopljena funkcija,
+  ne požrta napaka) → obstoječi Domov vizualno nespremenjen, layout matrika Domov ostane zelena.
+- **Vsebina čipa (free del):** mena danes (`MoonPhaseIcon` + ime mene) + element dneva (emoji +
+  »dan za X«, ista polnočna redukcija kot celica — `moonMonthDayFor`) + desni CTA →
+  `/moon-calendar` (push). Stanje »zaklenjeno → ✦ Tendask+« pride s **T6** — do takrat samo
+  odklenjeno stanje za flagom. Wireframe: `lunar-calendar_contexts.html` (board 1) + screen-map §1.
+- **Čip bere ogrete prefs** (controller je keepAlive, ogret v bootstrapu) — brez utripanja ob
+  zagonu; brez novih providerjev, `moonMonthDayFor`/`dayFor` je čista funkcija.
+- **Najprej videz → pogled (naprava ali `tmp/` harness) → šele nato testi/prevodi** (de takoj, ker
+  T3.7 vzorec že obstaja — a šele po potrjenem videzu). Layout matrika Domov s čipom + widget test
+  (flag/stikalo off → čipa ni) sodita v **T4.5**, ne sem — tu samo pogled.
 
-**Pred delom preberi:** plan T3 korak 8 (`docs/plan-implementacije-fr19-fr20.md`) ·
-`test/layout/layout_harness.dart` + `layout_matrix_test.dart` (vzorec `layoutMatrix`) ·
-`tmp/moon_de_preview_test.dart` (DB/locale setup) · `moon_month_view.dart` `_MoonDayCell`
-(mesto 320 px prekipenja).
+**Pred delom preberi:** plan T4 korak 1 + pasti (`docs/plan-implementacije-fr19-fr20.md`) ·
+wireframe `docs/wireframes/lunar-calendar_contexts.html` board 1 · screen-map §1 ·
+`home_screen.dart` + `HomeWeatherSection` (vzorec samoodločanja) · `MoonSettingsController`
+(`enabled`) · `moon_phase_icon.dart` + `moon_calendar.dart` (`moonMonthDayFor`,
+`principalIllumFraction`).
 
-**Pravila:** naredi natanko ta korak in nič več (T3 s tem koncem zaključen; naslednji task je T4.1
-čip na Domov). Pred merge: `flutter analyze` čist + cel `flutter test` zelen. Pred commitom
-vprašaj. Ob koncu: v planu označi T3.8, posodobi ta dokument na naslednji korak (T4.1 home chip;
-branch `feat/fr19-t4-1-home-chip`) in predlagaj commit.
+**Pravila:** naredi natanko ta korak in nič več (ne začenjaj T4.2). Pred merge: `flutter analyze`
+čist + cel `flutter test` zelen. Pred commitom vprašaj. Ob koncu: v planu označi T4.1, posodobi ta
+dokument na naslednji korak (T4.2 when-step oznaka; branch `feat/fr19-t4-2-when-step`) in
+predlagaj commit.
 
 **Stanje odločitev:** A1=C ✅ · A2=C ✅ (v v1) · A3=A ✅ · A4=A ✅ (fiksne semantične + kontrastna
 omejitev) · **A5 razrešen: A — emoji** (fallback po pogoju, 31. 7.) · A6=A ✅ (privzeto vklopljeno) ·
