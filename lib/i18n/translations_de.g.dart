@@ -941,6 +941,7 @@ class _Translations$moon$de extends Translations$moon$en {
 	@override late final _Translations$moon$badge$de badge = _Translations$moon$badge$de._(_root);
 	@override late final _Translations$moon$task_section$de task_section = _Translations$moon$task_section$de._(_root);
 	@override late final _Translations$moon$hint$de hint = _Translations$moon$hint$de._(_root);
+	@override late final _Translations$moon$finder$de finder = _Translations$moon$finder$de._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'Fruchttag',
 		'root': 'Wurzeltag',
@@ -1080,6 +1081,24 @@ class _Translations$moon$hint$de extends Translations$moon$hint$en {
 
 	// Translations
 	@override String title({required Object day}) => 'Morgen ist ${day}';
+}
+
+// Path: moon.finder
+class _Translations$moon$finder$de extends Translations$moon$finder$en {
+	_Translations$moon$finder$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Wann für …';
+	@override String get plant_label => 'Pflanze';
+	@override String get plant_hint => 'Pflanze wählen';
+	@override String get empty_hint => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.';
+	@override String get no_recommendation => 'Für diese Pflanze hat der Kalender keine Empfehlung.';
+	@override String callout({required Object plant, required Object day}) => '${plant} — am besten an einem ${day}.';
+	@override String get next_days => 'Nächste passende Tage';
+	@override String get waxing => 'zunehmender Mond';
+	@override String get waning => 'abnehmender Mond';
 }
 
 // Path: moon.division
@@ -1734,6 +1753,15 @@ extension on TranslationsDe {
 			'moon.badge.until' => ({required Object time}) => 'bis ${time}',
 			'moon.task_section.footnote' => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.',
 			'moon.hint.title' => ({required Object day}) => 'Morgen ist ${day}',
+			'moon.finder.title' => 'Wann für …',
+			'moon.finder.plant_label' => 'Pflanze',
+			'moon.finder.plant_hint' => 'Pflanze wählen',
+			'moon.finder.empty_hint' => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.',
+			'moon.finder.no_recommendation' => 'Für diese Pflanze hat der Kalender keine Empfehlung.',
+			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — am besten an einem ${day}.',
+			'moon.finder.next_days' => 'Nächste passende Tage',
+			'moon.finder.waxing' => 'zunehmender Mond',
+			'moon.finder.waning' => 'abnehmender Mond',
 			'moon.day_for.fruit' => 'Fruchttag',
 			'moon.day_for.root' => 'Wurzeltag',
 			'moon.day_for.flower' => 'Blütentag',

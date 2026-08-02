@@ -446,7 +446,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Pasti:** obvestilo ob prikazu dan **re-izpelje** (ne zamrzne ob razporeditvi) · spoštuje preklop
   sistema (en `system` vodi vse) · UI brez besede »motor«.
 
-## T5 · Iskalnik »Kdaj za X« (`/moon-finder`) 🔨 delno (T5.1 ✅) — priporočen za v1, sme v v1.1
+## T5 · Iskalnik »Kdaj za X« (`/moon-finder`) ✅ (2026-08-02) — v v1
 
 - **Vhod:** T3 (koledar, sheet), `coarsePlantCategory` (7 veder — obstaja), mapping element→kategorija
   (nova majhna tabela v motorju ali ob njem), plant-picker (obstaja).
@@ -465,7 +465,12 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   3. ✅ plant-detail chip (2026-08-02: `PlantMoonChip` v hero `plant_detail_screen`, trislojni vzorec
   T4.2/T4.3; postavitev **A po izbiri lastnika** — čip stoji ob čipu območja v stolpcu imena (`Wrap`),
   pri 360 px se čipa zložita; brez novih i18n ključev (`moon.finder.title`); rastline brez priporočila
-  in lasten vnos chipa nimajo) · 4. ⬜ pogled → widget testi/matrika/de.
+  in lasten vnos chipa nimajo) · 4. ✅ pogled → widget testi/matrika/de (2026-08-02: de `moon.finder.*`
+  — »Wann für …«, `am besten an einem ${day}`; pogled `tmp/moon_t5_de_preview_test.dart` potrdil, da
+  se pri 320 px × 1,3 nič ne lomi; 6 testov iskalnika (`moon_finder_screen_test.dart`: predizpolnjena
+  rastlina, brez priporočila, prazen zaslon, tap svežnja → sheet, »+« → `/task-new?date=`, izbor prek
+  picker-ja) + 2 testa chipa (`plant_moon_chip_test.dart`: temna vrata brez scope-a, tap →
+  `/moon-finder?plant=`) + matriki `moon/finder` in `plant/moon-chip` (36 komb.); suite **1340**).
 - **Branchi:** `feat/fr19-t5-1-category-map` · `feat/fr19-t5-2-finder-screen` ·
   `feat/fr19-t5-3-plant-chip` · `feat/fr19-t5-4-tests`.
 - **Varnost na `main`:** kot T3/T4 — ruta z varovalom, chip za flagom.
