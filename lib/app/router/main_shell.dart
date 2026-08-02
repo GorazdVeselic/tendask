@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../core/app_icons.dart';
 import '../../i18n/translations.g.dart';
 
 class MainShell extends StatelessWidget {
@@ -23,7 +24,7 @@ class MainShell extends StatelessWidget {
       floatingActionButton: showFab
           ? FloatingActionButton(
               onPressed: () => context.pushNamed('task-new'),
-              child: const Icon(Icons.add),
+              child: const Icon(kIconAdd),
             )
           : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -35,23 +36,23 @@ class MainShell extends StatelessWidget {
             shell.goBranch(index, initialLocation: true),
         destinations: [
           NavigationDestination(
-            icon: const Icon(Icons.home_outlined),
-            selectedIcon: const Icon(Icons.home),
+            icon: const Icon(kIconHomeOutlined),
+            selectedIcon: const Icon(kIconHome),
             label: t.nav.home,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.check_box_outlined),
-            selectedIcon: const Icon(Icons.check_box),
+            icon: const Icon(kIconCheckBoxOutlined),
+            selectedIcon: const Icon(kIconCheckBox),
             label: t.nav.tasks,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.calendar_today_outlined),
-            selectedIcon: const Icon(Icons.calendar_today),
+            icon: const Icon(kIconCalendarTodayOutlined),
+            selectedIcon: const Icon(kIconCalendarToday),
             label: t.nav.journal,
           ),
           NavigationDestination(
-            icon: const Icon(Icons.grass_outlined),
-            selectedIcon: const Icon(Icons.grass),
+            icon: const Icon(kIconGrassOutlined),
+            selectedIcon: const Icon(kIconGrass),
             label: t.nav.areas,
           ),
         ],

@@ -2,6 +2,8 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
+import '../../../../core/glyphs.dart';
 import '../../../../i18n/translations.g.dart';
 import 'confirm_delete_dialog.dart';
 
@@ -63,7 +65,7 @@ class TaskActionBar extends StatelessWidget {
                       )
                     : FilledButton.tonal(
                         onPressed: onEdit,
-                        child: Text('✏️  ${t.task_detail.action_edit}'),
+                        child: Text('$kGlyphEdit  ${t.task_detail.action_edit}'),
                       ),
               ),
               const SizedBox(height: 8),
@@ -71,25 +73,25 @@ class TaskActionBar extends StatelessWidget {
                 children: isWaiting
                     ? [
                         _SecBtn(
-                          icon: Icons.schedule_outlined,
+                          icon: kIconScheduleOutlined,
                           label: t.task_detail.action_postpone,
                           onTap: onPostpone,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.edit_outlined,
+                          icon: kIconEditOutlined,
                           label: t.task_detail.action_edit,
                           onTap: onEdit,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.copy_outlined,
+                          icon: kIconCopyOutlined,
                           label: t.task_detail.action_duplicate,
                           onTap: onDuplicate,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.delete_outline,
+                          icon: kIconDeleteOutline,
                           label: t.task_detail.action_delete,
                           isDanger: true,
                           onTap: () => unawaited(_confirmDelete(context)),
@@ -97,25 +99,25 @@ class TaskActionBar extends StatelessWidget {
                       ]
                     : [
                         _SecBtn(
-                          icon: Icons.copy_outlined,
+                          icon: kIconCopyOutlined,
                           label: t.task_detail.action_duplicate,
                           onTap: onDuplicate,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.calendar_today_outlined,
+                          icon: kIconCalendarTodayOutlined,
                           label: t.task_detail.action_move,
                           onTap: onMove,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.undo,
+                          icon: kIconUndo,
                           label: t.task_detail.action_revert,
                           onTap: onRevert,
                         ),
                         const SizedBox(width: 6),
                         _SecBtn(
-                          icon: Icons.delete_outline,
+                          icon: kIconDeleteOutline,
                           label: t.task_detail.action_delete,
                           isDanger: true,
                           onTap: () => unawaited(_confirmDelete(context)),

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/config.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -76,7 +77,7 @@ class _AreasScreenState extends ConsumerState<AreasScreen> {
       ),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: _add,
-        icon: const Icon(Icons.add),
+        icon: const Icon(kIconAdd),
         label: Text(_fabLabel(t)),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
@@ -208,7 +209,7 @@ class _NewAreaButton extends StatelessWidget {
       padding: const EdgeInsets.fromLTRB(16, 16, 16, 8),
       child: OutlinedButton.icon(
         onPressed: () => context.pushNamed('area-new'),
-        icon: const Icon(Icons.add),
+        icon: const Icon(kIconAdd),
         label: Text(t.areas.new_area_inline),
       ),
     );

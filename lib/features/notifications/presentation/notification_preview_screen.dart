@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../core/app_icons.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 
 /// Screen 20 — a static illustration of how the three notification types look on
 /// the lock screen. Purely educational: only task reminders are live today;
@@ -18,7 +20,7 @@ class NotificationPreviewScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(p.title),
@@ -48,7 +50,7 @@ class NotificationPreviewScreen extends StatelessWidget {
                 tagFg: AppColors.green,
               ),
               _NotifCard(
-                icon: '🌤️',
+                icon: kGlyphWeather,
                 time: '8:02',
                 title: p.wx_title,
                 body: p.wx_body,
@@ -57,7 +59,7 @@ class NotificationPreviewScreen extends StatelessWidget {
                 tagFg: AppColors.info,
               ),
               _NotifCard(
-                icon: '🌍',
+                icon: kGlyphNearby,
                 time: p.com_yesterday,
                 title: p.com_title,
                 body: p.com_body,
@@ -70,7 +72,7 @@ class NotificationPreviewScreen extends StatelessWidget {
                 p.footer,
                 textAlign: TextAlign.center,
                 style: TextStyle(
-                  color: Colors.white.withValues(alpha: 0.85),
+                  color: AppColors.onBrand.withValues(alpha: 0.85),
                   fontSize: 12,
                   height: 1.5,
                 ),
@@ -93,7 +95,7 @@ class _LockClock extends StatelessWidget {
         const Text(
           '9:41',
           style: TextStyle(
-            color: Colors.white,
+            color: AppColors.onBrand,
             fontSize: 64,
             fontWeight: FontWeight.w300,
             height: 1,
@@ -103,7 +105,7 @@ class _LockClock extends StatelessWidget {
         Text(
           context.t.notif_preview.date,
           style: TextStyle(
-            color: Colors.white.withValues(alpha: 0.9),
+            color: AppColors.onBrand.withValues(alpha: 0.9),
             fontSize: 15,
           ),
         ),
@@ -137,7 +139,7 @@ class _NotifCard extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.fromLTRB(14, 12, 14, 14),
       decoration: BoxDecoration(
-        color: Colors.white.withValues(alpha: 0.92),
+        color: AppColors.onBrand.withValues(alpha: 0.92),
         borderRadius: BorderRadius.circular(18),
       ),
       child: Row(

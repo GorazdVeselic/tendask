@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/widgets/sheet_handle.dart';
 import '../../../../i18n/translations.g.dart';
 import 'confirm_delete_dialog.dart';
@@ -32,31 +33,31 @@ void showTaskListActionSheet(
             const SheetHandle(),
             ListTile(
               leading: Icon(
-                Icons.check_circle_outline,
+                kIconCheckCircleOutline,
                 color: theme.colorScheme.primary,
               ),
               title: Text(t.tasks_list.action_complete),
               onTap: () => popThen(onComplete),
             ),
             ListTile(
-              leading: const Icon(Icons.schedule_outlined),
+              leading: const Icon(kIconScheduleOutlined),
               title: Text(t.tasks_list.action_postpone),
               onTap: () => popThen(onPostpone),
             ),
             ListTile(
-              leading: const Icon(Icons.edit_outlined),
+              leading: const Icon(kIconEditOutlined),
               title: Text(t.tasks_list.action_edit),
               onTap: () => popThen(onEdit),
             ),
             ListTile(
-              leading: const Icon(Icons.copy_outlined),
+              leading: const Icon(kIconCopyOutlined),
               title: Text(t.tasks_list.action_duplicate),
               onTap: () => popThen(onDuplicate),
             ),
             Divider(height: 1, color: theme.colorScheme.outlineVariant),
             ListTile(
               leading: Icon(
-                Icons.delete_outline,
+                kIconDeleteOutline,
                 color: theme.colorScheme.error,
               ),
               title: Text(

@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../app/theme/app_motion.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/config.dart';
@@ -206,7 +208,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     setState(() => _step = step);
     _pageController.animateToPage(
       step.index,
-      duration: const Duration(milliseconds: 260),
+      duration: kMotionMedium,
       curve: Curves.easeInOut,
     );
   }
@@ -422,7 +424,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
-            icon: const Icon(Icons.close),
+            icon: const Icon(kIconClose),
             onPressed: context.pop,
           ),
         ),
@@ -439,7 +441,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(isFirst ? Icons.close : Icons.arrow_back),
+          icon: Icon(isFirst ? kIconClose : kIconArrowBack),
           onPressed: _back,
         ),
         title: Text(
@@ -452,7 +454,7 @@ class _EntryScreenState extends ConsumerState<EntryScreen> {
         centerTitle: true,
         actions: [
           if (!isFirst)
-            IconButton(icon: const Icon(Icons.close), onPressed: context.pop),
+            IconButton(icon: const Icon(kIconClose), onPressed: context.pop),
         ],
       ),
       body: Column(

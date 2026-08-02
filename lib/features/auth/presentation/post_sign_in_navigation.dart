@@ -2,12 +2,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/config.dart';
 import '../../../core/location/location_repository.dart';
-
-/// How long routing waits for the first post-sign-in pull before falling back
-/// to the local profile cell. Long enough for a quick pull, short enough that a
-/// slow/offline network never leaves the user staring at a spinner.
-const _kPullWait = Duration(seconds: 5);
 
 /// Routes after sign-in or guest entry: to home when a garden location is set
 /// (profile.h3_r7), otherwise to the location step.
@@ -25,7 +21,7 @@ Future<void> goToLocationOrHome(
   if (syncFuture != null) {
     // Offline / slow / pull error → fall back to whatever cell is local.
     try {
-      await syncFuture.timeout(_kPullWait);
+      await syncFuture.timeout(kPostSignInPullWait);
     } on Object {
       /* ignore — degrade to the local cell below */
     }

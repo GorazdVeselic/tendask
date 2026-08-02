@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -13,6 +14,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../../core/glyphs.dart';
 import '../application/plants_providers.dart';
 import '../plant_move_result.dart';
 import 'widgets/area_pick_sheet.dart';
@@ -131,7 +133,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(kIconClose),
           onPressed: context.pop,
         ),
         title: Text(t.plant_edit.title_edit),
@@ -174,7 +176,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                 Card(
                   child: ListTile(
                     leading: Icon(
-                      Icons.place_outlined,
+                      kIconPlaceOutlined,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     title: Text(
@@ -183,7 +185,7 @@ class _PlantEditScreenState extends ConsumerState<PlantEditScreen> {
                           : t.area_pick.none,
                     ),
                     trailing: Icon(
-                      Icons.chevron_right,
+                      kIconChevronRight,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
                     onTap: _changeArea,
@@ -218,10 +220,10 @@ class _SpeciesCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final plant = plantId != null ? catalog[plantId] : null;
-    final icon = plant?.icon ?? '🌿';
+    final icon = plant?.icon ?? kGlyphPlantFallback;
     final label = plant != null
         ? catalogLabel(plant.labels)
-        : (customName ?? '🌿');
+        : (customName ?? kGlyphPlantFallback);
 
     return Card(
       child: ListTile(

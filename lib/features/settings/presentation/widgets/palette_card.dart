@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/theme_palette.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 import '../palette_labels.dart';
 
@@ -97,7 +98,7 @@ class PaletteCard extends StatelessWidget {
                   color: cs.primary,
                   shape: BoxShape.circle,
                 ),
-                child: Icon(Icons.check, size: 14, color: cs.onPrimary),
+                child: Icon(kIconCheck, size: 14, color: cs.onPrimary),
               ),
             ),
         ],

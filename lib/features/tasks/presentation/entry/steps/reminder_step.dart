@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/app_icons.dart';
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/config.dart';
+import '../../../../../core/glyphs.dart';
 import '../../../../../core/notifications/notification_service.dart';
 import '../../../../../core/widgets/section_label.dart';
 import '../../../../../core/widgets/sheet_handle.dart';
@@ -122,7 +124,7 @@ class ReminderStepBody extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Row(
               children: [
-                const Text('🔔', style: TextStyle(fontSize: 18)),
+                const Text(kGlyphBell, style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -143,14 +145,14 @@ class ReminderStepBody extends ConsumerWidget {
               for (var i = 0; i < reminders.length; i++)
                 ListTile(
                   dense: true,
-                  leading: const Text('🔔', style: TextStyle(fontSize: 18)),
+                  leading: const Text(kGlyphBell, style: TextStyle(fontSize: 18)),
                   title: Text(
                     reminderLabel(reminders[i], t),
                     style: theme.textTheme.bodyMedium,
                   ),
                   trailing: IconButton(
                     icon: Icon(
-                      Icons.close,
+                      kIconClose,
                       size: 18,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -161,7 +163,7 @@ class ReminderStepBody extends ConsumerWidget {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () => _add(context, ref),
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const Icon(kIconAdd, size: 18),
                   label: Text(t.entry.reminder_add),
                   style: TextButton.styleFrom(
                     padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -328,7 +330,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                               )
                             : null,
                         secondary: const Text(
-                          '🔔',
+                          kGlyphBell,
                           style: TextStyle(fontSize: 16),
                         ),
                         dense: true,
@@ -338,7 +340,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                       value: _kCustomOffset,
                       title: Text(t.entry.rem_custom),
                       secondary: const Text(
-                        '🔔',
+                        kGlyphBell,
                         style: TextStyle(fontSize: 16),
                       ),
                       dense: true,
@@ -402,7 +404,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                     Expanded(child: Text(t.entry.rem_choose_time)),
                     TextButton.icon(
                       onPressed: _pickTime,
-                      icon: const Icon(Icons.access_time_outlined, size: 18),
+                      icon: const Icon(kIconAccessTimeOutlined, size: 18),
                       label: Text(_draft.timeText),
                     ),
                   ],
@@ -428,7 +430,7 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                 ),
                 child: Row(
                   children: [
-                    const Text('🔔', style: TextStyle(fontSize: 16)),
+                    const Text(kGlyphBell, style: TextStyle(fontSize: 16)),
                     const SizedBox(width: 8),
                     Expanded(
                       child: Text(

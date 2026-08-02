@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme/app_motion.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/location/geocoding_client.dart';
 import '../../../core/location/location_repository.dart';
@@ -133,7 +135,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
       Scrollable.ensureVisible(
         ctx,
         alignment: 0,
-        duration: const Duration(milliseconds: 250),
+        duration: kMotionMedium,
         curve: Curves.easeOut,
       );
     });
@@ -219,7 +221,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
       appBar: fromSettings
           ? AppBar(
               leading: IconButton(
-                icon: const Icon(Icons.arrow_back),
+                icon: const Icon(kIconArrowBack),
                 onPressed: context.pop,
               ),
               title: Text(t.location.screen_title),
@@ -256,7 +258,7 @@ class _LocationScreenState extends ConsumerState<LocationScreen> {
                           borderRadius: BorderRadius.circular(22),
                         ),
                         child: Icon(
-                          Icons.location_on_outlined,
+                          kIconLocationOnOutlined,
                           size: 38,
                           color: cs.primary,
                         ),

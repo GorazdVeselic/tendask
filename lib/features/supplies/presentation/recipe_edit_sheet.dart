@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
+import '../../../core/glyphs.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/destructive_button.dart';
 import '../../../core/widgets/section_label.dart';
@@ -205,7 +207,7 @@ class _RecipeEditSheetState extends ConsumerState<_RecipeEditSheet> {
                           ListTile(
                             dense: true,
                             leading: const Text(
-                              '🧪',
+                              kGlyphSupplyFertilizer,
                               style: TextStyle(fontSize: 18),
                             ),
                             title: Text(
@@ -214,7 +216,7 @@ class _RecipeEditSheetState extends ConsumerState<_RecipeEditSheet> {
                             ),
                             trailing: IconButton(
                               icon: Icon(
-                                Icons.close,
+                                kIconClose,
                                 size: 18,
                                 color: theme.colorScheme.onSurfaceVariant,
                               ),
@@ -226,7 +228,7 @@ class _RecipeEditSheetState extends ConsumerState<_RecipeEditSheet> {
                           alignment: Alignment.centerLeft,
                           child: TextButton.icon(
                             onPressed: _addItem,
-                            icon: const Icon(Icons.add, size: 18),
+                            icon: const Icon(kIconAdd, size: 18),
                             label: Text(t.recipes.add_item),
                             style: TextButton.styleFrom(
                               padding: const EdgeInsets.symmetric(horizontal: 16),

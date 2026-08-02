@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/app_icons.dart';
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/config.dart';
 import '../../../../../core/database/catalog_provider.dart';
+import '../../../../../core/glyphs.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../areas/application/areas_providers.dart';
 import '../../../../plants/application/plants_providers.dart';
@@ -57,7 +59,7 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
           error: (_, _) => Padding(
             padding: const EdgeInsets.all(24),
             child: Center(
-              child: Icon(Icons.error_outline, color: theme.colorScheme.error),
+              child: Icon(kIconErrorOutline, color: theme.colorScheme.error),
             ),
           ),
           data: (catalog) {
@@ -96,7 +98,7 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
                   TextButton.icon(
                     onPressed: () => setState(() => _expanded = !_expanded),
                     icon: Icon(
-                      _expanded ? Icons.expand_less : Icons.expand_more,
+                      _expanded ? kIconExpandLess : kIconExpandMore,
                     ),
                     label: Text(
                       _expanded
@@ -110,7 +112,7 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
         ),
         const SizedBox(height: 12),
         Text(
-          '💡 ${t.entry.type_hint}',
+          '$kGlyphHint ${t.entry.type_hint}',
           textAlign: TextAlign.center,
           style: theme.textTheme.bodySmall?.copyWith(
             color: theme.colorScheme.onSurfaceVariant,
@@ -126,7 +128,7 @@ class _TypeStepBodyState extends ConsumerState<TypeStepBody> {
               padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
               child: Row(
                 children: [
-                  const Text('✍️', style: TextStyle(fontSize: 18)),
+                  const Text(kGlyphNote, style: TextStyle(fontSize: 18)),
                   const SizedBox(width: 10),
                   Expanded(
                     child: Text(
@@ -196,7 +198,7 @@ class _RepeatLastCard extends ConsumerWidget {
             child: Row(
               children: [
                 Icon(
-                  Icons.replay,
+                  kIconReplay,
                   size: 20,
                   color: theme.colorScheme.onPrimaryContainer,
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 
 /// Alternative option: let the device GPS fill in the location.
@@ -55,7 +56,7 @@ class GpsCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: Icon(
-                  Icons.my_location,
+                  kIconMyLocation,
                   color: emphasised ? cs.onPrimary : cs.primary,
                 ),
               ),
@@ -79,7 +80,7 @@ class GpsCard extends StatelessWidget {
                   ],
                 ),
               ),
-              Icon(Icons.chevron_right, color: muted),
+              Icon(kIconChevronRight, color: muted),
             ],
           ),
         ),

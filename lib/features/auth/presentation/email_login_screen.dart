@@ -97,7 +97,7 @@ class _EmailLoginScreenState extends ConsumerState<EmailLoginScreen> {
   void _startResendCooldown() {
     _cooldownTimer?.cancel();
     _cooldownRemaining = kOtpResendCooldown.inSeconds;
-    _cooldownTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _cooldownTimer = Timer.periodic(kOtpCooldownTick, (timer) {
       if (!mounted) {
         timer.cancel();
         return;

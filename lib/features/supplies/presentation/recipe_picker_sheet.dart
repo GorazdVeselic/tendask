@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/glyphs.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
@@ -60,7 +61,7 @@ class _RecipePickerSheet extends ConsumerWidget {
                 Card(
                   margin: const EdgeInsets.symmetric(vertical: 3),
                   child: ListTile(
-                    leading: const Text('📋', style: TextStyle(fontSize: 22)),
+                    leading: const Text(kGlyphRecipe, style: TextStyle(fontSize: 22)),
                     title: Text(r.name, style: theme.textTheme.bodyMedium),
                     subtitle: r.equipment != null
                         ? Text(r.equipment!, style: theme.textTheme.bodySmall)

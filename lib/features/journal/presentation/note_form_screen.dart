@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/date_format.dart';
 import '../../../core/haptics.dart';
@@ -163,7 +164,7 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(kIconClose),
           onPressed: context.pop,
         ),
         title: Text(_isEdit ? t.notes.title_edit : t.notes.title_new),

@@ -57,4 +57,21 @@ abstract final class AppColors {
   static const Color moonLeafSoft = Color(0xFFE4F0FB);
   static const Color moonLeafDark = Color(0xFF5BA1E8);
   static const Color moonLeafContainerDark = Color(0xFF223649);
+
+  // Text and scrims on top of the brand gradient (splash, onboarding, the
+  // notification preview): those surfaces are always dark, so their foreground
+  // is white regardless of the palette or the light/dark mode.
+  static const Color onBrand = Color(0xFFFFFFFF);
+
+  // Soft drop shadow under a floating bar (save bar).
+  static const Color shadowSoft = Color(0x0F000000);
+
+  // Google sign-in button — black on white is mandated by Google's branding
+  // guidelines, so it never follows the app palette.
+  static const Color googleButton = Color(0xFF000000);
+  static const Color onGoogleButton = Color(0xFFFFFFFF);
+
+  // Build-environment ribbon (debug/staging builds only, never in production).
+  static const Color envStaging = Color(0xFFFF9800);
+  static const Color envOther = Color(0xFF9E9E9E);
 }

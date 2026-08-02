@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/glyphs.dart';
 
 /// The "coordinates never leave the device" reassurance under the two options.
 class LocationPrivacyNote extends StatelessWidget {
@@ -20,7 +21,7 @@ class LocationPrivacyNote extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text('🔒', style: TextStyle(fontSize: 18)),
+          const Text(kGlyphPrivacy, style: TextStyle(fontSize: 18)),
           const SizedBox(width: 10),
           Expanded(
             child: Text(

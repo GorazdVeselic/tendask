@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/location/geocoding_client.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../i18n/translations.g.dart';
@@ -49,7 +50,7 @@ class EnterPlaceCard extends StatelessWidget {
               decoration: InputDecoration(
                 hintText: t.location.place_hint,
                 suffixIcon: IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: const Icon(kIconSearch),
                   onPressed: loading ? null : onSearch,
                 ),
               ),
@@ -65,7 +66,7 @@ class EnterPlaceCard extends StatelessWidget {
             for (final place in results)
               ListTile(
                 contentPadding: EdgeInsets.zero,
-                leading: const Icon(Icons.place_outlined),
+                leading: const Icon(kIconPlaceOutlined),
                 title: Text(place.name),
                 subtitle: Text(
                   [place.admin1, place.country].whereType<String>().join(', '),

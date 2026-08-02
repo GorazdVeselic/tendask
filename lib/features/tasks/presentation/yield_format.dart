@@ -1,4 +1,5 @@
 import '../../../core/database/app_database.dart';
+import '../../../core/glyphs.dart';
 import '../../../i18n/translations.g.dart';
 import '../yield_unit.dart';
 
@@ -38,5 +39,5 @@ String formatYield(double amount, YieldUnit? unit, Translations t) {
 String? taskYieldChip(Task task, Translations t) {
   final amount = task.yieldAmount;
   if (amount == null) return null;
-  return '🧺 ${formatYield(amount, yieldUnitFromName(task.yieldUnit), t)}';
+  return '$kGlyphHarvest ${formatYield(amount, yieldUnitFromName(task.yieldUnit), t)}';
 }

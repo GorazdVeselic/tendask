@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../app/theme/app_colors.dart';
 import '../core/config.dart';
 import '../core/notifications/notification_service.dart';
 import '../features/moon/application/moon_hint_coordinator.dart';
@@ -97,7 +98,7 @@ class _TendaskAppState extends ConsumerState<TendaskApp> {
     return Banner(
       message: kEnvLabel == 'staging' ? 'STAGING' : 'OFFLINE',
       location: BannerLocation.topEnd,
-      color: kEnvLabel == 'staging' ? Colors.orange : Colors.grey,
+      color: kEnvLabel == 'staging' ? AppColors.envStaging : AppColors.envOther,
       child: content,
     );
   }

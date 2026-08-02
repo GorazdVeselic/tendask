@@ -4,6 +4,7 @@ import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import 'widgets/reminder_sound_banner.dart';
 
 /// Pre-permission priming sheet (wireframe 21). Shown the first time the user
@@ -84,7 +85,7 @@ class _NotificationPrimingSheet extends StatelessWidget {
                 borderRadius: BorderRadius.circular(26),
               ),
               child: const Center(
-                child: Text('🔔', style: TextStyle(fontSize: 42)),
+                child: Text(kGlyphBell, style: TextStyle(fontSize: 42)),
               ),
             ),
             const SizedBox(height: 16),
@@ -105,8 +106,8 @@ class _NotificationPrimingSheet extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             _Benefit(icon: '⏰', text: p.benefit_reminders),
-            _Benefit(icon: '🌤️', text: p.benefit_weather),
-            _Benefit(icon: '🌍', text: p.benefit_nearby),
+            _Benefit(icon: kGlyphWeather, text: p.benefit_weather),
+            _Benefit(icon: kGlyphNearby, text: p.benefit_nearby),
             const SizedBox(height: 16),
             Container(
               padding: const EdgeInsets.all(12),
@@ -117,7 +118,7 @@ class _NotificationPrimingSheet extends StatelessWidget {
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('🔒'),
+                  const Text(kGlyphPrivacy),
                   const SizedBox(width: 9),
                   Expanded(
                     child: Text(

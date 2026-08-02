@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../../core/app_icons.dart';
+import '../../../../../core/glyphs.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../../supplies/application/supplies_providers.dart';
 import '../../../../supplies/data/supply_spec.dart';
@@ -61,7 +63,7 @@ class SuppliesStepBody extends ConsumerWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
             child: Row(
               children: [
-                const Text('🧪', style: TextStyle(fontSize: 18)),
+                const Text(kGlyphSupplyFertilizer, style: TextStyle(fontSize: 18)),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(
@@ -80,14 +82,14 @@ class SuppliesStepBody extends ConsumerWidget {
               for (var i = 0; i < supplies.length; i++)
                 ListTile(
                   dense: true,
-                  leading: const Text('🧪', style: TextStyle(fontSize: 18)),
+                  leading: const Text(kGlyphSupplyFertilizer, style: TextStyle(fontSize: 18)),
                   title: Text(
                     label(supplies[i]),
                     style: theme.textTheme.bodyMedium,
                   ),
                   trailing: IconButton(
                     icon: Icon(
-                      Icons.close,
+                      kIconClose,
                       size: 18,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -100,7 +102,7 @@ class SuppliesStepBody extends ConsumerWidget {
                   children: [
                     TextButton.icon(
                       onPressed: () => _add(context),
-                      icon: const Icon(Icons.add, size: 18),
+                      icon: const Icon(kIconAdd, size: 18),
                       label: Text(t.entry.supplies_add),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 16),
@@ -109,7 +111,7 @@ class SuppliesStepBody extends ConsumerWidget {
                     ),
                     TextButton.icon(
                       onPressed: () => _addRecipe(context),
-                      icon: const Icon(Icons.receipt_long, size: 18),
+                      icon: const Icon(kIconReceiptLong, size: 18),
                       label: Text(t.entry.supplies_use_recipe),
                       style: TextButton.styleFrom(
                         padding: const EdgeInsets.symmetric(horizontal: 16),

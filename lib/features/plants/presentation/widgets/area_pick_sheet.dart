@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/widgets/sheet_handle.dart';
 import '../../../../i18n/translations.g.dart';
@@ -75,7 +76,7 @@ class _AreaPickSheet extends ConsumerWidget {
               children: [
                 _OptionTile(
                   leading: Icon(
-                    Icons.inbox_outlined,
+                    kIconInboxOutlined,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                   label: t.area_pick.none,
@@ -102,7 +103,7 @@ class _AreaPickSheet extends ConsumerWidget {
           ),
           Divider(height: 1, color: theme.colorScheme.outlineVariant),
           ListTile(
-            leading: Icon(Icons.add, color: theme.colorScheme.primary),
+            leading: Icon(kIconAdd, color: theme.colorScheme.primary),
             title: Text(
               t.area_pick.new_area,
               style: TextStyle(
@@ -154,7 +155,7 @@ class _OptionTile extends StatelessWidget {
             )
           : null,
       trailing: selected
-          ? Icon(Icons.check, color: theme.colorScheme.primary)
+          ? Icon(kIconCheck, color: theme.colorScheme.primary)
           : null,
       onTap: onTap,
     );

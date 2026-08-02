@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
 
@@ -35,7 +36,7 @@ class PlantAreaBar extends StatelessWidget {
               child: Row(
                 children: [
                   Icon(
-                    Icons.place_outlined,
+                    kIconPlaceOutlined,
                     size: 18,
                     color: cs.onSurfaceVariant,
                   ),

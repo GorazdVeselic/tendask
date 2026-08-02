@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/app_icons.dart';
 
 /// A compact chip with a trailing ✕ — tapping anywhere removes it. Used in the
 /// "selected so far" footers (plant-add, task subjects).
@@ -31,7 +32,7 @@ class RemovableChip extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 4),
-              Icon(Icons.close, size: 16, color: cs.onPrimaryContainer),
+              Icon(kIconClose, size: 16, color: cs.onPrimaryContainer),
             ],
           ),
         ),

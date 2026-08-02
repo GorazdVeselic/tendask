@@ -1,12 +1,13 @@
+import '../../../core/glyphs.dart';
 import '../../../core/supply_category.dart';
 import '../../../i18n/translations.g.dart';
 
 /// Emoji avatar for a supply category (presentation mapping, not domain logic).
 String supplyCategoryIcon(SupplyCategory category) => switch (category) {
-  SupplyCategory.fertilizer => '🧪',
-  SupplyCategory.treatment => '🧴',
-  SupplyCategory.equipment => '🛢️',
-  SupplyCategory.other => '📦',
+  SupplyCategory.fertilizer => kGlyphSupplyFertilizer,
+  SupplyCategory.treatment => kGlyphSupplyTreatment,
+  SupplyCategory.equipment => kGlyphSupplyEquipment,
+  SupplyCategory.other => kGlyphSupplyOther,
 };
 
 /// Localized label for a supply category.

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
 import '../area_type_display.dart';
@@ -62,7 +63,7 @@ class AreaHeader extends StatelessWidget {
                 ],
               ),
             ),
-            Icon(Icons.chevron_right, color: theme.colorScheme.onSurfaceVariant),
+            Icon(kIconChevronRight, color: theme.colorScheme.onSurfaceVariant),
           ],
         ),
       ),

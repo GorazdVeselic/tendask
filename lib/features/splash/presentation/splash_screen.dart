@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/app_colors.dart';
+import '../../../app/theme/app_motion.dart';
 import '../../../core/app_info.dart';
 import '../../../core/config.dart';
 import '../../../i18n/translations.g.dart';
@@ -27,7 +28,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     with SingleTickerProviderStateMixin {
   late final AnimationController _dotsController = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 1000),
+    duration: kMotionSplashPulse,
   )..repeat();
 
   @override
@@ -72,7 +73,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   const Text(
                     'Tendask',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: AppColors.onBrand,
                       fontSize: 34,
                       fontWeight: FontWeight.w800,
                       letterSpacing: -1,
@@ -82,7 +83,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                   Text(
                     t.splash.tagline,
                     style: TextStyle(
-                      color: Colors.white.withValues(alpha: 0.92),
+                      color: AppColors.onBrand.withValues(alpha: 0.92),
                       fontSize: 15,
                       fontWeight: FontWeight.w600,
                       letterSpacing: 0.2,
@@ -111,7 +112,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         },
                         textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white.withValues(alpha: 0.7),
+                          color: AppColors.onBrand.withValues(alpha: 0.7),
                           fontSize: 13,
                           fontWeight: FontWeight.w500,
                         ),
@@ -151,7 +152,7 @@ class _LoadingDots extends StatelessWidget {
                 height: 8,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: Colors.white.withValues(alpha: 0.4 + 0.5 * pulse),
+                  color: AppColors.onBrand.withValues(alpha: 0.4 + 0.5 * pulse),
                 ),
               ),
             );
@@ -179,7 +180,7 @@ class _HexGridPainter extends CustomPainter {
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2
       ..strokeJoin = StrokeJoin.round
-      ..color = Colors.white.withValues(alpha: 0.10);
+      ..color = AppColors.onBrand.withValues(alpha: 0.10);
 
     // One pointy-top hexagon centered at the origin; placed by translation.
     final hex = Path()

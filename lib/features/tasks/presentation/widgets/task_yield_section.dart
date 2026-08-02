@@ -3,7 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/glyphs.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/tasks_providers.dart';
 import '../../yield_unit.dart';
@@ -36,7 +38,7 @@ class TaskYieldSection extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           child: Row(
             children: [
-              const Text('🧺', style: TextStyle(fontSize: 20)),
+              const Text(kGlyphHarvest, style: TextStyle(fontSize: 20)),
               const SizedBox(width: 12),
               Expanded(
                 child: Text(
@@ -51,7 +53,7 @@ class TaskYieldSection extends ConsumerWidget {
                 ),
               ),
               Icon(
-                hasYield ? Icons.edit_outlined : Icons.add,
+                hasYield ? kIconEditOutlined : kIconAdd,
                 size: 20,
                 color: theme.colorScheme.onSurfaceVariant,
               ),

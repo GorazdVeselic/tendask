@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/widgets/swipe_actions.dart';
 import '../../../../core/widgets/top_toast.dart';
@@ -65,7 +66,7 @@ class PlantRow extends ConsumerWidget {
         ),
         title: Text(userPlantLabel(plant, catalog)),
         trailing: Icon(
-          Icons.chevron_right,
+          kIconChevronRight,
           color: theme.colorScheme.onSurfaceVariant,
         ),
         onTap: () =>

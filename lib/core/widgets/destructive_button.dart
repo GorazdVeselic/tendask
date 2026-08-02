@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../core/app_icons.dart';
 import 'swipe_actions.dart';
 
 /// Inline destructive action for edit forms — terracotta text button at the
@@ -20,7 +21,7 @@ class DestructiveButton extends StatelessWidget {
     return Center(
       child: TextButton.icon(
         onPressed: onPressed,
-        icon: Icon(Icons.delete_outline, color: danger),
+        icon: Icon(kIconDeleteOutline, color: danger),
         label: Text(label, style: TextStyle(color: danger)),
       ),
     );

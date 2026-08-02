@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../core/notifications/reminder_audio.dart';
 import '../../../../i18n/translations.g.dart';
 
@@ -41,7 +42,7 @@ class ReminderSoundBanner extends ConsumerWidget {
         ),
         child: Row(
           children: [
-            const Icon(Icons.volume_off_rounded, size: 20, color: AppColors.warn),
+            const Icon(kIconVolumeOffRounded, size: 20, color: AppColors.warn),
             const SizedBox(width: 10),
             Expanded(
               child: Text(

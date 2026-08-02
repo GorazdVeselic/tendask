@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/glyphs.dart';
 import '../../task_specs.dart';
 import '../subject_labels.dart';
 
@@ -66,14 +68,14 @@ class TaskSubjectsCard extends StatelessWidget {
       title: Text(label, style: theme.textTheme.bodyMedium),
       subtitle: areaName != null
           ? Text(
-              '🪴 $areaName',
+              '$kGlyphSubject $areaName',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),
             )
           : null,
       trailing: Icon(
-        Icons.chevron_right,
+        kIconChevronRight,
         color: theme.colorScheme.onSurfaceVariant,
         size: 20,
       ),

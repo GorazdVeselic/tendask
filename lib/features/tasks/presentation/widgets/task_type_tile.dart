@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../app/theme/app_motion.dart';
 
 /// Selectable task-type cell (emoji + label) used in the quick-log grid
 /// and the new-task type picker.
@@ -23,7 +24,7 @@ class TaskTypeTile extends StatelessWidget {
     return GestureDetector(
       onTap: onTap,
       child: AnimatedContainer(
-        duration: const Duration(milliseconds: 150),
+        duration: kMotionFast,
         decoration: BoxDecoration(
           color: selected
               ? color.withAlpha(30)

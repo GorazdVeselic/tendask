@@ -1,15 +1,16 @@
 import '../../../core/area_type.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 
 /// Emoji avatar for an area type (presentation mapping, not domain logic).
 String areaTypeIcon(AreaType type) => switch (type) {
-  AreaType.garden => '🌻',
-  AreaType.lawn => '🌱',
-  AreaType.hedge => '🌿',
-  AreaType.bed => '🪴',
-  AreaType.tree => '🍎',
-  AreaType.ornamental => '🌸',
-  AreaType.other => '📍',
+  AreaType.garden => kGlyphAreaGarden,
+  AreaType.lawn => kGlyphAreaLawn,
+  AreaType.hedge => kGlyphAreaHedge,
+  AreaType.bed => kGlyphAreaBed,
+  AreaType.tree => kGlyphAreaTree,
+  AreaType.ornamental => kGlyphAreaOrnamental,
+  AreaType.other => kGlyphAreaOther,
 };
 
 /// Localized label for an area type.

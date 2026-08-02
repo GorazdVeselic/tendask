@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/glyphs.dart';
 import '../../../../i18n/translations.g.dart';
 import '../task_detail_labels.dart';
 
@@ -36,7 +37,7 @@ class TaskHero extends StatelessWidget {
           ),
           child: Center(
             child: Text(
-              type?.icon ?? '📋',
+              type?.icon ?? kGlyphTaskTypeFallback,
               style: const TextStyle(fontSize: 28),
             ),
           ),
@@ -54,7 +55,7 @@ class TaskHero extends StatelessWidget {
               ),
               if (subjectLabel != null && subjectLabel!.isNotEmpty)
                 Text(
-                  '🪴 $subjectLabel',
+                  '$kGlyphSubject $subjectLabel',
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: theme.colorScheme.onSurfaceVariant,
                   ),

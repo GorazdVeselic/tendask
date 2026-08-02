@@ -1,4 +1,5 @@
 import '../../../core/database/app_database.dart';
+import '../../../core/glyphs.dart';
 import '../../areas/presentation/area_type_display.dart';
 import '../../plants/presentation/plant_display.dart';
 import '../task_specs.dart';
@@ -53,7 +54,7 @@ String specLabel(
 }) {
   if (s.userPlantId != null) {
     final up = userPlants[s.userPlantId];
-    return up != null ? userPlantLabel(up, plants) : '🌿';
+    return up != null ? userPlantLabel(up, plants) : kGlyphPlantFallback;
   }
   return areas[s.areaId]?.name ?? '';
 }
@@ -67,8 +68,8 @@ String specIcon(
 }) {
   if (s.userPlantId != null) {
     final up = userPlants[s.userPlantId];
-    return up != null ? userPlantIcon(up, plants) : '🌿';
+    return up != null ? userPlantIcon(up, plants) : kGlyphPlantFallback;
   }
   final area = areas[s.areaId];
-  return area != null ? areaTypeIcon(area.type) : '🪴';
+  return area != null ? areaTypeIcon(area.type) : kGlyphAreaFallback;
 }
