@@ -360,14 +360,47 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **Mimogrede (naročilo lastnika):** vsi glifi/ikone/barve/animacije v kataloge —
   `core/glyphs.dart`, `core/app_icons.dart`, `app/theme/app_motion.dart`, `AppColors`.
 
-**Naloga TE seje: T6 korak 1 — shema FR-20** (branch `feat/fr20-t6-1-schema`). FR-19 ima narejene
-T1–T5 (cel) in T4b; ostaneta **T6** (edini task s shemo) in **T7** (prižig; T6 je njegov pogoj).
-Korak 1 po planu: `profile` dobi **tri nullable stolpce** (`plus_until timestamptz`, `plus_token text`,
-`plus_kind text` — `plus_kind` SAMO za prikaz, upravičenost se bere vedno iz `plus_until`) +
-**column-level `revoke update` za `plus_until`/`plus_token`** (server-lastna) + **granti v isti
-migraciji** · drift zrcalo + dvig `schemaVersion` + `build_runner` · **najprej staging**, prod
-`db push` po `docs/deploy-runbook.md`. Odločitve §11.4 (dependency za podpis) ta korak še NE rabi —
-pride s korakom 3.
+- **T6 korak 1 ✅ (2. 8., branch `feat/fr20-t6-1-schema`) — shema FR-20, staging; prod push čaka
+  potrditev:** `supabase/migrations/0017_profile_plus.sql` — `profile` dobi `plus_until timestamptz`,
+  `plus_token text`, `plus_kind text` (vsi nullable, additive). Drift zrcalo `schemaVersion 13 → 14`,
+  test `migration_v8_to_v9_test.dart` razširjen; suite **1412**. Dve najdbi:
+  **(a) vrstica iz speca je bila no-op** — `revoke update (plus_until, plus_token) … from authenticated`
+  ne naredi nič, ker se pravice v Postgresu samo seštevajo, `0002` pa je podelil `update` na **celi
+  tabeli**; column-level revoke ne more odgrizniti stolpca iz tabelnega granta. Delujoča oblika:
+  **revoke tabelno → re-grant po stolpcih** (seznam devetih klient-pisljivih stolpcev je v migraciji
+  eksplicitno naštet). **(b)** zaklenjena sta `insert` **in** `update` (upsert nad neobstoječo vrstico je
+  INSERT; `delete`+`insert` bi zaobšel samo-UPDATE zaklep), server-lastni pa so **štirje** stolpci:
+  `plus_until`, `plus_token`, `plus_kind`, `server_inserted_at` (odločitev lastnika 2. 8.).
+  ⚠️ **Nova obveznost:** vsaka prihodnja migracija, ki doda klient-pisljiv stolpec v `profile`, mu mora
+  dodati column grant, sicer push pade s `42501`.
+  **⚠️ M11 je izven projekta in ga NE upoštevaj** (lastnik, 2. 8.): read-only sonda produkcije
+  (`tmp/probe_prod_state.py`) je potrdila ledger `0001`–`0005` + `0011`–`0016`, shemo **identično
+  `main`**, nobene M11 tabele ali stolpca. Zato je naslednja prosta številka `0017` (ne `0023`, kot
+  sem sprva sklepal iz runbooka). **Dokumenti so v istem commitu popravljeni** — `deploy-runbook.md`
+  (+ novo pravilo na vrhu: bazo preberi, ne beri o njej), `m11.md`, `cookbook.md`, `stanje.md`,
+  `CLAUDE.md`. Od M11 na produkciji ostaneta le no-op `engine_dispatch()` in dva cron joba
+  (`engine_dispatch`, `agg_refresh_all`), ki **od 1. 7. 2026 ne tečeta** — dokazano prek
+  `cron.job_run_details` pri `cron.log_run = on` (`tmp/probe_prod_cron.py`).
+  Preverjeno na stagingu s sondo `tmp/probe_plus_grants.sql` (transakcija z rollbackom, staging ostal
+  prazen): legitimen push (lang) ✅ · samo-podaritev prek update ✗ `42501` · prek upsert ✗ `42501` ·
+  prek delete+insert ✗ `42501` · `plus_kind` ✗ `42501` · pull bere ✅. `polar_customer_id` (spec §7)
+  **namenoma ni dodan** — ponudnik (§11.3) ni odločen; pred podporo licenčnega modela je treba
+  predvideti, kateri ponudniki in da koda vzdrži **vse tri hkrati** (naročilo lastnika 2. 8.).
+
+**Naloga TE seje: T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
+`profile` stolpcev `plus_*` **NE sme vsebovati** (sicer si predelan klient prek LWW podari Plus), pull
+pa ju mora prinesti v drift. Danes `profileToRemote` (`lib/core/sync/remote_mappers.dart`) sestavlja
+payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem test, ki to zaklene**, plus
+`profileFromRemote`, da pull polni nova drift polja (tolerantno: manjkajoča polja → null).
+⚠️ Ta korak se merga **PRED** `plusProvider` (korak 4). Odločitev §11.4 (dependency za podpis) pride s
+korakom 3 — takrat vprašaj.
+
+⏳ **Odprto iz koraka 1: prod `db push` migracije `0017`.** Lastnik je izrecno rekel, da produkcije ne
+migriramo, dokler ni vse potrjeno. Prod ledger in shema sta bila izmerjena 2. 8. in sta identična
+`main`, zato bo `db push` uveljavil natanko to eno migracijo. Po pushu ponovi `tmp/probe_prod_state.py`
+in preveri, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`.
+Odprto tudi: staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica iste
+migracije) — datoteke ni več; ob napovedanem svežem refreshu staginga izgine sam.
 
 ⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
 vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih

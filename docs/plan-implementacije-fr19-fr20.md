@@ -486,10 +486,28 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
 - **Izhod:** zid obstaja, nič ne zaklepa (flag še off): shema `plus_until`/`plus_token`, `plusProvider`,
   osnovni `/tendask-plus` zaslon, gate ožičen na vstopne točke. Porabnik: T7.
 - **Koraki:**
-  1. ⬜ **Shema (additive, FR-20 §7):** Supabase migracija — `profile` dobi **tri nullable stolpce**:
+  1. ✅ **Shema (additive, FR-20 §7)** — `0017_profile_plus.sql`, **staging 2. 8.; prod `db push` čaka
+     potrditev.** Drift `schemaVersion 13 → 14` (v14 = trije stolpci), suite **1412**. Dve najdbi, ki
+     veljata naprej: **(a)** vrstica iz speca `revoke update (plus_until, plus_token) … from
+     authenticated` je **no-op** — pravice se v Postgresu samo seštevajo, `0002` pa je podelil `update`
+     na celi tabeli, zato column-level revoke ne odgrizne stolpca; edina delujoča oblika je *revoke
+     tabelno → re-grant po stolpcih*. **(b)** Zaklenjena sta `insert` **in** `update` (upsert nad
+     neobstoječo vrstico je INSERT, `delete`+`insert` pa bi zaobšel samo-UPDATE ključavnico);
+     server-lastni so **štirje** stolpci — `plus_until`, `plus_token`, `plus_kind` in `server_inserted_at`
+     (`0011` ga razglasi za strežniškega, a je ostal pisljiv). ⚠️ **Posledica:** vsaka prihodnja
+     migracija, ki doda klient-pisljiv stolpec v `profile`, mu mora dodati tudi column grant, sicer
+     push pade s `42501`. Preverjeno na stagingu s sondo (`tmp/probe_plus_grants.sql`, transakcija z
+     rollbackom): legitimen push ✅, samo-podaritev prek update/upsert/delete+insert ✗ `42501`,
+     pull bere ✅. **Številčenje `0017`:** read-only sonda produkcije (2. 8., `tmp/probe_prod_state.py`)
+     kaže ledger `0001`–`0005` + `0011`–`0016`, shemo identično `main` in **nobenega sledu M11** —
+     ni tabel, ni M11 stolpcev. Vrzel `0006`–`0010` je torej prazna. Runbook §2 je trdil nasprotno —
+     **popravljen v istem commitu**, skupaj z `m11.md`, `cookbook.md`, `stanje.md` in `CLAUDE.md`
+     (novo pravilo: pred posegom v bazo read-only sonda na prod in staging). Od M11 na produkciji
+     ostaneta le no-op `engine_dispatch()` in dva cron joba, ki **od 1. 7. 2026 ne tečeta**.
+     Vsebina koraka: `profile` dobi **tri nullable stolpce** —
      `plus_until timestamptz`, `plus_token text`, `plus_kind text` (samo za prikaz »Doživljenjska« vs
-     »velja do …«; **upravičenost se bere VEDNO samo iz `plus_until`**) + **column-level `revoke update`
-     za `plus_until`/`plus_token`** (server-lastna) + granti v isti migraciji. **`license*` tabele v
+     »velja do …«; **upravičenost se bere VEDNO samo iz `plus_until`**) + **column-level zaklep pisanja**
+     (server-lastni stolpci, oblika po najdbi (a)) + granti v isti migraciji. **`license*` tabele v
      rezino NE gredo** — pridejo s T8; masovni grant v T7 je pot FR-20 §6.6-C (`plus_until` naravnost
      na profile, brez kod). Drift zrcalo + `schemaVersion` dvig + `build_runner`.
   2. ⬜ **Sync izjeme (kritično, FR-20 §6):** pull stolpca prinaša, **push ju IZPUŠČA** iz payloada —

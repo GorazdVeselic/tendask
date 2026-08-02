@@ -25,6 +25,12 @@ class Profiles extends Table {
   // flag would re-seed and push a duplicate on every fresh install + sign-in.
   BoolColumn get defaultGardenSeeded =>
       boolean().withDefault(const Constant(false))();
+  // Tendask+ entitlement (FR-20), server-owned: the cloud writes them, the device
+  // only pulls them. Eligibility is read ONLY from plusUntil (plusToken proves it,
+  // plusKind is display text). Never included in the push payload.
+  DateTimeColumn get plusUntil => dateTime().nullable()();
+  TextColumn get plusToken => text().nullable()();
+  TextColumn get plusKind => text().nullable()();
   DateTimeColumn get updatedAt => dateTime()();
   TextColumn get syncStatus =>
       text().withDefault(const Constant(kSyncPending))();

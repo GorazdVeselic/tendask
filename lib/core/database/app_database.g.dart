@@ -1504,6 +1504,39 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     ),
     defaultValue: const Constant(false),
   );
+  static const VerificationMeta _plusUntilMeta = const VerificationMeta(
+    'plusUntil',
+  );
+  @override
+  late final GeneratedColumn<DateTime> plusUntil = GeneratedColumn<DateTime>(
+    'plus_until',
+    aliasedName,
+    true,
+    type: DriftSqlType.dateTime,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _plusTokenMeta = const VerificationMeta(
+    'plusToken',
+  );
+  @override
+  late final GeneratedColumn<String> plusToken = GeneratedColumn<String>(
+    'plus_token',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
+  static const VerificationMeta _plusKindMeta = const VerificationMeta(
+    'plusKind',
+  );
+  @override
+  late final GeneratedColumn<String> plusKind = GeneratedColumn<String>(
+    'plus_kind',
+    aliasedName,
+    true,
+    type: DriftSqlType.string,
+    requiredDuringInsert: false,
+  );
   static const VerificationMeta _updatedAtMeta = const VerificationMeta(
     'updatedAt',
   );
@@ -1536,6 +1569,9 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
     lang,
     notificationSettings,
     defaultGardenSeeded,
+    plusUntil,
+    plusToken,
+    plusKind,
     updatedAt,
     syncStatus,
   ];
@@ -1601,6 +1637,24 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         ),
       );
     }
+    if (data.containsKey('plus_until')) {
+      context.handle(
+        _plusUntilMeta,
+        plusUntil.isAcceptableOrUnknown(data['plus_until']!, _plusUntilMeta),
+      );
+    }
+    if (data.containsKey('plus_token')) {
+      context.handle(
+        _plusTokenMeta,
+        plusToken.isAcceptableOrUnknown(data['plus_token']!, _plusTokenMeta),
+      );
+    }
+    if (data.containsKey('plus_kind')) {
+      context.handle(
+        _plusKindMeta,
+        plusKind.isAcceptableOrUnknown(data['plus_kind']!, _plusKindMeta),
+      );
+    }
     if (data.containsKey('updated_at')) {
       context.handle(
         _updatedAtMeta,
@@ -1652,6 +1706,18 @@ class $ProfilesTable extends Profiles with TableInfo<$ProfilesTable, Profile> {
         DriftSqlType.bool,
         data['${effectivePrefix}default_garden_seeded'],
       )!,
+      plusUntil: attachedDatabase.typeMapping.read(
+        DriftSqlType.dateTime,
+        data['${effectivePrefix}plus_until'],
+      ),
+      plusToken: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plus_token'],
+      ),
+      plusKind: attachedDatabase.typeMapping.read(
+        DriftSqlType.string,
+        data['${effectivePrefix}plus_kind'],
+      ),
       updatedAt: attachedDatabase.typeMapping.read(
         DriftSqlType.dateTime,
         data['${effectivePrefix}updated_at'],
@@ -1677,6 +1743,9 @@ class Profile extends DataClass implements Insertable<Profile> {
   final String? lang;
   final String? notificationSettings;
   final bool defaultGardenSeeded;
+  final DateTime? plusUntil;
+  final String? plusToken;
+  final String? plusKind;
   final DateTime updatedAt;
   final String syncStatus;
   const Profile({
@@ -1687,6 +1756,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     this.lang,
     this.notificationSettings,
     required this.defaultGardenSeeded,
+    this.plusUntil,
+    this.plusToken,
+    this.plusKind,
     required this.updatedAt,
     required this.syncStatus,
   });
@@ -1710,6 +1782,15 @@ class Profile extends DataClass implements Insertable<Profile> {
       map['notification_settings'] = Variable<String>(notificationSettings);
     }
     map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded);
+    if (!nullToAbsent || plusUntil != null) {
+      map['plus_until'] = Variable<DateTime>(plusUntil);
+    }
+    if (!nullToAbsent || plusToken != null) {
+      map['plus_token'] = Variable<String>(plusToken);
+    }
+    if (!nullToAbsent || plusKind != null) {
+      map['plus_kind'] = Variable<String>(plusKind);
+    }
     map['updated_at'] = Variable<DateTime>(updatedAt);
     map['sync_status'] = Variable<String>(syncStatus);
     return map;
@@ -1726,6 +1807,15 @@ class Profile extends DataClass implements Insertable<Profile> {
           ? const Value.absent()
           : Value(notificationSettings),
       defaultGardenSeeded: Value(defaultGardenSeeded),
+      plusUntil: plusUntil == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plusUntil),
+      plusToken: plusToken == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plusToken),
+      plusKind: plusKind == null && nullToAbsent
+          ? const Value.absent()
+          : Value(plusKind),
       updatedAt: Value(updatedAt),
       syncStatus: Value(syncStatus),
     );
@@ -1748,6 +1838,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       defaultGardenSeeded: serializer.fromJson<bool>(
         json['defaultGardenSeeded'],
       ),
+      plusUntil: serializer.fromJson<DateTime?>(json['plusUntil']),
+      plusToken: serializer.fromJson<String?>(json['plusToken']),
+      plusKind: serializer.fromJson<String?>(json['plusKind']),
       updatedAt: serializer.fromJson<DateTime>(json['updatedAt']),
       syncStatus: serializer.fromJson<String>(json['syncStatus']),
     );
@@ -1763,6 +1856,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       'lang': serializer.toJson<String?>(lang),
       'notificationSettings': serializer.toJson<String?>(notificationSettings),
       'defaultGardenSeeded': serializer.toJson<bool>(defaultGardenSeeded),
+      'plusUntil': serializer.toJson<DateTime?>(plusUntil),
+      'plusToken': serializer.toJson<String?>(plusToken),
+      'plusKind': serializer.toJson<String?>(plusKind),
       'updatedAt': serializer.toJson<DateTime>(updatedAt),
       'syncStatus': serializer.toJson<String>(syncStatus),
     };
@@ -1776,6 +1872,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     Value<String?> lang = const Value.absent(),
     Value<String?> notificationSettings = const Value.absent(),
     bool? defaultGardenSeeded,
+    Value<DateTime?> plusUntil = const Value.absent(),
+    Value<String?> plusToken = const Value.absent(),
+    Value<String?> plusKind = const Value.absent(),
     DateTime? updatedAt,
     String? syncStatus,
   }) => Profile(
@@ -1788,6 +1887,9 @@ class Profile extends DataClass implements Insertable<Profile> {
         ? notificationSettings.value
         : this.notificationSettings,
     defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
+    plusUntil: plusUntil.present ? plusUntil.value : this.plusUntil,
+    plusToken: plusToken.present ? plusToken.value : this.plusToken,
+    plusKind: plusKind.present ? plusKind.value : this.plusKind,
     updatedAt: updatedAt ?? this.updatedAt,
     syncStatus: syncStatus ?? this.syncStatus,
   );
@@ -1804,6 +1906,9 @@ class Profile extends DataClass implements Insertable<Profile> {
       defaultGardenSeeded: data.defaultGardenSeeded.present
           ? data.defaultGardenSeeded.value
           : this.defaultGardenSeeded,
+      plusUntil: data.plusUntil.present ? data.plusUntil.value : this.plusUntil,
+      plusToken: data.plusToken.present ? data.plusToken.value : this.plusToken,
+      plusKind: data.plusKind.present ? data.plusKind.value : this.plusKind,
       updatedAt: data.updatedAt.present ? data.updatedAt.value : this.updatedAt,
       syncStatus: data.syncStatus.present
           ? data.syncStatus.value
@@ -1821,6 +1926,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
           ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
+          ..write('plusUntil: $plusUntil, ')
+          ..write('plusToken: $plusToken, ')
+          ..write('plusKind: $plusKind, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus')
           ..write(')'))
@@ -1836,6 +1944,9 @@ class Profile extends DataClass implements Insertable<Profile> {
     lang,
     notificationSettings,
     defaultGardenSeeded,
+    plusUntil,
+    plusToken,
+    plusKind,
     updatedAt,
     syncStatus,
   );
@@ -1850,6 +1961,9 @@ class Profile extends DataClass implements Insertable<Profile> {
           other.lang == this.lang &&
           other.notificationSettings == this.notificationSettings &&
           other.defaultGardenSeeded == this.defaultGardenSeeded &&
+          other.plusUntil == this.plusUntil &&
+          other.plusToken == this.plusToken &&
+          other.plusKind == this.plusKind &&
           other.updatedAt == this.updatedAt &&
           other.syncStatus == this.syncStatus);
 }
@@ -1862,6 +1976,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
   final Value<String?> lang;
   final Value<String?> notificationSettings;
   final Value<bool> defaultGardenSeeded;
+  final Value<DateTime?> plusUntil;
+  final Value<String?> plusToken;
+  final Value<String?> plusKind;
   final Value<DateTime> updatedAt;
   final Value<String> syncStatus;
   final Value<int> rowid;
@@ -1873,6 +1990,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
     this.defaultGardenSeeded = const Value.absent(),
+    this.plusUntil = const Value.absent(),
+    this.plusToken = const Value.absent(),
+    this.plusKind = const Value.absent(),
     this.updatedAt = const Value.absent(),
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1885,6 +2005,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     this.lang = const Value.absent(),
     this.notificationSettings = const Value.absent(),
     this.defaultGardenSeeded = const Value.absent(),
+    this.plusUntil = const Value.absent(),
+    this.plusToken = const Value.absent(),
+    this.plusKind = const Value.absent(),
     required DateTime updatedAt,
     this.syncStatus = const Value.absent(),
     this.rowid = const Value.absent(),
@@ -1898,6 +2021,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Expression<String>? lang,
     Expression<String>? notificationSettings,
     Expression<bool>? defaultGardenSeeded,
+    Expression<DateTime>? plusUntil,
+    Expression<String>? plusToken,
+    Expression<String>? plusKind,
     Expression<DateTime>? updatedAt,
     Expression<String>? syncStatus,
     Expression<int>? rowid,
@@ -1912,6 +2038,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
         'notification_settings': notificationSettings,
       if (defaultGardenSeeded != null)
         'default_garden_seeded': defaultGardenSeeded,
+      if (plusUntil != null) 'plus_until': plusUntil,
+      if (plusToken != null) 'plus_token': plusToken,
+      if (plusKind != null) 'plus_kind': plusKind,
       if (updatedAt != null) 'updated_at': updatedAt,
       if (syncStatus != null) 'sync_status': syncStatus,
       if (rowid != null) 'rowid': rowid,
@@ -1926,6 +2055,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     Value<String?>? lang,
     Value<String?>? notificationSettings,
     Value<bool>? defaultGardenSeeded,
+    Value<DateTime?>? plusUntil,
+    Value<String?>? plusToken,
+    Value<String?>? plusKind,
     Value<DateTime>? updatedAt,
     Value<String>? syncStatus,
     Value<int>? rowid,
@@ -1938,6 +2070,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
       lang: lang ?? this.lang,
       notificationSettings: notificationSettings ?? this.notificationSettings,
       defaultGardenSeeded: defaultGardenSeeded ?? this.defaultGardenSeeded,
+      plusUntil: plusUntil ?? this.plusUntil,
+      plusToken: plusToken ?? this.plusToken,
+      plusKind: plusKind ?? this.plusKind,
       updatedAt: updatedAt ?? this.updatedAt,
       syncStatus: syncStatus ?? this.syncStatus,
       rowid: rowid ?? this.rowid,
@@ -1970,6 +2105,15 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
     if (defaultGardenSeeded.present) {
       map['default_garden_seeded'] = Variable<bool>(defaultGardenSeeded.value);
     }
+    if (plusUntil.present) {
+      map['plus_until'] = Variable<DateTime>(plusUntil.value);
+    }
+    if (plusToken.present) {
+      map['plus_token'] = Variable<String>(plusToken.value);
+    }
+    if (plusKind.present) {
+      map['plus_kind'] = Variable<String>(plusKind.value);
+    }
     if (updatedAt.present) {
       map['updated_at'] = Variable<DateTime>(updatedAt.value);
     }
@@ -1992,6 +2136,9 @@ class ProfilesCompanion extends UpdateCompanion<Profile> {
           ..write('lang: $lang, ')
           ..write('notificationSettings: $notificationSettings, ')
           ..write('defaultGardenSeeded: $defaultGardenSeeded, ')
+          ..write('plusUntil: $plusUntil, ')
+          ..write('plusToken: $plusToken, ')
+          ..write('plusKind: $plusKind, ')
           ..write('updatedAt: $updatedAt, ')
           ..write('syncStatus: $syncStatus, ')
           ..write('rowid: $rowid')
@@ -9073,6 +9220,9 @@ typedef $$ProfilesTableCreateCompanionBuilder =
       Value<String?> lang,
       Value<String?> notificationSettings,
       Value<bool> defaultGardenSeeded,
+      Value<DateTime?> plusUntil,
+      Value<String?> plusToken,
+      Value<String?> plusKind,
       required DateTime updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9086,6 +9236,9 @@ typedef $$ProfilesTableUpdateCompanionBuilder =
       Value<String?> lang,
       Value<String?> notificationSettings,
       Value<bool> defaultGardenSeeded,
+      Value<DateTime?> plusUntil,
+      Value<String?> plusToken,
+      Value<String?> plusKind,
       Value<DateTime> updatedAt,
       Value<String> syncStatus,
       Value<int> rowid,
@@ -9132,6 +9285,21 @@ class $$ProfilesTableFilterComposer
 
   ColumnFilters<bool> get defaultGardenSeeded => $composableBuilder(
     column: $table.defaultGardenSeeded,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<DateTime> get plusUntil => $composableBuilder(
+    column: $table.plusUntil,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plusToken => $composableBuilder(
+    column: $table.plusToken,
+    builder: (column) => ColumnFilters(column),
+  );
+
+  ColumnFilters<String> get plusKind => $composableBuilder(
+    column: $table.plusKind,
     builder: (column) => ColumnFilters(column),
   );
 
@@ -9190,6 +9358,21 @@ class $$ProfilesTableOrderingComposer
     builder: (column) => ColumnOrderings(column),
   );
 
+  ColumnOrderings<DateTime> get plusUntil => $composableBuilder(
+    column: $table.plusUntil,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plusToken => $composableBuilder(
+    column: $table.plusToken,
+    builder: (column) => ColumnOrderings(column),
+  );
+
+  ColumnOrderings<String> get plusKind => $composableBuilder(
+    column: $table.plusKind,
+    builder: (column) => ColumnOrderings(column),
+  );
+
   ColumnOrderings<DateTime> get updatedAt => $composableBuilder(
     column: $table.updatedAt,
     builder: (column) => ColumnOrderings(column),
@@ -9235,6 +9418,15 @@ class $$ProfilesTableAnnotationComposer
     builder: (column) => column,
   );
 
+  GeneratedColumn<DateTime> get plusUntil =>
+      $composableBuilder(column: $table.plusUntil, builder: (column) => column);
+
+  GeneratedColumn<String> get plusToken =>
+      $composableBuilder(column: $table.plusToken, builder: (column) => column);
+
+  GeneratedColumn<String> get plusKind =>
+      $composableBuilder(column: $table.plusKind, builder: (column) => column);
+
   GeneratedColumn<DateTime> get updatedAt =>
       $composableBuilder(column: $table.updatedAt, builder: (column) => column);
 
@@ -9279,6 +9471,9 @@ class $$ProfilesTableTableManager
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
                 Value<bool> defaultGardenSeeded = const Value.absent(),
+                Value<DateTime?> plusUntil = const Value.absent(),
+                Value<String?> plusToken = const Value.absent(),
+                Value<String?> plusKind = const Value.absent(),
                 Value<DateTime> updatedAt = const Value.absent(),
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9290,6 +9485,9 @@ class $$ProfilesTableTableManager
                 lang: lang,
                 notificationSettings: notificationSettings,
                 defaultGardenSeeded: defaultGardenSeeded,
+                plusUntil: plusUntil,
+                plusToken: plusToken,
+                plusKind: plusKind,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,
@@ -9303,6 +9501,9 @@ class $$ProfilesTableTableManager
                 Value<String?> lang = const Value.absent(),
                 Value<String?> notificationSettings = const Value.absent(),
                 Value<bool> defaultGardenSeeded = const Value.absent(),
+                Value<DateTime?> plusUntil = const Value.absent(),
+                Value<String?> plusToken = const Value.absent(),
+                Value<String?> plusKind = const Value.absent(),
                 required DateTime updatedAt,
                 Value<String> syncStatus = const Value.absent(),
                 Value<int> rowid = const Value.absent(),
@@ -9314,6 +9515,9 @@ class $$ProfilesTableTableManager
                 lang: lang,
                 notificationSettings: notificationSettings,
                 defaultGardenSeeded: defaultGardenSeeded,
+                plusUntil: plusUntil,
+                plusToken: plusToken,
+                plusKind: plusKind,
                 updatedAt: updatedAt,
                 syncStatus: syncStatus,
                 rowid: rowid,

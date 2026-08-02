@@ -29,8 +29,8 @@ void main() {
     return rows.any((r) => r.data['name'] == column);
   }
 
-  test('schema version is 13', () {
-    expect(db.schemaVersion, 13);
+  test('schema version is 14', () {
+    expect(db.schemaVersion, 14);
   });
 
   test('v12: task carries the harvest yield columns (T11)', () async {
@@ -47,6 +47,20 @@ void main() {
 
   test('v10: profile carries the per-account default_garden_seeded flag', () async {
     expect(await columnExists('profile', 'default_garden_seeded'), isTrue);
+  });
+
+  test('v14: profile carries the Tendask+ entitlement columns', () async {
+    expect(await columnExists('profile', 'plus_until'), isTrue);
+    expect(await columnExists('profile', 'plus_token'), isTrue);
+    expect(await columnExists('profile', 'plus_kind'), isTrue);
+    // Nullable: an account without Plus holds NULL, never a sentinel date.
+    await db.customStatement(
+      "INSERT INTO profile (user_id, updated_at) VALUES ('u1', 0)",
+    );
+    final rows = await db
+        .customSelect("SELECT plus_until FROM profile WHERE user_id='u1'")
+        .get();
+    expect(rows.single.data['plus_until'], isNull);
   });
 
   test('v13: supply.category exists and defaults to other', () async {

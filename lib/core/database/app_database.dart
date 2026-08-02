@@ -45,7 +45,7 @@ class AppDatabase extends _$AppDatabase {
   AppDatabase.forTesting(super.executor);
 
   @override
-  int get schemaVersion => 13;
+  int get schemaVersion => 14;
 
   /// Wipes user + device-local data: on sign-out (reset, [keepFlags] false →
   /// also clears onboarding flag) or on sign-in to another account ([keepFlags]
@@ -177,6 +177,14 @@ class AppDatabase extends _$AppDatabase {
       // a default; existing rows backfill to 'other'. Mirrors Supabase 0015.
       if (from < 13) {
         await m.addColumn(supplies, supplies.category);
+      }
+      // v14: profile.plus_until/plus_token/plus_kind carry the Tendask+
+      // entitlement (FR-20). Additive nullable columns; mirror Supabase 0023.
+      // Server-owned — pull fills them, push must never send them.
+      if (from < 14) {
+        await m.addColumn(profiles, profiles.plusUntil);
+        await m.addColumn(profiles, profiles.plusToken);
+        await m.addColumn(profiles, profiles.plusKind);
       }
     },
   );
