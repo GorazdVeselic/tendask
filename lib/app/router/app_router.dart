@@ -12,6 +12,7 @@ import '../../features/home/presentation/home_screen.dart';
 import '../../features/journal/presentation/journal_screen.dart';
 import '../../features/journal/presentation/note_form_screen.dart';
 import '../../features/moon/presentation/moon_calendar_screen.dart';
+import '../../features/moon/presentation/moon_finder_screen.dart';
 import '../../features/moon/presentation/moon_settings_screen.dart';
 import '../../features/notifications/presentation/notification_preview_screen.dart';
 import '../../features/notifications/presentation/notification_settings_screen.dart';
@@ -234,6 +235,13 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       name: 'moon-settings',
       redirect: moonCalendarRedirect,
       builder: (context, state) => const MoonSettingsScreen(),
+    ),
+    GoRoute(
+      path: '/moon-finder',
+      name: 'moon-finder',
+      redirect: moonCalendarRedirect,
+      builder: (context, state) =>
+          MoonFinderScreen(initialPlantId: state.uri.queryParameters['plant']),
     ),
   ],
 );

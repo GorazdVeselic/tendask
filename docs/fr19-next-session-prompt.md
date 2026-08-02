@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1285 testov):**
+**Kaj je narejeno (vse v main, 1296 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -290,8 +290,27 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **nedosegljivo** (predvečer dneva +7 je +6, nudge pride na +7/+28 → trka ni); testirano je na ravni
   `planMoonHints(takenDays:)` in oživi šele, če horizont zraste čez 7 dni.
 
-**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 2** (`/moon-finder` zaslon,
-branch `feat/fr19-t5-2-finder-screen`), a T5 sme tudi v v1.1 — zato je pred njim mogoč **T6**
+- **T5 korak 2 ✅ (2. 8., branch `feat/fr19-t5-2-finder-screen`) — iskalnik »Kdaj za …«:**
+  `MoonFinderScreen` (`moon/presentation/moon_finder_screen.dart`, wireframe board 4) — polje
+  rastline (odpre obstoječi `/plant-picker`, `PlantPick`) → `plantElement()` → kartica z elementom
+  (soft ozadje, tekst `onSurface` po A4) → **svežnji primernih dni** (»čet 13. 8. – sob 15. 8.«,
+  podnaslov rastoča/upadajoča luna); tap vrstice odpre **dan-sheet**, »+« pelje v
+  `/task-new?date=…`. Rastline brez priporočila (sobne, iglavci, živa meja, lasten vnos) dobijo
+  mirno vrstico `no_recommendation`, prazen zaslon pa namig. Izračun je čist:
+  `moonDayRuns()` + `moonFinderRunsProvider(element, from)` (`moon/application/moon_finder.dart`,
+  memoizacija po (element, dan, sistem)); horizont `kMoonFinderHorizonDays = 60`, **scan sledi
+  odprtemu svežnju čez horizont** (odrezan razpon bi lagal, da dobri dnevi prej minejo — ujel test).
+  Ruta `/moon-finder?plant=` z `moonCalendarRedirect` (route_collision_test pokriva vse tri moon
+  rute), vstop **🔎 v AppBar koledarja**. Skupno: `isWaxing()` (`biodynamic_day.dart`, kopija iz
+  sheeta odstranjena), `weekdayShort()` (`moon_text.dart`, kopija iz tedenske agende odstranjena).
+  i18n `moon.finder.*` **en+sl** (de pride s T5.4). Unit testi izračuna (11), suite **1296**.
+  Pogled: `tmp/moon_finder_preview_test.dart` → `tmp/moon_finder_{light,dark,empty}.png`.
+  ⚠️ **Past harnessa (ponovno):** predogled, ki gleda **živ drift stream** (katalog), mora
+  container `dispose()` **pred** `db.close()` — sicer `pumpAndSettle` visi 10 minut.
+
+**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 3** (chip »🌙 Kdaj za …« na
+detajlu rastline, branch `feat/fr19-t5-3-plant-chip`), za njim **T5 korak 4** (widget testi, layout
+matrika `moon/finder`, de prevodi). T5 sme tudi v v1.1 — zato je namesto tega mogoč **T6**
 (FR-20 rezina upravičenosti, edini task s shemo; rabi odločitev §11.4 o dependency za podpis tokena)
 ali **T7** (prižig). Vrstni red je odprt.
 

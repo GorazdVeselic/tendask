@@ -219,13 +219,7 @@ class _WhatsHappening extends StatelessWidget {
         );
     }
 
-    final waxing = switch (day.phase) {
-      MoonPhase.newMoon ||
-      MoonPhase.waxingCrescent ||
-      MoonPhase.firstQuarter ||
-      MoonPhase.waxingGibbous => true,
-      _ => false,
-    };
+    final waxing = isWaxing(day.phase);
 
     return Container(
       key: kMoonWhatsHappeningKey,

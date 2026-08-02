@@ -71,7 +71,7 @@ void main() {
   // someone detaches `redirect:` from a route in app_router.dart.
   test('the real moon routes carry the redirect guard', () {
     final router = createAppRouter();
-    for (final path in ['/moon-calendar', '/moon-settings']) {
+    for (final path in ['/moon-calendar', '/moon-settings', '/moon-finder']) {
       final route = router.configuration.routes
           .whereType<GoRoute>()
           .singleWhere((r) => r.path == path);

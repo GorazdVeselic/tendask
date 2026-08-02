@@ -95,6 +95,11 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
         title: Text(t.moon.calendar.title),
         actions: [
           IconButton(
+            icon: const Icon(Icons.search),
+            tooltip: t.moon.finder.title,
+            onPressed: () => context.pushNamed('moon-finder'),
+          ),
+          IconButton(
             icon: const Icon(Icons.settings_outlined),
             onPressed: () => context.pushNamed('moon-settings'),
           ),

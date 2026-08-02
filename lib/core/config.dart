@@ -198,6 +198,11 @@ const kSuppliesEnabled = true;
 /// plusProvider.
 const kMoonCalendarEnabled = false;
 
+/// How far the "when for X" finder (FR-19 T5.2) looks ahead. An element
+/// returns roughly every nine days, so two months list about six stretches —
+/// enough to plan a sowing without paging.
+const kMoonFinderHorizonDays = 60;
+
 /// Midnight-sliver display rule of the moon month grid (FR-19 T3.3): an
 /// element transition within this window after local midnight hands the whole
 /// day to the new element instead of splitting the cell for a sliver.

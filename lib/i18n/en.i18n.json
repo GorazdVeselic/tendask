@@ -662,6 +662,17 @@
     "hint": {
       "title": "Tomorrow is a ${day}"
     },
+    "finder": {
+      "title": "When for …",
+      "plant_label": "Plant",
+      "plant_hint": "Choose a plant",
+      "empty_hint": "The calendar then lists the next days that suit it.",
+      "no_recommendation": "The calendar has no recommendation for this plant.",
+      "callout": "${plant} — best on a ${day}.",
+      "next_days": "Next suitable days",
+      "waxing": "waxing moon",
+      "waning": "waning moon"
+    },
     "day_for(map)": {
       "fruit": "fruit day",
       "root": "root day",

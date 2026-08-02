@@ -459,8 +459,10 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   (34 vnosov: 32 vrtnin + kamilica/sivka→cvet) po Thun klasifikaciji, navzkrižno preverjeno
   proti prc-lu.si/nemškim virom — **cvetača→list, brokoli edina cvetna kapusnica**;
   **katalog nedotaknjen** (sprememba `category` vrednosti bi starim APK-jem izpraznila čip
-  Vrtnine); testi popolnosti proti seedu.) · 2. ⬜ zaslon (izbor rastline → dnevi) ·
-  3. ⬜ plant-detail chip · 4. ⬜ pogled → testi/prevodi.
+  Vrtnine); testi popolnosti proti seedu.) · 2. ✅ zaslon (izbor rastline → dnevi)
+  (2026-08-01: `MoonFinderScreen` + `moonDayRuns()`/`moonFinderRunsProvider`; vstop 🔎 v AppBar
+  koledarja, ruta `/moon-finder?plant=` z varovalom; unit testi izračuna, en+sl) ·
+  3. ⬜ plant-detail chip · 4. ⬜ pogled → widget testi/matrika/de.
 - **Branchi:** `feat/fr19-t5-1-category-map` · `feat/fr19-t5-2-finder-screen` ·
   `feat/fr19-t5-3-plant-chip` · `feat/fr19-t5-4-tests`.
 - **Varnost na `main`:** kot T3/T4 — ruta z varovalom, chip za flagom.

@@ -951,6 +951,7 @@ class _Translations$moon$sl extends Translations$moon$en {
 	@override late final _Translations$moon$badge$sl badge = _Translations$moon$badge$sl._(_root);
 	@override late final _Translations$moon$task_section$sl task_section = _Translations$moon$task_section$sl._(_root);
 	@override late final _Translations$moon$hint$sl hint = _Translations$moon$hint$sl._(_root);
+	@override late final _Translations$moon$finder$sl finder = _Translations$moon$finder$sl._(_root);
 	@override Map<String, String> get day_for => {
 		'fruit': 'dan za plod',
 		'root': 'dan za korenino',
@@ -1090,6 +1091,24 @@ class _Translations$moon$hint$sl extends Translations$moon$hint$en {
 
 	// Translations
 	@override String title({required Object day}) => 'Jutri je ${day}';
+}
+
+// Path: moon.finder
+class _Translations$moon$finder$sl extends Translations$moon$finder$en {
+	_Translations$moon$finder$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get title => 'Kdaj za …';
+	@override String get plant_label => 'Rastlina';
+	@override String get plant_hint => 'Izberi rastlino';
+	@override String get empty_hint => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.';
+	@override String get no_recommendation => 'Za to rastlino koledar nima priporočila.';
+	@override String callout({required Object plant, required Object day}) => '${plant} — najbolje na ${day}.';
+	@override String get next_days => 'Naslednji primerni dnevi';
+	@override String get waxing => 'rastoča luna';
+	@override String get waning => 'upadajoča luna';
 }
 
 // Path: moon.division
@@ -1744,6 +1763,15 @@ extension on TranslationsSl {
 			'moon.badge.until' => ({required Object time}) => 'do ${time}',
 			'moon.task_section.footnote' => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.',
 			'moon.hint.title' => ({required Object day}) => 'Jutri je ${day}',
+			'moon.finder.title' => 'Kdaj za …',
+			'moon.finder.plant_label' => 'Rastlina',
+			'moon.finder.plant_hint' => 'Izberi rastlino',
+			'moon.finder.empty_hint' => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.',
+			'moon.finder.no_recommendation' => 'Za to rastlino koledar nima priporočila.',
+			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — najbolje na ${day}.',
+			'moon.finder.next_days' => 'Naslednji primerni dnevi',
+			'moon.finder.waxing' => 'rastoča luna',
+			'moon.finder.waning' => 'upadajoča luna',
 			'moon.day_for.fruit' => 'dan za plod',
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',

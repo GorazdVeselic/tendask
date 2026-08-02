@@ -33,6 +33,17 @@ enum MoonPhase {
   waningCrescent,
 }
 
+/// Whether the Moon is filling towards full. The new moon counts as waxing:
+/// display texts speak of the half of the cycle a day belongs to, and the
+/// exact instant already carries its own marker.
+bool isWaxing(MoonPhase phase) => switch (phase) {
+  MoonPhase.newMoon ||
+  MoonPhase.waxingCrescent ||
+  MoonPhase.firstQuarter ||
+  MoonPhase.waxingGibbous => true,
+  _ => false,
+};
+
 /// Biodynamic layers of one local calendar day (FR-19 spec §14.8).
 class BiodynamicDay {
   const BiodynamicDay({

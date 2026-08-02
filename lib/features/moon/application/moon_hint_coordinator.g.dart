@@ -60,7 +60,7 @@ final class MoonHintCoordinatorProvider
 }
 
 String _$moonHintCoordinatorHash() =>
-    r'ad3fcea234c4111dfe8bc6250bdd34e6382ca55d';
+    r'bf7c60a60c6ef2d54edd5b49185c63b7074eb4c6';
 
 /// Keeps the moon "tomorrow is a X day" hint armed (FR-19 T4b): a device-local
 /// notification the evening before a day the user's garden can use. Re-arms at

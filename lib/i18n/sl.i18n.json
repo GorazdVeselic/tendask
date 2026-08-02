@@ -672,6 +672,17 @@
     "hint": {
       "title": "Jutri je ${day}"
     },
+    "finder": {
+      "title": "Kdaj za …",
+      "plant_label": "Rastlina",
+      "plant_hint": "Izberi rastlino",
+      "empty_hint": "Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.",
+      "no_recommendation": "Za to rastlino koledar nima priporočila.",
+      "callout": "${plant} — najbolje na ${day}.",
+      "next_days": "Naslednji primerni dnevi",
+      "waxing": "rastoča luna",
+      "waning": "upadajoča luna"
+    },
     "day_for(map)": {
       "fruit": "dan za plod",
       "root": "dan za korenino",

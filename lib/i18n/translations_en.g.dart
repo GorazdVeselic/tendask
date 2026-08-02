@@ -2010,6 +2010,7 @@ class Translations$moon$en {
 	late final Translations$moon$badge$en badge = Translations$moon$badge$en.internal(_root);
 	late final Translations$moon$task_section$en task_section = Translations$moon$task_section$en.internal(_root);
 	late final Translations$moon$hint$en hint = Translations$moon$hint$en.internal(_root);
+	late final Translations$moon$finder$en finder = Translations$moon$finder$en.internal(_root);
 	Map<String, String> get day_for => {
 		'fruit': 'fruit day',
 		'root': 'root day',
@@ -2209,6 +2210,42 @@ class Translations$moon$hint$en {
 
 	/// en: 'Tomorrow is a ${day}'
 	String title({required Object day}) => 'Tomorrow is a ${day}';
+}
+
+// Path: moon.finder
+class Translations$moon$finder$en {
+	Translations$moon$finder$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'When for …'
+	String get title => 'When for …';
+
+	/// en: 'Plant'
+	String get plant_label => 'Plant';
+
+	/// en: 'Choose a plant'
+	String get plant_hint => 'Choose a plant';
+
+	/// en: 'The calendar then lists the next days that suit it.'
+	String get empty_hint => 'The calendar then lists the next days that suit it.';
+
+	/// en: 'The calendar has no recommendation for this plant.'
+	String get no_recommendation => 'The calendar has no recommendation for this plant.';
+
+	/// en: '${plant} — best on a ${day}.'
+	String callout({required Object plant, required Object day}) => '${plant} — best on a ${day}.';
+
+	/// en: 'Next suitable days'
+	String get next_days => 'Next suitable days';
+
+	/// en: 'waxing moon'
+	String get waxing => 'waxing moon';
+
+	/// en: 'waning moon'
+	String get waning => 'waning moon';
 }
 
 // Path: moon.division
@@ -2893,6 +2930,15 @@ extension on Translations {
 			'moon.badge.until' => ({required Object time}) => 'until ${time}',
 			'moon.task_section.footnote' => 'Tradition, not advice. Derived from the task\'s date.',
 			'moon.hint.title' => ({required Object day}) => 'Tomorrow is a ${day}',
+			'moon.finder.title' => 'When for …',
+			'moon.finder.plant_label' => 'Plant',
+			'moon.finder.plant_hint' => 'Choose a plant',
+			'moon.finder.empty_hint' => 'The calendar then lists the next days that suit it.',
+			'moon.finder.no_recommendation' => 'The calendar has no recommendation for this plant.',
+			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — best on a ${day}.',
+			'moon.finder.next_days' => 'Next suitable days',
+			'moon.finder.waxing' => 'waxing moon',
+			'moon.finder.waning' => 'waning moon',
 			'moon.day_for.fruit' => 'fruit day',
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',

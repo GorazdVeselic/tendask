@@ -13,9 +13,6 @@ import 'moon_text.dart';
 import 'widgets/element_badge.dart';
 import 'widgets/moon_phase_icon.dart';
 
-/// i18n weekday_short key for a date (DateTime.weekday is Mon=1..Sun=7).
-const _weekdayKeys = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
-
 /// The week's [i]-th day out of the memoized month grid, computed directly
 /// when the map does not reach it (it carries six leading days, which covers
 /// every week today — the fallback keeps a future off-by-one visible as a
@@ -156,10 +153,7 @@ class _WeekRow extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    t
-                        .moon
-                        .calendar
-                        .weekday_short[_weekdayKeys[day.date.weekday - 1]]!,
+                    weekdayShort(t, day.date),
                     style: theme.textTheme.labelSmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
