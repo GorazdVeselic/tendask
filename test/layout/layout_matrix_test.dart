@@ -27,6 +27,7 @@ import 'package:tendask/features/journal/presentation/widgets/day_cell.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
 import 'package:tendask/features/moon/application/moon_month_provider.dart';
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
+import 'package:tendask/features/moon/presentation/moon_day_sheet.dart';
 import 'package:tendask/features/moon/presentation/moon_finder_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_week_view.dart';
@@ -423,6 +424,23 @@ void main() {
     build: () => const _PlantChipRow(),
   );
 
+  // The sheet's wordiest days, which the tap-on-'15' entry above can never
+  // reach: a transition day (hero tail + "at HH:MM it turns" line) and the new
+  // moon (its own copy plus the unfavorable eclipse warning).
+  layoutMatrix(
+    'moon/day-sheet (transition)',
+    overrides: moonOverrides,
+    build: () => _SheetOpener(date: _moonTransitionDate()),
+    after: _openSheet,
+  );
+
+  layoutMatrix(
+    'moon/day-sheet (new moon)',
+    overrides: moonOverrides,
+    build: () => _SheetOpener(date: _kNewMoonDate),
+    after: _openSheet,
+  );
+
   // A transition day is the row's longest text ("… day · until 14:20").
   layoutMatrix(
     'entry/when-badge',
@@ -445,6 +463,34 @@ void main() {
     overrides: _taskWorldOverrides,
     build: () => const _JournalMoonGrid(),
   );
+}
+
+/// New moon of August 2026 — also a solar eclipse, so the sheet carries the
+/// unfavorable warning on top of the new-moon copy (fixture T1.10).
+final _kNewMoonDate = DateTime(2026, 8, 12);
+
+/// Opens the day sheet of a fixed date, which the calendar itself cannot do
+/// (it only ever shows the current month).
+class _SheetOpener extends StatelessWidget {
+  const _SheetOpener({required this.date});
+
+  final DateTime date;
+
+  @override
+  Widget build(BuildContext context) => Center(
+    child: TextButton(
+      onPressed: () => showMoonDaySheet(context, date),
+      child: const Text('OPEN'),
+    ),
+  );
+}
+
+Future<void> _openSheet(WidgetTester tester) async {
+  await tester.tap(find.text('OPEN'));
+  await tester.pump();
+  await tester.pump(const Duration(milliseconds: 400));
+  // Guard against measuring the empty opener when the tap missed.
+  expect(find.byType(SheetHandle), findsOneWidget);
 }
 
 /// The plant-detail hero row (avatar, name, chip row) with the moon chip next

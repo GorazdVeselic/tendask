@@ -740,6 +740,8 @@
       "whats_happening": "Kaj se dogaja",
       "in_constellation(rich)": "Luna je v ozvezdju ${sign} → ${day}.",
       "in_sign(rich)": "Luna je v znamenju ${sign} → ${day}.",
+      "in_constellation_since(rich)": "Od ${time} je Luna v ozvezdju ${sign} → ${day}.",
+      "in_sign_since(rich)": "Od ${time} je Luna v znamenju ${sign} → ${day}.",
       "transition(rich)": "Ob ${time} sledi ${sign} → ${day}.",
       "until_then": "do ${time}, nato ${emoji} ${day}",
       "phase_waxing(rich)": "${b(Rastoča luna)} — tradicionalno ugodno za setev in nadzemne pridelke.",

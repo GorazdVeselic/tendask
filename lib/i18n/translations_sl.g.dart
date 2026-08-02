@@ -1144,6 +1144,24 @@ class _Translations$moon$sheet$sl extends Translations$moon$sheet$en {
 		day,
 		const TextSpan(text: '.'),
 	]);
+	@override TextSpan in_constellation_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Od '),
+		time,
+		const TextSpan(text: ' je Luna v ozvezdju '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan in_sign_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Od '),
+		time,
+		const TextSpan(text: ' je Luna v znamenju '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
 	@override TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
 		const TextSpan(text: 'Ob '),
 		time,
@@ -1814,6 +1832,8 @@ extension on TranslationsSl {
 			'moon.sheet.whats_happening' => 'Kaj se dogaja',
 			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Luna je v ozvezdju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Luna je v znamenju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_constellation_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Od '), time, const TextSpan(text: ' je Luna v ozvezdju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Od '), time, const TextSpan(text: ' je Luna v znamenju '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Ob '), time, const TextSpan(text: ' sledi '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'do ${time}, nato ${emoji} ${day}',
 			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Rastoča luna'), const TextSpan(text: ' — tradicionalno ugodno za setev in nadzemne pridelke.'), ]), 

@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/notifications/notification_settings.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../../notifications/presentation/notification_priming_sheet.dart';
 import '../../settings/application/profile_providers.dart';
 import '../application/moon_settings_controller.dart';
@@ -36,7 +38,7 @@ class MoonSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.moon.calendar.title),
@@ -51,7 +53,7 @@ class MoonSettingsScreen extends ConsumerWidget {
           children: [
             Card(
               child: SwitchListTile(
-                secondary: const Text('🌙', style: TextStyle(fontSize: 22)),
+                secondary: const Text(kGlyphMoon, style: TextStyle(fontSize: 22)),
                 title: Text(t.moon.settings.enable),
                 subtitle: Text(t.moon.settings.enable_sub),
                 value: settings.enabled,
@@ -93,7 +95,7 @@ class MoonSettingsScreen extends ConsumerWidget {
                 children: [
                   const _HintTile(),
                   SwitchListTile(
-                    secondary: const Text('🪴', style: TextStyle(fontSize: 22)),
+                    secondary: const Text(kGlyphSubject, style: TextStyle(fontSize: 22)),
                     title: Text(t.moon.settings.highlight_garden),
                     subtitle: Text(t.moon.settings.highlight_garden_sub),
                     value: settings.highlightGarden,
@@ -101,14 +103,14 @@ class MoonSettingsScreen extends ConsumerWidget {
                         unawaited(controller.setHighlightGarden(v)),
                   ),
                   SwitchListTile(
-                    secondary: const Text('📅', style: TextStyle(fontSize: 22)),
+                    secondary: const Text(kGlyphCalendarLayer, style: TextStyle(fontSize: 22)),
                     title: Text(t.moon.settings.show_in_journal),
                     subtitle: Text(t.moon.settings.show_in_journal_sub),
                     value: settings.showInJournal,
                     onChanged: (v) => unawaited(controller.setShowInJournal(v)),
                   ),
                   SwitchListTile(
-                    secondary: const Text('🌌', style: TextStyle(fontSize: 22)),
+                    secondary: const Text(kGlyphAstro, style: TextStyle(fontSize: 22)),
                     title: Text(t.moon.settings.show_astro),
                     subtitle: Text(t.moon.settings.show_astro_sub),
                     value: settings.showAstroDetails,
@@ -163,7 +165,7 @@ class _HintTile extends ConsumerWidget {
     final settings = settingsAsync.asData?.value;
 
     return SwitchListTile(
-      secondary: const Text('🔔', style: TextStyle(fontSize: 22)),
+      secondary: const Text(kGlyphBell, style: TextStyle(fontSize: 22)),
       title: Text(t.moon.settings.hint),
       subtitle: Text(
         settingsAsync.hasError

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/moon_colors.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/biodynamic/category_element.dart';
 import '../../../core/catalog_labels.dart';
@@ -11,11 +12,12 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../../plants/presentation/plant_picker_screen.dart';
 import '../application/moon_finder.dart';
 import 'moon_day_sheet.dart';
 import 'moon_text.dart';
-import 'widgets/element_badge.dart';
+import 'widgets/element_glyph.dart';
 
 /// The reverse finder (FR-19 T5.2, wireframe board 4): pick a plant, get the
 /// next stretches of days its element favours. Reached from 🔎 on the calendar
@@ -78,7 +80,7 @@ class _MoonFinderScreenState extends ConsumerState<MoonFinderScreen>
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.moon.finder.title),
@@ -94,10 +96,10 @@ class _MoonFinderScreenState extends ConsumerState<MoonFinderScreen>
             onTap: _pickPlant,
           ),
           const SizedBox(height: 14),
-          if (element != null)
+          if (plant != null && element != null)
             _Runs(
               element: element,
-              plantLabel: catalogLabel(plant!.labels),
+              plantLabel: catalogLabel(plant.labels),
             )
           else
             _Note(
@@ -127,7 +129,11 @@ class _PlantField extends StatelessWidget {
   Widget build(BuildContext context) {
     final t = context.t;
     final theme = Theme.of(context);
-    final label = plant != null ? catalogLabel(plant!.labels) : customName;
+    // Local copy so the null check promotes (a widget field never does).
+    final catalogPlant = plant;
+    final label = catalogPlant != null
+        ? catalogLabel(catalogPlant.labels)
+        : customName;
 
     return InkWell(
       onTap: onTap,
@@ -136,7 +142,7 @@ class _PlantField extends StatelessWidget {
         decoration: InputDecoration(
           hintText: t.moon.finder.plant_hint,
           border: const OutlineInputBorder(),
-          suffixIcon: const Icon(Icons.arrow_drop_down),
+          suffixIcon: const Icon(kIconArrowDropDown),
         ),
         isEmpty: label == null,
         child: label == null
@@ -144,7 +150,7 @@ class _PlantField extends StatelessWidget {
             : Row(
                 children: [
                   Text(
-                    plant?.icon ?? '🌿',
+                    plant?.icon ?? kGlyphPlantFallback,
                     style: const TextStyle(fontSize: 18),
                   ),
                   const SizedBox(width: 8),
@@ -292,7 +298,7 @@ class _RunRow extends StatelessWidget {
               ),
             ),
             IconButton(
-              icon: const Icon(Icons.add),
+              icon: const Icon(kIconAdd),
               tooltip: t.moon.sheet.add_task,
               color: theme.colorScheme.primary,
               onPressed: () => context.pushNamed(

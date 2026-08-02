@@ -4,6 +4,7 @@ import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/biodynamic/moon_calendar.dart';
 import '../../../core/config.dart';
+import '../../../core/date_format.dart';
 import 'moon_month_provider.dart';
 import 'moon_settings_controller.dart';
 
@@ -66,7 +67,7 @@ List<MoonDayRun> moonDayRuns({
   const maxTailDays = 8;
   for (var i = 0; i < horizonDays + maxTailDays; i++) {
     if (i >= horizonDays && start == null) break;
-    final date = DateTime(from.year, from.month, from.day + i);
+    final date = addDays(from, i);
     if (moonMonthDayFor(date, system).element == element) {
       start ??= date;
       last = date;

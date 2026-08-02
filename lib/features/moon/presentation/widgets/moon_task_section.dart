@@ -9,7 +9,7 @@ import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
 import '../moon_gate.dart';
 import '../moon_text.dart';
-import 'element_badge.dart';
+import 'element_glyph.dart';
 
 /// "Moon calendar" section on the task detail (FR-19 T4.3, wireframe board A):
 /// the element day of the task's date, RE-DERIVED on every build — never
@@ -61,9 +61,9 @@ class MoonTaskSectionCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final theme = Theme.of(context);
-    // The grid cell of the task's date: same day label (midnight-sliver
-    // display rule) and transition hour the calendar shows for it.
-    final cell = moonMonthDayFor(date, ref.watch(moonSystemProvider));
+    // The day label the calendar shows for the task's date (midnight-sliver
+    // display rule); the phase-event marker of a full grid cell is unused here.
+    final cell = moonDayLabelFor(date, ref.watch(moonSystemProvider));
 
     return Card(
       child: Padding(

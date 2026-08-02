@@ -3,16 +3,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../app/theme/moon_colors.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/biodynamic/moon_calendar.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../application/moon_month_provider.dart';
 import '../application/moon_settings_controller.dart';
 import 'moon_text.dart';
-import 'widgets/element_badge.dart';
+import 'widgets/element_glyph.dart';
 import 'widgets/moon_phase_icon.dart';
 
 /// Opens the day-detail bottom sheet (FR-19 T3.5, wireframe board 4): the
@@ -71,7 +73,7 @@ class _MoonDaySheet extends ConsumerWidget {
         // The astro details block is behind its own sub-toggle (T3.6).
         if (settings?.showAstroDetails ?? true) ...[
           const SizedBox(height: 14),
-          _WhatsHappening(day: day),
+          _WhatsHappening(day: day, cell: cell),
         ],
         SectionLabel(
           // Map completeness against BiodynamicElement is enforced by i18n
@@ -173,9 +175,13 @@ const kMoonWhatsHappeningKey = Key('moon-whats-happening');
 /// The "what's happening" box (spec §11.6): position + transition hour, phase
 /// meaning, ascending/descending, favorability — slot-filled templates.
 class _WhatsHappening extends StatelessWidget {
-  const _WhatsHappening({required this.day});
+  const _WhatsHappening({required this.day, required this.cell});
 
   final BiodynamicDay day;
+
+  /// The label the calendar gives the same date, so the block cannot contradict
+  /// the hero above it on a midnight-sliver day.
+  final MoonMonthDay cell;
 
   @override
   Widget build(BuildContext context) {
@@ -187,36 +193,53 @@ class _WhatsHappening extends StatelessWidget {
       style: const TextStyle(fontWeight: FontWeight.w700),
     );
 
-    // The wording variant is the whole template: sidereal names a
-    // constellation, tropical a sign (spec §11.6).
-    final position = day.isConstellation
-        ? t.moon.sheet.in_constellation
-        : t.moon.sheet.in_sign;
+    // The Moon moves prograde through the zodiac, so the division after a
+    // transition is always the next one in ecliptic order.
+    final nextSign =
+        ZodiacSign.values[(day.sign.index + 1) % ZodiacSign.values.length];
     // Map completeness against ZodiacSign / BiodynamicElement is enforced by
-    // i18n tests.
-    final positionSpans = <InlineSpan>[
-      position(
-        sign: bold(t.moon.sign[day.sign.name]!),
-        day: bold(t.moon.day_for[day.element.name]!),
-      ),
-    ];
-    if ((day.transitionAt, day.secondaryElement) case (
-      final transitionAt?,
-      final secondary?,
-    )) {
-      // The Moon moves prograde through the zodiac, so the division after the
-      // transition is always the next one in ecliptic order.
-      final nextSign =
-          ZodiacSign.values[(day.sign.index + 1) % ZodiacSign.values.length];
-      positionSpans
-        ..add(const TextSpan(text: ' '))
-        ..add(
-          t.moon.sheet.transition(
-            time: bold(formatHm(transitionAt)),
-            sign: bold(t.moon.sign[nextSign.name]!),
-            day: bold(t.moon.day_for[secondary.name]!),
-          ),
-        );
+    // i18n tests. The wording variant is the whole template: sidereal names a
+    // constellation, tropical a sign (spec §11.6).
+    final positionSpans = <InlineSpan>[];
+    if (day.transitionAt case final transitionAt?
+        when cell.transitionAt == null && cell.element != day.element) {
+      // Midnight sliver: the calendar hands the whole day to the new element,
+      // so the block reports where the Moon has been since, not where it was
+      // for the first minutes of the day.
+      final since = day.isConstellation
+          ? t.moon.sheet.in_constellation_since
+          : t.moon.sheet.in_sign_since;
+      positionSpans.add(
+        since(
+          time: bold(formatHm(transitionAt)),
+          sign: bold(t.moon.sign[nextSign.name]!),
+          day: bold(t.moon.day_for[cell.element.name]!),
+        ),
+      );
+    } else {
+      final position = day.isConstellation
+          ? t.moon.sheet.in_constellation
+          : t.moon.sheet.in_sign;
+      positionSpans.add(
+        position(
+          sign: bold(t.moon.sign[day.sign.name]!),
+          day: bold(t.moon.day_for[day.element.name]!),
+        ),
+      );
+      if ((cell.transitionAt, cell.secondaryElement) case (
+        final transitionAt?,
+        final secondary?,
+      )) {
+        positionSpans
+          ..add(const TextSpan(text: ' '))
+          ..add(
+            t.moon.sheet.transition(
+              time: bold(formatHm(transitionAt)),
+              sign: bold(t.moon.sign[nextSign.name]!),
+              day: bold(t.moon.day_for[secondary.name]!),
+            ),
+          );
+      }
     }
 
     final waxing = isWaxing(day.phase);
@@ -236,7 +259,7 @@ class _WhatsHappening extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(0, 8, 0, 2),
           ),
           _InfoRow(
-            leading: const Text('🌌', style: TextStyle(fontSize: 14)),
+            leading: const Text(kGlyphAstro, style: TextStyle(fontSize: 14)),
             span: TextSpan(children: positionSpans),
           ),
           _InfoRow(
@@ -253,7 +276,7 @@ class _WhatsHappening extends StatelessWidget {
           if (day.ascending case final ascending?)
             _InfoRow(
               leading: Text(
-                ascending ? '↗' : '↘',
+                ascending ? kGlyphAscending : kGlyphDescending,
                 style: TextStyle(
                   fontWeight: FontWeight.w700,
                   color: theme.colorScheme.onSurfaceVariant,
@@ -267,12 +290,12 @@ class _WhatsHappening extends StatelessWidget {
             _InfoRow(
               leading: unfavorable
                   ? Icon(
-                      Icons.warning_amber_rounded,
+                      kIconWarningAmberRounded,
                       size: 16,
                       color: theme.colorScheme.error,
                     )
                   : Icon(
-                      Icons.check,
+                      kIconCheck,
                       size: 16,
                       color: theme.colorScheme.primary,
                     ),

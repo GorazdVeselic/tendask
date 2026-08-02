@@ -176,6 +176,20 @@ void main() {
     expect(DateTime.tryParse(receivedDate ?? ''), expectedRuns().first.start);
   });
 
+  testWidgets('a resume rebuilds the list (the day may have rolled over)', (
+    tester,
+  ) async {
+    await pumpFinder(tester, plantId: 'tomato');
+    final first = rangeLabel(expectedRuns().first);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text(first), findsOneWidget);
+  });
+
   testWidgets('picking a plant in the picker moves the answer with it', (
     tester,
   ) async {

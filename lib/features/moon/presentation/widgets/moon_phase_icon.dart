@@ -22,6 +22,7 @@ class MoonPhaseIcon extends StatelessWidget {
     required this.illumFraction,
     this.size = 24,
     this.color,
+    this.semanticLabel,
   });
 
   final MoonPhase phase;
@@ -34,22 +35,29 @@ class MoonPhaseIcon extends StatelessWidget {
   /// Overrides the default theme colour ([ColorScheme.onSurfaceVariant]).
   final Color? color;
 
+  /// Spoken name of the phase, for surfaces where the glyph is the only carrier
+  /// (the month grid). Where the phase is already written out next to it (week
+  /// agenda, legend, sheet) leave it null — a screen reader would repeat it.
+  final String? semanticLabel;
+
   @override
   Widget build(BuildContext context) {
+    final label = semanticLabel;
+    if (label != null) {
+      return Semantics(
+        label: label,
+        child: ExcludeSemantics(child: _paint(context)),
+      );
+    }
+    return _paint(context);
+  }
+
+  Widget _paint(BuildContext context) {
     return CustomPaint(
       size: Size.square(size),
       painter: _MoonPhasePainter(
         illumFraction: illumFraction.clamp(0.0, 1.0),
-        waxing: switch (phase) {
-          MoonPhase.newMoon ||
-          MoonPhase.waxingCrescent ||
-          MoonPhase.firstQuarter ||
-          MoonPhase.waxingGibbous => true,
-          MoonPhase.fullMoon ||
-          MoonPhase.waningGibbous ||
-          MoonPhase.lastQuarter ||
-          MoonPhase.waningCrescent => false,
-        },
+        waxing: isWaxing(phase),
         color: color ?? Theme.of(context).colorScheme.onSurfaceVariant,
       ),
     );

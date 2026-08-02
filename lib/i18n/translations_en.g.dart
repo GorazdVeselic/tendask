@@ -2292,6 +2292,28 @@ class Translations$moon$sheet$en {
 		const TextSpan(text: '.'),
 	]);
 
+	/// en: 'Since ${time} the Moon is in the constellation ${sign} → ${day}.'
+	TextSpan in_constellation_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Since '),
+		time,
+		const TextSpan(text: ' the Moon is in the constellation '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+
+	/// en: 'Since ${time} the Moon is in the sign ${sign} → ${day}.'
+	TextSpan in_sign_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Since '),
+		time,
+		const TextSpan(text: ' the Moon is in the sign '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+
 	/// en: 'At ${time} ${sign} follows → ${day}.'
 	TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
 		const TextSpan(text: 'At '),
@@ -2981,6 +3003,8 @@ extension on Translations {
 			'moon.sheet.whats_happening' => 'What\'s happening',
 			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'The Moon is in the constellation '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'The Moon is in the sign '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_constellation_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Since '), time, const TextSpan(text: ' the Moon is in the constellation '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Since '), time, const TextSpan(text: ' the Moon is in the sign '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'At '), time, const TextSpan(text: ' '), sign, const TextSpan(text: ' follows → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'until ${time}, then ${emoji} ${day}',
 			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Waxing moon'), const TextSpan(text: ' — traditionally favours sowing and above-ground crops.'), ]), 

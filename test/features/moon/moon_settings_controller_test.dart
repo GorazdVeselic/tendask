@@ -23,6 +23,44 @@ void main() {
     await db.close();
   });
 
+  // MoonSettings carries hand-written == / hashCode. A field left out of them
+  // stops Riverpod from rebuilding when only that field changes — a silent
+  // "the switch does nothing" bug, so every field is pinned here (T6 adds more).
+  group('MoonSettings equality', () {
+    const base = MoonSettings(
+      enabled: true,
+      system: CalendarSystem.sidereal,
+      highlightGarden: true,
+      showInJournal: true,
+      showAstroDetails: true,
+    );
+
+    final variants = <String, MoonSettings>{
+      'enabled': base.copyWith(enabled: false),
+      'system': base.copyWith(system: CalendarSystem.tropical),
+      'highlightGarden': base.copyWith(highlightGarden: false),
+      'showInJournal': base.copyWith(showInJournal: false),
+      'showAstroDetails': base.copyWith(showAstroDetails: false),
+    };
+
+    test('a copy with no change equals the original', () {
+      expect(base.copyWith(), base);
+      expect(base.copyWith().hashCode, base.hashCode);
+    });
+
+    for (final MapEntry(key: field, value: changed) in variants.entries) {
+      test('$field takes part in == and hashCode', () {
+        expect(changed, isNot(base), reason: field);
+        expect(changed.hashCode, isNot(base.hashCode), reason: field);
+      });
+    }
+
+    test('every field is covered by this group', () {
+      // Mirrors the constructor: a new field forces a new variant above.
+      expect(variants.keys.length, 5);
+    });
+  });
+
   test('defaults to enabled + sidereal when unset', () async {
     final settings = await container.read(
       moonSettingsControllerProvider.future,

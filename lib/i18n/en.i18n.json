@@ -730,6 +730,8 @@
       "whats_happening": "What's happening",
       "in_constellation(rich)": "The Moon is in the constellation ${sign} → ${day}.",
       "in_sign(rich)": "The Moon is in the sign ${sign} → ${day}.",
+      "in_constellation_since(rich)": "Since ${time} the Moon is in the constellation ${sign} → ${day}.",
+      "in_sign_since(rich)": "Since ${time} the Moon is in the sign ${sign} → ${day}.",
       "transition(rich)": "At ${time} ${sign} follows → ${day}.",
       "until_then": "until ${time}, then ${emoji} ${day}",
       "phase_waxing(rich)": "${b(Waxing moon)} — traditionally favours sowing and above-ground crops.",

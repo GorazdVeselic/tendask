@@ -7,7 +7,7 @@ import '../../../../i18n/translations.g.dart';
 import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
 import '../moon_gate.dart';
-import 'element_badge.dart';
+import 'element_glyph.dart';
 
 /// Element-day gate for a date row (FR-19 T4.2, wireframe board B): a muted
 /// one-liner like "🌿 leaf day · until 14:20". Decides its own visibility —
@@ -58,9 +58,9 @@ class MoonDayBadgeRow extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
     final theme = Theme.of(context);
-    // The grid cell of the date: same day label (midnight-sliver display rule)
-    // and same transition hour the calendar shows for it.
-    final cell = moonMonthDayFor(date, ref.watch(moonSystemProvider));
+    // The day label the calendar shows for the date (midnight-sliver display
+    // rule) — the phase-event marker of a full grid cell is never read here.
+    final cell = moonDayLabelFor(date, ref.watch(moonSystemProvider));
 
     // Map completeness against BiodynamicElement is enforced by i18n tests.
     var text =

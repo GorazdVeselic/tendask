@@ -9,6 +9,7 @@ import 'package:tendask/core/biodynamic/calendar_system.dart';
 import 'package:tendask/core/biodynamic/moon_calendar.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
+import 'package:tendask/core/date_format.dart';
 import 'package:tendask/core/local_prefs/local_prefs.dart';
 import 'package:tendask/core/widgets/sheet_handle.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
@@ -172,6 +173,69 @@ void main() {
     expect(
       DateTime.tryParse(receivedDate ?? ''),
       DateTime(now.year, now.month, 15),
+    );
+  });
+
+  testWidgets('the week arrows navigate to the adjacent week', (tester) async {
+    await pumpCalendar(tester);
+    await tester.tap(find.text(t.moon.calendar.week_view));
+    await tester.pumpAndSettle();
+
+    final today = startOfDay(DateTime.now());
+    expect(find.text('${today.day}'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_right));
+    await tester.pumpAndSettle();
+
+    // A week further on, today is off screen and the day seven days out is on.
+    expect(find.text('${today.day}'), findsNothing);
+    expect(find.text('${addDays(today, 7).day}'), findsOneWidget);
+
+    await tester.tap(find.byIcon(Icons.chevron_left));
+    await tester.pumpAndSettle();
+    expect(find.text('${today.day}'), findsOneWidget);
+  });
+
+  testWidgets('the AppBar magnifier opens the finder', (tester) async {
+    final router = GoRouter(
+      initialLocation: '/moon-calendar',
+      routes: [
+        GoRoute(
+          path: '/moon-calendar',
+          builder: (_, _) => const MoonCalendarScreen(),
+        ),
+        GoRoute(
+          path: '/moon-finder',
+          name: 'moon-finder',
+          builder: (_, _) => const Scaffold(body: Text('MOON-FINDER')),
+        ),
+      ],
+    );
+    await pumpCalendar(tester, router: router);
+
+    await tester.tap(find.byIcon(Icons.search));
+    await tester.pumpAndSettle();
+
+    expect(find.text('MOON-FINDER'), findsOneWidget);
+  });
+
+  testWidgets('a resume rebuilds the screen (the day may have rolled over)', (
+    tester,
+  ) async {
+    await pumpCalendar(tester);
+    final ml = MaterialLocalizations.of(
+      tester.element(find.byType(MoonCalendarScreen)),
+    );
+    final now = DateTime.now();
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(
+      find.text(ml.formatMonthYear(DateTime(now.year, now.month))),
+      findsOneWidget,
     );
   });
 
