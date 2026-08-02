@@ -6,6 +6,28 @@ shema/pravila v [`supabase/README.md`](../supabase/README.md) in [`CLAUDE.md`](.
 
 ---
 
+## ⚠️ Pravilo pred vsem drugim: bazo preberi, ne beri o njej
+
+**Preden se lotiš česarkoli resnega z bazo** (migracija, spremembo pravic, deploy, načrtovanje
+sheme), poženi **read-only sondo na PROD in na STAGING** in delaj po izmerjenem stanju.
+Ta dokument, `stanje.md`, spomin in prejšnje seje so **kazalci, ne resnica** — zastarijo tiho.
+
+```bash
+python tmp/probe_prod_state.py       # prod: ledger, stolpci, pravice, tabele (vzorec)
+wsl -e bash -lc "docker exec -i supabase-db psql -U postgres -d postgres -c '<select>'"   # staging
+```
+
+Kaj poberi vsakič: ledger (`supabase_migrations.schema_migrations`), stolpce prizadetih tabel
+(`information_schema.columns`), pravice (`role_table_grants` + `column_privileges`), obstoj tabel
+in funkcij (`pg_proc`, `pg_extension`).
+
+⚠️ **Prazen izpis ni vedno dokaz odsotnosti.** `cron.job` ima RLS `username = CURRENT_USER`, zato
+je job v lasti `supabase_admin` iz vloge `postgres` neviden. Kjer sonda ne more videti, to **zapiši
+kot »ne vem«**, ne kot »ni«.
+
+Sonde so **izključno read-only** (`conn.read_only = True`); vsak preizkus pisanja gre v transakcijo
+z `rollback` in **nikoli na produkcijo** — vzorec `tmp/probe_plus_grants.sql`.
+
 ## 0. Hitra orientacija (kaj gre kam)
 
 | Sprememba | Staging | Produkcija |
@@ -85,19 +107,43 @@ supabase migration list --linked     # primerja local vs remote ledger
 
 ---
 
-## 2. Številčenje migracij — POMEMBNO (past)
+## 2. Številčenje migracij
 
-Stanje (junij 2026): **CLI ledger žive baze kaže samo 0001–0005**, vendar je vzporedna veja
-`feat/m11-smart-engine` migracije **0006–0010 aplicirala na živo bazo mimo CLI ledgerja**
-(prek service-role / skript). Datoteke 0006–0010 živijo samo na M11 veji, ne na `main`.
+**Pravilo:** nova migracija = **najvišja datoteka v `supabase/migrations/` + 1**, potem ko si
+ledger **prebral iz baze** (pravilo na vrhu dokumenta). Številk pod najvišjo ne recikliramo — ista verzija na dveh
+vsebinah je edina past, ki jo CLI ne zna razrešiti.
 
-**Posledica / pravilo:**
-- Nove migracije oštevilči **nad najvišjo M11 datoteko** (trenutno → **0011, 0012, …**).
-- **Nikoli ne uporabi 0006–0010** za novo vsebino: CLI bi videl version »0006« v M11 stanju
-  in push preskočil (ali bi vezal isto številko na dve različni vsebini).
-- `supabase db push` z `main` (datoteke 0001–0005 + 00XX) uveljavi samo `00XX` (manjkajoč v
-  ledgerju); M11 objektov se ne dotakne. Vrzel 0006–0010 v ledgerju je obstoječa, je ne slabšamo.
-- Ob merge-u M11 ↔ main bo treba ledger uskladiti; do takrat hold to pravilo.
+Vrzel `0006`–`0010` je **prazna in nenevarna**: te datoteke živijo samo na arhivski veji
+`feat/m11-smart-engine`, na nobeni bazi jih ni. Ne uporabljaj jih za novo vsebino (zmeda ob
+branju arhiva), a tveganja ne nosijo.
+
+> **Popravek (2026-08-02).** Prejšnja različica tega poglavja je trdila, da je M11 migracije
+> `0006`–`0010` apliciral na živo bazo mimo CLI ledgerja. **Read-only sonda produkcije to ovrže:**
+> ledger ima `0001`–`0005` + `0011`–`0016`, `profile`/`task`/`task_type` nimajo nobenega M11 stolpca,
+> M11 tabel (`suggestion`, `engine_run`, `agg_event`, …) ni. Napačna trditev je 2026-08-02 stala eno
+> napačno preštevilčeno migracijo (`0023` namesto `0017`) — od tod pravilo §0.
+>
+> Komentarji v `0011_analytics_timestamps.sql` in `0013_task_series_id.sql` isto zmoto še ponavljajo.
+> **Aplicirane migracije popravljamo nazaj samo ob dokazani napaki v SQL, ne v komentarju** — beri jih
+> s to opombo v mislih.
+
+**Kaj je M11 na produkciji res pustil** (izmerjeno 2026-08-02, `tmp/probe_prod_cron.py`):
+
+- **Funkcijo `public.engine_dispatch()`** — no-op stub (`begin; return; end`), lastnik `postgres`,
+  `EXECUTE` ima `PUBLIC`. **Ne briši je** (pravilo: na produkciji ne brišemo; če bi cron oživel,
+  spet meče napake).
+- **Dva cron joba, oba mrtva:** `jobid 1` (`engine_dispatch`, 30-minutni, 737 zagonov, 303 neuspelih
+  pred stubom) in `jobid 2` (`agg_refresh_all`, dnevni 02:30, 15 zagonov, **vseh 15 neuspelih** —
+  funkcije ni). **Zadnji zagon obeh: 2026-07-01.** Ker je `cron.log_run = on` in
+  `cron.launch_active_jobs = on`, je odsotnost novejših vrstic v `cron.job_run_details` dokaz, da
+  **od 1. 7. 2026 ne tečeta več**. Vrstic v `cron.job` ne vidimo (RLS `username = CURRENT_USER`),
+  zato ne vemo, ali sta odjavljena ali le ustavljena — operativno je vseeno.
+- **Sled v `pg_stat_statements`:** deli M11 SQL (dispatcher, granti) so na produkciji nekoč res
+  tekli — od tod zmota o »apliciranih migracijah«. Ledger jih ni zabeležil, tabel in stolpcev pa
+  ni pustil noben.
+
+Pred vsakim resnim posegom to preveri znova (`python tmp/probe_prod_cron.py`) — stanje se je
+med 25. 6. in 1. 7. spremenilo samo od sebe, brez našega posega.
 
 **Vsaka migracija mora biti additive-only + idempotentna** (`add column if not exists`, backfill,
 `set default`/`set not null`), da je varno aplicirati prek CLI ali skripte, in da stari APK-ji
@@ -107,9 +153,16 @@ Stanje (junij 2026): **CLI ledger žive baze kaže samo 0001–0005**, vendar je
 Skripte proti prod so privzeto **read-only sonde** (`tmp/probe_*.py`). Izbris je edina nepovratna
 operacija; kar je odveč, ostane.
 
-### Stanje ledgerja na PROD (preverjeno 2026-07-14)
+### Stanje ledgerja (izmerjeno 2026-08-02, read-only sonda)
 
-`0001`–`0005`, `0011`, `0012`, `0013`, **`0014`, `0015`, `0016`** (vrzel `0006`–`0010` = M11 veja, glej zgoraj).
+| | PROD | STAGING |
+|---|---|---|
+| Ledger | `0001`–`0005`, `0011`–`0016` | `0001`–`0005`, `0011`–`0017` (+ osiroteli vnos `0023`) |
+| `profile` | 10 stolpcev, brez `plus_*` | 13 stolpcev, `plus_*` + stolpčne pravice |
+| M11 objekti | samo `engine_dispatch()` stub + pg_cron (glej §2) | nič (reset 29. 7.) |
+
+**Pending za prod:** `0017_profile_plus.sql` (FR-20 shema). Staging vnos `0023` je ostanek prve,
+preštevilčene različice iste migracije — datoteke ni več, ob naslednjem svežem refreshu izgine.
 
 | Migracija | Vsebina | Rabi jo |
 |---|---|---|

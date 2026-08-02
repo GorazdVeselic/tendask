@@ -156,7 +156,11 @@ Za vsako metriko: **🟢 dosegljivo zdaj** · **🟡 rabi majhen poseg** · **�
 - Play Console + (kasneje) Firebase Analytics konzola za vedenjske osnove.
 - **Rezultat:** osnovni vpogled danes, 0 infrastrukture.
 
-### Tier 1 — Migracija `0006` (🟡 majhen, additive, naredi PRVO)
+### Tier 1 — Migracija `0006` ✅ **narejeno kot `0011_analytics_timestamps.sql`** (🟡 majhen, additive)
+
+> Številka `0006` je bila iz načrta; dejansko je šla ven kot **`0011`** (2026-07). Nove migracije
+> vedno oštevilči nad najvišjo obstoječo datoteko — glej [`deploy-runbook.md`](../deploy-runbook.md) §2.
+
 - `alter table <user_tables> add column created_at timestamptz;` (nullable, device-set ob insertu; drift mirror).
 - `alter table <user_tables> add column server_inserted_at timestamptz default now();` (server-side).
 - Po želji `task.completed_at timestamptz` (set ob prehodu `waiting→done`).

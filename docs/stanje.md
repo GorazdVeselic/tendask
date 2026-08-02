@@ -11,6 +11,10 @@
 - **Tendask `1.0.1+16`** na Google Play, javno objavljeno, 40 držav.
 - Supabase projekt `jlmkkeijmmnwkizutvkg`; **`linked` = PROD** (`supabase db push` brez `--db-url`
   gre na produkcijo — glej [`deploy-runbook.md`](deploy-runbook.md)).
+- **Stanje baze (izmerjeno 2026-08-02, read-only sonda):** ledger `0001`–`0005` + `0011`–`0016`;
+  shema **identična `main`**; od M11 samo no-op funkcija `engine_dispatch()` in dva cron joba, ki
+  **od 1. 7. 2026 ne tečeta**. Pending: `0017_profile_plus.sql` (FR-20).
+  ⚠️ Ta vrstica je posnetek — pred vsakim posegom v bazo jo **izmeri znova**, ne beri.
 - Testna naprava: Samsung SM A536B.
 
 ## Delovna veja: `main`
@@ -30,7 +34,9 @@ Brez migracije, brez nove dependency, brez spremembe sheme.
 
 **Ostalo samo na M11 veji** (če bo kdaj potrebno, pobrati posamično): pravilo za prelome besed v
 layout matriki (`layoutBreaks` + `kAcceptedWordBreaks`), predelan `notification_priming_sheet`,
-strop skale nav pasu, krajši nemški nav napisi, šest M11 skript, migracije `0017`–`0022`.
+strop skale nav pasu, krajši nemški nav napisi, šest M11 skript, migracije `0006`–`0010` in
+`0017`–`0022`. ⚠️ **Te številke ne blokirajo `main`:** na nobeni bazi jih ni, in `main` je `0017`
+2026-08-02 že zasedel za FR-20 shemo. Ob morebitnem pobiranju z veje jih preštevilči.
 
 ## Čaka na izdajo
 

@@ -122,10 +122,14 @@ Staging je **on-demand** — če je stack dol, API ne dela.
 | verifikacija ledgerja | `supabase migration list --linked` |
 | dejanska shema (ne le ledger) | read-only Python sonda v `tmp/probe_*.py` (psycopg, geslo iz `.env`) |
 
+- **Preden se lotiš česarkoli resnega z bazo, jo preberi** — read-only sonda na PROD **in** staging.
+  Dokumenti (tudi ta) so kazalci, ne resnica; zastarijo tiho. Glej runbook, poglavje na vrhu.
 - **Na produkciji ničesar ne brišemo** — niti kot predlog. Skripte proti prod so **read-only sonde**.
 - Vrstni red: napiši migracijo → staging (`tendask migrate`) → test → potrditev → `db push` → verifikacija.
 - **Vsak nov prod build najprej `supabase db push`, šele nato upload.**
-- Nove migracije oštevilči nad najvišjo obstoječo; **nikoli 0006–0010** (ledger vrzel, glej runbook §2).
+- Nove migracije oštevilči **nad najvišjo datoteko** v `supabase/migrations/`, potem ko si ledger
+  prebral iz baze. Razpon `0006`–`0010` je neuporabljen (arhivska veja M11) — ne recikliraj ga,
+  a nevaren ni: na nobeni bazi ga ni.
 
 ---
 

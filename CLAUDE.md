@@ -219,6 +219,15 @@ opravljeno, se **ustavim in poročam**; naslednji korak izbere razvijalec.
 - Pred spremembo sheme: preverim §7.14 koncepta in poskrbim, da drift + Supabase ostaneta zrcalna.
 - Pred dodajanjem zaslona: preverim ustrezni `docs/wireframes/*`; če odstopam, najprej posodobim wireframe + koncept.
 - **Nikoli ne ugibam dejstev** (email, imena, ID-ji, ključi) — če ne vem, vprašam.
+- **Stanje baze preberem iz baze, nikoli iz dokumentov.** Pred vsakim resnim posegom (migracija,
+  pravice, deploy, načrtovanje sheme) poženem **read-only sondo na PROD in staging** in delam po
+  izmerjenem: ledger, stolpci, pravice (`role_table_grants` + `column_privileges`), obstoj tabel in
+  funkcij. `deploy-runbook.md`, `stanje.md`, spomin in prejšnje seje so **kazalci, ne resnica** —
+  zastarijo tiho in nihče tega ne opazi. Naučeno 2. 8. 2026: runbook je trdil, da je vzporedna veja
+  aplicirala migracije `0006`–`0010` na živo bazo; sonda je pokazala, da jih tam ni nikoli bilo, in
+  napačna trditev je stala napačno preštevilčeno migracijo. Kjer sonda ne more videti (npr. `cron.job`
+  ima RLS `username = CURRENT_USER`), **zapišem »ne vem«, ne »ni«** — prazen izpis ni dokaz odsotnosti.
+  Preizkusi pisanja gredo v transakcijo z `rollback` in **nikoli na produkcijo**.
 - **Kar se da izmeriti, izmerim; hipotez ne prodajam kot ugotovitve.** Ko je naprava priklopljena ali baza dosegljiva, je reprodukcija ceneje od sklepanja — in edino, kar loči najdbo od domneve. Če ostane domneva, jo označim kot domnevo.
 - Po končani podnalogi: kratek "to je narejeno, naslednje je X" + vprašam za commit — brez epskih povzetkov.
 

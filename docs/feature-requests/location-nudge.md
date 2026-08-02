@@ -43,8 +43,8 @@ Push je cilj tega FR-ja. Da prispe, mora zdržati vseh šest členov:
 
 | # | Člen | Stanje danes | Kdo ga odklene |
 |---|---|---|---|
-| 1 | FCM v izdaji (`firebase_core`, `firebase_messaging`, `google-services.json`) | samo na `feat/m11-smart-engine`; v `main` ga ni | merge M11 v main |
-| 2 | `profile.fcm_token` na PROD | **stolpca ni** — migracije 0006+ niso aplicirane | `supabase db push` |
+| 1 | FCM v izdaji (`firebase_core`, `firebase_messaging`, `google-services.json`) | samo na arhivski veji `feat/m11-smart-engine`; v `main` ga ni | ⚠️ **ne več merge M11** (ustavljen 29. 7.) — FCM bi bilo treba pripeljati posamično |
+| 2 | `profile.fcm_token` na PROD | **stolpca ni** (izmerjeno 2026-08-02) | nova additive migracija nad najvišjo obstoječo — datoteke z M11 veje niso na `main` |
 | 3 | Uporabnik namesti izdajo | Play auto-update, brez njegovega dejanja | — |
 | 4 | Uporabnik app **odpre** | token se registrira ob zagonu (`main.dart:162`) | prvo odprtje |
 | 5 | Dovoljenje `POST_NOTIFICATIONS` | večina ga nima (§1) | priming ob odprtju |
@@ -197,7 +197,9 @@ ostane na tvoji napravi in je nikoli ne pošljemo.« en/de ob implementaciji pre
 · routing za `location_nudge` · kanal `location_hint` · strežniška funkcija + cron · i18n ·
 unit testi (izbor prejemnikov, kapica, sprožilec prek `Clock`) · layout matrika.
 
-**Predpogoji (nista del tega FR-ja):** merge M11 v `main`, `supabase db push` migracij 0006+.
+**Predpogoja (nista del tega FR-ja), popravljena 2026-08-02:** FCM na `main` (M11 je ustavljen —
+merge veje **ni** več pot; sklad bi bilo treba pripeljati posamično) in `profile.fcm_token` prek
+**nove** additive migracije (datoteke `0006`+ z arhivske veje niso na `main` in niso na nobeni bazi).
 
 **Izven obsega:** pas na Domov (FR-22), obrat hierarhije gumbov na zaslonu 16, prižig motorja.
 
