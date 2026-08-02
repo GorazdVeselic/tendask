@@ -360,11 +360,23 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **Mimogrede (naročilo lastnika):** vsi glifi/ikone/barve/animacije v kataloge —
   `core/glyphs.dart`, `core/app_icons.dart`, `app/theme/app_motion.dart`, `AppColors`.
 
-**Naloga TE seje: izbere lastnik.** FR-19 ima narejene T1–T5 (cel) in T4b; ostaneta **T6**
-(FR-20 rezina upravičenosti, edini task s shemo — rabi odločitev §11.4 o dependency za podpis tokena)
-in **T7** (prižig; T6 je njegov pogoj). Priporočen naslednji korak je **T6 korak 1** (shema,
-branch `feat/fr20-t6-1-schema`) — vrstni red korakov znotraj T6 je zavezujoč (sync izjema pred
-providerjem).
+**Naloga TE seje: T6 korak 1 — shema FR-20** (branch `feat/fr20-t6-1-schema`). FR-19 ima narejene
+T1–T5 (cel) in T4b; ostaneta **T6** (edini task s shemo) in **T7** (prižig; T6 je njegov pogoj).
+Korak 1 po planu: `profile` dobi **tri nullable stolpce** (`plus_until timestamptz`, `plus_token text`,
+`plus_kind text` — `plus_kind` SAMO za prikaz, upravičenost se bere vedno iz `plus_until`) +
+**column-level `revoke update` za `plus_until`/`plus_token`** (server-lastna) + **granti v isti
+migraciji** · drift zrcalo + dvig `schemaVersion` + `build_runner` · **najprej staging**, prod
+`db push` po `docs/deploy-runbook.md`. Odločitve §11.4 (dependency za podpis) ta korak še NE rabi —
+pride s korakom 3.
+
+⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
+vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih
+stolpcev in si predelan klient prek LWW ne podari Plusa.
+
+📱 **Dolg, ki ga T7 ne sme preskočiti:** cel FR-19 je bil potrjen prek golden harnessa, **na napravi
+(SM A536B) ni bil nikoli videti**. Temni odtenki (A4) in emoji na pravem fontu sta edini stvari, ki ju
+golden okolje ne pove pošteno — preverba spada v T7 korak 3 (ali prej, z lokalno prižganim flagom v
+debug buildu).
 
 **Pred delom preberi:** ustrezni task v `docs/plan-implementacije-fr19-fr20.md` · wireframe zaslona ·
 `docs/screen-map.md`.
