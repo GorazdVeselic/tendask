@@ -27,10 +27,12 @@ import 'package:tendask/features/journal/presentation/widgets/day_cell.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
 import 'package:tendask/features/moon/application/moon_month_provider.dart';
 import 'package:tendask/features/moon/presentation/moon_calendar_screen.dart';
+import 'package:tendask/features/moon/presentation/moon_finder_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
 import 'package:tendask/features/moon/presentation/moon_week_view.dart';
 import 'package:tendask/features/moon/presentation/widgets/moon_day_badge.dart';
 import 'package:tendask/features/moon/presentation/widgets/moon_task_section.dart';
+import 'package:tendask/features/moon/presentation/widgets/plant_moon_chip.dart';
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
@@ -402,6 +404,25 @@ void main() {
     build: () => const HomeMoonChipCard(),
   );
 
+  // The finder with a plant already chosen — the wordiest state (callout plus
+  // the list of stretches). The catalog comes as a plain value, not the drift
+  // stream, for the same reason the 🔔 row does above.
+  layoutMatrix(
+    'moon/finder',
+    overrides: () => [
+      ..._dbOverrides(),
+      plantsMapProvider.overrideWith((ref) => Stream.value({'tomato': _plant()})),
+    ],
+    build: () => const MoonFinderScreen(initialPlantId: 'tomato'),
+  );
+
+  // The chip button, not the gate (const-false until T7), inside the hero's
+  // chip row: on its own it would never be squeezed.
+  layoutMatrix(
+    'plant/moon-chip',
+    build: () => const _PlantChipRow(),
+  );
+
   // A transition day is the row's longest text ("… day · until 14:20").
   layoutMatrix(
     'entry/when-badge',
@@ -425,6 +446,75 @@ void main() {
     build: () => const _JournalMoonGrid(),
   );
 }
+
+/// The plant-detail hero row (avatar, name, chip row) with the moon chip next
+/// to the area chip — placement A, decided 2026-08-02.
+class _PlantChipRow extends StatelessWidget {
+  const _PlantChipRow();
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CircleAvatar(
+          radius: 28,
+          backgroundColor: theme.colorScheme.surfaceContainerHighest,
+          child: const Text('🍅', style: TextStyle(fontSize: 26)),
+        ),
+        const SizedBox(width: 14),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'paradižnik',
+                style: theme.textTheme.headlineSmall?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
+              ),
+              Text(
+                'Solanum lycopersicum',
+                style: theme.textTheme.bodyMedium?.copyWith(
+                  color: theme.colorScheme.onSurfaceVariant,
+                ),
+              ),
+              const SizedBox(height: 8),
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  ActionChip(
+                    avatar: Icon(
+                      Icons.place_outlined,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                    label: Text('${_area().name} · ${t.plant_detail.move}'),
+                    onPressed: () {},
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  const PlantMoonChipButton(plantId: 'tomato'),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+/// A fruit-day plant for the finder: the catalog entry the screen resolves
+/// `?plant=tomato` to.
+Plant _plant() => Plant(
+  id: 'tomato',
+  labels: jsonEncode({'sl': 'paradižnik', 'en': 'tomato', 'de': 'Tomate'}),
+  scientificName: 'Solanum lycopersicum',
+  category: 'vegetable',
+  icon: '🍅',
+);
 
 /// The journal month grid of August 2026 with the moon layer applied.
 class _JournalMoonGrid extends StatelessWidget {

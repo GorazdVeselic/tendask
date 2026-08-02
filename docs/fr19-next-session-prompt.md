@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1296 testov):**
+**Kaj je narejeno (vse v main, 1340 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -323,11 +323,25 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   namesto ikon = manjkajoč MaterialIcons font v golden okolju). Screen-map §4 »Stanje rut«
   posodobljen. Testi in matrika pridejo s T5.4; suite ostaja **1296**.
 
-**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 4** (widget testi chipa +
-iskalnika, layout matrika `moon/finder` in `plant/moon-chip`, **de prevodi `moon.finder.*`** —
-trenutno pade na en; branch `feat/fr19-t5-4-tests`). T5 sme tudi v v1.1 — zato je namesto tega mogoč
-**T6** (FR-20 rezina upravičenosti, edini task s shemo; rabi odločitev §11.4 o dependency za podpis
-tokena) ali **T7** (prižig). Vrstni red je odprt.
+- **T5 korak 4 ✅ (2. 8., branch `feat/fr19-t5-4-tests`) — T5 s tem ZAKLJUČEN:** **de `moon.finder.*`**
+  (»Wann für …« · `${plant} — am besten an einem ${day}.` nad `day_for` (Fruchttag/Wurzeltag/…) ·
+  »Nächste passende Tage« · zu-/abnehmender Mond, isto besedišče kot `phase` mapa). Pogled najprej:
+  `tmp/moon_t5_de_preview_test.dart` → `tmp/moon_t5_de_{finder,finder_320,chip}.png` — pri 320 px × 1,3
+  se callout ovije na dve vrstici, čipa se zložita, nič odrezanega. **8 widget testov:**
+  `moon_finder_screen_test.dart` (6: predizpolnjena rastlina pokaže element + svežnje · sobna rastlina
+  dobi mirno vrstico brez seznama · prazen zaslon namigne · tap svežnja odpre sheet **prvega** dne ·
+  »+« odpre `/task-new?date=` s tem dnem · izbor prek plant-pickerja premakne odgovor) in
+  `plant_moon_chip_test.dart` (2: temna vrata brez `ProviderScope` · tap → `/moon-finder?plant=id`).
+  Katalog v testih pride kot vrednost (`plantsMapProvider.overrideWith`), ne kot živ drift stream.
+  **Matriki:** `moon/finder` (predizpolnjen paradižnik = najbolj besedno stanje) in `plant/moon-chip`
+  (čip v hero vrstici ob čipu območja, ne sam — sam ne bi bil nikoli stisnjen) = 36 kombinacij.
+  Suite **1340**.
+
+**Naloga TE seje: izbere lastnik.** FR-19 ima narejene T1–T5 (cel) in T4b; ostaneta **T6**
+(FR-20 rezina upravičenosti, edini task s shemo — rabi odločitev §11.4 o dependency za podpis tokena)
+in **T7** (prižig; T6 je njegov pogoj). Priporočen naslednji korak je **T6 korak 1** (shema,
+branch `feat/fr20-t6-1-schema`) — vrstni red korakov znotraj T6 je zavezujoč (sync izjema pred
+providerjem).
 
 **Pred delom preberi:** ustrezni task v `docs/plan-implementacije-fr19-fr20.md` · wireframe zaslona ·
 `docs/screen-map.md`.
