@@ -510,15 +510,31 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (server-lastni stolpci, oblika po najdbi (a)) + granti v isti migraciji. **`license*` tabele v
      rezino NE gredo** — pridejo s T8; masovni grant v T7 je pot FR-20 §6.6-C (`plus_until` naravnost
      na profile, brez kod). Drift zrcalo + `schemaVersion` dvig + `build_runner`.
-  1b. ⬜ **Preverba sheme na napravi (staging)** — vrinjen korak (lastnik, 2. 8.: »pred prod pushem stg
-     push in podroben device test«), **pogoj za prod `db push`**. Brez branch-a. Tveganje, ki ga lovi:
-     column-level granti so odvzeli tabelni `insert`/`update` na `profile`, zato manjkajoč stolpec na
-     seznamu pomeni `42501` in **ustavljen sync**; SQL-sonda to pokriva na ravni baze, **skozi PostgREST
-     z napravo pa ni bilo preverjeno**. Vsebina: nadgradnja čez obstoječo namestitev (da se izvede drift
-     `v13 → v14`) · tri poti pisanja profila (jezik, obvestila, lokacija) · `adb logcat` brez `42501` ·
-     strežniška potrditev, da so `plus_*` ostali `NULL` · zagon **starega builda z `main`** proti
-     stagingu z novimi stolpci (tolerantni parser). Popravek gre v novo migracijo `0018`, nikoli v
-     urejanje že aplicirane `0017`.
+  1b. ✅ **Preverba sheme na napravi (staging), 2. 8.** — vrinjen korak (lastnik, 2. 8.: »pred prod pushem
+     stg push in podroben device test«), **pogoj za prod `db push`**; brez branch-a in brez commita kode.
+     Lovljeno tveganje: column-level granti so odvzeli tabelni `insert`/`update` na `profile`, zato
+     manjkajoč stolpec na seznamu pomeni `42501` in **ustavljen sync** (`push()` je fail-fast, profil gre
+     prvi). SQL-sonda je to pokrivala na ravni baze, **skozi PostgREST z napravo pa ni bilo preverjeno**.
+     **Izid: vse zeleno na SM A536B.** Nadgradnja čez namestitev z 1. 8. je izvedla drift **v13 → v14**
+     (katalog 141 nedotaknjen). Staging je bil po resetu 29. 7. brez `auth.users`, zato je bila prijava
+     hkrati najostrejši test — prvi push je bil **INSERT nad neobstoječo vrstico**, natanko pot, ki jo
+     tabelni revoke zapre. Skozi so šle vse tri poti: lokacija (`h3_r7/r6/r5`, brez koordinat), jezik
+     (`lang = en`), obvestila (`notification_settings` s `frequency_cap: true`). `plus_until`/`plus_token`/
+     `plus_kind` so ostali `NULL`, `server_inserted_at` se ni premaknil. V `logcat` **nobenega `42501`,
+     `PostgrestException` ali `E/flutter`**; drift ves `synced`, nič `pending`; da veriga ni tiho padla za
+     profilom, dokazuje `area` (gostov lokalni vrt prevzet na nov uid in pushan).
+     **Stari build** (zgrajen iz `b9c69f0`, drift v13, ločen `git worktree`) je proti stagingu z novimi
+     stolpci deloval normalno: po prijavi naravnost na Domov z lokacijo iz pull-a — `sync_pull_service`
+     uporablja `select()` (= `select *`), torej je tri neznane stolpce res dobil in jih spregledal.
+     Nameščen je bil **na čisto**, ker bi nadgradnja nazaj čez podatke v14 pahnila drift v downgrade;
+     realen scenarij je uporabnik, ki je ves čas na starem buildu.
+     ⚠️ **Opomba o postopku:** `deploy.bat hot` se prek `cmd.exe /c` v Git Bashu ne požene (`/c` se
+     pretvori v pot), `flutter run` pa v neinteraktivni seji ob EOF ubije aplikacijo — uporabi
+     `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` + `adb install -r`
+     (isti defines, ista nadgradnja na mestu; to pot priporoča tudi `tool/smoke.md` zaradi padcev USB).
+     Popravek bi šel v novo migracijo `0018`, nikoli v urejanje že aplicirane `0017`.
+     ⏳ **Prod `db push` odložen** (lastnik, 2. 8.: »ne zdaj«) — produkcija izmerjena isti dan: ledger
+     `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
   2. ⬜ **Sync izjeme (kritično, FR-20 §6):** pull stolpca prinaša, **push ju IZPUŠČA** iz payloada —
      sicer si predelan klient prek LWW podari Plus. + **test**, da push payload stolpcev ne vsebuje.
   3. ⬜ Dependency za podpis (po odobritvi): pin + `tech-stack.md §1` posodobitev.

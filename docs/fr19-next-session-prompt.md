@@ -8,7 +8,8 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1411 testov):**
+**Kaj je narejeno (vse v main, 1412 testov — veji `feat/fr20-t6-1-schema` in
+`feat/prod-analytics-tooling` sta zmergani):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -387,38 +388,29 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **namenoma ni dodan** — ponudnik (§11.3) ni odločen; pred podporo licenčnega modela je treba
   predvideti, kateri ponudniki in da koda vzdrži **vse tri hkrati** (naročilo lastnika 2. 8.).
 
-**Naloga TE seje: T6 korak 1b — preverba sheme na napravi (staging).** Brez branch-a in brez commita
-kode; migracija je na stagingu, **produkcije se NE dotikaš** (izrecno naročilo lastnika 2. 8.:
-»pred prod pushem stg push in podroben device test«).
+- **T6 korak 1b ✅ (2. 8.) — shema preverjena na napravi (staging), prod push odložen:** brez branch-a in
+  brez commita kode. Tveganje, ki ga je korak lovil: `0017` je `authenticated` odvzela **tabelni**
+  `insert`/`update` na `profile` in ga vrnila **po stolpcih**, zato bi manjkajoč stolpec pomenil `42501`
+  in **ustavljen sync** (`push()` je fail-fast, profil gre prvi). **Vse zeleno na SM A536B.** Nadgradnja
+  čez namestitev z 1. 8. je izvedla drift **v13 → v14** (katalog 141 nedotaknjen, `ENV: staging`
+  potrjen ob zagonu). Staging je bil po resetu 29. 7. **brez `auth.users`**, zato je bila prijava hkrati
+  najostrejši test — prvi push je bil **INSERT nad neobstoječo vrstico**. Skozi so šle vse tri poti:
+  lokacija (`h3_r7/r6/r5`, brez koordinat), jezik (`lang = en`), obvestila (`notification_settings` s
+  `frequency_cap: true`); `plus_*` ostali `NULL`, `server_inserted_at` nepremaknjen. V `logcat`
+  **nobenega `42501`/`PostgrestException`/`E/flutter`**, drift ves `synced`, `area` pushana (dokaz, da
+  veriga za profilom ni tiho padla). **Stari build** iz `b9c69f0` (drift v13, ločen `git worktree`) proti
+  stagingu z novimi stolpci deluje: po prijavi naravnost na Domov z lokacijo iz pull-a — `sync_pull_service`
+  uporablja `select()` (= `select *`), torej je neznane stolpce res dobil in jih spregledal. Nameščen je
+  bil **na čisto**; nadgradnja nazaj čez podatke v14 bi drift pahnila v downgrade, realen scenarij pa je
+  uporabnik, ki je ves čas na starem buildu.
+  ⚠️ **Postopkovna past:** `deploy.bat hot` se prek `cmd.exe /c` v Git Bashu ne požene (`/c` se pretvori
+  v pot), `flutter run` pa v neinteraktivni seji ob EOF ubije aplikacijo → uporabi
+  `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` + `adb install -r`.
+  ⚠️ **Gost nima oblačne seje** (`auth_service.dart`), zato profila ne pusha — za device test se je
+  treba prijaviti z e-pošto, OTP se prebere iz Mailpita (`curl http://localhost:8025/api/v1/messages`
+  v WSL).
 
-**Zakaj ta seja obstaja — eno samo tveganje:** migracija `0017` je odvzela `authenticated` **tabelno**
-pravico `insert`/`update` na `profile` in jo vrnila **po stolpcih**. Če na seznamu manjka karkoli, kar
-klient pošlje, push profila pade s `42501` — in ker gre profil skozi isto verigo kot ostalo, to lahko
-**ustavi cel sync**. SQL-sonda je to potrdila na ravni baze; **skozi PostgREST z resnično napravo pa
-ni bilo preverjeno nikoli** (PostgREST sam sestavi `on conflict do update` in lahko v `SET` vključi
-več, kot pričakujem). Dokler ta test ni zelen, prod push ni na mizi.
-
-**Kaj naredi po vrsti:**
-1. **Nadgradnja, ne sveža namestitev** (sicer drift migracija `v13 → v14` ni preizkušena): na SM A536B
-   pusti obstoječo staging namestitev in čeznjo poženi `deploy.bat hot`. Ob zagonu preveri izpis
-   `ENV: … SUPABASE_URL=` — mora biti **staging**, ne prod.
-2. **Sproži vse tri poti, ki pišejo `profile`:** jezik (Nastavitve → Jezik), obvestila (zaslon 22 —
-   tiho okno ali stikalo), lokacija vrta (H3 celice). Po vsaki počakaj na sync.
-3. **Lovi `42501`** v `adb logcat` (in v aplikaciji: indikator »ni sinhronizirano«). Nič napak = vrata
-   držijo in klient je znotraj seznama.
-4. **Strežniška potrditev:** preberi staging vrstico profila — spremenjena polja so prišla skozi,
-   `plus_until`/`plus_token`/`plus_kind` so `NULL` in jih klient ni prepisal.
-5. **Test starega APK-ja** (tolerantni parser, `stari APK ob pullu ne crasha`): iz `main` (brez teh
-   commitov) poženi `deploy.bat hot` na isto staging bazo, ki **že ima** nove stolpce — app se mora
-   normalno zagnati in sinhronizirati. To je edini pošten test trditve iz glave migracije.
-6. **Šele ko je vse zeleno:** predlagaj lastniku prod `db push` migracije `0017`, po pushu ponovi
-   `tmp/probe_prod_state.py` in preveri, da ima `authenticated` na `plus_*` in `server_inserted_at`
-   samo `SELECT`. **Push izvedi šele na izrecno potrditev.**
-
-Če kaj pade: popravek gre v **novo** migracijo (`0018`), ne v urejanje `0017` — ta je na stagingu že
-aplicirana.
-
-**Nato (ločena seja): T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
+**Naloga TE seje: T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
 `profile` stolpcev `plus_*` **NE sme vsebovati** (sicer si predelan klient prek LWW podari Plus), pull
 pa ju mora prinesti v drift. Danes `profileToRemote` (`lib/core/sync/remote_mappers.dart`) sestavlja
 payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem test, ki to zaklene**, plus
@@ -426,10 +418,14 @@ payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem 
 ⚠️ Ta korak se merga **PRED** `plusProvider` (korak 4). Odločitev §11.4 (dependency za podpis) pride s
 korakom 3 — takrat vprašaj.
 
-⏳ **Odprto:** merge vej `feat/fr20-t6-1-schema` (2 commita) in `feat/prod-analytics-tooling` (1) v
-`main` · prod `db push` migracije `0017` (šele po točki 6 zgoraj) · `origin/main` je **10+ commitov
-zadaj** (push ni bil narejen ves FR-19) · staging ledger nosi **osiroteli vnos `0023`** (prva,
-preštevilčena različica iste migracije; datoteke ni več — ob svežem refreshu staginga izgine sam).
+⏳ **Odprto:** prod `db push` migracije `0017` — pogoj (device test) je izpolnjen, lastnik ga je 2. 8.
+**odložil** (»ne zdaj«); po pushu ponovi `tmp/probe_prod_state.py` in preveri, da ima `authenticated`
+na `plus_*` in `server_inserted_at` samo `SELECT`. Produkcija izmerjena 2. 8.: ledger `0001`–`0005` +
+`0011`–`0016`, `profile` 10 stolpcev, brez sledi M11 · `origin/main` je **10+ commitov zadaj** (push ni
+bil narejen ves FR-19) · staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica
+iste migracije; datoteke ni več — ob svežem refreshu staginga izgine sam) · **na telefonu stoji stari
+build** iz `b9c69f0` s staging podatki, worktree zanj je v `tmp/old-apk`
+(`git worktree remove tmp/old-apk`).
 
 ⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
 vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih
