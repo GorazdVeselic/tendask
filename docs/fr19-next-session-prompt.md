@@ -387,7 +387,38 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **namenoma ni dodan** — ponudnik (§11.3) ni odločen; pred podporo licenčnega modela je treba
   predvideti, kateri ponudniki in da koda vzdrži **vse tri hkrati** (naročilo lastnika 2. 8.).
 
-**Naloga TE seje: T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
+**Naloga TE seje: T6 korak 1b — preverba sheme na napravi (staging).** Brez branch-a in brez commita
+kode; migracija je na stagingu, **produkcije se NE dotikaš** (izrecno naročilo lastnika 2. 8.:
+»pred prod pushem stg push in podroben device test«).
+
+**Zakaj ta seja obstaja — eno samo tveganje:** migracija `0017` je odvzela `authenticated` **tabelno**
+pravico `insert`/`update` na `profile` in jo vrnila **po stolpcih**. Če na seznamu manjka karkoli, kar
+klient pošlje, push profila pade s `42501` — in ker gre profil skozi isto verigo kot ostalo, to lahko
+**ustavi cel sync**. SQL-sonda je to potrdila na ravni baze; **skozi PostgREST z resnično napravo pa
+ni bilo preverjeno nikoli** (PostgREST sam sestavi `on conflict do update` in lahko v `SET` vključi
+več, kot pričakujem). Dokler ta test ni zelen, prod push ni na mizi.
+
+**Kaj naredi po vrsti:**
+1. **Nadgradnja, ne sveža namestitev** (sicer drift migracija `v13 → v14` ni preizkušena): na SM A536B
+   pusti obstoječo staging namestitev in čeznjo poženi `deploy.bat hot`. Ob zagonu preveri izpis
+   `ENV: … SUPABASE_URL=` — mora biti **staging**, ne prod.
+2. **Sproži vse tri poti, ki pišejo `profile`:** jezik (Nastavitve → Jezik), obvestila (zaslon 22 —
+   tiho okno ali stikalo), lokacija vrta (H3 celice). Po vsaki počakaj na sync.
+3. **Lovi `42501`** v `adb logcat` (in v aplikaciji: indikator »ni sinhronizirano«). Nič napak = vrata
+   držijo in klient je znotraj seznama.
+4. **Strežniška potrditev:** preberi staging vrstico profila — spremenjena polja so prišla skozi,
+   `plus_until`/`plus_token`/`plus_kind` so `NULL` in jih klient ni prepisal.
+5. **Test starega APK-ja** (tolerantni parser, `stari APK ob pullu ne crasha`): iz `main` (brez teh
+   commitov) poženi `deploy.bat hot` na isto staging bazo, ki **že ima** nove stolpce — app se mora
+   normalno zagnati in sinhronizirati. To je edini pošten test trditve iz glave migracije.
+6. **Šele ko je vse zeleno:** predlagaj lastniku prod `db push` migracije `0017`, po pushu ponovi
+   `tmp/probe_prod_state.py` in preveri, da ima `authenticated` na `plus_*` in `server_inserted_at`
+   samo `SELECT`. **Push izvedi šele na izrecno potrditev.**
+
+Če kaj pade: popravek gre v **novo** migracijo (`0018`), ne v urejanje `0017` — ta je na stagingu že
+aplicirana.
+
+**Nato (ločena seja): T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
 `profile` stolpcev `plus_*` **NE sme vsebovati** (sicer si predelan klient prek LWW podari Plus), pull
 pa ju mora prinesti v drift. Danes `profileToRemote` (`lib/core/sync/remote_mappers.dart`) sestavlja
 payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem test, ki to zaklene**, plus
@@ -395,12 +426,10 @@ payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem 
 ⚠️ Ta korak se merga **PRED** `plusProvider` (korak 4). Odločitev §11.4 (dependency za podpis) pride s
 korakom 3 — takrat vprašaj.
 
-⏳ **Odprto iz koraka 1: prod `db push` migracije `0017`.** Lastnik je izrecno rekel, da produkcije ne
-migriramo, dokler ni vse potrjeno. Prod ledger in shema sta bila izmerjena 2. 8. in sta identična
-`main`, zato bo `db push` uveljavil natanko to eno migracijo. Po pushu ponovi `tmp/probe_prod_state.py`
-in preveri, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`.
-Odprto tudi: staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica iste
-migracije) — datoteke ni več; ob napovedanem svežem refreshu staginga izgine sam.
+⏳ **Odprto:** merge vej `feat/fr20-t6-1-schema` (2 commita) in `feat/prod-analytics-tooling` (1) v
+`main` · prod `db push` migracije `0017` (šele po točki 6 zgoraj) · `origin/main` je **10+ commitov
+zadaj** (push ni bil narejen ves FR-19) · staging ledger nosi **osiroteli vnos `0023`** (prva,
+preštevilčena različica iste migracije; datoteke ni več — ob svežem refreshu staginga izgine sam).
 
 ⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
 vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih

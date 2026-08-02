@@ -510,6 +510,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (server-lastni stolpci, oblika po najdbi (a)) + granti v isti migraciji. **`license*` tabele v
      rezino NE gredo** — pridejo s T8; masovni grant v T7 je pot FR-20 §6.6-C (`plus_until` naravnost
      na profile, brez kod). Drift zrcalo + `schemaVersion` dvig + `build_runner`.
+  1b. ⬜ **Preverba sheme na napravi (staging)** — vrinjen korak (lastnik, 2. 8.: »pred prod pushem stg
+     push in podroben device test«), **pogoj za prod `db push`**. Brez branch-a. Tveganje, ki ga lovi:
+     column-level granti so odvzeli tabelni `insert`/`update` na `profile`, zato manjkajoč stolpec na
+     seznamu pomeni `42501` in **ustavljen sync**; SQL-sonda to pokriva na ravni baze, **skozi PostgREST
+     z napravo pa ni bilo preverjeno**. Vsebina: nadgradnja čez obstoječo namestitev (da se izvede drift
+     `v13 → v14`) · tri poti pisanja profila (jezik, obvestila, lokacija) · `adb logcat` brez `42501` ·
+     strežniška potrditev, da so `plus_*` ostali `NULL` · zagon **starega builda z `main`** proti
+     stagingu z novimi stolpci (tolerantni parser). Popravek gre v novo migracijo `0018`, nikoli v
+     urejanje že aplicirane `0017`.
   2. ⬜ **Sync izjeme (kritično, FR-20 §6):** pull stolpca prinaša, **push ju IZPUŠČA** iz payloada —
      sicer si predelan klient prek LWW podari Plus. + **test**, da push payload stolpcev ne vsebuje.
   3. ⬜ Dependency za podpis (po odobritvi): pin + `tech-stack.md §1` posodobitev.
