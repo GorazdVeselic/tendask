@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../../core/app_icons.dart';
 import '../../../../../core/date_format.dart';
 import '../../../../../core/task_status.dart';
 import '../../../../../core/widgets/section_label.dart';
@@ -98,7 +99,7 @@ class WhenStepBody extends StatelessWidget {
                 label: t.entry.when_date,
                 child: _TappableField(
                   text: formatDmy(date),
-                  icon: Icons.calendar_today_outlined,
+                  icon: kIconCalendarTodayOutlined,
                   onTap: () => _pickDate(context),
                 ),
               ),
@@ -110,7 +111,7 @@ class WhenStepBody extends StatelessWidget {
                 label: t.entry.when_time,
                 child: _TappableField(
                   text: formatHm(date),
-                  icon: Icons.access_time_outlined,
+                  icon: kIconAccessTimeOutlined,
                   onTap: () => _pickTime(context),
                 ),
               ),

@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../../core/app_icons.dart';
 import '../../../../../core/auth/auth_service.dart';
 import '../../../../../core/catalog_labels.dart';
 import '../../../../../core/database/app_database.dart';
 import '../../../../../core/database/catalog_provider.dart';
+import '../../../../../core/glyphs.dart';
 import '../../../../../core/plant_category.dart';
 import '../../../../../core/widgets/removable_chip.dart';
 import '../../../../../core/widgets/section_label.dart';
@@ -135,7 +137,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
 
     String? areaSubtitle(UserPlant p) =>
         p.areaId != null && areas[p.areaId] != null
-        ? '🪴 ${areas[p.areaId]!.name}'
+        ? '$kGlyphSubject ${areas[p.areaId]!.name}'
         : null;
 
     Widget plantRow(UserPlant p) => PlantSelectRow(
@@ -194,7 +196,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                   ),
                   IconButton(
                     icon: Icon(
-                      _searchExpanded ? Icons.search_off : Icons.search,
+                      _searchExpanded ? kIconSearchOff : kIconSearch,
                     ),
                     color: theme.colorScheme.primary,
                     onPressed: _toggleSearch,
@@ -209,7 +211,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                     autofocus: true,
                     decoration: InputDecoration(
                       hintText: t.entry.subject_search_hint,
-                      prefixIcon: const Icon(Icons.search),
+                      prefixIcon: const Icon(kIconSearch),
                       border: const OutlineInputBorder(),
                       isDense: true,
                     ),
@@ -227,7 +229,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                 Padding(
                   padding: const EdgeInsets.fromLTRB(8, 2, 8, 0),
                   child: Text(
-                    '🪴 ${t.entry.subject_areas_context} '
+                    '$kGlyphSubject ${t.entry.subject_areas_context} '
                     '${selectedAreaNames.join(', ')}',
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
@@ -242,7 +244,7 @@ class _SubjectStepBodyState extends ConsumerState<SubjectStepBody> {
                 ),
                 for (final p in catalogMatches)
                   PlantSelectRow(
-                    icon: p.icon ?? '🌿',
+                    icon: p.icon ?? kGlyphPlantFallback,
                     title: catalogLabel(p.labels),
                     subtitle: plantCategoryLabel(
                       coarsePlantCategory(p.category),
@@ -357,7 +359,7 @@ class _AddAction extends StatelessWidget {
       alignment: Alignment.centerLeft,
       child: TextButton.icon(
         onPressed: onTap,
-        icon: const Icon(Icons.add, size: 18),
+        icon: const Icon(kIconAdd, size: 18),
         label: Text(label),
         style: TextButton.styleFrom(
           padding: const EdgeInsets.symmetric(horizontal: 16),

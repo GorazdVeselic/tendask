@@ -18,8 +18,8 @@ TaskDayGroup taskDayGroup(DateTime date, DateTime now) {
 
   if (day.isBefore(today)) return TaskDayGroup.overdue;
   if (day == today) return TaskDayGroup.today;
-  if (day == today.add(const Duration(days: 1))) return TaskDayGroup.tomorrow;
-  if (!day.isAfter(today.add(const Duration(days: kUpcomingWindowDays)))) {
+  if (day == addDays(today, 1)) return TaskDayGroup.tomorrow;
+  if (!day.isAfter(addDays(today, kUpcomingWindowDays))) {
     return TaskDayGroup.thisWeek;
   }
   return TaskDayGroup.later;

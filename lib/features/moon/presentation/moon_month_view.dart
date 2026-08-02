@@ -7,9 +7,10 @@ import '../../../core/date_format.dart';
 import '../../../core/month_cells.dart';
 import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../application/moon_month_provider.dart';
 import 'moon_day_sheet.dart';
-import 'widgets/element_badge.dart';
+import 'widgets/element_glyph.dart';
 import 'widgets/moon_phase_icon.dart';
 
 /// Month tab of the moon calendar (FR-19 T3.3): element-coloured grid with
@@ -70,11 +71,17 @@ class MoonMonthView extends ConsumerWidget {
             if (day == null) return const SizedBox.shrink();
             return GestureDetector(
               onTap: () => showMoonDaySheet(context, date),
-              child: _MoonDayCell(
-                day: day,
-                inMonth: inMonth,
-                isToday: isSameDay(date, now),
-                starred: inMonth && starred.contains(day.element),
+              // One merged node per cell, announced as the button it is —
+              // otherwise a screen reader reads four loose fragments.
+              child: Semantics(
+                container: true,
+                button: true,
+                child: _MoonDayCell(
+                  day: day,
+                  inMonth: inMonth,
+                  isToday: isSameDay(date, now),
+                  starred: inMonth && starred.contains(day.element),
+                ),
               ),
             );
           },
@@ -161,7 +168,8 @@ class _MoonDayCell extends StatelessWidget {
                         ),
                         if (starred)
                           Text(
-                            ' ★',
+                            ' $kGlyphStar',
+                            semanticsLabel: t.moon.calendar.legend_star,
                             style: TextStyle(
                               fontSize: 9,
                               color: theme.colorScheme.secondary,
@@ -180,6 +188,9 @@ class _MoonDayCell extends StatelessWidget {
                     illumFraction: principalIllumFraction(phase),
                     size: 11,
                     color: theme.colorScheme.onSurface,
+                    // The glyph is the only carrier of the event in the grid.
+                    // Map completeness is enforced by i18n tests.
+                    semanticLabel: t.moon.phase[phase.name]!,
                   ),
                 ),
             ],
@@ -283,7 +294,7 @@ class _MoonLegend extends StatelessWidget {
           ),
         item(
           Text(
-            '★',
+            kGlyphStar,
             style: TextStyle(fontSize: 11, color: theme.colorScheme.secondary),
           ),
           t.moon.calendar.legend_star,

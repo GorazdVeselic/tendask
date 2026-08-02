@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/date_format.dart';
 import '../../../i18n/translations.g.dart';
@@ -54,7 +55,7 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
     final firstWeekday = MaterialLocalizations.of(context).firstDayOfWeekIndex;
     // DateTime.weekday: Mon=1..Sun=7 → normalize to 0=Sun..6=Sat.
     final offset = (d.weekday % 7 - firstWeekday + 7) % 7;
-    return DateTime(d.year, d.month, d.day - offset);
+    return addDays(d, -offset);
   }
 
   void _shiftMonth(int months) => setState(() {
@@ -62,8 +63,7 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
       });
 
   void _shiftWeek(int weeks) => setState(() {
-        _anchor =
-            DateTime(_anchor.year, _anchor.month, _anchor.day + 7 * weeks);
+        _anchor = addDays(_anchor, 7 * weeks);
       });
 
   void _switchView(_MoonView view) {
@@ -95,12 +95,12 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
         title: Text(t.moon.calendar.title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search),
+            icon: const Icon(kIconSearch),
             tooltip: t.moon.finder.title,
             onPressed: () => context.pushNamed('moon-finder'),
           ),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(kIconSettingsOutlined),
             onPressed: () => context.pushNamed('moon-settings'),
           ),
         ],

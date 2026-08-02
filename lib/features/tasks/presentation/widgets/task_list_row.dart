@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/glyphs.dart';
 import '../task_day_groups.dart';
 import 'recurring_badge.dart';
 import 'task_list_action_sheet.dart';
@@ -43,7 +45,7 @@ class TaskListRow extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final type = taskType;
-    final icon = type?.icon ?? '📋';
+    final icon = type?.icon ?? kGlyphTaskTypeFallback;
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
 
     return TaskSwipe(
@@ -75,7 +77,7 @@ class TaskListRow extends StatelessWidget {
                       ),
                       if (subjectLabel != null && subjectLabel!.isNotEmpty)
                         Text(
-                          '🪴 $subjectLabel',
+                          '$kGlyphSubject $subjectLabel',
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: theme.colorScheme.onSurfaceVariant,
                           ),
@@ -90,7 +92,7 @@ class TaskListRow extends StatelessWidget {
                 ],
                 if (hasReminder) ...[
                   Icon(
-                    Icons.notifications_outlined,
+                    kIconNotificationsOutlined,
                     size: 15,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
@@ -98,7 +100,7 @@ class TaskListRow extends StatelessWidget {
                 ],
                 _StatusBadge(text: statusText, group: group),
                 IconButton(
-                  icon: const Icon(Icons.more_horiz),
+                  icon: const Icon(kIconMoreHoriz),
                   iconSize: 20,
                   visualDensity: VisualDensity.compact,
                   onPressed: () => showTaskListActionSheet(

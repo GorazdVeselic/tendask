@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../core/app_icons.dart';
 
 /// The month title with its prev/next arrows.
 class MonthNav extends StatelessWidget {
@@ -20,7 +21,7 @@ class MonthNav extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         IconButton(
-          icon: const Icon(Icons.chevron_left),
+          icon: const Icon(kIconChevronLeft),
           color: theme.colorScheme.primary,
           onPressed: onPrev,
         ),
@@ -31,7 +32,7 @@ class MonthNav extends StatelessWidget {
           ),
         ),
         IconButton(
-          icon: const Icon(Icons.chevron_right),
+          icon: const Icon(kIconChevronRight),
           color: theme.colorScheme.primary,
           onPressed: onNext,
         ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../core/app_icons.dart';
 
 /// One selectable plant row: icon, name, optional subtitle, and a ＋/✓ badge on
 /// the right that toggles selection. Shared by the garden plant-add catalog and
@@ -42,7 +43,7 @@ class PlantSelectRow extends StatelessWidget {
           color: selected ? cs.primary : cs.primaryContainer,
         ),
         child: Icon(
-          selected ? Icons.check : Icons.add,
+          selected ? kIconCheck : kIconAdd,
           size: 18,
           color: selected ? cs.onPrimary : cs.primary,
         ),

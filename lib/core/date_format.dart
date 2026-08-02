@@ -3,6 +3,22 @@
 
 DateTime startOfDay(DateTime d) => DateTime(d.year, d.month, d.day);
 
+/// [d] moved by [days] CALENDAR days, keeping its wall-clock time.
+///
+/// Never `add(Duration(days: n))` on a local DateTime: a day is 23 or 25 hours
+/// long at the daylight-saving changeovers, so adding 24-hour blocks lands on
+/// the wrong date (the autumn switch repeats a date and skips one).
+DateTime addDays(DateTime d, int days) => DateTime(
+  d.year,
+  d.month,
+  d.day + days,
+  d.hour,
+  d.minute,
+  d.second,
+  d.millisecond,
+  d.microsecond,
+);
+
 /// The same calendar day, whatever the time of day.
 bool isSameDay(DateTime a, DateTime b) => startOfDay(a) == startOfDay(b);
 

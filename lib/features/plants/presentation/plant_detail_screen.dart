@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -11,6 +12,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../../core/glyphs.dart';
 import '../../moon/presentation/widgets/plant_moon_chip.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/yield_format.dart';
@@ -43,13 +45,13 @@ class PlantDetailScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         actions: [
           if (plant != null)
             IconButton(
-              icon: const Icon(Icons.edit_outlined),
+              icon: const Icon(kIconEditOutlined),
               onPressed: () =>
                   context.pushNamed('plant-edit', pathParameters: {'id': id}),
             ),
@@ -153,7 +155,7 @@ class _Hero extends ConsumerWidget {
                 children: [
                   ActionChip(
                     avatar: Icon(
-                      Icons.place_outlined,
+                      kIconPlaceOutlined,
                       size: 18,
                       color: theme.colorScheme.primary,
                     ),
@@ -219,7 +221,7 @@ class _HistoryRow extends StatelessWidget {
     final theme = Theme.of(context);
     final type = catalog?[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
-    final icon = type?.icon ?? '📋';
+    final icon = type?.icon ?? kGlyphTaskTypeFallback;
     final yieldChip = taskYieldChip(task, context.t);
 
     return ListTile(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/config.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/moon_month_provider.dart';
@@ -44,7 +45,7 @@ class JournalMoonIconButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return IconButton(
       tooltip: context.t.moon.calendar.title,
-      icon: const Icon(Icons.nightlight_outlined),
+      icon: const Icon(kIconNightlightOutlined),
       onPressed: () => context.push('/moon-calendar'),
     );
   }

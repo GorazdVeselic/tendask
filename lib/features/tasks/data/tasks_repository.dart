@@ -6,6 +6,7 @@ import 'package:uuid/uuid.dart';
 
 import '../../../core/clock.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/date_format.dart';
 import '../../../core/sync/sync_status.dart';
 import '../../../core/task_status.dart';
 import '../../supplies/data/supplies_repository.dart';
@@ -627,7 +628,9 @@ class TasksRepository {
     final now = _clock.now();
     await (_db.update(_db.tasks)..where((t) => t.id.equals(id))).write(
       TasksCompanion(
-        date: Value(task.date.add(const Duration(days: 1))),
+        // Calendar step through local time: +24 h would move the wall clock
+        // by an hour across a daylight-saving changeover.
+        date: Value(addDays(task.date.toLocal(), 1).toUtc()),
         updatedAt: Value(now),
         syncStatus: const Value(kSyncPending),
       ),

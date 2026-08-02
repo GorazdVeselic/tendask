@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
@@ -10,6 +11,7 @@ import '../../../core/plant_category.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../../core/glyphs.dart';
 import '../application/plants_providers.dart';
 import '../plant_move_result.dart';
 import 'plant_picker_view.dart';
@@ -186,7 +188,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(kIconClose),
           onPressed: () => context.pop(_createdIds),
         ),
         title: Text(t.plants.add_title),
@@ -298,7 +300,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
                 if (catalog[id] case final p?)
                   FilterChip(
                     avatar: Text(
-                      p.icon ?? '🌿',
+                      p.icon ?? kGlyphPlantFallback,
                       style: const TextStyle(fontSize: 16),
                     ),
                     label: Text(catalogLabel(p.labels)),
@@ -313,7 +315,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
           children: [
             Expanded(child: SectionLabel(t.plants.from_catalog)),
             IconButton(
-              icon: Icon(_searchExpanded ? Icons.search_off : Icons.search),
+              icon: Icon(_searchExpanded ? kIconSearchOff : kIconSearch),
               color: theme.colorScheme.primary,
               onPressed: _toggleSearch,
             ),
@@ -327,7 +329,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
               autofocus: true,
               decoration: InputDecoration(
                 hintText: t.plants.search_hint,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(kIconSearch),
                 border: const OutlineInputBorder(),
                 isDense: true,
               ),
@@ -345,7 +347,7 @@ class _GardenPlantAddScreenState extends ConsumerState<GardenPlantAddScreen> {
     return SliverList.separated(
       itemCount: rows.length,
       itemBuilder: (_, i) => PlantSelectRow(
-        icon: rows[i].icon ?? '🌿',
+        icon: rows[i].icon ?? kGlyphPlantFallback,
         title: catalogLabel(rows[i].labels),
         subtitle: plantCategoryLabel(coarsePlantCategory(rows[i].category), t),
         selected: selectedIds.contains(rows[i].id),

@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1340 testov):**
+**Kaj je narejeno (vse v main, 1411 testov):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
@@ -336,6 +336,29 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **Matriki:** `moon/finder` (predizpolnjen paradižnik = najbolj besedno stanje) in `plant/moon-chip`
   (čip v hero vrstici ob čipu območja, ne sam — sam ne bi bil nikoli stisnjen) = 36 kombinacij.
   Suite **1340**.
+
+- **Pregled kode + testov T1–T5 ✅ (2. 8., branch `fix/fr19-review`) — vse najdeno popravljeno:**
+  **(1) prava napaka:** `moonHintCandidates` je dneve štel s 24-urnimi bloki → ob jesenskem premiku ure
+  (25. 10. 2026) dve **enaki** obvestili za isti dan in izgubljen zadnji dan horizonta (privzeto je
+  kapica izklopljena, zato je podvojitev prišla do naprave). Nov `addDays()` v `core/date_format.dart`;
+  isti vzorec popravljen še v dnevniškem nudgeu, `reminder_schedule`, `postponeOneDay` (»+1 dan«),
+  oznakah »jutri/včeraj« in skupinah opravil. Pravilo dodano v `CLAUDE.md`.
+  **(2)** vsa vrata čipa rastline → čista `plantMoonChipTarget()` (edino pravilo, ki ga temni flag ni
+  pustil testirati) · **(3)** sheet ob polnočnem prehodu pove »**od HH:MM**« in se ne prepira več s
+  herojem (nova ključa `in_constellation_since`/`in_sign_since`, en+sl+de; pogled
+  `tmp/moon_sliver_{sl,de}.png`) · **(4)** `moonDayLabel()` — čip/oznaka/task-sekcija kličejo motor
+  enkrat namesto 2–3× (izmerjeno 515 → 171 µs na build čipa) · **(5)** mrtev `ElementBadge` izbrisan
+  (datoteka → `element_glyph.dart`) · **(6)** `isWaxing()` izčrpen, brez dvojnika v `MoonPhaseIcon` ·
+  **(7)** `HomeMoonChip` preverja flag pred `ref` kot ostale tri točke · **(8)** a11y: celica meseca je
+  en semantični gumb, mena in ★ imata ime · **(9)** `SingleFlight` (`core/single_flight.dart`) — 3.
+  pojavitev vzorca `_running/_dirty/debounce`, zdaj ga uporabljajo vsi trije koordinatorji.
+  **Testi:** +74 (suite **1411**), pokritost FR-19 **92,6 % → 94,7 %**: DST regresiji, `addDays`,
+  `SingleFlight`, vrata čipa, enakost `MoonSettings` po poljih, veje sheeta (novoluna · ⚠/✓ · »od«/»ob«),
+  tedenska ‹ ›, 🔎 vstop, resume poti, **parnost i18n ključev en/sl/de** (slang tiho pade na en —
+  `moon.finder.*` je bil tako cel korak brez nemščine), matriki `moon/day-sheet (transition|new moon)`.
+  Neposkrita ostajajo natanko vrata za temnim flagom (52–78 %) — oživijo pri T7.
+  **Mimogrede (naročilo lastnika):** vsi glifi/ikone/barve/animacije v kataloge —
+  `core/glyphs.dart`, `core/app_icons.dart`, `app/theme/app_motion.dart`, `AppColors`.
 
 **Naloga TE seje: izbere lastnik.** FR-19 ima narejene T1–T5 (cel) in T4b; ostaneta **T6**
 (FR-20 rezina upravičenosti, edini task s shemo — rabi odločitev §11.4 o dependency za podpis tokena)

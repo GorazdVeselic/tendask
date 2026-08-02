@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
@@ -157,7 +158,7 @@ class _MonthCalendarViewState extends ConsumerState<MonthCalendarView> {
             alignment: Alignment.centerLeft,
             child: TextButton.icon(
               onPressed: () => _addTask(selected),
-              icon: const Icon(Icons.add, size: 18),
+              icon: const Icon(kIconAdd, size: 18),
               label: Text(t.journal.day_add),
             ),
           ),

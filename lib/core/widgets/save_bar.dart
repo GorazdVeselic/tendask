@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../app/theme/app_colors.dart';
 
 /// Fixed bottom action bar with a single full-width primary button.
 /// Shows a spinner and disables itself while [isSaving].
@@ -19,11 +20,11 @@ class SaveBar extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.surface,
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withAlpha(15),
+            color: AppColors.shadowSoft,
             blurRadius: 8,
-            offset: const Offset(0, -2),
+            offset: Offset(0, -2),
           ),
         ],
       ),

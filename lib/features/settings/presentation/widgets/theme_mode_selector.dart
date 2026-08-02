@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../app/theme/theme_mode_controller.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 
 /// System / light / dark. Applies instantly (the whole MaterialApp rebuilds).
@@ -19,17 +20,17 @@ class ThemeModeSelector extends ConsumerWidget {
       segments: [
         ButtonSegment(
           value: ThemeMode.system,
-          icon: const Icon(Icons.smartphone),
+          icon: const Icon(kIconSmartphone),
           label: Text(t.settings.theme_system),
         ),
         ButtonSegment(
           value: ThemeMode.light,
-          icon: const Icon(Icons.light_mode),
+          icon: const Icon(kIconLightMode),
           label: Text(t.settings.theme_light),
         ),
         ButtonSegment(
           value: ThemeMode.dark,
-          icon: const Icon(Icons.dark_mode),
+          icon: const Icon(kIconDarkMode),
           label: Text(t.settings.theme_dark),
         ),
       ],
@@ -68,7 +69,7 @@ class SystemStatusChip extends StatelessWidget {
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(Icons.brightness_auto, size: 14, color: cs.onSurfaceVariant),
+            Icon(kIconBrightnessAuto, size: 14, color: cs.onSurfaceVariant),
             const SizedBox(width: 5),
             Text(
               label,

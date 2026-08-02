@@ -6,11 +6,12 @@ import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/date_format.dart';
 import '../../../core/widgets/month_chrome.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../application/moon_month_provider.dart';
 import '../application/moon_settings_controller.dart';
 import 'moon_day_sheet.dart';
 import 'moon_text.dart';
-import 'widgets/element_badge.dart';
+import 'widgets/element_glyph.dart';
 import 'widgets/moon_phase_icon.dart';
 
 /// The week's [i]-th day out of the memoized month grid, computed directly
@@ -23,7 +24,7 @@ MoonMonthDay _dayOfWeek(
   int i,
   CalendarSystem system,
 ) {
-  final date = DateTime(weekStart.year, weekStart.month, weekStart.day + i);
+  final date = addDays(weekStart, i);
   return month[date] ?? moonMonthDayFor(date, system);
 }
 
@@ -49,11 +50,7 @@ class MoonWeekView extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final weekEnd = DateTime(
-      weekStart.year,
-      weekStart.month,
-      weekStart.day + 6,
-    );
+    final weekEnd = addDays(weekStart, 6);
     // The month grid of the week's last day covers the whole week (it carries
     // six leading days) — reuses the memoized month instead of a new provider.
     final days = ref.watch(
@@ -211,7 +208,7 @@ class _WeekRow extends StatelessWidget {
                           TextSpan(text: ' · ${t.moon.calendar.today_marker}'),
                         if (starred)
                           TextSpan(
-                            text: ' ★',
+                            text: ' $kGlyphStar',
                             style: TextStyle(
                               color: theme.colorScheme.secondary,
                             ),

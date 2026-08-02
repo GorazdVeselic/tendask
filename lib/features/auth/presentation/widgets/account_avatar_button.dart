@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../core/auth/auth_service.dart';
 import '../../../../core/widgets/sheet_handle.dart';
 import '../../../../i18n/translations.g.dart';
@@ -35,7 +36,7 @@ class AccountAvatarButton extends ConsumerWidget {
           radius: 14,
           backgroundColor: cs.surfaceContainerHighest,
           child: Icon(
-            Icons.person_outline,
+            kIconPersonOutline,
             size: 19,
             color: cs.onSurfaceVariant,
           ),

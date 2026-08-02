@@ -13,8 +13,10 @@ import '../../../core/auth/auth_service.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/date_format.dart';
 import '../../../core/notifications/notification_service.dart';
+import '../../../core/single_flight.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../../core/glyphs.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../settings/application/profile_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
@@ -29,9 +31,7 @@ part 'reminder_coordinator.g.dart';
 @Riverpod(keepAlive: true)
 class ReminderCoordinator extends _$ReminderCoordinator {
   static const Clock _clock = SystemClock();
-  Timer? _debounce;
-  bool _running = false;
-  bool _dirty = false;
+  late final SingleFlight _flight = SingleFlight(_reconcile);
 
   @override
   void build() {
@@ -55,28 +55,20 @@ class ReminderCoordinator extends _$ReminderCoordinator {
             db.profiles,
           ]),
         )
-        .listen((_) {
-          _debounce?.cancel();
-          _debounce = Timer(kReminderDebounce, () => unawaited(_reconcile()));
-        });
+        .listen((_) => _flight.runSoon(kReminderDebounce));
 
     ref.onDispose(() {
-      _debounce?.cancel();
+      _flight.dispose();
       sub.cancel();
     });
   }
 
   /// Runs the first reconcile. Call once after the bootstrap.
-  void start() => unawaited(_reconcile());
+  void start() => unawaited(_flight.run());
 
   /// Cancels stale OS notifications and (re)schedules every future reminder of a
   /// waiting task. Idempotent: rescheduling reuses the reminder's stable id.
   Future<void> _reconcile() async {
-    if (_running) {
-      _dirty = true;
-      return;
-    }
-    _running = true;
     try {
       final notif = ref.read(notificationServiceProvider);
       final repo = ref.read(tasksRepositoryProvider);
@@ -149,18 +141,12 @@ class ReminderCoordinator extends _$ReminderCoordinator {
       }
     } catch (e) {
       debugPrint('reminder reconcile failed: $e');
-    } finally {
-      _running = false;
-      if (_dirty) {
-        _dirty = false;
-        unawaited(_reconcile());
-      }
     }
   }
 
   String _title(Task task, Map<String, TaskType> types) {
     final type = types[task.taskTypeId];
-    if (type == null) return '🔔';
+    if (type == null) return kGlyphBell;
     final label = catalogLabel(type.labels);
     return type.icon.isNotEmpty ? '${type.icon} $label' : label;
   }
@@ -185,7 +171,7 @@ class ReminderCoordinator extends _$ReminderCoordinator {
     final day = startOfDay(dateLocal);
     final today = startOfDay(nowLocal);
     if (day == today) return t.notifications.today;
-    if (day == today.add(const Duration(days: 1))) {
+    if (day == addDays(today, 1)) {
       return t.notifications.tomorrow;
     }
     return formatDmy(dateLocal);

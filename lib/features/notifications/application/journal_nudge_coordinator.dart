@@ -11,6 +11,7 @@ import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/notifications/hint_rules.dart';
 import '../../../core/notifications/notification_service.dart';
+import '../../../core/single_flight.dart';
 import '../../../i18n/translations.g.dart';
 import '../../settings/application/profile_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
@@ -26,9 +27,7 @@ part 'journal_nudge_coordinator.g.dart';
 @Riverpod(keepAlive: true)
 class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
   static const Clock _clock = SystemClock();
-  Timer? _debounce;
-  bool _running = false;
-  bool _dirty = false;
+  late final SingleFlight _flight = SingleFlight(_reschedule);
 
   @override
   void build() {
@@ -40,31 +39,23 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
         .tableUpdates(
           TableUpdateQuery.onAllTables([db.tasks, db.notes, db.profiles]),
         )
-        .listen((_) {
-          _debounce?.cancel();
-          _debounce = Timer(kReminderDebounce, () => unawaited(_reschedule()));
-        });
+        .listen((_) => _flight.runSoon(kReminderDebounce));
 
     ref.onDispose(() {
-      _debounce?.cancel();
+      _flight.dispose();
       sub.cancel();
     });
   }
 
   /// Arms the chain for the first time. Call once after the bootstrap.
-  void start() => unawaited(_reschedule());
+  void start() => unawaited(_flight.run());
 
   /// Re-arm on app resume (a foreground return counts as activity, FR-16 §3.3).
-  void onResume() => unawaited(_reschedule());
+  void onResume() => unawaited(_flight.run());
 
   /// Cancels the existing chain and (re)schedules it [kJournalNudgeDayOffsets]
   /// days out, unless the user opted out. Idempotent: reuses the fixed ids.
   Future<void> _reschedule() async {
-    if (_running) {
-      _dirty = true;
-      return;
-    }
-    _running = true;
     try {
       final notif = ref.read(notificationServiceProvider);
       final userId = ref.read(authServiceProvider).userId;
@@ -125,12 +116,6 @@ class JournalNudgeCoordinator extends _$JournalNudgeCoordinator {
       debugPrint('journal nudge reschedule failed: $error');
       if (kSentryDsn.isNotEmpty) {
         unawaited(Sentry.captureException(error, stackTrace: stack));
-      }
-    } finally {
-      _running = false;
-      if (_dirty) {
-        _dirty = false;
-        unawaited(_reschedule());
       }
     }
   }

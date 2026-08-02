@@ -14,9 +14,10 @@ DateTime reminderFireTime({
   String? reminderTime,
 }) {
   if (offsetMinutes >= kMinutesPerDay && reminderTime != null) {
-    final base = startOfDay(
-      taskDateLocal,
-    ).subtract(Duration(days: offsetMinutes ~/ kMinutesPerDay));
+    final base = addDays(
+      startOfDay(taskDateLocal),
+      -(offsetMinutes ~/ kMinutesPerDay),
+    );
     final (h, m) = _parseHm(reminderTime);
     return DateTime(base.year, base.month, base.day, h, m);
   }

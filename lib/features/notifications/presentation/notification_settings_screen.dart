@@ -4,12 +4,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
 import '../../../core/notifications/notification_settings.dart';
 import '../../../core/notifications/notification_service.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../../settings/application/profile_providers.dart';
 import 'widgets/reminder_sound_banner.dart';
 
@@ -41,7 +43,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.notif_settings.title),
@@ -93,7 +95,7 @@ class _Body extends ConsumerWidget {
                     _save(ref, settings.copyWith(taskRemindersEnabled: v)),
               ),
               SwitchListTile(
-                secondary: const Text('🌱', style: TextStyle(fontSize: 22)),
+                secondary: const Text(kGlyphSeedling, style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_journal_nudge),
                 subtitle: Text(t.notif_settings.type_journal_nudge_sub),
                 value: settings.journalNudgeEnabled,
@@ -101,14 +103,14 @@ class _Body extends ConsumerWidget {
                     _save(ref, settings.copyWith(journalNudgeEnabled: v)),
               ),
               SwitchListTile(
-                secondary: const Text('🌤️', style: TextStyle(fontSize: 22)),
+                secondary: const Text(kGlyphWeather, style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_weather),
                 subtitle: Text(t.notif_settings.type_weather_sub),
                 value: settings.weatherHintsEnabled,
                 onChanged: null, // FCM deferred
               ),
               SwitchListTile(
-                secondary: const Text('🌍', style: TextStyle(fontSize: 22)),
+                secondary: const Text(kGlyphNearby, style: TextStyle(fontSize: 22)),
                 title: Text(t.notif_settings.type_community),
                 subtitle: Text(t.notif_settings.type_community_sub),
                 value: settings.communityHintsEnabled,
@@ -176,10 +178,10 @@ class _Body extends ConsumerWidget {
           child: Column(
             children: [
               ListTile(
-                leading: const Text('👁', style: TextStyle(fontSize: 20)),
+                leading: const Text(kGlyphPreview, style: TextStyle(fontSize: 20)),
                 title: Text(t.notif_settings.preview),
                 subtitle: Text(t.notif_settings.preview_sub),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: const Icon(kIconChevronRight),
                 onTap: () => context.pushNamed('notification-preview'),
               ),
               const _PermissionTile(),
@@ -214,8 +216,8 @@ class _PermissionTile extends ConsumerWidget {
             : t.notif_settings.system_permission_on,
       ),
       trailing: allowed == false
-          ? Icon(Icons.warning_amber_rounded, color: theme.colorScheme.error)
-          : Icon(Icons.check, color: theme.colorScheme.primary),
+          ? Icon(kIconWarningAmberRounded, color: theme.colorScheme.error)
+          : Icon(kIconCheck, color: theme.colorScheme.primary),
       // Grant happens out-of-app; re-check when the user returns.
       onTap: allowed == false
           ? () async {

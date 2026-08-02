@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/haptics.dart';
 import '../../../core/task_status.dart';
@@ -46,13 +47,13 @@ class TaskDetailScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: () => router.pop(),
         ),
         title: const SizedBox.shrink(),
         actions: [
           IconButton(
-            icon: const Icon(Icons.more_horiz),
+            icon: const Icon(kIconMoreHoriz),
             onPressed: () {
               final task = taskAsync.asData?.value;
               if (task == null) return;

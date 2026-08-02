@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
@@ -12,6 +13,7 @@ import '../../../core/widgets/empty_state.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/garden_plant_add_screen.dart';
 import '../../plants/presentation/widgets/plant_row.dart';
@@ -38,13 +40,13 @@ class AreaDetailScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         actions: [
           if (area != null)
             IconButton(
-              icon: const Icon(Icons.more_horiz),
+              icon: const Icon(kIconMoreHoriz),
               onPressed: () => _openActionSheet(context, ref, area),
             ),
         ],
@@ -62,7 +64,7 @@ class AreaDetailScreen extends ConsumerWidget {
                     for (final p in plants)
                       PlantRow(plant: p, catalog: plantCatalog),
                   ListTile(
-                    leading: Icon(Icons.add, color: theme.colorScheme.primary),
+                    leading: Icon(kIconAdd, color: theme.colorScheme.primary),
                     title: Text(
                       t.areas.add_plant_here(area: area.name),
                       style: TextStyle(color: theme.colorScheme.primary),
@@ -93,7 +95,7 @@ class AreaDetailScreen extends ConsumerWidget {
           children: [
             const SheetHandle(),
             ListTile(
-              leading: const Icon(Icons.edit_outlined),
+              leading: const Icon(kIconEditOutlined),
               title: Text(t.areas.action_edit),
               onTap: () {
                 Navigator.of(ctx).pop();
@@ -103,7 +105,7 @@ class AreaDetailScreen extends ConsumerWidget {
             Divider(height: 1, color: theme.colorScheme.outlineVariant),
             ListTile(
               leading: Icon(
-                Icons.delete_outline,
+                kIconDeleteOutline,
                 color: theme.colorScheme.error,
               ),
               title: Text(
@@ -228,7 +230,7 @@ class _HistoryRow extends StatelessWidget {
     final theme = Theme.of(context);
     final type = catalog?[task.taskTypeId];
     final label = type != null ? catalogLabel(type.labels) : task.taskTypeId;
-    final icon = type?.icon ?? '📋';
+    final icon = type?.icon ?? kGlyphTaskTypeFallback;
     final yieldChip = taskYieldChip(task, context.t);
 
     return ListTile(

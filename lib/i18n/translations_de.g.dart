@@ -1134,6 +1134,24 @@ class _Translations$moon$sheet$de extends Translations$moon$sheet$en {
 		day,
 		const TextSpan(text: '.'),
 	]);
+	@override TextSpan in_constellation_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Seit '),
+		time,
+		const TextSpan(text: ' steht der Mond im Sternbild '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
+	@override TextSpan in_sign_since({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
+		const TextSpan(text: 'Seit '),
+		time,
+		const TextSpan(text: ' steht der Mond im Zeichen '),
+		sign,
+		const TextSpan(text: ' → '),
+		day,
+		const TextSpan(text: '.'),
+	]);
 	@override TextSpan transition({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [
 		const TextSpan(text: 'Um '),
 		time,
@@ -1804,6 +1822,8 @@ extension on TranslationsDe {
 			'moon.sheet.whats_happening' => 'Was passiert',
 			'moon.sheet.in_constellation' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Der Mond steht im Sternbild '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.in_sign' => ({required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Der Mond steht im Zeichen '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_constellation_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Seit '), time, const TextSpan(text: ' steht der Mond im Sternbild '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
+			'moon.sheet.in_sign_since' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Seit '), time, const TextSpan(text: ' steht der Mond im Zeichen '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.transition' => ({required InlineSpan time, required InlineSpan sign, required InlineSpan day}) => TextSpan(children: [ const TextSpan(text: 'Um '), time, const TextSpan(text: ' folgt '), sign, const TextSpan(text: ' → '), day, const TextSpan(text: '.'), ]), 
 			'moon.sheet.until_then' => ({required Object time, required Object emoji, required Object day}) => 'bis ${time}, dann ${emoji} ${day}',
 			'moon.sheet.phase_waxing' => ({required InlineSpanBuilder b}) => TextSpan(children: [ b('Zunehmender Mond'), const TextSpan(text: ' — begünstigt traditionell Aussaat und oberirdische Kulturen.'), ]), 

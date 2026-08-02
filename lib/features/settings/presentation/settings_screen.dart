@@ -5,10 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:share_plus/share_plus.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/app_info.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
+import '../../../core/glyphs.dart';
 import '../../../core/legal.dart';
 import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
@@ -139,7 +141,7 @@ class SettingsScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.settings.title),
@@ -154,15 +156,15 @@ class SettingsScreen extends ConsumerWidget {
             Card(
               child: email != null
                   ? ListTile(
-                      leading: const CircleAvatar(child: Icon(Icons.person)),
+                      leading: const CircleAvatar(child: Icon(kIconPerson)),
                       title: Text(email),
                       subtitle: Text(t.settings.signed_in),
                     )
                   : ListTile(
-                      leading: const CircleAvatar(child: Icon(Icons.person)),
+                      leading: const CircleAvatar(child: Icon(kIconPerson)),
                       title: Text(t.settings.profile_guest),
                       subtitle: Text(t.settings.sign_in_prompt),
-                      trailing: const Icon(Icons.chevron_right),
+                      trailing: const Icon(kIconChevronRight),
                       // Signing in keeps the guest's local data (claimed on sign-in).
                       onTap: () => context.push('/login'),
                     ),
@@ -172,9 +174,9 @@ class SettingsScreen extends ConsumerWidget {
             SectionLabel(t.settings.section_location),
             Card(
               child: ListTile(
-                leading: const Text('📍', style: TextStyle(fontSize: 22)),
+                leading: const Text(kGlyphLocation, style: TextStyle(fontSize: 22)),
                 title: Text(t.settings.location_placeholder),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: const Icon(kIconChevronRight),
                 onTap: () => context.push('/location'),
               ),
             ),
@@ -198,9 +200,9 @@ class SettingsScreen extends ConsumerWidget {
             SectionLabel(t.settings.section_appearance),
             Card(
               child: ListTile(
-                leading: const Text('🎨', style: TextStyle(fontSize: 22)),
+                leading: const Text(kGlyphAppearance, style: TextStyle(fontSize: 22)),
                 title: Text(t.settings.appearance_placeholder),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: const Icon(kIconChevronRight),
                 onTap: () => context.pushNamed('appearance'),
               ),
             ),
@@ -209,9 +211,9 @@ class SettingsScreen extends ConsumerWidget {
             SectionLabel(t.settings.section_notifications),
             Card(
               child: ListTile(
-                leading: const Text('🔔', style: TextStyle(fontSize: 22)),
+                leading: const Text(kGlyphBell, style: TextStyle(fontSize: 22)),
                 title: Text(t.settings.notifications_placeholder),
-                trailing: const Icon(Icons.chevron_right),
+                trailing: const Icon(kIconChevronRight),
                 onTap: () => context.pushNamed('notification-settings'),
               ),
             ),
@@ -251,9 +253,9 @@ class SettingsScreen extends ConsumerWidget {
             SectionLabel(t.settings.section_about),
             Card(
               child: ListTile(
-                leading: const Icon(Icons.privacy_tip_outlined),
+                leading: const Icon(kIconPrivacyTipOutlined),
                 title: Text(t.settings.privacy_policy),
-                trailing: const Icon(Icons.open_in_new, size: 18),
+                trailing: const Icon(kIconOpenInNew, size: 18),
                 onTap: () => unawaited(openPrivacyPolicy()),
               ),
             ),
@@ -297,7 +299,7 @@ class _PlaceholderTile extends StatelessWidget {
         label,
         style: destructive ? TextStyle(color: theme.colorScheme.error) : null,
       ),
-      trailing: const Icon(Icons.chevron_right),
+      trailing: const Icon(kIconChevronRight),
       onTap: onTap,
     );
   }

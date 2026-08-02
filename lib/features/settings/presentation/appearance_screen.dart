@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import '../../../app/theme/theme_mode_controller.dart';
 import '../../../app/theme/theme_palette.dart';
 import '../../../app/theme/theme_palette_controller.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import 'palette_labels.dart';
@@ -45,7 +46,7 @@ class AppearanceScreen extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.settings.section_appearance),
@@ -104,7 +105,7 @@ class AppearanceScreen extends ConsumerWidget {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: () => selectPalette(greenPalette.id),
-                  icon: const Icon(Icons.refresh, size: 18),
+                  icon: const Icon(kIconRefresh, size: 18),
                   label: Text(
                     '${t.appearance.reset} (${paletteName(greenPalette.id, t)})',
                   ),

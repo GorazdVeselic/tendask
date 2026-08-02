@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../application/plants_providers.dart';
 import '../../../../core/database/catalog_provider.dart';
@@ -68,7 +69,7 @@ class PlantField extends ConsumerWidget {
               alignment: Alignment.centerLeft,
               child: TextButton.icon(
                 onPressed: onAdd,
-                icon: const Icon(Icons.add, size: 18),
+                icon: const Icon(kIconAdd, size: 18),
                 label: Text(t.plants.field_add),
                 style: TextButton.styleFrom(
                   padding: const EdgeInsets.symmetric(horizontal: 8),

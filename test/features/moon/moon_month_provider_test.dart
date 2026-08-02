@@ -72,6 +72,31 @@ void main() {
       expect(cell.secondaryElement, isNull);
     });
 
+    test('moonDayLabel is the same reduction, without the phase scan', () {
+      // The three light surfaces (home chip, when-step badge, task section)
+      // read the label through this cheaper path; it must not diverge from the
+      // grid cell they have to agree with.
+      for (final date in [_sliverDate(), _plainTransitionDate(), _quietDate()]) {
+        final cell = moonMonthDayFor(date, CalendarSystem.sidereal);
+        final label = moonDayLabelFor(date, CalendarSystem.sidereal);
+
+        expect(label.element, cell.element, reason: '$date');
+        expect(label.transitionAt, cell.transitionAt, reason: '$date');
+        expect(label.secondaryElement, cell.secondaryElement, reason: '$date');
+      }
+    });
+
+    test('moonDayLabel normalizes the date like the grid cell does', () {
+      final label = moonDayLabelFor(
+        DateTime(2026, 8, 15, 21, 30),
+        CalendarSystem.sidereal,
+      );
+      expect(label.element, moonMonthDayFor(
+        DateTime(2026, 8, 15),
+        CalendarSystem.sidereal,
+      ).element);
+    });
+
     test('the date is normalized to local midnight', () {
       final cell = moonMonthDayFor(
         DateTime(2026, 8, 15, 21, 30),

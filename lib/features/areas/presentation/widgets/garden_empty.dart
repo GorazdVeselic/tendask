@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../../core/glyphs.dart';
 
 /// First-run garden: richer than [EmptyState] on purpose — it carries the two
 /// entry points (add a plant, add an area) that seed an empty garden.
@@ -19,7 +21,7 @@ class GardenEmpty extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              '🌱',
+              kGlyphSeedling,
               style: TextStyle(fontSize: 44, color: theme.colorScheme.primary),
             ),
             const SizedBox(height: 14),
@@ -41,13 +43,13 @@ class GardenEmpty extends StatelessWidget {
             const SizedBox(height: 20),
             FilledButton.icon(
               onPressed: () => context.pushNamed('plant-add'),
-              icon: const Icon(Icons.add),
+              icon: const Icon(kIconAdd),
               label: Text(t.areas.empty_cta_plant),
             ),
             const SizedBox(height: 8),
             OutlinedButton.icon(
               onPressed: () => context.pushNamed('area-new'),
-              icon: const Icon(Icons.add),
+              icon: const Icon(kIconAdd),
               label: Text(t.areas.empty_cta_area),
             ),
           ],

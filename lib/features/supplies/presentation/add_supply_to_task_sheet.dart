@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/glyphs.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/supplies_providers.dart';
@@ -129,7 +131,7 @@ class _AddSupplySheetState extends ConsumerState<_AddSupplySheet> {
                     onChanged: (_) => setState(() {}),
                     decoration: InputDecoration(
                       hintText: t.supplies.search,
-                      prefixIcon: const Icon(Icons.search, size: 20),
+                      prefixIcon: const Icon(kIconSearch, size: 20),
                       isDense: true,
                       border: const OutlineInputBorder(),
                     ),
@@ -149,7 +151,7 @@ class _AddSupplySheetState extends ConsumerState<_AddSupplySheet> {
                 alignment: Alignment.centerLeft,
                 child: TextButton.icon(
                   onPressed: _addNew,
-                  icon: const Icon(Icons.add, size: 18),
+                  icon: const Icon(kIconAdd, size: 18),
                   label: Text(t.supplies.pick_new),
                 ),
               ),
@@ -213,7 +215,7 @@ class _SupplyPickRow extends StatelessWidget {
     final qtyText = formatSupplyQuantity(supply.quantity, clampNegative: true);
 
     final qtyLabel = Text(
-      isLow ? '⚠️ ${t.supplies.low}' : t.supplies.qty(q: qtyText, unit: supply.unit ?? ''),
+      isLow ? '$kGlyphLowStock ${t.supplies.low}' : t.supplies.qty(q: qtyText, unit: supply.unit ?? ''),
       style: theme.textTheme.labelMedium?.copyWith(
         color: isLow ? theme.colorScheme.error : theme.colorScheme.onSurfaceVariant,
       ),
@@ -238,7 +240,7 @@ class _SupplyPickRow extends StatelessWidget {
           qtyLabel,
           if (isSelected) ...[
             const SizedBox(width: 8),
-            Icon(Icons.check_circle, size: 18, color: theme.colorScheme.primary),
+            Icon(kIconCheckCircle, size: 18, color: theme.colorScheme.primary),
           ],
         ],
       ),

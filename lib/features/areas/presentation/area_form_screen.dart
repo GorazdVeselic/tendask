@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/area_type.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/haptics.dart';
@@ -122,7 +123,7 @@ class _AreaFormScreenState extends ConsumerState<AreaFormScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.close),
+          icon: const Icon(kIconClose),
           onPressed: context.pop,
         ),
         title: Text(_isEdit ? t.areas.form_title_edit : t.areas.form_title_new),

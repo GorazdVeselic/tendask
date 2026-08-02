@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import '../../../core/catalog_labels.dart';
 import '../../../core/database/app_database.dart';
+import '../../../core/glyphs.dart';
 
 /// Display name for a user plant: private alias wins, then custom name, then
 /// the catalog label. Never throws.
@@ -13,13 +14,13 @@ String userPlantLabel(UserPlant up, Map<String, Plant> catalog) {
     return up.customName!;
   }
   final plant = up.plantId != null ? catalog[up.plantId] : null;
-  return plant != null ? catalogLabel(plant.labels) : '🌿';
+  return plant != null ? catalogLabel(plant.labels) : kGlyphPlantFallback;
 }
 
 /// Emoji for a user plant — catalog icon, or a leaf for custom entries.
 String userPlantIcon(UserPlant up, Map<String, Plant> catalog) {
   final plant = up.plantId != null ? catalog[up.plantId] : null;
-  return plant?.icon ?? '🌿';
+  return plant?.icon ?? kGlyphPlantFallback;
 }
 
 /// True if [normQuery] (already lowercased) matches the plant's names in any

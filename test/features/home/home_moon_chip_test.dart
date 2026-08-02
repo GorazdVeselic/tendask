@@ -55,6 +55,21 @@ void main() {
     expect(find.text(t.moon.calendar.title), findsNothing);
   });
 
+  testWidgets('a resume rebuilds the card (the day may have rolled over)', (
+    tester,
+  ) async {
+    await pump(tester, const HomeMoonChipCard());
+    await tester.pumpAndSettle();
+    expect(find.text(t.moon.calendar.title), findsOneWidget);
+
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.paused);
+    tester.binding.handleAppLifecycleStateChanged(AppLifecycleState.resumed);
+    await tester.pumpAndSettle();
+
+    expect(tester.takeException(), isNull);
+    expect(find.text(t.moon.calendar.title), findsOneWidget);
+  });
+
   testWidgets('the card shows the phase and opens /moon-calendar on tap', (
     tester,
   ) async {

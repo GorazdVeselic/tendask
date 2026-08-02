@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/haptics.dart';
 import '../../../../core/task_status.dart';
@@ -41,7 +42,7 @@ void showTaskActionSheet(
                   if (isWaiting) ...[
                     ListTile(
                       leading: Icon(
-                        Icons.check_circle_outline,
+                        kIconCheckCircleOutline,
                         color: theme.colorScheme.primary,
                       ),
                       title: Text(t.task_detail.action_complete),
@@ -59,7 +60,7 @@ void showTaskActionSheet(
                       },
                     ),
                     ListTile(
-                      leading: const Icon(Icons.schedule_outlined),
+                      leading: const Icon(kIconScheduleOutlined),
                       title: Text(t.task_detail.action_postpone),
                       onTap: () {
                         Navigator.of(ctx).pop();
@@ -69,7 +70,7 @@ void showTaskActionSheet(
                   ] else
                     ListTile(
                       leading: Icon(
-                        Icons.undo,
+                        kIconUndo,
                         color: theme.colorScheme.secondary,
                       ),
                       title: Text(t.task_detail.action_revert),
@@ -79,7 +80,7 @@ void showTaskActionSheet(
                       },
                     ),
                   ListTile(
-                    leading: const Icon(Icons.edit_outlined),
+                    leading: const Icon(kIconEditOutlined),
                     title: Text(t.task_detail.action_edit),
                     onTap: () {
                       Navigator.of(ctx).pop();
@@ -90,7 +91,7 @@ void showTaskActionSheet(
                     },
                   ),
                   ListTile(
-                    leading: const Icon(Icons.copy_outlined),
+                    leading: const Icon(kIconCopyOutlined),
                     title: Text(t.task_detail.action_duplicate),
                     onTap: () {
                       Navigator.of(ctx).pop();
@@ -101,7 +102,7 @@ void showTaskActionSheet(
                   ),
                   if (task.recurrence != null)
                     ListTile(
-                      leading: const Icon(Icons.sync_disabled),
+                      leading: const Icon(kIconSyncDisabled),
                       title: Text(t.task_detail.action_stop_recurrence),
                       onTap: () {
                         Navigator.of(ctx).pop();
@@ -111,7 +112,7 @@ void showTaskActionSheet(
                   Divider(height: 1, color: theme.colorScheme.outlineVariant),
                   ListTile(
                     leading: Icon(
-                      Icons.delete_outline,
+                      kIconDeleteOutline,
                       color: theme.colorScheme.error,
                     ),
                     title: Text(

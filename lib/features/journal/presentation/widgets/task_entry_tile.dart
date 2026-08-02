@@ -5,6 +5,7 @@ import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../../core/glyphs.dart';
 import '../../../tasks/presentation/widgets/recurring_badge.dart';
 import '../../../tasks/presentation/yield_format.dart';
 
@@ -25,7 +26,7 @@ class TaskEntryTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final icon = taskType?.icon ?? '📋';
+    final icon = taskType?.icon ?? kGlyphTaskTypeFallback;
     final label = taskType != null
         ? catalogLabel(taskType!.labels)
         : task.taskTypeId;
@@ -34,7 +35,7 @@ class TaskEntryTile extends StatelessWidget {
     // Subtitle combines the subject and any recorded harvest yield (T11).
     final yieldChip = taskYieldChip(task, context.t);
     final subtitle = [
-      if (subjectLabel != null && subjectLabel!.isNotEmpty) '🪴 $subjectLabel',
+      if (subjectLabel != null && subjectLabel!.isNotEmpty) '$kGlyphSubject $subjectLabel',
       ?yieldChip,
     ].join('   ');
 

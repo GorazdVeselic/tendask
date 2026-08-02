@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../task_specs.dart';
@@ -58,7 +59,7 @@ class SubjectField extends StatelessWidget {
                 onDeleted: () => onRemove(i),
               ),
             ActionChip(
-              avatar: const Icon(Icons.add, size: 18),
+              avatar: const Icon(kIconAdd, size: 18),
               label: Text(t.subject_picker.choose),
               onPressed: onPick,
             ),

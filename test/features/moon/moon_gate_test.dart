@@ -47,4 +47,47 @@ void main() {
       expect(journalMoonLayerOn(null), isFalse);
     });
   });
+
+  group('plantMoonChipTarget', () {
+    String? target({
+      MoonSettings? settings,
+      String? category = 'vegetable',
+      String? plantId = 'tomato',
+    }) => plantMoonChipTarget(
+      settings ?? _settings(),
+      category: category,
+      plantId: plantId,
+    );
+
+    test('a plant the calendar knows returns its catalog id', () {
+      expect(target(), 'tomato');
+      // A category default, not just the per-plant override table.
+      expect(target(category: 'fruit_tree', plantId: 'apple'), 'apple');
+    });
+
+    test('follows the switches like every other surface', () {
+      expect(target(settings: _settings(enabled: false)), isNull);
+      expect(
+        plantMoonChipTarget(null, category: 'vegetable', plantId: 'tomato'),
+        isNull,
+      );
+      // The journal sub-switch governs the colour layer, never this chip.
+      expect(target(settings: _settings(showInJournal: false)), 'tomato');
+    });
+
+    test('a private plant has nothing to prefill the finder with', () {
+      expect(target(category: null, plantId: null), isNull);
+      expect(target(category: 'vegetable', plantId: null), isNull);
+    });
+
+    test('plants outside the sowing calendar get no chip', () {
+      // Houseplants, conifers and hedges (decision 2026-07-31/08-01): the
+      // finder would only answer "no recommendation".
+      expect(target(category: 'houseplant', plantId: 'monstera'), isNull);
+      expect(target(category: 'conifer', plantId: 'spruce'), isNull);
+      expect(target(category: 'hedge', plantId: 'privet'), isNull);
+      // A vegetable missing from the override table resolves to no element.
+      expect(target(category: 'vegetable', plantId: 'not-in-catalog'), isNull);
+    });
+  });
 }

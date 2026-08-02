@@ -23,14 +23,14 @@ List<DateTime> journalNudgeFireTimes({
   final times = <DateTime>[];
   var minDay = today;
   for (final offset in dayOffsets) {
-    var day = startOfDay(today.add(Duration(days: offset)));
+    var day = addDays(today, offset);
     // Keep the chain strictly increasing even if a collision shift from the
     // previous step pushed past this offset's nominal day.
     if (!day.isAfter(minDay)) {
-      day = startOfDay(minDay.add(const Duration(days: 1)));
+      day = addDays(minDay, 1);
     }
     while (taskReminderDays.contains(day)) {
-      day = startOfDay(day.add(const Duration(days: 1)));
+      day = addDays(day, 1);
     }
     times.add(DateTime(day.year, day.month, day.day, hour));
     minDay = day;

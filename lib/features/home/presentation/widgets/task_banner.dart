@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../../../app/theme/app_motion.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
 import 'home_task_list.dart';
 
@@ -73,8 +75,8 @@ class _TaskBannerState extends State<TaskBanner> {
                   ),
                   AnimatedRotation(
                     turns: _expanded ? 0.5 : 0,
-                    duration: const Duration(milliseconds: 180),
-                    child: Icon(Icons.expand_more, color: widget.foreground),
+                    duration: kMotionFast,
+                    child: Icon(kIconExpandMore, color: widget.foreground),
                   ),
                 ],
               ),

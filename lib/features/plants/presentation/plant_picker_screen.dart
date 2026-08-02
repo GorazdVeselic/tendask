@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/catalog_labels.dart';
 import '../../../core/catalog_sort.dart';
 import '../../../core/database/app_database.dart';
@@ -9,6 +10,7 @@ import '../../../core/database/catalog_provider.dart';
 import '../../../core/plant_category.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../../core/glyphs.dart';
 import 'plant_display.dart';
 
 /// Result of the plant picker: a catalog match ([plantId]) or a private
@@ -56,7 +58,7 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(kIconArrowBack),
           onPressed: context.pop,
         ),
         title: Text(t.plants.picker_title),
@@ -71,7 +73,7 @@ class _PlantPickerScreenState extends ConsumerState<PlantPickerScreen> {
               autofocus: true,
               decoration: InputDecoration(
                 hintText: t.plants.search_hint,
-                prefixIcon: const Icon(Icons.search),
+                prefixIcon: const Icon(kIconSearch),
                 border: const OutlineInputBorder(),
                 isDense: true,
               ),
@@ -155,7 +157,7 @@ class _CatalogRow extends StatelessWidget {
     final t = context.t;
     final theme = Theme.of(context);
     return ListTile(
-      leading: Text(plant.icon ?? '🌿', style: const TextStyle(fontSize: 22)),
+      leading: Text(plant.icon ?? kGlyphPlantFallback, style: const TextStyle(fontSize: 22)),
       title: Text(
         catalogLabel(plant.labels),
         style: theme.textTheme.bodyMedium,
@@ -164,7 +166,7 @@ class _CatalogRow extends StatelessWidget {
         plantCategoryLabel(coarsePlantCategory(plant.category), t),
         style: theme.textTheme.bodySmall,
       ),
-      trailing: Icon(Icons.add, color: theme.colorScheme.primary),
+      trailing: Icon(kIconAdd, color: theme.colorScheme.primary),
       onTap: onTap,
     );
   }

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/database/app_database.dart';
 import '../../../core/database/catalog_provider.dart';
 import '../../../core/date_format.dart';
@@ -60,7 +61,7 @@ class HomeScreen extends ConsumerWidget {
         actions: [
           const AccountAvatarButton(),
           IconButton(
-            icon: const Icon(Icons.settings_outlined),
+            icon: const Icon(kIconSettingsOutlined),
             onPressed: () => context.pushNamed('settings'),
           ),
         ],
@@ -127,7 +128,7 @@ class _HomeBody extends ConsumerWidget {
             if (buckets.overdue.isNotEmpty) ...[
               TaskBanner(
                 label: t.home.overdue_banner(n: buckets.overdue.length),
-                icon: Icons.warning_amber_rounded,
+                icon: kIconWarningAmberRounded,
                 background: cs.errorContainer,
                 foreground: cs.onErrorContainer,
                 tasks: buckets.overdue,
@@ -141,7 +142,7 @@ class _HomeBody extends ConsumerWidget {
             if (buckets.upcoming.isNotEmpty) ...[
               TaskBanner(
                 label: t.home.upcoming_banner(n: buckets.upcoming.length),
-                icon: Icons.event_outlined,
+                icon: kIconEventOutlined,
                 background: cs.primaryContainer,
                 foreground: cs.onPrimaryContainer,
                 tasks: buckets.upcoming,

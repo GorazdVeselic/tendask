@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme/app_colors.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/auth/auth_service.dart';
 import '../../../core/legal.dart';
 import '../../../core/local_prefs/local_prefs.dart';
@@ -102,7 +104,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                 borderRadius: BorderRadius.circular(22),
                               ),
                               child: Icon(
-                                Icons.eco_outlined,
+                                kIconEcoOutlined,
                                 size: 40,
                                 color: cs.primary,
                               ),
@@ -131,7 +133,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                       if (Platform.isIOS) ...[
                         _DarkButton(
-                          icon: Icons.apple,
+                          icon: kIconApple,
                           label: t.auth.continue_apple,
                           onPressed: busy ? null : _comingSoon,
                         ),
@@ -159,7 +161,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           onPressed: busy
                               ? null
                               : () => context.push('/login-email'),
-                          icon: const Icon(Icons.mail_outline, size: 20),
+                          icon: const Icon(kIconMailOutline, size: 20),
                           label: Text(t.auth.continue_email),
                         ),
                       ),
@@ -228,8 +230,8 @@ class _DarkButton extends StatelessWidget {
       height: 52,
       child: FilledButton.icon(
         style: FilledButton.styleFrom(
-          backgroundColor: Colors.black,
-          foregroundColor: Colors.white,
+          backgroundColor: AppColors.googleButton,
+          foregroundColor: AppColors.onGoogleButton,
         ),
         onPressed: onPressed,
         icon: Icon(icon, size: 22),

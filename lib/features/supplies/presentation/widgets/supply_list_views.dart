@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/database/app_database.dart';
+import '../../../../core/glyphs.dart';
 import '../../../../core/supply_category.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/section_label.dart';
@@ -84,13 +86,13 @@ class _RecipeRow extends StatelessWidget {
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 3),
       child: ListTile(
-        leading: const Text('📋', style: TextStyle(fontSize: 22)),
+        leading: const Text(kGlyphRecipe, style: TextStyle(fontSize: 22)),
         title: Text(recipe.name, style: theme.textTheme.bodyMedium),
         subtitle: recipe.equipment != null
             ? Text(recipe.equipment!, style: theme.textTheme.bodySmall)
             : null,
         trailing: Icon(
-          Icons.chevron_right,
+          kIconChevronRight,
           color: theme.colorScheme.onSurfaceVariant,
         ),
         onTap: () => showRecipeEditSheet(context, recipeId: recipe.id),
@@ -136,7 +138,7 @@ class _SupplyRow extends StatelessWidget {
           children: [
             _isLow
                 ? Text(
-                    '⚠️ ${t.supplies.low}',
+                    '$kGlyphLowStock ${t.supplies.low}',
                     style: theme.textTheme.labelMedium?.copyWith(
                       color: theme.colorScheme.error,
                     ),
@@ -149,7 +151,7 @@ class _SupplyRow extends StatelessWidget {
                   ),
             const SizedBox(width: 2),
             Icon(
-              Icons.chevron_right,
+              kIconChevronRight,
               color: theme.colorScheme.onSurfaceVariant,
             ),
           ],

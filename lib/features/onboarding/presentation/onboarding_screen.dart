@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../app/theme/app_motion.dart';
+import '../../../core/app_icons.dart';
 import '../../../core/local_prefs/local_prefs.dart';
 import '../../../i18n/translations.g.dart';
 
@@ -36,7 +38,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       return;
     }
     _controller.nextPage(
-      duration: const Duration(milliseconds: 280),
+      duration: kMotionSlow,
       curve: Curves.easeOut,
     );
   }
@@ -46,22 +48,22 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final t = context.t;
     final slides = <_Slide>[
       _Slide(
-        Icons.eco_outlined,
+        kIconEcoOutlined,
         t.onboarding.welcome_title,
         t.onboarding.welcome_body,
       ),
       _Slide(
-        Icons.fact_check_outlined,
+        kIconFactCheckOutlined,
         t.onboarding.log_title,
         t.onboarding.log_body,
       ),
       _Slide(
-        Icons.wb_cloudy_outlined,
+        kIconWbCloudyOutlined,
         t.onboarding.remind_title,
         t.onboarding.remind_body,
       ),
       _Slide(
-        Icons.public,
+        kIconPublic,
         t.onboarding.nearby_title,
         t.onboarding.nearby_body,
         badge: t.onboarding.soon_badge,
@@ -197,7 +199,7 @@ class _Dots extends StatelessWidget {
       children: [
         for (var i = 0; i < count; i++)
           AnimatedContainer(
-            duration: const Duration(milliseconds: 220),
+            duration: kMotionMedium,
             margin: const EdgeInsets.symmetric(horizontal: 4),
             height: 8,
             width: i == active ? 22 : 8,

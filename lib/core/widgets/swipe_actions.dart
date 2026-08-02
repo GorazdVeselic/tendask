@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 
+import '../../core/app_icons.dart';
 import '../../i18n/translations.g.dart';
 import 'confirm_dialog.dart';
 
@@ -151,7 +152,7 @@ SlidableAction completeSwipe(BuildContext context, VoidCallback onPressed) {
   return _action(
     background: c.complete,
     foreground: c.onComplete,
-    icon: Icons.check,
+    icon: kIconCheck,
     label: context.t.swipe.complete,
     onPressed: (_) => onPressed(),
   );
@@ -163,7 +164,7 @@ SlidableAction postponeSwipe(BuildContext context, VoidCallback onPressed) {
   return _action(
     background: c.postpone,
     foreground: c.onPostpone,
-    icon: Icons.schedule,
+    icon: kIconSchedule,
     label: context.t.swipe.postpone,
     onPressed: (_) => onPressed(),
   );
@@ -175,7 +176,7 @@ SlidableAction revertSwipe(BuildContext context, VoidCallback onPressed) {
   return _action(
     background: c.neutral,
     foreground: c.onNeutral,
-    icon: Icons.undo,
+    icon: kIconUndo,
     label: context.t.swipe.revert,
     onPressed: (_) => onPressed(),
   );
@@ -187,7 +188,7 @@ SlidableAction editSwipe(BuildContext context, VoidCallback onPressed) {
   return _action(
     background: c.neutral,
     foreground: c.onNeutral,
-    icon: Icons.edit_outlined,
+    icon: kIconEditOutlined,
     label: context.t.swipe.edit,
     onPressed: (_) => onPressed(),
   );
@@ -199,7 +200,7 @@ SlidableAction moveSwipe(BuildContext context, VoidCallback onPressed) {
   return _action(
     background: c.neutral,
     foreground: c.onNeutral,
-    icon: Icons.swap_horiz,
+    icon: kIconSwapHoriz,
     label: context.t.swipe.move,
     onPressed: (_) => onPressed(),
   );
@@ -217,7 +218,7 @@ SlidableAction deleteSwipe(
   return _action(
     background: c.delete,
     foreground: c.onDelete,
-    icon: Icons.delete_outline,
+    icon: kIconDeleteOutline,
     label: context.t.swipe.delete,
     onPressed: (ctx) async {
       final ok = await showConfirmDialog(

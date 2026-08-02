@@ -10,6 +10,7 @@ import '../../../core/clock.dart';
 import '../../../core/config.dart';
 import '../../../core/database/database_provider.dart';
 import '../../../core/notifications/notification_service.dart';
+import '../../../core/single_flight.dart';
 import '../../../i18n/translations.g.dart';
 import '../../notifications/application/journal_nudge_schedule.dart';
 import '../../notifications/application/reminder_schedule.dart';
@@ -30,9 +31,7 @@ part 'moon_hint_coordinator.g.dart';
 @Riverpod(keepAlive: true)
 class MoonHintCoordinator extends _$MoonHintCoordinator {
   static const Clock _clock = SystemClock();
-  Timer? _debounce;
-  bool _running = false;
-  bool _dirty = false;
+  late final SingleFlight _flight = SingleFlight(_reschedule);
 
   @override
   void build() {
@@ -49,45 +48,31 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
         .listen((_) => _scheduleSoon());
 
     ref.onDispose(() {
-      _debounce?.cancel();
+      _flight.dispose();
       sub.cancel();
     });
   }
 
   /// Arms the hints for the first time. Call once after the bootstrap.
-  void start() => unawaited(_reschedule());
+  void start() => unawaited(_flight.run());
 
   /// Re-arm on app resume — the app may have been backgrounded for days, and
   /// the horizon has moved on with them.
-  void onResume() => unawaited(_reschedule());
+  void onResume() => unawaited(_flight.run());
 
-  void _scheduleSoon() {
-    _debounce?.cancel();
-    _debounce = Timer(kReminderDebounce, () => unawaited(_reschedule()));
-  }
+  void _scheduleSoon() => _flight.runSoon(kReminderDebounce);
 
   /// Arms the hints again, unless the feature is dark. Idempotent: fixed ids.
   Future<void> _reschedule() async {
     // Dark until T7: nothing was ever scheduled, so there is nothing to clean
     // up either — leave the OS queue untouched.
     if (!kMoonCalendarEnabled) return;
-    if (_running) {
-      _dirty = true;
-      return;
-    }
-    _running = true;
     try {
       await armHints(_clock.now().toLocal());
     } catch (error, stack) {
       debugPrint('moon hint reschedule failed: $error');
       if (kSentryDsn.isNotEmpty) {
         unawaited(Sentry.captureException(error, stackTrace: stack));
-      }
-    } finally {
-      _running = false;
-      if (_dirty) {
-        _dirty = false;
-        unawaited(_reschedule());
       }
     }
   }

@@ -83,19 +83,23 @@ void main() {
 
   Future<void> pumpCell(WidgetTester tester, {MoonMonthDay? moonDay}) async {
     await tester.pumpWidget(
-      MaterialApp(
-        home: Scaffold(
-          body: Center(
-            child: SizedBox(
-              width: 48,
-              height: 52,
-              child: DayCell(
-                day: DateTime(2026, 8, 28),
-                count: 2,
-                isToday: false,
-                selected: false,
-                onTap: () {},
-                moonDay: moonDay,
+      // The cell names the phase marker for screen readers, so it needs the
+      // translations its host always has.
+      TranslationProvider(
+        child: MaterialApp(
+          home: Scaffold(
+            body: Center(
+              child: SizedBox(
+                width: 48,
+                height: 52,
+                child: DayCell(
+                  day: DateTime(2026, 8, 28),
+                  count: 2,
+                  isToday: false,
+                  selected: false,
+                  onTap: () {},
+                  moonDay: moonDay,
+                ),
               ),
             ),
           ),

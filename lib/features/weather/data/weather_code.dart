@@ -1,6 +1,10 @@
 /// WMO weather interpretation codes (Open-Meteo `weather_code`) grouped into a
 /// small set of conditions with an emoji. The human label is resolved in the
 /// presentation layer via i18n (`t.weather.cond_*`).
+library;
+
+import '../../../core/glyphs.dart';
+
 enum WeatherCondition {
   clear,
   mainlyClear,
@@ -31,17 +35,17 @@ WeatherCondition weatherConditionFromCode(int? code) => switch (code) {
 /// Glyph for every "no weather to show" surface — no garden location, no frozen
 /// snapshot. One constant, not a literal per widget, so those slots can never
 /// drift apart; same family as [weatherEmoji], so they still read as weather.
-const kNoWeatherEmoji = '🌦️';
+const kNoWeatherEmoji = kGlyphWeatherNone;
 
 String weatherEmoji(WeatherCondition condition) => switch (condition) {
-  WeatherCondition.clear => '☀️',
-  WeatherCondition.mainlyClear => '🌤️',
-  WeatherCondition.cloudy => '☁️',
-  WeatherCondition.fog => '🌫️',
-  WeatherCondition.drizzle => '🌦️',
-  WeatherCondition.rain => '🌧️',
-  WeatherCondition.snow => '🌨️',
-  WeatherCondition.showers => '🌦️',
-  WeatherCondition.thunderstorm => '⛈️',
-  WeatherCondition.unknown => '🌡️',
+  WeatherCondition.clear => kGlyphWeatherClear,
+  WeatherCondition.mainlyClear => kGlyphWeatherMainlyClear,
+  WeatherCondition.cloudy => kGlyphWeatherCloudy,
+  WeatherCondition.fog => kGlyphWeatherFog,
+  WeatherCondition.drizzle => kGlyphWeatherDrizzle,
+  WeatherCondition.rain => kGlyphWeatherRain,
+  WeatherCondition.snow => kGlyphWeatherSnow,
+  WeatherCondition.showers => kGlyphWeatherShowers,
+  WeatherCondition.thunderstorm => kGlyphWeatherThunderstorm,
+  WeatherCondition.unknown => kGlyphWeatherUnknown,
 };

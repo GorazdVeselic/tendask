@@ -227,3 +227,11 @@ const kOtpResendCooldown = Duration(seconds: 60);
 /// OPEN (proceed) rather than make sign-in feel stuck — only a definitive
 /// "domain does not exist" blocks.
 const kDnsCheckTimeout = Duration(seconds: 3);
+
+/// Tick of the visible OTP resend countdown.
+const kOtpCooldownTick = Duration(seconds: 1);
+
+/// How long routing waits for the first post-sign-in pull before falling back
+/// to the local profile cell. Long enough for a quick pull, short enough that a
+/// slow/offline network never leaves the user staring at a spinner.
+const kPostSignInPullWait = Duration(seconds: 5);

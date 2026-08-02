@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/biodynamic/category_element.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
@@ -25,27 +25,27 @@ class PlantMoonChip extends StatelessWidget {
   Widget build(BuildContext context) {
     // Flag check without a ref, same pattern as MoonDayBadge (T4.2).
     if (!kMoonCalendarEnabled) return const SizedBox.shrink();
-    final catalogPlant = plant;
-    if (catalogPlant == null) return const SizedBox.shrink();
-    return _PlantMoonChipGate(plant: catalogPlant);
+    return _PlantMoonChipGate(plant: plant);
   }
 }
 
 class _PlantMoonChipGate extends ConsumerWidget {
   const _PlantMoonChipGate({required this.plant});
 
-  final Plant plant;
+  final Plant? plant;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
-    // Plants outside the sowing calendar (houseplants, conifers, hedges) get
-    // no entry: the finder would only answer "no recommendation".
-    if (plantElement(category: plant.category, plantId: plant.id) == null) {
-      return const SizedBox.shrink();
-    }
-    return PlantMoonChipButton(plantId: plant.id);
+    // Every visibility rule lives in the pure gate, so it is testable while the
+    // feature flag above keeps this widget dark (finding T4.5).
+    final target = plantMoonChipTarget(
+      settings,
+      category: plant?.category,
+      plantId: plant?.id,
+    );
+    if (target == null) return const SizedBox.shrink();
+    return PlantMoonChipButton(plantId: target);
   }
 }
 
@@ -62,7 +62,7 @@ class PlantMoonChipButton extends StatelessWidget {
     final theme = Theme.of(context);
     return ActionChip(
       avatar: Icon(
-        Icons.nightlight_outlined,
+        kIconNightlightOutlined,
         size: 18,
         color: theme.colorScheme.primary,
       ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/config.dart';
 import '../../../core/date_format.dart';
+import '../../../core/glyphs.dart';
 import '../../../i18n/translations.g.dart';
 import '../data/weather_code.dart';
 import '../data/weather_snapshot.dart';
@@ -136,7 +138,7 @@ class CurrentWeatherCard extends StatelessWidget {
                 ),
               ),
               Icon(
-                Icons.refresh,
+                kIconRefresh,
                 color: theme.colorScheme.onSurfaceVariant,
                 size: 20,
               ),
@@ -200,7 +202,7 @@ class CurrentWeatherCard extends StatelessWidget {
                   if (onTap != null) ...[
                     const SizedBox(width: 8),
                     Icon(
-                      Icons.unfold_more,
+                      kIconUnfoldMore,
                       size: 18,
                       color: theme.colorScheme.onSurfaceVariant,
                     ),
@@ -248,7 +250,7 @@ class _PlaceHeader extends StatelessWidget {
     final muted = theme.colorScheme.onSurfaceVariant;
     return Row(
       children: [
-        Icon(Icons.place_outlined, size: 14, color: muted),
+        Icon(kIconPlaceOutlined, size: 14, color: muted),
         const SizedBox(width: 4),
         Expanded(
           child: Text(
@@ -330,12 +332,12 @@ class _Metrics extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final chips = <String>[
-      if (snapshot.humidity != null) '💧 ${snapshot.humidity!.round()}%',
-      if (snapshot.windSpeed != null) '🌬 ${_round1(snapshot.windSpeed!)} km/h',
+      if (snapshot.humidity != null) '$kGlyphHumidity ${snapshot.humidity!.round()}%',
+      if (snapshot.windSpeed != null) '$kGlyphWind ${_round1(snapshot.windSpeed!)} km/h',
       if (snapshot.precipitation != null)
-        '🌧 ${_round1(snapshot.precipitation!)} mm',
+        '$kGlyphRain ${_round1(snapshot.precipitation!)} mm',
       if (snapshot.soilTemperature != null)
-        '🌱 ${snapshot.soilTemperature!.round()}°C',
+        '$kGlyphSoil ${snapshot.soilTemperature!.round()}°C',
       if (snapshot.et0 != null) 'ET₀ ${_round1(snapshot.et0!)} mm',
     ];
     if (chips.isEmpty) return const SizedBox.shrink();

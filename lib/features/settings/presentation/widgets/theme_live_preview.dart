@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 
 /// Live preview of the selected palette (uses the screen's theme, which is the
@@ -115,7 +116,7 @@ class ThemeLivePreview extends StatelessWidget {
                   width: 46,
                   height: 40,
                   color: cs.primary,
-                  child: Icon(Icons.check, size: 16, color: cs.onPrimary),
+                  child: Icon(kIconCheck, size: 16, color: cs.onPrimary),
                 ),
                 Expanded(
                   child: Container(
@@ -134,7 +135,7 @@ class ThemeLivePreview extends StatelessWidget {
                   height: 40,
                   color: cs.error,
                   child: Icon(
-                    Icons.delete_outline,
+                    kIconDeleteOutline,
                     size: 16,
                     color: cs.onError,
                   ),

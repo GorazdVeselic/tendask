@@ -4,6 +4,7 @@ import '../../../core/biodynamic/biodynamic_day.dart';
 import '../../../core/biodynamic/calendar_system.dart';
 import '../../../core/biodynamic/moon_calendar.dart';
 import '../../../core/config.dart';
+import '../../../core/date_format.dart';
 import 'moon_settings_controller.dart';
 
 part 'moon_month_provider.g.dart';
@@ -42,27 +43,55 @@ class MoonMonthDay {
   final MoonPhase? principalPhase;
 }
 
-/// Computes the grid cell for one local calendar day.
-MoonMonthDay moonMonthDayFor(DateTime localDate, CalendarSystem system) {
-  final dayStart = DateTime(localDate.year, localDate.month, localDate.day);
-  final day = dayFor(dayStart, system);
+/// What the calendar labels a day with: the element of the cell plus the
+/// transition the cell still shows (null on a single-element day, and on a
+/// midnight sliver, which the display rule swallows).
+typedef MoonDayLabel = ({
+  BiodynamicElement element,
+  DateTime? transitionAt,
+  BiodynamicElement? secondaryElement,
+});
 
-  var element = day.element;
-  var secondary = day.secondaryElement;
-  var transitionAt = day.transitionAt;
+/// Applies the display rule to an already computed [day] (of [dayStart]).
+///
+/// Takes the engine result instead of a date so a surface that needs other
+/// layers too (the home chip needs the phase) computes [dayFor] once.
+MoonDayLabel moonDayLabel(BiodynamicDay day, DateTime dayStart) {
+  final transitionAt = day.transitionAt;
   if (transitionAt != null &&
       transitionAt.difference(dayStart) < kMoonMidnightSliverWindow) {
     // BiodynamicDay asserts secondaryElement is set whenever transitionAt is.
-    element = day.secondaryElement!;
-    secondary = null;
-    transitionAt = null;
+    return (
+      element: day.secondaryElement!,
+      transitionAt: null,
+      secondaryElement: null,
+    );
   }
+  return (
+    element: day.element,
+    transitionAt: transitionAt,
+    secondaryElement: day.secondaryElement,
+  );
+}
+
+/// The day label for a date — for surfaces that show only the label (the
+/// when-step badge, the task detail section) and would otherwise pay for the
+/// phase-event scan of [moonMonthDayFor] without ever reading it.
+MoonDayLabel moonDayLabelFor(DateTime localDate, CalendarSystem system) {
+  final dayStart = startOfDay(localDate);
+  return moonDayLabel(dayFor(dayStart, system), dayStart);
+}
+
+/// Computes the grid cell for one local calendar day.
+MoonMonthDay moonMonthDayFor(DateTime localDate, CalendarSystem system) {
+  final dayStart = startOfDay(localDate);
+  final label = moonDayLabel(dayFor(dayStart, system), dayStart);
 
   return MoonMonthDay(
     date: dayStart,
-    element: element,
-    transitionAt: transitionAt,
-    secondaryElement: secondary,
+    element: label.element,
+    transitionAt: label.transitionAt,
+    secondaryElement: label.secondaryElement,
     principalPhase: principalPhaseOn(dayStart),
   );
 }

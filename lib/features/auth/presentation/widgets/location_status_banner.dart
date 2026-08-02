@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/app_colors.dart';
+import '../../../../app/theme/app_motion.dart';
+import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
 
 /// How long the banner takes to swap states. Long enough to read as a change
 /// that just happened — this banner is the screen's only save confirmation, so
 /// an instant swap would go unnoticed (FR-24).
-const _flipDuration = Duration(milliseconds: 320);
+const _flipDuration = kMotionSlow;
 
 /// How far the second line is indented, so the place name starts under the
 /// status text rather than under its icon.
@@ -72,7 +74,7 @@ class LocationStatusBanner extends StatelessWidget {
               Row(
                 children: [
                   Icon(
-                    isSet ? Icons.check_circle : Icons.error_outline,
+                    isSet ? kIconCheckCircle : kIconErrorOutline,
                     size: 18,
                     color: fg,
                   ),

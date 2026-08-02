@@ -1,5 +1,6 @@
 import '../../../core/database/app_database.dart';
 import '../../../core/date_format.dart';
+import '../../../core/glyphs.dart';
 import '../../../core/task_status.dart';
 import '../../../i18n/translations.g.dart';
 import '../../supplies/presentation/supply_format.dart';
@@ -42,6 +43,6 @@ String statusPillLabel(Task task, Translations t) {
   final local = task.date.toLocal();
   final when = '${formatDmy(local)} · ${formatHm(local)}';
   return task.status == TaskStatus.waiting
-      ? '📅  ${t.task_detail.badge_waiting} · $when'
-      : '✓  ${t.task_detail.badge_done} · $when';
+      ? '$kGlyphWaiting  ${t.task_detail.badge_waiting} · $when'
+      : '$kGlyphDone  ${t.task_detail.badge_done} · $when';
 }

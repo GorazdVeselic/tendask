@@ -730,6 +730,8 @@
       "whats_happening": "Was passiert",
       "in_constellation(rich)": "Der Mond steht im Sternbild ${sign} → ${day}.",
       "in_sign(rich)": "Der Mond steht im Zeichen ${sign} → ${day}.",
+      "in_constellation_since(rich)": "Seit ${time} steht der Mond im Sternbild ${sign} → ${day}.",
+      "in_sign_since(rich)": "Seit ${time} steht der Mond im Zeichen ${sign} → ${day}.",
       "transition(rich)": "Um ${time} folgt ${sign} → ${day}.",
       "until_then": "bis ${time}, dann ${emoji} ${day}",
       "phase_waxing(rich)": "${b(Zunehmender Mond)} — begünstigt traditionell Aussaat und oberirdische Kulturen.",

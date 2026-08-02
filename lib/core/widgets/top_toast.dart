@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import '../../app/theme/app_motion.dart';
+import '../../core/app_icons.dart';
 
 /// Shows a brief, auto-dismissing toast at the TOP of the screen. [error] tints
 /// it red (via the error container) so warnings read clearly — the default
@@ -49,7 +51,7 @@ class _TopToastState extends State<_TopToast>
     with SingleTickerProviderStateMixin {
   late final AnimationController _c = AnimationController(
     vsync: this,
-    duration: const Duration(milliseconds: 220),
+    duration: kMotionMedium,
   );
 
   @override
@@ -60,7 +62,7 @@ class _TopToastState extends State<_TopToast>
 
   Future<void> _run() async {
     await _c.forward();
-    await Future<void>.delayed(const Duration(milliseconds: 2200));
+    await Future<void>.delayed(kToastVisible);
     if (!mounted) return;
     await _c.reverse();
     widget.onDone();
@@ -90,7 +92,7 @@ class _TopToastState extends State<_TopToast>
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             child: Row(
               children: [
-                Icon(Icons.info_outline, size: 20, color: widget.foreground),
+                Icon(kIconInfoOutline, size: 20, color: widget.foreground),
                 const SizedBox(width: 10),
                 Expanded(
                   child: Text(

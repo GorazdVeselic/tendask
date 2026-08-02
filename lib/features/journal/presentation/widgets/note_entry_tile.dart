@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/database/app_database.dart';
 import '../../../../core/date_format.dart';
+import '../../../../core/glyphs.dart';
 
 /// A standalone note in the timeline.
 class NoteEntryTile extends StatelessWidget {
@@ -19,7 +20,7 @@ class NoteEntryTile extends StatelessWidget {
     return ListTile(
       leading: CircleAvatar(
         backgroundColor: theme.colorScheme.surfaceContainerHighest,
-        child: const Text('✍️', style: TextStyle(fontSize: 18)),
+        child: const Text(kGlyphNote, style: TextStyle(fontSize: 18)),
       ),
       title: Text(
         note.content,
@@ -29,7 +30,7 @@ class NoteEntryTile extends StatelessWidget {
       ),
       subtitle: noteArea != null
           ? Text(
-              '🪴 ${noteArea.name}',
+              '$kGlyphSubject ${noteArea.name}',
               style: theme.textTheme.bodySmall?.copyWith(
                 color: theme.colorScheme.onSurfaceVariant,
               ),

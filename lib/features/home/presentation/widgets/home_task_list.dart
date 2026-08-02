@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/catalog_labels.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../core/date_format.dart';
 import '../../../../core/task_status.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../../core/glyphs.dart';
 import '../../../tasks/presentation/task_day_groups.dart';
 import '../../../tasks/presentation/widgets/recurring_badge.dart';
 import '../../../tasks/presentation/widgets/task_swipe.dart';
@@ -114,12 +116,12 @@ class _TaskTile extends StatelessWidget {
     final subject = subjectLabel;
     // Subject + any recorded harvest yield (T11) on one muted subtitle line.
     final subtitleText = [
-      if (subject != null && subject.isNotEmpty) '🪴 $subject',
+      if (subject != null && subject.isNotEmpty) '$kGlyphSubject $subject',
       ?taskYieldChip(task, t),
     ].join('   ');
 
     return ListTile(
-      leading: Text(type?.icon ?? '📋', style: const TextStyle(fontSize: 22)),
+      leading: Text(type?.icon ?? kGlyphTaskTypeFallback, style: const TextStyle(fontSize: 22)),
       title: Text(label, style: theme.textTheme.bodyMedium),
       subtitle: subtitleText.isEmpty
           ? null
@@ -146,14 +148,14 @@ class _TaskTile extends StatelessWidget {
                 ],
                 if (hasReminder && !isDone) ...[
                   Icon(
-                    Icons.notifications_outlined,
+                    kIconNotificationsOutlined,
                     size: 15,
                     color: theme.colorScheme.onSurfaceVariant,
                   ),
                   const SizedBox(width: 6),
                 ],
                 Icon(
-                  isDone ? Icons.check_circle : Icons.schedule,
+                  isDone ? kIconCheckCircle : kIconSchedule,
                   size: 16,
                   color: isDone
                       ? theme.colorScheme.primary

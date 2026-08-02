@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 import '../../../../app/theme/moon_colors.dart';
+import '../../../../i18n/translations.g.dart';
 import '../../../moon/application/moon_month_provider.dart';
 import '../../../moon/presentation/widgets/moon_phase_icon.dart';
 
@@ -84,6 +85,9 @@ class DayCell extends StatelessWidget {
                       illumFraction: principalIllumFraction(phase),
                       size: 10,
                       color: theme.colorScheme.onSurface,
+                      // The glyph is the only carrier of the event in the grid.
+                      // Map completeness is enforced by i18n tests.
+                      semanticLabel: context.t.moon.phase[phase.name]!,
                     ),
                   ],
                 ),

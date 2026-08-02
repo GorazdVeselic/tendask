@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../core/app_icons.dart';
 import '../../../core/date_format.dart';
+import '../../../core/glyphs.dart';
 import '../../../core/widgets/sheet_handle.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/weather_service.dart';
@@ -64,7 +66,7 @@ class _WeatherDetailSheet extends ConsumerWidget {
                     Row(
                       children: [
                         Icon(
-                          Icons.place_outlined,
+                          kIconPlaceOutlined,
                           size: 15,
                           color: theme.colorScheme.onSurfaceVariant,
                         ),
@@ -150,17 +152,17 @@ typedef _Metric = ({String icon, String label, String value, String unit});
 
 List<_Metric> _metricsFor(WeatherSnapshot s, Translations t) => [
   if (s.humidity != null)
-    (icon: '💧', label: t.weather.m_humidity, value: '${s.humidity!.round()}', unit: '%'),
+    (icon: kGlyphHumidity, label: t.weather.m_humidity, value: '${s.humidity!.round()}', unit: '%'),
   if (s.windSpeed != null)
-    (icon: '🌬', label: t.weather.m_wind, value: _round1(s.windSpeed!), unit: 'km/h'),
+    (icon: kGlyphWind, label: t.weather.m_wind, value: _round1(s.windSpeed!), unit: 'km/h'),
   if (s.precipitation != null)
-    (icon: '🌧', label: t.weather.m_precipitation, value: _round1(s.precipitation!), unit: 'mm'),
+    (icon: kGlyphRain, label: t.weather.m_precipitation, value: _round1(s.precipitation!), unit: 'mm'),
   if (s.soilTemperature != null)
-    (icon: '🌱', label: t.weather.m_soil_temp, value: '${s.soilTemperature!.round()}', unit: '°C'),
+    (icon: kGlyphSoil, label: t.weather.m_soil_temp, value: '${s.soilTemperature!.round()}', unit: '°C'),
   if (s.et0 != null)
-    (icon: '☀️', label: t.weather.m_et0, value: _round1(s.et0!), unit: 'mm'),
+    (icon: kGlyphSun, label: t.weather.m_et0, value: _round1(s.et0!), unit: 'mm'),
   if (s.rainPast48h != null)
-    (icon: '🌧', label: t.weather.m_rain48h, value: _round1(s.rainPast48h!), unit: 'mm'),
+    (icon: kGlyphRain, label: t.weather.m_rain48h, value: _round1(s.rainPast48h!), unit: 'mm'),
 ];
 
 /// Lays the metric cells out three per row, filling the trailing gap so the

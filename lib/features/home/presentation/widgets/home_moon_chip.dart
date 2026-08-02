@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../../core/app_icons.dart';
 import '../../../../core/biodynamic/moon_calendar.dart';
 import '../../../../core/config.dart';
+import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../moon/application/moon_month_provider.dart';
 import '../../../moon/application/moon_settings_controller.dart';
@@ -15,17 +17,27 @@ import '../../../moon/presentation/widgets/moon_phase_icon.dart';
 /// off it renders nothing (disabled feature, not a swallowed error), so the
 /// dashboard stays untouched until ignition (T7). The locked → ✦ Tendask+
 /// state comes with T6.
-class HomeMoonChip extends ConsumerWidget {
+class HomeMoonChip extends StatelessWidget {
   const HomeMoonChip({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    // Flag check before any ref, same pattern as the other three entry points
+    // (T4.2): while the feature is dark nothing here may touch Riverpod.
+    if (!kMoonCalendarEnabled) return const SizedBox.shrink();
+    return const _HomeMoonChipGate();
+  }
+}
+
+class _HomeMoonChipGate extends ConsumerWidget {
+  const _HomeMoonChipGate();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // Warmed in bootstrap (keepAlive), so no flash: the value is present from
     // the first frame and the null branch only covers a failed load.
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!kMoonCalendarEnabled || !moonSurfaceOn(settings)) {
-      return const SizedBox.shrink();
-    }
+    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
     return const Padding(
       padding: EdgeInsets.only(bottom: 16),
       child: HomeMoonChipCard(),
@@ -69,11 +81,12 @@ class _HomeMoonChipCardState extends ConsumerState<HomeMoonChipCard>
     final t = context.t;
     final theme = Theme.of(context);
     final system = ref.watch(moonSystemProvider);
-    final today = DateTime.now();
+    final today = startOfDay(DateTime.now());
     final day = dayFor(today, system);
     // The element of the day LABEL (midnight-sliver display rule), so the chip
-    // agrees with the calendar cell it opens.
-    final cell = moonMonthDayFor(today, system);
+    // agrees with the calendar cell it opens. Reduced from the day computed
+    // above rather than recomputed — the engine pass is the expensive part.
+    final cell = moonDayLabel(day, today);
 
     return Card(
       margin: EdgeInsets.zero,
@@ -144,7 +157,7 @@ class _HomeMoonChipCardState extends ConsumerState<HomeMoonChipCard>
                         ),
                       ),
                       Icon(
-                        Icons.chevron_right,
+                        kIconChevronRight,
                         size: 20,
                         color: theme.colorScheme.primary,
                       ),

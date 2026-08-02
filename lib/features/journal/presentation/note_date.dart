@@ -9,7 +9,7 @@ NoteDateOption noteDateOption(DateTime date, DateTime now) {
   final today = startOfDay(now);
   final day = startOfDay(date);
   if (day == today) return NoteDateOption.today;
-  if (day == today.subtract(const Duration(days: 1))) {
+  if (day == addDays(today, -1)) {
     return NoteDateOption.yesterday;
   }
   return NoteDateOption.custom;
@@ -23,6 +23,6 @@ DateTime noteSelectedDate(
   DateTime now,
 ) => switch (option) {
   NoteDateOption.today => now,
-  NoteDateOption.yesterday => now.subtract(const Duration(days: 1)),
+  NoteDateOption.yesterday => addDays(now, -1),
   NoteDateOption.custom => customDate ?? now,
 };
