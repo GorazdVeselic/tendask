@@ -462,7 +462,10 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   Vrtnine); testi popolnosti proti seedu.) · 2. ✅ zaslon (izbor rastline → dnevi)
   (2026-08-01: `MoonFinderScreen` + `moonDayRuns()`/`moonFinderRunsProvider`; vstop 🔎 v AppBar
   koledarja, ruta `/moon-finder?plant=` z varovalom; unit testi izračuna, en+sl) ·
-  3. ⬜ plant-detail chip · 4. ⬜ pogled → widget testi/matrika/de.
+  3. ✅ plant-detail chip (2026-08-02: `PlantMoonChip` v hero `plant_detail_screen`, trislojni vzorec
+  T4.2/T4.3; postavitev **A po izbiri lastnika** — čip stoji ob čipu območja v stolpcu imena (`Wrap`),
+  pri 360 px se čipa zložita; brez novih i18n ključev (`moon.finder.title`); rastline brez priporočila
+  in lasten vnos chipa nimajo) · 4. ⬜ pogled → widget testi/matrika/de.
 - **Branchi:** `feat/fr19-t5-1-category-map` · `feat/fr19-t5-2-finder-screen` ·
   `feat/fr19-t5-3-plant-chip` · `feat/fr19-t5-4-tests`.
 - **Varnost na `main`:** kot T3/T4 — ruta z varovalom, chip za flagom.

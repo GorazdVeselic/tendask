@@ -11,6 +11,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../core/widgets/top_toast.dart';
 import '../../../i18n/translations.g.dart';
 import '../../areas/application/areas_providers.dart';
+import '../../moon/presentation/widgets/plant_moon_chip.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/yield_format.dart';
 import '../../tasks/yield_summary.dart';
@@ -146,15 +147,22 @@ class _Hero extends ConsumerWidget {
                   ),
                 ),
               const SizedBox(height: 8),
-              ActionChip(
-                avatar: Icon(
-                  Icons.place_outlined,
-                  size: 18,
-                  color: theme.colorScheme.primary,
-                ),
-                label: Text(pillLabel),
-                onPressed: () => _move(context, ref),
-                visualDensity: VisualDensity.compact,
+              Wrap(
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  ActionChip(
+                    avatar: Icon(
+                      Icons.place_outlined,
+                      size: 18,
+                      color: theme.colorScheme.primary,
+                    ),
+                    label: Text(pillLabel),
+                    onPressed: () => _move(context, ref),
+                    visualDensity: VisualDensity.compact,
+                  ),
+                  PlantMoonChip(plant: catalogPlant),
+                ],
               ),
             ],
           ),

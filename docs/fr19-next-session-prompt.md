@@ -308,11 +308,26 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   ⚠️ **Past harnessa (ponovno):** predogled, ki gleda **živ drift stream** (katalog), mora
   container `dispose()` **pred** `db.close()` — sicer `pumpAndSettle` visi 10 minut.
 
-**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 3** (chip »🌙 Kdaj za …« na
-detajlu rastline, branch `feat/fr19-t5-3-plant-chip`), za njim **T5 korak 4** (widget testi, layout
-matrika `moon/finder`, de prevodi). T5 sme tudi v v1.1 — zato je namesto tega mogoč **T6**
-(FR-20 rezina upravičenosti, edini task s shemo; rabi odločitev §11.4 o dependency za podpis tokena)
-ali **T7** (prižig). Vrstni red je odprt.
+- **T5 korak 3 ✅ (2. 8., branch `feat/fr19-t5-3-plant-chip`) — chip »Kdaj za …« na detajlu rastline:**
+  `PlantMoonChip` (`moon/presentation/widgets/plant_moon_chip.dart`, wireframe board D) v `_Hero`
+  zaslona `plant_detail_screen.dart`. Trislojni vzorec T4.2/T4.3: **StatelessWidget flag gate brez
+  ref** (+ lasten vnos brez `plantId` odpade takoj) → `_PlantMoonChipGate` (opt-in stikalo **in**
+  `plantElement() == null` → nič: sobne, iglavci, živa meja bi v iskalniku dobili le »ni priporočila«)
+  → javna `PlantMoonChipButton(plantId)` za teste/matriko/predoglede. `ActionChip` z
+  `Icons.nightlight_outlined` (isti glif kot 🌙 vstop v Dnevniku) + `t.moon.finder.title` —
+  **brez novih i18n ključev**; tap → `pushNamed('moon-finder', queryParameters: {'plant': id})`.
+  **Postavitev A (izbira lastnika 2. 8.):** čip stoji ob čipu območja v stolpcu imena (`Wrap`,
+  spacing 8) — pri 360 px se čipa zložita eden pod drugega; varianta B (vrsta čipov pod avatarjem,
+  kot risan wireframe) je bila zavrnjena, ker bi premaknila obstoječi čip območja. Pogled:
+  `tmp/plant_moon_chip_preview_test.dart` → `tmp/plant_moon_chip_{360,320}.png` (⚠️ prazni kvadrati
+  namesto ikon = manjkajoč MaterialIcons font v golden okolju). Screen-map §4 »Stanje rut«
+  posodobljen. Testi in matrika pridejo s T5.4; suite ostaja **1296**.
+
+**Naloga TE seje: izbere lastnik.** Po planu je naslednji **T5 korak 4** (widget testi chipa +
+iskalnika, layout matrika `moon/finder` in `plant/moon-chip`, **de prevodi `moon.finder.*`** —
+trenutno pade na en; branch `feat/fr19-t5-4-tests`). T5 sme tudi v v1.1 — zato je namesto tega mogoč
+**T6** (FR-20 rezina upravičenosti, edini task s shemo; rabi odločitev §11.4 o dependency za podpis
+tokena) ali **T7** (prižig). Vrstni red je odprt.
 
 **Pred delom preberi:** ustrezni task v `docs/plan-implementacije-fr19-fr20.md` · wireframe zaslona ·
 `docs/screen-map.md`.

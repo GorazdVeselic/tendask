@@ -153,7 +153,8 @@ Predlagane rute (top-level [full], brez kolizij):
 **Stanje rut:** `/moon-calendar` obstaja od T2.5 (**redirect varovalo na ruti sami**: ob
 `!kMoonCalendarEnabled` → `/home`, ker deep-link doseže ruto mimo CTA-jev); `/moon-settings` od T3.6
 (isto varovalo; vstop ⚙️ v AppBar koledarja, vstop iz `/tendask-plus` pride s T6); `/moon-finder`
-od T5.2 (isto varovalo; vstop 🔎 v AppBar koledarja, vstop s chipa rastline pride s T5.3).
+od T5.2 (isto varovalo; vstop 🔎 v AppBar koledarja, vstop s chipa rastline od T5.3 — chip stoji ob
+čipu območja v stolpcu imena, brez priporočila (sobne, iglavci, živa meja, lasten vnos) ga ni).
 `/tendask-plus` pride s T6, z istim varovalom.
 
 **Polni navigacijski poti do iskalnika (za »vse vmesne korake«):**
