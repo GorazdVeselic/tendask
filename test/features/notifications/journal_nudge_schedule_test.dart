@@ -75,6 +75,17 @@ void main() {
       expect(times, [DateTime(2026, 7, 6, 17)]);
     });
 
+    test('a daylight-saving changeover inside the chain keeps the dates', () {
+      // 25 Oct 2026 is 25 hours long in the suite's zone: +7 days from the 20th
+      // is the 27th, not the 26th that 24-hour blocks would produce.
+      final times = journalNudgeFireTimes(
+        fromLocal: DateTime(2026, 10, 20, 10),
+        dayOffsets: const [7, 28],
+        hour: 17,
+      );
+      expect(times, [DateTime(2026, 10, 27, 17), DateTime(2026, 11, 17, 17)]);
+    });
+
     test('empty offsets yield no nudges', () {
       expect(
         journalNudgeFireTimes(fromLocal: now, dayOffsets: const [], hour: 17),

@@ -114,6 +114,26 @@ void main() {
       ]);
     });
 
+    test('the autumn daylight-saving day neither repeats nor swallows a day',
+        () {
+      // 25 Oct 2026 is 25 hours long in the suite's zone. Adding 24-hour blocks
+      // used to land on it twice (two identical notifications for the same
+      // evening) and never reach the last day of the horizon.
+      final hints = _candidates(
+        from: DateTime(2026, 10, 23, 9),
+        garden: BiodynamicElement.values.toSet(),
+      );
+
+      expect([for (final h in hints) h.date], [
+        for (var d = 24; d <= 30; d++) DateTime(2026, 10, d),
+      ]);
+      expect(
+        {for (final h in hints) h.fireTime}.length,
+        hints.length,
+        reason: 'no two hints may share a fire time',
+      );
+    });
+
     test('the zodiac system decides which days qualify', () {
       final tropical = _candidates(system: CalendarSystem.tropical);
 

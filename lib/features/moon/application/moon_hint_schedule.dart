@@ -61,14 +61,16 @@ List<MoonHint> moonHintCandidates({
   final hints = <MoonHint>[];
   final today = startOfDay(fromLocal);
   for (var offset = 1; offset <= horizonDays; offset++) {
-    final date = startOfDay(today.add(Duration(days: offset)));
+    // Calendar step, never `add(Duration(days:))`: on the autumn changeover a
+    // local day is 25 hours long, so adding 24-hour blocks would land twice on
+    // the same date and drop the last day of the horizon.
+    final date = addDays(today, offset);
     final cell = moonMonthDayFor(date, system);
     if (!gardenElements.contains(cell.element)) continue;
 
-    // startOfDay first: a DST day is 23 or 25 hours long, so the eve is a
-    // calendar step, not a 24-hour subtraction.
-    final eve = startOfDay(date.subtract(const Duration(days: 1)));
-    final fireTime = DateTime(eve.year, eve.month, eve.day, hour);
+    // Calendar step for the same reason: the eve of a 25-hour day is not
+    // "24 hours earlier".
+    final fireTime = DateTime(date.year, date.month, date.day - 1, hour);
     if (!fireTime.isAfter(fromLocal)) continue;
 
     hints.add(

@@ -10,7 +10,7 @@ WhenPreset whenPreset(DateTime date, DateTime now) {
   final day = startOfDay(date);
 
   if (day == today) return WhenPreset.today;
-  if (day == today.add(const Duration(days: 1))) return WhenPreset.tomorrow;
+  if (day == addDays(today, 1)) return WhenPreset.tomorrow;
   return WhenPreset.custom;
 }
 
@@ -21,7 +21,7 @@ DateTime? dateForPreset(WhenPreset preset, DateTime current, DateTime now) {
   return switch (preset) {
     WhenPreset.today => combineDateAndTime(today, current),
     WhenPreset.tomorrow => combineDateAndTime(
-      today.add(const Duration(days: 1)),
+      addDays(today, 1),
       current,
     ),
     WhenPreset.custom => null,

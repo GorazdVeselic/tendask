@@ -57,6 +57,6 @@ String journalDayLabel(DateTime date, DateTime now, Translations t) {
   final today = startOfDay(now);
 
   if (day == today) return t.common.today;
-  if (day == today.subtract(const Duration(days: 1))) return t.common.yesterday;
+  if (day == addDays(today, -1)) return t.common.yesterday;
   return formatDmy(date);
 }
