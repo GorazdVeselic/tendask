@@ -546,10 +546,26 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (nov `_dtOrNull`); **tolerantno**: produkcija je pri `0016`, torej vrne vrstice brez teh stolpcev —
      manjkajoča polja dajo `null`, ne izjeme (drugi test to zaklene). Brez sheme, brez migracije;
      `plus_*` v driftu ostanejo `null`, dokler jih strežnik ne pošlje. Suite **1414**.
-  3. ⬜ Dependency za podpis (po odobritvi): pin + `tech-stack.md §1` posodobitev.
+  3. ✅ **Dependency za podpis** — 2026-08-03, branch `feat/fr20-t6-3-signature-dep`: **`dart_jsonwebtoken:
+     ^3.4.1` z EdDSA/Ed25519** (odločitev lastnika po primerjavi treh kandidatov). Odločilna meritev:
+     paket je **že v drevesu** kot odvisnost `supabase_flutter`/`gotrue` (`>=2.17.0 <4.0.0`), zato je
+     celoten `pubspec.lock` diff **ena vrstica** — `transitive` → `direct main`, ista verzija, ista
+     `sha256`, torej **0 novih bajtov v APK** in nobene nove verige vzdrževanja. Ostalo: 160/160 točk,
+     izdaja pred ~3 meseci, MIT, čisti Dart (`clock`, `convert`, `pointycastle` — vsi že v drevesu),
+     brez platformnih kanalov in brez I/O. Zavrnjena **`cryptography` 2.9.0** (nov paket; JWT bi moral
+     ročno razčleniti — ~50 vrstic lastne kode na varnostno občutljivem mestu; ECDSA tam nima čiste
+     Dart izvedbe) in **`ed25519_edwards` 0.3.1** (zadnja izdaja pred ~4 leti, 13 všečkov, ista ročna
+     razčlenitev). **Nič kode** — uporaba pride s korakom 4. `tech-stack.md §1` dopolnjen z razlogom,
+     zakaj je izven prvotnega seznama (monetizacija ob pisanju sklada ni obstajala).
   4. ⬜ `plusProvider`: bere drift, preveri podpis (bundlan javni ključ), čas prek `Clock`
      (konstruktor-injektiran — ne `static const` vzorec koordinatorjev); **gost brez profila → mirno
      ni-Plus** (brez izjem). Unit testi: veljaven/pretečen/predelan token, gost.
+     ⚠️ **Dve najdbi iz branja izvorne kode paketa (korak 3), ki veljata za ta korak:** `JWT.verify`
+     vzame `alg` **iz glave žetona** (`jwt.dart:55`) in šele nato pokliče algoritem — napačen tip ključa
+     sicer vrže `TypeError` (hard cast, `assert` v release izpade), a preverba mora **eksplicitno
+     zavrniti vse razen `EdDSA`**, ne se zanašati na to. In: `checkExpiresIn` privzeto bere čas prek
+     internega paketa `clock`, zato ga postavi na `false` in `plus_until` presodi z **našim** `Clock`
+     (pravilo projekta — sicer poteka ni mogoče testirati).
   5. ⬜ `/tendask-plus` zaslon (osnovni): stanje darila/veljavnost (»Doživljenjska« vs »velja do …« —
      FR-20 §6, `plus_kind` samo za prikaz), seznam funkcij (»Lunin koledar« → `/moon-settings`;
      prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.

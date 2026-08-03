@@ -50,6 +50,9 @@ dependencies:
   freezed_annotation: ^3.1.0
   json_annotation: ^4.12.0
   supabase_flutter: ^2.14.0
+  # Offline entitlement token (Tendask+): EdDSA/Ed25519 signature check against a
+  # bundled public key. Already in the tree via supabase_flutter, so this pin adds no code.
+  dart_jsonwebtoken: ^3.4.1
   connectivity_plus: ^6.1.0
   geolocator: ^14.0.2
   h3_flutter: ^0.7.1

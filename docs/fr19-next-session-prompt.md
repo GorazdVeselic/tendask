@@ -420,12 +420,30 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   produkcija je pri `0016` in vrstice teh stolpcev nimajo, zato manjkajoče polje da `null`, ne izjeme
   (drugi test). Nič sheme, nič migracije, nič vidnega. Suite **1414**.
 
-**Naloga NASLEDNJE seje: T6 korak 3 — dependency za podpis tokena** (branch
-`feat/fr20-t6-3-signature-dep`). ⚠️ **Najprej vprašaj lastnika** (odločitev FR-20 §11.4): knjižnica za
-preverjanje podpisa je **izven potrjenega sklada `tech-stack.md §1`**, zato je izbira odločitev, ne
-predlog agenta. Izhod koraka: pin verzije v `pubspec.yaml` + vnos v `tech-stack.md §1` (+ `pubspec.lock`).
-Šele nato korak 4 (`plusProvider`, bere drift, preveri podpis z bundlanim javnim ključem, čas prek
-`Clock`; gost brez profila → mirno ni-Plus).
+- **T6 korak 3 ✅ (3. 8., branch `feat/fr20-t6-3-signature-dep`) — dependency za podpis:** odločitev
+  lastnika po primerjavi treh kandidatov = **`dart_jsonwebtoken: ^3.4.1` z EdDSA/Ed25519**. Odločilna
+  meritev: paket je **že v drevesu** kot odvisnost `supabase_flutter`/`gotrue` (`>=2.17.0 <4.0.0`), zato
+  je cel `pubspec.lock` diff **ena vrstica** — `transitive` → `direct main`, ista verzija, ista `sha256`
+  → **0 novih bajtov v APK**. Ostalo: 160/160 točk, izdaja pred ~3 meseci, MIT, čisti Dart (`clock`,
+  `convert`, `pointycastle` — vsi že v drevesu), brez platformnih kanalov in brez I/O. Zavrnjena
+  `cryptography` 2.9.0 (nov paket + ročna razčlenitev JWT ≈ 50 vrstic lastne kode na varnostno
+  občutljivem mestu; ECDSA tam nima čiste Dart izvedbe) in `ed25519_edwards` 0.3.1 (zadnja izdaja pred
+  ~4 leti, 13 všečkov). `tech-stack.md §1` dopolnjen z razlogom, zakaj je izven prvotnega seznama.
+  **Nič kode** — uporaba pride s korakom 4; suite ostaja **1414**.
+  ⚠️ **Dve najdbi za korak 4 (iz branja izvorne kode paketa):** `JWT.verify` vzame `alg` **iz glave
+  žetona** (`jwt.dart:55`) — napačen tip ključa sicer vrže `TypeError` (`assert` v release izpade), a
+  `plusProvider` mora **eksplicitno zavrniti vse razen `EdDSA`**, ne se zanašati na to. In
+  `checkExpiresIn` privzeto bere čas prek internega paketa `clock` → postavi ga na `false` in
+  `plus_until` presodi z **našim** `Clock` (sicer poteka ni mogoče testirati).
+
+**Naloga NASLEDNJE seje: T6 korak 4 — `plusProvider`** (branch `feat/fr20-t6-4-plus-provider`): bere
+drift (`plus_until`/`plus_token`/`plus_kind`), preveri podpis žetona z **bundlanim javnim ključem**
+(EdDSA/Ed25519, brez mreže), čas prek **`Clock`** (konstruktor-injektiran — ne `static const` vzorec
+koordinatorjev); **gost brez profila → mirno ni-Plus** (brez izjem). Upravičenost se bere **vedno samo
+iz `plus_until`**, `plus_kind` je le za prikaz (FR-20 §7); preveri tudi `sub == moj uid` (§5.6 — kopiran
+tuj žeton ne velja). Unit testi: veljaven / pretečen / predelan žeton, tuj `sub`, gost. ⚠️ Para ključev
+za staging/prod še ni — če ga korak potrebuje, **vprašaj lastnika** (ključi in skrivnosti se ne ugibajo,
+javni ključ gre v `assets/`, privatni v Supabase secrets).
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se

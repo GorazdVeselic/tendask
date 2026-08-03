@@ -33,6 +33,7 @@
 | Crash/monitoring | **Sentry** (čisti Dart `sentry` — `sentry_flutter` 8.x se ne prevede na svežem Android skladu Kotlin 2.3/AGP 9, 9.x pa poriše `jni` navzdol in zlomi `h3_flutter`; zato Dart paket + ročna `FlutterError`/`PlatformDispatcher` integracija) | `sentry` |
 | GDPR izvoz (deljenje datoteke) | **share_plus** (sistemski share sheet za izvoženo JSON datoteko, M9.7) | `share_plus` |
 | Zunanje povezave (politika zasebnosti) | **url_launcher** (odpre javno politiko zasebnosti v brskalniku — prijava + Nastavitve, M9.5) | `url_launcher` |
+| Podpis upravičenosti Tendask+ (offline) | **dart_jsonwebtoken** z **EdDSA/Ed25519** — aplikacija lokalno preveri podpis žetona `plus_token` z **bundlanim javnim ključem** (FR-20 §6.2, T6.4); privatni ključ ostane v Supabase secrets. Izven prvotnega seznama, ker monetizacija ob pisanju sklada ni obstajala; **odobreno 2026-08-03** ob teh meritvah: paket je **že v drevesu** kot odvisnost `supabase_flutter`/`gotrue` (pin ga samo prestavi iz `transitive` v `direct main` — 0 novih bajtov), 160/160 točk in zadnja izdaja pred ~3 meseci (pub.dev, 3. 8. 2026), MIT, čisti Dart brez platformnih kanalov in brez I/O (deluje na vrtu brez signala). Zavrnjena `cryptography` (nov paket + ročna razčlenitev JWT) in `ed25519_edwards` (zadnja izdaja 2021) | `dart_jsonwebtoken` |
 | Analitika | **brez v MVP** (kasneje PostHog self-host, opcijsko) | — |
 | CI/CD | **GitHub Actions** (lint + test + build) | — |
 
