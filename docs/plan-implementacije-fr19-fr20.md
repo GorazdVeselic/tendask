@@ -533,8 +533,10 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` + `adb install -r`
      (isti defines, ista nadgradnja na mestu; to pot priporoča tudi `tool/smoke.md` zaradi padcev USB).
      Popravek bi šel v novo migracijo `0018`, nikoli v urejanje že aplicirane `0017`.
-     ⏳ **Prod `db push` odložen** (lastnik, 2. 8.: »ne zdaj«) — produkcija izmerjena isti dan: ledger
-     `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
+     ⏳ **Prod `db push` odložen do konca celote** (odločitev lastnika 2. 8., potrjena 3. 8.: »db push na
+     produkcijo ne delava, dokler vse skupaj ni končano«) — torej **ne** po posameznem koraku T6, ampak ko
+     rezina stoji. Do takrat produkcija ostane pri `0016`; migracije se kopičijo v repu in na stagingu.
+     Produkcija izmerjena 2. 8.: ledger `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
   2. ⬜ **Sync izjeme (kritično, FR-20 §6):** pull stolpca prinaša, **push ju IZPUŠČA** iz payloada —
      sicer si predelan klient prek LWW podari Plus. + **test**, da push payload stolpcev ne vsebuje.
   3. ⬜ Dependency za podpis (po odobritvi): pin + `tech-stack.md §1` posodobitev.
@@ -546,6 +548,14 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.
      Kartica »✦ Tendask+« v Nastavitvah pod profilom, za flagom **`kTendaskPlusEnabled`** (ime iz
      screen-map §2.1); ruta `/tendask-plus` z istim varovalom. **Pogled → prevodi → layout matrika.**
+     ⚠️ **Ta korak zapre slepo ulico, ki obstaja danes** (opažanje lastnika 2. 8., potrjeno v kodi z
+     lokalno prižganim flagom): edini vstop v `/moon-settings` je **⚙️ v AppBar koledarja**
+     (`moon_calendar_screen.dart`), do koledarja pa vodijo samo površine, ki vse gredo skozi
+     `moonSurfaceOn()` = `settings.enabled` (`moon_gate.dart`). Izklop glavnega 🌙 stikala je zato
+     **enosmeren** — vklopiti ga ni več mogoče (`moonCalendarRedirect` gleda le build flag, torej pomaga
+     samo deep-link, ki ga uporabnik nima). Vrstica »Lunin koledar« na tem zaslonu je **drugi vstop, ki
+     od stikala ni odvisen** (screen-map §4 ga predvideva od začetka) — zato **ne** dodajaj ločene lunine
+     vrstice v glavne Nastavitve: to bi bil podvojen vstop mimo zasnove.
   6. ⬜ **Gate swap:** na vstopnih točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za
      prižig); čip dobi zaklenjeno stanje (rdeči »✦ Tendask+ ›« → `/tendask-plus`).
      **⚠️ Čip NI eno stikalo (odločitev lastnika 2026-08-01):** mena ostane **free za vedno**
@@ -554,6 +564,14 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      ne-Plusu zamenja z »✦ Tendask+ ›«. Enako velja za vse ostale površine, ki kažejo element-dan
      (when-step oznaka, task-detail sekcija, Dnevnik-plast, koledar, sheet): te gredo **cele** za zid.
      Test naj zaklene oboje: brez Plusa čip **še vedno** kaže meno in **ne** kaže elementa.
+     ⚠️ **Sprejemno merilo tega koraka: izklop glavnega 🌙 stikala mora ostati povraten.** Flaga
+     `kMoonCalendarEnabled` in `kTendaskPlusEnabled` se prižgeta **v istem dogodku** (rollout plan §4);
+     izdaja z luno prižgano in Tendask+ kartico skrito bi slepo ulico iz koraka 5 vrnila. Preveri kot
+     scenarij: stikalo off → Nastavitve → ✦ Tendask+ → »Lunin koledar« → `/moon-settings` → stikalo nazaj on.
+     ⚠️ **Odprto vprašanje za ta korak (odločitev lastnika, ne moja):** opt-in za lunino obvestilo 🔔 živi
+     v `NotificationSettings` (profile JSON, sinhroniziran), njegov edini dom pa je `/moon-settings`. Ko
+     darilo poteče, je treba odločiti, ali se namig utiša sam (`MoonHintCoordinator` gate na `plusProvider`)
+     in ali uporabnik kje vidi, da je bil vklopljen — sicer utihne tiho, brez sledi.
   7. ⬜ **Anti-steering i18n pregled** vseh novih nizov (FR-20 §3.1): brez cene, brez URL-ja, brez
      »kje dobiti kodo« — rdeča črta, ki lahko stane odstranitev aplikacije.
   8. ⬜ Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene
@@ -562,7 +580,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap`
   (koraka 7–8 — i18n pregled in staging preizkus — sta kontrolna, brez lastnih branchev).
 - **Varnost na `main`:** migracija additive + nullable (stari APK-ji ob pull ne crashajo, tolerantni
-  parser ignorira neznano); najprej **staging**, prod `db push` po runbooku; gate je privzeto zaklenjen,
+  parser ignorira neznano); najprej **staging**, prod `db push` po runbooku **šele ob koncu celote**
+  (odločitev lastnika 3. 8. — ne po posameznem koraku); gate je privzeto zaklenjen,
   a oba flaga off → nič vidnega; push izjema pokrita s testom PRED merge-om provider koraka.
 - **Pasti (predpreverjene):** granti v isti migraciji (pravilo iz spomina) · pred prod buildom
   `supabase db push` pending migracij (pravilo iz spomina) · shemo premika SAMO ta task

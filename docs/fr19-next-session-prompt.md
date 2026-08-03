@@ -418,23 +418,35 @@ payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem 
 ⚠️ Ta korak se merga **PRED** `plusProvider` (korak 4). Odločitev §11.4 (dependency za podpis) pride s
 korakom 3 — takrat vprašaj.
 
-⏳ **Odprto:** prod `db push` migracije `0017` — pogoj (device test) je izpolnjen, lastnik ga je 2. 8.
-**odložil** (»ne zdaj«); po pushu ponovi `tmp/probe_prod_state.py` in preveri, da ima `authenticated`
-na `plus_*` in `server_inserted_at` samo `SELECT`. Produkcija izmerjena 2. 8.: ledger `0001`–`0005` +
-`0011`–`0016`, `profile` 10 stolpcev, brez sledi M11 · `origin/main` je **10+ commitov zadaj** (push ni
-bil narejen ves FR-19) · staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica
-iste migracije; datoteke ni več — ob svežem refreshu staginga izgine sam) · **na telefonu stoji stari
-build** iz `b9c69f0` s staging podatki, worktree zanj je v `tmp/old-apk`
-(`git worktree remove tmp/old-apk`).
+🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
+se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
+do takrat kopičijo v repu in na stagingu. Ko push končno pride: po njem `tmp/probe_prod_state.py` in
+preverba, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`. Produkcija izmerjena
+2. 8.: ledger `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
+
+⏳ **Odprto:** staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica iste
+migracije; datoteke ni več — ob svežem refreshu staginga izgine sam) · **na telefonu stoji debug/staging
+build z lokalno prižganim `kMoonCalendarEnabled`** (v repu je flag `false`, nikoli commitan `true`) ·
+worktree starega builda je v `tmp/old-apk` (`git worktree remove tmp/old-apk`).
+
+🔁 **Najdba lastnika 2. 8. (potrjena v kodi, popravek je del T6):** izklop glavnega 🌙 stikala v
+`/moon-settings` je danes **enosmeren** — edini vstop tja je ⚙️ v AppBar koledarja, do koledarja pa vodijo
+samo površine za `moonSurfaceOn()` = `settings.enabled` (`moon_gate.dart`), `moonCalendarRedirect` pa gleda
+le build flag. **Ne dodajaj lunine vrstice v glavne Nastavitve** — drugi vstop je od začetka predviden kot
+`/tendask-plus` → »Lunin koledar« (screen-map §4), torej ga zapre **T6 korak 5**; korak 6 ima to kot
+sprejemno merilo.
 
 ⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
 vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih
 stolpcev in si predelan klient prek LWW ne podari Plusa.
 
 📱 **Dolg, ki ga T7 ne sme preskočiti:** cel FR-19 je bil potrjen prek golden harnessa, **na napravi
-(SM A536B) ni bil nikoli videti**. Temni odtenki (A4) in emoji na pravem fontu sta edini stvari, ki ju
-golden okolje ne pove pošteno — preverba spada v T7 korak 3 (ali prej, z lokalno prižganim flagom v
-debug buildu).
+(SM A536B) pa še ni bil pregledan**. Temni odtenki (A4) in emoji na pravem fontu sta edini stvari, ki ju
+golden okolje ne pove pošteno — preverba spada v T7 korak 3. **Podlaga je pripravljena:** 2. 8. je bil na
+telefon nameščen debug/staging build z lokalno prižganim flagom, a je USB padel pred ogledom, zato zasloni
+niso bili videni. Za ponovitev: `kMoonCalendarEnabled = true` (samo lokalno!) →
+`flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` → `adb install -r` → **flag
+takoj nazaj na `false`** (s prižganim flagom `flutter test` pade — testi namenoma zaklepajo temna vrata).
 
 **Pred delom preberi:** ustrezni task v `docs/plan-implementacije-fr19-fr20.md` · wireframe zaslona ·
 `docs/screen-map.md`.
