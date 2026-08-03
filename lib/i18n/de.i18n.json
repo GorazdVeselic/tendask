@@ -634,6 +634,7 @@
     "settings": {
       "enable": "Mondkalender anzeigen",
       "enable_sub": "Chip auf der Startseite, Hinweise im Garten",
+      "enable_sub_free": "Mondphasen-Chip auf der Startseite",
       "system_label": "Kalendersystem",
       "system_sidereal": "Nach Sternbildern",
       "system_sidereal_sub": "biodynamisch",

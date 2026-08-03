@@ -23,6 +23,7 @@ import 'features/moon/application/moon_hint_coordinator.dart';
 import 'features/moon/application/moon_settings_controller.dart';
 import 'features/notifications/application/journal_nudge_coordinator.dart';
 import 'features/notifications/application/reminder_coordinator.dart';
+import 'features/plus/application/plus_provider.dart';
 import 'features/settings/application/profile_providers.dart';
 import 'i18n/plural_resolvers.dart';
 import 'i18n/translations.g.dart';
@@ -204,6 +205,24 @@ Future<void> _bootstrap() async {
     await container.read(moonSettingsControllerProvider.future);
   } catch (error, stack) {
     debugPrint('Moon settings warm-up failed (non-fatal): $error');
+    if (kSentryDsn.isNotEmpty) {
+      unawaited(Sentry.captureException(error, stackTrace: stack));
+    }
+  }
+
+  // And the Tendask+ entitlement (FR-20 T6.6), for the same reason: a paying
+  // user must not watch the locked chip flash by, and both the moon route guard
+  // and the hint coordinator read it synchronously rather than watching it.
+  //
+  // The listener is deliberately never closed: a StreamProvider stops following
+  // its stream as soon as its last listener goes, so closing this one would
+  // freeze the entitlement at its boot value until some widget happened to
+  // watch it. It lives as long as the container, i.e. the app. Non-fatal.
+  try {
+    container.listen(plusProvider, (_, _) {});
+    await container.read(plusProvider.future);
+  } catch (error, stack) {
+    debugPrint('Plus warm-up failed (non-fatal): $error');
     if (kSentryDsn.isNotEmpty) {
       unawaited(Sentry.captureException(error, stackTrace: stack));
     }

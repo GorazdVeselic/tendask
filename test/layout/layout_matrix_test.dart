@@ -37,6 +37,7 @@ import 'package:tendask/features/moon/presentation/widgets/plant_moon_chip.dart'
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
+import 'package:tendask/features/plus/application/plus_provider.dart';
 import 'package:tendask/features/plus/application/plus_token.dart';
 import 'package:tendask/features/plus/presentation/tendask_plus_screen.dart';
 import 'package:tendask/features/plus/presentation/widgets/plus_settings_card.dart';
@@ -396,16 +397,29 @@ void main() {
       notificationSettingsProvider.overrideWith(
         (ref) => Stream.value(const NotificationSettings()),
       ),
+      // With Tendask+, which is the screen's full state — without it only the
+      // master switch and the explainer are left (T6.6).
+      plusProvider.overrideWith(
+        (ref) => Stream.value(PlusStatus.active(until: DateTime.utc(2027))),
+      ),
     ],
     build: () => const MoonSettingsScreen(),
   );
 
   // The card, not the HomeMoonChip gate: the gate is const-false until T7, so
-  // only the card can be measured (same pattern as weather/no-location).
+  // only the card can be measured (same pattern as weather/no-location). Both
+  // CTAs are measured — the locked pill is a different width from the element
+  // day, and it is the one German squeezes hardest.
   layoutMatrix(
     'home/moon-chip',
     overrides: _dbOverrides,
-    build: () => const HomeMoonChipCard(),
+    build: () => const HomeMoonChipCard(isPlus: true),
+  );
+
+  layoutMatrix(
+    'home/moon-chip (locked)',
+    overrides: _dbOverrides,
+    build: () => const HomeMoonChipCard(isPlus: false),
   );
 
   // The finder with a plant already chosen — the wordiest state (callout plus

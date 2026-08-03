@@ -1,9 +1,12 @@
 import 'dart:async' show unawaited;
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tendask/app/router/app_router.dart';
+import 'package:tendask/features/plus/application/plus_provider.dart';
+import 'package:tendask/features/plus/application/plus_token.dart';
 import 'package:tendask/core/config.dart';
 
 /// Regression guard: a full-screen "create" route must NOT live under the same
@@ -71,12 +74,18 @@ void main() {
   // someone detaches `redirect:` from a route in app_router.dart.
   test('the real moon routes carry the redirect guard', () {
     final router = createAppRouter();
-    for (final path in ['/moon-calendar', '/moon-settings', '/moon-finder']) {
-      final route = router.configuration.routes
-          .whereType<GoRoute>()
-          .singleWhere((r) => r.path == path);
-      expect(route.redirect, same(moonCalendarRedirect), reason: path);
+    GoRoute routeAt(String path) => router.configuration.routes
+        .whereType<GoRoute>()
+        .singleWhere((r) => r.path == path);
+
+    // The two paid screens (T6.6) share the walled guard…
+    for (final path in ['/moon-calendar', '/moon-finder']) {
+      expect(routeAt(path).redirect, same(moonCalendarRedirect), reason: path);
     }
+    // …while the settings are reachable without an entitlement on purpose: the
+    // master switch there also governs the free phase chip, so walling this
+    // route would make switching that chip off one-way again.
+    expect(routeAt('/moon-settings').redirect, same(moonSettingsRedirect));
   });
 
   // Same for the Tendask+ screen (FR-20): its Settings card is flag-gated, but
@@ -114,15 +123,17 @@ void main() {
 
   // The moon calendar (FR-19) must be guarded on the route itself, not only on
   // its CTAs: a deep link reaches the route past any flag-gated buttons. Uses
-  // the real [moonCalendarRedirect], so this stays green when the flag flips
-  // on at ignition (T7) — it then asserts the route opens instead.
-  testWidgets('dark /moon-calendar deep link is guarded on the route', (
+  // the real [moonCalendarRedirect] with no entitlement, so this stays green
+  // when the flag flips on at ignition (T7) — it then asserts that the deep
+  // link lands on the unlock screen instead of the calendar.
+  testWidgets('a /moon-calendar deep link never opens it unentitled', (
     tester,
   ) async {
     final router = GoRouter(
       initialLocation: '/home',
       routes: [
         GoRoute(path: '/home', builder: (_, _) => const Text('HOME')),
+        GoRoute(path: '/tendask-plus', builder: (_, _) => const Text('PLUS')),
         GoRoute(
           path: '/moon-calendar',
           redirect: moonCalendarRedirect,
@@ -130,19 +141,27 @@ void main() {
         ),
       ],
     );
-    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpWidget(
+      ProviderScope(
+        overrides: [
+          plusProvider.overrideWith(
+            (ref) => Stream.value(const PlusStatus.none()),
+          ),
+        ],
+        child: MaterialApp.router(routerConfig: router),
+      ),
+    );
     await tester.pumpAndSettle();
 
     unawaited(router.push('/moon-calendar'));
     await tester.pumpAndSettle();
 
+    // Dark flag → home; lit flag without Tendask+ → the unlock screen. Either
+    // way the calendar itself stays out of reach.
     expect(
-      find.text(kMoonCalendarEnabled ? 'MOON' : 'HOME'),
+      find.text(kMoonCalendarEnabled ? 'PLUS' : 'HOME'),
       findsOneWidget,
     );
-    expect(
-      find.text(kMoonCalendarEnabled ? 'HOME' : 'MOON'),
-      findsNothing,
-    );
+    expect(find.text('MOON'), findsNothing);
   });
 }

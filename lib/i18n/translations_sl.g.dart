@@ -1058,6 +1058,7 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	// Translations
 	@override String get enable => 'Prikaži Lunin koledar';
 	@override String get enable_sub => 'čip na Domov, oznake po vrtu';
+	@override String get enable_sub_free => 'čip z meno Lune na Domov';
 	@override String get system_label => 'Sistem koledarja';
 	@override String get system_sidereal => 'Po ozvezdjih';
 	@override String get system_sidereal_sub => 'biodinamični';
@@ -1781,6 +1782,7 @@ extension on TranslationsSl {
 			'moon.calendar.weekday_short.sun' => 'ned',
 			'moon.settings.enable' => 'Prikaži Lunin koledar',
 			'moon.settings.enable_sub' => 'čip na Domov, oznake po vrtu',
+			'moon.settings.enable_sub_free' => 'čip z meno Lune na Domov',
 			'moon.settings.system_label' => 'Sistem koledarja',
 			'moon.settings.system_sidereal' => 'Po ozvezdjih',
 			'moon.settings.system_sidereal_sub' => 'biodinamični',

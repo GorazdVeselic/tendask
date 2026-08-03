@@ -1,4 +1,5 @@
 import 'package:flutter/widgets.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../core/config.dart';
@@ -21,6 +22,7 @@ import '../../features/plants/presentation/garden_plant_add_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
+import '../../features/plus/application/plus_provider.dart';
 import '../../features/plus/presentation/tendask_plus_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
@@ -30,10 +32,27 @@ import '../../features/tasks/presentation/task_detail_screen.dart';
 import '../../features/tasks/presentation/tasks_screen.dart';
 import 'main_shell.dart';
 
-/// Guard on the moon calendar routes themselves (FR-19, dark until T7): a deep
+/// Guard on the paid moon screens themselves (FR-19, dark until T7): a deep
 /// link reaches a route past the flag-gated CTAs, so gating buttons alone is
-/// not enough.
-String? moonCalendarRedirect(BuildContext context, GoRouterState state) =>
+/// not enough. Since T6.6 they also need Tendask+ (spec §6.5) — a walled screen
+/// hands the user its unlock rather than dropping them home.
+String? moonCalendarRedirect(BuildContext context, GoRouterState state) {
+  if (!kMoonCalendarEnabled) return '/home';
+  // Read, not watch: a redirect is not a build. The entitlement is warmed
+  // during bootstrap, so a still-loading value (which reads as locked) is not
+  // a state the user can navigate in.
+  final isPlus = ProviderScope.containerOf(
+    context,
+    listen: false,
+  ).read(plusActiveProvider);
+  return isPlus ? null : '/tendask-plus';
+}
+
+/// The moon SETTINGS route is deliberately NOT walled (owner, 2026-08-03): its
+/// master 🌙 switch also governs the free phase chip, and this screen is the
+/// only way to switch that chip back on — reached from the Tendask+ screen,
+/// which stays open to everyone.
+String? moonSettingsRedirect(BuildContext context, GoRouterState state) =>
     kMoonCalendarEnabled ? null : '/home';
 
 /// Same guard for the Tendask+ screen (FR-20, dark until T7): it is reachable
@@ -239,7 +258,7 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
     GoRoute(
       path: '/moon-settings',
       name: 'moon-settings',
-      redirect: moonCalendarRedirect,
+      redirect: moonSettingsRedirect,
       builder: (context, state) => const MoonSettingsScreen(),
     ),
     GoRoute(

@@ -644,6 +644,7 @@
     "settings": {
       "enable": "Prikaži Lunin koledar",
       "enable_sub": "čip na Domov, oznake po vrtu",
+      "enable_sub_free": "čip z meno Lune na Domov",
       "system_label": "Sistem koledarja",
       "system_sidereal": "Po ozvezdjih",
       "system_sidereal_sub": "biodinamični",

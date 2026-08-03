@@ -634,6 +634,7 @@
     "settings": {
       "enable": "Show moon calendar",
       "enable_sub": "chip on Home, labels across the garden",
+      "enable_sub_free": "moon phase chip on Home",
       "system_label": "Calendar system",
       "system_sidereal": "By constellations",
       "system_sidereal_sub": "biodynamic",

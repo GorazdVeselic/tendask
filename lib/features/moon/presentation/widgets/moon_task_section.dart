@@ -5,6 +5,7 @@ import '../../../../core/config.dart';
 import '../../../../core/date_format.dart';
 import '../../../../core/widgets/section_label.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../plus/application/plus_provider.dart';
 import '../../application/moon_month_provider.dart';
 import '../../application/moon_settings_controller.dart';
 import '../moon_gate.dart';
@@ -15,8 +16,9 @@ import 'element_glyph.dart';
 /// the element day of the task's date, RE-DERIVED on every build — never
 /// frozen like the weather snapshot (spec §6.1.2), so editing the date moves
 /// it. Info only, no tap (MVP). Decides its own visibility — while the feature
-/// flag or the opt-in switch is off it renders nothing (disabled feature, not
-/// a swallowed error), including its section label.
+/// flag, the opt-in switch or the Tendask+ entitlement is missing it renders
+/// nothing (disabled feature, not a swallowed error), including its section
+/// label: the element day is the paid half of FR-19 (spec §6.5).
 class MoonTaskSection extends StatelessWidget {
   const MoonTaskSection({super.key, required this.date});
 
@@ -39,7 +41,8 @@ class _MoonTaskSectionGate extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
+    final isPlus = ref.watch(plusActiveProvider);
+    if (!moonPlusSurfaceOn(settings, isPlus)) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

@@ -13,9 +13,9 @@ MoonSettings _settings({bool enabled = true, bool showInJournal = true}) =>
     );
 
 void main() {
-  // The visibility rules the four T4 entry points share. Their gate widgets
-  // cannot exercise this layer while kMoonCalendarEnabled is false, so these
-  // cases are what pins the behaviour that goes live at ignition (T7).
+  // The visibility rules the entry points share. Their gate widgets cannot
+  // exercise this layer while kMoonCalendarEnabled is false, so these cases are
+  // what pins the behaviour that goes live at ignition (T7).
   group('moonSurfaceOn', () {
     test('follows the master switch', () {
       expect(moonSurfaceOn(_settings()), isTrue);
@@ -32,29 +32,47 @@ void main() {
     });
   });
 
-  group('journalMoonLayerOn', () {
-    test('needs both the master switch and the journal sub-switch', () {
-      expect(journalMoonLayerOn(_settings()), isTrue);
-      expect(journalMoonLayerOn(_settings(showInJournal: false)), isFalse);
-      expect(journalMoonLayerOn(_settings(enabled: false)), isFalse);
-      expect(
-        journalMoonLayerOn(_settings(enabled: false, showInJournal: true)),
-        isFalse,
-      );
+  group('moonPlusSurfaceOn', () {
+    test('needs the entitlement on top of the master switch', () {
+      expect(moonPlusSurfaceOn(_settings(), true), isTrue);
+      expect(moonPlusSurfaceOn(_settings(), false), isFalse);
+      expect(moonPlusSurfaceOn(_settings(enabled: false), true), isFalse);
     });
 
     test('treats a failed settings load as off', () {
-      expect(journalMoonLayerOn(null), isFalse);
+      expect(moonPlusSurfaceOn(null, true), isFalse);
+    });
+
+    test('the free phase does not follow it', () {
+      // The Home chip keeps its phase without a licence (spec §6.5); only its
+      // element-day CTA is swapped for the lock.
+      expect(moonSurfaceOn(_settings()), isTrue);
+      expect(moonPlusSurfaceOn(_settings(), false), isFalse);
+    });
+  });
+
+  group('journalMoonLayerOn', () {
+    test('needs the entitlement, the master switch and the sub-switch', () {
+      expect(journalMoonLayerOn(_settings(), true), isTrue);
+      expect(journalMoonLayerOn(_settings(), false), isFalse);
+      expect(journalMoonLayerOn(_settings(showInJournal: false), true), isFalse);
+      expect(journalMoonLayerOn(_settings(enabled: false), true), isFalse);
+    });
+
+    test('treats a failed settings load as off', () {
+      expect(journalMoonLayerOn(null, true), isFalse);
     });
   });
 
   group('plantMoonChipTarget', () {
     String? target({
       MoonSettings? settings,
+      bool isPlus = true,
       String? category = 'vegetable',
       String? plantId = 'tomato',
     }) => plantMoonChipTarget(
       settings ?? _settings(),
+      isPlus: isPlus,
       category: category,
       plantId: plantId,
     );
@@ -68,11 +86,20 @@ void main() {
     test('follows the switches like every other surface', () {
       expect(target(settings: _settings(enabled: false)), isNull);
       expect(
-        plantMoonChipTarget(null, category: 'vegetable', plantId: 'tomato'),
+        plantMoonChipTarget(
+          null,
+          isPlus: true,
+          category: 'vegetable',
+          plantId: 'tomato',
+        ),
         isNull,
       );
       // The journal sub-switch governs the colour layer, never this chip.
       expect(target(settings: _settings(showInJournal: false)), 'tomato');
+    });
+
+    test('the finder is paid, so no entitlement means no chip', () {
+      expect(target(isPlus: false), isNull);
     });
 
     test('a private plant has nothing to prefill the finder with', () {

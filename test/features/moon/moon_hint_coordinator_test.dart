@@ -12,6 +12,8 @@ import 'package:tendask/core/notifications/notification_settings.dart';
 import 'package:tendask/features/moon/application/garden_elements_provider.dart';
 import 'package:tendask/features/moon/application/moon_hint_coordinator.dart';
 import 'package:tendask/features/moon/application/moon_settings_controller.dart';
+import 'package:tendask/features/plus/application/plus_provider.dart';
+import 'package:tendask/features/plus/application/plus_token.dart';
 import 'package:tendask/features/settings/application/profile_providers.dart';
 import 'package:tendask/features/settings/data/profile_repository.dart';
 import 'package:tendask/i18n/translations.g.dart';
@@ -34,6 +36,7 @@ typedef _Env = ({
 Future<_Env> _setup({
   NotificationSettings settings = _optIn,
   Set<BiodynamicElement> garden = const {BiodynamicElement.root},
+  bool isPlus = true,
 }) async {
   final db = AppDatabase.forTesting(NativeDatabase.memory());
   final profileRepo = ProfileRepository(db);
@@ -49,12 +52,27 @@ Future<_Env> _setup({
       // The garden derives from two drift streams and the catalog; what the
       // hint cares about is only the resulting element set.
       gardenElementsProvider.overrideWithValue(garden),
+      // The hint is a paid surface (T6.6); the signed token is exercised in
+      // plus_provider_test, so here the entitlement comes as a value.
+      plusProvider.overrideWith(
+        (ref) => Stream.value(
+          isPlus
+              ? PlusStatus.active(until: DateTime.utc(2027))
+              : const PlusStatus.none(),
+        ),
+      ),
     ],
   );
   // LIFO: dispose the container (cancels the coordinator's profile
   // subscription) before closing the database.
   addTearDown(() => db.close());
   addTearDown(container.dispose);
+  // The bootstrap holds an open listener on the entitlement (main.dart): a
+  // StreamProvider follows its stream only while something listens, and the
+  // coordinator reads the value rather than watching it. Without this the
+  // entitlement would stay AsyncLoading, i.e. locked.
+  container.listen(plusProvider, (_, _) {});
+  await pumpEventQueue();
   return (container: container, db: db, profileRepo: profileRepo, notif: notif);
 }
 
@@ -127,6 +145,19 @@ void main() {
 
     expect(env.notif.cancelled, containsAll(kMoonHintNotificationIds));
     expect(env.notif.scheduledNudges, isEmpty);
+  });
+
+  test('an expired gift silences the hint without touching the opt-in', () async {
+    // Owner's decision 2026-08-03: the hint goes quiet by itself when Tendask+
+    // lapses, and the stored opt-in survives so it returns with a new licence.
+    final env = await _setup(isPlus: false);
+
+    await _coordinator(env).armHints(_from);
+
+    expect(env.notif.cancelled, containsAll(kMoonHintNotificationIds));
+    expect(env.notif.scheduledNudges, isEmpty);
+    final stored = await env.profileRepo.notificationSettings(kLocalUserId);
+    expect(stored.moonHintEnabled, isTrue);
   });
 
   test('an empty garden stays silent', () async {

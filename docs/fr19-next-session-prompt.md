@@ -486,22 +486,34 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `settings/plus-card`) = 54 komb. Suite **1495**. Pogled: `tmp/plus_preview_test.dart` →
   `tmp/plus_{active,lifetime,inactive,dark,de_320,card}.png`.
 
-**Naloga NASLEDNJE seje: T6 korak 6 — gate swap** (branch `feat/fr20-t6-6-gate-swap`): na vstopnih
-točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za prižig); čip na Domov dobi zaklenjeno
-stanje (rdeči »✦ Tendask+ ›« → `/tendask-plus`).
-⚠️ **Čip NI eno stikalo** (odločitev lastnika 1. 8.): **mena ostane free za vedno** (spec §6.5), zato
-`HomeMoonChipCard` rabi **deljena vrata** — ikona mene + naslov + ime mene se izrišejo vedno (ko je
-master flag on), **element-dan CTA »dan za X ›«** pa se ob ne-Plusu zamenja z »✦ Tendask+ ›«. Vse
-ostale površine z element-dnevom (when-step oznaka, task-detail sekcija, Dnevnik-plast, koledar, sheet)
-gredo **cele** za zid. Test naj zaklene oboje: brez Plusa čip **še vedno** kaže meno in **ne** kaže elementa.
-⚠️ **Sprejemno merilo:** izklop glavnega 🌙 stikala mora ostati **povraten** — preveri scenarij stikalo
-off → Nastavitve → ✦ Tendask+ → »Lunin koledar« → `/moon-settings` → stikalo nazaj on. Flaga
-`kMoonCalendarEnabled` in `kTendaskPlusEnabled` se prižgeta **v istem dogodku**; izdaja z luno prižgano
-in Tendask+ kartico skrito bi slepo ulico vrnila.
-⚠️ **Odprto vprašanje za ta korak (odločitev lastnika, ne moja):** opt-in za lunino obvestilo 🔔 živi v
-`NotificationSettings` (profile JSON, sinhroniziran), njegov edini dom pa je `/moon-settings`. Ko darilo
-poteče, je treba odločiti, ali se namig **utiša sam** (`MoonHintCoordinator` gate na `plusProvider`) in
-ali uporabnik kje vidi, da je bil vklopljen — sicer utihne tiho, brez sledi.
+- **T6 korak 6 ✅ (3. 8., branch `feat/fr20-t6-6-gate-swap`) — gate swap:** nov **`plusActiveProvider`**
+  je edini bool zaklenjenih površin (loading/napaka = zaklenjeno). `moonSurfaceOn()` ostane **free**
+  pravilo (mena), element-dan nosi novi **`moonPlusSurfaceOn(settings, isPlus)`**; `journalMoonLayerOn`
+  in `plantMoonChipTarget` sta dobila `isPlus`. **Cele za zid:** when-step oznaka, task-detail sekcija,
+  Dnevnik-plast + 🌙 gumb, čip rastline, `/moon-calendar` in `/moon-finder` (deep-link brez licence →
+  `/tendask-plus`, ne `/home`). **Čip na Domov = deljena vrata:** mena + naslov vedno, CTA pa »dan za X ›«
+  ali **pilula »✦ Tendask+ ›«**; tap kjerkoli po kartici → `/tendask-plus`.
+  ⚠️ **Ton pilule = medena `colorScheme.secondary`** (izbira lastnika ob pogledu): wireframe je risal
+  rdečo (`--lock`), a rdeča je v aplikaciji destruktivna barva. Predogledi:
+  `tmp/plus_gate_preview_test.dart` → `tmp/gate_chip_{locked,unlocked,dark,de320,alt_terracotta}.png`,
+  `tmp/gate_settings_{free,plus}.png`.
+  ⚠️ **Dve odločitvi lastnika:** (a) ko darilo poteče, se **lunino obvestilo 🔔 utiša samo**
+  (`MoonHintCoordinator` bere upravičenost; shranjen opt-in ostane, namig se vrne z novo licenco), brez
+  sledi za uporabnika; (b) **vrstica »Lunin koledar« na `/tendask-plus` je tapljiva tudi brez licence**
+  → `/moon-settings` ima **lastno varovalo `moonSettingsRedirect`** (samo flag, brez zidu) in brez Plusa
+  pokaže **samo glavno stikalo + »Kaj je to?«**. Nov ključ `moon.settings.enable_sub_free` en+sl+de.
+  ⚠️ **Najdba (Riverpod 3):** `StreamProvider` sledi streamu **samo dokler ga kdo posluša**;
+  `ref.listen`/`ref.watch` iz providerja, ki ga sam nihče ne posluša (koordinator), stream **ne** oživi
+  in `.future` v tem stanju nikoli ne dokonča. Zato `main.dart` drži **odprt** (nikoli zaprt!)
+  `container.listen(plusProvider, …)` in počaka na prvo vrednost (brez utripa čipa); isti vzorec rabijo
+  testi koordinatorja. **+25 testov, suite 1520**; analyze čist. Netestirana ostaja samo veja
+  `containerOf(...).read(plusActiveProvider)` v `moonCalendarRedirect` (temen flag) — oživi pri T7.
+
+**Naloga NASLEDNJE seje: T6 korak 7 — anti-steering pregled i18n** (kontrolni korak, brez svojega
+brancha po planu): pregled **vseh** nizov FR-19/FR-20 (`plus.*`, `moon.*`, pilula na čipu, kartica v
+Nastavitvah) proti FR-20 §3.1 — **brez cene, brez URL-ja, brez namiga, kje dobiti kodo**. To je rdeča
+črta, ki lahko stane odstranitev aplikacije iz Play. Za njim ostane korak 8 (staging preizkus na
+napravi: viden odklep/zaklep, potek prek skrajšanega `plus_until`, letalski način) in nato T7 prižig.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
@@ -530,12 +542,13 @@ podpisanim žetonom (»Aktiven do 2. 9. 2026«, brez omrežja) in **cel scenarij
 off → čip na Domov izgine → Nastavitve → ✦ Tendask+ → »Lunin koledar« → nastavitve → vklop → čip nazaj.
 V `logcat` nič. Zato korak 6 tega ne odkriva več — mora pa ga **ohraniti**.
 
-🔁 **Najdba lastnika 2. 8. (potrjena v kodi, popravek je del T6):** izklop glavnega 🌙 stikala v
+🔁 **Najdba lastnika 2. 8. — ZAPRTO (koraka 5 in 6):** izklop glavnega 🌙 stikala v
 `/moon-settings` je danes **enosmeren** — edini vstop tja je ⚙️ v AppBar koledarja, do koledarja pa vodijo
 samo površine za `moonSurfaceOn()` = `settings.enabled` (`moon_gate.dart`), `moonCalendarRedirect` pa gleda
 le build flag. **Ne dodajaj lunine vrstice v glavne Nastavitve** — drugi vstop je od začetka predviden kot
-`/tendask-plus` → »Lunin koledar« (screen-map §4), torej ga zapre **T6 korak 5**; korak 6 ima to kot
-sprejemno merilo.
+`/tendask-plus` → »Lunin koledar« (screen-map §4). Korak 5 ga je odprl, korak 6 pa je vrstico naredil
+tapljivo **tudi brez licence** in `/moon-settings` pustil izven zidu, zato je pot povratna v obeh
+stanjih upravičenosti (zaklenjeno s testi).
 
 ✅ **Vrstni red znotraj T6 je izpolnjen:** sync izjema (korak 2) je v `main` **pred** `plusProvider`
 (korak 4), zato nobena vmesna izdaja ne more pushati server-lastnih stolpcev.

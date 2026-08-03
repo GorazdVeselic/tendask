@@ -6,14 +6,15 @@ import '../../../../core/app_icons.dart';
 import '../../../../core/config.dart';
 import '../../../../core/database/app_database.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../plus/application/plus_provider.dart';
 import '../../application/moon_settings_controller.dart';
 import '../moon_gate.dart';
 
 /// "When for …" chip in the plant detail hero (FR-19 T5.3, wireframe board D):
 /// opens the finder prefilled with this plant. Decides its own visibility —
-/// while the feature flag or the opt-in switch is off it renders nothing
-/// (disabled feature, not a swallowed error), so the hero stays untouched
-/// until ignition (T7).
+/// while the feature flag, the opt-in switch or the Tendask+ entitlement is
+/// missing it renders nothing (disabled feature, not a swallowed error), so the
+/// hero stays untouched until ignition (T7); the finder is paid (spec §6.5).
 class PlantMoonChip extends StatelessWidget {
   const PlantMoonChip({super.key, required this.plant});
 
@@ -41,6 +42,7 @@ class _PlantMoonChipGate extends ConsumerWidget {
     // feature flag above keeps this widget dark (finding T4.5).
     final target = plantMoonChipTarget(
       settings,
+      isPlus: ref.watch(plusActiveProvider),
       category: plant?.category,
       plantId: plant?.id,
     );

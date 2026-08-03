@@ -11,6 +11,8 @@ import 'package:tendask/core/local_prefs/local_prefs.dart';
 import 'package:tendask/core/notifications/notification_service.dart';
 import 'package:tendask/features/moon/application/moon_settings_controller.dart';
 import 'package:tendask/features/moon/presentation/moon_settings_screen.dart';
+import 'package:tendask/features/plus/application/plus_provider.dart';
+import 'package:tendask/features/plus/application/plus_token.dart';
 import 'package:tendask/features/settings/data/profile_repository.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -21,6 +23,14 @@ class _FailingController extends MoonSettingsController {
   @override
   Future<MoonSettings> build() async => throw StateError('boom');
 }
+
+/// The entitlement as a plain value — the signed token is exercised in
+/// plus_provider_test.
+Stream<PlusStatus> _plus({required bool active}) => Stream.value(
+  active
+      ? PlusStatus.active(until: DateTime.utc(2027))
+      : const PlusStatus.none(),
+);
 
 void main() {
   late AppDatabase db;
@@ -35,6 +45,9 @@ void main() {
         databaseProvider.overrideWithValue(db),
         // The 🔔 row asks the OS for the notification grant before it opts in.
         notificationServiceProvider.overrideWithValue(notif),
+        // Everything below the master switch is a Tendask+ row (T6.6), so the
+        // default here is an entitled user; the free screen has its own test.
+        plusProvider.overrideWith((ref) => _plus(active: true)),
       ],
     );
   });
@@ -134,6 +147,38 @@ void main() {
     expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
   });
 
+  testWidgets('without Tendask+ only the free switch and the explainer stay', (
+    tester,
+  ) async {
+    // The screen is reachable without a licence (via /tendask-plus) so the free
+    // phase chip can be switched back on; the paid rows would otherwise be
+    // settings for surfaces the wall hides.
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        notificationServiceProvider.overrideWithValue(notif),
+        plusProvider.overrideWith((ref) => _plus(active: false)),
+      ],
+    );
+    await pumpSettings(tester);
+
+    expect(find.text(t.moon.settings.enable), findsOneWidget);
+    expect(find.text(t.moon.settings.enable_sub_free), findsOneWidget);
+    expect(find.text(t.moon.settings.about_title), findsOneWidget);
+
+    expect(find.text(t.moon.settings.system_label), findsNothing);
+    expect(find.text(t.moon.settings.hint), findsNothing);
+    expect(find.text(t.moon.settings.highlight_garden), findsNothing);
+    expect(find.text(t.moon.settings.show_in_journal), findsNothing);
+    expect(find.text(t.moon.settings.show_astro), findsNothing);
+
+    // The switch still works — that is the whole point of keeping it here.
+    await tester.tap(find.text(t.moon.settings.enable));
+    await tester.pumpAndSettle();
+    expect(await LocalPrefsRepository(db).moonCalendarEnabled(), isFalse);
+  });
+
   testWidgets('a failed load shows the error message, not a stuck spinner', (
     tester,
   ) async {
@@ -142,6 +187,7 @@ void main() {
       overrides: [
         databaseProvider.overrideWithValue(db),
         moonSettingsControllerProvider.overrideWith(_FailingController.new),
+        plusProvider.overrideWith((ref) => _plus(active: true)),
       ],
     );
     await pumpSettings(tester);

@@ -2158,6 +2158,9 @@ class Translations$moon$settings$en {
 	/// en: 'chip on Home, labels across the garden'
 	String get enable_sub => 'chip on Home, labels across the garden';
 
+	/// en: 'moon phase chip on Home'
+	String get enable_sub_free => 'moon phase chip on Home';
+
 	/// en: 'Calendar system'
 	String get system_label => 'Calendar system';
 
@@ -2974,6 +2977,7 @@ extension on Translations {
 			'moon.calendar.weekday_short.sun' => 'Sun',
 			'moon.settings.enable' => 'Show moon calendar',
 			'moon.settings.enable_sub' => 'chip on Home, labels across the garden',
+			'moon.settings.enable_sub_free' => 'moon phase chip on Home',
 			'moon.settings.system_label' => 'Calendar system',
 			'moon.settings.system_sidereal' => 'By constellations',
 			'moon.settings.system_sidereal_sub' => 'biodynamic',

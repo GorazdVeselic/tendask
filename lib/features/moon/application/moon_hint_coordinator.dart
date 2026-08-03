@@ -14,6 +14,7 @@ import '../../../core/single_flight.dart';
 import '../../../i18n/translations.g.dart';
 import '../../notifications/application/journal_nudge_schedule.dart';
 import '../../notifications/application/reminder_schedule.dart';
+import '../../plus/application/plus_provider.dart';
 import '../../settings/application/profile_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import 'garden_elements_provider.dart';
@@ -40,6 +41,10 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     // before they resolve — these listeners arm it again once they do.
     ref.listen(gardenElementsProvider, (_, _) => _scheduleSoon());
     ref.listen(moonSettingsControllerProvider, (_, _) => _scheduleSoon());
+    // The hint is a paid surface (spec §6.5), so an entitlement that arrives or
+    // lapses must arm or silence it. Listening also keeps the stream subscribed,
+    // so the read inside [armHints] sees a resolved value.
+    ref.listen(plusProvider, (_, _) => _scheduleSoon());
 
     // The 🔔 opt-in and the anti-spam switches live in the profile.
     final db = ref.watch(databaseProvider);
@@ -96,6 +101,12 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     for (final id in kMoonHintNotificationIds) {
       await notif.cancel(id);
     }
+    // An expired gift silences the hint by itself (owner, 2026-08-03) — the
+    // stored opt-in is left alone, so it returns with the entitlement. Read,
+    // not awaited: an entitlement that has not resolved yet reads as "no Plus"
+    // and the listener in [build] arms again the moment it does — the same
+    // pattern the garden and the settings streams already use.
+    if (!ref.read(plusActiveProvider)) return;
     if (!moon.enabled || !settings.moonHintEnabled) return;
 
     // The journal nudge is the senior hint: the moon hint yields to its days

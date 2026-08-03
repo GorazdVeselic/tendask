@@ -32,6 +32,7 @@ Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
   - tap opravila (DANES/NAZADNJE) → **task-detail** (`/task/:id` ali shell `/tasks/:id`).
   - **+ FAB → `/task-new`** (vnos opravila, wizard — gl. §3.1).
 - **[FR-19] doda:** »moon chip« pod vremensko kartico → `/moon-calendar` (ali `/tendask-plus`, če zaklenjeno).
+  **Deljena vrata (T6.6):** mena + naslov sta free za vedno (§6.5), element-dan CTA je za zidom.
 
 ### 1.2 Opravila — `/tasks` (`tasks`) [shell]
 Seznam opravil. Tap opravila → **task-detail** `/tasks/:id` (`task-detail`, znotraj shell-a).
@@ -145,15 +146,19 @@ Predlagane rute (top-level [full], brez kolizij):
 
 | Route | name | Kako se pride (VSI vstopi) | Vsebuje / vodi |
 |---|---|---|---|
-| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA (s T6.6) | stanje veljavnosti (»Aktiven do …« / »Aktiven — doživljenjsko«) + seznam funkcij, isti v obeh stanjih; **»Lunin koledar« → `/moon-settings`** (samo z licenco), prihodnje = »Kmalu«. **Vnos kode + »Aktiviraj« pride s T8** |
-| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (od T6.5) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena (🔔 namig pride s T4b) · »Kaj je to« |
+| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA (s T6.6) | stanje veljavnosti (»Aktiven do …« / »Aktiven — doživljenjsko«) + seznam funkcij, isti v obeh stanjih; **»Lunin koledar« → `/moon-settings`** (od T6.6 tapljivo **tudi brez licence** — glavno 🌙 stikalo vodi tudi free čip mene), prihodnje = »Kmalu«. **Vnos kode + »Aktiviraj« pride s T8** |
+| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (od T6.5, brez pogoja licence od T6.6) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: 🔔 namig · poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena · »Kaj je to«. **Brez Tendask+ ostaneta samo glavno stikalo + »Kaj je to?«** (T6.6) |
 | `/moon-calendar` | moon-calendar | (1) Domov moon chip (odklenjen) · (2) Dnevnik **🌙** AppBar | segmented [Mesec | Teden] · **⚙️ → `/moon-settings`** · 🔎 → `/moon-finder` · ★ po vrtu · **tap dan → dan-podrobno (sheet)** |
 | `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Kdaj za …« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
 | (sheet) | moon-day | `/moon-calendar` → tap dan | »Kaj se dogaja« + priporočila → »＋ opravilo« = `/task-new?date=…` |
 
 **Stanje rut:** `/moon-calendar` obstaja od T2.5 (**redirect varovalo na ruti sami**: ob
-`!kMoonCalendarEnabled` → `/home`, ker deep-link doseže ruto mimo CTA-jev); `/moon-settings` od T3.6
-(isto varovalo; vstop ⚙️ v AppBar koledarja, vstop iz `/tendask-plus` pride s T6); `/moon-finder`
+`!kMoonCalendarEnabled` → `/home`, ker deep-link doseže ruto mimo CTA-jev; **od T6.6 varovalo zahteva
+tudi Tendask+** — brez licence gre deep-link na `/tendask-plus`, ne na `/home`); `/moon-settings` od T3.6
+(vstop ⚙️ v AppBar koledarja **in od T6.5 vrstica »Lunin koledar« na `/tendask-plus`**; **edina lunina
+ruta BREZ zidu** — `moonSettingsRedirect` gleda samo flag, ker glavno 🌙 stikalo vodi tudi free čip mene,
+zato mora ostati dosegljivo brez licence (odločitev lastnika 3. 8.); brez Plusa zaslon pokaže samo glavno
+stikalo + kartico »Kaj je to?«); `/moon-finder`
 od T5.2 (isto varovalo; vstop 🔎 v AppBar koledarja, vstop s chipa rastline od T5.3 — chip stoji ob
 čipu območja v stolpcu imena, brez priporočila (sobne, iglavci, živa meja, lasten vnos) ga ni).
 `/tendask-plus` obstaja od T6.5 z **lastnim varovalom** (`tendaskPlusRedirect` na `kTendaskPlusEnabled`;
@@ -171,7 +176,8 @@ ikona ob naslovu), nikoli še enkrat v imenu; ime samo je `kPlusLabel = 'Tendask
 
 **Vstop v ✦ Tendask+ (za »kako sploh prideš«):**
 - Domov → **⚙️** → `/settings` → kartica **»✦ Tendask+«** → `/tendask-plus`.
-- Domov → *moon chip (zaklenjen)* → rdeči CTA → `/tendask-plus`.
+- Domov → *moon chip (zaklenjen)* → CTA pilula **»✦ Tendask+ ›«** (medena, `colorScheme.secondary` —
+  odločitev lastnika 3. 8.; wireframe je risal rdečo, a rdeča je v aplikaciji destruktivna) → `/tendask-plus`.
 
 **Poimenovanje (fiksno):** povsod **»✦ Tendask+«** (ikona vedno spredaj). Prihodnje/nedokončane funkcije =
 **»Kmalu«** (EN: »Soon«). Nikjer »Thun«/»Aussaattage«. Sistem = »Po ozvezdjih (biodinamični)« / »Po

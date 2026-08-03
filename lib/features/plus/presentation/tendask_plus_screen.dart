@@ -83,11 +83,10 @@ class PlusScreenBody extends StatelessWidget {
                 glyph: kGlyphMoon,
                 title: t.plus.moon,
                 subtitle: t.plus.moon_sub,
-                // The settings are only worth opening once the calendar is
-                // unlocked; without Plus the row stays a description.
-                onTap: status.isActive
-                    ? () => context.pushNamed('moon-settings')
-                    : null,
+                // Open to everyone, entitlement or not (owner, 2026-08-03):
+                // the master 🌙 switch behind this row also governs the free
+                // phase chip, and this is the only way back to it.
+                onTap: () => context.pushNamed('moon-settings'),
               ),
               _FeatureTile(
                 glyph: kGlyphAreaBed,

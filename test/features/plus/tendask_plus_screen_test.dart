@@ -85,9 +85,12 @@ void main() {
     expect(find.text('MOON-SETTINGS'), findsOneWidget);
   });
 
-  testWidgets('without Plus the moon row is a description, not a way in', (
+  testWidgets('without Plus the moon row still opens the settings', (
     tester,
   ) async {
+    // Owner's decision 2026-08-03: the master 🌙 switch behind this row also
+    // governs the free phase chip, so switching that chip off must stay
+    // reversible without a licence — this row is the only way back to it.
     await _pump(
       tester,
       const Scaffold(body: PlusScreenBody(status: PlusStatus.none())),
@@ -99,8 +102,7 @@ void main() {
     await tester.tap(find.text(t.plus.moon));
     await tester.pumpAndSettle();
 
-    expect(find.text('MOON-SETTINGS'), findsNothing);
-    expect(find.text(t.plus.moon), findsOneWidget);
+    expect(find.text('MOON-SETTINGS'), findsOneWidget);
   });
 
   testWidgets('the screen reads the entitlement from plusProvider', (

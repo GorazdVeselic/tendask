@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/features/home/presentation/widgets/home_moon_chip.dart';
+import 'package:tendask/features/plus/presentation/plus_label.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
 void main() {
@@ -43,6 +44,31 @@ void main() {
     );
   }
 
+  /// A router with both destinations the chip can reach, so a tap proves which
+  /// one it picked.
+  GoRouter routerFor({required bool isPlus}) => GoRouter(
+    initialLocation: '/',
+    routes: [
+      GoRoute(
+        path: '/',
+        builder: (_, _) => Scaffold(body: HomeMoonChipCard(isPlus: isPlus)),
+      ),
+      GoRoute(
+        path: '/moon-calendar',
+        builder: (_, _) => const Scaffold(body: Text('MOON-CALENDAR')),
+      ),
+      GoRoute(
+        path: '/tendask-plus',
+        builder: (_, _) => const Scaffold(body: Text('TENDASK-PLUS')),
+      ),
+    ],
+  );
+
+  /// The element-day CTA, in whichever element today happens to be.
+  Finder elementCta() => find.byWidgetPredicate(
+    (w) => w is Text && t.moon.day_for.values.contains(w.data),
+  );
+
   testWidgets('the gate renders nothing while the feature flag is dark', (
     tester,
   ) async {
@@ -58,7 +84,7 @@ void main() {
   testWidgets('a resume rebuilds the card (the day may have rolled over)', (
     tester,
   ) async {
-    await pump(tester, const HomeMoonChipCard());
+    await pump(tester, const HomeMoonChipCard(isPlus: true));
     await tester.pumpAndSettle();
     expect(find.text(t.moon.calendar.title), findsOneWidget);
 
@@ -70,30 +96,45 @@ void main() {
     expect(find.text(t.moon.calendar.title), findsOneWidget);
   });
 
-  testWidgets('the card shows the phase and opens /moon-calendar on tap', (
-    tester,
-  ) async {
-    final router = GoRouter(
-      initialLocation: '/',
-      routes: [
-        GoRoute(
-          path: '/',
-          builder: (_, _) => const Scaffold(body: HomeMoonChipCard()),
-        ),
-        GoRoute(
-          path: '/moon-calendar',
-          builder: (_, _) => const Scaffold(body: Text('MOON-CALENDAR')),
-        ),
-      ],
-    );
-    await pump(tester, const SizedBox.shrink(), router: router);
+  testWidgets('with Tendask+ the CTA is the element day and opens the calendar',
+      (tester) async {
+    await pump(tester, const SizedBox.shrink(), router: routerFor(isPlus: true));
     await tester.pumpAndSettle();
 
     expect(find.text(t.moon.calendar.title), findsOneWidget);
+    expect(elementCta(), findsOneWidget);
+    expect(find.text(kPlusLabel), findsNothing);
 
     await tester.tap(find.byType(HomeMoonChipCard));
     await tester.pumpAndSettle();
 
     expect(find.text('MOON-CALENDAR'), findsOneWidget);
+  });
+
+  testWidgets('without Tendask+ the phase stays and the element day is locked',
+      (tester) async {
+    // The split gate of spec §6.5: the moon phase is free forever, only the
+    // element day sits behind the wall.
+    await pump(
+      tester,
+      const SizedBox.shrink(),
+      router: routerFor(isPlus: false),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.moon.calendar.title), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Text && t.moon.phase.values.contains(w.data),
+      ),
+      findsOneWidget,
+    );
+    expect(elementCta(), findsNothing);
+    expect(find.text(kPlusLabel), findsOneWidget);
+
+    await tester.tap(find.byType(HomeMoonChipCard));
+    await tester.pumpAndSettle();
+
+    expect(find.text('TENDASK-PLUS'), findsOneWidget);
   });
 }

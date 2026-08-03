@@ -50,3 +50,12 @@ final plusProvider = StreamProvider<PlusStatus>((ref) {
         ),
       );
 });
+
+/// Whether Tendask+ is running right now — the boolean every walled surface
+/// watches (T6.6). A value that is still loading, or one that failed to load,
+/// reads as locked: a locked surface is honest, a briefly unlocked one is not.
+/// [plusProvider] is warmed during bootstrap, so in practice this is resolved
+/// before the first frame.
+final plusActiveProvider = Provider<bool>(
+  (ref) => ref.watch(plusProvider).value?.isActive ?? false,
+);

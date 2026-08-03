@@ -1048,6 +1048,7 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	// Translations
 	@override String get enable => 'Mondkalender anzeigen';
 	@override String get enable_sub => 'Chip auf der Startseite, Hinweise im Garten';
+	@override String get enable_sub_free => 'Mondphasen-Chip auf der Startseite';
 	@override String get system_label => 'Kalendersystem';
 	@override String get system_sidereal => 'Nach Sternbildern';
 	@override String get system_sidereal_sub => 'biodynamisch';
@@ -1771,6 +1772,7 @@ extension on TranslationsDe {
 			'moon.calendar.weekday_short.sun' => 'So',
 			'moon.settings.enable' => 'Mondkalender anzeigen',
 			'moon.settings.enable_sub' => 'Chip auf der Startseite, Hinweise im Garten',
+			'moon.settings.enable_sub_free' => 'Mondphasen-Chip auf der Startseite',
 			'moon.settings.system_label' => 'Kalendersystem',
 			'moon.settings.system_sidereal' => 'Nach Sternbildern',
 			'moon.settings.system_sidereal_sub' => 'biodynamisch',

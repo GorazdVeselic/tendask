@@ -13,6 +13,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../../core/glyphs.dart';
 import '../../notifications/presentation/notification_priming_sheet.dart';
+import '../../plus/application/plus_provider.dart';
 import '../../settings/application/profile_providers.dart';
 import '../application/moon_settings_controller.dart';
 
@@ -30,6 +31,12 @@ class MoonSettingsScreen extends ConsumerWidget {
     // spinner only covers the theoretical first-frame gap.
     final settingsAsync = ref.watch(moonSettingsControllerProvider);
     final controller = ref.read(moonSettingsControllerProvider.notifier);
+    // Without Tendask+ this screen keeps only what a free user can act on: the
+    // master switch (which also governs the free phase chip) and the explainer.
+    // The system toggle, the 🔔 hint and the display sub-switches all configure
+    // surfaces the wall hides (spec §6.5), so showing them would be settings
+    // with no visible effect.
+    final isPlus = ref.watch(plusActiveProvider);
     final hint = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
       height: 1.4,
@@ -53,73 +60,92 @@ class MoonSettingsScreen extends ConsumerWidget {
           children: [
             Card(
               child: SwitchListTile(
-                secondary: const Text(kGlyphMoon, style: TextStyle(fontSize: 22)),
+                secondary: const Text(
+                  kGlyphMoon,
+                  style: TextStyle(fontSize: 22),
+                ),
                 title: Text(t.moon.settings.enable),
-                subtitle: Text(t.moon.settings.enable_sub),
+                subtitle: Text(
+                  isPlus
+                      ? t.moon.settings.enable_sub
+                      : t.moon.settings.enable_sub_free,
+                ),
                 value: settings.enabled,
                 onChanged: (v) => unawaited(controller.setEnabled(v)),
               ),
             ),
 
-            SectionLabel(t.moon.settings.system_label),
-            SegmentedButton<CalendarSystem>(
-              segments: [
-                ButtonSegment(
-                  value: CalendarSystem.sidereal,
-                  label: _SystemSegment(
-                    title: t.moon.settings.system_sidereal,
-                    subtitle: t.moon.settings.system_sidereal_sub,
+            if (isPlus) ...[
+              SectionLabel(t.moon.settings.system_label),
+              SegmentedButton<CalendarSystem>(
+                segments: [
+                  ButtonSegment(
+                    value: CalendarSystem.sidereal,
+                    label: _SystemSegment(
+                      title: t.moon.settings.system_sidereal,
+                      subtitle: t.moon.settings.system_sidereal_sub,
+                    ),
                   ),
-                ),
-                ButtonSegment(
-                  value: CalendarSystem.tropical,
-                  label: _SystemSegment(
-                    title: t.moon.settings.system_tropical,
-                    subtitle: t.moon.settings.system_tropical_sub,
-                  ),
-                ),
-              ],
-              selected: {settings.system},
-              showSelectedIcon: false,
-              onSelectionChanged: (s) =>
-                  unawaited(controller.setSystem(s.first)),
-            ),
-            Padding(
-              padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
-              child: Text(t.moon.settings.system_help, style: hint),
-            ),
-
-            const SizedBox(height: 16),
-            Card(
-              child: Column(
-                children: [
-                  const _HintTile(),
-                  SwitchListTile(
-                    secondary: const Text(kGlyphSubject, style: TextStyle(fontSize: 22)),
-                    title: Text(t.moon.settings.highlight_garden),
-                    subtitle: Text(t.moon.settings.highlight_garden_sub),
-                    value: settings.highlightGarden,
-                    onChanged: (v) =>
-                        unawaited(controller.setHighlightGarden(v)),
-                  ),
-                  SwitchListTile(
-                    secondary: const Text(kGlyphCalendarLayer, style: TextStyle(fontSize: 22)),
-                    title: Text(t.moon.settings.show_in_journal),
-                    subtitle: Text(t.moon.settings.show_in_journal_sub),
-                    value: settings.showInJournal,
-                    onChanged: (v) => unawaited(controller.setShowInJournal(v)),
-                  ),
-                  SwitchListTile(
-                    secondary: const Text(kGlyphAstro, style: TextStyle(fontSize: 22)),
-                    title: Text(t.moon.settings.show_astro),
-                    subtitle: Text(t.moon.settings.show_astro_sub),
-                    value: settings.showAstroDetails,
-                    onChanged: (v) =>
-                        unawaited(controller.setShowAstroDetails(v)),
+                  ButtonSegment(
+                    value: CalendarSystem.tropical,
+                    label: _SystemSegment(
+                      title: t.moon.settings.system_tropical,
+                      subtitle: t.moon.settings.system_tropical_sub,
+                    ),
                   ),
                 ],
+                selected: {settings.system},
+                showSelectedIcon: false,
+                onSelectionChanged: (s) =>
+                    unawaited(controller.setSystem(s.first)),
               ),
-            ),
+              Padding(
+                padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
+                child: Text(t.moon.settings.system_help, style: hint),
+              ),
+
+              const SizedBox(height: 16),
+              Card(
+                child: Column(
+                  children: [
+                    const _HintTile(),
+                    SwitchListTile(
+                      secondary: const Text(
+                        kGlyphSubject,
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      title: Text(t.moon.settings.highlight_garden),
+                      subtitle: Text(t.moon.settings.highlight_garden_sub),
+                      value: settings.highlightGarden,
+                      onChanged: (v) =>
+                          unawaited(controller.setHighlightGarden(v)),
+                    ),
+                    SwitchListTile(
+                      secondary: const Text(
+                        kGlyphCalendarLayer,
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      title: Text(t.moon.settings.show_in_journal),
+                      subtitle: Text(t.moon.settings.show_in_journal_sub),
+                      value: settings.showInJournal,
+                      onChanged: (v) =>
+                          unawaited(controller.setShowInJournal(v)),
+                    ),
+                    SwitchListTile(
+                      secondary: const Text(
+                        kGlyphAstro,
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      title: Text(t.moon.settings.show_astro),
+                      subtitle: Text(t.moon.settings.show_astro_sub),
+                      value: settings.showAstroDetails,
+                      onChanged: (v) =>
+                          unawaited(controller.setShowAstroDetails(v)),
+                    ),
+                  ],
+                ),
+              ),
+            ],
 
             const SizedBox(height: 18),
             const _AboutCard(),
