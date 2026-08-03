@@ -537,8 +537,15 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      produkcijo ne delava, dokler vse skupaj ni končano«) — torej **ne** po posameznem koraku T6, ampak ko
      rezina stoji. Do takrat produkcija ostane pri `0016`; migracije se kopičijo v repu in na stagingu.
      Produkcija izmerjena 2. 8.: ledger `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
-  2. ⬜ **Sync izjeme (kritično, FR-20 §6):** pull stolpca prinaša, **push ju IZPUŠČA** iz payloada —
-     sicer si predelan klient prek LWW podari Plus. + **test**, da push payload stolpcev ne vsebuje.
+  2. ✅ **Sync izjeme (kritično, FR-20 §6)** — 2026-08-03, branch `feat/fr20-t6-2-sync-exclusion`:
+     pull stolpce prinaša, **push jih izpušča**. `profileToRemote` payload sestavlja eksplicitno, zato
+     `plus_*` že prej ni pošiljal — vsebina koraka je bila **zaklep tega z testom** (payload iz vrstice s
+     `plus_until = 2099` + `plus_token = 'forged'` nima nobenega ključa `plus_*` niti
+     `server_inserted_at` — vsi štirje server-lastni stolpci iz `0017`) + doc komentar »nikoli ne dodaj
+     `plus_*` ključa« nad funkcijo. `profileFromRemote` zdaj polni `plusUntil`/`plusToken`/`plusKind`
+     (nov `_dtOrNull`); **tolerantno**: produkcija je pri `0016`, torej vrne vrstice brez teh stolpcev —
+     manjkajoča polja dajo `null`, ne izjeme (drugi test to zaklene). Brez sheme, brez migracije;
+     `plus_*` v driftu ostanejo `null`, dokler jih strežnik ne pošlje. Suite **1414**.
   3. ⬜ Dependency za podpis (po odobritvi): pin + `tech-stack.md §1` posodobitev.
   4. ⬜ `plusProvider`: bere drift, preveri podpis (bundlan javni ključ), čas prek `Clock`
      (konstruktor-injektiran — ne `static const` vzorec koordinatorjev); **gost brez profila → mirno

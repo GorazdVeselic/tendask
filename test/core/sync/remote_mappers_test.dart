@@ -104,6 +104,29 @@ void main() {
     expect(map.containsKey('deleted'), isFalse);
   });
 
+  test('profileToRemote: server-owned columns never reach the payload', () {
+    // FR-20 §6: plus_* are written by the cloud only. If push ever carried them,
+    // a tampered client would grant itself Plus through LWW (and the database
+    // would answer 42501, stalling the whole fail-fast push chain).
+    final map = profileToRemote(
+      Profile(
+        userId: 'u1',
+        h3R7: null,
+        h3R6: null,
+        h3R5: null,
+        lang: null,
+        defaultGardenSeeded: false,
+        plusUntil: DateTime.utc(2099),
+        plusToken: 'forged',
+        plusKind: 'lifetime',
+        updatedAt: t0,
+        syncStatus: kSyncPending,
+      ),
+    );
+    expect(map.keys.where((k) => k.startsWith('plus_')), isEmpty);
+    expect(map.containsKey('server_inserted_at'), isFalse);
+  });
+
   test('profile notification_settings: jsonb round-trips through text', () {
     const json = '{"task_reminders":false,"default_offset":60}';
     final map = profileToRemote(
@@ -503,6 +526,28 @@ void main() {
     expect(minimal.lang.value, isNull);
     expect(minimal.notificationSettings.value, isNull);
     expect(minimal.defaultGardenSeeded.value, isFalse);
+  });
+
+  test('profileFromRemote: pull brings plus_*; an older server yields null', () {
+    final full = profileFromRemote({
+      'user_id': 'u1',
+      'plus_until': '2026-12-31T23:00:00.000Z',
+      'plus_token': 'signed-token',
+      'plus_kind': 'gift',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(full.plusUntil.value, DateTime.utc(2026, 12, 31, 23));
+    expect(full.plusToken.value, 'signed-token');
+    expect(full.plusKind.value, 'gift');
+
+    // Production is still at 0016 — a row without the columns must not throw.
+    final older = profileFromRemote({
+      'user_id': 'u1',
+      'updated_at': '2026-06-05T10:00:00.000Z',
+    });
+    expect(older.plusUntil.value, isNull);
+    expect(older.plusToken.value, isNull);
+    expect(older.plusKind.value, isNull);
   });
 
   test('parsers ignore unknown/extra keys without throwing (tolerant)', () {

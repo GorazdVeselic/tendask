@@ -16,12 +16,16 @@ import 'sync_status.dart';
 ///   * DateTime serializes to an int in drift, timestamptz wants ISO-8601 UTC;
 ///   * jsonb columns are stored as JSON strings locally — Postgres wants the
 ///     decoded object, not a quoted string.
-/// `sync_status` is deliberately never sent (local-only column).
+/// `sync_status` is deliberately never sent (local-only column), and neither are
+/// the server-owned `plus_*` columns (FR-20 §6): the cloud writes them, a push
+/// that carried them would let a tampered client grant itself Plus via LWW.
 
 String _ts(DateTime d) => d.toUtc().toIso8601String();
 
 Object? _jsonb(String? s) => s == null ? null : jsonDecode(s);
 
+/// Push payload for `profile`. Never add a `plus_*` key here — those columns are
+/// server-owned and the database revokes write access to them (`0017`).
 Map<String, dynamic> profileToRemote(Profile r) => {
   'user_id': r.userId,
   'h3_r7': r.h3R7,
@@ -145,6 +149,8 @@ Map<String, dynamic> taskSupplyToRemote(TaskSupply r) => {
 
 DateTime _dt(Object? v) => DateTime.parse(v as String);
 
+DateTime? _dtOrNull(Object? v) => v == null ? null : DateTime.parse(v as String);
+
 String? _text(Object? v) {
   if (v == null) return null;
   if (v is String) return v; // already JSON text — don't double-encode
@@ -177,6 +183,11 @@ ProfilesCompanion profileFromRemote(Map<String, dynamic> r) =>
       lang: Value(r['lang'] as String?),
       notificationSettings: Value(_text(r['notification_settings'])),
       defaultGardenSeeded: Value(r['default_garden_seeded'] as bool? ?? false),
+      // Server-owned (FR-20): pull brings them in, push never sends them back.
+      // A server without the columns yet simply yields null, not a throw.
+      plusUntil: Value(_dtOrNull(r['plus_until'])),
+      plusToken: Value(r['plus_token'] as String?),
+      plusKind: Value(r['plus_kind'] as String?),
       updatedAt: Value(_dt(r['updated_at'])),
       syncStatus: const Value(kSyncSynced),
     );

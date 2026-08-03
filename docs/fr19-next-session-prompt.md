@@ -8,7 +8,7 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1412 testov — veji `feat/fr20-t6-1-schema` in
+**Kaj je narejeno (vse v main, 1414 testov — veji `feat/fr20-t6-1-schema` in
 `feat/prod-analytics-tooling` sta zmergani):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
@@ -410,13 +410,22 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   treba prijaviti z e-pošto, OTP se prebere iz Mailpita (`curl http://localhost:8025/api/v1/messages`
   v WSL).
 
-**Naloga TE seje: T6 korak 2 — sync izjema** (branch `feat/fr20-t6-2-sync-exclusion`). Push payload
-`profile` stolpcev `plus_*` **NE sme vsebovati** (sicer si predelan klient prek LWW podari Plus), pull
-pa ju mora prinesti v drift. Danes `profileToRemote` (`lib/core/sync/remote_mappers.dart`) sestavlja
-payload eksplicitno, torej jih že zdaj ne pošlje — **korak je zato predvsem test, ki to zaklene**, plus
-`profileFromRemote`, da pull polni nova drift polja (tolerantno: manjkajoča polja → null).
-⚠️ Ta korak se merga **PRED** `plusProvider` (korak 4). Odločitev §11.4 (dependency za podpis) pride s
-korakom 3 — takrat vprašaj.
+- **T6 korak 2 ✅ (3. 8., branch `feat/fr20-t6-2-sync-exclusion`) — sync izjema:** push payload profila
+  `plus_*` ne vsebuje, pull jih prinaša. Domneva iz plana je držala — `profileToRemote`
+  (`lib/core/sync/remote_mappers.dart`) našteva ključe eksplicitno, torej server-lastnih stolpcev ni
+  pošiljal niti prej; korak je to **zaklenil s testom** (vrstica s `plus_until = 2099` in
+  `plus_token = 'forged'` da payload brez vsakega ključa `plus_*` in brez `server_inserted_at` — vsi
+  štirje server-lastni stolpci `0017`) in dodal doc komentar »nikoli ne dodaj `plus_*` ključa«.
+  `profileFromRemote` polni `plusUntil`/`plusToken`/`plusKind` prek novega `_dtOrNull`; **tolerantno** —
+  produkcija je pri `0016` in vrstice teh stolpcev nimajo, zato manjkajoče polje da `null`, ne izjeme
+  (drugi test). Nič sheme, nič migracije, nič vidnega. Suite **1414**.
+
+**Naloga NASLEDNJE seje: T6 korak 3 — dependency za podpis tokena** (branch
+`feat/fr20-t6-3-signature-dep`). ⚠️ **Najprej vprašaj lastnika** (odločitev FR-20 §11.4): knjižnica za
+preverjanje podpisa je **izven potrjenega sklada `tech-stack.md §1`**, zato je izbira odločitev, ne
+predlog agenta. Izhod koraka: pin verzije v `pubspec.yaml` + vnos v `tech-stack.md §1` (+ `pubspec.lock`).
+Šele nato korak 4 (`plusProvider`, bere drift, preveri podpis z bundlanim javnim ključem, čas prek
+`Clock`; gost brez profila → mirno ni-Plus).
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
@@ -436,9 +445,8 @@ le build flag. **Ne dodajaj lunine vrstice v glavne Nastavitve** — drugi vstop
 `/tendask-plus` → »Lunin koledar« (screen-map §4), torej ga zapre **T6 korak 5**; korak 6 ima to kot
 sprejemno merilo.
 
-⚠️ **Vrstni red znotraj T6 je zavezujoč:** sync izjema (korak 2 — push payload stolpcev NE sme
-vsebovati) se merga **pred** `plusProvider` (korak 4), da nobena vmesna izdaja ne pusha server-lastnih
-stolpcev in si predelan klient prek LWW ne podari Plusa.
+✅ **Vrstni red znotraj T6 je izpolnjen:** sync izjema (korak 2) je v `main` **pred** `plusProvider`
+(korak 4), zato nobena vmesna izdaja ne more pushati server-lastnih stolpcev.
 
 📱 **Dolg, ki ga T7 ne sme preskočiti:** cel FR-19 je bil potrjen prek golden harnessa, **na napravi
 (SM A536B) pa še ni bil pregledan**. Temni odtenki (A4) in emoji na pravem fontu sta edini stvari, ki ju
