@@ -648,8 +648,41 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (locked)`. Pogled: `tmp/plus_gate_preview_test.dart` → `tmp/gate_chip_*`, `tmp/gate_settings_*`.
      ⚠️ **Ostaja netestirano samo za temnim flagom:** veja `containerOf(...).read(plusActiveProvider)`
      v `moonCalendarRedirect` in srednja plast vrat štirih površin — oživijo pri T7.
-  7. ⬜ **Anti-steering i18n pregled** vseh novih nizov (FR-20 §3.1): brez cene, brez URL-ja, brez
-     »kje dobiti kodo« — rdeča črta, ki lahko stane odstranitev aplikacije.
+  6b. ⬜ **Nadzor: mena vedno vidna, `/moon-settings` kot razstavni salon** — odločitev lastnika
+     2026-08-03 (decisions **B3**, spec §6.4), sprejeta ob pregledu koraka 6 na napravi. Revidira vrata,
+     ki jih je postavil korak 6; **izvede se pred korakom 8**, sicer bi device test preizkušal vrata,
+     ki jih ta korak spremeni.
+     **Vsebina:** (a) **glavno stikalo 🌙 odpade** — čip na Domov (mena + ime mene) je viden vedno, samo
+     za build flagom; desna stran ostane deljena (pilula »✦ Tendask+ ›« → `/tendask-plus` brez licence,
+     »dan za X ›« → `/moon-calendar` z njo). (b) Element-oznake pri opravilih in v vrtu — **when-korak,
+     detajl opravila, čip rastline** — dobijo **peto podstikalo** ob 🔔 · 🪴 · 📅 · 🌌; Domova ne zadeva.
+     (c) **Brez licence je zaslon viden cel, a onemogočen** (sistem + pet stikal sivih, s **privzetimi**
+     vrednostmi: vsa vklopljena, sistem »Po ozvezdjih«); »Kaj je to?« vidna vedno. (d) Pod segmentom
+     sistema **opis izbranega** sistema namesto današnjega splošnega `system_help` (dva nova niza × 3
+     jeziki; besedilo se predlaga v klepetu pred pisanjem).
+     **Kaj se dotakne:** `moonSurfaceOn()` izgubi `settings.enabled` člen (mena za samim flagom),
+     `moonPlusSurfaceOn()` ga zamenja z novim podstikalom, prefs ključ `moon_calendar_enabled` in njegov
+     setter odpadeta, `moon_settings_screen` dobi onemogočeno stanje, `HomeMoonChip` izgubi opt-in vrata.
+     `moonSettingsRedirect` (izven zidu) **ostane** — zdaj z boljšim razlogom: salon je del teaserja.
+     Testi koraka 6 (vrata × stikala × licenca, matrika `home/moon-chip`) gredo v revizijo skupaj z njim.
+     ⏳ **Odprto, za odločiti ob izvedbi (ne zdaj):** (i) **berljivost oznake v when-koraku** — lastnik
+     jo je 3. 8. na napravi spregledal, ker nosi isti `bodySmall`/`onSurfaceVariant` slog kot opomba
+     »Privzeto: danes ob naslednji polni uri« tik nad njo in se bere kot njena druga vrstica;
+     (ii) **oznaka čipa na detajlu rastline** — danes `moon.finder.title` »Kdaj za …«, kar ob imenu
+     rastline nič ne pove (kandidat: »Primerni dnevi«, isto besedišče kot `finder.next_days`).
+  7. ✅ **Anti-steering i18n pregled** (FR-20 §3.1) — 2026-08-03, kontrolni korak brez brancha in **brez
+     najdb: nobenega niza ni bilo treba popraviti.** Pregledani `plus.*` (11 ključev) in cel `moon.*`
+     (calendar · settings · finder · hint · badge · sheet · task_section + vse enum mape) v **en+sl+de**,
+     `kPlusLabel`/`PlusTitle` (blagovno ime brez besedila o nakupu), pilula `_LockedCta` na čipu Domov,
+     `PlusEntryCard` v Nastavitvah in obvestilo luninega namiga. Poleg branja še vzorčni pregled čez vse
+     tri `*.i18n.json` na `€`/`$`, `http`, `www.`, `tendask.`, buy/purchase/price/subscribe/store/upgrade,
+     kupi/nakup/cena/naročnina/trgovina/splet, kaufen/Preis/Abo/Website, premium/unlock/trial/promo/ponudba
+     — vsi zadetki lažni (`$n` v številih, `email_login.*` koda iz e-pošte, `notes.content_hint` »Free
+     text«). Trdo kodiranih uporabniških nizov v `features/plus`, `features/moon` in `home_moon_chip.dart`
+     ni. Zaslon `/tendask-plus` brez licence pokaže `plus.tagline` + seznam funkcij z dvema »Kmalu« — to je
+     oblika, ki jo §3.1 izrecno dovoli (nevtralen opis ugodnosti brez cene in naslova).
+     Ob strani izmerjeno: `docs/go-live/store-listing.md` Plusa in Lune **sploh ne omenja** — uskladitev
+     listinga je naloga T7, ne tega koraka.
   8. 🔨 Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene
      na napravi; offline (letalski način) Plus dela.
      **Delno opravljeno 2026-08-03 (SM A536B, staging), takoj po koraku 4** — vse, kar se da izmeriti,
@@ -668,7 +701,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      testom payloada. **Ostane za pravi korak 8:** viden odklep/zaklep na zaslonu `/tendask-plus`
      (rabi korak 5), potek prek skrajšanega `plus_until` in letalski način.
 - **Branchi:** `feat/fr20-t6-1-schema` · `feat/fr20-t6-2-sync-exclusion` · `feat/fr20-t6-3-signature-dep` ·
-  `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap`
+  `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap` ·
+  `feat/fr20-t6-6b-always-on-phase` (korak 6b, še ni odprt)
   (koraka 7–8 — i18n pregled in staging preizkus — sta kontrolna, brez lastnih branchev).
 - **Varnost na `main`:** migracija additive + nullable (stari APK-ji ob pull ne crashajo, tolerantni
   parser ignorira neznano); najprej **staging**, prod `db push` po runbooku **šele ob koncu celote**

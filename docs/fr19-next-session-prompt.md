@@ -509,11 +509,23 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   testi koordinatorja. **+25 testov, suite 1520**; analyze čist. Netestirana ostaja samo veja
   `containerOf(...).read(plusActiveProvider)` v `moonCalendarRedirect` (temen flag) — oživi pri T7.
 
-**Naloga NASLEDNJE seje: T6 korak 7 — anti-steering pregled i18n** (kontrolni korak, brez svojega
-brancha po planu): pregled **vseh** nizov FR-19/FR-20 (`plus.*`, `moon.*`, pilula na čipu, kartica v
-Nastavitvah) proti FR-20 §3.1 — **brez cene, brez URL-ja, brez namiga, kje dobiti kodo**. To je rdeča
-črta, ki lahko stane odstranitev aplikacije iz Play. Za njim ostane korak 8 (staging preizkus na
-napravi: viden odklep/zaklep, potek prek skrajšanega `plus_until`, letalski način) in nato T7 prižig.
+- **T6 korak 7 ✅ (3. 8.) — anti-steering pregled i18n, brez najdb:** noben niz ni bilo treba popraviti.
+  Pregledani `plus.*` (11 ključev) in cel `moon.*` (calendar · settings · finder · hint · badge · sheet ·
+  task_section + enum mape) v **en+sl+de**, `kPlusLabel`/`PlusTitle`, pilula `_LockedCta` na čipu Domov,
+  `PlusEntryCard` v Nastavitvah in obvestilo luninega namiga; povrhu vzorčni pregled čez vse tri
+  `*.i18n.json` na cene, URL-je, nakupne CTA in namige o kodi (vsi zadetki lažni — `$n` v številih,
+  `email_login.*` koda iz e-pošte). Trdo kodiranih uporabniških nizov v `features/plus`, `features/moon`
+  in `home_moon_chip.dart` ni. `/tendask-plus` brez licence = `plus.tagline` + seznam funkcij z dvema
+  »Kmalu«, kar §3.1 izrecno dovoli. Ob strani: `docs/go-live/store-listing.md` Plusa in Lune sploh ne
+  omenja — listing je naloga T7.
+
+**Naloga NASLEDNJE seje: T6 korak 6b — mena vedno vidna, `/moon-settings` kot razstavni salon.**
+Nova odločitev lastnika 3. 8. (decisions **B3**, spec §6.4), sprejeta po pregledu koraka 6 na napravi;
+**vrine se pred korak 8**, ker bi sicer device test preizkušal vrata, ki jih ta korak spremeni.
+Branch `feat/fr20-t6-6b-always-on-phase`. Vsebina, pasti in dve odprti podrobnosti (berljivost oznake v
+when-koraku · oznaka čipa »Kdaj za …« na rastlini) so **v planu pri koraku 6b** — beri tam, tu ne
+podvajam. Za njim ostane korak 8 (staging preizkus na napravi: viden odklep/zaklep, potek prek
+skrajšanega `plus_until`, letalski način) in nato T7 prižig.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se

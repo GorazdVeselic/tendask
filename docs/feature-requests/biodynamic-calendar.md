@@ -259,10 +259,22 @@ Ker je element dneva poceni re-izpeljljiv, ga pokažemo na več mestih brez stro
     »tvoj najboljši pridelek je bil sejan na plodov dan«. **Previdno — opažanje, ne znanstvena trditev.**
 
 ### 6.4 Nadzor
-- **Opt-in stikalo** v Nastavitvah (`settings`): »Prikaži biodinamični koledar« (privzeto **off** ali
-  ob-onboardingu vprašano — odločitev §8). Vzorec obstaja (`kSuppliesEnabled` feature-flag / nastavitve).
-  Ko je off, se oznake nikjer ne kažejo → uporabnik, ki ne dela po luni, ni obremenjen s šumom.
-- Kasneje morebitna **izbira koledarskega sistema** (§8) živi tu.
+
+**Revidirano 2026-08-03 (lastnik, odločitev B3 v decisions dokumentu)** — nadomešča prvotno enotno
+opt-in stikalo »Prikaži biodinamični koledar«, ki je ugašalo tudi meno:
+
+- **Mena na Domov je vedno vidna** in je ni mogoče ugasniti (za build flagom). Brez licence je desna
+  stran čipa pilula »✦ Tendask+ ›«, z licenco »dan za X ›« — mena je namenoma teaser za tiste, ki
+  Plusa nimajo.
+- **Glavnega stikala 🌙 ni več.** Nadzor živi na petih podstikalih zaslona `/moon-settings`:
+  🔔 namig · 🪴 poudari po vrtu · 📅 prikaži v Dnevniku · 🌌 ozvezdja in mena · **novo:** element-oznake
+  pri opravilih in v vrtu (when-korak, detajl opravila, čip rastline). Peto stikalo **ne vpliva na
+  Domov** — tam ostane mena ne glede na vse.
+- **Brez licence je `/moon-settings` razstavni salon:** sistem koledarja in vseh pet stikal so vidni,
+  a **onemogočeni**, in kažejo privzete vrednosti (vsa vklopljena, sistem »Po ozvezdjih«) — torej
+  sliko tega, kar licenca prinese, ne uporabnikovih nastavitev. Kartica »Kaj je to?« je vidna vedno.
+- **Izbira koledarskega sistema** (§8) živi tu; pod segmentom stoji opis **izbranega** sistema
+  (zamenja se ob preklopu), ne ene splošne razlage.
 
 ## 6.5 Faznost in monetizacija
 

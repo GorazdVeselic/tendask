@@ -137,6 +137,17 @@ argument zdaj teče prek darila.)*
   profili dobijo **časovno omejeno darilo Tendask+** (predlog 6 mesecev; FR-20 §10.4). Med gradnjo (koraka
   1–2 rollout plana) je gate navaden `const` flag; `plusProvider` + board 2 / zaklenjeni čip / vnos kode
   pridejo z minimalno rezino FR-20 (korak 3) oz. komercialnim delom (korak 5).
+- **B3 · Nadzor: mena vedno vidna, nastavitve kot razstavni salon** ✅ ODLOČENO (2026-08-03, lastnik,
+  po pregledu koraka 6 na napravi): **glavno stikalo 🌙 »Prikaži Lunin koledar« odpade.** Razlog:
+  mena je edini free kavelj in je kot teaser vredna več, kot je vredna možnost, da jo uporabnik
+  skrije — zato je **vedno vidna, tudi Plus uporabniku**. Posledice: (a) element-oznake pri opravilih
+  in v vrtu (when-korak, detajl opravila, čip rastline) dobijo **svoje, peto podstikalo** ob obstoječih
+  štirih (🔔 · 🪴 · 📅 · 🌌) — Domova ne zadeva; (b) brez licence je `/moon-settings` **razstavni
+  salon**: sistem + vseh pet stikal vidnih, a onemogočenih, s **privzetimi** vrednostmi (vsa
+  vklopljena, sistem »Po ozvezdjih«), »Kaj je to?« pa vidna vedno; (c) pod segmentom sistema stoji
+  opis **izbranega** sistema namesto ene splošne razlage (dva nova niza × 3 jeziki).
+  S tem odpade tudi vprašanje, ali kartica »Kaj je to?« brez licence obljublja element-dan — stoji nad
+  vidnimi (sivimi) stikali, ki ga prinesejo. Zapisano v spec §6.4; izvedba = plan T6 korak 6b.
 
 ---
 
