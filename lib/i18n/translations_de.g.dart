@@ -73,6 +73,7 @@ class TranslationsDe extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recipes$de recipes = _Translations$recipes$de._(_root);
 	@override late final _Translations$harvest$de harvest = _Translations$harvest$de._(_root);
 	@override late final _Translations$moon$de moon = _Translations$moon$de._(_root);
+	@override late final _Translations$plus$de plus = _Translations$plus$de._(_root);
 }
 
 // Path: splash
@@ -995,6 +996,26 @@ class _Translations$moon$de extends Translations$moon$en {
 	@override late final _Translations$moon$sheet$de sheet = _Translations$moon$sheet$de._(_root);
 }
 
+// Path: plus
+class _Translations$plus$de extends Translations$plus$en {
+	_Translations$plus$de._(TranslationsDe root) : this._root = root, super.internal(root);
+
+	final TranslationsDe _root; // ignore: unused_field
+
+	// Translations
+	@override String get tagline => 'Erweiterte Funktionen für die Gartenplanung.';
+	@override String get load_error => 'Tendask+ konnte nicht geladen werden.';
+	@override String active_until({required Object date}) => 'Aktiv bis ${date}';
+	@override String get active_lifetime => 'Aktiv — lebenslang';
+	@override String get inactive => 'Nicht aktiv';
+	@override String get features_label => 'Tendask+ Funktionen';
+	@override String get moon => 'Mondkalender';
+	@override String get moon_sub => 'Tage für Frucht, Blatt, Blüte und Wurzel';
+	@override String get multi_garden => 'Mehrere Gärten und Orte';
+	@override String get analytics => 'Ernteauswertung';
+	@override String get soon => 'Bald';
+}
+
 // Path: moon.calendar
 class _Translations$moon$calendar$de extends Translations$moon$calendar$en {
 	_Translations$moon$calendar$de._(TranslationsDe root) : this._root = root, super.internal(root);
@@ -1834,6 +1855,17 @@ extension on TranslationsDe {
 			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Ein Mondknoten oder eine Finsternis ist nah — '), b('ein ungünstiger Tag'), const TextSpan(text: '; gönn dem Garten lieber Ruhe.'), ]), 
 			'moon.sheet.recommended_for' => ({required Object day}) => 'Empfohlen für den ${day}',
 			'moon.sheet.add_task' => '+ Aufgabe',
+			'plus.tagline' => 'Erweiterte Funktionen für die Gartenplanung.',
+			'plus.load_error' => 'Tendask+ konnte nicht geladen werden.',
+			'plus.active_until' => ({required Object date}) => 'Aktiv bis ${date}',
+			'plus.active_lifetime' => 'Aktiv — lebenslang',
+			'plus.inactive' => 'Nicht aktiv',
+			'plus.features_label' => 'Tendask+ Funktionen',
+			'plus.moon' => 'Mondkalender',
+			'plus.moon_sub' => 'Tage für Frucht, Blatt, Blüte und Wurzel',
+			'plus.multi_garden' => 'Mehrere Gärten und Orte',
+			'plus.analytics' => 'Ernteauswertung',
+			'plus.soon' => 'Bald',
 			_ => null,
 		};
 	}

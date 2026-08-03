@@ -198,6 +198,13 @@ const kSuppliesEnabled = true;
 /// plusProvider.
 const kMoonCalendarEnabled = false;
 
+/// Tendask+ feature gate (FR-20, dark until T7 ignition): hides the settings
+/// card and guards the `/tendask-plus` route while monetisation is being built.
+/// Flips on in the SAME release as [kMoonCalendarEnabled] — a lit moon calendar
+/// without this screen would strand a user who switched the calendar off, since
+/// its only other entry point is the calendar itself (plan T6 step 5).
+const kTendaskPlusEnabled = false;
+
 /// How far the "when for X" finder (FR-19 T5.2) looks ahead. An element
 /// returns roughly every nine days, so two months list about six stretches —
 /// enough to plan a sowing without paging.

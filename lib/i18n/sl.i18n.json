@@ -753,5 +753,18 @@
       "recommended_for": "Priporočeno za ${day}",
       "add_task": "+ opravilo"
     }
+  },
+  "plus": {
+    "tagline": "Napredne funkcije za načrtovanje vrta.",
+    "load_error": "Stanja Tendask+ ni bilo mogoče naložiti.",
+    "active_until": "Aktiven do ${date}",
+    "active_lifetime": "Aktiven — doživljenjsko",
+    "inactive": "Ni aktiven",
+    "features_label": "Funkcije Tendask+",
+    "moon": "Lunin koledar",
+    "moon_sub": "dnevi za plod, list, cvet in korenino",
+    "multi_garden": "Več vrtov in lokacij",
+    "analytics": "Analitika pridelka",
+    "soon": "Kmalu"
   }
 }

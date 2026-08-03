@@ -73,6 +73,7 @@ class TranslationsSl extends Translations with BaseTranslations<AppLocale, Trans
 	@override late final _Translations$recipes$sl recipes = _Translations$recipes$sl._(_root);
 	@override late final _Translations$harvest$sl harvest = _Translations$harvest$sl._(_root);
 	@override late final _Translations$moon$sl moon = _Translations$moon$sl._(_root);
+	@override late final _Translations$plus$sl plus = _Translations$plus$sl._(_root);
 }
 
 // Path: splash
@@ -1005,6 +1006,26 @@ class _Translations$moon$sl extends Translations$moon$en {
 	@override late final _Translations$moon$sheet$sl sheet = _Translations$moon$sheet$sl._(_root);
 }
 
+// Path: plus
+class _Translations$plus$sl extends Translations$plus$en {
+	_Translations$plus$sl._(TranslationsSl root) : this._root = root, super.internal(root);
+
+	final TranslationsSl _root; // ignore: unused_field
+
+	// Translations
+	@override String get tagline => 'Napredne funkcije za načrtovanje vrta.';
+	@override String get load_error => 'Stanja Tendask+ ni bilo mogoče naložiti.';
+	@override String active_until({required Object date}) => 'Aktiven do ${date}';
+	@override String get active_lifetime => 'Aktiven — doživljenjsko';
+	@override String get inactive => 'Ni aktiven';
+	@override String get features_label => 'Funkcije Tendask+';
+	@override String get moon => 'Lunin koledar';
+	@override String get moon_sub => 'dnevi za plod, list, cvet in korenino';
+	@override String get multi_garden => 'Več vrtov in lokacij';
+	@override String get analytics => 'Analitika pridelka';
+	@override String get soon => 'Kmalu';
+}
+
 // Path: moon.calendar
 class _Translations$moon$calendar$sl extends Translations$moon$calendar$en {
 	_Translations$moon$calendar$sl._(TranslationsSl root) : this._root = root, super.internal(root);
@@ -1844,6 +1865,17 @@ extension on TranslationsSl {
 			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Bližina vozla ali mrka — '), b('neugoden dan'), const TextSpan(text: '; vrt raje počiva.'), ]), 
 			'moon.sheet.recommended_for' => ({required Object day}) => 'Priporočeno za ${day}',
 			'moon.sheet.add_task' => '+ opravilo',
+			'plus.tagline' => 'Napredne funkcije za načrtovanje vrta.',
+			'plus.load_error' => 'Stanja Tendask+ ni bilo mogoče naložiti.',
+			'plus.active_until' => ({required Object date}) => 'Aktiven do ${date}',
+			'plus.active_lifetime' => 'Aktiven — doživljenjsko',
+			'plus.inactive' => 'Ni aktiven',
+			'plus.features_label' => 'Funkcije Tendask+',
+			'plus.moon' => 'Lunin koledar',
+			'plus.moon_sub' => 'dnevi za plod, list, cvet in korenino',
+			'plus.multi_garden' => 'Več vrtov in lokacij',
+			'plus.analytics' => 'Analitika pridelka',
+			'plus.soon' => 'Kmalu',
 			_ => null,
 		};
 	}

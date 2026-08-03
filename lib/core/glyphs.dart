@@ -71,6 +71,10 @@ const kGlyphStar = '★';
 const kGlyphAscending = '↗';
 const kGlyphDescending = '↘';
 
+// ── Tendask+ (FR-20) ────────────────────────────────────────────────────────
+/// Harvest analytics (a future Tendask+ feature).
+const kGlyphAnalytics = '📊';
+
 // ── Supplies ────────────────────────────────────────────────────────────────
 const kGlyphSupplyFertilizer = '🧪';
 const kGlyphSupplyTreatment = '🧴';

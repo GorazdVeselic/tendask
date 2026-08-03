@@ -2,6 +2,11 @@ import 'dart:convert';
 
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 
+/// `profile.plus_kind` value that reads as "lifetime" rather than a date
+/// (FR-20 §7). Display only — the column is unsigned, so it can never widen
+/// what the token grants.
+const kPlusKindLifetime = 'lifetime';
+
 /// Tendask+ entitlement as derived from the signed token (FR-20 §6.2).
 class PlusStatus {
   const PlusStatus.none() : isActive = false, until = null, kind = null;

@@ -21,6 +21,7 @@ import '../../features/plants/presentation/garden_plant_add_screen.dart';
 import '../../features/plants/presentation/plant_detail_screen.dart';
 import '../../features/plants/presentation/plant_edit_screen.dart';
 import '../../features/plants/presentation/plant_picker_screen.dart';
+import '../../features/plus/presentation/tendask_plus_screen.dart';
 import '../../features/settings/presentation/appearance_screen.dart';
 import '../../features/settings/presentation/settings_screen.dart';
 import '../../features/splash/presentation/splash_screen.dart';
@@ -34,6 +35,11 @@ import 'main_shell.dart';
 /// not enough.
 String? moonCalendarRedirect(BuildContext context, GoRouterState state) =>
     kMoonCalendarEnabled ? null : '/home';
+
+/// Same guard for the Tendask+ screen (FR-20, dark until T7): it is reachable
+/// by deep link even while its Settings card is hidden.
+String? tendaskPlusRedirect(BuildContext context, GoRouterState state) =>
+    kTendaskPlusEnabled ? null : '/home';
 
 /// Builds the app router. [initialLocation] depends on first-run state (M7.2):
 /// '/onboarding' until the intro is seen, '/home' afterwards (resolved in main).
@@ -235,6 +241,12 @@ GoRouter createAppRouter({String initialLocation = '/home'}) => GoRouter(
       name: 'moon-settings',
       redirect: moonCalendarRedirect,
       builder: (context, state) => const MoonSettingsScreen(),
+    ),
+    GoRoute(
+      path: '/tendask-plus',
+      name: 'tendask-plus',
+      redirect: tendaskPlusRedirect,
+      builder: (context, state) => const TendaskPlusScreen(),
     ),
     GoRoute(
       path: '/moon-finder',

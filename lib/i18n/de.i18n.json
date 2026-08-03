@@ -743,5 +743,18 @@
       "recommended_for": "Empfohlen für den ${day}",
       "add_task": "+ Aufgabe"
     }
+  },
+  "plus": {
+    "tagline": "Erweiterte Funktionen für die Gartenplanung.",
+    "load_error": "Tendask+ konnte nicht geladen werden.",
+    "active_until": "Aktiv bis ${date}",
+    "active_lifetime": "Aktiv — lebenslang",
+    "inactive": "Nicht aktiv",
+    "features_label": "Tendask+ Funktionen",
+    "moon": "Mondkalender",
+    "moon_sub": "Tage für Frucht, Blatt, Blüte und Wurzel",
+    "multi_garden": "Mehrere Gärten und Orte",
+    "analytics": "Ernteauswertung",
+    "soon": "Bald"
   }
 }

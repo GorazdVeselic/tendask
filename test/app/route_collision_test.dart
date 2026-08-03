@@ -79,6 +79,39 @@ void main() {
     }
   });
 
+  // Same for the Tendask+ screen (FR-20): its Settings card is flag-gated, but
+  // a deep link would reach the route regardless.
+  test('the real /tendask-plus route carries the redirect guard', () {
+    final route = createAppRouter().configuration.routes
+        .whereType<GoRoute>()
+        .singleWhere((r) => r.path == '/tendask-plus');
+    expect(route.redirect, same(tendaskPlusRedirect));
+  });
+
+  testWidgets('dark /tendask-plus deep link is guarded on the route', (
+    tester,
+  ) async {
+    final router = GoRouter(
+      initialLocation: '/home',
+      routes: [
+        GoRoute(path: '/home', builder: (_, _) => const Text('HOME')),
+        GoRoute(
+          path: '/tendask-plus',
+          redirect: tendaskPlusRedirect,
+          builder: (_, _) => const Text('PLUS'),
+        ),
+      ],
+    );
+    await tester.pumpWidget(MaterialApp.router(routerConfig: router));
+    await tester.pumpAndSettle();
+
+    unawaited(router.push('/tendask-plus'));
+    await tester.pumpAndSettle();
+
+    expect(find.text(kTendaskPlusEnabled ? 'PLUS' : 'HOME'), findsOneWidget);
+    expect(find.text(kTendaskPlusEnabled ? 'HOME' : 'PLUS'), findsNothing);
+  });
+
   // The moon calendar (FR-19) must be guarded on the route itself, not only on
   // its CTAs: a deep link reaches the route past any flag-gated buttons. Uses
   // the real [moonCalendarRedirect], so this stays green when the flag flips

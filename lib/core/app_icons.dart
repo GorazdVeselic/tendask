@@ -13,6 +13,7 @@ const kIconAdd = Icons.add;
 const kIconApple = Icons.apple;
 const kIconArrowBack = Icons.arrow_back;
 const kIconArrowDropDown = Icons.arrow_drop_down;
+const kIconAutoAwesome = Icons.auto_awesome;
 const kIconBrightnessAuto = Icons.brightness_auto;
 const kIconCalendarToday = Icons.calendar_today;
 const kIconCalendarTodayOutlined = Icons.calendar_today_outlined;

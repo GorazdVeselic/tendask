@@ -74,6 +74,7 @@ class Translations with BaseTranslations<AppLocale, Translations> {
 	late final Translations$recipes$en recipes = Translations$recipes$en.internal(_root);
 	late final Translations$harvest$en harvest = Translations$harvest$en.internal(_root);
 	late final Translations$moon$en moon = Translations$moon$en.internal(_root);
+	late final Translations$plus$en plus = Translations$plus$en.internal(_root);
 }
 
 // Path: splash
@@ -2067,6 +2068,48 @@ class Translations$moon$en {
 	late final Translations$moon$sheet$en sheet = Translations$moon$sheet$en.internal(_root);
 }
 
+// Path: plus
+class Translations$plus$en {
+	Translations$plus$en.internal(this._root);
+
+	final Translations _root; // ignore: unused_field
+
+	// Translations
+
+	/// en: 'Advanced features for planning your garden.'
+	String get tagline => 'Advanced features for planning your garden.';
+
+	/// en: 'Tendask+ could not be loaded.'
+	String get load_error => 'Tendask+ could not be loaded.';
+
+	/// en: 'Active until ${date}'
+	String active_until({required Object date}) => 'Active until ${date}';
+
+	/// en: 'Active — lifetime'
+	String get active_lifetime => 'Active — lifetime';
+
+	/// en: 'Not active'
+	String get inactive => 'Not active';
+
+	/// en: 'Tendask+ features'
+	String get features_label => 'Tendask+ features';
+
+	/// en: 'Moon calendar'
+	String get moon => 'Moon calendar';
+
+	/// en: 'days for fruit, leaf, flower and root'
+	String get moon_sub => 'days for fruit, leaf, flower and root';
+
+	/// en: 'More gardens and locations'
+	String get multi_garden => 'More gardens and locations';
+
+	/// en: 'Harvest analytics'
+	String get analytics => 'Harvest analytics';
+
+	/// en: 'Soon'
+	String get soon => 'Soon';
+}
+
 // Path: moon.calendar
 class Translations$moon$calendar$en {
 	Translations$moon$calendar$en.internal(this._root);
@@ -3015,6 +3058,17 @@ extension on Translations {
 			'moon.sheet.unfavorable' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'A lunar node or eclipse is near — '), b('an unfavorable day'), const TextSpan(text: '; better let the garden rest.'), ]), 
 			'moon.sheet.recommended_for' => ({required Object day}) => 'Recommended for ${day}',
 			'moon.sheet.add_task' => '+ task',
+			'plus.tagline' => 'Advanced features for planning your garden.',
+			'plus.load_error' => 'Tendask+ could not be loaded.',
+			'plus.active_until' => ({required Object date}) => 'Active until ${date}',
+			'plus.active_lifetime' => 'Active — lifetime',
+			'plus.inactive' => 'Not active',
+			'plus.features_label' => 'Tendask+ features',
+			'plus.moon' => 'Moon calendar',
+			'plus.moon_sub' => 'days for fruit, leaf, flower and root',
+			'plus.multi_garden' => 'More gardens and locations',
+			'plus.analytics' => 'Harvest analytics',
+			'plus.soon' => 'Soon',
 			_ => null,
 		};
 	}

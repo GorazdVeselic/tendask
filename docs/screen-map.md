@@ -96,8 +96,9 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
 6. **RAČUN & PODATKI:** »Izvozi podatke (GDPR)« · »Odjava« · »Izbriši račun in vse podatke« (terakota).
 7. **O APLIKACIJI:** »🛡 Politika zasebnosti« ↗ (zunanja povezava).
 8. Footer: »Tendask · 1.0.1+16«.
-- **[FR-19] doda (board E):** poudarjena kartica **»✦ Tendask+«** takoj pod profilom (pred LOKACIJA) →
-  `/tendask-plus`. Skrita prek `kTendaskPlusEnabled`, dokler ni monetizacije.
+- **[FR-19] doda (board E) — narejeno T6.5:** poudarjena kartica **»✦ Tendask+«** (tinted
+  `primaryContainer`, ikona + ime + pripis) takoj pod profilom (pred LOKACIJA) → `/tendask-plus`.
+  Skrita prek `kTendaskPlusEnabled`, dokler ni monetizacije.
 
 ### 2.2 Detajl opravila — `/task/:id` (task-view) / `/tasks/:id` (task-detail), dejansko
 ← nazaj · ⋯ (action sheet). Struktura:
@@ -144,8 +145,8 @@ Predlagane rute (top-level [full], brez kolizij):
 
 | Route | name | Kako se pride (VSI vstopi) | Vsebuje / vodi |
 |---|---|---|---|
-| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA | brez licence: vnos kode + »Aktiviraj« + seznam ugodnosti (»Kmalu« za prihodnje) · z licenco: veljavnost + funkcije; **»Lunin koledar« → `/moon-settings`** |
-| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (s T6) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena (🔔 namig pride s T4b) · »Kaj je to« |
+| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA (s T6.6) | stanje veljavnosti (»Aktiven do …« / »Aktiven — doživljenjsko«) + seznam funkcij, isti v obeh stanjih; **»Lunin koledar« → `/moon-settings`** (samo z licenco), prihodnje = »Kmalu«. **Vnos kode + »Aktiviraj« pride s T8** |
+| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (od T6.5) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena (🔔 namig pride s T4b) · »Kaj je to« |
 | `/moon-calendar` | moon-calendar | (1) Domov moon chip (odklenjen) · (2) Dnevnik **🌙** AppBar | segmented [Mesec | Teden] · **⚙️ → `/moon-settings`** · 🔎 → `/moon-finder` · ★ po vrtu · **tap dan → dan-podrobno (sheet)** |
 | `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Kdaj za …« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
 | (sheet) | moon-day | `/moon-calendar` → tap dan | »Kaj se dogaja« + priporočila → »＋ opravilo« = `/task-new?date=…` |
@@ -155,7 +156,12 @@ Predlagane rute (top-level [full], brez kolizij):
 (isto varovalo; vstop ⚙️ v AppBar koledarja, vstop iz `/tendask-plus` pride s T6); `/moon-finder`
 od T5.2 (isto varovalo; vstop 🔎 v AppBar koledarja, vstop s chipa rastline od T5.3 — chip stoji ob
 čipu območja v stolpcu imena, brez priporočila (sobne, iglavci, živa meja, lasten vnos) ga ni).
-`/tendask-plus` pride s T6, z istim varovalom.
+`/tendask-plus` obstaja od T6.5 z **lastnim varovalom** (`tendaskPlusRedirect` na `kTendaskPlusEnabled`;
+oba flaga se prižgeta v istem dogodku, sicer se vrne slepa ulica luninega stikala).
+
+**Znak »✦«:** riše se kot **Material ikona** (`kIconAutoAwesome`), ne kot besedilni glif — ✦ (U+2726) v
+Plus Jakarta Sans ne obstaja in pade na nadomestek. Nastopi **enkrat na površino** (ikona vrstice ali
+ikona ob naslovu), nikoli še enkrat v imenu; ime samo je `kPlusLabel = 'Tendask+'`.
 
 **Polni navigacijski poti do iskalnika (za »vse vmesne korake«):**
 - **A · iz koledarja:** Domov → *moon chip* → `/moon-calendar` → tap **🔎** → `/moon-finder` (prazen) → tap

@@ -37,6 +37,9 @@ import 'package:tendask/features/moon/presentation/widgets/plant_moon_chip.dart'
 import 'package:tendask/features/journal/presentation/note_form_screen.dart';
 import 'package:tendask/features/notifications/presentation/notification_settings_screen.dart';
 import 'package:tendask/features/plants/application/plants_providers.dart';
+import 'package:tendask/features/plus/application/plus_token.dart';
+import 'package:tendask/features/plus/presentation/tendask_plus_screen.dart';
+import 'package:tendask/features/plus/presentation/widgets/plus_settings_card.dart';
 import 'package:tendask/features/settings/application/profile_providers.dart';
 import 'package:tendask/features/settings/presentation/appearance_screen.dart';
 import 'package:tendask/features/settings/presentation/settings_screen.dart';
@@ -462,6 +465,30 @@ void main() {
     'journal/moon-layer',
     overrides: _taskWorldOverrides,
     build: () => const _JournalMoonGrid(),
+  );
+
+  // The Tendask+ screen through its public body (the route is flag-guarded).
+  // Both states, because they differ where it matters: the active one is a
+  // tinted icon+text row, the inactive one adds the tagline above the list.
+  layoutMatrix(
+    'plus/screen (active)',
+    build: () => PlusScreenBody(
+      status: PlusStatus.active(
+        until: DateTime.utc(2027, 8, 12),
+        kind: 'granted',
+      ),
+    ),
+  );
+
+  layoutMatrix(
+    'plus/screen (inactive)',
+    build: () => const PlusScreenBody(status: PlusStatus.none()),
+  );
+
+  // The Settings entry card, not its gate (const-false until T7).
+  layoutMatrix(
+    'settings/plus-card',
+    build: () => const PlusEntryCard(),
   );
 }
 

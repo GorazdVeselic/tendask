@@ -743,5 +743,18 @@
       "recommended_for": "Recommended for ${day}",
       "add_task": "+ task"
     }
+  },
+  "plus": {
+    "tagline": "Advanced features for planning your garden.",
+    "load_error": "Tendask+ could not be loaded.",
+    "active_until": "Active until ${date}",
+    "active_lifetime": "Active — lifetime",
+    "inactive": "Not active",
+    "features_label": "Tendask+ features",
+    "moon": "Moon calendar",
+    "moon_sub": "days for fruit, leaf, flower and root",
+    "multi_garden": "More gardens and locations",
+    "analytics": "Harvest analytics",
+    "soon": "Soon"
   }
 }

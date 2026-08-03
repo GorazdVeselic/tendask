@@ -584,11 +584,28 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      žetona Plus ugasne · prazen `kPlusPublicKey` = današnje temno stanje).
      ⏳ **Ostaja za T7:** generiranje para ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets)
      in izdaja žetonov ob masovnem grantu.
-  5. ⬜ `/tendask-plus` zaslon (osnovni): stanje darila/veljavnost (»Doživljenjska« vs »velja do …« —
-     FR-20 §6, `plus_kind` samo za prikaz), seznam funkcij (»Lunin koledar« → `/moon-settings`;
-     prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.
-     Kartica »✦ Tendask+« v Nastavitvah pod profilom, za flagom **`kTendaskPlusEnabled`** (ime iz
-     screen-map §2.1); ruta `/tendask-plus` z istim varovalom. **Pogled → prevodi → layout matrika.**
+  5. ✅ `/tendask-plus` zaslon (osnovni) — 2026-08-03, branch `feat/fr20-t6-5-plus-screen`.
+     `TendaskPlusScreen` (`features/plus/presentation/`) bere `plusProvider`; **javna
+     `PlusScreenBody(status:)`** nosi vsebino, da jo predogledi, testi in matrika izrišejo brez baze
+     (vzorec T4.2). Aktivno = tinted kartica ✓ + »Aktiven do 12. 8. 2027«, oziroma
+     **»Aktiven — doživljenjsko«** pri `plus_kind == 'lifetime'` (`kPlusKindLifetime`; datum bi tam
+     lagal, ker je žeton po §6.2 omejen na leto). Neaktivno = mirna vrstica »Ni aktiven« + pripis
+     `plus.tagline`. **Seznam funkcij je EN, isti v obeh stanjih** (🌙 Lunin koledar z opisom ·
+     🪴 Več vrtov in lokacij »Kmalu« · 📊 Analitika pridelka »Kmalu«) — dve ločeni listi (wireframe
+     ima brez licence bogatejši seznam ugodnosti) bi se lahko razšli; bogatejši opis pride s **T8**,
+     ko zaslon dobi vnos kode. Vrstica koledarja je **tapljiva samo z licenco** → `/moon-settings`.
+     Kartica »✦ Tendask+« v Nastavitvah pod profilom: gate `PlusSettingsCard` (flag) → javna
+     `PlusEntryCard`. Nov flag **`kTendaskPlusEnabled = false`** + ruta `/tendask-plus` z lastnim
+     `tendaskPlusRedirect` (route_collision_test pokriva oboje). i18n `plus.*` **en+sl+de**.
+     ⚠️ **Odločitev lastnika ob prvem pogledu:** znak »✦« je **Material ikona**
+     (`kIconAutoAwesome`), ne besedilni glif — U+2726 v Plus Jakarta Sans ne obstaja in je padel na
+     nadomestek, poleg tega se je zaradi `kPlusLabel = '✦ Tendask+'` risal **dvakrat** (ikona vrstice
+     + ime). Zdaj: `kPlusLabel = 'Tendask+'`, znak enkrat na površino.
+     **Testi:** 7 widget (veljavnost · doživljenjsko brez datuma · vrstica koledarja odpre nastavitve ·
+     brez Plusa je opis, ne vhod · zaslon bere `plusProvider` · kartica za temnim flagom · kartica
+     odpre zaslon) + 2 varovalo rute + **matrika** `plus/screen (active|inactive)` in
+     `settings/plus-card` = 54 kombinacij. Suite **1495**. Pogled:
+     `tmp/plus_preview_test.dart` → `tmp/plus_{active,lifetime,inactive,dark,de_320,card}.png`.
      ⚠️ **Ta korak zapre slepo ulico, ki obstaja danes** (opažanje lastnika 2. 8., potrjeno v kodi z
      lokalno prižganim flagom): edini vstop v `/moon-settings` je **⚙️ v AppBar koledarja**
      (`moon_calendar_screen.dart`), do koledarja pa vodijo samo površine, ki vse gredo skozi
@@ -615,8 +632,23 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      in ali uporabnik kje vidi, da je bil vklopljen — sicer utihne tiho, brez sledi.
   7. ⬜ **Anti-steering i18n pregled** vseh novih nizov (FR-20 §3.1): brez cene, brez URL-ja, brez
      »kje dobiti kodo« — rdeča črta, ki lahko stane odstranitev aplikacije.
-  8. ⬜ Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene
+  8. 🔨 Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene
      na napravi; offline (letalski način) Plus dela.
+     **Delno opravljeno 2026-08-03 (SM A536B, staging), takoj po koraku 4** — vse, kar se da izmeriti,
+     preden obstaja zaslon. Priprava: v profilno vrstico (`01b9054f-…`, `exogenus@gmail.com`) so bili s
+     service role vpisani `plus_until = 2026-09-02 10:19:20Z`, `plus_kind = 'granted'` in žeton, podpisan
+     z **enkratnim testnim parom ključev** (`tmp/gen_plus_test_token.dart`, determinističen seed
+     `(i*7+13) % 256`; produkcijski par pride šele s T7). Izmerjeno:
+     **(a) pull** prinese vse tri stolpce skozi PostgREST v drift (`plus_until` 1788344360,
+     `plus_kind` granted, žeton 240 znakov) — granti `0017` klienta ne ovirajo pri branju;
+     **(b) podpis** — `verifyPlusToken` nad **točnimi bajti s telefona** vrne `isActive: true` do
+     2. 9. 2026, isti žeton pod tujim uid pa `false` (`tmp/verify_device_token.dart`);
+     **(c) push z napolnjenimi `plus_*`** — dvakratna menjava jezika (`sl → en → sl`) je obakrat
+     pristala na stagingu (`updated_at` 10:26:09 in 10:26:37), **`plus_*` in `server_inserted_at` pa so
+     ostali nedotaknjeni** in v `logcat` ni bilo nobenega `42501`/`PostgrestException`/`E/flutter`.
+     To je bila edina še neizmerjena pot: sync izjema (korak 2) je bila do tedaj zaklenjena samo s
+     testom payloada. **Ostane za pravi korak 8:** viden odklep/zaklep na zaslonu `/tendask-plus`
+     (rabi korak 5), potek prek skrajšanega `plus_until` in letalski način.
 - **Branchi:** `feat/fr20-t6-1-schema` · `feat/fr20-t6-2-sync-exclusion` · `feat/fr20-t6-3-signature-dep` ·
   `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap`
   (koraka 7–8 — i18n pregled in staging preizkus — sta kontrolna, brez lastnih branchev).

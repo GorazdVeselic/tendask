@@ -16,6 +16,7 @@ import '../../../core/sync/sync_service.dart';
 import '../../../core/widgets/confirm_dialog.dart';
 import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
+import '../../plus/presentation/widgets/plus_settings_card.dart';
 import '../application/profile_providers.dart';
 import '../application/account_providers.dart';
 
@@ -169,6 +170,10 @@ class SettingsScreen extends ConsumerWidget {
                       onTap: () => context.push('/login'),
                     ),
             ),
+
+            // Tendask+ (FR-20) — hidden until ignition; also the only entry to
+            // the moon settings that does not depend on the moon switch.
+            const PlusSettingsCard(),
 
             // Location — opens the location screen (set/update garden location).
             SectionLabel(t.settings.section_location),

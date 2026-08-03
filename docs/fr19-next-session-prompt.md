@@ -454,17 +454,54 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   Function: `{sub, plus_until (epoch sekunde), iat}`, `alg=EdDSA`. **18 novih testov, suite 1432.**
   ⏳ Za T7 ostane generiranje para ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets).
 
-**Naloga NASLEDNJE seje: T6 korak 5 — zaslon `/tendask-plus`** (branch `feat/fr20-t6-5-plus-screen`):
-osnovno stanje darila/veljavnosti (»Doživljenjska« vs »velja do …« — `plus_kind` **samo za prikaz**,
-bere se iz `plusProvider`), seznam funkcij (»Lunin koledar« → `/moon-settings`; prihodnje = »Kmalu«),
-**brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika** (FR-20 §3.1 — brez cene, brez URL-ja,
-brez namiga, kje dobiti kodo; to je rdeča črta, ki lahko stane odstranitev aplikacije). Kartica
-»✦ Tendask+« v Nastavitvah pod profilom, za novim flagom **`kTendaskPlusEnabled`** (ime iz screen-map
-§2.1); ruta `/tendask-plus` z istim varovalom kot moon rute + `route_collision_test` + screen-map v
-istem commitu. **Vrstni red dela: pogled → prevodi (en+sl+de) → layout matrika** (pravilo »poglej,
-preden vlagaš«). ⚠️ Ta korak **zapre slepo ulico**: vrstica »Lunin koledar« je drugi vstop v
-`/moon-settings`, ki ni odvisen od glavnega 🌙 stikala — **ne** dodajaj lunine vrstice v glavne
-Nastavitve.
+- **Predčasni del koraka 8 ✅ (3. 8., naprava SM A536B proti stagingu)** — izmerjeno vse, kar se da,
+  preden obstaja zaslon; brez commita kode. V profilno vrstico (`01b9054f-…`, `exogenus@gmail.com`) so
+  bili s service role vpisani `plus_until = 2026-09-02 10:19:20Z`, `plus_kind = 'granted'` in žeton,
+  podpisan z **enkratnim testnim parom ključev** (`tmp/gen_plus_test_token.dart`, determinističen seed
+  `(i*7+13) % 256`, javni ključ `nHq6JH1Lmot5tW6rGCV05fjNlUAomh+JWgaeAFtYs8o=`; produkcijski par pride s
+  T7). Izidi: **pull** prinese vse tri stolpce v drift · **podpis** — `verifyPlusToken` nad točnimi
+  bajti s telefona da `isActive: true` do 2. 9. 2026, isti žeton pod tujim uid `false`
+  (`tmp/verify_device_token.dart`) · **push z napolnjenimi `plus_*`** — dvojna menjava jezika
+  (`sl → en → sl`) je obakrat pristala na stagingu, `plus_*` in `server_inserted_at` pa sta ostala
+  nedotaknjena, v `logcat` nič `42501`/`PostgrestException`/`E/flutter`. To je bila edina neizmerjena
+  pot (korak 2 je bil do tedaj zaklenjen le s testom payloada). **Staging vrstica darilo obdrži**, zato
+  bo zaslon koraka 5 imel kaj pokazati; na telefonu stoji debug/staging build iz `main` z **lokalno
+  prižganim** luninim flagom (v repu `false`, preverjeno).
+
+- **T6 korak 5 ✅ (3. 8., branch `feat/fr20-t6-5-plus-screen`) — zaslon `/tendask-plus`:**
+  `TendaskPlusScreen` bere `plusProvider`, vsebino nosi **javna `PlusScreenBody(status:)`** (izris brez
+  baze — vzorec T4.2). Aktivno = tinted kartica ✓ + »Aktiven do 12. 8. 2027«, pri
+  `plus_kind == 'lifetime'` (`kPlusKindLifetime`) pa **»Aktiven — doživljenjsko«** (datum bi tam lagal,
+  ker je žeton po §6.2 omejen na leto). Neaktivno = mirna vrstica »Ni aktiven« + pripis. **Seznam
+  funkcij je EN, isti v obeh stanjih** (🌙 Lunin koledar z opisom · 🪴 Več vrtov in lokacij »Kmalu« ·
+  📊 Analitika pridelka »Kmalu«); wireframe ima brez licence bogatejši seznam ugodnosti, a dve ločeni
+  listi bi se lahko razšli — **bogatejši opis pride s T8**, ko zaslon dobi vnos kode. Vrstica koledarja
+  je tapljiva **samo z licenco** → `/moon-settings`. V Nastavitvah gate `PlusSettingsCard` (flag) →
+  javna `PlusEntryCard`, takoj pod profilom. Nov flag **`kTendaskPlusEnabled = false`**, ruta z lastnim
+  `tendaskPlusRedirect`. i18n `plus.*` en+sl+de; nič nakupnega jezika (brez cene, URL-ja, namiga o kodi).
+  ⚠️ **Odločitev lastnika ob prvem pogledu:** znak »✦« je **Material ikona** (`kIconAutoAwesome`), ne
+  besedilni glif — U+2726 v Plus Jakarta Sans ne obstaja (padel je na nadomestne tri črtice) in se je
+  zaradi `kPlusLabel = '✦ Tendask+'` risal **dvakrat**. Zdaj `kPlusLabel = 'Tendask+'`, znak **enkrat
+  na površino**. Testi: 7 widget + 2 varovalo rute + matrika (`plus/screen (active|inactive)`,
+  `settings/plus-card`) = 54 komb. Suite **1495**. Pogled: `tmp/plus_preview_test.dart` →
+  `tmp/plus_{active,lifetime,inactive,dark,de_320,card}.png`.
+
+**Naloga NASLEDNJE seje: T6 korak 6 — gate swap** (branch `feat/fr20-t6-6-gate-swap`): na vstopnih
+točkah `kMoonCalendarEnabled` → `plusProvider` (+ master flag za prižig); čip na Domov dobi zaklenjeno
+stanje (rdeči »✦ Tendask+ ›« → `/tendask-plus`).
+⚠️ **Čip NI eno stikalo** (odločitev lastnika 1. 8.): **mena ostane free za vedno** (spec §6.5), zato
+`HomeMoonChipCard` rabi **deljena vrata** — ikona mene + naslov + ime mene se izrišejo vedno (ko je
+master flag on), **element-dan CTA »dan za X ›«** pa se ob ne-Plusu zamenja z »✦ Tendask+ ›«. Vse
+ostale površine z element-dnevom (when-step oznaka, task-detail sekcija, Dnevnik-plast, koledar, sheet)
+gredo **cele** za zid. Test naj zaklene oboje: brez Plusa čip **še vedno** kaže meno in **ne** kaže elementa.
+⚠️ **Sprejemno merilo:** izklop glavnega 🌙 stikala mora ostati **povraten** — preveri scenarij stikalo
+off → Nastavitve → ✦ Tendask+ → »Lunin koledar« → `/moon-settings` → stikalo nazaj on. Flaga
+`kMoonCalendarEnabled` in `kTendaskPlusEnabled` se prižgeta **v istem dogodku**; izdaja z luno prižgano
+in Tendask+ kartico skrito bi slepo ulico vrnila.
+⚠️ **Odprto vprašanje za ta korak (odločitev lastnika, ne moja):** opt-in za lunino obvestilo 🔔 živi v
+`NotificationSettings` (profile JSON, sinhroniziran), njegov edini dom pa je `/moon-settings`. Ko darilo
+poteče, je treba odločiti, ali se namig **utiša sam** (`MoonHintCoordinator` gate na `plusProvider`) in
+ali uporabnik kje vidi, da je bil vklopljen — sicer utihne tiho, brez sledi.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
