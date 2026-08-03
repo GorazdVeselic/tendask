@@ -557,15 +557,33 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      Dart izvedbe) in **`ed25519_edwards` 0.3.1** (zadnja izdaja pred ~4 leti, 13 všečkov, ista ročna
      razčlenitev). **Nič kode** — uporaba pride s korakom 4. `tech-stack.md §1` dopolnjen z razlogom,
      zakaj je izven prvotnega seznama (monetizacija ob pisanju sklada ni obstajala).
-  4. ⬜ `plusProvider`: bere drift, preveri podpis (bundlan javni ključ), čas prek `Clock`
-     (konstruktor-injektiran — ne `static const` vzorec koordinatorjev); **gost brez profila → mirno
-     ni-Plus** (brez izjem). Unit testi: veljaven/pretečen/predelan token, gost.
-     ⚠️ **Dve najdbi iz branja izvorne kode paketa (korak 3), ki veljata za ta korak:** `JWT.verify`
-     vzame `alg` **iz glave žetona** (`jwt.dart:55`) in šele nato pokliče algoritem — napačen tip ključa
-     sicer vrže `TypeError` (hard cast, `assert` v release izpade), a preverba mora **eksplicitno
-     zavrniti vse razen `EdDSA`**, ne se zanašati na to. In: `checkExpiresIn` privzeto bere čas prek
-     internega paketa `clock`, zato ga postavi na `false` in `plus_until` presodi z **našim** `Clock`
-     (pravilo projekta — sicer poteka ni mogoče testirati).
+  4. ✅ **`plusProvider`** — 2026-08-03, branch `feat/fr20-t6-4-plus-provider`. **Dve odločitvi lastnika
+     na začetku koraka:** (a) **javni ključ je konstanta v repu** — `kPlusPublicKey` v `core/config.dart`,
+     ker javni ključ ni skrivnost in ga tako ni mogoče pozabiti ob build-u (`--dart-define` bi pomenil
+     tiho izdajo brez Plusa); **danes je prazen**, ker para ključev še ni → vsak profil bere kot ne-Plus,
+     kar je natanko želeno temno stanje. (b) **Merodajen je podpisan žeton, ne stolpec `plus_until`** —
+     stolpec je zrcalo za prikaz, zato predelana vrstica v driftu ne odklene ničesar.
+     Struktura: `features/plus/data/plus_repository.dart` (`PlusRecord` = tipiziran model, drift ostane v
+     `data/`) · `application/plus_token.dart` = **čista funkcija** `verifyPlusToken()` (brez Riverpoda,
+     brez ure iz okolja — »zdaj« je argument, isti vzorec kot `planMoonHints()` v T4b) ·
+     `application/plus_provider.dart` = `plusProvider` (`StreamProvider<PlusStatus>`, sledi
+     `authStateChangesProvider`, re-izračun ob vsaki spremembi vrstice). Ura in ključ sta **overridljiva
+     providerja** (`plusClockProvider`, `plusPublicKeyProvider`), zato je `kPlusPublicKey` edina
+     netestirana konstanta. Vsaka nepričakovanost (manjkajoč ključ, tuj `sub`, napačen `alg`, pokvarjen
+     žeton, potekel datum) je **miren `PlusStatus.none()`, nikoli izjema** — gost offline ne sme videti
+     napake. **Dve najdbi iz branja izvorne kode paketa (korak 3), obe upoštevani:** `JWT.verify` vzame
+     `alg` **iz glave žetona** (`jwt.dart:55`), zato je `EdDSA` pripet **pred** klicem verify (test z
+     `HS256` žetonom to zaklene); `checkExpiresIn` bi bral čas prek internega paketa `clock`, zato je
+     `false` in `plus_until` presodi naš `Clock`. `checkHeaderType` je prav tako `false` — `typ` ob
+     pripetem algoritmu ne doda ničesar, izdajatelj brez njega pa bi Plus ugasnil brez vidnega vzroka.
+     **Pogodba žetona** (za Edge Function ob T7/T8): `{sub, plus_until (epoch sekunde), iat}`, `alg=EdDSA`.
+     **18 novih testov, suite 1432:** čisti (veljaven · potekel · rob poteka · predelano telo · tuj ključ ·
+     tuj `sub` · `HS256` · smeti/null · manjkajoča trditev · prazen ali pokvarjen javni ključ) in
+     providerski nad in-memory driftom (gost brez vrstice · pull odklene · **raztegnjen stolpec brez
+     žetona ne odklene** · stolpec ne more preživeti trditve · ura odloča potek · tuj `sub` · odvzem
+     žetona Plus ugasne · prazen `kPlusPublicKey` = današnje temno stanje).
+     ⏳ **Ostaja za T7:** generiranje para ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets)
+     in izdaja žetonov ob masovnem grantu.
   5. ⬜ `/tendask-plus` zaslon (osnovni): stanje darila/veljavnost (»Doživljenjska« vs »velja do …« —
      FR-20 §6, `plus_kind` samo za prikaz), seznam funkcij (»Lunin koledar« → `/moon-settings`;
      prihodnje = »Kmalu«), **brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika**.

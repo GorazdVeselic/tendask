@@ -436,14 +436,35 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   `checkExpiresIn` privzeto bere čas prek internega paketa `clock` → postavi ga na `false` in
   `plus_until` presodi z **našim** `Clock` (sicer poteka ni mogoče testirati).
 
-**Naloga NASLEDNJE seje: T6 korak 4 — `plusProvider`** (branch `feat/fr20-t6-4-plus-provider`): bere
-drift (`plus_until`/`plus_token`/`plus_kind`), preveri podpis žetona z **bundlanim javnim ključem**
-(EdDSA/Ed25519, brez mreže), čas prek **`Clock`** (konstruktor-injektiran — ne `static const` vzorec
-koordinatorjev); **gost brez profila → mirno ni-Plus** (brez izjem). Upravičenost se bere **vedno samo
-iz `plus_until`**, `plus_kind` je le za prikaz (FR-20 §7); preveri tudi `sub == moj uid` (§5.6 — kopiran
-tuj žeton ne velja). Unit testi: veljaven / pretečen / predelan žeton, tuj `sub`, gost. ⚠️ Para ključev
-za staging/prod še ni — če ga korak potrebuje, **vprašaj lastnika** (ključi in skrivnosti se ne ugibajo,
-javni ključ gre v `assets/`, privatni v Supabase secrets).
+- **T6 korak 4 ✅ (3. 8., branch `feat/fr20-t6-4-plus-provider`) — `plusProvider`:** **dve odločitvi
+  lastnika:** (a) **javni ključ je konstanta v repu** — `kPlusPublicKey` v `core/config.dart`, ker javni
+  ključ ni skrivnost in ga tako ni mogoče pozabiti ob build-u; **danes je prazen** (para ključev še ni)
+  → vsak profil bere kot ne-Plus = želeno temno stanje. (b) **Merodajen je podpisan žeton, ne stolpec
+  `plus_until`** — stolpec je zrcalo za prikaz, predelana vrstica v driftu ne odklene ničesar.
+  Struktura: `features/plus/data/plus_repository.dart` (`PlusRecord`, drift ostane v `data/`) ·
+  `application/plus_token.dart` = **čista** `verifyPlusToken()` (»zdaj« je argument — vzorec
+  `planMoonHints()`) · `application/plus_provider.dart` = `plusProvider`
+  (`StreamProvider<PlusStatus>`, sledi `authStateChangesProvider`, re-izračun ob spremembi vrstice).
+  Ura in ključ sta overridljiva providerja (`plusClockProvider`, `plusPublicKeyProvider`), zato je
+  `kPlusPublicKey` **edina netestirana konstanta**. Vse nepričakovano (manjkajoč ključ, tuj `sub`,
+  napačen `alg`, pokvarjen žeton, potek) je **miren `PlusStatus.none()`, nikoli izjema**. Obe najdbi iz
+  koraka 3 sta upoštevani: `EdDSA` je pripet **pred** `JWT.verify` (test s `HS256` to zaklene),
+  `checkExpiresIn: false` + naš `Clock`; `checkHeaderType: false` (`typ` ob pripetem algoritmu ne doda
+  ničesar, izdajatelj brez njega pa bi Plus ugasnil brez vidnega vzroka). **Pogodba žetona** za Edge
+  Function: `{sub, plus_until (epoch sekunde), iat}`, `alg=EdDSA`. **18 novih testov, suite 1432.**
+  ⏳ Za T7 ostane generiranje para ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets).
+
+**Naloga NASLEDNJE seje: T6 korak 5 — zaslon `/tendask-plus`** (branch `feat/fr20-t6-5-plus-screen`):
+osnovno stanje darila/veljavnosti (»Doživljenjska« vs »velja do …« — `plus_kind` **samo za prikaz**,
+bere se iz `plusProvider`), seznam funkcij (»Lunin koledar« → `/moon-settings`; prihodnje = »Kmalu«),
+**brez vnosa kode** (pride s T8) in **brez kančka nakupnega jezika** (FR-20 §3.1 — brez cene, brez URL-ja,
+brez namiga, kje dobiti kodo; to je rdeča črta, ki lahko stane odstranitev aplikacije). Kartica
+»✦ Tendask+« v Nastavitvah pod profilom, za novim flagom **`kTendaskPlusEnabled`** (ime iz screen-map
+§2.1); ruta `/tendask-plus` z istim varovalom kot moon rute + `route_collision_test` + screen-map v
+istem commitu. **Vrstni red dela: pogled → prevodi (en+sl+de) → layout matrika** (pravilo »poglej,
+preden vlagaš«). ⚠️ Ta korak **zapre slepo ulico**: vrstica »Lunin koledar« je drugi vstop v
+`/moon-settings`, ki ni odvisen od glavnega 🌙 stikala — **ne** dodajaj lunine vrstice v glavne
+Nastavitve.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se

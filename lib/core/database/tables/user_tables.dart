@@ -26,8 +26,9 @@ class Profiles extends Table {
   BoolColumn get defaultGardenSeeded =>
       boolean().withDefault(const Constant(false))();
   // Tendask+ entitlement (FR-20), server-owned: the cloud writes them, the device
-  // only pulls them. Eligibility is read ONLY from plusUntil (plusToken proves it,
-  // plusKind is display text). Never included in the push payload.
+  // only pulls them. Eligibility comes from the signed plusToken alone (T6.4) —
+  // plusUntil mirrors its claim for display, plusKind is display text. Never
+  // included in the push payload.
   DateTimeColumn get plusUntil => dateTime().nullable()();
   TextColumn get plusToken => text().nullable()();
   TextColumn get plusKind => text().nullable()();

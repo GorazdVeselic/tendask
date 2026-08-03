@@ -208,6 +208,16 @@ const kMoonFinderHorizonDays = 60;
 /// day to the new element instead of splitting the cell for a sliver.
 const kMoonMidnightSliverWindow = Duration(hours: 1);
 
+/// Ed25519 public key (base64, raw 32 bytes) that verifies the Tendask+
+/// entitlement token stored in `profile.plus_token` (FR-20 §6.2). A public key
+/// is not a secret, so it lives in the repo rather than in --dart-define: a
+/// release can then never silently ship without it. The private half stays in
+/// Supabase secrets and never leaves the server.
+///
+/// Empty until the key pair is generated at ignition (T7) — an empty key means
+/// no token can verify, so every profile reads as non-Plus.
+const kPlusPublicKey = '';
+
 /// Sentry crash/error monitoring DSN (M9.1). Arrives ONLY via --dart-define
 /// (never committed — see dart_defines.json, gitignored). Empty → Sentry stays
 /// off and the app runs normally (same offline-first pattern as Supabase).

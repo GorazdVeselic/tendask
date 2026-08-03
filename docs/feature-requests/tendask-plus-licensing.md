@@ -579,7 +579,7 @@ Po poteku zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**X mesece
    - **Vezano na obseg paketa (§10.2):** M11 ima ponavljajoč se strošek → če je v paketu, govori proti neomejeni doživljenjski (ali za njeno omejitev na lansirno ponudbo).
    - **Vmesna možnost, če bo potreba:** sezonska licenca 6 mesecev (ena transakcija, ujame sezonsko vedenje brez upravljanja odpovedi).
 3. **Polar ali Paddle?** **Priporočilo = Polar** (§4.3), a ni potrjeno. Pred potrditvijo preveri dvoje: (a) ali Stripe Express onboarding za s.p. steče, (b) ali Polar pošilja **opomnik pred obnovitvijo** (§5.1) — če ne, ga moraš pošiljati sam ali izbrati Paddle.
-4. **Nova dependency za preverjanje podpisa** — kateri paket, in posodobitev `tech-stack.md §1`.
+4. ~~**Nova dependency za preverjanje podpisa**~~ **Odločeno (2026-08-03, T6.3): `dart_jsonwebtoken` ^3.4.1 z EdDSA/Ed25519** — paket je bil že v drevesu prek `supabase_flutter`, zato pin ne doda kode; `tech-stack.md §1` dopolnjen. Ob T6.4 sta bili odločeni še dve podrobnosti: **javni ključ je konstanta v repu** (`kPlusPublicKey` v `core/config.dart` — javni ključ ni skrivnost, tako ga ni mogoče pozabiti ob build-u; privatni ostane v Supabase secrets) in **merodajen je podpisan žeton, ne stolpec** `plus_until` (stolpec je zrcalo za prikaz; predelana vrstica v driftu ne odklene ničesar). Žeton po §6.2: `{sub, plus_until (epoch sekunde), iat}`, `alg = EdDSA`.
 5. **`kLicenseGraceDays`** — 7 ali 14?
 6. **Število sedežev** — 3 ali več?
 7. **Trial?** (npr. 14 dni Plus ob prvi prijavi) — poveča konverzijo, a doda stanje.
