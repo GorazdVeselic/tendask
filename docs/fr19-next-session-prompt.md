@@ -511,8 +511,24 @@ preverba, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELEC
 
 ⏳ **Odprto:** staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica iste
 migracije; datoteke ni več — ob svežem refreshu staginga izgine sam) · **na telefonu stoji debug/staging
-build z lokalno prižganim `kMoonCalendarEnabled`** (v repu je flag `false`, nikoli commitan `true`) ·
-worktree starega builda je v `tmp/old-apk` (`git worktree remove tmp/old-apk`).
+build z lokalno prižganimi `kMoonCalendarEnabled` + `kTendaskPlusEnabled` in testnim `kPlusPublicKey`**
+(v repu so vsi trije privzeti — `false`/prazen, nikoli commitani) · worktree starega builda je v
+`tmp/old-apk` (`git worktree remove tmp/old-apk`).
+
+📱 **Postopek za ogled na napravi** (deloval 3. 8., SM A536B): lokalno postavi
+`kMoonCalendarEnabled = true`, `kTendaskPlusEnabled = true` in
+`kPlusPublicKey = 'nHq6JH1Lmot5tW6rGCV05fjNlUAomh+JWgaeAFtYs8o='` (testni par, `tmp/gen_plus_test_token.dart`)
+→ `flutter build apk --debug --dart-define-from-file=dart_defines.staging.json` → `adb install -r
+build/app/outputs/flutter-apk/app-debug.apk` → **vse tri vrednosti takoj nazaj** (s prižganim luninim
+flagom `flutter test` pade). Prijava z e-pošto (gost nima oblačne seje), OTP iz Mailpita. Scenarij se
+vozi z `tmp/steps.txt` + `& ./tool/adb_run.ps1`; ⚙️ Nastavitve so na Domov pri `tap 1010 165`.
+⚠️ Screencap **preusmerjaj v Bash orodju** (`adb exec-out screencap -p > tmp/x.png`) — prek PowerShella
+se PNG pokvari.
+
+✅ **T6 korak 5 preverjen na napravi (3. 8.):** kartica v Nastavitvah, `/tendask-plus` z resničnim
+podpisanim žetonom (»Aktiven do 2. 9. 2026«, brez omrežja) in **cel scenarij slepe ulice**: 🌙 stikalo
+off → čip na Domov izgine → Nastavitve → ✦ Tendask+ → »Lunin koledar« → nastavitve → vklop → čip nazaj.
+V `logcat` nič. Zato korak 6 tega ne odkriva več — mora pa ga **ohraniti**.
 
 🔁 **Najdba lastnika 2. 8. (potrjena v kodi, popravek je del T6):** izklop glavnega 🌙 stikala v
 `/moon-settings` je danes **enosmeren** — edini vstop tja je ⚙️ v AppBar koledarja, do koledarja pa vodijo
