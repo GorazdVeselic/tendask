@@ -16,7 +16,7 @@ import 'element_glyph.dart';
 /// the element day of the task's date, RE-DERIVED on every build — never
 /// frozen like the weather snapshot (spec §6.1.2), so editing the date moves
 /// it. Info only, no tap (MVP). Decides its own visibility — while the feature
-/// flag, the opt-in switch or the Tendask+ entitlement is missing it renders
+/// flag, the element-label switch or the Tendask+ entitlement is missing it renders
 /// nothing (disabled feature, not a swallowed error), including its section
 /// label: the element day is the paid half of FR-19 (spec §6.5).
 class MoonTaskSection extends StatelessWidget {
@@ -42,7 +42,7 @@ class _MoonTaskSectionGate extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
     final isPlus = ref.watch(plusActiveProvider);
-    if (!moonPlusSurfaceOn(settings, isPlus)) return const SizedBox.shrink();
+    if (!moonElementLabelsOn(settings, isPlus)) return const SizedBox.shrink();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [

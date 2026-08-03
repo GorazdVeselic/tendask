@@ -10,15 +10,15 @@ import '../../../../core/date_format.dart';
 import '../../../../i18n/translations.g.dart';
 import '../../../moon/application/moon_month_provider.dart';
 import '../../../moon/application/moon_settings_controller.dart';
-import '../../../moon/presentation/moon_gate.dart';
 import '../../../moon/presentation/widgets/moon_phase_icon.dart';
 import '../../../plus/application/plus_provider.dart';
 import '../../../plus/presentation/plus_label.dart';
 
 /// Moon calendar entry gate on the dashboard (FR-19 T4.1, wireframe board 1).
-/// Decides its own visibility — while the feature flag or the opt-in switch is
-/// off it renders nothing (disabled feature, not a swallowed error), so the
-/// dashboard stays untouched until ignition (T7).
+/// While the feature flag is off it renders nothing, so the dashboard stays
+/// untouched until ignition (T7); once lit, the chip is ALWAYS here — the phase
+/// is the one free hook and is worth more as a teaser than as something the
+/// user can hide (decision B3), so there is no switch for it.
 ///
 /// This is the one moon surface with SPLIT gating (T6.6): the phase is free
 /// forever (spec §6.5), so the chip stays whole without Tendask+ and only its
@@ -40,12 +40,8 @@ class _HomeMoonChipGate extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Warmed in bootstrap (keepAlive), so no flash: the value is present from
-    // the first frame and the null branch only covers a failed load.
-    final settings = ref.watch(moonSettingsControllerProvider).asData?.value;
-    // The free phase follows the master switch alone; the entitlement only
-    // decides which CTA the card carries.
-    if (!moonSurfaceOn(settings)) return const SizedBox.shrink();
+    // The entitlement only decides which CTA the card carries — never whether
+    // the card is here.
     return Padding(
       padding: const EdgeInsets.only(bottom: 16),
       child: HomeMoonChipCard(isPlus: ref.watch(plusActiveProvider)),

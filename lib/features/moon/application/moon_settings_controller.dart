@@ -5,72 +5,76 @@ import '../../../core/local_prefs/local_prefs.dart';
 
 part 'moon_settings_controller.g.dart';
 
-/// Moon calendar settings (FR-19): the on/off switch, the zodiac system and
-/// the display sub-toggles (garden ★, Journal layer, astro details).
+/// Moon calendar settings (FR-19): the zodiac system and the display
+/// sub-toggles (garden ★, Journal layer, astro details, element labels). There
+/// is no master switch — the phase on Home is always on (decision B3).
 class MoonSettings {
   const MoonSettings({
-    required this.enabled,
     required this.system,
     required this.highlightGarden,
     required this.showInJournal,
     required this.showAstroDetails,
+    required this.showElementLabels,
   });
 
-  final bool enabled;
   final CalendarSystem system;
   final bool highlightGarden;
   final bool showInJournal;
   final bool showAstroDetails;
+  final bool showElementLabels;
 
   MoonSettings copyWith({
-    bool? enabled,
     CalendarSystem? system,
     bool? highlightGarden,
     bool? showInJournal,
     bool? showAstroDetails,
+    bool? showElementLabels,
   }) =>
       MoonSettings(
-        enabled: enabled ?? this.enabled,
         system: system ?? this.system,
         highlightGarden: highlightGarden ?? this.highlightGarden,
         showInJournal: showInJournal ?? this.showInJournal,
         showAstroDetails: showAstroDetails ?? this.showAstroDetails,
+        showElementLabels: showElementLabels ?? this.showElementLabels,
       );
 
   @override
   bool operator ==(Object other) =>
       other is MoonSettings &&
-      other.enabled == enabled &&
       other.system == system &&
       other.highlightGarden == highlightGarden &&
       other.showInJournal == showInJournal &&
-      other.showAstroDetails == showAstroDetails;
+      other.showAstroDetails == showAstroDetails &&
+      other.showElementLabels == showElementLabels;
 
   @override
   int get hashCode => Object.hash(
-        enabled,
         system,
         highlightGarden,
         showInJournal,
         showAstroDetails,
+        showElementLabels,
       );
 
   @override
   String toString() =>
-      'MoonSettings(enabled: $enabled, system: ${system.name}, '
+      'MoonSettings(system: ${system.name}, '
       'highlightGarden: $highlightGarden, showInJournal: $showInJournal, '
-      'showAstroDetails: $showAstroDetails)';
+      'showAstroDetails: $showAstroDetails, '
+      'showElementLabels: $showElementLabels)';
 }
 
-/// Defaults when nothing is stored yet or the load failed: enabled (decision
-/// A6), sidereal (matches the printed calendars the target market uses),
-/// display sub-toggles on (decision 2026-07-31).
-const _defaults = MoonSettings(
-  enabled: true,
+/// Defaults when nothing is stored yet or the load failed: sidereal (matches
+/// the printed calendars the target market uses) and every sub-toggle on
+/// (decision 2026-07-31, extended by B3). This is also the picture the
+/// settings screen shows without Tendask+ — what the licence brings, not the
+/// user's own state.
+const kMoonSettingsDefaults = MoonSettings(
   system: CalendarSystem.sidereal,
   highlightGarden: true,
   showInJournal: true,
   showAstroDetails: true,
+  showElementLabels: true,
 );
 
 /// The user's moon calendar settings, persisted device-locally (never synced —
@@ -84,29 +88,25 @@ class MoonSettingsController extends _$MoonSettingsController {
   @override
   Future<MoonSettings> build() async {
     final prefs = ref.watch(localPrefsProvider);
-    final enabled = await prefs.moonCalendarEnabled() ?? _defaults.enabled;
     final system = switch (await prefs.moonSystem()) {
       'tropical' => CalendarSystem.tropical,
-      _ => _defaults.system,
+      _ => kMoonSettingsDefaults.system,
     };
-    final highlightGarden =
-        await prefs.moonHighlightGarden() ?? _defaults.highlightGarden;
+    final highlightGarden = await prefs.moonHighlightGarden() ??
+        kMoonSettingsDefaults.highlightGarden;
     final showInJournal =
-        await prefs.moonShowInJournal() ?? _defaults.showInJournal;
-    final showAstroDetails =
-        await prefs.moonShowAstroDetails() ?? _defaults.showAstroDetails;
+        await prefs.moonShowInJournal() ?? kMoonSettingsDefaults.showInJournal;
+    final showAstroDetails = await prefs.moonShowAstroDetails() ??
+        kMoonSettingsDefaults.showAstroDetails;
+    final showElementLabels = await prefs.moonShowElementLabels() ??
+        kMoonSettingsDefaults.showElementLabels;
     return MoonSettings(
-      enabled: enabled,
       system: system,
       highlightGarden: highlightGarden,
       showInJournal: showInJournal,
       showAstroDetails: showAstroDetails,
+      showElementLabels: showElementLabels,
     );
-  }
-
-  Future<void> setEnabled(bool enabled) async {
-    state = AsyncData((await _current()).copyWith(enabled: enabled));
-    await ref.read(localPrefsProvider).setMoonCalendarEnabled(enabled);
   }
 
   Future<void> setSystem(CalendarSystem system) async {
@@ -135,13 +135,22 @@ class MoonSettingsController extends _$MoonSettingsController {
         .setMoonShowAstroDetails(showAstroDetails);
   }
 
-  /// Current settings, falling back to [_defaults] when the initial load
-  /// failed — a toggle tap must still work (and repair state) in that case.
+  Future<void> setShowElementLabels(bool showElementLabels) async {
+    state = AsyncData(
+      (await _current()).copyWith(showElementLabels: showElementLabels),
+    );
+    await ref
+        .read(localPrefsProvider)
+        .setMoonShowElementLabels(showElementLabels);
+  }
+
+  /// Current settings, falling back to [kMoonSettingsDefaults] when the initial
+  /// load failed — a toggle tap must still work (and repair state) in that case.
   Future<MoonSettings> _current() async {
     try {
       return await future;
     } catch (_) {
-      return _defaults;
+      return kMoonSettingsDefaults;
     }
   }
 }

@@ -45,8 +45,8 @@ void main() {
         databaseProvider.overrideWithValue(db),
         // The 🔔 row asks the OS for the notification grant before it opts in.
         notificationServiceProvider.overrideWithValue(notif),
-        // Everything below the master switch is a Tendask+ row (T6.6), so the
-        // default here is an entitled user; the free screen has its own test.
+        // Every row here configures a walled surface (T6.6), so the default is
+        // an entitled user; the free showroom has its own test.
         plusProvider.overrideWith((ref) => _plus(active: true)),
       ],
     );
@@ -91,17 +91,17 @@ void main() {
     expect(await LocalPrefsRepository(db).moonSystem(), 'tropical');
   });
 
-  testWidgets('the main switch persists device-locally', (tester) async {
+  testWidgets('the chosen system explains itself', (tester) async {
     await pumpSettings(tester);
 
-    await tester.tap(find.text(t.moon.settings.enable));
+    expect(find.text(t.moon.settings.system_help_sidereal), findsOneWidget);
+    expect(find.text(t.moon.settings.system_help_tropical), findsNothing);
+
+    await tester.tap(find.text(t.moon.settings.system_tropical));
     await tester.pumpAndSettle();
 
-    expect(
-      container.read(moonSettingsControllerProvider).value?.enabled,
-      isFalse,
-    );
-    expect(await LocalPrefsRepository(db).moonCalendarEnabled(), isFalse);
+    expect(find.text(t.moon.settings.system_help_tropical), findsOneWidget);
+    expect(find.text(t.moon.settings.system_help_sidereal), findsNothing);
   });
 
   testWidgets('the display sub-toggles persist device-locally', (tester) async {
@@ -119,6 +119,10 @@ void main() {
     await tester.tap(find.text(t.moon.settings.show_astro));
     await tester.pumpAndSettle();
     expect(await prefs.moonShowAstroDetails(), isFalse);
+
+    await tester.tap(find.text(t.moon.settings.show_element_labels));
+    await tester.pumpAndSettle();
+    expect(await prefs.moonShowElementLabels(), isFalse);
   });
 
   testWidgets('the hint opt-in starts off and writes to the synced profile', (
@@ -147,12 +151,11 @@ void main() {
     expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
   });
 
-  testWidgets('without Tendask+ only the free switch and the explainer stay', (
+  testWidgets('without Tendask+ the screen is a disabled showroom', (
     tester,
   ) async {
-    // The screen is reachable without a licence (via /tendask-plus) so the free
-    // phase chip can be switched back on; the paid rows would otherwise be
-    // settings for surfaces the wall hides.
+    // Reachable without a licence (via /tendask-plus): everything is visible so
+    // the reader sees what the licence brings, but nothing can be changed.
     container.dispose();
     container = ProviderContainer(
       overrides: [
@@ -163,20 +166,72 @@ void main() {
     );
     await pumpSettings(tester);
 
-    expect(find.text(t.moon.settings.enable), findsOneWidget);
-    expect(find.text(t.moon.settings.enable_sub_free), findsOneWidget);
+    // SectionLabel renders its text uppercase.
+    expect(
+      find.text(t.moon.settings.system_label.toUpperCase()),
+      findsOneWidget,
+    );
     expect(find.text(t.moon.settings.about_title), findsOneWidget);
 
-    expect(find.text(t.moon.settings.system_label), findsNothing);
-    expect(find.text(t.moon.settings.hint), findsNothing);
-    expect(find.text(t.moon.settings.highlight_garden), findsNothing);
-    expect(find.text(t.moon.settings.show_in_journal), findsNothing);
-    expect(find.text(t.moon.settings.show_astro), findsNothing);
+    for (final title in [
+      t.moon.settings.hint,
+      t.moon.settings.highlight_garden,
+      t.moon.settings.show_in_journal,
+      t.moon.settings.show_astro,
+      t.moon.settings.show_element_labels,
+    ]) {
+      final row = tester.widget<SwitchListTile>(
+        find.ancestor(
+          of: find.text(title),
+          matching: find.byType(SwitchListTile),
+        ),
+      );
+      // Defaults, not the user's own state: all five on, all five dead.
+      expect(row.value, isTrue, reason: title);
+      expect(row.onChanged, isNull, reason: title);
+    }
 
-    // The switch still works — that is the whole point of keeping it here.
-    await tester.tap(find.text(t.moon.settings.enable));
-    await tester.pumpAndSettle();
-    expect(await LocalPrefsRepository(db).moonCalendarEnabled(), isFalse);
+    expect(
+      tester
+          .widget<SegmentedButton<CalendarSystem>>(
+            find.byType(SegmentedButton<CalendarSystem>),
+          )
+          .onSelectionChanged,
+      isNull,
+    );
+    expect(find.text(t.moon.settings.system_help_sidereal), findsOneWidget);
+  });
+
+  testWidgets('the showroom paints defaults, not what the user stored', (
+    tester,
+  ) async {
+    await LocalPrefsRepository(db).setMoonSystem('tropical');
+    await LocalPrefsRepository(db).setMoonShowInJournal(false);
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        notificationServiceProvider.overrideWithValue(notif),
+        plusProvider.overrideWith((ref) => _plus(active: false)),
+      ],
+    );
+    await pumpSettings(tester);
+
+    expect(find.text(t.moon.settings.system_help_sidereal), findsOneWidget);
+    expect(
+      tester
+          .widget<SwitchListTile>(
+            find.ancestor(
+              of: find.text(t.moon.settings.show_in_journal),
+              matching: find.byType(SwitchListTile),
+            ),
+          )
+          .value,
+      isTrue,
+    );
+    // Nothing was written back: the stored settings survive the visit.
+    expect(await LocalPrefsRepository(db).moonSystem(), 'tropical');
+    expect(await LocalPrefsRepository(db).moonShowInJournal(), isFalse);
   });
 
   testWidgets('a failed load shows the error message, not a stuck spinner', (

@@ -1046,15 +1046,13 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get enable => 'Mondkalender anzeigen';
-	@override String get enable_sub => 'Chip auf der Startseite, Hinweise im Garten';
-	@override String get enable_sub_free => 'Mondphasen-Chip auf der Startseite';
 	@override String get system_label => 'Kalendersystem';
 	@override String get system_sidereal => 'Nach Sternbildern';
 	@override String get system_sidereal_sub => 'biodynamisch';
 	@override String get system_tropical => 'Nach Zeichen';
 	@override String get system_tropical_sub => 'astrologisch';
-	@override String get system_help => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.';
+	@override String get system_help_sidereal => 'Die Stellung des Mondes vor den tatsächlichen Sternbildern am Himmel (siderischer Tierkreis) — die Einteilung, die gedruckte Mondkalender verwenden.';
+	@override String get system_help_tropical => 'Der Tierkreis in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — die Einteilung der Horoskope. Von den Sternbildern weicht sie heute um etwa ein Zeichen ab.';
 	@override String get hint => 'Hinweis „morgen ist ein guter Tag“';
 	@override String get hint_sub => 'sanft, beachtet die Ruhezeiten';
 	@override String get highlight_garden => 'Für meinen Garten hervorheben';
@@ -1063,6 +1061,8 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	@override String get show_in_journal_sub => 'färbt den Monatskalender im Tagebuch';
 	@override String get show_astro => 'Sternbilder und Mondphase anzeigen';
 	@override String get show_astro_sub => 'mehr Astro-Details in der Tagesansicht';
+	@override String get show_element_labels => 'Element bei Aufgaben anzeigen';
+	@override String get show_element_labels_sub => 'im Eingabeschritt, an der Aufgabe und an der Pflanze';
 	@override String get about_title => '🌙 Was ist das?';
 	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
 		const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '),
@@ -1113,6 +1113,7 @@ class _Translations$moon$finder$de extends Translations$moon$finder$en {
 
 	// Translations
 	@override String get title => 'Wann für …';
+	@override String get chip => 'Passende Tage';
 	@override String get plant_label => 'Pflanze';
 	@override String get plant_hint => 'Pflanze wählen';
 	@override String get empty_hint => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.';
@@ -1770,15 +1771,13 @@ extension on TranslationsDe {
 			'moon.calendar.weekday_short.fri' => 'Fr',
 			'moon.calendar.weekday_short.sat' => 'Sa',
 			'moon.calendar.weekday_short.sun' => 'So',
-			'moon.settings.enable' => 'Mondkalender anzeigen',
-			'moon.settings.enable_sub' => 'Chip auf der Startseite, Hinweise im Garten',
-			'moon.settings.enable_sub_free' => 'Mondphasen-Chip auf der Startseite',
 			'moon.settings.system_label' => 'Kalendersystem',
 			'moon.settings.system_sidereal' => 'Nach Sternbildern',
 			'moon.settings.system_sidereal_sub' => 'biodynamisch',
 			'moon.settings.system_tropical' => 'Nach Zeichen',
 			'moon.settings.system_tropical_sub' => 'astrologisch',
-			'moon.settings.system_help' => 'Wähle den Kalender, dem du folgst. Die Astronomie ist gleich; nur die Einteilung des Tierkreises unterscheidet sich.',
+			'moon.settings.system_help_sidereal' => 'Die Stellung des Mondes vor den tatsächlichen Sternbildern am Himmel (siderischer Tierkreis) — die Einteilung, die gedruckte Mondkalender verwenden.',
+			'moon.settings.system_help_tropical' => 'Der Tierkreis in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — die Einteilung der Horoskope. Von den Sternbildern weicht sie heute um etwa ein Zeichen ab.',
 			'moon.settings.hint' => 'Hinweis „morgen ist ein guter Tag“',
 			'moon.settings.hint_sub' => 'sanft, beachtet die Ruhezeiten',
 			'moon.settings.highlight_garden' => 'Für meinen Garten hervorheben',
@@ -1787,6 +1786,8 @@ extension on TranslationsDe {
 			'moon.settings.show_in_journal_sub' => 'färbt den Monatskalender im Tagebuch',
 			'moon.settings.show_astro' => 'Sternbilder und Mondphase anzeigen',
 			'moon.settings.show_astro_sub' => 'mehr Astro-Details in der Tagesansicht',
+			'moon.settings.show_element_labels' => 'Element bei Aufgaben anzeigen',
+			'moon.settings.show_element_labels_sub' => 'im Eingabeschritt, an der Aufgabe und an der Pflanze',
 			'moon.settings.about_title' => '🌙 Was ist das?',
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '), b('Wurzeln, Blättern, Blüten und Früchten'), const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '), b('Planung'), const TextSpan(text: ', nicht als Regel.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
@@ -1795,6 +1796,7 @@ extension on TranslationsDe {
 			'moon.task_section.footnote' => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.',
 			'moon.hint.title' => ({required Object day}) => 'Morgen ist ${day}',
 			'moon.finder.title' => 'Wann für …',
+			'moon.finder.chip' => 'Passende Tage',
 			'moon.finder.plant_label' => 'Pflanze',
 			'moon.finder.plant_hint' => 'Pflanze wählen',
 			'moon.finder.empty_hint' => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.',

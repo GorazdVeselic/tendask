@@ -3,60 +3,53 @@ import 'package:tendask/core/biodynamic/calendar_system.dart';
 import 'package:tendask/features/moon/application/moon_settings_controller.dart';
 import 'package:tendask/features/moon/presentation/moon_gate.dart';
 
-MoonSettings _settings({bool enabled = true, bool showInJournal = true}) =>
-    MoonSettings(
-      enabled: enabled,
-      system: CalendarSystem.sidereal,
-      highlightGarden: true,
-      showInJournal: showInJournal,
-      showAstroDetails: true,
-    );
+MoonSettings _settings({
+  bool showInJournal = true,
+  bool showElementLabels = true,
+}) => MoonSettings(
+  system: CalendarSystem.sidereal,
+  highlightGarden: true,
+  showInJournal: showInJournal,
+  showAstroDetails: true,
+  showElementLabels: showElementLabels,
+);
 
 void main() {
   // The visibility rules the entry points share. Their gate widgets cannot
   // exercise this layer while kMoonCalendarEnabled is false, so these cases are
   // what pins the behaviour that goes live at ignition (T7).
-  group('moonSurfaceOn', () {
-    test('follows the master switch', () {
-      expect(moonSurfaceOn(_settings()), isTrue);
-      expect(moonSurfaceOn(_settings(enabled: false)), isFalse);
+  group('moonElementLabelsOn', () {
+    test('needs the entitlement and the element-label switch', () {
+      expect(moonElementLabelsOn(_settings(), true), isTrue);
+      expect(moonElementLabelsOn(_settings(), false), isFalse);
+      expect(
+        moonElementLabelsOn(_settings(showElementLabels: false), true),
+        isFalse,
+      );
     });
 
     test('treats a failed settings load as off', () {
-      expect(moonSurfaceOn(null), isFalse);
+      expect(moonElementLabelsOn(null, true), isFalse);
     });
 
     test('ignores the journal sub-switch', () {
-      // The 🌙 entry button follows the master switch alone (board C).
-      expect(moonSurfaceOn(_settings(showInJournal: false)), isTrue);
-    });
-  });
-
-  group('moonPlusSurfaceOn', () {
-    test('needs the entitlement on top of the master switch', () {
-      expect(moonPlusSurfaceOn(_settings(), true), isTrue);
-      expect(moonPlusSurfaceOn(_settings(), false), isFalse);
-      expect(moonPlusSurfaceOn(_settings(enabled: false), true), isFalse);
-    });
-
-    test('treats a failed settings load as off', () {
-      expect(moonPlusSurfaceOn(null, true), isFalse);
-    });
-
-    test('the free phase does not follow it', () {
-      // The Home chip keeps its phase without a licence (spec §6.5); only its
-      // element-day CTA is swapped for the lock.
-      expect(moonSurfaceOn(_settings()), isTrue);
-      expect(moonPlusSurfaceOn(_settings(), false), isFalse);
+      expect(moonElementLabelsOn(_settings(showInJournal: false), true), isTrue);
     });
   });
 
   group('journalMoonLayerOn', () {
-    test('needs the entitlement, the master switch and the sub-switch', () {
+    test('needs the entitlement and its own sub-switch', () {
       expect(journalMoonLayerOn(_settings(), true), isTrue);
       expect(journalMoonLayerOn(_settings(), false), isFalse);
       expect(journalMoonLayerOn(_settings(showInJournal: false), true), isFalse);
-      expect(journalMoonLayerOn(_settings(enabled: false), true), isFalse);
+    });
+
+    test('does not follow the element-label switch', () {
+      // The colour layer and the labels on tasks are separate switches (B3).
+      expect(
+        journalMoonLayerOn(_settings(showElementLabels: false), true),
+        isTrue,
+      );
     });
 
     test('treats a failed settings load as off', () {
@@ -83,8 +76,8 @@ void main() {
       expect(target(category: 'fruit_tree', plantId: 'apple'), 'apple');
     });
 
-    test('follows the switches like every other surface', () {
-      expect(target(settings: _settings(enabled: false)), isNull);
+    test('follows the switches like every other label surface', () {
+      expect(target(settings: _settings(showElementLabels: false)), isNull);
       expect(
         plantMoonChipTarget(
           null,

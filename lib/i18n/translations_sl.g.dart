@@ -1056,15 +1056,13 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get enable => 'Prikaži Lunin koledar';
-	@override String get enable_sub => 'čip na Domov, oznake po vrtu';
-	@override String get enable_sub_free => 'čip z meno Lune na Domov';
 	@override String get system_label => 'Sistem koledarja';
 	@override String get system_sidereal => 'Po ozvezdjih';
 	@override String get system_sidereal_sub => 'biodinamični';
 	@override String get system_tropical => 'Po znamenjih';
 	@override String get system_tropical_sub => 'astrološki';
-	@override String get system_help => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.';
+	@override String get system_help_sidereal => 'Lega Lune med dejanskimi ozvezdji na nebu (siderični zodiak) — razmejitev, ki jo uporabljajo tiskani setveni koledarji.';
+	@override String get system_help_tropical => 'Zodiak, razdeljen na dvanajst enakih znamenj od pomladnega enakonočja (tropski zodiak) — razmejitev horoskopov. Od ozvezdij se danes razlikuje za približno eno znamenje.';
 	@override String get hint => 'Namig »jutri dober dan«';
 	@override String get hint_sub => 'nežno, spoštuje tihe ure';
 	@override String get highlight_garden => 'Poudari po mojem vrtu';
@@ -1073,6 +1071,8 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	@override String get show_in_journal_sub => 'obarva mesečni koledar Dnevnika';
 	@override String get show_astro => 'Prikaži ozvezdja in meno';
 	@override String get show_astro_sub => 'več astro podrobnosti v dnevu';
+	@override String get show_element_labels => 'Prikaži element pri opravilih';
+	@override String get show_element_labels_sub => 'v koraku vnosa, na opravilu in na rastlini';
 	@override String get about_title => '🌙 Kaj je to?';
 	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
 		const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '),
@@ -1123,6 +1123,7 @@ class _Translations$moon$finder$sl extends Translations$moon$finder$en {
 
 	// Translations
 	@override String get title => 'Kdaj za …';
+	@override String get chip => 'Primerni dnevi';
 	@override String get plant_label => 'Rastlina';
 	@override String get plant_hint => 'Izberi rastlino';
 	@override String get empty_hint => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.';
@@ -1780,15 +1781,13 @@ extension on TranslationsSl {
 			'moon.calendar.weekday_short.fri' => 'pet',
 			'moon.calendar.weekday_short.sat' => 'sob',
 			'moon.calendar.weekday_short.sun' => 'ned',
-			'moon.settings.enable' => 'Prikaži Lunin koledar',
-			'moon.settings.enable_sub' => 'čip na Domov, oznake po vrtu',
-			'moon.settings.enable_sub_free' => 'čip z meno Lune na Domov',
 			'moon.settings.system_label' => 'Sistem koledarja',
 			'moon.settings.system_sidereal' => 'Po ozvezdjih',
 			'moon.settings.system_sidereal_sub' => 'biodinamični',
 			'moon.settings.system_tropical' => 'Po znamenjih',
 			'moon.settings.system_tropical_sub' => 'astrološki',
-			'moon.settings.system_help' => 'Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.',
+			'moon.settings.system_help_sidereal' => 'Lega Lune med dejanskimi ozvezdji na nebu (siderični zodiak) — razmejitev, ki jo uporabljajo tiskani setveni koledarji.',
+			'moon.settings.system_help_tropical' => 'Zodiak, razdeljen na dvanajst enakih znamenj od pomladnega enakonočja (tropski zodiak) — razmejitev horoskopov. Od ozvezdij se danes razlikuje za približno eno znamenje.',
 			'moon.settings.hint' => 'Namig »jutri dober dan«',
 			'moon.settings.hint_sub' => 'nežno, spoštuje tihe ure',
 			'moon.settings.highlight_garden' => 'Poudari po mojem vrtu',
@@ -1797,6 +1796,8 @@ extension on TranslationsSl {
 			'moon.settings.show_in_journal_sub' => 'obarva mesečni koledar Dnevnika',
 			'moon.settings.show_astro' => 'Prikaži ozvezdja in meno',
 			'moon.settings.show_astro_sub' => 'več astro podrobnosti v dnevu',
+			'moon.settings.show_element_labels' => 'Prikaži element pri opravilih',
+			'moon.settings.show_element_labels_sub' => 'v koraku vnosa, na opravilu in na rastlini',
 			'moon.settings.about_title' => '🌙 Kaj je to?',
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '), b('koreninami, listi, cvetovi in plodovi'), const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '), b('načrtovanju'), const TextSpan(text: ', ne kot pravilo.'), ]), 
 			'moon.settings.about_footnote' => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.',
@@ -1805,6 +1806,7 @@ extension on TranslationsSl {
 			'moon.task_section.footnote' => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.',
 			'moon.hint.title' => ({required Object day}) => 'Jutri je ${day}',
 			'moon.finder.title' => 'Kdaj za …',
+			'moon.finder.chip' => 'Primerni dnevi',
 			'moon.finder.plant_label' => 'Rastlina',
 			'moon.finder.plant_hint' => 'Izberi rastlino',
 			'moon.finder.empty_hint' => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.',

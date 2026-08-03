@@ -2152,15 +2152,6 @@ class Translations$moon$settings$en {
 
 	// Translations
 
-	/// en: 'Show moon calendar'
-	String get enable => 'Show moon calendar';
-
-	/// en: 'chip on Home, labels across the garden'
-	String get enable_sub => 'chip on Home, labels across the garden';
-
-	/// en: 'moon phase chip on Home'
-	String get enable_sub_free => 'moon phase chip on Home';
-
 	/// en: 'Calendar system'
 	String get system_label => 'Calendar system';
 
@@ -2176,8 +2167,11 @@ class Translations$moon$settings$en {
 	/// en: 'astrological'
 	String get system_tropical_sub => 'astrological';
 
-	/// en: 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.'
-	String get system_help => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.';
+	/// en: 'The Moon's place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.'
+	String get system_help_sidereal => 'The Moon\'s place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.';
+
+	/// en: 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.'
+	String get system_help_tropical => 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.';
 
 	/// en: '“Tomorrow is a good day” hint'
 	String get hint => '“Tomorrow is a good day” hint';
@@ -2202,6 +2196,12 @@ class Translations$moon$settings$en {
 
 	/// en: 'more astro detail in the day view'
 	String get show_astro_sub => 'more astro detail in the day view';
+
+	/// en: 'Show element on tasks'
+	String get show_element_labels => 'Show element on tasks';
+
+	/// en: 'in the entry step, on the task and on the plant'
+	String get show_element_labels_sub => 'in the entry step, on the task and on the plant';
 
 	/// en: '🌙 What is this?'
 	String get about_title => '🌙 What is this?';
@@ -2268,6 +2268,9 @@ class Translations$moon$finder$en {
 
 	/// en: 'When for …'
 	String get title => 'When for …';
+
+	/// en: 'Suitable days'
+	String get chip => 'Suitable days';
 
 	/// en: 'Plant'
 	String get plant_label => 'Plant';
@@ -2975,15 +2978,13 @@ extension on Translations {
 			'moon.calendar.weekday_short.fri' => 'Fri',
 			'moon.calendar.weekday_short.sat' => 'Sat',
 			'moon.calendar.weekday_short.sun' => 'Sun',
-			'moon.settings.enable' => 'Show moon calendar',
-			'moon.settings.enable_sub' => 'chip on Home, labels across the garden',
-			'moon.settings.enable_sub_free' => 'moon phase chip on Home',
 			'moon.settings.system_label' => 'Calendar system',
 			'moon.settings.system_sidereal' => 'By constellations',
 			'moon.settings.system_sidereal_sub' => 'biodynamic',
 			'moon.settings.system_tropical' => 'By signs',
 			'moon.settings.system_tropical_sub' => 'astrological',
-			'moon.settings.system_help' => 'Match the calendar you follow. The astronomy is the same; only the division of the zodiac differs.',
+			'moon.settings.system_help_sidereal' => 'The Moon\'s place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.',
+			'moon.settings.system_help_tropical' => 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.',
 			'moon.settings.hint' => '“Tomorrow is a good day” hint',
 			'moon.settings.hint_sub' => 'gentle, respects quiet hours',
 			'moon.settings.highlight_garden' => 'Highlight for my garden',
@@ -2992,6 +2993,8 @@ extension on Translations {
 			'moon.settings.show_in_journal_sub' => 'colours the Journal month calendar',
 			'moon.settings.show_astro' => 'Show constellations and phase',
 			'moon.settings.show_astro_sub' => 'more astro detail in the day view',
+			'moon.settings.show_element_labels' => 'Show element on tasks',
+			'moon.settings.show_element_labels_sub' => 'in the entry step, on the task and on the plant',
 			'moon.settings.about_title' => '🌙 What is this?',
 			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '), b('roots, leaves, flowers and fruits'), const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '), b('planning'), const TextSpan(text: ', not a rule.'), ]), 
 			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
@@ -3000,6 +3003,7 @@ extension on Translations {
 			'moon.task_section.footnote' => 'Tradition, not advice. Derived from the task\'s date.',
 			'moon.hint.title' => ({required Object day}) => 'Tomorrow is a ${day}',
 			'moon.finder.title' => 'When for …',
+			'moon.finder.chip' => 'Suitable days',
 			'moon.finder.plant_label' => 'Plant',
 			'moon.finder.plant_hint' => 'Choose a plant',
 			'moon.finder.empty_hint' => 'The calendar then lists the next days that suit it.',

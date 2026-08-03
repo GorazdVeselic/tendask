@@ -135,18 +135,6 @@ void main() {
     expect(env.notif.scheduledNudges, isEmpty);
   });
 
-  test('the calendar switch silences the hint too', () async {
-    final env = await _setup();
-    await env.container
-        .read(moonSettingsControllerProvider.notifier)
-        .setEnabled(false);
-
-    await _coordinator(env).armHints(_from);
-
-    expect(env.notif.cancelled, containsAll(kMoonHintNotificationIds));
-    expect(env.notif.scheduledNudges, isEmpty);
-  });
-
   test('an expired gift silences the hint without touching the opt-in', () async {
     // Owner's decision 2026-08-03: the hint goes quiet by itself when Tendask+
     // lapses, and the stored opt-in survives so it returns with a new licence.

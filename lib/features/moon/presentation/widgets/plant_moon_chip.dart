@@ -12,8 +12,8 @@ import '../moon_gate.dart';
 
 /// "When for …" chip in the plant detail hero (FR-19 T5.3, wireframe board D):
 /// opens the finder prefilled with this plant. Decides its own visibility —
-/// while the feature flag, the opt-in switch or the Tendask+ entitlement is
-/// missing it renders nothing (disabled feature, not a swallowed error), so the
+/// while the feature flag, the element-label switch or the Tendask+ entitlement
+/// is missing it renders nothing (disabled feature, not a swallowed error), so the
 /// hero stays untouched until ignition (T7); the finder is paid (spec §6.5).
 class PlantMoonChip extends StatelessWidget {
   const PlantMoonChip({super.key, required this.plant});
@@ -68,7 +68,9 @@ class PlantMoonChipButton extends StatelessWidget {
         size: 18,
         color: theme.colorScheme.primary,
       ),
-      label: Text(context.t.moon.finder.title),
+      // Not the finder's own title ("When for …"): next to the plant's name
+      // that phrase says nothing, so the chip names what it leads to.
+      label: Text(context.t.moon.finder.chip),
       onPressed: () => context.pushNamed(
         'moon-finder',
         queryParameters: {'plant': plantId},

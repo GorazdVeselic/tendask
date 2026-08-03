@@ -29,26 +29,30 @@ void main() {
     expect(await prefs.pendingSignInEmail(), 'b@y.si');
   });
 
-  test('moonCalendarEnabled distinguishes never-set from switched off', () async {
-    expect(await prefs.moonCalendarEnabled(), isNull);
+  test('moonShowElementLabels distinguishes never-set from switched off',
+      () async {
+    expect(await prefs.moonShowElementLabels(), isNull);
 
-    await prefs.setMoonCalendarEnabled(false);
-    expect(await prefs.moonCalendarEnabled(), isFalse);
+    await prefs.setMoonShowElementLabels(false);
+    expect(await prefs.moonShowElementLabels(), isFalse);
 
-    await prefs.setMoonCalendarEnabled(true);
-    expect(await prefs.moonCalendarEnabled(), isTrue);
+    await prefs.setMoonShowElementLabels(true);
+    expect(await prefs.moonShowElementLabels(), isTrue);
   });
 
   test('a corrupted moon flag reads as switched off, never as default-on',
       () async {
     // Only the app writes this key ('true'/'false'); anything else must not
-    // read as null (null means never-set and defaults to ON per A6).
+    // read as null (null means never-set and defaults to ON).
     await db
         .into(db.localFlags)
         .insertOnConflictUpdate(
-          LocalFlagsCompanion.insert(key: 'moon_calendar_enabled', value: 'yes'),
+          LocalFlagsCompanion.insert(
+            key: 'moon_show_element_labels',
+            value: 'yes',
+          ),
         );
-    expect(await prefs.moonCalendarEnabled(), isFalse);
+    expect(await prefs.moonShowElementLabels(), isFalse);
   });
 
   test('moonSystem round-trips and overwrites', () async {

@@ -8,14 +8,14 @@
 Gradiva FR-19 Lunin koledar po planu `docs/plan-implementacije-fr19-fr20.md` — **korak po koraku,
 vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flagom), merge v `main`.
 
-**Kaj je narejeno (vse v main, 1414 testov — veji `feat/fr20-t6-1-schema` in
+**Kaj je narejeno (vse v main, 1537 testov — veji `feat/fr20-t6-1-schema` in
 `feat/prod-analytics-tooling` sta zmergani):**
 - **T1 motor ✅** (`lib/core/biodynamic/`): vse 4 plasti (zodiak s kalibriranimi mejami + IAU
   rezerva, mena, ascending, neugodni dnevi — kalibrirano na tiskani Thun 2024), fixture jul+avg
   2026 (62 dni × 2 sistema), pokritost 99,5 %. ⚠️ CI `Test` korak ima `TZ: Europe/Ljubljana`
   (fixture/Thun ure so CET/CEST) — ne odstranjuj.
 - **T2 ogrodje ✅ (cel):** `kMoonCalendarEnabled = false` (`core/config.dart`, edino stikalo do
-  T6) · `local_prefs` ključa (`moon_calendar_enabled` bool?, null = privzeto VKLOPLJENO po A6;
+  T6) · `local_prefs` ključa (`moon_calendar_enabled` — **izbrisan v koraku 6b**;
   `moon_system`, privzeto sidereal) · `MoonSettingsController`
   (`lib/features/moon/application/`, **keepAlive**, ogret v bootstrapu ne-fatalno, en `system`
   vodi vse zaslone §11.6) · `MoonColors` ThemeExtension (hexi v `AppColors`, instanci v
@@ -519,13 +519,33 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   »Kmalu«, kar §3.1 izrecno dovoli. Ob strani: `docs/go-live/store-listing.md` Plusa in Lune sploh ne
   omenja — listing je naloga T7.
 
-**Naloga NASLEDNJE seje: T6 korak 6b — mena vedno vidna, `/moon-settings` kot razstavni salon.**
-Nova odločitev lastnika 3. 8. (decisions **B3**, spec §6.4), sprejeta po pregledu koraka 6 na napravi;
-**vrine se pred korak 8**, ker bi sicer device test preizkušal vrata, ki jih ta korak spremeni.
-Branch `feat/fr20-t6-6b-always-on-phase`. Vsebina, pasti in dve odprti podrobnosti (berljivost oznake v
-when-koraku · oznaka čipa »Kdaj za …« na rastlini) so **v planu pri koraku 6b** — beri tam, tu ne
-podvajam. Za njim ostane korak 8 (staging preizkus na napravi: viden odklep/zaklep, potek prek
-skrajšanega `plus_until`, letalski način) in nato T7 prižig.
+- **T6 korak 6b ✅ (3. 8., branch `feat/fr20-t6-6b-always-on-phase`) — mena vedno vidna, nastavitve kot
+  salon:** **glavno stikalo 🌙 je izbrisano** (`MoonSettings.enabled`, prefs `moon_calendar_enabled`,
+  `setEnabled()`) — čip na Domov stoji za samim build flagom, deljeni CTA (»dan za X ›« / pilula
+  »✦ Tendask+ ›«) ostane. `moonSurfaceOn`/`moonPlusSurfaceOn` sta zamenjana z
+  **`moonElementLabelsOn(settings, isPlus)`** nad novim **petim podstikalom `showElementLabels`**
+  (prefs `moon_show_element_labels`, privzeto vklopljeno, glif 🏷️ `kGlyphElementLabels`) — velja za
+  when-korak, detajl opravila in čip rastline; Dnevnikova plast ostane na 📅, 🌙 gumb Dnevnika pa gleda
+  **samo** `plusActiveProvider`. Namig 🔔 ne bere več `moon.enabled`.
+  **`/moon-settings` brez licence = razstavni salon:** `shown = isPlus ? stored : kMoonSettingsDefaults`,
+  vseh pet vrstic in segment vidnih, a `onChanged: null` in **privzete** vrednosti (tudi 🔔, ki je sicer
+  shranjen `false` — salon slika, kaj licenca prinese); nič se ne zapiše in shranjene nastavitve obisk
+  preživijo (zaklenjeno s testom). Pet vrstic gre skozi nov `_MoonSwitch`. Pod segmentom stoji opis
+  **izbranega** sistema (`system_help_sidereal`/`_tropical` en+sl+de, z »(siderični/tropski zodiak)«);
+  splošni `system_help` izbrisan.
+  ⚠️ **Odločitvi ob pogledu:** (i) oznaka v when-koraku je zdaj **pilula v soft barvi elementa**
+  (tekst `onSurface`, A4) — v medlem slogu se je brala kot druga vrstica opombe »Privzeto: danes ob
+  naslednji polni uri«; (ii) čip rastline nosi nov ključ **`moon.finder.chip`** (»Primerni dnevi« ·
+  »Suitable days« · »Passende Tage«); naslov iskalnika ostane »Kdaj za …«. Suite **1537**, analyze čist.
+  Pogled: `tmp/step6b_preview_test.dart` → `tmp/t6b_*.png`. Nova matrika `moon-settings (free)`.
+  ⏳ Wireframe board 2b še riše glavno stikalo — uskladitev ob priložnosti.
+
+**Naloga NASLEDNJE seje: T6 korak 8 — staging preizkus na napravi.** Ostane: viden odklep/zaklep na
+`/tendask-plus` in po vseh štirih vstopnih točkah, **potek** prek skrajšanega `plus_until` (namig 🔔 mora
+utihniti sam, opt-in preživeti), letalski način in **novo iz 6b**: čip mene je viden tudi brez licence in
+ga ni mogoče skriti · `/moon-settings` brez licence kot salon (vse sivo, privzeto) · peto podstikalo
+🏷️ ugasne oznake pri opravilih/rastlini, Domova pa ne. Predčasno izmerjeno 3. 8. (pull, podpis, push z
+napolnjenimi `plus_*`) je zapisano spodaj. Za njim T7 prižig.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
@@ -552,15 +572,14 @@ se PNG pokvari.
 ✅ **T6 korak 5 preverjen na napravi (3. 8.):** kartica v Nastavitvah, `/tendask-plus` z resničnim
 podpisanim žetonom (»Aktiven do 2. 9. 2026«, brez omrežja) in **cel scenarij slepe ulice**: 🌙 stikalo
 off → čip na Domov izgine → Nastavitve → ✦ Tendask+ → »Lunin koledar« → nastavitve → vklop → čip nazaj.
-V `logcat` nič. Zato korak 6 tega ne odkriva več — mora pa ga **ohraniti**.
+V `logcat` nič. ⚠️ **Ta scenarij je s korakom 6b odpadel** (glavnega stikala ni več, čip je vedno vidiven);
+pot Nastavitve → ✦ Tendask+ → »Lunin koledar« → `/moon-settings` pa mora ostati.
 
-🔁 **Najdba lastnika 2. 8. — ZAPRTO (koraka 5 in 6):** izklop glavnega 🌙 stikala v
-`/moon-settings` je danes **enosmeren** — edini vstop tja je ⚙️ v AppBar koledarja, do koledarja pa vodijo
-samo površine za `moonSurfaceOn()` = `settings.enabled` (`moon_gate.dart`), `moonCalendarRedirect` pa gleda
-le build flag. **Ne dodajaj lunine vrstice v glavne Nastavitve** — drugi vstop je od začetka predviden kot
-`/tendask-plus` → »Lunin koledar« (screen-map §4). Korak 5 ga je odprl, korak 6 pa je vrstico naredil
-tapljivo **tudi brez licence** in `/moon-settings` pustil izven zidu, zato je pot povratna v obeh
-stanjih upravičenosti (zaklenjeno s testi).
+🔁 **Najdba lastnika 2. 8. — ZAPRTO (koraki 5, 6 in 6b):** izklop glavnega 🌙 stikala je bil **enosmeren**
+(edini vstop v `/moon-settings` je bil ⚙️ v koledarju, do koledarja pa so vodile samo površine za istim
+stikalom). Korak 5 je odprl drugi vstop (`/tendask-plus` → »Lunin koledar«), korak 6 ga je naredil tapljivega
+tudi brez licence, **korak 6b pa je vzrok odstranil**: glavnega stikala ni več, čipa mene ni mogoče ugasniti.
+**Ne dodajaj lunine vrstice v glavne Nastavitve** — vstop je `/tendask-plus` → »Lunin koledar« (screen-map §4).
 
 ✅ **Vrstni red znotraj T6 je izpolnjen:** sync izjema (korak 2) je v `main` **pred** `plusProvider`
 (korak 4), zato nobena vmesna izdaja ne more pushati server-lastnih stolpcev.

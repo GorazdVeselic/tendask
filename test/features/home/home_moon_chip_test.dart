@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:tendask/core/database/app_database.dart';
 import 'package:tendask/core/database/database_provider.dart';
 import 'package:tendask/features/home/presentation/widgets/home_moon_chip.dart';
+import 'package:tendask/features/moon/application/moon_settings_controller.dart';
 import 'package:tendask/features/plus/presentation/plus_label.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
@@ -79,6 +80,31 @@ void main() {
 
     expect(find.byType(Card), findsNothing);
     expect(find.text(t.moon.calendar.title), findsNothing);
+  });
+
+  testWidgets('no moon setting can hide the phase (decision B3)', (
+    tester,
+  ) async {
+    // The master switch is gone: the phase is the one free hook and is worth
+    // more as a teaser than as something the user can switch off. Switching
+    // every sub-toggle off must leave the chip whole.
+    await container
+        .read(moonSettingsControllerProvider.notifier)
+        .setShowElementLabels(false);
+    await container
+        .read(moonSettingsControllerProvider.notifier)
+        .setShowInJournal(false);
+
+    await pump(tester, const HomeMoonChipCard(isPlus: false));
+    await tester.pumpAndSettle();
+
+    expect(find.text(t.moon.calendar.title), findsOneWidget);
+    expect(
+      find.byWidgetPredicate(
+        (w) => w is Text && t.moon.phase.values.contains(w.data),
+      ),
+      findsOneWidget,
+    );
   });
 
   testWidgets('a resume rebuilds the card (the day may have rolled over)', (

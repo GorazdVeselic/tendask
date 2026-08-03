@@ -17,9 +17,15 @@ import '../../plus/application/plus_provider.dart';
 import '../../settings/application/profile_providers.dart';
 import '../application/moon_settings_controller.dart';
 
-/// Moon calendar settings (FR-19 T3.6, wireframe board 2b): the opt-in switch,
-/// the zodiac-system toggle, the display sub-toggles and a "what is this"
-/// explainer. Reached via ⚙️ on the calendar (Tendask+ entry comes with T6).
+/// Moon calendar settings (FR-19 T3.6, wireframe board 2b): the zodiac-system
+/// toggle, the five display sub-toggles and a "what is this" explainer. Reached
+/// via ⚙️ on the calendar and via the "Moon calendar" row on /tendask-plus.
+///
+/// There is no master switch any more (decision B3): the phase on Home is the
+/// one free hook and stays visible for everyone. Without Tendask+ the screen is
+/// a SHOWROOM — everything is here but disabled, showing the DEFAULTS (all on,
+/// by constellations), i.e. the picture of what the licence brings rather than
+/// the user's own state. The explainer shows either way.
 class MoonSettingsScreen extends ConsumerWidget {
   const MoonSettingsScreen({super.key});
 
@@ -31,11 +37,6 @@ class MoonSettingsScreen extends ConsumerWidget {
     // spinner only covers the theoretical first-frame gap.
     final settingsAsync = ref.watch(moonSettingsControllerProvider);
     final controller = ref.read(moonSettingsControllerProvider.notifier);
-    // Without Tendask+ this screen keeps only what a free user can act on: the
-    // master switch (which also governs the free phase chip) and the explainer.
-    // The system toggle, the 🔔 hint and the display sub-switches all configure
-    // surfaces the wall hides (spec §6.5), so showing them would be settings
-    // with no visible effect.
     final isPlus = ref.watch(plusActiveProvider);
     final hint = theme.textTheme.bodySmall?.copyWith(
       color: theme.colorScheme.onSurfaceVariant,
@@ -55,27 +56,11 @@ class MoonSettingsScreen extends ConsumerWidget {
         loading: () =>
             const Center(child: CircularProgressIndicator.adaptive()),
         error: (_, _) => Center(child: Text(t.moon.settings.load_error)),
-        data: (settings) => ListView(
-          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-          children: [
-            Card(
-              child: SwitchListTile(
-                secondary: const Text(
-                  kGlyphMoon,
-                  style: TextStyle(fontSize: 22),
-                ),
-                title: Text(t.moon.settings.enable),
-                subtitle: Text(
-                  isPlus
-                      ? t.moon.settings.enable_sub
-                      : t.moon.settings.enable_sub_free,
-                ),
-                value: settings.enabled,
-                onChanged: (v) => unawaited(controller.setEnabled(v)),
-              ),
-            ),
-
-            if (isPlus) ...[
+        data: (stored) {
+          final shown = isPlus ? stored : kMoonSettingsDefaults;
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+            children: [
               SectionLabel(t.moon.settings.system_label),
               SegmentedButton<CalendarSystem>(
                 segments: [
@@ -94,64 +79,107 @@ class MoonSettingsScreen extends ConsumerWidget {
                     ),
                   ),
                 ],
-                selected: {settings.system},
+                selected: {shown.system},
                 showSelectedIcon: false,
-                onSelectionChanged: (s) =>
-                    unawaited(controller.setSystem(s.first)),
+                onSelectionChanged: isPlus
+                    ? (s) => unawaited(controller.setSystem(s.first))
+                    : null,
               ),
               Padding(
                 padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
-                child: Text(t.moon.settings.system_help, style: hint),
+                // The chosen system explains itself — one general sentence for
+                // both left the reader to guess which half applied.
+                child: Text(
+                  switch (shown.system) {
+                    CalendarSystem.sidereal =>
+                      t.moon.settings.system_help_sidereal,
+                    CalendarSystem.tropical =>
+                      t.moon.settings.system_help_tropical,
+                  },
+                  style: hint,
+                ),
               ),
 
               const SizedBox(height: 16),
               Card(
                 child: Column(
                   children: [
-                    const _HintTile(),
-                    SwitchListTile(
-                      secondary: const Text(
-                        kGlyphSubject,
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      title: Text(t.moon.settings.highlight_garden),
-                      subtitle: Text(t.moon.settings.highlight_garden_sub),
-                      value: settings.highlightGarden,
-                      onChanged: (v) =>
-                          unawaited(controller.setHighlightGarden(v)),
+                    _HintTile(enabled: isPlus),
+                    _MoonSwitch(
+                      glyph: kGlyphSubject,
+                      title: t.moon.settings.highlight_garden,
+                      subtitle: t.moon.settings.highlight_garden_sub,
+                      value: shown.highlightGarden,
+                      onChanged: isPlus
+                          ? (v) => unawaited(controller.setHighlightGarden(v))
+                          : null,
                     ),
-                    SwitchListTile(
-                      secondary: const Text(
-                        kGlyphCalendarLayer,
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      title: Text(t.moon.settings.show_in_journal),
-                      subtitle: Text(t.moon.settings.show_in_journal_sub),
-                      value: settings.showInJournal,
-                      onChanged: (v) =>
-                          unawaited(controller.setShowInJournal(v)),
+                    _MoonSwitch(
+                      glyph: kGlyphCalendarLayer,
+                      title: t.moon.settings.show_in_journal,
+                      subtitle: t.moon.settings.show_in_journal_sub,
+                      value: shown.showInJournal,
+                      onChanged: isPlus
+                          ? (v) => unawaited(controller.setShowInJournal(v))
+                          : null,
                     ),
-                    SwitchListTile(
-                      secondary: const Text(
-                        kGlyphAstro,
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      title: Text(t.moon.settings.show_astro),
-                      subtitle: Text(t.moon.settings.show_astro_sub),
-                      value: settings.showAstroDetails,
-                      onChanged: (v) =>
-                          unawaited(controller.setShowAstroDetails(v)),
+                    _MoonSwitch(
+                      glyph: kGlyphAstro,
+                      title: t.moon.settings.show_astro,
+                      subtitle: t.moon.settings.show_astro_sub,
+                      value: shown.showAstroDetails,
+                      onChanged: isPlus
+                          ? (v) => unawaited(controller.setShowAstroDetails(v))
+                          : null,
+                    ),
+                    _MoonSwitch(
+                      glyph: kGlyphElementLabels,
+                      title: t.moon.settings.show_element_labels,
+                      subtitle: t.moon.settings.show_element_labels_sub,
+                      value: shown.showElementLabels,
+                      onChanged: isPlus
+                          ? (v) => unawaited(controller.setShowElementLabels(v))
+                          : null,
                     ),
                   ],
                 ),
               ),
-            ],
 
-            const SizedBox(height: 18),
-            const _AboutCard(),
-          ],
-        ),
+              const SizedBox(height: 18),
+              const _AboutCard(),
+            ],
+          );
+        },
       ),
+    );
+  }
+}
+
+/// One sub-toggle row: emoji, title, small qualifier. A null [onChanged] greys
+/// the row out — the showroom state without Tendask+.
+class _MoonSwitch extends StatelessWidget {
+  const _MoonSwitch({
+    required this.glyph,
+    required this.title,
+    required this.subtitle,
+    required this.value,
+    required this.onChanged,
+  });
+
+  final String glyph;
+  final String title;
+  final String subtitle;
+  final bool value;
+  final ValueChanged<bool>? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return SwitchListTile(
+      secondary: Text(glyph, style: const TextStyle(fontSize: 22)),
+      title: Text(title),
+      subtitle: Text(subtitle),
+      value: value,
+      onChanged: onChanged,
     );
   }
 }
@@ -161,7 +189,11 @@ class MoonSettingsScreen extends ConsumerWidget {
 /// account (decision B1), so it reads and writes the notification settings
 /// instead of [MoonSettingsController].
 class _HintTile extends ConsumerWidget {
-  const _HintTile();
+  const _HintTile({required this.enabled});
+
+  /// False without Tendask+: the row then shows the showroom picture and never
+  /// touches the profile stream.
+  final bool enabled;
 
   Future<void> _set(
     BuildContext context,
@@ -187,17 +219,26 @@ class _HintTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final t = context.t;
+    if (!enabled) {
+      // Shown ON like the other four, even though the stored opt-in defaults to
+      // off: the showroom paints what the licence brings, not a stored value.
+      return _MoonSwitch(
+        glyph: kGlyphBell,
+        title: t.moon.settings.hint,
+        subtitle: t.moon.settings.hint_sub,
+        value: true,
+        onChanged: null,
+      );
+    }
     final settingsAsync = ref.watch(notificationSettingsProvider);
     final settings = settingsAsync.asData?.value;
 
-    return SwitchListTile(
-      secondary: const Text(kGlyphBell, style: TextStyle(fontSize: 22)),
-      title: Text(t.moon.settings.hint),
-      subtitle: Text(
-        settingsAsync.hasError
-            ? t.moon.settings.load_error
-            : t.moon.settings.hint_sub,
-      ),
+    return _MoonSwitch(
+      glyph: kGlyphBell,
+      title: t.moon.settings.hint,
+      subtitle: settingsAsync.hasError
+          ? t.moon.settings.load_error
+          : t.moon.settings.hint_sub,
       value: settings?.moonHintEnabled ?? false,
       onChanged: settings == null
           ? null

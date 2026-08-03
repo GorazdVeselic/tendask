@@ -67,7 +67,9 @@ void main() {
     );
     await tester.pumpAndSettle();
 
-    expect(find.text(t.moon.finder.title), findsOneWidget);
+    // The chip names the answer ("Suitable days"), not the finder's own title —
+    // "When for …" says nothing next to the plant's name (decision B3 detail).
+    expect(find.text(t.moon.finder.chip), findsOneWidget);
     await tester.tap(find.byType(ActionChip));
     await tester.pumpAndSettle();
 

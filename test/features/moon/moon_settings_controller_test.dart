@@ -28,19 +28,19 @@ void main() {
   // "the switch does nothing" bug, so every field is pinned here (T6 adds more).
   group('MoonSettings equality', () {
     const base = MoonSettings(
-      enabled: true,
       system: CalendarSystem.sidereal,
       highlightGarden: true,
       showInJournal: true,
       showAstroDetails: true,
+      showElementLabels: true,
     );
 
     final variants = <String, MoonSettings>{
-      'enabled': base.copyWith(enabled: false),
       'system': base.copyWith(system: CalendarSystem.tropical),
       'highlightGarden': base.copyWith(highlightGarden: false),
       'showInJournal': base.copyWith(showInJournal: false),
       'showAstroDetails': base.copyWith(showAstroDetails: false),
+      'showElementLabels': base.copyWith(showElementLabels: false),
     };
 
     test('a copy with no change equals the original', () {
@@ -61,11 +61,10 @@ void main() {
     });
   });
 
-  test('defaults to enabled + sidereal when unset', () async {
+  test('defaults to sidereal when unset', () async {
     final settings = await container.read(
       moonSettingsControllerProvider.future,
     );
-    expect(settings.enabled, isTrue);
     expect(settings.system, CalendarSystem.sidereal);
   });
 
@@ -76,6 +75,9 @@ void main() {
     expect(settings.highlightGarden, isTrue);
     expect(settings.showInJournal, isTrue);
     expect(settings.showAstroDetails, isTrue);
+    expect(settings.showElementLabels, isTrue);
+    // The showroom on /moon-settings paints exactly these values (B3).
+    expect(settings, kMoonSettingsDefaults);
   });
 
   test('setShowInJournal updates state and persists device-locally', () async {
@@ -109,17 +111,18 @@ void main() {
     );
   });
 
-  test('setEnabled updates state and persists device-locally', () async {
+  test('setShowElementLabels updates state and persists device-locally',
+      () async {
     await container
         .read(moonSettingsControllerProvider.notifier)
-        .setEnabled(false);
+        .setShowElementLabels(false);
 
     expect(
-      container.read(moonSettingsControllerProvider).value?.enabled,
+      container.read(moonSettingsControllerProvider).value?.showElementLabels,
       isFalse,
     );
     expect(
-      await container.read(localPrefsProvider).moonCalendarEnabled(),
+      await container.read(localPrefsProvider).moonShowElementLabels(),
       isFalse,
     );
   });
@@ -136,17 +139,17 @@ void main() {
     expect(await container.read(localPrefsProvider).moonSystem(), 'tropical');
   });
 
-  test('setEnabled(false) survives a rebuild (persisted, not just state)',
+  test('setShowElementLabels(false) survives a rebuild (persisted, not state)',
       () async {
     await container
         .read(moonSettingsControllerProvider.notifier)
-        .setEnabled(false);
+        .setShowElementLabels(false);
     container.invalidate(moonSettingsControllerProvider);
 
     final settings = await container.read(
       moonSettingsControllerProvider.future,
     );
-    expect(settings.enabled, isFalse);
+    expect(settings.showElementLabels, isFalse);
   });
 
   test('an unknown stored system falls back to sidereal', () async {

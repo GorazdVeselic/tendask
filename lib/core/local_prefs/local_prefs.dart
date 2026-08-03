@@ -11,11 +11,11 @@ const _kDefaultGardenLocalId = 'default_garden_local_id';
 const _kThemeMode = 'theme_mode';
 const _kThemePalette = 'theme_palette';
 const _kPendingSignInEmail = 'pending_sign_in_email';
-const _kMoonCalendarEnabled = 'moon_calendar_enabled';
 const _kMoonSystem = 'moon_system';
 const _kMoonHighlightGarden = 'moon_highlight_garden';
 const _kMoonShowInJournal = 'moon_show_in_journal';
 const _kMoonShowAstroDetails = 'moon_show_astro_details';
+const _kMoonShowElementLabels = 'moon_show_element_labels';
 
 /// Device-local "seen once" flags backed by the local_flag table. Never synced —
 /// these are per-device UI state (which intro/priming screens the user passed).
@@ -100,17 +100,6 @@ class LocalPrefsRepository {
 
   Future<void> clearPendingSignInEmail() => _clear(_kPendingSignInEmail);
 
-  /// Whether the moon calendar (FR-19) is switched on for this device, or null
-  /// if the user never changed it (defaults to on — decision A6). Device-local
-  /// (decision B1): the calendar is global, not user data, so it never syncs.
-  Future<bool?> moonCalendarEnabled() async {
-    final value = await _getString(_kMoonCalendarEnabled);
-    return value == null ? null : value == 'true';
-  }
-
-  Future<void> setMoonCalendarEnabled(bool enabled) =>
-      _setFlag(_kMoonCalendarEnabled, enabled);
-
   /// The user's chosen moon calendar system ('sidereal' | 'tropical'), or null
   /// if the user never changed it (defaults to sidereal, matching the printed
   /// calendars the target market compares against).
@@ -147,6 +136,18 @@ class LocalPrefsRepository {
 
   Future<void> setMoonShowAstroDetails(bool enabled) =>
       _setFlag(_kMoonShowAstroDetails, enabled);
+
+  /// Whether tasks and plants carry the element label of their day (entry step,
+  /// task detail, plant chip), or null if the user never changed it (defaults
+  /// to on — decision B3). Device-local (decision B1): the calendar is global,
+  /// not user data, so it never syncs.
+  Future<bool?> moonShowElementLabels() async {
+    final value = await _getString(_kMoonShowElementLabels);
+    return value == null ? null : value == 'true';
+  }
+
+  Future<void> setMoonShowElementLabels(bool enabled) =>
+      _setFlag(_kMoonShowElementLabels, enabled);
 }
 
 @riverpod

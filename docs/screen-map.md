@@ -33,6 +33,8 @@ Naslov »Dober dan 🌿« + datum · ⚙️ desno zgoraj.
   - **+ FAB → `/task-new`** (vnos opravila, wizard — gl. §3.1).
 - **[FR-19] doda:** »moon chip« pod vremensko kartico → `/moon-calendar` (ali `/tendask-plus`, če zaklenjeno).
   **Deljena vrata (T6.6):** mena + naslov sta free za vedno (§6.5), element-dan CTA je za zidom.
+  **Od T6.6b (B3) čipa ni mogoče skriti** — vidi se za build flagom, brez stikala; peto podstikalo
+  (element pri opravilih) Domova ne zadeva.
 
 ### 1.2 Opravila — `/tasks` (`tasks`) [shell]
 Seznam opravil. Tap opravila → **task-detail** `/tasks/:id` (`task-detail`, znotraj shell-a).
@@ -58,7 +60,7 @@ Naslov »Vrt · rastline in trate«. Segmented **[Območja | Sredstva | Recepti]
   - tap **območja** (naslovna kartica s 🌻/🍎) → **area-detail** `/areas/:id` (`area-detail`) [shell].
   - »+ Rastlina« → `/plant-add` (`plant-add`).
   - Sredstva / Recepti = zavihka (če `kSuppliesEnabled`).
-- **[FR-19] doda (board D):** na **plant-detail** chip »🌙 Kdaj za …« → `/moon-finder?plant=:id`.
+- **[FR-19] doda (board D):** na **plant-detail** chip »🌙 Primerni dnevi« → `/moon-finder?plant=:id` (naslov iskalnika ostane »Kdaj za …«).
 
 ---
 
@@ -118,7 +120,7 @@ Naslov centriran »Nastavitve« · ← nazaj. Struktura (vsaka sekcija = VELIKA 
 1. **Hero:** ikona (🍎…) + ime + znanstveno ime + chip **»📍 Dodeli območje«**.
 2. **PRIDELEK:** »Skupaj … N kg«.
 3. **ZGODOVINA OPRAVIL:** kartice opravil → tap → task-view.
-- **[FR-19] doda (board D):** drugi chip v hero **»🌙 Kdaj za …«** → `/moon-finder?plant=:id` (predizpolnjen).
+- **[FR-19] doda (board D):** drugi chip v hero **»🌙 Primerni dnevi«** → `/moon-finder?plant=:id` (predizpolnjen).
 
 ---
 
@@ -146,19 +148,18 @@ Predlagane rute (top-level [full], brez kolizij):
 
 | Route | name | Kako se pride (VSI vstopi) | Vsebuje / vodi |
 |---|---|---|---|
-| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA (s T6.6) | stanje veljavnosti (»Aktiven do …« / »Aktiven — doživljenjsko«) + seznam funkcij, isti v obeh stanjih; **»Lunin koledar« → `/moon-settings`** (od T6.6 tapljivo **tudi brez licence** — glavno 🌙 stikalo vodi tudi free čip mene), prihodnje = »Kmalu«. **Vnos kode + »Aktiviraj« pride s T8** |
-| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (od T6.5, brez pogoja licence od T6.6) | stikalo · sistem [Po ozvezdjih / Po znamenjih] · podstikala: 🔔 namig · poudari po vrtu · prikaži v Dnevniku · ozvezdja in mena · »Kaj je to«. **Brez Tendask+ ostaneta samo glavno stikalo + »Kaj je to?«** (T6.6) |
+| `/tendask-plus` | tendask-plus | (1) Nastavitve → »✦ Tendask+« kartica · (2) Domov moon chip (zaklenjen) rdeči CTA (s T6.6) | stanje veljavnosti (»Aktiven do …« / »Aktiven — doživljenjsko«) + seznam funkcij, isti v obeh stanjih; **»Lunin koledar« → `/moon-settings`** (od T6.6 tapljivo **tudi brez licence** — od T6.6b je zaslon razstavni salon), prihodnje = »Kmalu«. **Vnos kode + »Aktiviraj« pride s T8** |
+| `/moon-settings` | moon-settings | (1) `/moon-calendar` **⚙️** · (2) `/tendask-plus` → »Lunin koledar« (od T6.5, brez pogoja licence od T6.6) | sistem [Po ozvezdjih / Po znamenjih] + opis **izbranega** sistema · **pet** podstikal: 🔔 namig · 🪴 poudari po vrtu · 📅 prikaži v Dnevniku · 🌌 ozvezdja in mena · 🏷️ element pri opravilih (when-korak, detajl opravila, čip rastline) · »Kaj je to«. **Glavnega 🌙 stikala ni** (T6.6b/B3 — mena na Domov je vedno vidna). **Brez Tendask+ je zaslon razstavni salon:** vse vidno, a onemogočeno, s privzetimi vrednostmi (vsa stikala vklopljena, sistem »Po ozvezdjih«); »Kaj je to?« vedno |
 | `/moon-calendar` | moon-calendar | (1) Domov moon chip (odklenjen) · (2) Dnevnik **🌙** AppBar | segmented [Mesec | Teden] · **⚙️ → `/moon-settings`** · 🔎 → `/moon-finder` · ★ po vrtu · **tap dan → dan-podrobno (sheet)** |
-| `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Kdaj za …« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
+| `/moon-finder` | moon-finder | (1) `/moon-calendar` 🔎 (prazen) · (2) plant-detail »🌙 Primerni dnevi« (`?plant=:id`, predizpolnjen) | izbor rastline (⊳ plant-picker) → seznam primernih dni → »＋« = `/task-new?date=…` |
 | (sheet) | moon-day | `/moon-calendar` → tap dan | »Kaj se dogaja« + priporočila → »＋ opravilo« = `/task-new?date=…` |
 
 **Stanje rut:** `/moon-calendar` obstaja od T2.5 (**redirect varovalo na ruti sami**: ob
 `!kMoonCalendarEnabled` → `/home`, ker deep-link doseže ruto mimo CTA-jev; **od T6.6 varovalo zahteva
 tudi Tendask+** — brez licence gre deep-link na `/tendask-plus`, ne na `/home`); `/moon-settings` od T3.6
 (vstop ⚙️ v AppBar koledarja **in od T6.5 vrstica »Lunin koledar« na `/tendask-plus`**; **edina lunina
-ruta BREZ zidu** — `moonSettingsRedirect` gleda samo flag, ker glavno 🌙 stikalo vodi tudi free čip mene,
-zato mora ostati dosegljivo brez licence (odločitev lastnika 3. 8.); brez Plusa zaslon pokaže samo glavno
-stikalo + kartico »Kaj je to?«); `/moon-finder`
+ruta BREZ zidu** — `moonSettingsRedirect` gleda samo flag; od T6.6b je razlog razstavni salon: zaslon je
+del teaserja, zato mora biti dosegljiv brez licence); `/moon-finder`
 od T5.2 (isto varovalo; vstop 🔎 v AppBar koledarja, vstop s chipa rastline od T5.3 — chip stoji ob
 čipu območja v stolpcu imena, brez priporočila (sobne, iglavci, živa meja, lasten vnos) ga ni).
 `/tendask-plus` obstaja od T6.5 z **lastnim varovalom** (`tendaskPlusRedirect` na `kTendaskPlusEnabled`;
@@ -171,7 +172,7 @@ ikona ob naslovu), nikoli še enkrat v imenu; ime samo je `kPlusLabel = 'Tendask
 **Polni navigacijski poti do iskalnika (za »vse vmesne korake«):**
 - **A · iz koledarja:** Domov → *moon chip* → `/moon-calendar` → tap **🔎** → `/moon-finder` (prazen) → tap
   polje → **plant-picker** → izbereš rastlino → seznam dni → »＋« → `/task-new?date=…`.
-- **B · iz rastline:** Vrt → tap rastline → `/plant/:id` → chip **»🌙 Kdaj za …«** → `/moon-finder?plant=:id`
+- **B · iz rastline:** Vrt → tap rastline → `/plant/:id` → chip **»🌙 Primerni dnevi«** → `/moon-finder?plant=:id`
   (predizpolnjen) → seznam dni → »＋« → `/task-new?date=…`.
 
 **Vstop v ✦ Tendask+ (za »kako sploh prideš«):**

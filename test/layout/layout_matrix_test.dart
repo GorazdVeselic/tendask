@@ -397,11 +397,24 @@ void main() {
       notificationSettingsProvider.overrideWith(
         (ref) => Stream.value(const NotificationSettings()),
       ),
-      // With Tendask+, which is the screen's full state — without it only the
-      // master switch and the explainer are left (T6.6).
       plusProvider.overrideWith(
         (ref) => Stream.value(PlusStatus.active(until: DateTime.utc(2027))),
       ),
+    ],
+    build: () => const MoonSettingsScreen(),
+  );
+
+  // Without a licence the same screen is a disabled showroom (B3): identical
+  // rows, but every one of them wears the default value, so German lands on
+  // different strings than the licensed run above.
+  layoutMatrix(
+    'moon-settings (free)',
+    overrides: () => [
+      ..._dbOverrides(),
+      notificationSettingsProvider.overrideWith(
+        (ref) => Stream.value(const NotificationSettings()),
+      ),
+      plusProvider.overrideWith((ref) => Stream.value(const PlusStatus.none())),
     ],
     build: () => const MoonSettingsScreen(),
   );

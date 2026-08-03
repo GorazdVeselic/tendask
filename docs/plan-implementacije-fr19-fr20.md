@@ -648,28 +648,34 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (locked)`. Pogled: `tmp/plus_gate_preview_test.dart` → `tmp/gate_chip_*`, `tmp/gate_settings_*`.
      ⚠️ **Ostaja netestirano samo za temnim flagom:** veja `containerOf(...).read(plusActiveProvider)`
      v `moonCalendarRedirect` in srednja plast vrat štirih površin — oživijo pri T7.
-  6b. ⬜ **Nadzor: mena vedno vidna, `/moon-settings` kot razstavni salon** — odločitev lastnika
-     2026-08-03 (decisions **B3**, spec §6.4), sprejeta ob pregledu koraka 6 na napravi. Revidira vrata,
-     ki jih je postavil korak 6; **izvede se pred korakom 8**, sicer bi device test preizkušal vrata,
-     ki jih ta korak spremeni.
-     **Vsebina:** (a) **glavno stikalo 🌙 odpade** — čip na Domov (mena + ime mene) je viden vedno, samo
-     za build flagom; desna stran ostane deljena (pilula »✦ Tendask+ ›« → `/tendask-plus` brez licence,
-     »dan za X ›« → `/moon-calendar` z njo). (b) Element-oznake pri opravilih in v vrtu — **when-korak,
-     detajl opravila, čip rastline** — dobijo **peto podstikalo** ob 🔔 · 🪴 · 📅 · 🌌; Domova ne zadeva.
-     (c) **Brez licence je zaslon viden cel, a onemogočen** (sistem + pet stikal sivih, s **privzetimi**
-     vrednostmi: vsa vklopljena, sistem »Po ozvezdjih«); »Kaj je to?« vidna vedno. (d) Pod segmentom
-     sistema **opis izbranega** sistema namesto današnjega splošnega `system_help` (dva nova niza × 3
-     jeziki; besedilo se predlaga v klepetu pred pisanjem).
-     **Kaj se dotakne:** `moonSurfaceOn()` izgubi `settings.enabled` člen (mena za samim flagom),
-     `moonPlusSurfaceOn()` ga zamenja z novim podstikalom, prefs ključ `moon_calendar_enabled` in njegov
-     setter odpadeta, `moon_settings_screen` dobi onemogočeno stanje, `HomeMoonChip` izgubi opt-in vrata.
-     `moonSettingsRedirect` (izven zidu) **ostane** — zdaj z boljšim razlogom: salon je del teaserja.
-     Testi koraka 6 (vrata × stikala × licenca, matrika `home/moon-chip`) gredo v revizijo skupaj z njim.
-     ⏳ **Odprto, za odločiti ob izvedbi (ne zdaj):** (i) **berljivost oznake v when-koraku** — lastnik
-     jo je 3. 8. na napravi spregledal, ker nosi isti `bodySmall`/`onSurfaceVariant` slog kot opomba
-     »Privzeto: danes ob naslednji polni uri« tik nad njo in se bere kot njena druga vrstica;
-     (ii) **oznaka čipa na detajlu rastline** — danes `moon.finder.title` »Kdaj za …«, kar ob imenu
-     rastline nič ne pove (kandidat: »Primerni dnevi«, isto besedišče kot `finder.next_days`).
+  6b. ✅ **Nadzor: mena vedno vidna, `/moon-settings` kot razstavni salon** — 2026-08-03, branch
+     `feat/fr20-t6-6b-always-on-phase`. Odločitev lastnika (decisions **B3**, spec §6.4) ob pregledu
+     koraka 6 na napravi; vrinjena pred korak 8, ker spreminja vrata, ki bi jih device test sicer meril.
+     **Izvedeno:** (a) **glavno stikalo 🌙 je odpadlo** — `MoonSettings.enabled`, prefs ključ
+     `moon_calendar_enabled` in `setEnabled()` so izbrisani; `HomeMoonChip` je zdaj samo za build flagom
+     (deljeni CTA ostane). (b) `moonSurfaceOn()`/`moonPlusSurfaceOn()` sta se zlila v novo
+     **`moonElementLabelsOn(settings, isPlus)`** (when-korak · detajl opravila · čip rastline), ki bere
+     **peto podstikalo `showElementLabels`** (prefs `moon_show_element_labels`, privzeto vklopljeno,
+     glif `kGlyphElementLabels` 🏷️); `journalMoonLayerOn` je izgubil odvisnost od glavnega stikala,
+     🌙 gumb v Dnevniku pa gleda **samo `plusActiveProvider`**. Koordinator namiga ne bere več
+     `moon.enabled` (opt-in 🔔 + upravičenost sta dovolj). (c) Zaslon brez licence je **razstavni salon**:
+     `shown = isPlus ? stored : kMoonSettingsDefaults` — sistem in vseh pet vrstic vidnih, `onChanged`/
+     `onSelectionChanged` = `null`, vrednosti privzete (tudi 🔔, ki je sicer shranjen privzeto `false` —
+     salon slika, kaj licenca prinese); nič se ne zapiše, shranjene nastavitve obisk preživijo (test).
+     Pet vrstic gre skozi nov `_MoonSwitch` (5 klicalcev, brez kopij). (d) Pod segmentom stoji opis
+     **izbranega** sistema (`system_help_sidereal`/`_tropical` en+sl+de, z oklepajem »siderični/tropski
+     zodiak« na željo lastnika); splošni `system_help` izbrisan.
+     ⚠️ **Odločitvi ob pogledu (lastnik, 3. 8.):** (i) oznaka v when-koraku je zdaj **pilula v soft barvi
+     elementa** (`MoonColors.softOf`, tekst `onSurface` po A4) — v prejšnjem medlem slogu jo je lastnik na
+     napravi bral kot drugo vrstico opombe »Privzeto: danes ob naslednji polni uri«; (ii) čip na detajlu
+     rastline nosi nov ključ **`moon.finder.chip`** (»Primerni dnevi« · »Suitable days« · »Passende Tage«),
+     ker »Kdaj za …« ob imenu rastline nič ne pove; naslov iskalnika ostane »Kdaj za …«.
+     **Testi:** `moon_gate_test` prepisan na nova vrata, showroom (vse vrstice mrtve + privzete + nič
+     zapisov) in »opis sledi izbranemu sistemu« v `moon_settings_screen_test`, »noben nastavitveni
+     preklop ne skrije mene« v `home_moon_chip_test`, `local_prefs`/controller testi na novi ključ, nova
+     matrika **`moon-settings (free)`** (18 komb.). Suite **1537**, analyze čist.
+     Pogled: `tmp/step6b_preview_test.dart` → `tmp/t6b_{when_badge_*,settings_*,plant_chip_*}.png`.
+     ⏳ **Ostaja:** wireframe `lunar-calendar_*` board 2b še riše glavno stikalo — uskladitev ob priložnosti.
   7. ✅ **Anti-steering i18n pregled** (FR-20 §3.1) — 2026-08-03, kontrolni korak brez brancha in **brez
      najdb: nobenega niza ni bilo treba popraviti.** Pregledani `plus.*` (11 ključev) in cel `moon.*`
      (calendar · settings · finder · hint · badge · sheet · task_section + vse enum mape) v **en+sl+de**,
@@ -702,7 +708,7 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      (rabi korak 5), potek prek skrajšanega `plus_until` in letalski način.
 - **Branchi:** `feat/fr20-t6-1-schema` · `feat/fr20-t6-2-sync-exclusion` · `feat/fr20-t6-3-signature-dep` ·
   `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap` ·
-  `feat/fr20-t6-6b-always-on-phase` (korak 6b, še ni odprt)
+  `feat/fr20-t6-6b-always-on-phase`
   (koraka 7–8 — i18n pregled in staging preizkus — sta kontrolna, brez lastnih branchev).
 - **Varnost na `main`:** migracija additive + nullable (stari APK-ji ob pull ne crashajo, tolerantni
   parser ignorira neznano); najprej **staging**, prod `db push` po runbooku **šele ob koncu celote**

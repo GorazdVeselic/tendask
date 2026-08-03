@@ -107,7 +107,7 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     // and the listener in [build] arms again the moment it does — the same
     // pattern the garden and the settings streams already use.
     if (!ref.read(plusActiveProvider)) return;
-    if (!moon.enabled || !settings.moonHintEnabled) return;
+    if (!settings.moonHintEnabled) return;
 
     // The journal nudge is the senior hint: the moon hint yields to its days
     // (one gentle hint per day). An explicit task reminder does not take a day

@@ -64,6 +64,9 @@ const kGlyphAstro = '🌌';
 /// Calendar layer in the journal.
 const kGlyphCalendarLayer = '📅';
 
+/// Element labels on tasks and plants (their sub-toggle).
+const kGlyphElementLabels = '🏷️';
+
 /// Day the user's own garden can use.
 const kGlyphStar = '★';
 
