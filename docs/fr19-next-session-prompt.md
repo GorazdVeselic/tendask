@@ -568,17 +568,38 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   **sl+en+de**. Nedotaknjeni po odločitvi lastnika: `plus.tagline`, `sheet.favorable/unfavorable`,
   `finder.empty_hint`.
 
-**Naloga NASLEDNJE seje: T6 korak 8 — staging preizkus na napravi.** Ostane: viden odklep/zaklep na
-`/tendask-plus` in po vseh štirih vstopnih točkah, **potek** prek skrajšanega `plus_until` (namig 🔔 mora
-utihniti sam, opt-in preživeti), letalski način in **novo iz 6b**: čip mene je viden tudi brez licence in
-ga ni mogoče skriti · `/moon-settings` brez licence kot salon (vse sivo, privzeto) · peto podstikalo
-🏷️ ugasne oznake pri opravilih/rastlini, Domova pa ne. Predčasno izmerjeno 3. 8. (pull, podpis, push z
-napolnjenimi `plus_*`) je zapisano spodaj. Za njim T7 prižig.
-**Ob istem koraku počisti dolg:** wireframe `docs/wireframes/lunar-calendar_*` board 2b še riše glavno
-🌙 stikalo, ki ga B3 ukinja (zaslon ima zdaj sistem + pet podstikal + »Kaj je to?«, brez licence sivo).
-**Stanje repozitorija ob predaji (4. 8.):** `main` = `de1dac9`, potisnjeno na `origin/main`; nič
-nezmergaanega, nobene odprte veje. Zadnji APK na napravo je bil zgrajen, a **namestitev ni uspela** —
-USB je padel; APK s prižganimi flagi čaka v `build/app/outputs/flutter-apk/app-debug.apk`.
+- **T6 korak 8 ✅ (4. 8., SM A536B proti stagingu) — T6 s tem ZAKLJUČEN; brez brancha kode, ker se hrošč
+  ni pokazal.** Nameščen APK z lokalno prižganimi flagi iz drevesa `de1dac9`. **Odklenjeno:** čip Domov ·
+  koledar mesec/teden · dan-sheet (razširjen, nič pod navigacijskimi gumbi) · nastavitve z licenco ·
+  korak »Kdaj« (pilula v soft barvi elementa) · detajl opravila · Dnevnik (🌙 gumb + plast) · čip rastline
+  »☾ Primerni dnevi« → iskalnik · `/tendask-plus` »Aktiven do 2. 9. 2026« · pot Nastavitve → ✦ Tendask+ →
+  »Lunin koledar«. **🏷️ off** pobriše oznako v koraku »Kdaj«, celo sekcijo na opravilu in čip rastline,
+  **Domova pa ne** (B3). **Potek licence:** ker je merodajen podpisan žeton, je bil izdan nov žeton s
+  `plus_until` v preteklosti (`tmp/gen_plus_test_token.dart … -1`) — samo skrajšanje stolpca ne bi
+  dokazalo nič. Po zagonu (pull ob startu; `kSyncInterval` je 15 min, resume sam ne potegne) je vse
+  zaklenjeno, čip obdrži meno + medeno pilulo, **lunino obvestilo je utihnilo samo** (alarm 5. 8. 18:00
+  izginil iz `dumpsys alarm`, nudge 11. 8./1. 9. in opomnik 14. 8. ostali), **opt-in `moon_hint = true`
+  preživel** in se je z vrnjenim žetonom alarm vrnil. **🔔 vrstica** se ob tapu premakne takoj. **Letalski
+  način** (z izklopljenim wifi — sam letalski način ga na Samsungu pusti prižganega) + hladen zagon: Plus,
+  koledar in vse površine delujejo, vreme mirno pade na zadnji posnetek. `logcat` skozi celo sejo čist.
+  Staging vrnjen v izhodiščno stanje; `server_inserted_at` ves čas nepremaknjen (3. 8.).
+  ⚠️ **Ena najdba (kozmetična, NE popravljena):** brez licence **segment sistema ne kaže izbire** —
+  onemogočen M3 `SegmentedButton` izpusti polnilo izbrane polovice, zato sta »Po ozvezdjih« in
+  »Po znamenjih« videti enaka. Pet stikal privzeto vrednost pokaže pravilno (sivo, a v položaju
+  »vklopljeno«). Opis pod segmentom še vedno govori o sideričnem zodiaku, torej podatek ni izgubljen.
+  **Dolg počiščen:** wireframe `lunar-calendar_overview.html` board 2b usklajen z zaslonom — glavno 🌙
+  stikalo odstranjeno, board je zdaj **par** (z licenco / razstavni salon), pet podstikal z 🏷️, opis
+  izbranega sistema, novo besedilo »Kaj je to?«, opomba z razlogom B3.
+
+**Naloga NASLEDNJE seje: T7 — prižig z darilom.** Vhod je zdaj izpolnjen: T6 stoji in je izmerjen na
+napravi. **Prvo vprašanje za lastnika:** ali gre `supabase db push` na produkcijo (prod je pri `0016`,
+migracija `0017` čaka) — po `deploy-runbook.md`, staging najprej, po pushu `tmp/probe_prod_state.py` +
+preverba, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`. Šele nato koraki T7:
+par ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets) · masovni grant · prižig obeh flagov ·
+pregled vseh zaslonov na napravi (dolg spodaj: temni odtenki A4 + emoji na pravem fontu) · store listing.
+**Stanje repozitorija ob predaji (4. 8.):** `main` = `de1dac9` + necommitana sprememba wireframa in
+dokumentov iz tega koraka; nobene odprte veje. APK s prižganimi flagi in nameščen na telefonu je iz
+`de1dac9`; v repu so `kMoonCalendarEnabled = false`, `kTendaskPlusEnabled = false`, `kPlusPublicKey` prazen.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se

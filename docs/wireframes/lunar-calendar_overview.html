@@ -318,33 +318,68 @@
 
   <!-- ============ BOARD 2b: NADZOR — nastavitve pod ✦ Tendask+ (bilo board 5) ============ -->
   <div class="board">
-    <div class="phone">
-      <div class="phone__notch"></div>
-      <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
-      <div class="appbar"><div class="back">‹ <span style="margin-left:2px">✦ Tendask+</span></div>
-        <div style="text-align:right"><h1 style="font-size:18px">Lunin koledar</h1></div></div>
-      <div class="content">
-        <div class="setrow"><div class="si">🌙</div><div class="sm"><div class="st">Prikaži Lunin koledar</div><div class="ss">čip na Domov, oznake po vrtu</div></div><div class="toggle"></div></div>
+    <div class="pair">
+      <div>
+        <div class="plabel">S ✦ Tendask+ — stikala živa</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">✦ Tendask+</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">Lunin koledar</h1></div></div>
+          <div class="content">
+            <div style="padding:2px 4px 8px;">
+              <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;">Sistem koledarja</div>
+              <div class="segmented" style="margin-bottom:7px;">
+                <div class="seg active" style="line-height:1.25;">Po ozvezdjih<br><small style="font-weight:500;opacity:.8;">biodinamični</small></div>
+                <div class="seg" style="line-height:1.25;">Po znamenjih<br><small style="font-weight:500;opacity:.8;">astrološki</small></div>
+              </div>
+              <div style="font-size:12px;color:var(--muted);">Lego Lune meri po ozvezdjih, kot jih vidiš na nebu (siderični zodiak). Po tem so narejeni tiskani biodinamični setveni koledarji.</div>
+            </div>
 
-        <div style="padding:14px 4px 8px;">
-          <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;">Sistem koledarja</div>
-          <div class="segmented" style="margin-bottom:7px;">
-            <div class="seg active" style="line-height:1.25;">Po ozvezdjih<br><small style="font-weight:500;opacity:.8;">biodinamični</small></div>
-            <div class="seg" style="line-height:1.25;">Po znamenjih<br><small style="font-weight:500;opacity:.8;">astrološki</small></div>
+            <div class="setrow"><div class="si">🔔</div><div class="sm"><div class="st">Namig »jutri dober dan«</div><div class="ss">nežno, spoštuje tihe ure</div></div><div class="toggle off"></div></div>
+            <div class="setrow"><div class="si">🪴</div><div class="sm"><div class="st">Poudari po mojem vrtu</div><div class="ss">dvigni dneve za to, kar gojim</div></div><div class="toggle"></div></div>
+            <div class="setrow"><div class="si">📅</div><div class="sm"><div class="st">Prikaži v Dnevniku</div><div class="ss">obarva mesečni koledar Dnevnika</div></div><div class="toggle off"></div></div>
+            <div class="setrow"><div class="si">🌌</div><div class="sm"><div class="st">Prikaži ozvezdja in meno</div><div class="ss">podrobnosti o legi Lune pri posameznem dnevu</div></div><div class="toggle"></div></div>
+            <div class="setrow"><div class="si">🏷️</div><div class="sm"><div class="st">Prikaži element pri opravilih</div><div class="ss">v koraku vnosa, na opravilu in na rastlini</div></div><div class="toggle"></div></div>
+            <div class="card tinted" style="margin-top:18px;">
+              <div style="font-weight:700;font-size:15px;margin-bottom:6px;">🌙 Kaj je to?</div>
+              <div style="font-size:13px;line-height:1.6;color:#3a463f;">Nekateri vrtnarji delajo »po luni«. Luna
+                potuje skozi ozvezdja in <b>biodinamika vsakemu pripiše svoj del rastline</b>.
+                <div style="color:var(--muted);margin-top:8px;font-size:12px;">Po biodinamičnem vrtnarstvu je vsak dan naklonjen plodu, listu, cvetu ali korenini. Koledar to razdelitev pokaže kot pripomoček pri načrtovanju.</div></div>
+            </div>
           </div>
-          <div style="font-size:12px;color:var(--muted);">Uskladi s koledarjem, ki mu slediš. Astronomija je enaka, razlikuje se le razmejitev.</div>
         </div>
-
-        <div class="setrow"><div class="si">🔔</div><div class="sm"><div class="st">Namig »jutri dober dan«</div><div class="ss">nežno, spoštuje tihe ure</div></div><div class="toggle off"></div></div>
-        <div class="setrow"><div class="si">🪴</div><div class="sm"><div class="st">Poudari po mojem vrtu</div><div class="ss">dvigni dneve za to, kar gojim</div></div><div class="toggle"></div></div>
-        <div class="setrow"><div class="si">📅</div><div class="sm"><div class="st">Prikaži v Dnevniku</div><div class="ss">obarva mesečni koledar (board C)</div></div><div class="toggle off"></div></div>
-        <div class="setrow"><div class="si">🌌</div><div class="sm"><div class="st">Prikaži ozvezdja in meno</div><div class="ss">več astro podrobnosti v dnevu</div></div><div class="toggle"></div></div>
-        <div class="card tinted" style="margin-top:18px;">
-          <div style="font-weight:700;font-size:15px;margin-bottom:6px;">🌙 Kaj je to?</div>
-          <div style="font-size:13px;line-height:1.6;color:#3a463f;">Nekateri vrtnarji delajo »po luni«. Luna
-            potuje skozi ozvezdja, ki jih tradicija povezuje s <b>koreninami, listi, cvetovi in plodovi</b>.
-            Koledar pokaže element vsakega dne — kot pomoč pri <b>načrtovanju</b>, ne kot pravilo.
-            <div style="color:var(--muted);margin-top:8px;font-size:12px;">Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.</div></div>
+      </div>
+      <div>
+        <div class="plabel off">Brez licence — razstavni salon</div>
+        <div class="phone">
+          <div class="phone__notch"></div>
+          <div class="statusbar"><span>9:41</span><span class="right">📶 🔋</span></div>
+          <div class="appbar"><div class="back">‹ <span style="margin-left:2px">✦ Tendask+</span></div>
+            <div style="text-align:right"><h1 style="font-size:18px">Lunin koledar</h1></div></div>
+          <div class="content">
+            <div style="opacity:.45;">
+              <div style="padding:2px 4px 8px;">
+                <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);margin-bottom:8px;">Sistem koledarja</div>
+                <div class="segmented" style="margin-bottom:7px;">
+                  <div class="seg active" style="line-height:1.25;">Po ozvezdjih<br><small style="font-weight:500;opacity:.8;">biodinamični</small></div>
+                  <div class="seg" style="line-height:1.25;">Po znamenjih<br><small style="font-weight:500;opacity:.8;">astrološki</small></div>
+                </div>
+                <div style="font-size:12px;color:var(--muted);">Lego Lune meri po ozvezdjih, kot jih vidiš na nebu (siderični zodiak). Po tem so narejeni tiskani biodinamični setveni koledarji.</div>
+              </div>
+              <div class="setrow"><div class="si">🔔</div><div class="sm"><div class="st">Namig »jutri dober dan«</div><div class="ss">nežno, spoštuje tihe ure</div></div><div class="toggle"></div></div>
+              <div class="setrow"><div class="si">🪴</div><div class="sm"><div class="st">Poudari po mojem vrtu</div><div class="ss">dvigni dneve za to, kar gojim</div></div><div class="toggle"></div></div>
+              <div class="setrow"><div class="si">📅</div><div class="sm"><div class="st">Prikaži v Dnevniku</div><div class="ss">obarva mesečni koledar Dnevnika</div></div><div class="toggle"></div></div>
+              <div class="setrow"><div class="si">🌌</div><div class="sm"><div class="st">Prikaži ozvezdja in meno</div><div class="ss">podrobnosti o legi Lune pri posameznem dnevu</div></div><div class="toggle"></div></div>
+              <div class="setrow"><div class="si">🏷️</div><div class="sm"><div class="st">Prikaži element pri opravilih</div><div class="ss">v koraku vnosa, na opravilu in na rastlini</div></div><div class="toggle"></div></div>
+            </div>
+            <div class="card tinted" style="margin-top:18px;">
+              <div style="font-weight:700;font-size:15px;margin-bottom:6px;">🌙 Kaj je to?</div>
+              <div style="font-size:13px;line-height:1.6;color:#3a463f;">Nekateri vrtnarji delajo »po luni«. Luna
+                potuje skozi ozvezdja in <b>biodinamika vsakemu pripiše svoj del rastline</b>.
+                <div style="color:var(--muted);margin-top:8px;font-size:12px;">Po biodinamičnem vrtnarstvu je vsak dan naklonjen plodu, listu, cvetu ali korenini. Koledar to razdelitev pokaže kot pripomoček pri načrtovanju.</div></div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -352,11 +387,20 @@
       <div class="screen-no">BOARD 2b · NADZOR (nastavitve pod ✦ Tendask+)</div>
       <h2>Nastavitve Luninega koledarja</h2>
       <p><b>Umeščeno takoj za board 2</b>, ker konceptualno spada k ✦ Tendask+: dosežeš ga iz
-        <b>✦ Tendask+ → »Lunin koledar«</b> (board 2, desno). Glavno stikalo + podstikala (obvestila,
-        personalizacija, Dnevnik-plast, astro podrobnosti) + razlaga »kaj je to«.</p>
-      <div class="op"><b>Opt-in je dvonivojski:</b> najprej ✦ Tendask+, nato znotraj njega vklopiš/nastaviš
-        koledar. Kdor ✦ Tendask+ nima, teh nastavitev ne vidi — vidi upsell (board 2 levo).</div>
+        <b>✦ Tendask+ → »Lunin koledar«</b> (board 2, desno). Sistem + <b>pet podstikal</b> (obvestilo,
+        personalizacija, Dnevnik-plast, astro podrobnosti, element pri opravilih) + razlaga »kaj je to«.</p>
+      <div class="op"><b>Glavnega stikala 🌙 ni</b> (odločitev B3, 2026-08-03): mena je edini free kavelj in je
+        kot teaser vredna več kot možnost, da jo uporabnik skrije — <b>čip na Domov je viden vedno</b>, tudi
+        brez licence, in ga ni mogoče ugasniti. Element-oznake pri opravilih in v vrtu (korak »Kdaj«, detajl
+        opravila, čip rastline) zato dobijo <b>svoje, peto podstikalo 🏷️</b>; Domova ne zadeva.</div>
+      <div class="op"><b>Brez licence je zaslon razstavni salon</b> (desno): sistem in vseh pet vrstic so
+        <b>vidni, a mrtvi</b>, s <b>privzetimi</b> vrednostmi (vsa vklopljena, »Po ozvezdjih«) — tudi 🔔, ki je
+        sicer shranjen izklopljen: salon slika, kaj licenca prinese, ne shranjenega stanja. Nič se ne zapiše,
+        shranjene nastavitve obisk preživijo. »Kaj je to?« je vidna vedno in stoji <b>nad</b> stikali, ki
+        element-dan prinesejo — zato ne obljublja nič, česar bralec ne bi videl tik pod njo.</div>
       <h4>Sistem koledarja: siderični / tropski</h4>
+      <p>Pod segmentom stoji opis <b>izbranega</b> sistema (ne ena splošna razlaga za oba) — sicer je bralec
+        ugibal, katera polovica velja zanj.</p>
       <p>Preklop »<b>Po ozvezdjih (biodinamični)</b> / <b>Po znamenjih (astrološki)</b>«. <b>Poimenovanje po
         mehanizmu, NE po znamki</b> — nikjer »Thun«/»Aussaattage« (licence). »Biodinamični« je generičen
         opis metode (v redu).</p>

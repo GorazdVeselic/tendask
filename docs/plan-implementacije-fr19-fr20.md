@@ -689,9 +689,41 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      oblika, ki jo §3.1 izrecno dovoli (nevtralen opis ugodnosti brez cene in naslova).
      Ob strani izmerjeno: `docs/go-live/store-listing.md` Plusa in Lune **sploh ne omenja** — uskladitev
      listinga je naloga T7, ne tega koraka.
-  8. 🔨 Staging preizkus: migracija na staging + ročno nastavljen `plus_until` → Plus se odklene/zaklene
-     na napravi; offline (letalski način) Plus dela.
-     **Delno opravljeno 2026-08-03 (SM A536B, staging), takoj po koraku 4** — vse, kar se da izmeriti,
+  8. ✅ **Staging preizkus na napravi** — 2026-08-04, SM A536B proti stagingu; **brez brancha kode, ker se
+     hrošč ni pokazal** (korak je merilni). Nameščen je bil APK z lokalno prižganimi flagi, zgrajen iz
+     drevesa `de1dac9`. **Izmerjeno in zeleno:**
+     **(a) odklenjeno stanje** — čip na Domov (»dan za list ›«) · `/moon-calendar` mesec + teden ·
+     dan-sheet (razširjen do konca, nič pod navigacijskimi gumbi) · `/moon-settings` z licenco (pet živih
+     stikal, opis **izbranega** sistema) · korak »Kdaj« (pilula v soft barvi elementa) · detajl opravila
+     (sekcija »Lunin koledar«) · Dnevnik (🌙 gumb + barvna plast, pike in »danes« nedotaknjeni) ·
+     čip rastline »☾ Primerni dnevi« → `/moon-finder` (svežnji do 60 dni) · `/tendask-plus`
+     »Aktiven do 2. 9. 2026« · pot Nastavitve → ✦ Tendask+ → »Lunin koledar« → `/moon-settings`.
+     **(b) peto podstikalo 🏷️** — izklop pobriše oznako v koraku »Kdaj«, celo sekcijo na detajlu opravila
+     (skupaj s `SectionLabel`) in čip na rastlini, **čip na Domov pa ostane nespremenjen** (B3).
+     **(c) potek licence** — ker je merodajen **podpisan žeton, ne stolpec**, je bil izdan nov žeton s
+     `plus_until` v preteklosti (isti testni par, `tmp/gen_plus_test_token.dart … -1`); samo skrajšanje
+     stolpca ne bi dokazalo ničesar. Po zagonu (pull ob startu; `kSyncInterval` je 15 min, resume sam ne
+     potegne) je **vse zaklenjeno**: čip obdrži meno in dobi medeno pilulo »✦ Tendask+ ›«, `/tendask-plus`
+     pravi »Ni aktiven«, 🌙 gumb in plast Dnevnika izgineta, `/moon-settings` je razstavni salon.
+     **Lunino obvestilo je utihnilo samo** — armirani alarm 5. 8. ob 18:00 je izginil iz `dumpsys alarm`,
+     dnevniški nudge (11. 8., 1. 9. ob 17:00) in opomnik opravila (14. 8. ob 09:00) so ostali; **shranjen
+     opt-in `moon_hint = true` je preživel** in ob vrnjenem žetonu se je alarm 5. 8. 18:00 vrnil.
+     **(d) 🔔 optimistična vrstica** — posnetek takoj po tapu ujame stikalo že v gibanju; zapis pristane v
+     profilu (`updated_at` isto sekundo), brez zatikanja.
+     **(e) letalski način** — z izklopljenim wifi (sam letalski način ga na Samsungu pusti prižganega!)
+     in **hladnim zagonom** so Plus, koledar in vse površine delovale; vreme je mirno padlo na zadnji
+     posnetek. V `logcat` skozi celo sejo **nič** `E/flutter`/`PostgrestException`/`42501`.
+     **Staging po koncu vrnjen v izhodiščno stanje** (`plus_until` 2026-09-02, žeton 240 znakov),
+     `server_inserted_at` ves čas nepremaknjen (3. 8.) = klient ga res ne piše.
+     ⚠️ **Ena najdba (kozmetična, ne popravljena — poročana lastniku):** brez licence **segment sistema ne
+     kaže, kateri sistem je izbran** — onemogočen `SegmentedButton` v M3 izpusti polnilo izbrane polovice,
+     zato sta »Po ozvezdjih« in »Po znamenjih« videti enaka. Pet stikal privzeto vrednost pokaže pravilno
+     (onemogočeno, a v položaju »vklopljeno«); B3 pa za salon predvideva tudi viden privzeti sistem.
+     Podatek ni izgubljen — opis pod segmentom govori o sideričnem zodiaku.
+     **Ob istem koraku počiščen dolg:** wireframe `lunar-calendar_overview.html` board 2b je usklajen z
+     zaslonom — glavno 🌙 stikalo odstranjeno, board je zdaj **par** (z licenco / razstavni salon), pet
+     podstikal z 🏷️, opis izbranega sistema in novo besedilo »Kaj je to?«; opomba dobila razlog B3.
+     **Delno opravljeno že 2026-08-03 (SM A536B, staging), takoj po koraku 4** — vse, kar se da izmeriti,
      preden obstaja zaslon. Priprava: v profilno vrstico (`01b9054f-…`, `exogenus@gmail.com`) so bili s
      service role vpisani `plus_until = 2026-09-02 10:19:20Z`, `plus_kind = 'granted'` in žeton, podpisan
      z **enkratnim testnim parom ključev** (`tmp/gen_plus_test_token.dart`, determinističen seed
@@ -704,8 +736,8 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
      pristala na stagingu (`updated_at` 10:26:09 in 10:26:37), **`plus_*` in `server_inserted_at` pa so
      ostali nedotaknjeni** in v `logcat` ni bilo nobenega `42501`/`PostgrestException`/`E/flutter`.
      To je bila edina še neizmerjena pot: sync izjema (korak 2) je bila do tedaj zaklenjena samo s
-     testom payloada. **Ostane za pravi korak 8:** viden odklep/zaklep na zaslonu `/tendask-plus`
-     (rabi korak 5), potek prek skrajšanega `plus_until` in letalski način.
+     testom payloada.
+     **S tem je T6 zaključen — prod `db push` je od tu naprej odprto vprašanje za lastnika.**
 - **Branchi:** `feat/fr20-t6-1-schema` · `feat/fr20-t6-2-sync-exclusion` · `feat/fr20-t6-3-signature-dep` ·
   `feat/fr20-t6-4-plus-provider` · `feat/fr20-t6-5-plus-screen` · `feat/fr20-t6-6-gate-swap` ·
   `feat/fr20-t6-6b-always-on-phase`
