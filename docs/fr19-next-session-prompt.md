@@ -574,6 +574,11 @@ utihniti sam, opt-in preživeti), letalski način in **novo iz 6b**: čip mene j
 ga ni mogoče skriti · `/moon-settings` brez licence kot salon (vse sivo, privzeto) · peto podstikalo
 🏷️ ugasne oznake pri opravilih/rastlini, Domova pa ne. Predčasno izmerjeno 3. 8. (pull, podpis, push z
 napolnjenimi `plus_*`) je zapisano spodaj. Za njim T7 prižig.
+**Ob istem koraku počisti dolg:** wireframe `docs/wireframes/lunar-calendar_*` board 2b še riše glavno
+🌙 stikalo, ki ga B3 ukinja (zaslon ima zdaj sistem + pet podstikal + »Kaj je to?«, brez licence sivo).
+**Stanje repozitorija ob predaji (4. 8.):** `main` = `de1dac9`, potisnjeno na `origin/main`; nič
+nezmergaanega, nobene odprte veje. Zadnji APK na napravo je bil zgrajen, a **namestitev ni uspela** —
+USB je padel; APK s prižganimi flagi čaka v `build/app/outputs/flutter-apk/app-debug.apk`.
 
 🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
 se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
