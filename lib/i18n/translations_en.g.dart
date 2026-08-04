@@ -1045,9 +1045,6 @@ class Translations$entry$en {
 	/// en: 'Time'
 	String get when_time => 'Time';
 
-	/// en: 'Default: today at the next full hour.'
-	String get when_default_note => 'Default: today at the next full hour.';
-
 	/// en: 'Status'
 	String get when_status => 'Status';
 
@@ -2019,14 +2016,14 @@ class Translations$moon$en {
 		'leaf': 'leaf day',
 	};
 	Map<String, String> get activity => {
-		'fruit': 'Sow and tend fruiting crops (tomatoes, beans); gather seeds.',
-		'root': 'Sow and tend root crops (carrots, radishes, beets).',
-		'flower': 'Sow and tend flowering plants; cut flowers for the vase.',
-		'leaf': 'Sow and tend leafy vegetables (lettuce, spinach, cabbage).',
+		'fruit': 'A day for fruiting crops — tomatoes, beans, squash. Good for saving seed, too.',
+		'root': 'A day for root crops — carrots, radishes, beetroot.',
+		'flower': 'A day for flowers — and for cutting them for the vase.',
+		'leaf': 'A day for leafy greens — lettuce, spinach, cabbage.',
 	};
 
-	/// en: 'Around the new moon, let the garden rest; light chores only.'
-	String get activity_new_moon => 'Around the new moon, let the garden rest; light chores only.';
+	/// en: 'New moon is a day to pause — light jobs at most.'
+	String get activity_new_moon => 'New moon is a day to pause — light jobs at most.';
 
 	Map<String, String> get element => {
 		'fruit': 'fruit',
@@ -2167,11 +2164,11 @@ class Translations$moon$settings$en {
 	/// en: 'astrological'
 	String get system_tropical_sub => 'astrological';
 
-	/// en: 'The Moon's place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.'
-	String get system_help_sidereal => 'The Moon\'s place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.';
+	/// en: 'Places the Moon against the constellations as you see them in the sky (sidereal zodiac). Printed biodynamic sowing calendars are built this way.'
+	String get system_help_sidereal => 'Places the Moon against the constellations as you see them in the sky (sidereal zodiac). Printed biodynamic sowing calendars are built this way.';
 
-	/// en: 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.'
-	String get system_help_tropical => 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.';
+	/// en: 'Places the Moon in twelve equal signs counted from the spring equinox (tropical zodiac) — the same as horoscopes. Today it differs from the constellations by about one sign.'
+	String get system_help_tropical => 'Places the Moon in twelve equal signs counted from the spring equinox (tropical zodiac) — the same as horoscopes. Today it differs from the constellations by about one sign.';
 
 	/// en: '“Tomorrow is a good day” hint'
 	String get hint => '“Tomorrow is a good day” hint';
@@ -2194,8 +2191,8 @@ class Translations$moon$settings$en {
 	/// en: 'Show constellations and phase'
 	String get show_astro => 'Show constellations and phase';
 
-	/// en: 'more astro detail in the day view'
-	String get show_astro_sub => 'more astro detail in the day view';
+	/// en: 'details of the Moon's position on each day'
+	String get show_astro_sub => 'details of the Moon\'s position on each day';
 
 	/// en: 'Show element on tasks'
 	String get show_element_labels => 'Show element on tasks';
@@ -2206,17 +2203,15 @@ class Translations$moon$settings$en {
 	/// en: '🌙 What is this?'
 	String get about_title => '🌙 What is this?';
 
-	/// en: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with ${b(roots, leaves, flowers and fruits)}. The calendar shows each day's element — as an aid for ${b(planning)}, not a rule.'
+	/// en: 'Some gardeners work “by the moon”. The Moon travels through constellations, and ${b(biodynamics gives each one a part of the plant)}.'
 	TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
-		const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '),
-		b('roots, leaves, flowers and fruits'),
-		const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '),
-		b('planning'),
-		const TextSpan(text: ', not a rule.'),
+		const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations, and '),
+		b('biodynamics gives each one a part of the plant'),
+		const TextSpan(text: '.'),
 	]);
 
-	/// en: 'Tradition and preference, not agronomic advice. Computed on your device.'
-	String get about_footnote => 'Tradition and preference, not agronomic advice. Computed on your device.';
+	/// en: 'In biodynamic gardening, every day favours fruit, leaf, flower or root. The calendar shows that division as an aid for planning.'
+	String get about_footnote => 'In biodynamic gardening, every day favours fruit, leaf, flower or root. The calendar shows that division as an aid for planning.';
 
 	/// en: 'Couldn't load the settings.'
 	String get load_error => 'Couldn\'t load the settings.';
@@ -2242,8 +2237,8 @@ class Translations$moon$task_section$en {
 
 	// Translations
 
-	/// en: 'Tradition, not advice. Derived from the task's date.'
-	String get footnote => 'Tradition, not advice. Derived from the task\'s date.';
+	/// en: 'Biodynamics calls this a day for that element. A hint, not a rule.'
+	String get footnote => 'Biodynamics calls this a day for that element. A hint, not a rule.';
 }
 
 // Path: moon.hint
@@ -2281,8 +2276,8 @@ class Translations$moon$finder$en {
 	/// en: 'The calendar then lists the next days that suit it.'
 	String get empty_hint => 'The calendar then lists the next days that suit it.';
 
-	/// en: 'The calendar has no recommendation for this plant.'
-	String get no_recommendation => 'The calendar has no recommendation for this plant.';
+	/// en: 'Biodynamics has no recommendation for this plant.'
+	String get no_recommendation => 'Biodynamics has no recommendation for this plant.';
 
 	/// en: '${plant} — best on a ${day}.'
 	String callout({required Object plant, required Object day}) => '${plant} — best on a ${day}.';
@@ -2683,7 +2678,6 @@ extension on Translations {
 			'entry.when_pick_date' => 'Date…',
 			'entry.when_date' => 'Date',
 			'entry.when_time' => 'Time',
-			'entry.when_default_note' => 'Default: today at the next full hour.',
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Waiting',
 			'entry.when_status_done' => 'Done',
@@ -2942,9 +2936,9 @@ extension on Translations {
 			'recipes.form_save' => 'Save',
 			'recipes.err_name' => 'Enter a recipe name.',
 			'recipes.form_delete' => 'Delete recipe',
+			'recipes.delete_note' => 'This recipe will be removed from your list.',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.delete_note' => 'This recipe will be removed from your list.',
 			'recipes.items' => 'Supplies',
 			'recipes.add_item' => 'Add supply',
 			'recipes.pick_title' => 'Pick a recipe',
@@ -2983,8 +2977,8 @@ extension on Translations {
 			'moon.settings.system_sidereal_sub' => 'biodynamic',
 			'moon.settings.system_tropical' => 'By signs',
 			'moon.settings.system_tropical_sub' => 'astrological',
-			'moon.settings.system_help_sidereal' => 'The Moon\'s place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.',
-			'moon.settings.system_help_tropical' => 'The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.',
+			'moon.settings.system_help_sidereal' => 'Places the Moon against the constellations as you see them in the sky (sidereal zodiac). Printed biodynamic sowing calendars are built this way.',
+			'moon.settings.system_help_tropical' => 'Places the Moon in twelve equal signs counted from the spring equinox (tropical zodiac) — the same as horoscopes. Today it differs from the constellations by about one sign.',
 			'moon.settings.hint' => '“Tomorrow is a good day” hint',
 			'moon.settings.hint_sub' => 'gentle, respects quiet hours',
 			'moon.settings.highlight_garden' => 'Highlight for my garden',
@@ -2992,22 +2986,22 @@ extension on Translations {
 			'moon.settings.show_in_journal' => 'Show in Journal',
 			'moon.settings.show_in_journal_sub' => 'colours the Journal month calendar',
 			'moon.settings.show_astro' => 'Show constellations and phase',
-			'moon.settings.show_astro_sub' => 'more astro detail in the day view',
+			'moon.settings.show_astro_sub' => 'details of the Moon\'s position on each day',
 			'moon.settings.show_element_labels' => 'Show element on tasks',
 			'moon.settings.show_element_labels_sub' => 'in the entry step, on the task and on the plant',
 			'moon.settings.about_title' => '🌙 What is this?',
-			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with '), b('roots, leaves, flowers and fruits'), const TextSpan(text: '. The calendar shows each day\'s element — as an aid for '), b('planning'), const TextSpan(text: ', not a rule.'), ]), 
-			'moon.settings.about_footnote' => 'Tradition and preference, not agronomic advice. Computed on your device.',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Some gardeners work “by the moon”. The Moon travels through constellations, and '), b('biodynamics gives each one a part of the plant'), const TextSpan(text: '.'), ]), 
+			'moon.settings.about_footnote' => 'In biodynamic gardening, every day favours fruit, leaf, flower or root. The calendar shows that division as an aid for planning.',
 			'moon.settings.load_error' => 'Couldn\'t load the settings.',
 			'moon.badge.until' => ({required Object time}) => 'until ${time}',
-			'moon.task_section.footnote' => 'Tradition, not advice. Derived from the task\'s date.',
+			'moon.task_section.footnote' => 'Biodynamics calls this a day for that element. A hint, not a rule.',
 			'moon.hint.title' => ({required Object day}) => 'Tomorrow is a ${day}',
 			'moon.finder.title' => 'When for …',
 			'moon.finder.chip' => 'Suitable days',
 			'moon.finder.plant_label' => 'Plant',
 			'moon.finder.plant_hint' => 'Choose a plant',
 			'moon.finder.empty_hint' => 'The calendar then lists the next days that suit it.',
-			'moon.finder.no_recommendation' => 'The calendar has no recommendation for this plant.',
+			'moon.finder.no_recommendation' => 'Biodynamics has no recommendation for this plant.',
 			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — best on a ${day}.',
 			'moon.finder.next_days' => 'Next suitable days',
 			'moon.finder.waxing' => 'waxing moon',
@@ -3016,11 +3010,11 @@ extension on Translations {
 			'moon.day_for.root' => 'root day',
 			'moon.day_for.flower' => 'flower day',
 			'moon.day_for.leaf' => 'leaf day',
-			'moon.activity.fruit' => 'Sow and tend fruiting crops (tomatoes, beans); gather seeds.',
-			'moon.activity.root' => 'Sow and tend root crops (carrots, radishes, beets).',
-			'moon.activity.flower' => 'Sow and tend flowering plants; cut flowers for the vase.',
-			'moon.activity.leaf' => 'Sow and tend leafy vegetables (lettuce, spinach, cabbage).',
-			'moon.activity_new_moon' => 'Around the new moon, let the garden rest; light chores only.',
+			'moon.activity.fruit' => 'A day for fruiting crops — tomatoes, beans, squash. Good for saving seed, too.',
+			'moon.activity.root' => 'A day for root crops — carrots, radishes, beetroot.',
+			'moon.activity.flower' => 'A day for flowers — and for cutting them for the vase.',
+			'moon.activity.leaf' => 'A day for leafy greens — lettuce, spinach, cabbage.',
+			'moon.activity_new_moon' => 'New moon is a day to pause — light jobs at most.',
 			'moon.element.fruit' => 'fruit',
 			'moon.element.root' => 'root',
 			'moon.element.flower' => 'flower',

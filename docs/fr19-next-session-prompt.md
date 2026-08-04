@@ -540,6 +540,34 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   Pogled: `tmp/step6b_preview_test.dart` → `tmp/t6b_*.png`. Nova matrika `moon-settings (free)`.
   ⏳ Wireframe board 2b še riše glavno stikalo — uskladitev ob priložnosti.
 
+- **Popravki po prvem pogledu na napravi (4. 8., isti sveženj kot 6b):** **(1) `SafeArea`** na
+  `/moon-settings`, `/moon-calendar`, `/moon-finder` in `/tendask-plus` — nobeden od štirih novih zaslonov
+  ga ni imel, zato je zadnja kartica zlezla pod Androidove navigacijske gumbe (hišni vzorec je
+  `body: SafeArea(child: …)`, gl. `settings_screen.dart`). **(2) 🔔 vrstica je zdaj optimistična** —
+  edina od petih je čakala na pot »zapis v profil → stream nazaj« (plus platformni klic za dovoljenje),
+  kar je na napravi pomenilo ~1 s zamika za prstom; zdaj se premakne takoj in se vrne, če dovoljenje
+  odpade. **(3) `when_default_note` izbrisan** (sl/en/de) — napis »Privzeto: danes ob naslednji polni uri«
+  je ob 23:xx lagal (privzetek `nextFullHour` se prelije v jutri, segment pokaže »Jutri«), datum in ura pa
+  sta itak vidna v poljih nad njim. **(4) nov `SegmentLabel`** (`core/widgets/segment_label.dart`,
+  `FittedBox.scaleDown` + `maxLines: 1`) na **vseh** segmentnih gumbih aplikacije (11 mest) — »Tedensko«
+  je pri 320 px lomilo zadnji »o« v novo vrstico. Pogled: `tmp/segments_preview_test.dart` →
+  `tmp/seg_{sl360,sl320,de320}.png`.
+  **(5) Zaštekanje ob 🔔 odpravljeno pri viru:** `MoonHintCoordinator` je ob **vsakem** zapisu v profil —
+  torej tudi ob menjavi jezika, uredbi lokacije in ob vsakem sync pullu — naredil 7 preklicev + do 7
+  razporeditev, **do 14 klicev prek platformnega kanala**. Zdaj si zapomni, kaj je armiral (id · čas ·
+  naslov · telo, primerjava po vrednosti) in ob nespremenjenem planu **ne pokliče OS niti enkrat**;
+  preklic gre samo v reže, ki plana ne nosijo več (razporeditev z istim id-jem obstoječo zamenja); nov
+  `kMoonHintDebounce = 2 s` (prej `kReminderDebounce` 800 ms) potisne delo z OS izven animacije stikala.
+  Naslov in telo živita v zapomnjenem zapisu, zato menjava jezika ali sistema **še vedno** sproži
+  ponovno armiranje. +2 testa (nespremenjen plan se OS ne dotakne · preklop sistema armira spremenjene
+  reže).
+  **(6) Prenova besedil (lastnik, 4. 8.)** — pripisi so brali kot strojni (telegrafski »X, ne Y.«,
+  poševnica, razlaga mehanizma bralcu): novi `moon.task_section.footnote`, `moon.settings.about_body` +
+  `about_footnote` (kartica zdaj brez podvojenega naštevanja), vse štiri `moon.activity` vrstice,
+  `activity_new_moon`, `finder.no_recommendation`, `settings.show_astro_sub` in oba opisa sistema —
+  **sl+en+de**. Nedotaknjeni po odločitvi lastnika: `plus.tagline`, `sheet.favorable/unfavorable`,
+  `finder.empty_hint`.
+
 **Naloga NASLEDNJE seje: T6 korak 8 — staging preizkus na napravi.** Ostane: viden odklep/zaklep na
 `/tendask-plus` in po vseh štirih vstopnih točkah, **potek** prek skrajšanega `plus_until` (namig 🔔 mora
 utihniti sam, opt-in preživeti), letalski način in **novo iz 6b**: čip mene je viden tudi brez licence in

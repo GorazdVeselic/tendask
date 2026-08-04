@@ -86,28 +86,27 @@ class _MoonFinderScreenState extends ConsumerState<MoonFinderScreen>
         title: Text(t.moon.finder.title),
         centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-        children: [
-          FieldLabel(t.moon.finder.plant_label),
-          _PlantField(
-            plant: plant,
-            customName: _customName,
-            onTap: _pickPlant,
-          ),
-          const SizedBox(height: 14),
-          if (plant != null && element != null)
-            _Runs(
-              element: element,
-              plantLabel: catalogLabel(plant.labels),
-            )
-          else
-            _Note(
-              plant == null && _customName == null
-                  ? t.moon.finder.empty_hint
-                  : t.moon.finder.no_recommendation,
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+          children: [
+            FieldLabel(t.moon.finder.plant_label),
+            _PlantField(
+              plant: plant,
+              customName: _customName,
+              onTap: _pickPlant,
             ),
-        ],
+            const SizedBox(height: 14),
+            if (plant != null && element != null)
+              _Runs(element: element, plantLabel: catalogLabel(plant.labels))
+            else
+              _Note(
+                plant == null && _customName == null
+                    ? t.moon.finder.empty_hint
+                    : t.moon.finder.no_recommendation,
+              ),
+          ],
+        ),
       ),
     );
   }
@@ -287,9 +286,7 @@ class _RunRow extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    run.waxing
-                        ? t.moon.finder.waxing
-                        : t.moon.finder.waning,
+                    run.waxing ? t.moon.finder.waxing : t.moon.finder.waning,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: theme.colorScheme.onSurfaceVariant,
                     ),

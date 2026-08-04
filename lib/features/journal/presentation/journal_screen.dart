@@ -12,6 +12,7 @@ import '../../plants/application/plants_providers.dart';
 import '../../tasks/application/tasks_providers.dart';
 import '../../tasks/presentation/subject_labels.dart';
 import '../application/notes_providers.dart';
+import '../../../core/widgets/segment_label.dart';
 import 'journal_entry.dart';
 import 'journal_timeline.dart';
 import 'month_calendar_view.dart';
@@ -78,11 +79,11 @@ class _JournalScreenState extends ConsumerState<JournalScreen> {
               segments: [
                 ButtonSegment(
                   value: _View.timeline,
-                  label: Text(t.journal.timeline),
+                  label: SegmentLabel(t.journal.timeline),
                 ),
                 ButtonSegment(
                   value: _View.month,
-                  label: Text(t.journal.month_view),
+                  label: SegmentLabel(t.journal.month_view),
                 ),
               ],
               selected: {_view},

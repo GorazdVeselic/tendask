@@ -37,11 +37,14 @@ class TendaskPlusScreen extends ConsumerWidget {
         title: const PlusTitle(),
         centerTitle: true,
       ),
-      body: statusAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
-        error: (_, _) => Center(child: Text(t.plus.load_error)),
-        data: (status) => PlusScreenBody(status: status),
+      // Without it the last feature row slides under the Android navigation bar.
+      body: SafeArea(
+        child: statusAsync.when(
+          loading: () =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+          error: (_, _) => Center(child: Text(t.plus.load_error)),
+          data: (status) => PlusScreenBody(status: status),
+        ),
       ),
     );
   }
@@ -123,7 +126,10 @@ class _StatusCard extends StatelessWidget {
     if (!status.isActive) {
       return Card(
         child: ListTile(
-          leading: Icon(kPlusMarkIcon, color: theme.colorScheme.onSurfaceVariant),
+          leading: Icon(
+            kPlusMarkIcon,
+            color: theme.colorScheme.onSurfaceVariant,
+          ),
           title: const Text(kPlusLabel),
           subtitle: Text(t.plus.inactive),
         ),

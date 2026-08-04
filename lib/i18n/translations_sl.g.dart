@@ -545,7 +545,6 @@ class _Translations$entry$sl extends Translations$entry$en {
 	@override String get when_pick_date => 'Datum…';
 	@override String get when_date => 'Datum';
 	@override String get when_time => 'Ura';
-	@override String get when_default_note => 'Privzeto: danes ob naslednji polni uri.';
 	@override String get when_status => 'Status';
 	@override String get when_status_waiting => 'Čaka';
 	@override String get when_status_done => 'Opravljeno';
@@ -960,12 +959,12 @@ class _Translations$moon$sl extends Translations$moon$en {
 		'leaf': 'dan za list',
 	};
 	@override Map<String, String> get activity => {
-		'fruit': 'Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.',
-		'root': 'Setev in oskrba korenovk (korenje, redkev, pesa).',
-		'flower': 'Setev in oskrba cvetnic; rez cvetja za šopke.',
-		'leaf': 'Setev in oskrba listnate zelenjave (solata, špinača, zelje).',
+		'fruit': 'Dan za plodovke — paradižnik, fižol, buče. Dober tudi za pobiranje semena.',
+		'root': 'Dan za korenovke — korenje, redkev, pesa.',
+		'flower': 'Dan za cvetnice — in za rez cvetja za vazo.',
+		'leaf': 'Dan za listnato zelenjavo — solato, špinačo, zelje.',
 	};
-	@override String get activity_new_moon => 'Ob mlaju raje počitek; le lažja opravila.';
+	@override String get activity_new_moon => 'Mlaj je dan za premor — kvečjemu lažja opravila.';
 	@override Map<String, String> get element => {
 		'fruit': 'plod',
 		'root': 'korenina',
@@ -1061,8 +1060,8 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	@override String get system_sidereal_sub => 'biodinamični';
 	@override String get system_tropical => 'Po znamenjih';
 	@override String get system_tropical_sub => 'astrološki';
-	@override String get system_help_sidereal => 'Lega Lune med dejanskimi ozvezdji na nebu (siderični zodiak) — razmejitev, ki jo uporabljajo tiskani setveni koledarji.';
-	@override String get system_help_tropical => 'Zodiak, razdeljen na dvanajst enakih znamenj od pomladnega enakonočja (tropski zodiak) — razmejitev horoskopov. Od ozvezdij se danes razlikuje za približno eno znamenje.';
+	@override String get system_help_sidereal => 'Lego Lune meri po ozvezdjih, kot jih vidiš na nebu (siderični zodiak). Po tem so narejeni tiskani biodinamični setveni koledarji.';
+	@override String get system_help_tropical => 'Lego Lune meri po dvanajstih enakih znamenjih od pomladnega enakonočja (tropski zodiak) — enako kot horoskopi. Danes se od ozvezdij razlikuje za približno eno znamenje.';
 	@override String get hint => 'Namig »jutri dober dan«';
 	@override String get hint_sub => 'nežno, spoštuje tihe ure';
 	@override String get highlight_garden => 'Poudari po mojem vrtu';
@@ -1070,18 +1069,16 @@ class _Translations$moon$settings$sl extends Translations$moon$settings$en {
 	@override String get show_in_journal => 'Prikaži v Dnevniku';
 	@override String get show_in_journal_sub => 'obarva mesečni koledar Dnevnika';
 	@override String get show_astro => 'Prikaži ozvezdja in meno';
-	@override String get show_astro_sub => 'več astro podrobnosti v dnevu';
+	@override String get show_astro_sub => 'podrobnosti o legi Lune pri posameznem dnevu';
 	@override String get show_element_labels => 'Prikaži element pri opravilih';
 	@override String get show_element_labels_sub => 'v koraku vnosa, na opravilu in na rastlini';
 	@override String get about_title => '🌙 Kaj je to?';
 	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
-		const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '),
-		b('koreninami, listi, cvetovi in plodovi'),
-		const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '),
-		b('načrtovanju'),
-		const TextSpan(text: ', ne kot pravilo.'),
+		const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja in '),
+		b('biodinamika vsakemu pripiše svoj del rastline'),
+		const TextSpan(text: '.'),
 	]);
-	@override String get about_footnote => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.';
+	@override String get about_footnote => 'Po biodinamičnem vrtnarstvu je vsak dan naklonjen plodu, listu, cvetu ali korenini. Koledar to razdelitev pokaže kot pripomoček pri načrtovanju.';
 	@override String get load_error => 'Nastavitev ni bilo mogoče naložiti.';
 }
 
@@ -1102,7 +1099,7 @@ class _Translations$moon$task_section$sl extends Translations$moon$task_section$
 	final TranslationsSl _root; // ignore: unused_field
 
 	// Translations
-	@override String get footnote => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.';
+	@override String get footnote => 'Po biodinamiki je to dan za ta element. Namig, ne pravilo.';
 }
 
 // Path: moon.hint
@@ -1127,7 +1124,7 @@ class _Translations$moon$finder$sl extends Translations$moon$finder$en {
 	@override String get plant_label => 'Rastlina';
 	@override String get plant_hint => 'Izberi rastlino';
 	@override String get empty_hint => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.';
-	@override String get no_recommendation => 'Za to rastlino koledar nima priporočila.';
+	@override String get no_recommendation => 'Biodinamika za to rastlino nima priporočila.';
 	@override String callout({required Object plant, required Object day}) => '${plant} — najbolje na ${day}.';
 	@override String get next_days => 'Naslednji primerni dnevi';
 	@override String get waxing => 'rastoča luna';
@@ -1486,7 +1483,6 @@ extension on TranslationsSl {
 			'entry.when_pick_date' => 'Datum…',
 			'entry.when_date' => 'Datum',
 			'entry.when_time' => 'Ura',
-			'entry.when_default_note' => 'Privzeto: danes ob naslednji polni uri.',
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Čaka',
 			'entry.when_status_done' => 'Opravljeno',
@@ -1745,9 +1741,9 @@ extension on TranslationsSl {
 			'recipes.form_save' => 'Shrani',
 			'recipes.err_name' => 'Vnesi ime recepta.',
 			'recipes.form_delete' => 'Izbriši recept',
+			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.delete_note' => 'Recept bo odstranjen s tvojega seznama.',
 			'recipes.items' => 'Sredstva',
 			'recipes.add_item' => 'Dodaj sredstvo',
 			'recipes.pick_title' => 'Izberi recept',
@@ -1786,8 +1782,8 @@ extension on TranslationsSl {
 			'moon.settings.system_sidereal_sub' => 'biodinamični',
 			'moon.settings.system_tropical' => 'Po znamenjih',
 			'moon.settings.system_tropical_sub' => 'astrološki',
-			'moon.settings.system_help_sidereal' => 'Lega Lune med dejanskimi ozvezdji na nebu (siderični zodiak) — razmejitev, ki jo uporabljajo tiskani setveni koledarji.',
-			'moon.settings.system_help_tropical' => 'Zodiak, razdeljen na dvanajst enakih znamenj od pomladnega enakonočja (tropski zodiak) — razmejitev horoskopov. Od ozvezdij se danes razlikuje za približno eno znamenje.',
+			'moon.settings.system_help_sidereal' => 'Lego Lune meri po ozvezdjih, kot jih vidiš na nebu (siderični zodiak). Po tem so narejeni tiskani biodinamični setveni koledarji.',
+			'moon.settings.system_help_tropical' => 'Lego Lune meri po dvanajstih enakih znamenjih od pomladnega enakonočja (tropski zodiak) — enako kot horoskopi. Danes se od ozvezdij razlikuje za približno eno znamenje.',
 			'moon.settings.hint' => 'Namig »jutri dober dan«',
 			'moon.settings.hint_sub' => 'nežno, spoštuje tihe ure',
 			'moon.settings.highlight_garden' => 'Poudari po mojem vrtu',
@@ -1795,22 +1791,22 @@ extension on TranslationsSl {
 			'moon.settings.show_in_journal' => 'Prikaži v Dnevniku',
 			'moon.settings.show_in_journal_sub' => 'obarva mesečni koledar Dnevnika',
 			'moon.settings.show_astro' => 'Prikaži ozvezdja in meno',
-			'moon.settings.show_astro_sub' => 'več astro podrobnosti v dnevu',
+			'moon.settings.show_astro_sub' => 'podrobnosti o legi Lune pri posameznem dnevu',
 			'moon.settings.show_element_labels' => 'Prikaži element pri opravilih',
 			'moon.settings.show_element_labels_sub' => 'v koraku vnosa, na opravilu in na rastlini',
 			'moon.settings.about_title' => '🌙 Kaj je to?',
-			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s '), b('koreninami, listi, cvetovi in plodovi'), const TextSpan(text: '. Koledar pokaže element vsakega dne — kot pomoč pri '), b('načrtovanju'), const TextSpan(text: ', ne kot pravilo.'), ]), 
-			'moon.settings.about_footnote' => 'Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja in '), b('biodinamika vsakemu pripiše svoj del rastline'), const TextSpan(text: '.'), ]), 
+			'moon.settings.about_footnote' => 'Po biodinamičnem vrtnarstvu je vsak dan naklonjen plodu, listu, cvetu ali korenini. Koledar to razdelitev pokaže kot pripomoček pri načrtovanju.',
 			'moon.settings.load_error' => 'Nastavitev ni bilo mogoče naložiti.',
 			'moon.badge.until' => ({required Object time}) => 'do ${time}',
-			'moon.task_section.footnote' => 'Tradicija, ne nasvet. Preračunano iz datuma opravila.',
+			'moon.task_section.footnote' => 'Po biodinamiki je to dan za ta element. Namig, ne pravilo.',
 			'moon.hint.title' => ({required Object day}) => 'Jutri je ${day}',
 			'moon.finder.title' => 'Kdaj za …',
 			'moon.finder.chip' => 'Primerni dnevi',
 			'moon.finder.plant_label' => 'Rastlina',
 			'moon.finder.plant_hint' => 'Izberi rastlino',
 			'moon.finder.empty_hint' => 'Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.',
-			'moon.finder.no_recommendation' => 'Za to rastlino koledar nima priporočila.',
+			'moon.finder.no_recommendation' => 'Biodinamika za to rastlino nima priporočila.',
 			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — najbolje na ${day}.',
 			'moon.finder.next_days' => 'Naslednji primerni dnevi',
 			'moon.finder.waxing' => 'rastoča luna',
@@ -1819,11 +1815,11 @@ extension on TranslationsSl {
 			'moon.day_for.root' => 'dan za korenino',
 			'moon.day_for.flower' => 'dan za cvet',
 			'moon.day_for.leaf' => 'dan za list',
-			'moon.activity.fruit' => 'Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.',
-			'moon.activity.root' => 'Setev in oskrba korenovk (korenje, redkev, pesa).',
-			'moon.activity.flower' => 'Setev in oskrba cvetnic; rez cvetja za šopke.',
-			'moon.activity.leaf' => 'Setev in oskrba listnate zelenjave (solata, špinača, zelje).',
-			'moon.activity_new_moon' => 'Ob mlaju raje počitek; le lažja opravila.',
+			'moon.activity.fruit' => 'Dan za plodovke — paradižnik, fižol, buče. Dober tudi za pobiranje semena.',
+			'moon.activity.root' => 'Dan za korenovke — korenje, redkev, pesa.',
+			'moon.activity.flower' => 'Dan za cvetnice — in za rez cvetja za vazo.',
+			'moon.activity.leaf' => 'Dan za listnato zelenjavo — solato, špinačo, zelje.',
+			'moon.activity_new_moon' => 'Mlaj je dan za premor — kvečjemu lažja opravila.',
 			'moon.element.fruit' => 'plod',
 			'moon.element.root' => 'korenina',
 			'moon.element.flower' => 'cvet',

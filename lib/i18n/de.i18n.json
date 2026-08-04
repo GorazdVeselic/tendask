@@ -307,7 +307,6 @@
     "when_pick_date": "Datum…",
     "when_date": "Datum",
     "when_time": "Uhrzeit",
-    "when_default_note": "Standard: heute zur nächsten vollen Stunde.",
     "when_status": "Status",
     "when_status_waiting": "Wartet",
     "when_status_done": "Erledigt",
@@ -637,8 +636,8 @@
       "system_sidereal_sub": "biodynamisch",
       "system_tropical": "Nach Zeichen",
       "system_tropical_sub": "astrologisch",
-      "system_help_sidereal": "Die Stellung des Mondes vor den tatsächlichen Sternbildern am Himmel (siderischer Tierkreis) — die Einteilung, die gedruckte Mondkalender verwenden.",
-      "system_help_tropical": "Der Tierkreis in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — die Einteilung der Horoskope. Von den Sternbildern weicht sie heute um etwa ein Zeichen ab.",
+      "system_help_sidereal": "Bestimmt den Stand des Mondes an den Sternbildern, wie du sie am Himmel siehst (siderischer Tierkreis). So sind die gedruckten biodynamischen Mondkalender gerechnet.",
+      "system_help_tropical": "Bestimmt den Stand des Mondes in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — wie in den Horoskopen. Von den Sternbildern weicht er heute um etwa ein Zeichen ab.",
       "hint": "Hinweis „morgen ist ein guter Tag“",
       "hint_sub": "sanft, beachtet die Ruhezeiten",
       "highlight_garden": "Für meinen Garten hervorheben",
@@ -646,19 +645,19 @@
       "show_in_journal": "Im Tagebuch anzeigen",
       "show_in_journal_sub": "färbt den Monatskalender im Tagebuch",
       "show_astro": "Sternbilder und Mondphase anzeigen",
-      "show_astro_sub": "mehr Astro-Details in der Tagesansicht",
+      "show_astro_sub": "Details zum Stand des Mondes am jeweiligen Tag",
       "show_element_labels": "Element bei Aufgaben anzeigen",
       "show_element_labels_sub": "im Eingabeschritt, an der Aufgabe und an der Pflanze",
       "about_title": "🌙 Was ist das?",
-      "about_body(rich)": "Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit ${b(Wurzeln, Blättern, Blüten und Früchten)} verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der ${b(Planung)}, nicht als Regel.",
-      "about_footnote": "Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.",
+      "about_body(rich)": "Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, und ${b(die Biodynamik ordnet jedem einen Pflanzenteil zu)}.",
+      "about_footnote": "Im biodynamischen Gartenbau begünstigt jeder Tag Frucht, Blatt, Blüte oder Wurzel. Der Kalender zeigt diese Einteilung als Hilfe bei der Planung.",
       "load_error": "Einstellungen konnten nicht geladen werden."
     },
     "badge": {
       "until": "bis ${time}"
     },
     "task_section": {
-      "footnote": "Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet."
+      "footnote": "Nach der Biodynamik ist das der Tag für dieses Element. Ein Hinweis, keine Regel."
     },
     "hint": {
       "title": "Morgen ist ${day}"
@@ -669,7 +668,7 @@
       "plant_label": "Pflanze",
       "plant_hint": "Pflanze wählen",
       "empty_hint": "Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.",
-      "no_recommendation": "Für diese Pflanze hat der Kalender keine Empfehlung.",
+      "no_recommendation": "Die Biodynamik hat für diese Pflanze keine Empfehlung.",
       "callout": "${plant} — am besten an einem ${day}.",
       "next_days": "Nächste passende Tage",
       "waxing": "zunehmender Mond",
@@ -682,12 +681,12 @@
       "leaf": "Blatttag"
     },
     "activity(map)": {
-      "fruit": "Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.",
-      "root": "Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).",
-      "flower": "Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.",
-      "leaf": "Blattgemüse säen und pflegen (Salat, Spinat, Kohl)."
+      "fruit": "Ein Tag für Fruchtgemüse — Tomaten, Bohnen, Kürbis. Auch gut, um Saatgut zu ernten.",
+      "root": "Ein Tag für Wurzelgemüse — Karotten, Radieschen, Rote Bete.",
+      "flower": "Ein Tag für Blühendes — und zum Schneiden für die Vase.",
+      "leaf": "Ein Tag für Blattgemüse — Salat, Spinat, Kohl."
     },
-    "activity_new_moon": "Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.",
+    "activity_new_moon": "Neumond ist ein Tag zum Innehalten — höchstens leichte Arbeiten.",
     "element(map)": {
       "fruit": "Frucht",
       "root": "Wurzel",

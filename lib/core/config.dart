@@ -93,6 +93,11 @@ const kPushDebounce = Duration(seconds: 2);
 /// reschedules OS notifications after this delay, coalescing rapid edits.
 const kReminderDebounce = Duration(milliseconds: 800);
 
+/// Debounce for re-arming the moon hint. Longer than [kReminderDebounce] on
+/// purpose: that pass talks to the OS notification queue, and at 800 ms it
+/// landed inside the 🔔 switch animation, where it read as a stutter.
+const kMoonHintDebounce = Duration(seconds: 2);
+
 /// Minutes in a day — day-based reminder offsets (>= this) fire N whole days
 /// before the task at a chosen time of day.
 const kMinutesPerDay = 1440;

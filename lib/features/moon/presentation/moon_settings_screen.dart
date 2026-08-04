@@ -52,104 +52,106 @@ class MoonSettingsScreen extends ConsumerWidget {
         title: Text(t.moon.calendar.title),
         centerTitle: true,
       ),
-      body: settingsAsync.when(
-        loading: () =>
-            const Center(child: CircularProgressIndicator.adaptive()),
-        error: (_, _) => Center(child: Text(t.moon.settings.load_error)),
-        data: (stored) {
-          final shown = isPlus ? stored : kMoonSettingsDefaults;
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
-            children: [
-              SectionLabel(t.moon.settings.system_label),
-              SegmentedButton<CalendarSystem>(
-                segments: [
-                  ButtonSegment(
-                    value: CalendarSystem.sidereal,
-                    label: _SystemSegment(
-                      title: t.moon.settings.system_sidereal,
-                      subtitle: t.moon.settings.system_sidereal_sub,
+      // Without it the last card slides under the Android navigation bar.
+      body: SafeArea(
+        child: settingsAsync.when(
+          loading: () =>
+              const Center(child: CircularProgressIndicator.adaptive()),
+          error: (_, _) => Center(child: Text(t.moon.settings.load_error)),
+          data: (stored) {
+            final shown = isPlus ? stored : kMoonSettingsDefaults;
+            return ListView(
+              padding: const EdgeInsets.fromLTRB(16, 12, 16, 32),
+              children: [
+                SectionLabel(t.moon.settings.system_label),
+                SegmentedButton<CalendarSystem>(
+                  segments: [
+                    ButtonSegment(
+                      value: CalendarSystem.sidereal,
+                      label: _SystemSegment(
+                        title: t.moon.settings.system_sidereal,
+                        subtitle: t.moon.settings.system_sidereal_sub,
+                      ),
                     ),
-                  ),
-                  ButtonSegment(
-                    value: CalendarSystem.tropical,
-                    label: _SystemSegment(
-                      title: t.moon.settings.system_tropical,
-                      subtitle: t.moon.settings.system_tropical_sub,
+                    ButtonSegment(
+                      value: CalendarSystem.tropical,
+                      label: _SystemSegment(
+                        title: t.moon.settings.system_tropical,
+                        subtitle: t.moon.settings.system_tropical_sub,
+                      ),
                     ),
-                  ),
-                ],
-                selected: {shown.system},
-                showSelectedIcon: false,
-                onSelectionChanged: isPlus
-                    ? (s) => unawaited(controller.setSystem(s.first))
-                    : null,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
-                // The chosen system explains itself — one general sentence for
-                // both left the reader to guess which half applied.
-                child: Text(
-                  switch (shown.system) {
+                  ],
+                  selected: {shown.system},
+                  showSelectedIcon: false,
+                  onSelectionChanged: isPlus
+                      ? (s) => unawaited(controller.setSystem(s.first))
+                      : null,
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(2, 8, 2, 0),
+                  // The chosen system explains itself — one general sentence for
+                  // both left the reader to guess which half applied.
+                  child: Text(switch (shown.system) {
                     CalendarSystem.sidereal =>
                       t.moon.settings.system_help_sidereal,
                     CalendarSystem.tropical =>
                       t.moon.settings.system_help_tropical,
-                  },
-                  style: hint,
+                  }, style: hint),
                 ),
-              ),
 
-              const SizedBox(height: 16),
-              Card(
-                child: Column(
-                  children: [
-                    _HintTile(enabled: isPlus),
-                    _MoonSwitch(
-                      glyph: kGlyphSubject,
-                      title: t.moon.settings.highlight_garden,
-                      subtitle: t.moon.settings.highlight_garden_sub,
-                      value: shown.highlightGarden,
-                      onChanged: isPlus
-                          ? (v) => unawaited(controller.setHighlightGarden(v))
-                          : null,
-                    ),
-                    _MoonSwitch(
-                      glyph: kGlyphCalendarLayer,
-                      title: t.moon.settings.show_in_journal,
-                      subtitle: t.moon.settings.show_in_journal_sub,
-                      value: shown.showInJournal,
-                      onChanged: isPlus
-                          ? (v) => unawaited(controller.setShowInJournal(v))
-                          : null,
-                    ),
-                    _MoonSwitch(
-                      glyph: kGlyphAstro,
-                      title: t.moon.settings.show_astro,
-                      subtitle: t.moon.settings.show_astro_sub,
-                      value: shown.showAstroDetails,
-                      onChanged: isPlus
-                          ? (v) => unawaited(controller.setShowAstroDetails(v))
-                          : null,
-                    ),
-                    _MoonSwitch(
-                      glyph: kGlyphElementLabels,
-                      title: t.moon.settings.show_element_labels,
-                      subtitle: t.moon.settings.show_element_labels_sub,
-                      value: shown.showElementLabels,
-                      onChanged: isPlus
-                          ? (v) => unawaited(controller.setShowElementLabels(v))
-                          : null,
-                    ),
-                  ],
+                const SizedBox(height: 16),
+                Card(
+                  child: Column(
+                    children: [
+                      _HintTile(enabled: isPlus),
+                      _MoonSwitch(
+                        glyph: kGlyphSubject,
+                        title: t.moon.settings.highlight_garden,
+                        subtitle: t.moon.settings.highlight_garden_sub,
+                        value: shown.highlightGarden,
+                        onChanged: isPlus
+                            ? (v) => unawaited(controller.setHighlightGarden(v))
+                            : null,
+                      ),
+                      _MoonSwitch(
+                        glyph: kGlyphCalendarLayer,
+                        title: t.moon.settings.show_in_journal,
+                        subtitle: t.moon.settings.show_in_journal_sub,
+                        value: shown.showInJournal,
+                        onChanged: isPlus
+                            ? (v) => unawaited(controller.setShowInJournal(v))
+                            : null,
+                      ),
+                      _MoonSwitch(
+                        glyph: kGlyphAstro,
+                        title: t.moon.settings.show_astro,
+                        subtitle: t.moon.settings.show_astro_sub,
+                        value: shown.showAstroDetails,
+                        onChanged: isPlus
+                            ? (v) =>
+                                  unawaited(controller.setShowAstroDetails(v))
+                            : null,
+                      ),
+                      _MoonSwitch(
+                        glyph: kGlyphElementLabels,
+                        title: t.moon.settings.show_element_labels,
+                        subtitle: t.moon.settings.show_element_labels_sub,
+                        value: shown.showElementLabels,
+                        onChanged: isPlus
+                            ? (v) =>
+                                  unawaited(controller.setShowElementLabels(v))
+                            : null,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
 
-              const SizedBox(height: 18),
-              const _AboutCard(),
-            ],
-          );
-        },
+                const SizedBox(height: 18),
+                const _AboutCard(),
+              ],
+            );
+          },
+        ),
       ),
     );
   }
@@ -188,23 +190,34 @@ class _MoonSwitch extends StatelessWidget {
 /// here that is NOT device-local: it lives in the profile and syncs with the
 /// account (decision B1), so it reads and writes the notification settings
 /// instead of [MoonSettingsController].
-class _HintTile extends ConsumerWidget {
+class _HintTile extends ConsumerStatefulWidget {
   const _HintTile({required this.enabled});
 
   /// False without Tendask+: the row then shows the showroom picture and never
   /// touches the profile stream.
   final bool enabled;
 
-  Future<void> _set(
-    BuildContext context,
-    WidgetRef ref,
-    NotificationSettings settings,
-    bool on,
-  ) async {
+  @override
+  ConsumerState<_HintTile> createState() => _HintTileState();
+}
+
+class _HintTileState extends ConsumerState<_HintTile> {
+  /// What the user just asked for, shown until the stored value catches up.
+  /// Unlike the four device-local rows (whose controller updates its state
+  /// before it persists), this one has to travel through the profile table and
+  /// back out of its stream — long enough that the switch visibly lagged the
+  /// finger. Cleared when the stream agrees, or on a refused write.
+  bool? _pending;
+
+  Future<void> _set(NotificationSettings settings, bool on) async {
+    setState(() => _pending = on);
     if (on) {
       final notif = ref.read(notificationServiceProvider);
-      // Denied → leave it off; the switch mirrors what is stored.
-      if (!await _ensurePermission(context, notif)) return;
+      // Denied → back to off; the switch may only promise what is stored.
+      if (!await _ensurePermission(context, notif)) {
+        if (mounted) setState(() => _pending = null);
+        return;
+      }
     }
     final userId = ref.read(authServiceProvider).userId;
     // The hint coordinator re-arms itself off the profile table update.
@@ -217,9 +230,9 @@ class _HintTile extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final t = context.t;
-    if (!enabled) {
+    if (!widget.enabled) {
       // Shown ON like the other four, even though the stored opt-in defaults to
       // off: the showroom paints what the licence brings, not a stored value.
       return _MoonSwitch(
@@ -230,6 +243,12 @@ class _HintTile extends ConsumerWidget {
         onChanged: null,
       );
     }
+    ref.listen(notificationSettingsProvider, (_, next) {
+      // The stored value caught up — hand the row back to the stream.
+      if (next.asData?.value.moonHintEnabled == _pending) {
+        setState(() => _pending = null);
+      }
+    });
     final settingsAsync = ref.watch(notificationSettingsProvider);
     final settings = settingsAsync.asData?.value;
 
@@ -239,10 +258,8 @@ class _HintTile extends ConsumerWidget {
       subtitle: settingsAsync.hasError
           ? t.moon.settings.load_error
           : t.moon.settings.hint_sub,
-      value: settings?.moonHintEnabled ?? false,
-      onChanged: settings == null
-          ? null
-          : (v) => unawaited(_set(context, ref, settings, v)),
+      value: _pending ?? settings?.moonHintEnabled ?? false,
+      onChanged: settings == null ? null : (v) => unawaited(_set(settings, v)),
     );
   }
 }

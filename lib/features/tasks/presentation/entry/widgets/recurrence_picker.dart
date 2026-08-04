@@ -7,6 +7,7 @@ import '../../../../../core/widgets/section_label.dart';
 import '../../../../../i18n/translations.g.dart';
 import '../../../data/recurrence.dart';
 import '../steps/when_rules.dart';
+import '../../../../../core/widgets/segment_label.dart';
 
 /// Width of the small numeric inputs (interval / repeat count).
 const double _kNumberFieldWidth = 64;
@@ -99,19 +100,19 @@ class _RecurrencePickerState extends State<RecurrencePicker> {
           segments: [
             ButtonSegment(
               value: RecurrenceMode.off,
-              label: Text(t.entry.recurrence_off),
+              label: SegmentLabel(t.entry.recurrence_off),
             ),
             ButtonSegment(
               value: RecurrenceMode.daily,
-              label: Text(t.entry.recurrence_daily),
+              label: SegmentLabel(t.entry.recurrence_daily),
             ),
             ButtonSegment(
               value: RecurrenceMode.weekly,
-              label: Text(t.entry.recurrence_weekly),
+              label: SegmentLabel(t.entry.recurrence_weekly),
             ),
             ButtonSegment(
               value: RecurrenceMode.custom,
-              label: Text(t.entry.recurrence_custom),
+              label: SegmentLabel(t.entry.recurrence_custom),
             ),
           ],
           selected: {_mode},

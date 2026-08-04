@@ -307,7 +307,6 @@
     "when_pick_date": "Date…",
     "when_date": "Date",
     "when_time": "Time",
-    "when_default_note": "Default: today at the next full hour.",
     "when_status": "Status",
     "when_status_waiting": "Waiting",
     "when_status_done": "Done",
@@ -637,8 +636,8 @@
       "system_sidereal_sub": "biodynamic",
       "system_tropical": "By signs",
       "system_tropical_sub": "astrological",
-      "system_help_sidereal": "The Moon's place among the actual constellations in the sky (sidereal zodiac) — the division printed sowing calendars use.",
-      "system_help_tropical": "The zodiac split into twelve equal signs from the spring equinox (tropical zodiac) — the division horoscopes use. Today it differs from the constellations by about one sign.",
+      "system_help_sidereal": "Places the Moon against the constellations as you see them in the sky (sidereal zodiac). Printed biodynamic sowing calendars are built this way.",
+      "system_help_tropical": "Places the Moon in twelve equal signs counted from the spring equinox (tropical zodiac) — the same as horoscopes. Today it differs from the constellations by about one sign.",
       "hint": "“Tomorrow is a good day” hint",
       "hint_sub": "gentle, respects quiet hours",
       "highlight_garden": "Highlight for my garden",
@@ -646,19 +645,19 @@
       "show_in_journal": "Show in Journal",
       "show_in_journal_sub": "colours the Journal month calendar",
       "show_astro": "Show constellations and phase",
-      "show_astro_sub": "more astro detail in the day view",
+      "show_astro_sub": "details of the Moon's position on each day",
       "show_element_labels": "Show element on tasks",
       "show_element_labels_sub": "in the entry step, on the task and on the plant",
       "about_title": "🌙 What is this?",
-      "about_body(rich)": "Some gardeners work “by the moon”. The Moon travels through constellations that tradition links with ${b(roots, leaves, flowers and fruits)}. The calendar shows each day's element — as an aid for ${b(planning)}, not a rule.",
-      "about_footnote": "Tradition and preference, not agronomic advice. Computed on your device.",
+      "about_body(rich)": "Some gardeners work “by the moon”. The Moon travels through constellations, and ${b(biodynamics gives each one a part of the plant)}.",
+      "about_footnote": "In biodynamic gardening, every day favours fruit, leaf, flower or root. The calendar shows that division as an aid for planning.",
       "load_error": "Couldn't load the settings."
     },
     "badge": {
       "until": "until ${time}"
     },
     "task_section": {
-      "footnote": "Tradition, not advice. Derived from the task's date."
+      "footnote": "Biodynamics calls this a day for that element. A hint, not a rule."
     },
     "hint": {
       "title": "Tomorrow is a ${day}"
@@ -669,7 +668,7 @@
       "plant_label": "Plant",
       "plant_hint": "Choose a plant",
       "empty_hint": "The calendar then lists the next days that suit it.",
-      "no_recommendation": "The calendar has no recommendation for this plant.",
+      "no_recommendation": "Biodynamics has no recommendation for this plant.",
       "callout": "${plant} — best on a ${day}.",
       "next_days": "Next suitable days",
       "waxing": "waxing moon",
@@ -682,12 +681,12 @@
       "leaf": "leaf day"
     },
     "activity(map)": {
-      "fruit": "Sow and tend fruiting crops (tomatoes, beans); gather seeds.",
-      "root": "Sow and tend root crops (carrots, radishes, beets).",
-      "flower": "Sow and tend flowering plants; cut flowers for the vase.",
-      "leaf": "Sow and tend leafy vegetables (lettuce, spinach, cabbage)."
+      "fruit": "A day for fruiting crops — tomatoes, beans, squash. Good for saving seed, too.",
+      "root": "A day for root crops — carrots, radishes, beetroot.",
+      "flower": "A day for flowers — and for cutting them for the vase.",
+      "leaf": "A day for leafy greens — lettuce, spinach, cabbage."
     },
-    "activity_new_moon": "Around the new moon, let the garden rest; light chores only.",
+    "activity_new_moon": "New moon is a day to pause — light jobs at most.",
     "element(map)": {
       "fruit": "fruit",
       "root": "root",

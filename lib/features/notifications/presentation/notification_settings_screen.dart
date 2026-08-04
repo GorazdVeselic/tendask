@@ -13,6 +13,7 @@ import '../../../core/widgets/section_label.dart';
 import '../../../i18n/translations.g.dart';
 import '../../../core/glyphs.dart';
 import '../../settings/application/profile_providers.dart';
+import '../../../core/widgets/segment_label.dart';
 import 'widgets/reminder_sound_banner.dart';
 
 /// Default reminder offsets offered in settings — a subset of the reminder
@@ -127,7 +128,7 @@ class _Body extends ConsumerWidget {
             for (final offset in _offsetChoices)
               ButtonSegment(
                 value: offset,
-                label: Text(_offsetLabel(offset, t)),
+                label: SegmentLabel(_offsetLabel(offset, t)),
               ),
           ],
           selected: {settings.defaultReminderOffset},

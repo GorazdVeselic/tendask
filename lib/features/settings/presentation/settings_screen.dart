@@ -19,6 +19,7 @@ import '../../../i18n/translations.g.dart';
 import '../../plus/presentation/widgets/plus_settings_card.dart';
 import '../application/profile_providers.dart';
 import '../application/account_providers.dart';
+import '../../../core/widgets/segment_label.dart';
 
 /// Native language names (endonyms) — not translated; shown the same in every locale.
 String _langLabel(AppLocale loc) => switch (loc) {
@@ -191,7 +192,7 @@ class SettingsScreen extends ConsumerWidget {
             SegmentedButton<AppLocale>(
               segments: [
                 for (final loc in AppLocale.values)
-                  ButtonSegment(value: loc, label: Text(_langLabel(loc))),
+                  ButtonSegment(value: loc, label: SegmentLabel(_langLabel(loc))),
               ],
               selected: {current},
               onSelectionChanged: (s) => _setLang(ref, s.first),

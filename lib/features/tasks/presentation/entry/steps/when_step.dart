@@ -8,6 +8,7 @@ import '../../../../../i18n/translations.g.dart';
 import '../../../../moon/presentation/widgets/moon_day_badge.dart';
 import '../../../data/recurrence.dart';
 import '../widgets/recurrence_picker.dart';
+import '../../../../../core/widgets/segment_label.dart';
 import 'when_rules.dart';
 
 /// Step 3 — when: quick preset (today/tomorrow/date) over explicit date + time,
@@ -67,15 +68,15 @@ class WhenStepBody extends StatelessWidget {
           segments: [
             ButtonSegment(
               value: WhenPreset.today,
-              label: Text(t.entry.when_today),
+              label: SegmentLabel(t.entry.when_today),
             ),
             ButtonSegment(
               value: WhenPreset.tomorrow,
-              label: Text(t.entry.when_tomorrow),
+              label: SegmentLabel(t.entry.when_tomorrow),
             ),
             ButtonSegment(
               value: WhenPreset.custom,
-              label: Text(t.entry.when_pick_date),
+              label: SegmentLabel(t.entry.when_pick_date),
             ),
           ],
           selected: {whenPreset(date, DateTime.now())},
@@ -118,15 +119,9 @@ class WhenStepBody extends StatelessWidget {
             ),
           ],
         ),
-        const SizedBox(height: 8),
-        Text(
-          t.entry.when_default_note,
-          style: theme.textTheme.bodySmall?.copyWith(
-            color: theme.colorScheme.onSurfaceVariant,
-          ),
-        ),
-        // Renders nothing while the moon flag or opt-in switch is off (the
-        // step itself stays Riverpod-free — the badge is its own consumer).
+        // Renders nothing while the moon flag or the element-label switch is
+        // off (the step itself stays Riverpod-free — the badge is its own
+        // consumer).
         MoonDayBadge(date: date),
         const SizedBox(height: 20),
         _Field(
@@ -135,11 +130,11 @@ class WhenStepBody extends StatelessWidget {
             segments: [
               ButtonSegment(
                 value: TaskStatus.waiting,
-                label: Text(t.entry.when_status_waiting),
+                label: SegmentLabel(t.entry.when_status_waiting),
               ),
               ButtonSegment(
                 value: TaskStatus.done,
-                label: Text(t.entry.when_status_done),
+                label: SegmentLabel(t.entry.when_status_done),
               ),
             ],
             selected: {status},

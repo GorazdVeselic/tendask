@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/theme/theme_mode_controller.dart';
 import '../../../../core/app_icons.dart';
 import '../../../../i18n/translations.g.dart';
+import '../../../../core/widgets/segment_label.dart';
 
 /// System / light / dark. Applies instantly (the whole MaterialApp rebuilds).
 class ThemeModeSelector extends ConsumerWidget {
@@ -21,17 +22,17 @@ class ThemeModeSelector extends ConsumerWidget {
         ButtonSegment(
           value: ThemeMode.system,
           icon: const Icon(kIconSmartphone),
-          label: Text(t.settings.theme_system),
+          label: SegmentLabel(t.settings.theme_system),
         ),
         ButtonSegment(
           value: ThemeMode.light,
           icon: const Icon(kIconLightMode),
-          label: Text(t.settings.theme_light),
+          label: SegmentLabel(t.settings.theme_light),
         ),
         ButtonSegment(
           value: ThemeMode.dark,
           icon: const Icon(kIconDarkMode),
-          label: Text(t.settings.theme_dark),
+          label: SegmentLabel(t.settings.theme_dark),
         ),
       ],
       selected: {mode},

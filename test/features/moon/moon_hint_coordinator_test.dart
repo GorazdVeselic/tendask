@@ -101,15 +101,14 @@ void main() {
     expect(env.notif.scheduledNudges, isEmpty);
   });
 
-  test('opt-in: clears the reserved ids first, then arms the plan in order',
-      () async {
+  test('opt-in: clears the unused ids and arms the plan in order', () async {
     final env = await _setup();
 
     await _coordinator(env).armHints(_from);
 
-    // Cleared first, so a system switch or an opt-out can never leave a stale
-    // hint behind.
-    expect(env.notif.cancelled, containsAll(kMoonHintNotificationIds));
+    // The three used slots are overwritten by scheduling the same id; the rest
+    // are cleared, so an opt-out or a system switch leaves nothing stale.
+    expect(env.notif.cancelled, kMoonHintNotificationIds.skip(3));
     expect(env.notif.scheduledNudges, kMoonHintNotificationIds.take(3));
     expect(env.notif.nudgeTimes, [
       DateTime(2026, 8, 6, kMoonHintHour),
@@ -124,6 +123,34 @@ void main() {
       env.notif.nudgeBodies,
       everyElement(t.moon.activity[BiodynamicElement.root.name]!),
     );
+  });
+
+  test('an unchanged plan does not touch the OS queue again', () async {
+    // The coordinator re-arms on every profile write — language, location, a
+    // sync pull. None of those move the hints, and each pass costs platform
+    // round trips, which is what made the 🔔 tap stutter.
+    final env = await _setup();
+    await _coordinator(env).armHints(_from);
+    env.notif.cancelled.clear();
+    env.notif.scheduledNudges.clear();
+
+    await _coordinator(env).armHints(_from);
+
+    expect(env.notif.cancelled, isEmpty);
+    expect(env.notif.scheduledNudges, isEmpty);
+  });
+
+  test('a system switch re-arms the slots it changes', () async {
+    final env = await _setup(garden: BiodynamicElement.values.toSet());
+    await _coordinator(env).armHints(_from);
+    env.notif.scheduledNudges.clear();
+
+    await env.container
+        .read(moonSettingsControllerProvider.notifier)
+        .setSystem(CalendarSystem.tropical);
+    await _coordinator(env).armHints(_from);
+
+    expect(env.notif.scheduledNudges, isNotEmpty);
   });
 
   test('opt-out clears the ids and arms nothing', () async {

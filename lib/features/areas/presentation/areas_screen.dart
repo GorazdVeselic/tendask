@@ -14,6 +14,7 @@ import '../../supplies/presentation/recipe_edit_sheet.dart';
 import '../../supplies/presentation/supply_edit_sheet.dart';
 import '../../supplies/presentation/widgets/supply_list_views.dart';
 import '../application/areas_providers.dart';
+import '../../../core/widgets/segment_label.dart';
 import 'area_type_display.dart';
 import 'garden_items.dart';
 import 'widgets/area_header.dart';
@@ -91,15 +92,15 @@ class _AreasScreenState extends ConsumerState<AreasScreen> {
                     segments: [
                       ButtonSegment(
                         value: _Section.areas,
-                        label: Text(t.areas.seg_areas),
+                        label: SegmentLabel(t.areas.seg_areas),
                       ),
                       ButtonSegment(
                         value: _Section.supplies,
-                        label: Text(t.supplies.seg_supplies),
+                        label: SegmentLabel(t.supplies.seg_supplies),
                       ),
                       ButtonSegment(
                         value: _Section.recipes,
-                        label: Text(t.supplies.seg_recipes),
+                        label: SegmentLabel(t.supplies.seg_recipes),
                       ),
                     ],
                     selected: {_section},

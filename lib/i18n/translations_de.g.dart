@@ -537,7 +537,6 @@ class _Translations$entry$de extends Translations$entry$en {
 	@override String get when_pick_date => 'Datum…';
 	@override String get when_date => 'Datum';
 	@override String get when_time => 'Uhrzeit';
-	@override String get when_default_note => 'Standard: heute zur nächsten vollen Stunde.';
 	@override String get when_status => 'Status';
 	@override String get when_status_waiting => 'Wartet';
 	@override String get when_status_done => 'Erledigt';
@@ -950,12 +949,12 @@ class _Translations$moon$de extends Translations$moon$en {
 		'leaf': 'Blatttag',
 	};
 	@override Map<String, String> get activity => {
-		'fruit': 'Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.',
-		'root': 'Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).',
-		'flower': 'Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.',
-		'leaf': 'Blattgemüse säen und pflegen (Salat, Spinat, Kohl).',
+		'fruit': 'Ein Tag für Fruchtgemüse — Tomaten, Bohnen, Kürbis. Auch gut, um Saatgut zu ernten.',
+		'root': 'Ein Tag für Wurzelgemüse — Karotten, Radieschen, Rote Bete.',
+		'flower': 'Ein Tag für Blühendes — und zum Schneiden für die Vase.',
+		'leaf': 'Ein Tag für Blattgemüse — Salat, Spinat, Kohl.',
 	};
-	@override String get activity_new_moon => 'Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.';
+	@override String get activity_new_moon => 'Neumond ist ein Tag zum Innehalten — höchstens leichte Arbeiten.';
 	@override Map<String, String> get element => {
 		'fruit': 'Frucht',
 		'root': 'Wurzel',
@@ -1051,8 +1050,8 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	@override String get system_sidereal_sub => 'biodynamisch';
 	@override String get system_tropical => 'Nach Zeichen';
 	@override String get system_tropical_sub => 'astrologisch';
-	@override String get system_help_sidereal => 'Die Stellung des Mondes vor den tatsächlichen Sternbildern am Himmel (siderischer Tierkreis) — die Einteilung, die gedruckte Mondkalender verwenden.';
-	@override String get system_help_tropical => 'Der Tierkreis in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — die Einteilung der Horoskope. Von den Sternbildern weicht sie heute um etwa ein Zeichen ab.';
+	@override String get system_help_sidereal => 'Bestimmt den Stand des Mondes an den Sternbildern, wie du sie am Himmel siehst (siderischer Tierkreis). So sind die gedruckten biodynamischen Mondkalender gerechnet.';
+	@override String get system_help_tropical => 'Bestimmt den Stand des Mondes in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — wie in den Horoskopen. Von den Sternbildern weicht er heute um etwa ein Zeichen ab.';
 	@override String get hint => 'Hinweis „morgen ist ein guter Tag“';
 	@override String get hint_sub => 'sanft, beachtet die Ruhezeiten';
 	@override String get highlight_garden => 'Für meinen Garten hervorheben';
@@ -1060,18 +1059,16 @@ class _Translations$moon$settings$de extends Translations$moon$settings$en {
 	@override String get show_in_journal => 'Im Tagebuch anzeigen';
 	@override String get show_in_journal_sub => 'färbt den Monatskalender im Tagebuch';
 	@override String get show_astro => 'Sternbilder und Mondphase anzeigen';
-	@override String get show_astro_sub => 'mehr Astro-Details in der Tagesansicht';
+	@override String get show_astro_sub => 'Details zum Stand des Mondes am jeweiligen Tag';
 	@override String get show_element_labels => 'Element bei Aufgaben anzeigen';
 	@override String get show_element_labels_sub => 'im Eingabeschritt, an der Aufgabe und an der Pflanze';
 	@override String get about_title => '🌙 Was ist das?';
 	@override TextSpan about_body({required InlineSpanBuilder b}) => TextSpan(children: [
-		const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '),
-		b('Wurzeln, Blättern, Blüten und Früchten'),
-		const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '),
-		b('Planung'),
-		const TextSpan(text: ', nicht als Regel.'),
+		const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, und '),
+		b('die Biodynamik ordnet jedem einen Pflanzenteil zu'),
+		const TextSpan(text: '.'),
 	]);
-	@override String get about_footnote => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.';
+	@override String get about_footnote => 'Im biodynamischen Gartenbau begünstigt jeder Tag Frucht, Blatt, Blüte oder Wurzel. Der Kalender zeigt diese Einteilung als Hilfe bei der Planung.';
 	@override String get load_error => 'Einstellungen konnten nicht geladen werden.';
 }
 
@@ -1092,7 +1089,7 @@ class _Translations$moon$task_section$de extends Translations$moon$task_section$
 	final TranslationsDe _root; // ignore: unused_field
 
 	// Translations
-	@override String get footnote => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.';
+	@override String get footnote => 'Nach der Biodynamik ist das der Tag für dieses Element. Ein Hinweis, keine Regel.';
 }
 
 // Path: moon.hint
@@ -1117,7 +1114,7 @@ class _Translations$moon$finder$de extends Translations$moon$finder$en {
 	@override String get plant_label => 'Pflanze';
 	@override String get plant_hint => 'Pflanze wählen';
 	@override String get empty_hint => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.';
-	@override String get no_recommendation => 'Für diese Pflanze hat der Kalender keine Empfehlung.';
+	@override String get no_recommendation => 'Die Biodynamik hat für diese Pflanze keine Empfehlung.';
 	@override String callout({required Object plant, required Object day}) => '${plant} — am besten an einem ${day}.';
 	@override String get next_days => 'Nächste passende Tage';
 	@override String get waxing => 'zunehmender Mond';
@@ -1476,7 +1473,6 @@ extension on TranslationsDe {
 			'entry.when_pick_date' => 'Datum…',
 			'entry.when_date' => 'Datum',
 			'entry.when_time' => 'Uhrzeit',
-			'entry.when_default_note' => 'Standard: heute zur nächsten vollen Stunde.',
 			'entry.when_status' => 'Status',
 			'entry.when_status_waiting' => 'Wartet',
 			'entry.when_status_done' => 'Erledigt',
@@ -1735,9 +1731,9 @@ extension on TranslationsDe {
 			'recipes.form_save' => 'Speichern',
 			'recipes.err_name' => 'Rezeptnamen eingeben.',
 			'recipes.form_delete' => 'Rezept löschen',
+			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			_ => null,
 		} ?? switch (path) {
-			'recipes.delete_note' => 'Dieses Rezept wird aus deiner Liste entfernt.',
 			'recipes.items' => 'Mittel',
 			'recipes.add_item' => 'Mittel hinzufügen',
 			'recipes.pick_title' => 'Rezept wählen',
@@ -1776,8 +1772,8 @@ extension on TranslationsDe {
 			'moon.settings.system_sidereal_sub' => 'biodynamisch',
 			'moon.settings.system_tropical' => 'Nach Zeichen',
 			'moon.settings.system_tropical_sub' => 'astrologisch',
-			'moon.settings.system_help_sidereal' => 'Die Stellung des Mondes vor den tatsächlichen Sternbildern am Himmel (siderischer Tierkreis) — die Einteilung, die gedruckte Mondkalender verwenden.',
-			'moon.settings.system_help_tropical' => 'Der Tierkreis in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — die Einteilung der Horoskope. Von den Sternbildern weicht sie heute um etwa ein Zeichen ab.',
+			'moon.settings.system_help_sidereal' => 'Bestimmt den Stand des Mondes an den Sternbildern, wie du sie am Himmel siehst (siderischer Tierkreis). So sind die gedruckten biodynamischen Mondkalender gerechnet.',
+			'moon.settings.system_help_tropical' => 'Bestimmt den Stand des Mondes in zwölf gleichen Zeichen ab dem Frühlingspunkt (tropischer Tierkreis) — wie in den Horoskopen. Von den Sternbildern weicht er heute um etwa ein Zeichen ab.',
 			'moon.settings.hint' => 'Hinweis „morgen ist ein guter Tag“',
 			'moon.settings.hint_sub' => 'sanft, beachtet die Ruhezeiten',
 			'moon.settings.highlight_garden' => 'Für meinen Garten hervorheben',
@@ -1785,22 +1781,22 @@ extension on TranslationsDe {
 			'moon.settings.show_in_journal' => 'Im Tagebuch anzeigen',
 			'moon.settings.show_in_journal_sub' => 'färbt den Monatskalender im Tagebuch',
 			'moon.settings.show_astro' => 'Sternbilder und Mondphase anzeigen',
-			'moon.settings.show_astro_sub' => 'mehr Astro-Details in der Tagesansicht',
+			'moon.settings.show_astro_sub' => 'Details zum Stand des Mondes am jeweiligen Tag',
 			'moon.settings.show_element_labels' => 'Element bei Aufgaben anzeigen',
 			'moon.settings.show_element_labels_sub' => 'im Eingabeschritt, an der Aufgabe und an der Pflanze',
 			'moon.settings.about_title' => '🌙 Was ist das?',
-			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, die die Tradition mit '), b('Wurzeln, Blättern, Blüten und Früchten'), const TextSpan(text: ' verbindet. Der Kalender zeigt das Element jedes Tages — als Hilfe bei der '), b('Planung'), const TextSpan(text: ', nicht als Regel.'), ]), 
-			'moon.settings.about_footnote' => 'Tradition und Vorliebe, keine agronomische Beratung. Auf dem Gerät berechnet.',
+			'moon.settings.about_body' => ({required InlineSpanBuilder b}) => TextSpan(children: [ const TextSpan(text: 'Manche Gärtner arbeiten „nach dem Mond“. Der Mond wandert durch Sternbilder, und '), b('die Biodynamik ordnet jedem einen Pflanzenteil zu'), const TextSpan(text: '.'), ]), 
+			'moon.settings.about_footnote' => 'Im biodynamischen Gartenbau begünstigt jeder Tag Frucht, Blatt, Blüte oder Wurzel. Der Kalender zeigt diese Einteilung als Hilfe bei der Planung.',
 			'moon.settings.load_error' => 'Einstellungen konnten nicht geladen werden.',
 			'moon.badge.until' => ({required Object time}) => 'bis ${time}',
-			'moon.task_section.footnote' => 'Tradition, keine Beratung. Aus dem Datum der Aufgabe berechnet.',
+			'moon.task_section.footnote' => 'Nach der Biodynamik ist das der Tag für dieses Element. Ein Hinweis, keine Regel.',
 			'moon.hint.title' => ({required Object day}) => 'Morgen ist ${day}',
 			'moon.finder.title' => 'Wann für …',
 			'moon.finder.chip' => 'Passende Tage',
 			'moon.finder.plant_label' => 'Pflanze',
 			'moon.finder.plant_hint' => 'Pflanze wählen',
 			'moon.finder.empty_hint' => 'Der Kalender zeigt dann die nächsten Tage, die ihr entsprechen.',
-			'moon.finder.no_recommendation' => 'Für diese Pflanze hat der Kalender keine Empfehlung.',
+			'moon.finder.no_recommendation' => 'Die Biodynamik hat für diese Pflanze keine Empfehlung.',
 			'moon.finder.callout' => ({required Object plant, required Object day}) => '${plant} — am besten an einem ${day}.',
 			'moon.finder.next_days' => 'Nächste passende Tage',
 			'moon.finder.waxing' => 'zunehmender Mond',
@@ -1809,11 +1805,11 @@ extension on TranslationsDe {
 			'moon.day_for.root' => 'Wurzeltag',
 			'moon.day_for.flower' => 'Blütentag',
 			'moon.day_for.leaf' => 'Blatttag',
-			'moon.activity.fruit' => 'Fruchtgemüse säen und pflegen (Tomaten, Bohnen); Saatgut ernten.',
-			'moon.activity.root' => 'Wurzelgemüse säen und pflegen (Karotten, Radieschen, Rote Bete).',
-			'moon.activity.flower' => 'Blühpflanzen säen und pflegen; Blumen für die Vase schneiden.',
-			'moon.activity.leaf' => 'Blattgemüse säen und pflegen (Salat, Spinat, Kohl).',
-			'moon.activity_new_moon' => 'Um den Neumond dem Garten Ruhe gönnen; nur leichte Arbeiten.',
+			'moon.activity.fruit' => 'Ein Tag für Fruchtgemüse — Tomaten, Bohnen, Kürbis. Auch gut, um Saatgut zu ernten.',
+			'moon.activity.root' => 'Ein Tag für Wurzelgemüse — Karotten, Radieschen, Rote Bete.',
+			'moon.activity.flower' => 'Ein Tag für Blühendes — und zum Schneiden für die Vase.',
+			'moon.activity.leaf' => 'Ein Tag für Blattgemüse — Salat, Spinat, Kohl.',
+			'moon.activity_new_moon' => 'Neumond ist ein Tag zum Innehalten — höchstens leichte Arbeiten.',
 			'moon.element.fruit' => 'Frucht',
 			'moon.element.root' => 'Wurzel',
 			'moon.element.flower' => 'Blüte',

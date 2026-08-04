@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:drift/native.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -17,6 +19,20 @@ import 'package:tendask/features/settings/data/profile_repository.dart';
 import 'package:tendask/i18n/translations.g.dart';
 
 import '../../support/fake_notification_service.dart';
+
+/// Holds the grant check open, so the gap between the tap and the stored value
+/// is observable in a test the way it is on a device.
+class _SlowNotificationService extends FakeNotificationService {
+  _SlowNotificationService(this.gate);
+
+  final Future<void> gate;
+
+  @override
+  Future<bool> areNotificationsEnabled() async {
+    await gate;
+    return super.areNotificationsEnabled();
+  }
+}
 
 /// Simulates a failed prefs load so the screen's error branch is reachable.
 class _FailingController extends MoonSettingsController {
@@ -150,6 +166,42 @@ void main() {
     expect(settings.moonHintEnabled, isTrue);
     expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
   });
+
+  testWidgets('the hint switch moves with the finger, not with the write', (
+    tester,
+  ) async {
+    // It asks the OS about the grant and then travels through the profile table
+    // and back out of its stream; on the device that lagged the tap by about a
+    // second. The gate below stands in for that delay.
+    final gate = Completer<void>();
+    final slow = _SlowNotificationService(gate.future);
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [
+        databaseProvider.overrideWithValue(db),
+        notificationServiceProvider.overrideWithValue(slow),
+        plusProvider.overrideWith((ref) => _plus(active: true)),
+      ],
+    );
+    await pumpSettings(tester);
+    final hintRow = find.ancestor(
+      of: find.text(t.moon.settings.hint),
+      matching: find.byType(SwitchListTile),
+    );
+
+    await tester.tap(find.text(t.moon.settings.hint));
+    await tester.pump();
+    expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
+
+    gate.complete();
+    await tester.pumpAndSettle();
+    expect(tester.widget<SwitchListTile>(hintRow).value, isTrue);
+    final stored = await ProfileRepository(
+      db,
+    ).notificationSettings(kLocalUserId);
+    expect(stored.moonHintEnabled, isTrue);
+  });
+
 
   testWidgets('without Tendask+ the screen is a disabled showroom', (
     tester,

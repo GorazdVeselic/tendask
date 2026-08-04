@@ -14,6 +14,7 @@ import '../../../../notifications/presentation/notification_priming_sheet.dart';
 import '../../../../notifications/presentation/widgets/reminder_sound_banner.dart';
 import '../../../../settings/application/profile_providers.dart';
 import '../../../task_specs.dart';
+import '../../../../../core/widgets/segment_label.dart';
 import 'reminder_draft.dart';
 
 /// Base label for a reminder offset, e.g. "1 day before" (without a time of day).
@@ -374,15 +375,15 @@ class _ReminderEditSheetState extends State<_ReminderEditSheet> {
                         segments: [
                           ButtonSegment(
                             value: ReminderUnit.minutes,
-                            label: Text(t.entry.rem_unit_min),
+                            label: SegmentLabel(t.entry.rem_unit_min),
                           ),
                           ButtonSegment(
                             value: ReminderUnit.hours,
-                            label: Text(t.entry.rem_unit_hour),
+                            label: SegmentLabel(t.entry.rem_unit_hour),
                           ),
                           ButtonSegment(
                             value: ReminderUnit.days,
-                            label: Text(t.entry.rem_unit_day),
+                            label: SegmentLabel(t.entry.rem_unit_day),
                           ),
                         ],
                         selected: {_customUnit},

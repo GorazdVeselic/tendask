@@ -315,7 +315,6 @@
     "when_pick_date": "Datum…",
     "when_date": "Datum",
     "when_time": "Ura",
-    "when_default_note": "Privzeto: danes ob naslednji polni uri.",
     "when_status": "Status",
     "when_status_waiting": "Čaka",
     "when_status_done": "Opravljeno",
@@ -647,8 +646,8 @@
       "system_sidereal_sub": "biodinamični",
       "system_tropical": "Po znamenjih",
       "system_tropical_sub": "astrološki",
-      "system_help_sidereal": "Lega Lune med dejanskimi ozvezdji na nebu (siderični zodiak) — razmejitev, ki jo uporabljajo tiskani setveni koledarji.",
-      "system_help_tropical": "Zodiak, razdeljen na dvanajst enakih znamenj od pomladnega enakonočja (tropski zodiak) — razmejitev horoskopov. Od ozvezdij se danes razlikuje za približno eno znamenje.",
+      "system_help_sidereal": "Lego Lune meri po ozvezdjih, kot jih vidiš na nebu (siderični zodiak). Po tem so narejeni tiskani biodinamični setveni koledarji.",
+      "system_help_tropical": "Lego Lune meri po dvanajstih enakih znamenjih od pomladnega enakonočja (tropski zodiak) — enako kot horoskopi. Danes se od ozvezdij razlikuje za približno eno znamenje.",
       "hint": "Namig »jutri dober dan«",
       "hint_sub": "nežno, spoštuje tihe ure",
       "highlight_garden": "Poudari po mojem vrtu",
@@ -656,19 +655,19 @@
       "show_in_journal": "Prikaži v Dnevniku",
       "show_in_journal_sub": "obarva mesečni koledar Dnevnika",
       "show_astro": "Prikaži ozvezdja in meno",
-      "show_astro_sub": "več astro podrobnosti v dnevu",
+      "show_astro_sub": "podrobnosti o legi Lune pri posameznem dnevu",
       "show_element_labels": "Prikaži element pri opravilih",
       "show_element_labels_sub": "v koraku vnosa, na opravilu in na rastlini",
       "about_title": "🌙 Kaj je to?",
-      "about_body(rich)": "Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja, ki jih tradicija povezuje s ${b(koreninami, listi, cvetovi in plodovi)}. Koledar pokaže element vsakega dne — kot pomoč pri ${b(načrtovanju)}, ne kot pravilo.",
-      "about_footnote": "Tradicija/preferenca, ne agronomski nasvet. Izračunano na napravi.",
+      "about_body(rich)": "Nekateri vrtnarji delajo »po luni«. Luna potuje skozi ozvezdja in ${b(biodinamika vsakemu pripiše svoj del rastline)}.",
+      "about_footnote": "Po biodinamičnem vrtnarstvu je vsak dan naklonjen plodu, listu, cvetu ali korenini. Koledar to razdelitev pokaže kot pripomoček pri načrtovanju.",
       "load_error": "Nastavitev ni bilo mogoče naložiti."
     },
     "badge": {
       "until": "do ${time}"
     },
     "task_section": {
-      "footnote": "Tradicija, ne nasvet. Preračunano iz datuma opravila."
+      "footnote": "Po biodinamiki je to dan za ta element. Namig, ne pravilo."
     },
     "hint": {
       "title": "Jutri je ${day}"
@@ -679,7 +678,7 @@
       "plant_label": "Rastlina",
       "plant_hint": "Izberi rastlino",
       "empty_hint": "Koledar nato pokaže naslednje dni, ki tej rastlini ustrezajo.",
-      "no_recommendation": "Za to rastlino koledar nima priporočila.",
+      "no_recommendation": "Biodinamika za to rastlino nima priporočila.",
       "callout": "${plant} — najbolje na ${day}.",
       "next_days": "Naslednji primerni dnevi",
       "waxing": "rastoča luna",
@@ -692,12 +691,12 @@
       "leaf": "dan za list"
     },
     "activity(map)": {
-      "fruit": "Setev in oskrba plodovk (paradižnik, fižol); pobiranje semena.",
-      "root": "Setev in oskrba korenovk (korenje, redkev, pesa).",
-      "flower": "Setev in oskrba cvetnic; rez cvetja za šopke.",
-      "leaf": "Setev in oskrba listnate zelenjave (solata, špinača, zelje)."
+      "fruit": "Dan za plodovke — paradižnik, fižol, buče. Dober tudi za pobiranje semena.",
+      "root": "Dan za korenovke — korenje, redkev, pesa.",
+      "flower": "Dan za cvetnice — in za rez cvetja za vazo.",
+      "leaf": "Dan za listnato zelenjavo — solato, špinačo, zelje."
     },
-    "activity_new_moon": "Ob mlaju raje počitek; le lažja opravila.",
+    "activity_new_moon": "Mlaj je dan za premor — kvečjemu lažja opravila.",
     "element(map)": {
       "fruit": "plod",
       "root": "korenina",

@@ -65,7 +65,7 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
   /// the horizon has moved on with them.
   void onResume() => unawaited(_flight.run());
 
-  void _scheduleSoon() => _flight.runSoon(kReminderDebounce);
+  void _scheduleSoon() => _flight.runSoon(kMoonHintDebounce);
 
   /// Arms the hints again, unless the feature is dark. Idempotent: fixed ids.
   Future<void> _reschedule() async {
@@ -82,32 +82,66 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
     }
   }
 
-  /// Clears the reserved ids and posts the hints due after [nowLocal], unless
-  /// the user opted out. Free of both the feature gate and the ambient clock on
-  /// purpose — the gate belongs to the entry points above and the time comes
-  /// from the caller — so the real arming path stays reachable while the
-  /// calendar is dark.
+  /// What the OS queue currently holds, or null when this session has not armed
+  /// yet (a fresh process knows nothing about the queue it inherited). Every
+  /// field the user can see is in here, so a rerun that produces the same list
+  /// can skip the platform calls entirely — and most reruns do: the profile
+  /// table also changes on a language switch, a location edit or a sync pull,
+  /// none of which move the hints.
+  List<_ArmedHint>? _armed;
+
+  /// Brings the OS queue in line with the plan for [nowLocal]. Free of both the
+  /// feature gate and the ambient clock on purpose — the gate belongs to the
+  /// entry points above and the time comes from the caller — so the real arming
+  /// path stays reachable while the calendar is dark.
   @visibleForTesting
   Future<void> armHints(DateTime nowLocal) async {
+    final desired = await _plan(nowLocal);
+    final armed = _armed;
+    // Nothing the user would notice has moved — leave the OS alone. Each
+    // cancel/schedule is a platform round trip, and 14 of them mid-tap is what
+    // made the 🔔 row stutter.
+    if (armed != null && listEquals(armed, desired)) return;
+
     final notif = ref.read(notificationServiceProvider);
+    final keep = {for (final hint in desired) hint.id};
+    for (final id in kMoonHintNotificationIds) {
+      // Slots that keep a hint are overwritten by scheduling the same id; only
+      // the ones falling out of the plan need clearing, so an opt-out or a
+      // system switch still leaves nothing stale behind.
+      if (keep.contains(id)) continue;
+      if (armed == null || armed.any((hint) => hint.id == id)) {
+        await notif.cancel(id);
+      }
+    }
+    for (final hint in desired) {
+      if (armed != null && armed.contains(hint)) continue;
+      await notif.scheduleNudge(
+        id: hint.id,
+        when: hint.when,
+        title: hint.title,
+        body: hint.body,
+      );
+    }
+    _armed = desired;
+  }
+
+  /// The hints that should sit in the OS queue right now, copy included — no
+  /// platform calls, so it is cheap enough to run on every trigger.
+  Future<List<_ArmedHint>> _plan(DateTime nowLocal) async {
     final userId = ref.read(authServiceProvider).userId;
     final settings = await ref
         .read(profileRepositoryProvider)
         .notificationSettings(userId);
     final moon = await ref.read(moonSettingsControllerProvider.future);
 
-    // Clear first so an opt-out (or a system switch) never leaves a stale hint
-    // behind.
-    for (final id in kMoonHintNotificationIds) {
-      await notif.cancel(id);
-    }
     // An expired gift silences the hint by itself (owner, 2026-08-03) — the
     // stored opt-in is left alone, so it returns with the entitlement. Read,
     // not awaited: an entitlement that has not resolved yet reads as "no Plus"
     // and the listener in [build] arms again the moment it does — the same
     // pattern the garden and the settings streams already use.
-    if (!ref.read(plusActiveProvider)) return;
-    if (!settings.moonHintEnabled) return;
+    if (!ref.read(plusActiveProvider)) return const [];
+    if (!settings.moonHintEnabled) return const [];
 
     // The journal nudge is the senior hint: the moon hint yields to its days
     // (one gentle hint per day). An explicit task reminder does not take a day
@@ -133,16 +167,24 @@ class MoonHintCoordinator extends _$MoonHintCoordinator {
       hour: kMoonHintHour,
     );
 
-    for (var slot = 0; slot < hints.length; slot++) {
-      final hint = hints[slot];
-      await notif.scheduleNudge(
-        id: kMoonHintNotificationIds[slot],
-        when: hint.fireTime,
-        title: t.moon.hint.title(day: t.moon.day_for[hint.element.name]!),
-        body: hint.isNewMoon
-            ? t.moon.activity_new_moon
-            : t.moon.activity[hint.element.name]!,
-      );
-    }
+    return [
+      for (var slot = 0; slot < hints.length; slot++)
+        (
+          id: kMoonHintNotificationIds[slot],
+          when: hints[slot].fireTime,
+          // Carried in the record, not re-derived at send time: it is what
+          // makes a language or system switch differ from the armed queue.
+          title: t.moon.hint.title(
+            day: t.moon.day_for[hints[slot].element.name]!,
+          ),
+          body: hints[slot].isNewMoon
+              ? t.moon.activity_new_moon
+              : t.moon.activity[hints[slot].element.name]!,
+        ),
+    ];
   }
 }
+
+/// One armed notification, compared by value (records) to tell "the plan moved"
+/// from "something else in the profile changed".
+typedef _ArmedHint = ({int id, DateTime when, String title, String body});

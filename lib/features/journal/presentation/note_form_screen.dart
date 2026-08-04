@@ -16,6 +16,7 @@ import '../../plants/application/plants_providers.dart';
 import '../../plants/presentation/plant_picker_screen.dart';
 import '../../plants/presentation/widgets/plant_field.dart';
 import '../application/notes_providers.dart';
+import '../../../core/widgets/segment_label.dart';
 import 'note_date.dart';
 
 class NoteFormScreen extends ConsumerStatefulWidget {
@@ -264,14 +265,14 @@ class _DateSegment extends StatelessWidget {
 
     return SegmentedButton<NoteDateOption>(
       segments: [
-        ButtonSegment(value: NoteDateOption.today, label: Text(t.notes.today)),
+        ButtonSegment(value: NoteDateOption.today, label: SegmentLabel(t.notes.today)),
         ButtonSegment(
           value: NoteDateOption.yesterday,
-          label: Text(t.notes.yesterday),
+          label: SegmentLabel(t.notes.yesterday),
         ),
         ButtonSegment(
           value: NoteDateOption.custom,
-          label: Text(customLabel, overflow: TextOverflow.ellipsis),
+          label: SegmentLabel(customLabel),
         ),
       ],
       selected: {option},

@@ -8,6 +8,7 @@ import '../../../core/date_format.dart';
 import '../../../i18n/translations.g.dart';
 import '../application/garden_elements_provider.dart';
 import '../application/moon_settings_controller.dart';
+import '../../../core/widgets/segment_label.dart';
 import 'moon_month_view.dart';
 import 'moon_week_view.dart';
 
@@ -20,8 +21,7 @@ class MoonCalendarScreen extends ConsumerStatefulWidget {
   const MoonCalendarScreen({super.key});
 
   @override
-  ConsumerState<MoonCalendarScreen> createState() =>
-      _MoonCalendarScreenState();
+  ConsumerState<MoonCalendarScreen> createState() => _MoonCalendarScreenState();
 }
 
 class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
@@ -59,12 +59,12 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
   }
 
   void _shiftMonth(int months) => setState(() {
-        _anchor = DateTime(_anchor.year, _anchor.month + months);
-      });
+    _anchor = DateTime(_anchor.year, _anchor.month + months);
+  });
 
   void _shiftWeek(int weeks) => setState(() {
-        _anchor = addDays(_anchor, 7 * weeks);
-      });
+    _anchor = addDays(_anchor, 7 * weeks);
+  });
 
   void _switchView(_MoonView view) {
     final today = startOfDay(DateTime.now());
@@ -105,44 +105,46 @@ class _MoonCalendarScreenState extends ConsumerState<MoonCalendarScreen>
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
-            child: SegmentedButton<_MoonView>(
-              segments: [
-                ButtonSegment(
-                  value: _MoonView.month,
-                  label: Text(t.moon.calendar.month_view),
-                ),
-                ButtonSegment(
-                  value: _MoonView.week,
-                  label: Text(t.moon.calendar.week_view),
-                ),
-              ],
-              selected: {_view},
-              showSelectedIcon: false,
-              onSelectionChanged: (s) => _switchView(s.first),
-              style: const ButtonStyle(visualDensity: VisualDensity.compact),
+      body: SafeArea(
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 10, 16, 0),
+              child: SegmentedButton<_MoonView>(
+                segments: [
+                  ButtonSegment(
+                    value: _MoonView.month,
+                    label: SegmentLabel(t.moon.calendar.month_view),
+                  ),
+                  ButtonSegment(
+                    value: _MoonView.week,
+                    label: SegmentLabel(t.moon.calendar.week_view),
+                  ),
+                ],
+                selected: {_view},
+                showSelectedIcon: false,
+                onSelectionChanged: (s) => _switchView(s.first),
+                style: const ButtonStyle(visualDensity: VisualDensity.compact),
+              ),
             ),
-          ),
-          Expanded(
-            child: switch (_view) {
-              _MoonView.month => MoonMonthView(
+            Expanded(
+              child: switch (_view) {
+                _MoonView.month => MoonMonthView(
                   month: DateTime(_anchor.year, _anchor.month),
                   starred: starred,
                   onPrev: () => _shiftMonth(-1),
                   onNext: () => _shiftMonth(1),
                 ),
-              _MoonView.week => MoonWeekView(
+                _MoonView.week => MoonWeekView(
                   weekStart: _weekStartOf(_anchor),
                   starred: starred,
                   onPrev: () => _shiftWeek(-1),
                   onNext: () => _shiftWeek(1),
                 ),
-            },
-          ),
-        ],
+              },
+            ),
+          ],
+        ),
       ),
     );
   }
