@@ -751,39 +751,59 @@ Neodvisen od T1 (lahko vzporedno). Vse temno — nič od tega ni vidno brez flag
   (serializacija §2 rollout plana) · vrstni red korakov je zavezujoč: sync izjema (2) se merga
   **pred** providerjem (4), da nobena vmesna izdaja ne pusha server-lastnih stolpcev.
 
-## T7 · Prižig z darilom (en dogodek, majhen)
+## T7 · Prižig z javno darilno kodo
 
-- **Vhod:** T6 na produkciji (temen) · P0.4 odločeni (dolžina, gost) · release APK z vsem zgoraj ·
-  zgodba za objavo.
-- **Izhod:** Lunin koledar živ za vse (podarjen Plus); mena free.
-- **Koraki:**
-  1. ⬜ Masovni grant: enkratna strežniška operacija — vsem obstoječim profilom `plus_until = prižig + X`
-     + podpisani tokeni (mehanizem FR-20 §6.6); po odločitvi P0.4 tudi rešitev za goste.
-  2. ⬜ Oba flaga on (`kMoonCalendarEnabled`, `kTendaskPlusEnabled`) — branch `feat/fr20-t7-ignite`,
-     en drobcen commit — + release build (versionCode disciplina — nalaganje porabi kodo) + `db push` check.
-  3. ⬜ Preverba na napravi (SM A536B): odklenjen tok, potek/zaklenjen tok (ročno skrajšan `plus_until`
-     na stagingu), offline. **Vključi vse štiri T4 vstopne točke** (čip · when-step · task-detail ·
-     Dnevnik gumb+plast): dokler je flag temen, priklop na gostitelja lovi test le pri when-koraku
-     (ostali gostitelji rabijo cel svet providerjev) — najdba T4.5.
-  4. ⬜ Objavljena zgodba (»X mesecev v zahvalo«) + Play listing/posnetki po potrebi (SL/EN/DE).
-  5. ⬜ Zabeleži datum poteka prvih daril = **trdi rok za T8**.
-- **Varnost:** to je edini korak, ki **namerno** spremeni vedenje v produkciji — zato je zadnji in
-  najmanjši (en flag-flip commit + strežniška operacija); vse ostalo je bilo do takrat že tedne v
-  produkciji temno in pretestirano.
-- **Pasti:** Play `App access` še NI potreben (vnos kode ne obstaja do T8; pre-launch report Plus zaslonov
-  tako ali tako ne pokrije).
+> ⚠️ **Prekrojeno 2026-08-04** (decisions **B4**, FR-20 **§6.8**). Prvotni T7 je bil »tihi masovni
+> grant + flag flip«, vnos kode pa je čakal na T8. Zdaj je obratno: **darilo se podeli z eno javno
+> kodo, ki jo uporabnik vnese sam**, zato se unovčitev in `license` shema preselita **sem**, v T8 pa
+> ostane samo prodaja. T7 s tem ni več »en dogodek, majhen« — je največji task za T6.
 
-## T8 · Trgovina (komercialni del FR-20) — rok: pred potekom prvih daril
+- **Vhod:** T6 na produkciji (temen) · odločitve B4 (koda, datum, kapaciteta) · zgodba za objavo ·
+  pravna podlaga za mailing (**preveri lastnik**, ne ugibava) in orodje za pošiljanje (Resend, §5.2).
+- **Izhod:** Lunin koledar živ; kdor vnese kodo, ima Plus do 31. 12. 2026; mena free za vse.
+- **Koraki (predlog razreza, ni še potrjen):**
+  1. ⬜ **Shema licenc** (edini shemo-dotikajoč korak → serijsko, staging prej): `license` +
+     `license_redemption` (unique `(license_id, user_id)`) + `license_redeem_attempt` z `reason`;
+     `max_redemptions`; `provider`/`provider_ref` **že tu** (pravilo §5.2, tudi brez prodaje);
+     granti v isti migraciji — `license*` **nima** granta za `authenticated`, dostop samo prek RPC.
+  2. ⬜ **Unovčitev + kovanje žetona** (Edge Function; Ed25519 v Postgresu ni): atomarna unovčitev →
+     `profile` **upsert** (11 % računov je brez profila!) → podpisan žeton. Enotno sporočilo navzven,
+     razlog v `reason`. Rate limit 5/uro (§6.5).
+  3. ⬜ **Par ključev za produkcijo**: javni v `kPlusPublicKey`, privatni v Supabase secrets. Testni
+     par iz `tmp/gen_plus_test_token.dart` **ne sme** v produkcijo.
+  4. ⬜ **Zaslon za vnos kode** na `/tendask-plus` — najprej wireframe, pogled, šele nato koda
+     (pravilo »poglej, preden vlagaš«); i18n en+sl+de; normalizacija velikosti črk in vezajev.
+  5. ⬜ **Vodenje licenc** (§7.2): `mint_license` / `revoke_license` / `find_licenses` + dva pogleda.
+     Brez tega ne moreš odgovoriti na prvo podporno vprašanje.
+  6. ⬜ Oba flaga on (`kMoonCalendarEnabled`, `kTendaskPlusEnabled`) — en drobcen commit + release
+     build (versionCode disciplina — nalaganje porabi kodo) + `db push` check.
+  7. ⬜ **Preverba na napravi** (SM A536B): unovčitev · odklenjen tok · zaklenjen tok · offline ·
+     **temna tema** (dolg: cel FR-19 je bil na napravi viden samo v svetli). Vključi vse štiri T4
+     vstopne točke — dokler je bil flag temen, je priklop na gostitelja lovil test le pri when-koraku
+     (najdba T4.5); ob prižigu bodo ti testi rabili `ProviderScope`.
+  8. ⬜ **Spletna stran + mailing**: stran s kodo (brez pogojev prodaje in politike vračil — ni
+     prodaje) + razpošiljanje vsem računom.
+  9. ⬜ **Play `App access` na »Da«** z dobesednimi navodili in javno kodo · listing (SL/EN/DE;
+     `docs/go-live/store-listing.md` Plusa in Lune danes sploh ne omenja).
+- **Varnost:** to je edini korak, ki **namerno** spremeni vedenje v produkciji. Vse razen koraka 6 se
+  da pripraviti in izmeriti na stagingu.
+- **Trdi rok, ki iz tega izhaja:** **1. 1. 2027** vsi hkrati padejo na brezplačni sloj → T8 mora do
+  takrat stati.
 
-Podrobni koraki so **FR-20 §12** (ne podvajam): odločitve cene + Polar/Paddle → Polar izdelka + webhook
-Edge Function + RPC `redeem_license` + migracija `license` tabele → spletna stran `/plus` (3 jeziki,
-popravek `t.hero.free`) → vnos kode na `/tendask-plus` → Play Console `App access` + `review` koda →
-DoD sandbox matrika (nakup/unovčitev/offline/podaljšanje/vračilo/predelava/preklic).
+## T8 · Trgovina (samo prodaja) — rok: 31. 12. 2026
 
-- **Vhod:** T7 živ · FR-20 §11.2 (cene) in §11.3 (ponudnik) odločena.
-- **Izhod:** kupljiv Tendask+ pred potekom daril.
-- **Branchi:** določijo se ob razrezu taska (konvencija `feat/fr20-t8-N-slug`); `license*` shema je
-  spet edini shemo-dotikajoč korak → serijsko, staging prej.
+> Prekrojeno 2026-08-04: unovčitev, `license` shema in vnos kode so se preselili v T7, zato tu ostane
+> **samo pot denarja**.
+
+Podrobni koraki so **FR-20 §12** (ne podvajam): odločitve cene (§11.2) + Polar/Paddle (§11.3) → Polar
+izdelka + **webhook adapter** (Edge Function, ki dogodek prevede v upsert po `provider_ref`) → nakupna
+stran `/plus` (3 jeziki, pogoji, politika vračil, popravek `t.hero.free`) → **obnavljanje žetonov**
+(§7.1 — obvezno šele z doživljenjsko licenco) → DoD sandbox matrika (nakup/podaljšanje/vračilo/
+predelava/preklic).
+
+- **Vhod:** T7 živ · §11.2 in §11.3 odločena.
+- **Izhod:** kupljiv Tendask+, preden 31. 12. 2026 poteče lansirna koda.
+- **Branchi:** določijo se ob razrezu taska (konvencija `feat/fr20-t8-N-slug`).
 
 ---
 
@@ -794,7 +814,9 @@ DoD sandbox matrika (nakup/unovčitev/offline/podaljšanje/vračilo/predelava/pr
 > board C (→ **T4.4**, A2=C). Zunaj v1 ostaja:
 
 - **Retrospektivni vpogled (§6.3.11)** — dolgoročno.
-- **Vnos licenčne kode, `license*` tabele, Play `App access`** — T8, ne prej.
+- ~~**Vnos licenčne kode, `license*` tabele, Play `App access`** — T8, ne prej.~~ **Prekrojeno
+  2026-08-04 (B4):** vse troje se je preselilo v **T7**, ker se darilo podeli z javno kodo, ki jo
+  uporabnik vnese sam. V T8 ostane samo prodaja (Polar, webhooki, nakupna stran, vračila).
 
 ---
 

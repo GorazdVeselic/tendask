@@ -148,6 +148,32 @@ argument zdaj teče prek darila.)*
   opis **izbranega** sistema namesto ene splošne razlage (dva nova niza × 3 jeziki).
   S tem odpade tudi vprašanje, ali kartica »Kaj je to?« brez licence obljublja element-dan — stoji nad
   vidnimi (sivimi) stikali, ki ga prinesejo. Zapisano v spec §6.4; izvedba = plan T6 korak 6b.
+- **B4 · Prižig gre z javno darilno kodo, ne s tihim masovnim grantom** ✅ ODLOČENO (2026-08-04,
+  lastnik): namesto strežniške operacije, ki bi vsem profilom tiho vpisala `plus_until` (prvotni
+  §6.6-C), se izda **ena sama javna koda**, razposlana po e-pošti vsem uporabnikom in objavljena na
+  spletni strani. **Uporabnik jo mora vnesti sam.** Parametri: **absolutni datum 31. 12. 2026** (ne
+  trajanje od unovčitve), **kapaciteta 2000 unovčitev** (dvig je `update` stolpca, ne migracija),
+  **prodaja ostane ločena v T8**.
+  **Zakaj:** (a) tiho darilo ni dogodek — kar uporabnik dobi, ne da bi opazil, ne šteje kot vrednost;
+  (b) **nauči obreda pred plačilom** — ko koda 1. 1. 2027 poteče, je pot »Tendask+ → vnesi kodo« že
+  znana in ni nova ovira ob prvem nakupu; (c) **delež unovčitev je edini pošten signal o
+  povpraševanju**, ki ga dobiš, preden postaviš ceno (danes je cena v FR-20 §11.2 ugibanje na podlagi
+  sidra Luninih bukev).
+  **Kar s tem odpade:** masovni grant čez vse profile in množično kovanje žetonov · `review` koda kot
+  poseben režim (§6.6: kapica ~20, rotacija, vklop ob oddaji, preklic po odobritvi) — recenzent dobi
+  isto javno kodo, ker ni česa varovati · vprašanje gosta (§11.9) — sonda produkcije 4. 8. 2026 je
+  pokazala **0 anonimnih računov**, vsi obstoječi uporabniki so prijavljeni.
+  **Kar s tem nastane:** vnos kode se preseli iz T8 v **T7** · shema rabi **ločeno tabelo unovčitev**
+  (`license_redemption`), ker današnji `license.redeemed_by`/`redeemed_at` predvidevata enkratno
+  unovčitev · **kovanje žetonov postane obvezno** (doslej ročno; Ed25519 zna Edge Function, Postgres
+  ne) · Play `App access` postane potreben že ob prižigu, a je lažji — navodilo je javna koda.
+  ⚠️ **Sporočilo ob neuspehu ostane enotno** (»navedena koda/licenca ni veljavna«, FR-20 §6.5) tudi
+  ob izčrpani kapaciteti — razlikovanje je bilo predlagano in **zavrnjeno** (lastnik: v bazo bo šel
+  pogledat tako ali tako). Posledica: **strežnik mora razlog zapisati**, čeprav ga ne pove —
+  `license_redeem_attempt` dobi stolpec `reason`, sicer je podpora ugibanje.
+  ⚠️ **Unovčitev mora vrstico v `profile` ustvariti, če je ni.** Sonda 4. 8. 2026: 122 računov proti
+  109 profilom = **13 računov (11 %) brez profila**; brez upserta bi vsakemu devetemu unovčitev padla.
+  Vzrok teh 13 ni raziskan.
 
 ---
 

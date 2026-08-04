@@ -436,6 +436,43 @@ Nevarnost je sicer manjša, kot se zdi: navodila iz `App access` **niso javna** 
 
 Kdor unovči kodo, gre za vedno offline **in** premakne uro nazaj, obdrži Plus. Obramba (Play Integrity, zaznava root-a, obvezno online preverjanje) bi zlomila prav tisto, zaradi česar aplikacija obstaja.
 
+### 6.8 Lansirna javna koda ✅ ODLOČENO (2026-08-04, lastnik)
+
+**Nadomešča masovni grant iz §10.4/§6.6-C za ta prižig.** Namesto strežniške operacije, ki bi vsem
+profilom tiho vpisala `plus_until`, se izda **ena sama javna koda**: razposlana po e-pošti vsem
+uporabnikom, objavljena na spletni strani, unovči jo vsak sam. Utemeljitev je v FR-19 decisions **B4**
+(dogodek namesto tišine · nauči obreda pred plačilom · delež unovčitev = signal o povpraševanju).
+
+| Parameter | Vrednost | Zakaj tako |
+|---|---|---|
+| Število kod | **ena za vse** | serija na uporabnika bi dala natančnejšo meritev in preklic posameznika, a doda kovanje in poštanje — pri brezplačni akciji ni vredno |
+| Veljavnost | **absolutni `plus_until` = 31. 12. 2026** | ne `duration_days` od unovčitve: akcija je koledarska (»brezplačno do konca leta«), ne osebno obdobje |
+| Kapaciteta | **2000 unovčitev** | varovalka, ne kvota — dvig je `update` stolpca, ne migracija |
+| `kind` | `granted`, `provider = 'internal'` | `provider`/`provider_ref` ostaneta v prvi migraciji tudi brez prodaje (pravilo §5.2) |
+
+**Dvojna unovčitev je neškodljiva**, ker je datum absoluten — drugič ne podaljša ničesar; unikatni
+indeks na `(license_id, user_id)` jo tako ali tako prepreči, kapaciteta pa zato res šteje **uporabnike**.
+
+**Kaj s tem odpade:** masovni grant čez vse profile · množično kovanje žetonov · `review` koda kot
+poseben režim (§6.6) — recenzent dobi isto javno kodo, ker ni česa varovati · vprašanje gosta (§11.9),
+ker je sonda produkcije 4. 8. 2026 pokazala **0 anonimnih računov**.
+
+⚠️ **Kapaciteta ne varuje pred zlorabo, ampak pred presenečenjem.** Koda je namenoma javna, torej njeno
+širjenje je namen in ne napad; lunin koledar je čista funkcija datuma in na uporabnika ne stane nič.
+Zato naj bo številka raje previsoka kot prenizka — prenizka zavrne prave uporabnike.
+
+⚠️ **Sporočilo ob neuspehu ostaja enotno** (§6.5) tudi ob izčrpani kapaciteti. Razlikovanje je bilo
+predlagano (pri eni javni kodi enumeracija ni mogoča, torej varnostnega razloga za skrivanje ni) in
+**zavrnjeno**. Posledica: `license_redeem_attempt` dobi stolpec **`reason`** — strežnik razlog zapiše,
+tudi ko ga ne pove, sicer podpora ugiba.
+
+⚠️ **Unovčitev mora vrstico v `profile` ustvariti, če je ni.** Sonda 4. 8. 2026: **122 računov proti
+109 profilom** = 13 računov (11 %) brez profila. Brez upserta bi vsakemu devetemu unovčitev padla.
+*(Vzrok teh 13 ni raziskan — verjetno prijava brez dokončanega uvoda.)*
+
+**Rok ostaja isti, le zdaj je koledarski in javen:** 1. 1. 2027 vsi hkrati padejo na brezplačni sloj,
+zato mora nakupna pot (T8) do takrat stati.
+
 ---
 
 ## 7. Shema (skica)
@@ -449,17 +486,22 @@ profile
 
 license
   id uuid pk, code text unique, kind text,            -- annual|lifetime|gift|granted
-  plus_until timestamptz null,                        -- Polar: iz webhooka
-  duration_days int null,                             -- lastne kode: plus_until = redeemed_at + to
-  redeemed_by uuid null → auth.users, redeemed_at timestamptz null,
+  plus_until timestamptz null,                        -- absolutni datum (Polar webhook ALI lansirna koda)
+  duration_days int null,                             -- lastne kode od unovčitve: plus_until = redeemed_at + to
+  max_redemptions int null,                           -- null = enkratna; 2000 = lansirna koda (§6.8)
   revoked_at timestamptz null, provider text, provider_ref text,  -- provider_ref = Polar sub_/order id
   created_at, updated_at
+
+license_redemption                                    -- ENA VRSTICA NA UPORABNIKA (§6.8)
+  license_id → license, user_id → auth.users, redeemed_at,
+  unique (license_id, user_id)
 
 license_device
   license_id → license, install_id text, last_seen_at
 
 license_redeem_attempt
-  user_id, attempted_at, success bool
+  user_id, attempted_at, success bool,
+  reason text null                                    -- zakaj je padlo; navzven se NE pove (§6.5/§6.8)
 ```
 
 **Pravila (iz `CLAUDE.md`):**
@@ -470,6 +512,52 @@ license_redeem_attempt
 - **Sync push mora ta stolpca izpustiti** iz payloada — sicer si predelan klient prek LWW podari Plus.
 - Drift shema zrcali Supabase (nova verzija sheme + migracija).
 - **`plus_kind` je izključno za prikaz.** Upravičenost se bere **samo** iz `plus_until`, nikoli iz tipa — sicer dobiš dve resnici. Namen: `plus_until = 2099` na zaslonu izgleda kot napaka, zato »Doživljenjska« proti »Letna, velja do 12. 3. 2027« (FR-19 §11.3 hoče prikaz veljavnosti).
+- **`redeemed_by`/`redeemed_at` sta odpadla iz `license`** (odločitev §6.8): ena koda ima N unovčitev,
+  zato so unovčitve svoja tabela. Enkratno kodo modelira `max_redemptions = null` (oz. 1).
+- **Unovčitev je `security definer` RPC/Edge Function in mora `profile` vrstico ustvariti, če je ni**
+  (§6.8: 11 % računov je danes brez profila).
+
+---
+
+## 7.1 Kovanje žetonov — kdo, kdaj, kaj ga sproži
+
+⚠️ **Doslej nezasnovan del.** Spec je do 2026-08-04 pisal samo »strežnik izda podpisan token« (§5.4),
+ne pa kdaj. Za T6 so bili vsi žetoni podpisani **ročno** (`tmp/gen_plus_test_token.dart`); strežniške
+kode za to ni. Kovanje mora biti **Edge Function** — Ed25519 je v Denu prek WebCrypto, v Postgresu ga
+brez `pgsodium` ni.
+
+| Sprožilec | Kdaj | Opomba |
+|---|---|---|
+| **Unovčitev kode** | takoj, v istem klicu | edini obvezni online trenutek (§5.5) |
+| **Webhook podaljšanja** | ob dogodku | uporabnik ne naredi nič (§5.4) |
+| **Obnovitev pred potekom žetona** | **nezasnovano** | doživljenjska licenca ima žeton omejen na 12 mesecev (§6.2) → brez obnavljanja tiho ugasne |
+
+Zadnja vrstica je odprta. Za lansirno kodo (§6.8) še ni problem — `plus_until` je 31. 12. 2026, torej
+manj kot leto dni, in en žeton pokrije celo obdobje. **Postane obvezna z doživljenjsko licenco v T8.**
+
+---
+
+## 7.2 Vodenje in pregled licenc (ops)
+
+⚠️ **Do 2026-08-04 tega ni bilo nikjer v specu** — opisana je bila pot nakup → koda → unovčitev, ne pa
+kje lastnik licence ustvari, pregleda in prekliče. Predlog (**ni še potrjen**):
+
+**Zavrnjeno takoj:** *admin v aplikaciji* (administrativna koda bi šla v APK skozi Googlov pregled;
+telefon ni kraj za izvajanje preklicev) in *samo Polarjeva nadzorna plošča* (lastnih `granted` kod ne
+vidi in ne pozna `plus_until`).
+
+**Zdaj — SQL funkcije + Supabase Studio.** Tri `security definer` operacije
+(`mint_license(kind, plus_until|duration_days, max_redemptions)` vrne kodo · `revoke_license(code, razlog)` ·
+`find_licenses(niz)`) in dva pogleda: **licence** (koda, vrsta, kapaciteta proti porabljenemu,
+preklic, ponudnik) in **upravičenost po profilih** (kdo ima Plus, do kdaj, iz katere licence, kdaj mu
+poteče). Kodo za darilo ustvariš z eno vrstico, ne z ročnim `insert`-om, ki bi lahko zgrešil invarianto.
+
+**Kasneje — majhna admin stran na `tendask_web`** za Supabase prijavo in seznamom dovoljenih računov:
+seznam s filtri, gumb za novo kodo, gumb za preklic. Smiselna šele, ko obseg Studio preraste.
+
+**Kar mora pregled znati odgovoriti:** koliko je kapacitete še ostalo · kdo je unovčil in kdaj ·
+zakaj je nekomu unovčitev padla (`license_redeem_attempt.reason`, ker navzven sporočilo tega ne pove) ·
+komu in kdaj poteče upravičenost.
 
 ---
 
@@ -547,7 +635,11 @@ Monetizirati se sme le **nov sloj nad njimi** (glej 10.2), nikoli sam mehanizem 
 
 **Nadomešča prvotni model »free-first + trajni grandfathering«.** Da spoštujeva pravilo §10 do konca (»nič, kar bo Plus, ne izide free«), **noben bodoči-Plus del ne gre v produkcijo brezplačno.** FR-19 bogati del (element-dan + planer + akcije) **debitira že zaklenjen** (gradi se za flagom — glej rollout plan). Free ostane le **mena Lune** (kavelj, §10.2/§10.3). *(M11 je bil 2026-07-29 ustavljen — iz tega odstavka izpade; ko se vrne, velja zanj isto pravilo.)*
 
-Namesto trajne obveznosti daš **omejeno lansirno darilo**: ob prižigu zidu **masovno dodeliš vsem obstoječim profilom časovno omejeno `granted` licenco** (mehanizem §6.6). Strežniška enkratna operacija (additive migracija; server je lastnik `plus_until`/`plus_token`).
+Namesto trajne obveznosti daš **omejeno lansirno darilo**. ⚠️ **Mehanizem je zamenjan (2026-08-04,
+lastnik — §6.8):** ne masovna strežniška dodelitev vsem profilom, ampak **ena javna koda, ki jo
+uporabnik vnese sam** (razposlana po e-pošti + objavljena na spletni strani), z absolutnim datumom
+**31. 12. 2026** in kapaciteto **2000**. Spodnja primerjava (darilo proti trajnemu grandfatheringu)
+velja nespremenjeno — zamenjan je le način dostave.
 
 **Dolžina darila (2026-07-30):** prvotni »1 leto« ni več fiksen — je **parameter, ki se izbere ob prižigu**. Lastnikov delovni predlog je **6 mesecev**. Sezonski razmislek: vrtnarjenje je sezonsko — darilo, ki poteče **spomladi** (ko uporabnik koledar najbolj rabi), je za konverzijo idealno; dolžino izberi glede na datum prižiga, ne pavšalno.
 
@@ -562,7 +654,10 @@ Po poteku zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**X mesece
 
 **Potek darila je hkrati ROK za trgovino:** ko prva darila potečejo, mora nakupna pot obstajati (Polar, kode, spletna stran) — uporabnik, ki hoče plačati in ne more, je najslabši izid. Komercialni del FR-20 se torej dokonča **v teku darilne dobe**, ne nujno pred prižigom (§12).
 
-**⚠️ Odprto (pred prižigom odločiti): gost brez računa.** Darilo se dodeli **profilom v oblaku** — gost (lokalni `kLocalUserId`, brez Supabase seje) profila nima. Opciji: (a) lokalno darilo v drift (luknja: reinstall = novo darilo), (b) darilo vezano na prijavo (»prijavi se in dobiš X mesecev« — hkrati vzvod za prijave). Glej §11.9.
+~~**⚠️ Odprto (pred prižigom odločiti): gost brez računa.**~~ **Razrešeno z §6.8 (2026-08-04):** unovčitev
+zahteva prijavljen račun (§5.3), torej je koda sama opcija (b) — »prijavi se in dobiš«. Sonda produkcije
+4. 8. 2026 je pokazala **0 anonimnih računov** (122 od 122 s potrjeno e-pošto), zato vprašanje danes
+nima nobenega prizadetega uporabnika.
 
 ---
 
@@ -584,8 +679,10 @@ Po poteku zgodnji val **plača kot vsi**. Ker je zgodba od začetka »**X mesece
 6. **Število sedežev** — 3 ali več?
 7. **Trial?** (npr. 14 dni Plus ob prvi prijavi) — poveča konverzijo, a doda stanje.
 8. **Kdaj?** Ni launch-gating; aplikacija je v produkciji in free.
-9. **Gost brez računa in darilo** (§10.4): lokalno darilo vs. vezava na prijavo — odločiti **pred prižigom**.
-10. **Dolžina lansirnega darila** (§10.4): parameter ob prižigu; lastnikov delovni predlog 6 mesecev, izbira glede na sezono.
+9. ~~**Gost brez računa in darilo**~~ **Odpadlo (2026-08-04, §6.8):** unovčitev zahteva prijavo, kar je opcija (b); anonimnih računov v produkciji ni.
+10. ~~**Dolžina lansirnega darila**~~ **Odločeno (2026-08-04, §6.8): absolutni datum 31. 12. 2026**, ne trajanje od unovčitve.
+11. **Obnavljanje žetonov** (§7.1) — nezasnovano. Za lansirno kodo ni problem (`plus_until` je manj kot leto stran, en žeton pokrije vse); **obvezno postane z doživljenjsko licenco v T8**.
+12. **Potrditev načina vodenja licenc** (§7.2) — predlog je SQL funkcije + Supabase Studio zdaj, admin stran kasneje. Ni potrjeno.
 
 ---
 
