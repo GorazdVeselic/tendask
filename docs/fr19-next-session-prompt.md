@@ -591,21 +591,48 @@ vsak korak v svoji seji**: en korak = en branch = en commit, vse temno (za flago
   stikalo odstranjeno, board je zdaj **par** (z licenco / razstavni salon), pet podstikal z 🏷️, opis
   izbranega sistema, novo besedilo »Kaj je to?«, opomba z razlogom B3.
 
-**Naloga NASLEDNJE seje: T7 — prižig z darilom.** Vhod je zdaj izpolnjen: T6 stoji in je izmerjen na
-napravi. **Prvo vprašanje za lastnika:** ali gre `supabase db push` na produkcijo (prod je pri `0016`,
-migracija `0017` čaka) — po `deploy-runbook.md`, staging najprej, po pushu `tmp/probe_prod_state.py` +
-preverba, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`. Šele nato koraki T7:
-par ključev (javni v `kPlusPublicKey`, privatni v Supabase secrets) · masovni grant · prižig obeh flagov ·
-pregled vseh zaslonov na napravi (dolg spodaj: temni odtenki A4 + emoji na pravem fontu) · store listing.
-**Stanje repozitorija ob predaji (4. 8.):** `main` = `de1dac9` + necommitana sprememba wireframa in
-dokumentov iz tega koraka; nobene odprte veje. APK s prižganimi flagi in nameščen na telefonu je iz
-`de1dac9`; v repu so `kMoonCalendarEnabled = false`, `kTendaskPlusEnabled = false`, `kPlusPublicKey` prazen.
+- **Zasnova licenčnega dela ✅ (4. 8., odločitev B4)** — po T6 se je pogovor premaknil na licence in
+  **prižig je prekrojen**: namesto tihega masovnega granta gre **ena javna koda**, razposlana po
+  e-pošti vsem uporabnikom in objavljena na spletni strani; uporabnik jo **vnese sam**. Parametri
+  (lastnik, 4. 8.): **absolutni datum 31. 12. 2026** · **kapaciteta 2000** unovčitev (dvig je `update`,
+  ne migracija) · **enotno sporočilo** ob neuspehu (»navedena koda/licenca ni veljavna«) · **prodaja
+  ostane v T8**. Zapisano v `biodynamic-calendar-decisions.md` **B4** in FR-20 **§6.8**.
+  **Posledice:** vnos kode + `license` shema sta se preselila iz T8 v **T7** (v T8 ostane samo pot
+  denarja) · `license.redeemed_by`/`redeemed_at` odpadeta, unovčitve so **svoja tabela**
+  `license_redemption` z unique `(license_id, user_id)` · `license_redeem_attempt` dobi **`reason`**
+  (enotno navzven, natančno navznoter — sicer je podpora ugibanje) · `review` koda kot poseben režim
+  odpade (recenzent dobi isto javno kodo) · vprašanje gosta odpade (sonda: **0 anonimnih računov**).
+  **Dve luknji, ki ju je spec imel in sta zdaj zapisani:** FR-20 **§7.1** kovanje žetonov (doslej
+  ročno; Ed25519 rabi Edge Function — **obnavljanje žetonov ostaja nezasnovano**, obvezno postane z
+  doživljenjsko licenco v T8) in **§7.2** vodenje/pregled licenc (predlog: `mint_license` /
+  `revoke_license` / `find_licenses` + dva pogleda v Supabase Studiu zdaj, admin stran kasneje —
+  **še ni potrjeno**). Admin v aplikaciji je zavrnjen (koda bi šla v APK skozi Googlov pregled).
+  ⚠️ **Najdba iz read-only sonde produkcije (4. 8.):** 122 računov proti **109 profilom** = 13 računov
+  (11 %) **brez vrstice v `profile`** → unovčitev mora profil **ustvariti, če ga ni**, sicer vsakemu
+  devetemu pade. Vzrok ni raziskan. Rast: jun. 37 · jul. 80 · avg. 5.
+  **Wireframe `docs/wireframes/plus-redeem.html`** (nov): vnos je **kartica na zaslonu, ne gumb, ki
+  odpre list**; uspeh obrne kartico stanja v »Aktiven do 31. 12. 2026«; **brez povezave NE sme pasti v
+  isto sporočilo** kot neveljavna koda. Odprto v wireframu: kaj vidi anonimni uporabnik in ali polje
+  ob prihodu s čipa dobi fokus.
 
-🚫 **Produkcije se do konca celote ne dotikamo** (odločitev lastnika 3. 8.): **`supabase db push` na prod
-se NE izvede po posameznem koraku T6, ampak šele ko rezina stoji.** Prod ostane pri `0016`; migracije se
-do takrat kopičijo v repu in na stagingu. Ko push končno pride: po njem `tmp/probe_prod_state.py` in
-preverba, da ima `authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`. Produkcija izmerjena
-2. 8.: ledger `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev, brez sledi M11.
+**Naloga NASLEDNJE seje: T7 — prižig z javno darilno kodo** (plan ima devet korakov). **Zaporedje ni
+poljubno:** shema (1) → unovčitev + kovanje žetona (2) → par ključev (3) → zaslon za vnos (4, wireframe
+najprej poglej) → vodenje licenc (5) → flag flip (6) → naprava (7) → stran + mailing (8) → Play (9).
+**Preden se česa lotiš, vprašaj lastnika**, s katerim korakom začneva in ali potrjuje §7.2 (način
+vodenja licenc) — to je edina nepotrjena zasnova v tej rezini.
+**Stanje repozitorija ob predaji (4. 8.):** `main` = `0f2e734`, potisnjeno na `origin/main`; nobene
+odprte veje, necommitan je le `.claude/settings.json` (ni moj). Analyze čist, 1540 testov zelenih.
+APK, nameščen na telefonu, je iz `de1dac9`; v repu so `kMoonCalendarEnabled = false`,
+`kTendaskPlusEnabled = false`, `kPlusPublicKey` prazen.
+
+🚫 **PRODUKCIJE SE NE DOTIKAMO, dokler licenčni del ni čisto zaključen** (odločitev lastnika 4. 8.,
+zaostri prejšnjo z 3. 8.). Prod ostane pri `0016`; migracija `0017` in vse nadaljnje se kopičijo v repu
+in na stagingu. **Ne predlagaj `db push`, dokler lastnik sam ne reče.** Ko push končno pride: po
+`deploy-runbook.md`, staging najprej, po pushu `tmp/probe_prod_state.py` + preverba, da ima
+`authenticated` na `plus_*` in `server_inserted_at` samo `SELECT`. Read-only sonde produkcije so
+dovoljene in zaželene (`tmp/probe_prod_users.py`, `tmp/probe_prod_state.py`). Produkcija izmerjena
+2. 8.: ledger `0001`–`0005` + `0011`–`0016`, `profile` 10 stolpcev (+3 iz `0017` samo na stagingu),
+brez sledi M11.
 
 ⏳ **Odprto:** staging ledger nosi **osiroteli vnos `0023`** (prva, preštevilčena različica iste
 migracije; datoteke ni več — ob svežem refreshu staginga izgine sam) · **na telefonu stoji debug/staging
