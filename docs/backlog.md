@@ -54,6 +54,7 @@ razrez na korake z branchi: [`plan-implementacije-fr19-fr20.md`](plan-implementa
 | **FR-14** | Analitika & metrike | 📝 | Shema je odlična za sync, šibka za analitiko (gostje nevidni, LWW upsert = brez zgodovine dogodkov). Dva ločena tira: vedenjska analitika **brez dotika sync sheme**, domenske statistike prek event loga. | [`analytics.md`](feature-requests/analytics.md) |
 | **FR-26** | Preureditev zaslona Nastavitve | 💡 | Opažanje lastnika 3. 8. ob pogledu na napravo: profil je edina kartica brez sekcijske oznake → pod **RAČUN & PODATKI**, ob kartico ✦ Tendask+; Tendask+ dobi sekcijsko oznako in ime v kartici odpade; vrstica lokacije dobi pravo ikono bucike namesto emojija 📍. Samo presentation. **Smiselno šele po prižigu (T7)**, ko je kartica sploh vidna. | [`settings-restructure.md`](feature-requests/settings-restructure.md) |
 | **FR-15** | Obvestilo o nadgradnji (in-app update) | 📝 | Play In-App Updates = **nova dependency izven `tech-stack.md §1`** → najprej potrdi. Lokalno netestabilno (rabi Play track). Lasten `min_supported_version` gate pride šele z M10/iOS. | [`in-app-update.md`](feature-requests/in-app-update.md) |
+| **FR-27** | Domov/Opravila/Dnevnik pri velikem št. vnosov | 💡 | Ni izmerjen problem, proaktivno: Domov omeji DANES/NAZADNJE na okno -1 mesec/+7 dni (rdeč pas zamujenih ostane neomejen), Opravila+Dnevnik dobita search/filter, infinite scroll je nice-to-have dokler ni izmerjena počasnost. | [`list-scaling.md`](feature-requests/list-scaling.md) |
 
 ## Odprti bugi
 
